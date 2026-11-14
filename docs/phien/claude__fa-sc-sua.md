@@ -15,7 +15,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - [x] L1 FA-SC-6 roster input (P1-1) — cc2d9a4, checker NO BUGS 76b2c45
 - [x] L2 FA-SC-4 sheet "Cần xử lý" (P1-2) — bca5941, checker NO BUGS b1d956b
 - [x] L3 FA-SC-4b per-club dropped-response report (P1-4) — 7c3d3b3, checker NO BUGS 35e4938
-- [ ] L4 FA-SC-2 per-class confirmation sheet (P1-3)
+- [x] L4 FA-SC-2 per-class confirmation sheet (P1-3) — db28790, checker NO BUGS 0c81390
 
 ### Lot L1 — roster input (FA-SC-6)
 - New optional arg on `chuyen_fa_daa` + CLI flag (e.g. `danh_sach_truong=None` / `--danh-sach-truong CSV`): the roster
@@ -56,8 +56,8 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - Test: one block per student; dropped test shows reason; privacy assertions (no other class's IDs, no STB column).
 
 ## Current state (overwrite each handoff)
-- Done so far: setup; L1; L2; L3 (all NO BUGS).
-- In progress: L4 (writer).
+- Done so far: setup; L1-L4 all ticked (checker NO BUGS each). Phase 1 automatic scope COMPLETE.
+- In progress: nothing.
 - Tests: per lot, see protocol §2.
 - Open problems: none.
 
@@ -65,8 +65,8 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 | Role | Session id | Model | Status |
 |---|---|---|---|
 | lead | session_01YVAytzZ86RjYnNn3aTHjZY | Sonnet medium | active (all Sonnet medium, Truong 2026-11-14) |
-| writer L4 | session_01YVAyu1Gjsgbsp1AtoyQ8mu | Sonnet medium | active (L3 pair archived) |
-| checker L4 | - | Sonnet medium | created when writer reports done |
+| writer L4 | session_01YVAyu1Gjsgbsp1AtoyQ8mu | Sonnet medium | archived |
+| checker L4 | session_01YVAytziarxgVP2ttMTk2LY | Sonnet medium | archived |
 
 ## Needs Truong (never built automatically)
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
@@ -86,3 +86,18 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 |---|---|---|---|
 | 2026-11-14 | Opus (lead) | branch setup, lot specs | |
 | 2026-11-14 | Sonnet (writer/checker) | L1 roster input | NO BUGS |
+| 2026-11-14 | Sonnet (lead) | L2-L4 run, final summary | all NO BUGS |
+
+## Tổng kết cuối (§7, tiếng Việt)
+**Đã làm (bộ chuyển đổi `mau_forms_thi_clb/`, kiosk không đổi, mọi tuỳ chọn mặc định TẮT → đầu ra giống hệt cũ):**
+- L1 danh sách học sinh của trường làm đầu vào (`danh_sach_truong`, `--danh-sach-truong`): báo ID lạ, ID trùng hai email, điền lớp, "Chưa đăng ký" theo lớp. Drill d03a, d03b, d14, d01, d02 đổi trạng thái.
+- L2 sheet "Cần xử lý" (`can_xu_ly`, `--can-xu-ly`) trong BANG_DIEM.xlsx: mỗi học sinh/vấn đề một dòng. Drill d06, d04, d07 đổi trạng thái; d05 chưa.
+- L3 báo cáo theo CLB (`bao_cao_clb`, `--bao-cao-clb`): thư mục BAO_CAO_CLB/, mỗi CLB một tệp, chỉ dữ liệu CLB đó.
+- L4 phiếu xác nhận theo lớp (`phieu_lop`, `--phieu-lop`): PHIEU_XAC_NHAN_LOP/, mỗi lớp một tệp, mỗi học sinh một khối; không điểm, không số bốc thăm, không email.
+- Test mới: tests/test_fa_sc_l1…l4 (L2: 9, L3: 6, L4: 9, L1 theo tệp riêng); kiem_nhanh 7/7, 60/60 giống hệt ở mọi lô.
+
+**Cần Truong quyết (xem danh sách "Needs Truong" ở trên):** Phase 0 (D-SC2…D-SC7, khuyến nghị ở plan §4); P2-1…P2-5; kiểm tên S37/d05 và "lựa chọn đổi sau giờ thi" (cần sửa form); roster với đường A (CSV List); "có hiện điểm của chính em trên phiếu xác nhận không?"; bài nộp lại trong cùng tệp quiz bị bỏ im lặng; nối các tuỳ chọn vào tab "Chuẩn bị đợt".
+
+**Nên thử trên Forms thật (TH):** chạy converter với danh sách trường thật cùng ba tuỳ chọn mới; kiểm một phiếu lớp và một báo cáo CLB bằng mắt; xác nhận không lộ dữ liệu bạn khác.
+
+**Ghi chú nhật ký AI (3–5 dòng):** Lead + writer + checker đều là Claude Sonnet (effort medium), mỗi lô một cặp mới. Kiểm thử độc lập từng lô (test liên quan, drill, so sánh byte-identical, kiểm riêng tư). Mọi số liệu là dữ liệu giả lập. Không có kết luận báo cáo nào do AI viết.
