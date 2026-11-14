@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-14 — FA-SC-L3 (FA-SC-4b, kế hoạch P1-4): báo cáo theo CLB cho giáo viên CLB
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường
+và `--day-du`, và `chuyen_fa_daa` trên đợt giả, ở HEAD trước lô này: 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., bao_cao_clb=False)` và cờ `--bao-cao-clb` (cần tệp bài thi): thư mục `BAO_CAO_CLB/`, mỗi CLB có đề thi một tệp
+  `<club_id>.xlsx` (hai sheet: "Phiếu thi bị bỏ" = email không có trong danh sách đăng ký đã làm bài CLB này; "Chưa có bài thi" =
+  mã em xếp CLB Tuyển chọn này mà chưa có bài). Không điểm, không số bốc thăm, không dữ liệu CLB khác. Hàm mới `lap_bao_cao_clb`,
+  `ghi_bao_cao_clb`; `phan_tich_chi_thi(..., bo_phieu=None)` ghi lại CLB của phiếu bị bỏ (chỉ khi được yêu cầu). Kết quả có thêm
+  khoá `bao_cao_clb`. Chỉ là báo cáo (bất biến 2).
+- Test mới: `tests/test_fa_sc_l3_bao_cao_clb.py` (6 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 296 tệp, 6.246 ca.
+
 ## 2026-11-14 — FA-SC-L2 (FA-SC-4, kế hoạch P1-2): sheet "Cần xử lý" trong BANG_DIEM.xlsx
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường
