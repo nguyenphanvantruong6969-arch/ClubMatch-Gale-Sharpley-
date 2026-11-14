@@ -13,7 +13,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 ## Plan (written by Opus; ticked by lead after CHECKER NO BUGS)
 - [x] L0 baseline: converter on `du_lieu_test/demo_t4m.py` fake data (`--day-du` and plain) into scratch; keep outputs
 - [x] L1 FA-SC-6 roster input (P1-1) — cc2d9a4, checker NO BUGS 76b2c45
-- [ ] L2 FA-SC-4 sheet "Cần xử lý" (P1-2)
+- [x] L2 FA-SC-4 sheet "Cần xử lý" (P1-2) — bca5941, checker NO BUGS b1d956b
 - [ ] L3 FA-SC-4b per-club dropped-response report (P1-4)
 - [ ] L4 FA-SC-2 per-class confirmation sheet (P1-3)
 
@@ -56,8 +56,8 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - Test: one block per student; dropped test shows reason; privacy assertions (no other class's IDs, no STB column).
 
 ## Current state (overwrite each handoff)
-- Done so far: setup; L1 (cc2d9a4, NO BUGS).
-- In progress: L2 (writer).
+- Done so far: setup; L1; L2 (NO BUGS).
+- In progress: L3 (writer).
 - Tests: per lot, see protocol §2.
 - Open problems: none.
 
