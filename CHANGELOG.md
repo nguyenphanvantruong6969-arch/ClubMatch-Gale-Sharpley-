@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả
+với danh sách trường + `can_xu_ly` + `bao_cao_clb` bật, HEAD trước lô và sau lô: 10 tệp, 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., phieu_lop=False)` và cờ `--phieu-lop`: thư mục `PHIEU_XAC_NHAN_LOP/`, mỗi lớp một tệp `<lớp>.xlsx`, mỗi em MỘT khối:
+  nguyện vọng đã lưu từng ngày (kèm huy chương), ba huy chương, bài thi nhận được và "Tính" / "Không tính — lý do" (không tick thi,
+  không xếp CLB đó, bài lần hai bị bỏ, xếp CLB Tuyển chọn mà chưa nhận bài). Lớp lấy từ danh sách trường (L1) hoặc cột lớp của phiếu;
+  em chưa có lớp vào tệp "Chưa có lớp". Không điểm (cả điểm của chính em), không số bốc thăm, không email, không dữ liệu lớp khác.
+  Hàm mới `lap_phieu_lop`, `ghi_phieu_lop`. Kết quả có thêm khoá `phieu_lop`. Chỉ là báo cáo (bất biến 2).
+- Test mới: `tests/test_fa_sc_l4_phieu_lop.py` (9 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 297 tệp, 6.255 ca.
+
 ## 2026-11-14 — FA-SC-L3 (FA-SC-4b, kế hoạch P1-4): báo cáo theo CLB cho giáo viên CLB
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường

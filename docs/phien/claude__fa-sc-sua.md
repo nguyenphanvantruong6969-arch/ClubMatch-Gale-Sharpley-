@@ -74,6 +74,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - S37 typed-name check that needs a "class and full name" question in the test form (form generator change).
 - L2: "choices changed after test time" (registration rows carry no submit time; needs a form change) and S37/d05 name check (needs a name question in the test form).
 - Roster with path A (CSV List): today a clear error; supporting it needs a decision on how List rows map to the roster.
+- L4: "show own score on the confirmation sheet?" (omitted: undecided, plan says nothing); a test re-submitted inside the SAME quiz file is dropped silently by the converter (first kept, no warning), so the class sheet cannot name it (needs a warning + decision); dropped responses from unknown emails cannot be tied to a student, so they stay on the IT sheet / club reports only.
 - Wiring the new converter options into the kiosk "Chuẩn bị đợt" tab.
 
 ## Decisions and gotchas
