@@ -23,7 +23,7 @@ def dien_tap(ra, seed=c.SEED, so_hs=c.SO_HS):
     loi = copy.deepcopy(dot)
     h = c.em(loi, sid)
     h["thi"][y] = h["thi"].pop(x)
-    r = c.chay(loi, os.path.join(ra, "loi"), seed)
+    r = c.chay(loi, os.path.join(ra, "loi"), seed, can_xu_ly=True)
     cua_em = [t[2] for t in r["canh_bao_day_du"] if t[1] in (sid, h["email"])]
     o_doi, em_doi = c.so_sanh(sach["ket_qua"], r["ket_qua"], bo_qua=(sid,))
     return c.in_bang("d06 S1 thi nhầm CLB", [
@@ -31,6 +31,7 @@ def dien_tap(ra, seed=c.SEED, so_hs=c.SO_HS):
         ("cảnh báo 'làm bài nhưng KHÔNG xếp CLB này'", c.dem(cua_em, "KHÔNG xếp")),
         ("cảnh báo NOT_ATTEMPTED cho CLB định thi", c.dem(cua_em, "NOT_ATTEMPTED")),
         ("hai cảnh báo nằm ở hai dòng rời nhau", "có" if len(cua_em) >= 2 else "không"),
+        ("FA-SC L2: dòng 'Cần xử lý' của em (hai cảnh báo gộp thành một)", sum(1 for x in r["can_xu_ly"] if x[0] == sid)),
         ("tổng số dòng cảnh báo IT phải đọc", len(r["canh_bao"])),
         ("CLB của em ngày X (sạch -> lỗi)", "%s -> %s" % (sach["ket_qua"].get((sid, NGAY_X)), r["ket_qua"].get((sid, NGAY_X)))),
         ("em KHÁC đổi CLB so với lần sạch", em_doi),

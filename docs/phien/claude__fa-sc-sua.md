@@ -72,6 +72,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
 - P2-1 per-day lottery lock (schema change), P2-2 attendance, P2-3 capacity warning, P2-4, P2-5.
 - S37 typed-name check that needs a "class and full name" question in the test form (form generator change).
+- L2: "choices changed after test time" (registration rows carry no submit time; needs a form change) and S37/d05 name check (needs a name question in the test form).
 - Roster with path A (CSV List): today a clear error; supporting it needs a decision on how List rows map to the roster.
 - Wiring the new converter options into the kiosk "Chuẩn bị đợt" tab.
 

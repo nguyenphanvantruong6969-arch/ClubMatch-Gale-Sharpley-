@@ -199,15 +199,16 @@ def ghi_danh_sach(duong, hang):
     return duong
 
 
-def chay(dot, thu_muc, seed=SEED, luat=None, danh_sach_truong=None, **ghi):
+def chay(dot, thu_muc, seed=SEED, luat=None, danh_sach_truong=None, can_xu_ly=False, **ghi):
     """Trọn chuỗi: ghi tệp -> chuyển đổi -> nạp -> chạy. Trả dict; không ném lỗi khi bị chặn (ghi vào `loi`).
     `luat`: thêm khoá vào `rules` của workspace tạm (ví dụ {"fa_diem_danh": True}).
     `danh_sach_truong` (FA-SC L1, mặc định None = TẮT, số liệu cũ không đổi): [(mã, lớp, email)] ghi thành CSV rồi
-    đưa cho bộ chuyển đổi; kết quả `bao_cao_danh_sach` có trong dict trả về."""
+    đưa cho bộ chuyển đổi; kết quả `bao_cao_danh_sach` có trong dict trả về.
+    `can_xu_ly` (FA-SC L2, mặc định TẮT): bật sheet "Cần xử lý"; các dòng việc có trong `ra["can_xu_ly"]`."""
     de, loai = de_fa()
     so_clb, tep_dk, tep_thi = ghi_tep(dot, thu_muc, de, loai, **ghi)
     ra = {"thu_muc": thu_muc, "loai": loai, "de": de, "canh_bao": [], "loi": [], "ket_qua": {}, "buoc_chan": None}
-    kw = {}
+    kw = {"can_xu_ly": True} if can_xu_ly else {}
     if danh_sach_truong is not None:
         kw["danh_sach_truong"] = ghi_danh_sach(os.path.join(thu_muc, "danh_sach_truong.csv"), danh_sach_truong)
     try:
@@ -218,6 +219,7 @@ def chay(dot, thu_muc, seed=SEED, luat=None, danh_sach_truong=None, **ghi):
     ra["canh_bao"] = [x[2] for x in kq["canh_bao"]]
     ra["canh_bao_day_du"] = kq["canh_bao"]
     ra["bao_cao_danh_sach"] = kq.get("bao_cao_danh_sach")
+    ra["can_xu_ly"] = kq.get("can_xu_ly")
     api, db = mo_kiosk(thu_muc, **(luat or {}))
     ra["api"], ra["db"] = api, db
     r = nap(api, os.path.join(thu_muc, "nap", cv.TEN_SO))

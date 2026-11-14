@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 2026-11-14 — FA-SC-L2 (FA-SC-4, kế hoạch P1-2): sheet "Cần xử lý" trong BANG_DIEM.xlsx
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường
+và `--day-du` ở HEAD trước lô này: 42 tệp, 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., can_xu_ly=False)` và cờ `--can-xu-ly` (cần tệp bài thi): hàm mới `lap_can_xu_ly` gom thành dòng việc
+  [(mã, vấn đề, ai xử lý, việc cần làm)] — làm bài CLB này mà chưa thi CLB em xếp (hai cảnh báo rời gộp MỘT dòng, nêu cả hai CLB);
+  chỉ làm bài không xếp / chỉ chưa thi; có bài mà không tick thi; bài thi gửi từ email ngoài danh sách (dòng nêu email, gửi quản
+  trị viên); CLB Tự do đứng trước CLB Tuyển chọn em đã thi; giữ chỗ em không xếp CLB đó (gửi giáo viên CLB). `ghi_bang_diem(...,
+  can_xu_ly=None)` thêm sheet "Cần xử lý" (Mã HS, Họ tên, Vấn đề, Ai xử lý, Việc cần làm); kết quả có thêm khoá `can_xu_ly`. Sheet
+  "Cảnh báo" và danh sách cảnh báo giữ nguyên. Chỉ là báo cáo, không đi vào Sổ nhập hay khoá ưu tiên.
+- Từ rà soát L1: `doi_chieu_danh_sach_truong` báo một dòng khi một email có ở hai mã trong danh sách trường (trước đây lặng lẽ lấy mã đầu).
+- `du_lieu_test/su_co/chung.py`: `chay(..., can_xu_ly=False)`; d04, d06, d07 thêm dòng "FA-SC L2" (số cũ không đổi): d06 hai cảnh báo
+  -> một dòng, d04 một dòng nêu email lạ + một dòng của em, d07 một dòng Tự do đứng trước Tuyển chọn.
+- Test mới: `tests/test_fa_sc_l2_can_xu_ly.py` (9 ca).
+- Chưa làm (cần Truong): "đổi nguyện vọng sau giờ thi" (phiếu đăng ký không có giờ nộp, cần đổi biểu mẫu); d05 (so tên gõ với tên danh
+  sách cần câu hỏi lớp/họ tên trong biểu mẫu thi).
+
 ## 2026-11-14 — FA-SC-L1 (FA-SC-6, kế hoạch P1-1): danh sách học sinh của trường làm đầu vào bộ chuyển đổi
 
 Chỉ bộ chuyển đổi (`mau_forms_thi_clb/`), kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte

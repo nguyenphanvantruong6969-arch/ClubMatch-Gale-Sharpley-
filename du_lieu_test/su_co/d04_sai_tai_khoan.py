@@ -15,11 +15,13 @@ def dien_tap(ra, seed=c.SEED, so_hs=c.SO_HS):
     loi = copy.deepcopy(dot)
     h = c.em(loi, sid)
     bai, h["thi"] = h["thi"], {}
-    r = c.chay(loi, os.path.join(ra, "loi"), seed, phieu_thi_them=[(EMAIL_LA, bai)])
+    r = c.chay(loi, os.path.join(ra, "loi"), seed, phieu_thi_them=[(EMAIL_LA, bai)], can_xu_ly=True)
     o_doi, em_doi = c.so_sanh(sach["ket_qua"], r["ket_qua"], bo_qua=(sid,))
     return c.in_bang("d04 S5 thi bằng sai tài khoản", [
         ("bị chặn ở bước", r["buoc_chan"]),
         ("cảnh báo 'email không có trong danh sách'", c.dem(r["canh_bao"], EMAIL_LA)),
+        ("FA-SC L2: dòng 'Cần xử lý' nêu email lạ", sum(1 for x in r["can_xu_ly"] if EMAIL_LA in x[1])),
+        ("FA-SC L2: dòng 'Cần xử lý' của em (chưa có bài thi)", sum(1 for x in r["can_xu_ly"] if x[0] == sid)),
         ("cảnh báo NOT_ATTEMPTED của em", sum(1 for x in r["canh_bao_day_du"] if x[1] in (sid, h["email"]) and "NOT_ATTEMPTED" in x[2])),
         ("số ngày em mất CLB Tuyển chọn đã trúng ở lần sạch",
          sum(1 for k, v in sach["ket_qua"].items()

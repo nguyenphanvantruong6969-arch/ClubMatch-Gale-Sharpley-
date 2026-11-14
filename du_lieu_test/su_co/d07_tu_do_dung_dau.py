@@ -18,10 +18,11 @@ def dien_tap(ra, seed=c.SEED, so_hs=c.SO_HS):
     h = c.em(loi, sid)
     tu_do = next(x for x in h["nv"][NGAY] if loai[x] == "TU_DO")
     h["nv"][NGAY] = [tu_do] + [x for x in h["nv"][NGAY] if x != tu_do]
-    r = c.chay(loi, os.path.join(ra, "loi"), seed)
+    r = c.chay(loi, os.path.join(ra, "loi"), seed, can_xu_ly=True)
     return c.in_bang("d07 S33 CLB Tự do đứng đầu", [
         ("bị chặn ở bước", r["buoc_chan"]),
         ("cảnh báo nhắc tới em", sum(1 for x in r["canh_bao_day_du"] if x[1] in (sid, h["email"]))),
+        ("FA-SC L2: dòng 'Cần xử lý' của em (Tự do đứng trước Tuyển chọn)", sum(1 for x in r["can_xu_ly"] if x[0] == sid)),
         ("CLB của em ngày đó (sạch -> lỗi)", "%s -> %s" % (clb, r["ket_qua"].get((sid, NGAY)))),
         ("điểm thi của em ở CLB Tuyển chọn (câu đúng / 5)", h["thi"][clb][0]),
     ])
