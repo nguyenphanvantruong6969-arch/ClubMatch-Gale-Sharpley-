@@ -64,9 +64,9 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 ## Sessions
 | Role | Session id | Model | Status |
 |---|---|---|---|
-| lead | session_01YVAyu4EAC3N6CVfiJpThan | Opus | active |
-| writer | session_01YVAyu37AUCc9XrJPLLF9Ru | Sonnet | active |
-| checker | session_01YVAyu2yY5cZLrAT3px9584 | Sonnet | active |
+| lead | session_01YVAytzZ86RjYnNn3aTHjZY | Sonnet medium | active (all Sonnet medium, Truong 2026-11-14) |
+| writer L2 | session_01YVAyu1zaKC9Yo2JqKiPpcC | Sonnet medium | active |
+| checker L2 | - | Sonnet medium | created when writer reports done |
 
 ## Needs Truong (never built automatically)
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
