@@ -48,6 +48,7 @@ from rbda_priority_pipeline import (
     connect_db,
     default_reserve_eligible_fn,
     diem_wharton_hieu_luc,
+    doc_stb_buoi,
     dung_fa_daa,
     dung_wharton,
     generate_stb_lottery,
@@ -1198,6 +1199,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
             ).fetchone()
             already_locked = bool(lock_row[0]) if lock_row else False
             stb_redrawn = False
+            # FA-SC-L5: thứ tự TỪNG BUỔI đã khoá ở lần chạy trước (None = tính như cũ: lần đầu / vừa vẽ lại / CSDL cũ).
+            stb_buoi_da_khoa = None
 
             if not already_locked or force_redraw_stb:
                 # Ve lai TOAN BO
@@ -1231,6 +1234,7 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 missing = [
                     sid for sid, info in students.items() if info.get("stb") is None
                 ]
+                stb_buoi_da_khoa = doc_stb_buoi(cur) or None
                 if missing and chi_buoi_chuan is not None:
                     # CHEN SO CHO EM MOI CUNG DOI THU TU CUA MOI BUOI.
                     #
@@ -1276,7 +1280,14 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                         students[sid]["stb"] = v
                 else:
                     stb_step_detail = err("stb_reused")
-            steps_log.append({"step": "stb_lottery", "status": "done", "detail": stb_step_detail})
+            buoc_stb = {"step": "stb_lottery", "status": "done", "detail": stb_step_detail}
+            # FA-SC-L5: nói rõ khi thứ tự từng ngày bị xoá (vẽ lại) hoặc lần đầu được lưu cho CSDL đã khoá từ bản cũ.
+            if len(ds_buoi_tat_ca) > 1 and already_locked:
+                if force_redraw_stb and doc_stb_buoi(cur):
+                    buoc_stb["warnings"] = [err("stb_buoi_ve_lai")]
+                elif not force_redraw_stb and stb_buoi_da_khoa is None:
+                    buoc_stb["warnings"] = [err("stb_buoi_luu_lan_dau")]
+            steps_log.append(buoc_stb)
 
             # Khong mo connection moi de doc lai stb_number: cac thay doi
             # o tren CHUA commit, mot connection khac se khong thay duoc
@@ -1303,7 +1314,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 kq_fa = fa_daa.chay_fa_daa(
                     students, clubs, tested_scores, applicants, preferences, stb_lottery,
                     fa_clb, fa_cap, huy_chuong, seed=seed, chi_buoi=chi_buoi_chuan,
-                    tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"])
+                    tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"],
+                    stb_buoi_da_khoa=stb_buoi_da_khoa)
                 result = kq_fa.ket_qua
                 clubs_ck, scores_ck, app_ck, prefs_ck, reserve_ck = (
                     kq_fa.clubs, kq_fa.tested_scores, kq_fa.applicants, kq_fa.preferences,
@@ -1316,6 +1328,7 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                     chi_buoi=chi_buoi_chuan,
                     tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"],
                     diem_wharton=diem_wharton,
+                    stb_buoi_da_khoa=stb_buoi_da_khoa,
                 )
                 clubs_ck, scores_ck, app_ck, prefs_ck, reserve_ck = (
                     clubs, tested_scores, applicants, preferences, reserve_fn)
@@ -1463,6 +1476,13 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 "VALUES (?, ?, ?, ?, ?, ?)",
                 cac_dong_match_results(result),
             )
+            # FA-SC-L5: thứ tự bốc thăm TỪNG BUỔI của lần chạy này, CÙNG giao dịch với kết quả (bất biến 5). Chỉ khi nhiều
+            # buổi và `stb_ngay`; một buổi / chế độ khác thì bảng rỗng và các chỗ đọc tính như cũ.
+            cur.execute("DELETE FROM stb_buoi")
+            if result.che_do_boc_tham == "stb_ngay" and len(result.stb_tat_ca_buoi) > 1:
+                cur.executemany(
+                    "INSERT INTO stb_buoi (buoi, student_id, so) VALUES (?, ?, ?)",
+                    [(b, sid, so) for b, so_b in result.stb_tat_ca_buoi.items() for sid, so in so_b.items()])
             steps_log.append({"step": "write_results", "status": "done"})
 
             # "Da duoc xep" = co it nhat MOT CLB trong tuan. Mot em co CLB

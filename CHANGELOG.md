@@ -55,6 +55,31 @@ Chỉ bộ chuyển đổi (`mau_forms_thi_clb/`), kiosk không đổi. Tuỳ ch
   em không lớp xuống 0/120, d01 và d02 có em trong báo cáo.
 - Test mới: `tests/test_fa_sc_l1_danh_sach.py` (7 ca).
 - Chưa làm (cần Truong): đường A (CSV List) chưa dùng được với danh sách trường (báo lỗi rõ); chưa nối vào tab "Chuẩn bị đợt".
+## 2026-11-15 — FA-SC-L5 (FA-SC-10 / P2-1, Truong duyệt 15/11 kể cả bảng mới `stb_buoi`): khoá thứ tự bốc thăm THEO NGÀY
+
+Sửa mã sản phẩm (kiosk). Mọi số liệu là MÔ PHỎNG. Cấu hình mặc định giữ từng byte lần chạy ĐẦU: `kiem_nhanh --co-so origin/main
+--so-seed 20` = 7/7, 60/60 trùng khít.
+- **Việc**: lần chạy đầu gọi đúng `sinh_stb_theo_buoi` rồi LƯU thứ tự từng ngày vào bảng mới `stb_buoi(buoi, student_id, so)`
+  (cùng giao dịch với kết quả; `run_history` không đụng). Lần chạy sau giữ thứ tự tương đối của em cũ ở MỌI ngày và chèn đều em
+  mới từng ngày (`stb_theo_buoi_da_khoa` → `chen_stb_cho_hoc_sinh_moi`, seed `_seed_cua_buoi(seed, buoi)`). Ba nơi đọc cùng một
+  nguồn: lần chạy (`run_rbda_nhieu_buoi`, tham số mới `stb_buoi_da_khoa=None` = cách cũ), `get_so_boc_tham_theo_buoi`, vòng 2
+  (`_du_lieu_vong_2`). Một buổi hoặc chế độ khác `stb_ngay`: không lưu, không đổi.
+- **Thay đổi hành vi có chủ ý — chạy lại với danh sách học sinh đã đổi giờ cho kết quả KHÁC lần chạy lại của bản cũ**: bản cũ
+  hoán vị VỊ TRÍ cả dàn nên thêm một em là em cũ đổi chỗ ở mọi ngày (d12: 20 em cũ đổi CLB → 1; d16: 18 → 0). Chạy lại KHÔNG đổi
+  danh sách thì vẫn giống hệt.
+- **Workspace cũ** (đã khoá, chưa có `stb_buoi`): lần chạy đầu sau khi nâng cấp tính ĐÚNG như bản cũ (không ai bị xáo lặng lẽ), lưu
+  thứ tự đó, và bước bốc thăm ghi `stb_buoi_luu_lan_dau`. Không bao giờ dựng lại âm thầm. "Vẽ lại" (`force_redraw_stb`) xoá thứ tự
+  cũ, lập lại từ bộ số mới, ghi `stb_buoi_ve_lai` (+ `run_history.stb_redrawn = 1` như trước). Xoá học sinh: bỏ dòng của em đó,
+  không đánh lại số ai. `reset_data`: xoá bảng.
+- **Schema**: `stb_buoi` tạo bằng `di_tru_schema` (bước 8; sao lưu `.bak-` trước, chạy lại không làm gì); cố ý KHÔNG nằm trong
+  `DEFAULT_SCHEMA` để mọi CSDL cũ đi qua đường di trú có sao lưu.
+- **Dấu vân tay (FA-9)**: KHÔNG gồm thứ tự từng ngày (cùng lý do với số bốc thăm gốc: đó là kết quả của lần chạy, không phải dữ
+  liệu đầu vào); ghi rõ trong docstring `dau_van_tay_du_lieu` và có test canh.
+- Tệp: `rbda_priority_pipeline.py`, `api.py`, `api_bao_cao.py`, `api_sau_xep.py`, `api_quan_ly.py`, `fa_daa.py`,
+  `i18n_errors.py` (+ `i18n_loi.js` sinh lại), `docs/ke_hoach/CLAUDE_CHI_TIET.md` (hàng `tests/`).
+- Test mới: `tests/test_fa_sc_l5_khoa_so_theo_ngay.py` (62 ca: lần đầu giống cũ × 20 seed, thứ tự em cũ giữ nguyên, phân bố đều
+  χ², xoá, vẽ lại, di trú, CSDL cũ, một buổi, dấu vân tay, báo cáo bốc thăm).
+- Cần Truong xác nhận: lời hứa bất biến 3 nay mở rộng sang thứ tự TỪNG NGÀY (xem `docs/phien/claude__fa-sc-sua.md`).
 
 ## 2026-11-14 — FA-SC (mục mới ngoài sổ, Truong duyệt D-SC1): sự cố do con người, phần nghiên cứu
 

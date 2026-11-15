@@ -367,7 +367,7 @@ class SauXepMixin:
 
     def _du_lieu_vong_2(self, cur, buoi):
         """(buoi, ds_buoi, da_chay, [em theo thứ tự bốc thăm], {club: còn}, run_goc, vi_tri)."""
-        from rbda_priority_pipeline import sinh_stb_theo_buoi
+        from rbda_priority_pipeline import doc_stb_buoi, stb_theo_buoi_da_khoa
         vi_tri, _, run_goc = sx.doc_vi_tri(cur)
         ds_buoi = sorted(run_goc, key=khoa_sap_buoi)
         buoi = buoi if buoi in run_goc else (ds_buoi[0] if ds_buoi else "")
@@ -383,7 +383,7 @@ class SauXepMixin:
         stb_goc = {r[0]: r[1] for r in cur.execute(
             "SELECT student_id, stb_number FROM students WHERE stb_number IS NOT NULL")}
         seed = (cur.execute("SELECT seed FROM stb_lock WHERE id = 1").fetchone() or [None])[0] or 0
-        stb = sinh_stb_theo_buoi(stb_goc, tat_ca_buoi, seed, "stb_ngay").get(buoi, stb_goc) if buoi else {}
+        stb = stb_theo_buoi_da_khoa(stb_goc, tat_ca_buoi, seed, "stb_ngay", doc_stb_buoi(cur)).get(buoi, stb_goc) if buoi else {}
         can = sx.can_vong_2(vi_tri, nv, buoi)
         thu_tu = sorted(can, key=lambda s: (stb.get(s, float("inf")), s))
         dang = {}

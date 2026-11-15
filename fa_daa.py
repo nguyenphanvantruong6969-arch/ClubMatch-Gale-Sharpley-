@@ -316,7 +316,8 @@ class KetQuaFA:
 def chay_fa_daa(students: dict, clubs: dict, tested_scores: dict, applicants: dict,
                 preferences: dict, stb_lottery: dict, fa_clb: dict, giu_cho, huy_chuong: dict,
                 seed: int = 0, chi_buoi=None, tier_rank=None, bo_qua_du_tru: bool = False,
-                max_rounds: int = 1000, buoc_fallback: bool = True) -> KetQuaFA:
+                max_rounds: int = 1000, buoc_fallback: bool = True,
+                stb_buoi_da_khoa=None) -> KetQuaFA:
     """Chạy FA-DAA: chuẩn bị đầu vào trong bộ nhớ, gọi `run_rbda_nhieu_buoi` (lõi KHÔNG đổi), rồi
     xử lý sau. Không sửa đối số nào.
 
@@ -388,7 +389,8 @@ def chay_fa_daa(students: dict, clubs: dict, tested_scores: dict, applicants: di
             students, clubs_fa, tested_fa, app_fa, prefs_fa, stb_lottery, reserve_fn,
             seed=seed, max_rounds=max_rounds, chi_buoi=chi_buoi, tier_rank=tier_rank,
             bo_qua_du_tru=bo_qua_du_tru,
-            diem_wharton=diem_huy_chuong_hieu_luc(prefs_fa, huy_chuong))
+            diem_wharton=diem_huy_chuong_hieu_luc(prefs_fa, huy_chuong),
+            stb_buoi_da_khoa=stb_buoi_da_khoa)
 
     ket = chay()
     theo_buoi = rp.nhom_theo_buoi(clubs_fa)
