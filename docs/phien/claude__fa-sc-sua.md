@@ -101,3 +101,10 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 **Nên thử trên Forms thật (TH):** chạy converter với danh sách trường thật cùng ba tuỳ chọn mới; kiểm một phiếu lớp và một báo cáo CLB bằng mắt; xác nhận không lộ dữ liệu bạn khác.
 
 **Ghi chú nhật ký AI (3–5 dòng):** Lead + writer + checker đều là Claude Sonnet (effort medium), mỗi lô một cặp mới. Kiểm thử độc lập từng lô (test liên quan, drill, so sánh byte-identical, kiểm riêng tư). Mọi số liệu là dữ liệu giả lập. Không có kết luận báo cáo nào do AI viết.
+
+## Truong decisions (2026-11-15)
+- D-SC2: retake only before lock, club teacher approves, different variant, only if no response for the intended club.
+- D-SC3: post-result claims = data errors only, proven by a system record.
+- D-SC7: (a) no rerun with a changed student list after announcing; then (b) build P2-1 per-day lottery lock.
+- Confirmation sheet: do NOT show the student's own score.
+- Still open: D-SC4, D-SC5, D-SC6, P2-2, P2-3, form changes (S37, change-after-test), path A roster, kiosk tab wiring.
