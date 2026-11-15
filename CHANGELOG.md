@@ -4,6 +4,8 @@
 
 Tài liệu vận hành, không đổi mã: `docs/power_apps/HUONG_DAN_POWER_APPS_DANG_KY.md` (hướng dẫn kỹ thuật dựng app đăng ký CLB trên Power Apps) và `docs/power_apps/HUONG_DAN_CAI_DAT_MOI_TRUONG.md` (hướng dẫn cài đặt môi trường từng bước cho người không chuyên). Không có test mới.
 
+Bộ tách nhỏ `docs/power_apps/cai_dat/` (2026-11-15, chỉ tài liệu, chưa thử trên Microsoft thật): rà lại 25 tệp cho mỗi bước một thao tác, có 👀 xác nhận và lối xử lý khi không thấy; sửa công thức (`App.StartScreen` tra thẳng `HocSinh` thay vì biến `varHS` chưa có lúc khởi động; `Reset` các ô chọn sau khi lưu; bỏ `Coalesce` trên bản ghi; `AddColumns` không nhập nhằng tên cột; mục «Value» của ô thả xuống bộ cũ); thêm `powerapps/PA16_bieu_mau_va_bai_thi.md` (bài thi trắc nghiệm trong app: list `CauHoi`, `DapAn` chỉ giáo viên đọc, `BaiLam`; giáo viên bấm chấm, điểm vào `ChonThi.score_k`; hợp đồng CSV không đổi). `HUONG_DAN_POWER_APPS_DANG_KY.md` §3.3 sửa cùng lỗi `StartScreen`. Không có test mới.
+
 ## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả

@@ -2,31 +2,36 @@
 
 [← SP09](../sharepoint/SP09_phan_quyen.md) · Tiếp theo: [PA02](PA02_tao_app.md)
 
-Power Apps chia thành nhiều **khu làm việc** (trên màn hình gọi là «Environment»), giống các ngăn tủ. Ứng dụng và dữ liệu phải nằm **cùng một ngăn**. Chọn nhầm ngăn là lỗi hay gặp nhất.
+Power Apps chia thành nhiều **khu làm việc** (trên màn hình gọi là «Environment»), giống các ngăn tủ. Ứng dụng làm ở ngăn nào thì nằm ở ngăn đó. Chọn nhầm ngăn là lỗi hay gặp nhất: hôm sau mở lại sẽ "không thấy ứng dụng đâu".
 
-1. Mở trình duyệt, dán vào thanh địa chỉ:
+1. Mở trình duyệt, bấm vào thanh địa chỉ, dán:
 ```
 https://make.powerapps.com
 ```
-2. Đăng nhập bằng thư điện tử của trường (nếu chưa).
+2. Bấm phím `Enter`.
+3. Chỉ khi trang hỏi đăng nhập: gõ thư điện tử của trường, bấm «Next», gõ mật khẩu, bấm «Sign in».
 
-👀 Trang có cột trái gồm «Home», «Create», «Learn», «Apps»…
+👀 Trang Power Apps. Cột bên trái có «Home», «Create», «Apps».
 
-3. Nhìn **góc trên bên phải**, cạnh hình cái chuông: có chữ «Environment» và một cái tên bên dưới (ví dụ «XCL Education Group»).
-4. Bấm vào cái tên đó.
+4. Nhìn thanh màu trên cùng của trang, **phía bên phải**, ngay bên trái hình cái chuông: có chữ nhỏ «Environment» và một cái tên bên dưới (ví dụ tên trường).
+5. Bấm vào cái tên đó.
 
-👀 Hiện danh sách các khu làm việc bạn được dùng.
+👀 Bên phải mở khung «Select environment», liệt kê các khu làm việc bạn được dùng.
 
-5. Chọn theo thứ tự ưu tiên:
-   - Khu mà bộ phận tin học đã chỉ định.
-   - Nếu không ai chỉ định: khu có chữ «(default)» hoặc có tên trường.
-   - **Tránh** khu có chữ «Developer», «Trial», «Sandbox».
-6. Bấm chọn. Danh sách tự đóng.
-7. Ghi tên khu làm việc vào sổ tay, đặt tên là **KHU LÀM VIỆC**.
+6. Bấm vào **một** khu, chọn theo thứ tự ưu tiên sau (gặp dòng nào đúng trước thì dừng ở dòng đó):
+   1. Khu mà bộ phận tin học đã chỉ định cho bạn.
+   2. Khu có chữ «(default)» sau tên.
+   3. Khu mang tên trường.
 
-⚠️ Chỉ có một khu, hoặc không bấm được: dùng luôn khu đó.
-⚠️ Danh sách trống: bạn chưa được cấp quyền. Gửi tin nhắn mẫu ở cuối SP01.
+   **Không chọn** khu có chữ «Developer», «Trial» hoặc «Sandbox» trong tên.
+
+👀 Khung tự đóng. Cái tên ở thanh trên cùng đổi thành khu vừa chọn.
+
+7. Ghi tên khu đó vào sổ tay, đặt tên là **KHU LÀM VIỆC**.
+
+⚠️ Khung chỉ có một khu: bấm khu đó, ghi tên nó.
+⚠️ Khung trống, hoặc chỉ có khu «Developer»/«Trial»: bạn chưa được cấp quyền ở khu của trường. Gửi tin nhắn mẫu ở cuối [SP01](../sharepoint/SP01_kiem_quyen.md), thêm câu: "Nhờ anh/chị cho biết em nên làm ứng dụng ở Environment nào."
 
 - [ ] Đã ghi KHU LÀM VIỆC.
 
-**Từ giờ:** mỗi lần vào trang này, liếc góc trên phải xem có đúng KHU LÀM VIỆC không.
+**Từ giờ:** mỗi lần mở make.powerapps.com, việc đầu tiên là nhìn cái tên cạnh hình cái chuông. Khác KHU LÀM VIỆC thì làm lại bước 5 và 6.

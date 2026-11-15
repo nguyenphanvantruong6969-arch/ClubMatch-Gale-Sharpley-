@@ -4,16 +4,29 @@ Bộ hướng dẫn này chia việc thành nhiều tệp nhỏ. Mỗi tệp ch�
 
 ## Cách đọc hướng dẫn
 
-- **Chữ trong ngoặc «…»** là chữ in trên màn hình (thường bằng tiếng Anh, vì Microsoft để vậy). Tìm đúng chữ đó rồi bấm.
+- **Chữ trong ngoặc «…»** là chữ in trên màn hình (bằng tiếng Anh, vì Microsoft để vậy). Tìm đúng chữ đó rồi bấm.
 - **Ô màu xám** là phần để **sao chép và dán**. Đừng gõ tay. Cách làm:
-  1. Bôi đen toàn bộ chữ trong ô xám (hoặc bấm nút sao chép ở góc ô, nếu có).
+  1. Đưa chuột vào ô xám. Nếu ở góc trên bên phải của ô hiện một nút hình hai tờ giấy chồng nhau: bấm nút đó là đã sao chép xong, bỏ qua bước 2. Nếu không hiện nút: kéo chuột bôi đen toàn bộ chữ trong ô.
   2. Bấm `Ctrl` + `C` để sao chép.
-  3. Bấm vào chỗ cần điền trên màn hình.
-  4. Bấm `Ctrl` + `A` để chọn hết chữ cũ (nếu có), rồi `Ctrl` + `V` để dán.
-- 👀 là điều bạn sẽ thấy nếu làm đúng.
+  3. Bấm chuột vào chỗ cần điền trên màn hình.
+  4. Bấm `Ctrl` + `A` để chọn hết chữ đang có ở chỗ đó.
+  5. Bấm `Ctrl` + `V` để dán đè lên.
+- Mỗi ô xám chỉ chứa **một** thứ cần dán. Thấy nhiều ô xám liền nhau thì dán từng ô một, đúng thứ tự.
+- 👀 là điều bạn phải thấy nếu làm đúng. **Chưa thấy thì đừng làm tiếp**, đọc dòng ⚠️ ngay bên dưới.
 - ⚠️ là lỗi hay gặp và cách sửa.
-- Tên nút có thể hơi khác vì Microsoft hay đổi giao diện. Mỗi chỗ đã ghi thêm tên khác có thể gặp.
+- Microsoft thỉnh thoảng đổi tên nút. Chỗ nào có hai tên, hướng dẫn ghi cả hai, dạng: «tên này» (bản khác ghi «tên kia»).
 - Mọi ví dụ về học sinh, câu lạc bộ đều là **ví dụ giả**.
+
+## Bốn thứ phải ghi vào sổ tay
+
+Trong lúc làm, bạn sẽ được nhắc ghi lại 4 thứ. Mở sẵn một tệp ghi chú (Notepad) để dán vào:
+
+| Tên gọi trong hướng dẫn | Ghi ở tệp nào | Là gì |
+|---|---|---|
+| **NHÓM HỌC SINH** | SP01 | Tên nhóm gom tài khoản học sinh |
+| **ĐỊA CHỈ TRANG** | SP02 | Địa chỉ trang SharePoint chứa dữ liệu |
+| **KHU LÀM VIỆC** | PA01 | Tên ngăn chứa ứng dụng trong Power Apps |
+| **ĐƯỜNG DẪN ỨNG DỤNG** | PA14 | Đường dẫn gửi cho học sinh |
 
 ## Phần A — Kho dữ liệu (SharePoint)
 
@@ -25,7 +38,7 @@ Bộ hướng dẫn này chia việc thành nhiều tệp nhỏ. Mỗi tệp ch�
 | [ ] | [SP04](sharepoint/SP04_list_CLB.md) | Tạo bảng câu lạc bộ |
 | [ ] | [SP05](sharepoint/SP05_list_HocSinh.md) | Tạo bảng học sinh |
 | [ ] | [SP06](sharepoint/SP06_list_NguyenVong.md) | Tạo bảng nguyện vọng |
-| [ ] | [SP07](sharepoint/SP07_list_ChonThi.md) | Tạo bảng chọn câu lạc bộ thi (có thể bỏ qua) |
+| [ ] | [SP07](sharepoint/SP07_list_ChonThi.md) | Tạo bảng chọn câu lạc bộ thi (bỏ qua nếu không câu lạc bộ nào thi tuyển) |
 | [ ] | [SP08](sharepoint/SP08_nap_excel.md) | Đưa danh sách học sinh, câu lạc bộ từ Excel vào |
 | [ ] | [SP09](sharepoint/SP09_phan_quyen.md) | Ai được xem, ai được sửa |
 
@@ -43,16 +56,26 @@ Bộ hướng dẫn này chia việc thành nhiều tệp nhỏ. Mỗi tệp ch�
 | [ ] | [PA08](powerapps/PA08_dang_ky_o_chon.md) | Trang đăng ký: 10 ô chọn câu lạc bộ |
 | [ ] | [PA09](powerapps/PA09_dang_ky_nut_nop.md) | Trang đăng ký: dòng báo lỗi và nút Nộp |
 | [ ] | [PA10](powerapps/PA10_man_xac_nhan.md) | Trang xác nhận đã nộp |
-| [ ] | [PA11](powerapps/PA11_man_chon_thi.md) | Trang chọn câu lạc bộ thi (có thể bỏ qua) |
+| [ ] | [PA11](powerapps/PA11_man_chon_thi.md) | Trang chọn câu lạc bộ thi (bỏ qua nếu đã bỏ SP07) |
 | [ ] | [PA12](powerapps/PA12_man_quan_tri.md) | Trang theo dõi cho giáo viên |
 | [ ] | [PA13](powerapps/PA13_man_dau_tien_va_chay_thu.md) | Chọn trang mở đầu, chạy thử |
 | [ ] | [PA14](powerapps/PA14_phat_hanh_chia_se.md) | Phát hành, gửi đường dẫn, mã QR |
 | [ ] | [PA15](powerapps/PA15_thu_3_hoc_sinh.md) | Thử với 3 học sinh, rồi dọn dẹp |
 
+## Phần C — Thêm bài thi tuyển vào ứng dụng (chỉ khi có câu lạc bộ thi tuyển)
+
+| Xong | Tệp | Việc |
+|---|---|---|
+| [ ] | [PA16](powerapps/PA16_bieu_mau_va_bai_thi.md) | Phiếu đăng ký và bài thi trắc nghiệm ngay trong ứng dụng: bảng câu hỏi, bảng đáp án, trang làm bài, nút chấm điểm |
+
 ## Thứ tự bắt buộc
 
-Làm xong Phần A trước rồi mới sang Phần B. Riêng PA15 cần SP09 đã xong.
+- Làm xong Phần A rồi mới sang Phần B.
+- PA15 cần SP09 đã xong.
+- PA16 cần SP07 và PA11 đã xong (không được bỏ qua hai tệp đó), và PA15 đã đạt.
 
 ## Khi bị kẹt
 
-Chụp **nguyên màn hình** lúc báo lỗi, ghi tên tệp và số bước (ví dụ "PA08, bước 7"), gửi cho người phụ trách.
+1. Chụp **nguyên màn hình** lúc báo lỗi (phím `Windows` + `Shift` + `S`, kéo chuột quanh cả màn hình).
+2. Ghi tên tệp và số bước, ví dụ "PA08, bước 7".
+3. Gửi ảnh và dòng ghi đó cho người phụ trách.

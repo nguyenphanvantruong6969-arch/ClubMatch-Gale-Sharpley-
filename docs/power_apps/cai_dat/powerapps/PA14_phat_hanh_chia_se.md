@@ -2,56 +2,101 @@
 
 [← PA13](PA13_man_dau_tien_va_chay_thu.md) · Tiếp theo: [PA15](PA15_thu_3_hoc_sinh.md)
 
+**Cần có:** NHÓM HỌC SINH (SP01 phần D), thư điện tử các giáo viên phụ trách.
+
 ## Phần 1 — Phát hành
 
-1. Bấm `Ctrl` + `S`.
-2. Bấm «Publish» (hình mũi tên lên, góc trên phải, cạnh nút lưu).
-3. Nếu hỏi ghi chú phiên bản, dán:
+Phát hành là đưa bản bạn vừa làm tới người dùng. Chưa phát hành thì chỉ mình bạn thấy.
+
+1. Ở màn hình thiết kế, bấm `Ctrl` + `S`.
+2. Ở đầu bên phải thanh lệnh có một hàng biểu tượng nhỏ. Đưa chuột vào từng biểu tượng sẽ hiện tên của nó. Bấm biểu tượng có tên «Publish» (nằm ngay bên phải biểu tượng lưu hình đĩa mềm).
+
+👀 Hiện hộp «Publish».
+
+3. Chỉ khi hộp có ô ghi chú phiên bản: bấm vào ô đó, dán:
 ```
 Ban dau
 ```
-4. Bấm «Publish this version».
+4. Bấm nút «Publish this version».
 
-👀 Thông báo đã phát hành.
+👀 Hộp đóng lại; thoáng hiện thông báo màu xanh báo đã phát hành.
 
-> **Mỗi lần sửa ứng dụng đều phải phát hành lại.** Nếu không, học sinh vẫn thấy bản cũ.
+> **Mỗi lần sửa ứng dụng đều phải làm lại bước 1 đến 4.** Nếu không, học sinh vẫn thấy bản cũ.
 
-## Phần 2 — Chia sẻ
+## Phần 2 — Chia sẻ cho học sinh
 
-5. Thanh trên bấm «Share». (Hoặc ngoài trang «Apps»: bấm «⋯» cạnh `DangKyCLB` → «Share».)
-6. Bấm vào ô nhập tên, dán tên nhóm học sinh:
+5. Cũng ở hàng biểu tượng đó, bấm biểu tượng có tên «Share» (đưa chuột vào để thấy tên).
+
+👀 Mở bảng chia sẻ, có ô nhập tên ở phía trên.
+
+6. Bấm vào ô nhập tên, dán NHÓM HỌC SINH, ví dụ:
 ```
 HS-CLB-2026
 ```
-7. Chọn nhóm hiện ra. **Không** đánh dấu «Co-owner» cho học sinh.
-8. Dán thư điện tử từng giáo viên phụ trách → chọn → **đánh dấu «Co-owner»** (được sửa ứng dụng).
-9. Bỏ đánh dấu «Send an email invitation» nếu không muốn gửi thư tự động.
-10. Nếu hiện phần nói về quyền dữ liệu SharePoint: bỏ qua (đã làm ở SP09).
-11. Bấm «Share».
+7. Bấm vào tên nhóm hiện ra ngay bên dưới ô.
 
-⚠️ Không tìm thấy nhóm: nhóm mới tạo cần vài giờ mới hiện, hoặc đó là loại nhóm chỉ để gửi thư (không dùng được). Hỏi bộ phận tin học.
+👀 Tên nhóm được thêm vào danh sách người dùng trong bảng.
 
-## Phần 3 — Lấy đường dẫn
+8. Nhìn dòng của nhóm học sinh:
+   - Có ô đánh dấu «Co-owner»: **để trống**, không đánh dấu.
+   - Có ô thả xuống quyền: chọn «User».
 
-12. Vào make.powerapps.com → cột trái bấm «Apps».
-13. Bấm «⋯» cạnh `DangKyCLB` → «Details».
-14. Dòng «Web link» → bấm «Copy».
+## Phần 3 — Chia sẻ cho giáo viên phụ trách
 
-👀 Đường dẫn có dạng `https://apps.powerapps.com/play/e/.../a/...`
+Làm lại bước 9 đến 11 cho từng giáo viên.
 
-15. Dán vào sổ tay, đặt tên **ĐƯỜNG DẪN ỨNG DỤNG**.
+9. Bấm vào ô nhập tên, dán thư điện tử của giáo viên.
+10. Bấm vào tên giáo viên hiện ra ngay bên dưới.
+11. Ở dòng của giáo viên đó: đánh dấu ô «Co-owner» (hoặc chọn «Co-owner» trong ô thả xuống quyền). Giáo viên này sẽ sửa được ứng dụng.
+12. Tìm ô đánh dấu «Send an email invitation to new users» ở cuối bảng, bấm để **bỏ** dấu tích.
+13. Bấm nút «Share» ở cuối bảng.
 
-## Phần 4 — Mã QR
+👀 Thông báo đã chia sẻ thành công. Phần nói về quyền dữ liệu («Data permissions») trong bảng: không cần đụng tới, đã làm ở SP09.
 
-16. Dùng trang tạo mã QR mà trường cho phép (hỏi bộ phận tin học nếu chưa chắc). **Chỉ dán ĐƯỜNG DẪN ỨNG DỤNG**, không nhập thông tin học sinh.
-17. Tải ảnh mã QR. In kèm dòng chữ sau:
+14. Đóng bảng chia sẻ (dấu X).
+
+⚠️ Ở bước 7, dán tên nhóm mà không hiện gì: nhóm chưa có, hoặc là loại nhóm chỉ để gửi thư. Hỏi bộ phận tin học (câu hỏi mẫu ở [SP09](../sharepoint/SP09_phan_quyen.md), Phần 2). Trong lúc chờ, để thử PA15 bạn dán thư điện tử của từng tài khoản thử thay cho tên nhóm.
+
+## Phần 4 — Lấy đường dẫn
+
+15. Mở thẻ trình duyệt mới, vào make.powerapps.com (nhìn đúng KHU LÀM VIỆC).
+16. Ở cột bên trái, bấm «Apps».
+17. Đưa chuột vào dòng `DangKyCLB`, bấm «⋯» hiện ra cạnh tên, bấm «Details».
+
+👀 Trang thông tin của ứng dụng, có dòng «Web link» kèm một đường dẫn dạng `https://apps.powerapps.com/play/e/.../a/...`
+
+18. Bôi đen cả đường dẫn ở dòng «Web link», bấm `Ctrl` + `C`.
+19. Dán vào sổ tay, đặt tên **ĐƯỜNG DẪN ỨNG DỤNG**.
+
+## Phần 5 — Kiểm trang mở đầu
+
+20. Mở thẻ trình duyệt mới, dán ĐƯỜNG DẪN ỨNG DỤNG vào thanh địa chỉ, bấm `Enter`.
+21. Chỉ khi hiện hộp xin quyền dùng SharePoint: bấm «Allow».
+
+👀 Vì bạn là giáo viên phụ trách (có trong `DSQuanTri`): ứng dụng mở thẳng **trang theo dõi**, có dòng "… / … học sinh đã nộp".
+
+⚠️ Mở ra trang báo "chưa có trong danh sách học sinh": thư điện tử của bạn trong `DSQuanTri` ([PA04](PA04_cong_thuc_app.md), bước 6) gõ sai hoặc có chữ hoa. Sửa, rồi phát hành lại (bước 1 đến 4).
+
+## Phần 6 — Mã QR
+
+22. Mở trang tạo mã QR mà trường cho phép dùng (chưa biết trang nào: hỏi bộ phận tin học).
+23. Dán ĐƯỜNG DẪN ỨNG DỤNG vào ô nhập của trang đó. **Chỉ dán đường dẫn**, không nhập bất kỳ thông tin nào của học sinh.
+24. Tải ảnh mã QR về máy.
+25. Dùng điện thoại quét thử mã vừa tải.
+
+👀 Điện thoại mở đúng ứng dụng (sau khi đăng nhập thư điện tử của trường).
+
+26. In mã QR kèm dòng chữ sau:
 ```
 Quét mã → đăng nhập bằng email trường → chọn câu lạc bộ theo thứ tự em thích.
 ```
 
 ## Học sinh mở ứng dụng thế nào
 
-- **Điện thoại:** quét mã QR → mở trong trình duyệt → đăng nhập thư điện tử của trường. Hoặc cài ứng dụng «Power Apps» từ App Store / Google Play → đăng nhập → chọn `DangKyCLB`.
+- **Điện thoại:** quét mã QR → trang mở trong trình duyệt → đăng nhập thư điện tử của trường → bấm «Allow» nếu được hỏi.
+- **Điện thoại, cách khác:** cài ứng dụng «Power Apps» từ App Store hoặc Google Play → đăng nhập thư điện tử của trường → bấm `DangKyCLB` trong danh sách.
 - **Máy tính:** mở ĐƯỜNG DẪN ỨNG DỤNG bằng Edge hoặc Chrome.
 
-- [ ] Đã phát hành, đã chia sẻ, có đường dẫn và mã QR.
+- [ ] Đã phát hành.
+- [ ] Đã chia sẻ cho nhóm học sinh và giáo viên phụ trách.
+- [ ] Có ĐƯỜNG DẪN ỨNG DỤNG và mã QR; trang mở đầu đúng.

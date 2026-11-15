@@ -4,13 +4,18 @@
 
 Trang này hiện khi thư điện tử đăng nhập không có trong bảng học sinh.
 
-1. Cây bên trái: bấm `conKhung_KhongCoTen`.
-2. Thêm một ô chữ («+ Insert» → «Text label»).
-3. Đổi tên ô chữ thành:
+Các chữ THÊM, ĐỔI TÊN, ĐIỀN MỤC: xem đầu tệp [PA05](PA05_tao_man_hinh_va_khung.md).
+
+1. Cây bên trái: bấm mũi tên cạnh `scrKhongCoTen` để mở ra, rồi bấm `conKhung_KhongCoTen`.
+2. THÊM ô chữ (dán vào ô tìm):
+```
+Text label
+```
+3. ĐỔI TÊN ô chữ vừa thêm thành:
 ```
 lblKhongCoTen
 ```
-4. Điền các mục:
+4. Bấm `lblKhongCoTen` ở cây bên trái, rồi ĐIỀN 5 MỤC sau:
 
 **«Text»** — dán:
 ```
@@ -32,6 +37,8 @@ If(LaPhone, 18, 16)
 ```
 Color.DarkRed
 ```
+
+👀 Trên trang ở giữa có dòng chữ đỏ sẫm, bắt đầu bằng "Email" kèm thư điện tử của chính bạn, chữ tự xuống dòng trong khung.
 
 5. Bấm `Ctrl` + `S`.
 

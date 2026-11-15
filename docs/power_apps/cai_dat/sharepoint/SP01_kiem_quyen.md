@@ -2,67 +2,88 @@
 
 [← Mục lục](../00_MUC_LUC.md) · Tiếp theo: [SP02](SP02_tao_site.md)
 
-**Cần có:** máy tính có trình duyệt Edge hoặc Chrome, địa chỉ thư điện tử của trường (dạng `ten@truong.edu.vn`).
+**Cần có:** máy tính có trình duyệt Edge hoặc Chrome, địa chỉ thư điện tử của trường (dạng `ten@truong.edu.vn`) và mật khẩu.
 
 ## A. Tài khoản của trường
 
-1. Mở trình duyệt. Bấm vào thanh địa chỉ ở trên cùng, dán:
+1. Mở trình duyệt Edge hoặc Chrome.
+2. Bấm vào thanh địa chỉ (ô dài nằm trên cùng cửa sổ), dán:
 ```
 https://www.office.com
 ```
-2. Bấm `Enter`.
-3. Bấm «Sign in» (Đăng nhập).
-4. Gõ thư điện tử của trường, bấm «Next».
-5. Gõ mật khẩu, bấm «Sign in».
-6. Nếu hỏi «Stay signed in?»: máy dùng chung bấm «No», máy riêng bấm «Yes».
+3. Bấm phím `Enter`.
+4. Bấm nút «Sign in» ở giữa trang. (Nếu trang mở ra đã có tên bạn ở góc trên bên phải thì bạn đã đăng nhập sẵn: nhảy tới dòng 👀.)
+5. Gõ thư điện tử của trường vào ô đang nhấp nháy.
+6. Bấm «Next».
+7. Gõ mật khẩu.
+8. Bấm «Sign in».
+9. Trang hỏi «Stay signed in?»: máy dùng chung bấm «No», máy riêng bấm «Yes».
 
-👀 Trang chủ Microsoft 365, có tên hoặc ảnh của bạn ở góc trên bên phải.
+👀 Trang chủ Microsoft 365. Góc trên bên phải có hình tròn mang ảnh hoặc chữ cái đầu tên bạn.
+
+⚠️ Báo sai mật khẩu hoặc tài khoản bị khoá: liên hệ bộ phận tin học của trường. Không làm tiếp được khi chưa đăng nhập.
 
 - [ ] **Đạt A**
 
 ## B. Được dùng Power Apps
 
-7. Mở thẻ mới (`Ctrl` + `T`), dán vào thanh địa chỉ:
+10. Bấm `Ctrl` + `T` để mở thẻ mới.
+11. Bấm vào thanh địa chỉ, dán:
 ```
 https://make.powerapps.com
 ```
-8. Nếu hỏi quốc gia: chọn «Vietnam», bấm «Get started».
+12. Bấm phím `Enter`.
+13. Chỉ khi hiện bảng hỏi quốc gia: bấm ô thả xuống, chọn «Vietnam», rồi bấm «Get started».
 
-👀 Trang Power Apps, cột bên trái có chữ «Home», «Create», «Apps»…
+👀 Trang Power Apps. Cột bên trái có các chữ «Home», «Create», «Apps».
 
-⚠️ Nếu hiện «You need a license» hoặc «Your organization has not enabled Power Apps»: bạn **chưa được cấp quyền**. Gửi tin nhắn ở cuối tệp này cho bộ phận tin học.
+⚠️ Hiện «You need a license» hoặc «Your organization has not enabled Power Apps»: bạn **chưa được cấp quyền**. Đánh dấu mục 1 trong tin nhắn ở cuối tệp này, gửi cho bộ phận tin học, rồi làm tiếp phần C.
 
 - [ ] **Đạt B**
 
 ## C. Được tạo trang SharePoint
 
-9. Quay lại thẻ office.com.
-10. Bấm hình **9 chấm vuông** ở góc trên bên trái → bấm «SharePoint». Không thấy thì gõ chữ `SharePoint` vào ô tìm kiếm trên cùng.
-11. Bấm «+ Create site» (chỉ để thử, chưa tạo thật).
+14. Bấm vào thẻ office.com đã mở ở phần A.
+15. Bấm hình **9 chấm vuông** ở góc trên cùng bên trái trang.
 
-👀 Hiện hộp chọn «Team site» / «Communication site» → **bạn có quyền**. Bấm dấu X để đóng lại.
+👀 Mở ra một bảng liệt kê các ứng dụng.
 
-⚠️ Không có nút «Create site», hoặc báo «Site is unavailable due to admin setting» → **bạn chưa có quyền**. Xem phần "Khi bị chặn" ở SP02.
+16. Bấm «SharePoint» trong bảng đó. Không thấy chữ «SharePoint»: bấm «More apps» (bản khác ghi «All apps» hoặc «Explore all your apps») ở cuối bảng, rồi bấm «SharePoint» trong danh sách đầy đủ.
 
-- [ ] **Đạt C**
+👀 Trang SharePoint mở ra (có thể ở thẻ mới).
+
+17. Tìm nút «+ Create site» ở phía trên bên trái trang, ngay dưới thanh màu trên cùng. Bấm vào. (Đây chỉ là bấm thử, chưa tạo gì.)
+
+👀 Hiện bảng cho chọn «Team site» và «Communication site» → **bạn có quyền**.
+
+18. Bấm dấu X ở góc trên bên phải bảng đó để đóng.
+
+⚠️ Không có nút «+ Create site», hoặc bấm vào thì báo «Site is unavailable due to admin setting» → **bạn chưa có quyền tạo trang**. Không sao: đánh dấu "chưa đạt C" và làm tiếp. [SP02](SP02_tao_site.md) có phần "Khi bị chặn".
+
+- [ ] **Đạt C** (hoặc ghi: chưa đạt C)
 
 ## D. Nhóm tài khoản học sinh (bổ sung sau cũng được)
 
-12. Hỏi bộ phận tin học: trường đã có **nhóm** gom tài khoản học sinh chưa (ví dụ "HS-Khoi10")?
-13. Có rồi: ghi tên nhóm vào sổ tay. Chưa có: xin tạo nhóm tên `HS-CLB-2026` (có trong tin nhắn mẫu bên dưới).
+Nhóm là một cái tên gom nhiều tài khoản học sinh lại, để về sau cấp quyền một lần cho tất cả.
+
+19. Hỏi bộ phận tin học câu này: "Trường đã có nhóm gom tài khoản học sinh chưa, tên nhóm là gì?"
+20. Đã có: ghi tên nhóm vào sổ tay, đặt tên là **NHÓM HỌC SINH**.
+21. Chưa có: đánh dấu mục 3 trong tin nhắn ở cuối tệp này (xin tạo nhóm tên `HS-CLB-2026`), và ghi `HS-CLB-2026` vào sổ tay làm **NHÓM HỌC SINH**.
 
 - [ ] **Đạt D** (hoặc đã gửi đề nghị)
 
 ## E. Chuẩn bị sẵn
 
-- [ ] Danh sách học sinh: Mã học sinh, Họ tên, Lớp, thư điện tử của trường, Nhóm ưu tiên (nếu có).
-- [ ] Danh sách câu lạc bộ: Mã (viết liền, không dấu, ví dụ `clb_bongro`), Tên, Số chỗ, Số chỗ ưu tiên, Nhóm ưu tiên.
-- [ ] Hạn chót nộp (ngày, giờ).
+- [ ] Danh sách học sinh, mỗi em có: mã học sinh, họ tên, lớp, thư điện tử của trường, nhóm ưu tiên (em nào không thuộc nhóm ưu tiên thì để trống).
+- [ ] Danh sách câu lạc bộ, mỗi câu lạc bộ có: mã (viết liền, không dấu, ví dụ `clb_bongro`), tên, số chỗ, số chỗ ưu tiên, nhóm ưu tiên (không có thì để trống), có thi tuyển hay không.
+- [ ] Hạn chót nộp (ngày, giờ, phút).
 - [ ] Thư điện tử của các giáo viên phụ trách.
 
 ## Tin nhắn gửi bộ phận tin học
 
-Sao chép, rồi sửa các chỗ trong ngoặc vuông `[ ]`:
+1. Sao chép cả ô xám dưới đây, dán vào thư điện tử hoặc tin nhắn.
+2. Sửa các chỗ trong ngoặc vuông `[ ]` thành thông tin thật.
+3. Xoá những dòng việc bạn **đã đạt** (ví dụ đã đạt B thì xoá dòng 1).
 
 ```
 Kính gửi bộ phận tin học trường [tên trường],
@@ -72,13 +93,13 @@ bằng Power Apps, lưu dữ liệu trên SharePoint (chỉ dùng phần có s�
 Microsoft 365 Education, không mua thêm). Nhờ anh/chị cấp cho tài khoản
 [thư điện tử của em] những mục còn thiếu dưới đây:
 
-[ ] 1. Quyền dùng Power Apps (gói "Power Apps for Microsoft 365").
-[ ] 2. Một trang SharePoint tên CLB-2026, em là chủ trang (Owner).
-       Hiện tài khoản em báo "Site is unavailable due to admin setting" khi tạo trang.
-[ ] 3. Một nhóm tên HS-CLB-2026 gồm tài khoản các học sinh tham gia.
-[ ] 4. Cho phép học sinh mở ứng dụng Power Apps trên điện thoại.
+1. Quyền dùng Power Apps (gói "Power Apps for Microsoft 365").
+2. Một trang SharePoint tên CLB-2026, em là chủ trang (Owner).
+   Hiện tài khoản em báo "Site is unavailable due to admin setting" khi tạo trang.
+3. Một nhóm bảo mật (security group) tên HS-CLB-2026 gồm tài khoản các học sinh tham gia.
+4. Cho phép học sinh mở ứng dụng Power Apps trên điện thoại.
 
 Em cần xong trước ngày [ngày]. Em cảm ơn anh/chị.
 ```
 
-**Chỉ sang SP02 khi A và B đã đạt.** Nếu thiếu C, SP02 có cách xử lý.
+**Chỉ sang SP02 khi A và B đã đạt.** Chưa đạt C thì vẫn sang SP02, làm phần "Khi bị chặn".

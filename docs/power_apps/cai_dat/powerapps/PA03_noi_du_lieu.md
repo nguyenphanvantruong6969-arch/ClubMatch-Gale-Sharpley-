@@ -2,27 +2,42 @@
 
 [← PA02](PA02_tao_app.md) · Tiếp theo: [PA04](PA04_cong_thuc_app.md)
 
-**Cần có:** đã tạo các bảng ở SP04 đến SP07; có ĐỊA CHỈ TRANG.
+**Cần có:** đã tạo các bảng ở SP04 đến SP07; có ĐỊA CHỈ TRANG; đang ở màn hình thiết kế của `DangKyCLB`.
 
-1. Ở màn hình thiết kế, dải biểu tượng dọc bên trái: bấm hình **cái trụ** («Data»).
-2. Bấm «+ Add data».
-3. Bấm vào ô tìm kiếm, dán:
+(Đã đóng màn hình thiết kế: mở make.powerapps.com → cột trái bấm «Apps» → đưa chuột vào dòng `DangKyCLB` → bấm hình cây bút «Edit».)
+
+1. Trên thanh lệnh, bấm «Add data».
+
+👀 Mở một bảng nhỏ có ô tìm kiếm «Search».
+
+2. Bấm vào ô tìm kiếm đó, dán:
 ```
 SharePoint
 ```
-4. Bấm «SharePoint» (biểu tượng chữ S màu xanh lá).
-5. Nếu hiện «+ Add a connection»: bấm vào → chọn «Connect directly (cloud services)» → «Connect». Nếu hỏi cho phép: bấm «Allow».
-6. Ở bảng «Connect to a SharePoint site»:
-   - Thấy `CLB-2026` trong «Recent sites»: bấm vào.
-   - Không thấy: bấm vào ô nhập địa chỉ, dán ĐỊA CHỈ TRANG → bấm «Connect».
-7. Đánh dấu các bảng: `CLB`, `HocSinh`, `NguyenVong`, và `ChonThi` (nếu có).
-8. Bấm «Connect».
+3. Bấm dòng «SharePoint» (biểu tượng chữ S trên nền xanh lá) trong kết quả.
+4. Chỉ khi hiện dòng «Add a connection» (hoặc «+ Add a connection»): bấm dòng đó; bên phải mở khung, để nguyên lựa chọn «Connect directly (cloud services)», bấm «Connect».
+5. Chỉ khi hiện hộp xin quyền: bấm «Allow».
 
-👀 Khung bên trái liệt kê đủ tên các bảng.
+👀 Bên phải mở khung «Connect to a SharePoint site».
 
-9. Bấm `Ctrl` + `S`.
+6. Bấm vào ô «Enter the SharePoint URL…» ở đầu khung, dán ĐỊA CHỈ TRANG.
+7. Bấm «Connect».
 
-⚠️ Không thấy bảng: bấm biểu tượng mũi tên vòng tròn để làm mới; kiểm tra đúng trang, đúng tài khoản.
-⚠️ Một bảng hiện thành `CLB_1`: bạn đã nối hai lần. Bấm «⋯» cạnh tên thừa → «Remove».
+👀 Khung đổi thành «Choose a list», liệt kê các bảng trong trang, mỗi bảng có một ô đánh dấu.
 
-- [ ] Đủ tên các bảng trong khung bên trái.
+8. Bấm đánh dấu ô `CLB`.
+9. Bấm đánh dấu ô `HocSinh`.
+10. Bấm đánh dấu ô `NguyenVong`.
+11. Có bảng `ChonThi` (đã làm SP07): bấm đánh dấu ô `ChonThi`.
+12. Bấm «Connect» ở cuối khung.
+13. Ở dải biểu tượng dọc sát mép trái màn hình, bấm hình **cái trụ tròn** (tên «Data»).
+
+👀 Khung bên trái liệt kê `CLB`, `HocSinh`, `NguyenVong` (và `ChonThi`).
+
+14. Bấm `Ctrl` + `S`.
+15. Ở dải biểu tượng dọc, bấm biểu tượng trên cùng («Tree view») để quay lại cây bên trái.
+
+⚠️ Ở bước 8, không thấy tên bảng trong danh sách: ĐỊA CHỈ TRANG dán sai. Bấm mũi tên quay lại ở đầu khung, làm lại bước 6. Vẫn không thấy: tài khoản đang đăng nhập Power Apps khác tài khoản đã tạo bảng.
+⚠️ Ở bước 13, một bảng hiện thành `CLB_1`: bạn đã nối bảng đó hai lần. Đưa chuột vào dòng `CLB_1` → bấm «⋯» → «Remove».
+
+- [ ] Khung «Data» có đủ tên các bảng, không có tên nào mang đuôi `_1`.

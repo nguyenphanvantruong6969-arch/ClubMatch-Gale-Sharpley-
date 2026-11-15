@@ -127,8 +127,9 @@ ClearCollect(colCLB, SortByColumns(CLB, "name"))
 
 ### 3.3. `App.StartScreen`
 ```
-If(LaQuanTri, scrQuanTri, IsBlank(varHS), scrKhongCoTen, scrDangKy)
+If(LaQuanTri, scrQuanTri, IsBlank(LookUp(HocSinh, email = Lower(User().Email))), scrKhongCoTen, scrDangKy)
 ```
+> `StartScreen` được tính **trước khi** `OnStart` chạy xong, nên không dùng được biến `varHS` (lúc đó còn trống); phải tra thẳng bảng `HocSinh`. `LaQuanTri` là công thức đặt tên nên dùng được.
 
 ---
 

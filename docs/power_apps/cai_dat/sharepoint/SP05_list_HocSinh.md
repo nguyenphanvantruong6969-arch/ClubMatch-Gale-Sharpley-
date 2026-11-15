@@ -2,6 +2,8 @@
 
 [← SP04](SP04_list_CLB.md) · Tiếp theo: [SP06](SP06_list_NguyenVong.md)
 
+Làm lần lượt từng bước. T1 đến T5 là các thao tác ở [SP03](SP03_thao_tac_list_co_ban.md).
+
 **Bước 1 — Làm T1.** Tên bảng:
 ```
 HocSinh
@@ -12,22 +14,22 @@ HocSinh
 student_id
 ```
 
-**Bước 3 — Làm T3.** Loại «Single line of text», **Bắt buộc**. Tên cột (họ tên):
+**Bước 3 — Làm T3.** Loại: **Chữ ngắn**, **Bắt buộc**. Tên cột (họ tên):
 ```
 name
 ```
 
-**Bước 4 — Làm T3.** Loại «Single line of text». Tên cột (lớp):
+**Bước 4 — Làm T3.** Loại: **Chữ ngắn**. Tên cột (lớp):
 ```
 class_id
 ```
 
-**Bước 5 — Làm T3.** Loại «Single line of text», **Bắt buộc**. Tên cột (thư điện tử):
+**Bước 5 — Làm T3.** Loại: **Chữ ngắn**, **Bắt buộc**. Tên cột (thư điện tử):
 ```
 email
 ```
 
-**Bước 6 — Làm T3.** Loại «Single line of text». Tên cột (nhóm được ưu tiên):
+**Bước 6 — Làm T3.** Loại: **Chữ ngắn**. Tên cột (nhóm được ưu tiên):
 ```
 reserve_group
 ```
@@ -42,9 +44,12 @@ reserve_group
 
 ## Kiểm tra
 
-- [ ] Các cột theo đúng thứ tự: `student_id`, `name`, `class_id`, `email`, `reserve_group`.
+👀 Hàng tên cột của bảng `HocSinh`, đọc từ trái sang phải: `student_id`, `name`, `class_id`, `email`, `reserve_group`.
+
+- [ ] Đủ 5 cột, đúng tên, đúng thứ tự.
 
 ## Lưu ý
 
-- Ứng dụng nhận ra học sinh **qua thư điện tử lúc đăng nhập**. Thư điện tử trong bảng phải viết **chữ thường** và đúng từng chữ.
+- Ứng dụng nhận ra học sinh **qua thư điện tử lúc đăng nhập**. Thư điện tử trong bảng phải viết **chữ thường** và đúng từng chữ. SP08 có bước làm sạch.
 - Học sinh không có trong bảng này thì không nộp được.
+- Bảng này để trống, chưa điền gì. Dữ liệu sẽ đưa vào ở [SP08](SP08_nap_excel.md).
