@@ -96,7 +96,9 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 | lead | session_01YVAytzZ86RjYnNn3aTHjZY | Sonnet medium | active (all Sonnet medium, Truong 2026-11-14) |
 | writer L4 | session_01YVAyu1Gjsgbsp1AtoyQ8mu | Sonnet medium | archived |
 | checker L4 | session_01YVAytziarxgVP2ttMTk2LY | Sonnet medium | archived |
-| lead L5 | (this session) | Sonnet medium | active |
+| lead L5 | session_01YVAyu2GQZcAWLnBkzjQFwa | Sonnet medium | active |
+| writer L5 | session_01YVAytzPQwmCph4tHz5hnUR | Sonnet medium | active |
+| checker L5 | session_01YVAyu1NyBNoy8DMPNpoLfb | Sonnet medium | waiting |
 
 ## Needs Truong (never built automatically)
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
