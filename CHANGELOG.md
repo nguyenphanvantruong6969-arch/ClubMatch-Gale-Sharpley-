@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased / tài liệu — chưa có mã (chờ Truong)
+
+Tài liệu vận hành, không đổi mã: `docs/power_apps/HUONG_DAN_POWER_APPS_DANG_KY.md` (hướng dẫn kỹ thuật dựng app đăng ký CLB trên Power Apps) và `docs/power_apps/HUONG_DAN_CAI_DAT_MOI_TRUONG.md` (hướng dẫn cài đặt môi trường từng bước cho người không chuyên). Không có test mới.
+
 ## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả
