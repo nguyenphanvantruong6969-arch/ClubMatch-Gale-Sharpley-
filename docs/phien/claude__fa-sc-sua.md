@@ -148,3 +148,5 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 **Workspace cũ:** lần chạy đầu sau khi nâng cấp dùng cách tính cũ rồi mới lưu, kèm một cảnh báo; không có gì đổi âm thầm. CHANGELOG ghi: chạy lại sau khi đổi danh sách học sinh nay KHÁC các lần chạy lại cũ (chủ ý).
 **Cần Truong:** (1) xác nhận cách diễn đạt bất biến 3 mở rộng sang thứ tự theo ngày; (2) dấu vân tay FA-9 KHÔNG gồm thứ tự theo ngày (đã ghi và có test) — chấp nhận hay muốn gồm?; (3) `tests/test_a13_13_kiem_nhan.py::test_F1` đã lỗi sẵn từ trước L5 (`du_lieu_test/su_co/chung.py` thiếu `"wharton": False`), không do L5 — cần một lô riêng.
 **Nhật ký AI:** lead + 2 writer (writer đầu bàn giao ở 200k token) + 1 checker, đều Claude Sonnet medium; checker kiểm độc lập (test, drill, so sánh giống hệt, thử rollback). Số liệu là mô phỏng; không có kết luận báo cáo nào do AI viết.
+- 2026-11-15 (Truong "ok"): invariant 3 now also covers the per-day order (`stb_buoi`); FA-9 fingerprint keeps
+  excluding per-day orders (as built). PR claude/fa-sc-sua -> main approved.
