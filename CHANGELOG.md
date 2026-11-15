@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
+
+Chỉ tài liệu, mã không đổi. Đối chiếu góp ý vòng trước với kho mã và chia việc cho 3 nhóm tự động (mỗi nhóm: Opus dẫn,
+Sonnet viết, Sonnet soát), chạy đến khi xong và CI xanh. Quyết định D-GT1…D-GT9 của Truong (15/11/2026), gồm duyệt đổi
+cấu trúc CSDL (quy tắc 7) cho `ma_tra_cuu`, `run_history.loai_chay`, `ket_qua_thu`, `tai_khoan`, `nhat_ky_thao_tac`.
+- Mới: `docs/ke_hoach/GT_KE_HOACH.md`, `docs/ke_hoach/gt/GT1_GIAI_TRINH.md`, `GT2_TIEU_CHI.md`, `GT3_QUYEN_TAI_LIEU.md`,
+  `docs/phien/GT_GIAO_THUC.md`, `docs/phien/claude__determined-allen-kig6ud.md`.
+- Test mới: không có (chỉ tài liệu).
+
 ## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả
