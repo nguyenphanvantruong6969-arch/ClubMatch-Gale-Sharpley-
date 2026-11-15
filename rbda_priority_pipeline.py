@@ -2663,7 +2663,7 @@ def dau_van_tay_du_lieu(cur, rules=None) -> str:
     buổi), ô tick thi, điểm CÒN TICK (đúng tập `load_from_sqlite` dùng),
     nguyện vọng.
 
-    KHÔNG gồm: số bốc thăm (chỉ lần chạy đổi được nó — tính vào thì mỗi lần
+    KHÔNG gồm: số bốc thăm (kể cả thứ tự từng buổi lưu trong bảng `stb_buoi`; chỉ lần chạy đổi được nó — tính vào thì mỗi lần
     chạy vẽ bổ sung cho em mới là tự báo "dữ liệu đã đổi"), và TÊN học sinh /
     tên CLB (tệp kết quả nối tên lúc xuất, sửa chính tả tên không làm kết quả
     nào cũ đi).
