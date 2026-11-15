@@ -58,6 +58,7 @@ Trong lúc làm, bạn sẽ được nhắc ghi lại 4 thứ. Mở sẵn một 
 | [ ] | [PA10](powerapps/PA10_man_xac_nhan.md) | Trang xác nhận đã nộp |
 | [ ] | [PA11](powerapps/PA11_man_chon_thi.md) | Trang chọn câu lạc bộ thi (bỏ qua nếu đã bỏ SP07) |
 | [ ] | [PA12](powerapps/PA12_man_quan_tri.md) | Trang theo dõi cho giáo viên |
+| [ ] | [PA17](powerapps/PA17_lam_dep.md) | Làm đẹp: màu trường, logo, phông chữ, bo góc, biểu tượng, hiệu ứng (làm sau PA12, trước PA13) |
 | [ ] | [PA13](powerapps/PA13_man_dau_tien_va_chay_thu.md) | Chọn trang mở đầu, chạy thử |
 | [ ] | [PA14](powerapps/PA14_phat_hanh_chia_se.md) | Phát hành, gửi đường dẫn, mã QR |
 | [ ] | [PA15](powerapps/PA15_thu_3_hoc_sinh.md) | Thử với 3 học sinh, rồi dọn dẹp |
@@ -71,6 +72,7 @@ Trong lúc làm, bạn sẽ được nhắc ghi lại 4 thứ. Mở sẵn một 
 ## Thứ tự bắt buộc
 
 - Làm xong Phần A rồi mới sang Phần B.
+- PA17 làm sau PA12 (và sau PA16 nếu có), trước PA13.
 - PA15 cần SP09 đã xong.
 - PA16 cần SP07 và PA11 đã xong (không được bỏ qua hai tệp đó), và PA15 đã đạt.
 

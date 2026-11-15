@@ -1,6 +1,6 @@
 # PA12 — Trang theo dõi cho giáo viên
 
-[← PA11](PA11_man_chon_thi.md) · Tiếp theo: [PA13](PA13_man_dau_tien_va_chay_thu.md)
+[← PA11](PA11_man_chon_thi.md) · Tiếp theo: [PA17](PA17_lam_dep.md) (làm đẹp), rồi [PA13](PA13_man_dau_tien_va_chay_thu.md)
 
 Thêm 6 thứ vào `conKhung_QuanTri`, đúng thứ tự: số đã nộp, nút làm mới, tiêu đề, danh sách chưa nộp, bảng đếm, nút mở bảng.
 
