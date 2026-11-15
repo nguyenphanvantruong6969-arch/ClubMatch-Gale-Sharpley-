@@ -151,11 +151,12 @@ def ghi_tep(dot, thu_muc, de, loai, phieu_dang_ky_them=(), phieu_thi_them=(), an
     return so_clb, tep_dk, tep_thi
 
 
-def mo_kiosk(thu_muc, **luat):
-    """Kiosk trên CSDL tạm, FA-DAA bật (cần wharton bật)."""
+def mo_kiosk(thu_muc, fa_daa=True, **luat):
+    """Kiosk trên CSDL tạm. Mặc định FA-DAA bật (cần wharton bật); fa_daa=False tắt cả hai, tường minh."""
     db = os.path.join(thu_muc, "app.db")
     api = PipelineAPI(db)
-    ch.ghi_cau_hinh(db, {"rules": dict({"wharton": True, "fa_daa": True}, **luat)})
+    goc = {"wharton": True, "fa_daa": True} if fa_daa else {"wharton": False, "fa_daa": False}
+    ch.ghi_cau_hinh(db, {"rules": dict(goc, **luat)})
     return api, db
 
 
