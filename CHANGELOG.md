@@ -1827,3 +1827,7 @@ Số đo chính (dữ liệu mô phỏng):
 - 5.000 HS, 10 CLB: `run_rbda` 0,18 s; `verify_stability` 2,09 s (≈92 % thời gian kiểm tra); 0 cặp phá vỡ.
 - Tiếp tục DA từ trạng thái cũ: khớp chạy lại 38/38 lần.
 - Sổ 33 mục: 29 đúng, 3 khác (Z1, Z4, Z6), 1 sai (C1).
+
+## CI song song (FA-SC, Truong 2026-11-15)
+- `.github/workflows/tests.yml`: bộ test Linux chia 4 phần chạy song song (`.github/chia_test.py`, chia tất định theo kích thước tệp, tệp giao diện nặng ×4), Windows chia 2; job `do-phu` gộp độ phủ (vẫn ≥ 85 %). Mỗi phần chạy lại TRƯỚC các test hỏng ở lần chạy trước của nhánh (`--lf`, cache). Không thư viện mới; mã sản phẩm không đổi.
+- `pyproject.toml`: bỏ `.github/*` khỏi đo độ phủ.

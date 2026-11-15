@@ -31,9 +31,15 @@ jobs:
       - run: pip install "ruff>=0.6,<1"
       - run: ruff check .
 
+  # Bo test chia 4 phan chay song song (.github/chia_test.py, chia tat dinh theo kich thuoc tep):
+  # truoc day mot may chay noi tiep 51-73 phut. Moi phan ghi do phu rieng; job "do-phu" gop lai.
   test-linux:
-    name: Bo test day du + giao dien that (Linux)
+    name: Bo test day du + giao dien that (Linux ${{ matrix.phan }}/4)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        phan: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,10 +52,30 @@ jobs:
       # xanh ma khong kiem gi ve giao dien.
       - name: Cai Chromium cho Playwright
         run: python -m playwright install --with-deps chromium
+      # Chay lai TRUOC cac test hong o lan chay truoc cua nhanh nay: biet ban sua dung chua sau vai phut.
+      - name: Lay danh sach test hong lan truoc
+        uses: actions/cache@v4
+        with:
+          path: .pytest_cache
+          key: pytest-lf-${{ github.head_ref || github.ref_name }}-${{ matrix.phan }}-${{ github.run_id }}
+          restore-keys: pytest-lf-${{ github.head_ref || github.ref_name }}-${{ matrix.phan }}-
+      - name: Chay lai test hong lan truoc (nhanh)
+        run: |
+          # exit 5 = khong co test hong nao de chay lai (lan dau, hoac lan truoc xanh): bo qua
+          python -m pytest -q --lf --lfnf=none $(python .github/chia_test.py ${{ matrix.phan }} 4) || [ $? -eq 5 ]
       - name: Chay test (kem do phu)
-        run: python -m pytest -q --cov --cov-report=term
+        env:
+          COVERAGE_FILE: .coverage.phan${{ matrix.phan }}
+        run: python -m pytest -q --cov --cov-report= $(python .github/chia_test.py ${{ matrix.phan }} 4)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: do-phu-${{ matrix.phan }}
+          path: .coverage.phan${{ matrix.phan }}
+          include-hidden-files: true
       # Chan truong hop Chromium cai hong ma test giao dien lang le bo qua.
       - name: Soat khong co test giao dien nao bi bo qua
+        if: matrix.phan == 1
         run: |
           python -m pytest -q -rs tests/test_giao_dien_upload.py > ket_qua.txt || true
           cat ket_qua.txt
@@ -58,9 +84,31 @@ jobs:
             exit 1
           fi
 
+  do-phu:
+    name: Do phu gop (>= 85 %)
+    needs: test-linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install "coverage[toml]>=7"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: do-phu-*
+          merge-multiple: true
+      - run: |
+          python -m coverage combine .coverage.phan*
+          python -m coverage report
+
   test-windows:
-    name: Bo test (Windows)
+    name: Bo test (Windows ${{ matrix.phan }}/2)
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        phan: [1, 2]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -75,4 +123,5 @@ jobs:
           # python-docx: các test sinh tệp Forms (.docx) chạy THẬT trên Windows (PR #14, Truong chọn), không bỏ qua
           pip install "pytest>=8.0,<10" "pillow>=10.0,<13" "python-docx>=1.1,<2"
       - name: Chay test
-        run: python -m pytest -q
+        shell: bash
+        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 2)
