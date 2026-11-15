@@ -1354,6 +1354,48 @@ def sinh_stb_theo_buoi(
     return ra
 
 
+def stb_theo_buoi_da_khoa(
+    stb_goc: dict[str, int], ds_buoi: list[str], seed: int, che_do: str,
+    da_khoa: Optional[dict[str, dict[str, int]]] = None,
+) -> dict[str, dict[str, int]]:
+    """Bộ số bốc thăm từng buổi, GIỮ thứ tự đã khoá ở lần chạy trước (FA-SC-L5, bảng `stb_buoi`).
+
+    `da_khoa=None` hoặc rỗng -> đúng `sinh_stb_theo_buoi` (lần chạy đầu, CSDL cũ chưa lưu, hoặc vừa vẽ lại): kết quả
+    lần đầu GIỐNG HỆT từng byte cách cũ. Một buổi, hay chế độ khác `stb_ngay`: cũng đúng cách cũ, không lưu gì.
+
+    Có `da_khoa[buoi]` thì buổi đó: em cũ (còn trong `stb_goc`) giữ thứ tự tương đối đã lưu; em mới được CHÈN ĐỀU bằng
+    `chen_stb_cho_hoc_sinh_moi`, seed `_seed_cua_buoi(seed, buoi)`; em đã xoá chỉ biến mất, không ai bị đánh lại số
+    (khi không có em mới thì giữ nguyên số đã lưu). Buổi chưa từng lưu (buổi mới xuất hiện) tính như cách cũ.
+    Vì sao: cách cũ hoán vị VỊ TRÍ của cả dàn nên thêm một em là các em cũ đổi chỗ ở mọi buổi (d12 20/51, d16 18/38).
+    """
+    if not da_khoa or che_do != "stb_ngay" or len(ds_buoi) <= 1:
+        return sinh_stb_theo_buoi(stb_goc, ds_buoi, seed, che_do)
+    ra: dict[str, dict[str, int]] = {}
+    for buoi in ds_buoi:
+        luu = da_khoa.get(buoi)
+        if not luu:
+            ra[buoi] = sinh_stb_theo_buoi(stb_goc, [buoi, "_"], seed, che_do)[buoi]
+            continue
+        cu = [s for s in sorted(luu, key=lambda s: (luu[s], s)) if s in stb_goc]
+        moi = sorted(set(stb_goc) - set(cu))
+        if moi:
+            ra[buoi] = chen_stb_cho_hoc_sinh_moi(cu, moi, _seed_cua_buoi(seed, buoi))
+        else:
+            ra[buoi] = {s: luu[s] for s in cu}
+    return ra
+
+
+def doc_stb_buoi(cur) -> dict[str, dict[str, int]]:
+    """{buoi: {student_id: so}} đã lưu trong `stb_buoi` ({} nếu bảng chưa có hoặc rỗng)."""
+    ra: dict[str, dict[str, int]] = {}
+    try:
+        for buoi, sid, so in cur.execute("SELECT buoi, student_id, so FROM stb_buoi"):
+            ra.setdefault(buoi, {})[sid] = so
+    except Exception:
+        return {}
+    return ra
+
+
 def _stb_co_bu(stb_goc: dict[str, int], so_clb_da_co: dict[str, int]) -> dict[str, int]:
     """Đánh lại bộ số cho một buổi: em đang có ÍT CLB hơn được lên trước.
 
@@ -1390,6 +1432,8 @@ class KetQuaTuan:
     ds_buoi: list[str] = field(default_factory=list)
     che_do_boc_tham: str = CHE_DO_BOC_THAM_MAC_DINH
     stb_theo_buoi: dict[str, dict[str, int]] = field(default_factory=dict)
+    # Thứ tự GỐC của MỌI buổi (kể cả buổi không chạy lần này) — thứ `api` lưu vào `stb_buoi` (FA-SC-L5).
+    stb_tat_ca_buoi: dict[str, dict[str, int]] = field(default_factory=dict)
 
     @property
     def rounds_run(self) -> int:
@@ -1429,6 +1473,7 @@ def run_rbda_nhieu_buoi(
     tier_rank: Optional[dict[str, int]] = None,
     bo_qua_du_tru: bool = False,
     diem_wharton: Optional[dict[str, dict[str, int]]] = None,
+    stb_buoi_da_khoa: Optional[dict[str, dict[str, int]]] = None,
 ) -> KetQuaTuan:
     """Xếp CLB cho cả tuần: cắt theo buổi, gọi run_rbda từng buổi, ghép lại.
 
@@ -1499,13 +1544,14 @@ def run_rbda_nhieu_buoi(
 
     # Bộ số bốc thăm sinh từ TOÀN BỘ danh sách buổi, không phải danh sách đã
     # lọc — xem phần "BẤT BIẾN QUAN TRỌNG NHẤT" ở docstring.
-    stb_tinh = sinh_stb_theo_buoi(
-        stb_lottery, ds_buoi_tat_ca, seed, che_do_boc_tham)
+    stb_tinh = stb_theo_buoi_da_khoa(
+        stb_lottery, ds_buoi_tat_ca, seed, che_do_boc_tham, stb_buoi_da_khoa)
 
     ket = KetQuaTuan(
         assignment={sid: {} for sid in students},
         ds_buoi=ds_buoi,
         che_do_boc_tham=che_do_boc_tham,
+        stb_tat_ca_buoi=stb_tinh,
     )
     so_clb_da_co: dict[str, int] = {sid: 0 for sid in students}
 
@@ -2453,6 +2499,15 @@ def di_tru_schema(db_path: str) -> list[str]:
                     "WHERE is_locked = 1")
             da_lam.append("stb_lock.seed")
 
+        # 8. `stb_buoi` (FA-SC-L5) — bảng MỚI, rỗng. CSDL đã khoá từ bản cũ để rỗng: lần chạy kế tiếp tính như bản cũ
+        #    rồi mới lưu (xem `stb_theo_buoi_da_khoa`), không ai bị xáo lặng lẽ.
+        if "stb_buoi" not in co_bang:
+            sao_luu_truoc_khi_sua()
+            cur.execute(
+                "CREATE TABLE IF NOT EXISTS stb_buoi (buoi TEXT NOT NULL, student_id TEXT NOT NULL, "
+                "so INTEGER NOT NULL, PRIMARY KEY (buoi, student_id))")
+            da_lam.append("stb_buoi")
+
         conn.commit()
     finally:
         conn.close()
@@ -2608,7 +2663,7 @@ def dau_van_tay_du_lieu(cur, rules=None) -> str:
     buổi), ô tick thi, điểm CÒN TICK (đúng tập `load_from_sqlite` dùng),
     nguyện vọng.
 
-    KHÔNG gồm: số bốc thăm (chỉ lần chạy đổi được nó — tính vào thì mỗi lần
+    KHÔNG gồm: số bốc thăm (kể cả thứ tự từng buổi lưu trong bảng `stb_buoi`; chỉ lần chạy đổi được nó — tính vào thì mỗi lần
     chạy vẽ bổ sung cho em mới là tự báo "dữ liệu đã đổi"), và TÊN học sinh /
     tên CLB (tệp kết quả nối tên lúc xuất, sửa chính tả tên không làm kết quả
     nào cũ đi).

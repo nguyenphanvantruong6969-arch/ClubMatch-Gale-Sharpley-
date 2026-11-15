@@ -17,7 +17,8 @@ from rbda_priority_pipeline import (
     BUOI_MAC_DINH,
     CHE_DO_BOC_THAM_MAC_DINH,
     sap_buoi,
-    sinh_stb_theo_buoi,
+    doc_stb_buoi,
+    stb_theo_buoi_da_khoa,
     so_thu_trong_tuan,
 )
 
@@ -607,10 +608,11 @@ class BaoCaoMixin:
         đúng bảng này. Có test canh việc hai tiến trình khác nhau ra cùng
         kết quả.
 
-        TÍNH LẠI, KHÔNG LƯU THÊM. Không có bảng mới trong cơ sở dữ liệu,
-        không phải di trú gì. Hàm dẫn xuất là tất định nên tính lại cho
-        đúng bộ số mà lần chạy đã dùng — lưu thêm một bản sao chỉ tạo ra
-        cơ hội cho hai bản trôi khỏi nhau.
+        ĐỌC THỨ TỰ ĐÃ LƯU (FA-SC-L5). Từ khi có bảng `stb_buoi`, thứ tự từng
+        buổi của lần chạy được LƯU cùng giao dịch với kết quả, và bảng này đọc
+        đúng bản đó (`stb_theo_buoi_da_khoa`) — vì sau khi thêm em muộn, thứ
+        tự dẫn xuất lại từ bộ số gốc không còn là thứ đã dùng. Chưa lưu (CSDL
+        cũ chưa chạy lại) thì tính lại như trước, đúng với lần chạy đã có.
 
         DÙNG CHẾ ĐỘ ĐÃ GHI TRONG NHẬT KÝ, KHÔNG DÙNG CHẾ ĐỘ HIỆN TẠI. Một
         cơ sở dữ liệu đã chạy bằng bản trước (ghi 'stb_tuan') mà hiển thị
@@ -643,6 +645,7 @@ class BaoCaoMixin:
                 tat_ca = dict(cur.execute(
                     "SELECT student_id, stb_number FROM students "
                     "WHERE stb_number IS NOT NULL").fetchall())
+                da_khoa = doc_stb_buoi(cur)      # FA-SC-L5: thứ tự từng buổi lần chạy đã LƯU (rỗng = tính lại như cũ)
 
             if meta is None or not tat_ca:
                 return _ok({"ds_buoi": ds_buoi, "hoc_sinh": [], "seed": None,
@@ -651,7 +654,7 @@ class BaoCaoMixin:
 
             seed = meta["seed"]
             che_do = meta["che_do_boc_tham"] or CHE_DO_BOC_THAM_MAC_DINH
-            theo_buoi = sinh_stb_theo_buoi(tat_ca, ds_buoi, seed, che_do)
+            theo_buoi = stb_theo_buoi_da_khoa(tat_ca, ds_buoi, seed, che_do, da_khoa)
 
             hoc_sinh = [
                 {

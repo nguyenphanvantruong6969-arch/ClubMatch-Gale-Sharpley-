@@ -1,5 +1,99 @@
 # CHANGELOG
 
+## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả
+với danh sách trường + `can_xu_ly` + `bao_cao_clb` bật, HEAD trước lô và sau lô: 10 tệp, 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., phieu_lop=False)` và cờ `--phieu-lop`: thư mục `PHIEU_XAC_NHAN_LOP/`, mỗi lớp một tệp `<lớp>.xlsx`, mỗi em MỘT khối:
+  nguyện vọng đã lưu từng ngày (kèm huy chương), ba huy chương, bài thi nhận được và "Tính" / "Không tính — lý do" (không tick thi,
+  không xếp CLB đó, bài lần hai bị bỏ, xếp CLB Tuyển chọn mà chưa nhận bài). Lớp lấy từ danh sách trường (L1) hoặc cột lớp của phiếu;
+  em chưa có lớp vào tệp "Chưa có lớp". Không điểm (cả điểm của chính em), không số bốc thăm, không email, không dữ liệu lớp khác.
+  Hàm mới `lap_phieu_lop`, `ghi_phieu_lop`. Kết quả có thêm khoá `phieu_lop`. Chỉ là báo cáo (bất biến 2).
+- Test mới: `tests/test_fa_sc_l4_phieu_lop.py` (9 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 297 tệp, 6.255 ca.
+
+## 2026-11-14 — FA-SC-L3 (FA-SC-4b, kế hoạch P1-4): báo cáo theo CLB cho giáo viên CLB
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường
+và `--day-du`, và `chuyen_fa_daa` trên đợt giả, ở HEAD trước lô này: 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., bao_cao_clb=False)` và cờ `--bao-cao-clb` (cần tệp bài thi): thư mục `BAO_CAO_CLB/`, mỗi CLB có đề thi một tệp
+  `<club_id>.xlsx` (hai sheet: "Phiếu thi bị bỏ" = email không có trong danh sách đăng ký đã làm bài CLB này; "Chưa có bài thi" =
+  mã em xếp CLB Tuyển chọn này mà chưa có bài). Không điểm, không số bốc thăm, không dữ liệu CLB khác. Hàm mới `lap_bao_cao_clb`,
+  `ghi_bao_cao_clb`; `phan_tich_chi_thi(..., bo_phieu=None)` ghi lại CLB của phiếu bị bỏ (chỉ khi được yêu cầu). Kết quả có thêm
+  khoá `bao_cao_clb`. Chỉ là báo cáo (bất biến 2).
+- Test mới: `tests/test_fa_sc_l3_bao_cao_clb.py` (6 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 296 tệp, 6.246 ca.
+
+## 2026-11-14 — FA-SC-L2 (FA-SC-4, kế hoạch P1-2): sheet "Cần xử lý" trong BANG_DIEM.xlsx
+
+Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (so `demo_t4m.py` thường
+và `--day-du` ở HEAD trước lô này: 42 tệp, 0 khác; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., can_xu_ly=False)` và cờ `--can-xu-ly` (cần tệp bài thi): hàm mới `lap_can_xu_ly` gom thành dòng việc
+  [(mã, vấn đề, ai xử lý, việc cần làm)] — làm bài CLB này mà chưa thi CLB em xếp (hai cảnh báo rời gộp MỘT dòng, nêu cả hai CLB);
+  chỉ làm bài không xếp / chỉ chưa thi; có bài mà không tick thi; bài thi gửi từ email ngoài danh sách (dòng nêu email, gửi quản
+  trị viên); CLB Tự do đứng trước CLB Tuyển chọn em đã thi; giữ chỗ em không xếp CLB đó (gửi giáo viên CLB). `ghi_bang_diem(...,
+  can_xu_ly=None)` thêm sheet "Cần xử lý" (Mã HS, Họ tên, Vấn đề, Ai xử lý, Việc cần làm); kết quả có thêm khoá `can_xu_ly`. Sheet
+  "Cảnh báo" và danh sách cảnh báo giữ nguyên. Chỉ là báo cáo, không đi vào Sổ nhập hay khoá ưu tiên.
+- Từ rà soát L1: `doi_chieu_danh_sach_truong` báo một dòng khi một email có ở hai mã trong danh sách trường (trước đây lặng lẽ lấy mã đầu).
+- `du_lieu_test/su_co/chung.py`: `chay(..., can_xu_ly=False)`; d04, d06, d07 thêm dòng "FA-SC L2" (số cũ không đổi): d06 hai cảnh báo
+  -> một dòng, d04 một dòng nêu email lạ + một dòng của em, d07 một dòng Tự do đứng trước Tuyển chọn.
+- Test mới: `tests/test_fa_sc_l2_can_xu_ly.py` (9 ca).
+- Chưa làm (cần Truong): "đổi nguyện vọng sau giờ thi" (phiếu đăng ký không có giờ nộp, cần đổi biểu mẫu); d05 (so tên gõ với tên danh
+  sách cần câu hỏi lớp/họ tên trong biểu mẫu thi).
+
+## 2026-11-14 — FA-SC-L1 (FA-SC-6, kế hoạch P1-1): danh sách học sinh của trường làm đầu vào bộ chuyển đổi
+
+Chỉ bộ chuyển đổi (`mau_forms_thi_clb/`), kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte
+(so `demo_t4m.py` thường và `--day-du`, và một đợt đường B 120 em giả; `kiem_nhanh` 7/7, 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `chuyen_fa_daa(..., danh_sach_truong=CSV)` và cờ `--danh-sach-truong` (chỉ đường B): CSV `student_id, class_id[, email]` đọc bằng
+  `danh_sach_chua_dang_ky.doc_danh_sach_truong` (hàm mới, `LoiDanhSach` nếu thiếu cột / rỗng). Hàm mới
+  `doi_chieu_danh_sach_truong`: mã gõ không có trong danh sách → một dòng cảnh báo; danh sách có cột email → thay mã gõ nhầm
+  bằng mã của danh sách và báo chỗ khác (nên mã trùng bạn không còn làm kiosk từ chối); hai email cùng một mã → một dòng nêu
+  cả hai email; `class_id` điền vào cột Lớp có sẵn của Sổ nhập (cột Sổ nhập không đổi). Hàm `ghi_chua_dang_ky` ghi
+  `CHUA_DANG_KY.xlsx` (sheet "Chưa đăng ký" theo lớp, sheet "Thiếu ngày"); kết quả có thêm khoá `bao_cao_danh_sach`. Chỉ là báo cáo
+  và điền lớp, không đổi điểm hay thứ hạng.
+- `du_lieu_test/su_co/chung.py`: `chay(..., danh_sach_truong=None)`, `danh_sach_that`, `ghi_danh_sach` (mặc định TẮT; số cũ của
+  d01–d14 không đổi). d01, d02, d03, d14 thêm các dòng "[có danh sách trường]": d03(a) không còn bị kiosk chặn, d14 từ 120/120
+  em không lớp xuống 0/120, d01 và d02 có em trong báo cáo.
+- Test mới: `tests/test_fa_sc_l1_danh_sach.py` (7 ca).
+- Chưa làm (cần Truong): đường A (CSV List) chưa dùng được với danh sách trường (báo lỗi rõ); chưa nối vào tab "Chuẩn bị đợt".
+## 2026-11-15 — FA-SC-L5 (FA-SC-10 / P2-1, Truong duyệt 15/11 kể cả bảng mới `stb_buoi`): khoá thứ tự bốc thăm THEO NGÀY
+
+Sửa mã sản phẩm (kiosk). Mọi số liệu là MÔ PHỎNG. Cấu hình mặc định giữ từng byte lần chạy ĐẦU: `kiem_nhanh --co-so origin/main
+--so-seed 20` = 7/7, 60/60 trùng khít.
+- **Việc**: lần chạy đầu gọi đúng `sinh_stb_theo_buoi` rồi LƯU thứ tự từng ngày vào bảng mới `stb_buoi(buoi, student_id, so)`
+  (cùng giao dịch với kết quả; `run_history` không đụng). Lần chạy sau giữ thứ tự tương đối của em cũ ở MỌI ngày và chèn đều em
+  mới từng ngày (`stb_theo_buoi_da_khoa` → `chen_stb_cho_hoc_sinh_moi`, seed `_seed_cua_buoi(seed, buoi)`). Ba nơi đọc cùng một
+  nguồn: lần chạy (`run_rbda_nhieu_buoi`, tham số mới `stb_buoi_da_khoa=None` = cách cũ), `get_so_boc_tham_theo_buoi`, vòng 2
+  (`_du_lieu_vong_2`). Một buổi hoặc chế độ khác `stb_ngay`: không lưu, không đổi.
+- **Thay đổi hành vi có chủ ý — chạy lại với danh sách học sinh đã đổi giờ cho kết quả KHÁC lần chạy lại của bản cũ**: bản cũ
+  hoán vị VỊ TRÍ cả dàn nên thêm một em là em cũ đổi chỗ ở mọi ngày (d12: 20 em cũ đổi CLB → 1; d16: 18 → 0). Chạy lại KHÔNG đổi
+  danh sách thì vẫn giống hệt.
+- **Workspace cũ** (đã khoá, chưa có `stb_buoi`): lần chạy đầu sau khi nâng cấp tính ĐÚNG như bản cũ (không ai bị xáo lặng lẽ), lưu
+  thứ tự đó, và bước bốc thăm ghi `stb_buoi_luu_lan_dau`. Không bao giờ dựng lại âm thầm. "Vẽ lại" (`force_redraw_stb`) xoá thứ tự
+  cũ, lập lại từ bộ số mới, ghi `stb_buoi_ve_lai` (+ `run_history.stb_redrawn = 1` như trước). Xoá học sinh: bỏ dòng của em đó,
+  không đánh lại số ai. `reset_data`: xoá bảng.
+- **Schema**: `stb_buoi` tạo bằng `di_tru_schema` (bước 8; sao lưu `.bak-` trước, chạy lại không làm gì); cố ý KHÔNG nằm trong
+  `DEFAULT_SCHEMA` để mọi CSDL cũ đi qua đường di trú có sao lưu.
+- **Dấu vân tay (FA-9)**: KHÔNG gồm thứ tự từng ngày (cùng lý do với số bốc thăm gốc: đó là kết quả của lần chạy, không phải dữ
+  liệu đầu vào); ghi rõ trong docstring `dau_van_tay_du_lieu` và có test canh.
+- Tệp: `rbda_priority_pipeline.py`, `api.py`, `api_bao_cao.py`, `api_sau_xep.py`, `api_quan_ly.py`, `fa_daa.py`,
+  `i18n_errors.py` (+ `i18n_loi.js` sinh lại), `docs/ke_hoach/CLAUDE_CHI_TIET.md` (hàng `tests/`).
+- Test mới: `tests/test_fa_sc_l5_khoa_so_theo_ngay.py` (62 ca: lần đầu giống cũ × 20 seed, thứ tự em cũ giữ nguyên, phân bố đều
+  χ², xoá, vẽ lại, di trú, CSDL cũ, một buổi, dấu vân tay, báo cáo bốc thăm).
+- Cần Truong xác nhận: lời hứa bất biến 3 nay mở rộng sang thứ tự TỪNG NGÀY (xem `docs/phien/claude__fa-sc-sua.md`).
+
+## 2026-11-14 — FA-SC (mục mới ngoài sổ, Truong duyệt D-SC1): sự cố do con người, phần nghiên cứu
+
+Chỉ tài liệu và kịch bản diễn tập; **không sửa mã sản phẩm**, không test mới. Mọi số liệu là MÔ PHỎNG (120 học sinh giả).
+- `docs/fable/06_CRISIS_MEMO.md`: danh mục 48 sự cố phía học sinh + 13 phía giáo viên/IT (điểm S/O/D là giả định), kết quả 16
+  diễn tập, bảng phương án, đề xuất FA-SC-1…9 (chưa mục nào được duyệt), quyết định chờ D-SC2…7.
+- `docs/fable/06b_SO_TAY_SU_CO.md`: bản nháp sổ tay sự cố cho IT và giáo viên.
+- `du_lieu_test/su_co/`: `chung.py`, `d01`…`d16`, `chay_tat_ca.py`, `README.md` (chỉ đọc mã sản phẩm, tất định theo `--seed`).
+- `docs/phien/claude__fable-fa-sc.md`: bàn giao nhánh.
+- `docs/fable/07_FA_SC_FIX_PLAN.md`: kế hoạch sửa đề xuất (3 pha, chưa duyệt) và `du_lieu_test/su_co/thu_p1_khoa_so_theo_ngay.py`
+  (bản thử trong tiến trình: khoá thứ tự theo ngày thì d12 còn 1 em cũ đổi CLB thay vì 20, d16 còn 0 thay vì 18; số mô phỏng).
+- Phát hiện cần Truong quyết (D-SC7, chưa sửa gì): chế độ `stb_ngay` tính lại thứ tự bốc thăm theo ngày của mọi em khi số học
+  sinh đổi (`sinh_stb_theo_buoi`); một em đến muộn không tranh chỗ vẫn làm 18–38 em cũ đổi CLB trong dữ liệu giả 120 em.
+
 ## 2026-11-14 — SG-1 … SG-12: sửa sau đợt soát giao diện toàn kiosk (ba người song song, gộp ở claude/sg-sua)
 
 Đặc tả: `docs/ke_hoach/SOAT_GIAO_DIEN_KE_HOACH.md` (D1 = A, D2 = b, D3 = NULL đã duyệt). Cách chạy: `docs/ke_hoach/SG_SONG_SONG.md`
@@ -1733,3 +1827,7 @@ Số đo chính (dữ liệu mô phỏng):
 - 5.000 HS, 10 CLB: `run_rbda` 0,18 s; `verify_stability` 2,09 s (≈92 % thời gian kiểm tra); 0 cặp phá vỡ.
 - Tiếp tục DA từ trạng thái cũ: khớp chạy lại 38/38 lần.
 - Sổ 33 mục: 29 đúng, 3 khác (Z1, Z4, Z6), 1 sai (C1).
+
+## CI song song (FA-SC, Truong 2026-11-15)
+- `.github/workflows/tests.yml`: bộ test Linux chia 4 phần chạy song song (`.github/chia_test.py`, chia tất định theo kích thước tệp, tệp giao diện nặng ×4), Windows chia 2; job `do-phu` gộp độ phủ (vẫn ≥ 85 %). Mỗi phần chạy lại TRƯỚC các test hỏng ở lần chạy trước của nhánh (`--lf`, cache). Không thư viện mới; mã sản phẩm không đổi.
+- `pyproject.toml`: bỏ `.github/*` khỏi đo độ phủ.

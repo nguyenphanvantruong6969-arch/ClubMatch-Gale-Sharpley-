@@ -460,6 +460,14 @@ MESSAGES = {
         "vi": "Số bốc thăm đã khoá nên được dùng lại, không bốc thăm mới.",
         "en": "Lottery numbers were already locked, so they were reused.",
     },
+    "stb_buoi_ve_lai": {
+        "vi": "Đã vẽ lại bộ số: thứ tự bốc thăm đã khoá của từng ngày bị xoá và lập lại từ bộ số mới.",
+        "en": "The lottery was redrawn: the locked order of every day was cleared and rebuilt from the new numbers.",
+    },
+    "stb_buoi_luu_lan_dau": {
+        "vi": "Thứ tự bốc thăm từng ngày được tính như các lần chạy trước (kết quả không bị xáo) và lưu lại từ lần này; các lần sau giữ nguyên thứ tự đã lưu.",
+        "en": "The order of each day was worked out the same way as in earlier runs (nothing was reshuffled) and is now stored; later runs keep the stored order.",
+    },
     "rbda_done": {
         "vi": "Hoàn tất sau {rounds} vòng, không có lỗi.",
         "en": "Finished in {rounds} round(s) with no errors.",

@@ -121,7 +121,11 @@ def test_kiosk_co_lop_bat_buoc_chon_truoc_khi_luu(mo):
     page.select_option("#kioskLop", "10A1")
     page.locator("#btnSubmitPreferences").click()
     page.wait_for_function("() => document.getElementById('preferencesFeedback').textContent.trim() !== ''")
-    ds = {r["student_id"]: r["class_id"] for r in api.list_students_admin("", 1, 50)["data"]["rows"]}
+    for _ in range(50):                          # chờ lần lưu ghi xong vào CSDL (phản hồi có thể hiện trước khi ghi)
+        ds = {r["student_id"]: r["class_id"] for r in api.list_students_admin("", 1, 50)["data"]["rows"]}
+        if ds["HS2"]:
+            break
+        page.wait_for_timeout(100)
     assert ds["HS2"] == "10A1"
     assert not loi, loi
 

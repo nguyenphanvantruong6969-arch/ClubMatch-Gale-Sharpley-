@@ -1670,6 +1670,7 @@ class QuanLyMixin:
                 cur.execute("DELETE FROM preferences WHERE student_id = ?", (student_id,))
                 cur.execute("DELETE FROM club_scores WHERE student_id = ?", (student_id,))
                 cur.execute("DELETE FROM ket_qua_truoc WHERE student_id = ?", (student_id,))
+                cur.execute("DELETE FROM stb_buoi WHERE student_id = ?", (student_id,))   # FA-SC-L5: không đánh lại số
                 cur.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
             return _ok({"student_id": student_id, "deleted": True})
         except Exception as e:
@@ -1755,6 +1756,7 @@ class QuanLyMixin:
                 # cu — de lai thi tep "thay doi" so voi hoc sinh da xoa.
                 cur.execute("DELETE FROM ket_qua_truoc")
                 cur.execute("DELETE FROM dau_van_tay_chay")
+                cur.execute("DELETE FROM stb_buoi")      # FA-SC-L5: mở khoá STB thì thứ tự từng buổi cũng bỏ
 
                 # Mở khoá STB. Bỏ bước này thì lần chạy sau đi vào nhánh "đã
                 # khoá" và ghi nhật ký là "tái sử dụng STB" cho một bộ số bốc
