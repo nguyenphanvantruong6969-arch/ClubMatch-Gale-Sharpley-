@@ -16,6 +16,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - [x] L2 FA-SC-4 sheet "Cần xử lý" (P1-2) — bca5941, checker NO BUGS b1d956b
 - [x] L3 FA-SC-4b per-club dropped-response report (P1-4) — 7c3d3b3, checker NO BUGS 35e4938
 - [x] L4 FA-SC-2 per-class confirmation sheet (P1-3) — db28790, checker NO BUGS 0c81390
+- [ ] L5 FA-SC-10 per-day lottery lock (P2-1; approved 2026-11-15)
 
 ### Lot L1 — roster input (FA-SC-6)
 - New optional arg on `chuyen_fa_daa` + CLI flag (e.g. `danh_sach_truong=None` / `--danh-sach-truong CSV`): the roster
@@ -55,6 +56,34 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
   include only if the plan says so as report-only; otherwise omit and put "show own score?" on Needs Truong.
 - Test: one block per student; dropped test shows reason; privacy assertions (no other class's IDs, no STB column).
 
+### Lot L5 — per-day lottery lock (FA-SC-10 = P2-1; approved by Truong 2026-11-15 incl. new table `stb_buoi`)
+- Goal: at the first run store each day's order; later runs keep earlier students' relative order on EVERY day and insert
+  newcomers uniformly per day (`chen_stb_cho_hoc_sinh_moi`, seed `_seed_cua_buoi(seed, buoi)`). Spec: plan §2 P2-1;
+  prototype `du_lieu_test/su_co/thu_p1_khoa_so_theo_ngay.py`. Schema change allowed ONLY for the new table (rule 7).
+- First run must call today's `sinh_stb_theo_buoi` unchanged → invariant 1 (`kiem_nhanh.py --co-so origin/main
+  --so-seed 20` → 7/7, 60/60). New parameter (e.g. stored orders = None) defaults to old behaviour.
+- All three readers use the stored order: the run (`run_rbda_nhieu_buoi` via `_run_pipeline_da_khoa`),
+  `get_so_boc_tham_theo_buoi` (`api_bao_cao.py`), round 2 (`_du_lieu_vong_2`, `api_sau_xep.py`).
+- Table `stb_buoi(buoi, student_id, so)` created via `di_tru_schema` (idempotent, backup first, invariant 7). Write it in
+  the SAME transaction as the run (invariant 5); `run_history` untouched (4). `force_redraw_stb` clears it and leaves a
+  trace (run_history/steps_log entry). Student deleted → others' order unchanged (no renumbering by gaps).
+- Old workspaces (lock exists, no stored order): DECISION — the first run after migration uses the legacy computation
+  exactly as old code would (so nothing moves silently), then stores that order; a visible step detail says so.
+  Never "rebuild" or reshuffle silently. Single-day / non-`stb_ngay` modes: untouched, store nothing.
+- Fingerprint (FA-9): covers per-day orders, or states plainly that it does not (writer picks; document it).
+- 7 kiem_nhan (plan): (1) 3 datasets × 20 seeds first run byte-identical; (2) property: after +k students earlier
+  students' relative order unchanged on every day; (3) newcomer per-day position uniform (chi-square over seeds);
+  (4) deletion keeps others' order; (5) redraw clears + trace; (6) migration idempotent with backup; (7) fingerprint.
+- Drills: d12 and d16 must flip (earlier students moved: d12 20/51 → ~1/1, d16 18/38 → 0/0; run via
+  `du_lieu_test/su_co/d12_*.py`, `d16_*.py`, plain, not the in-process prototype).
+- Related tests: new `tests/test_fa_sc_l5_*.py` + every tests/ file grepping stb/seed/lottery identifiers touched
+  (at least test_khoa_hat_giong, test_boc_tham, test_chen_stb_cong_bang, test_nhieu_buoi, test_api, test_data_durability,
+  test_a14_lop_backend, test_export_ket_qua, test_xuat_hoc_sinh, test_wharton_pipeline, test_a13_13_kiem_nhan,
+  test_tham_khao_verify_nhanh). Update the `tests/` row in `CLAUDE_CHI_TIET.md`.
+- CHANGELOG must say: reruns with a changed student list now differ from old reruns (intended). Invariant 3 wording
+  extended to per-day order: record in "Needs Truong" for confirmation.
+- Unclear → "Needs Truong" in this file, never wait. Interaction with G1/G3 → note only.
+
 ## Current state (overwrite each handoff)
 - Done so far: setup; L1-L4 all ticked (checker NO BUGS each). Phase 1 automatic scope COMPLETE.
 - In progress: nothing.
@@ -67,6 +96,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 | lead | session_01YVAytzZ86RjYnNn3aTHjZY | Sonnet medium | active (all Sonnet medium, Truong 2026-11-14) |
 | writer L4 | session_01YVAyu1Gjsgbsp1AtoyQ8mu | Sonnet medium | archived |
 | checker L4 | session_01YVAytziarxgVP2ttMTk2LY | Sonnet medium | archived |
+| lead L5 | (this session) | Sonnet medium | active |
 
 ## Needs Truong (never built automatically)
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
