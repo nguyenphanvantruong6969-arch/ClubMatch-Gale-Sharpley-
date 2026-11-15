@@ -44,3 +44,23 @@
 - Notes (not bugs): (a) a second-attempt entry for a club with no first test in `bai_thi` would show two rows (not reachable: the
   converter only drops a 2nd file when a 1st exists); (b) class name is used as file name after `\w- ` sanitising only, a class
   named `..` gives `...xlsx` inside the folder (harmless); (c) `ghi_phieu_lop` needs `buoi[].ma` and `cau_lac_bo[].name` in `de` (always present).
+
+## L5 — reviewed 68af423..98b8b09 — verdict: NO BUGS
+- Tests: new `test_fa_sc_l5_khoa_so_theo_ngay.py` + the 12 related files in the spec + `test_ws_nhan` -> 664 passed, 3 skipped, 1 failed.
+  The failure `test_a13_13_kiem_nhan::test_F1_script_do_tat_wharton_ro_rang` (`su_co/chung.py` lacks an explicit `"wharton": False`)
+  fails identically at base 68af423, so it is not from L5 (not touched by this diff).
+- Invariant 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` -> 7/7, 60/60 identical; ruff clean.
+- Drills (fake data, `--ra` scratch dir, base vs head): d12 old students changing club 20 -> 1; d16 18 -> 0 and per-day order of old
+  students kept 0/5 -> 5/5. Both flip as specified.
+- Invariants 3/4/5/7: first run calls `sinh_stb_theo_buoi` unchanged (`stb_theo_buoi_da_khoa` falls back when nothing stored);
+  `stb_buoi` DELETE+INSERT sits before the single `conn.commit()`; `run_history` only grows (3 rows after redraw);
+  `di_tru_schema` adds the table once, backup first, second call returns `[]`; `init_db` runs it, so old DBs get the table.
+- Rollback probe (my own, scratch): run 1 stored, +4 students, then `commit` forced to raise -> run not ok and `stb_buoi`,
+  `match_results`, `run_history`, `students` all identical to before; same for a redraw run; a normal rerun afterwards works.
+- Old-workspace rule: empty `stb_buoi` -> legacy order, results unchanged, then stored; step warning `stb_buoi_luu_lan_dau`
+  once, not repeated. Redraw clears the table and warns `stb_buoi_ve_lai`; `reset_data` leaves the table empty.
+- Readers: run (`stb_buoi_da_khoa` through `chay_fa_daa` and `run_rbda_nhieu_buoi`), `get_so_boc_tham_theo_buoi`, `_du_lieu_vong_2`
+  all call `stb_theo_buoi_da_khoa(..., doc_stb_buoi(cur))`; the report test matches the stored order.
+- Notes (not bugs): (a) a bucket that appears for the first time is computed with `sinh_stb_theo_buoi(stb_goc, [buoi, "_"], ...)`,
+  deterministic but a different stream from the all-days call; acceptable for a brand-new day. (b) Fingerprint explicitly
+  excludes per-day order (docstring updated, test present). (c) Invariant 3 wording extension is on Needs Truong already.
