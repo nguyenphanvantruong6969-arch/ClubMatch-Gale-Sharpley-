@@ -1,55 +1,147 @@
-# PA12 — Màn quản trị cho giáo viên
+# PA12 — Trang theo dõi cho giáo viên
 
-⏱ 20 phút · [← PA11](PA11_man_chon_thi.md) · Tiếp: [PA13](PA13_man_dau_tien_va_chay_thu.md)
+Mất khoảng 20 phút · [← PA11](PA11_man_chon_thi.md) · Tiếp theo: [PA13](PA13_man_dau_tien_va_chay_thu.md)
 
-Mọi control chèn trong `conKhung_QuanTri`.
+Mọi thứ thêm vào `conKhung_QuanTri`. Mỗi lần thêm: bấm `conKhung_QuanTri` ở cây bên trái trước.
 
-## 1. Label `lblQTSoLieu`
-`Size` = `26` · `Width` = `Parent.Width` · `Text` =
+## 1. Số học sinh đã nộp
+
+Thêm «Text label». Tên:
+```
+lblQTSoLieu
+```
+**«Text»**:
 ```
 CountRows(NguyenVong) & " / " & CountRows(HocSinh) & " học sinh đã nộp"
 ```
+**«Size»**:
+```
+26
+```
+**«Width»**:
+```
+Parent.Width
+```
 
-## 2. Nút `btnLamMoi`
-`Text` = `"Làm mới số liệu"` · `OnSelect` = `Refresh(NguyenVong); Refresh(HocSinh)` · `Height` = `48`
+## 2. Nút làm mới số liệu
 
-## 3. Label `lblQTChuaNop`
-`Text` = `"Học sinh chưa nộp"` · `FontWeight` = `FontWeight.Semibold`
+Thêm «Button». Tên:
+```
+btnLamMoi
+```
+**«Text»**:
+```
+"Làm mới số liệu"
+```
+**«OnSelect»**:
+```
+Refresh(NguyenVong); Refresh(HocSinh)
+```
+**«Height»**:
+```
+48
+```
 
-## 4. Gallery `galChuaNop`
-1. Chọn `conKhung_QuanTri` → **+ Insert → Vertical gallery** → nếu hỏi nguồn dữ liệu: chọn `HocSinh`.
-2. Đổi tên `galChuaNop`.
-3. Thuộc tính:
+## 3. Tiêu đề "Học sinh chưa nộp"
 
-| Thuộc tính | Dán |
-|---|---|
-| `Items` | `Filter(HocSinh, !(student_id in NguyenVong.student_id))` |
-| `WrapCount` | `If(App.Width < 900, 1, 3)` |
-| `TemplateSize` | `50` |
-| `Height` | `400` |
-| `Width` | `Parent.Width` |
+Thêm «Text label». Tên:
+```
+lblQTChuaNop
+```
+**«Text»**:
+```
+"Học sinh chưa nộp"
+```
+**«FontWeight»**:
+```
+FontWeight.Semibold
+```
 
-4. Trong gallery, bấm label đầu tiên (Title) → `Text` = `ThisItem.student_id & " – " & ThisItem.name & " (" & ThisItem.class_id & ")"`.
-5. Xoá các control thừa trong ô mẫu (subtitle, ảnh, mũi tên): chọn → **Delete**.
+## 4. Danh sách học sinh chưa nộp
 
-## 5. Gallery thống kê `galThongKe`
-1. Chèn **Vertical gallery** mới → đổi tên `galThongKe`.
-2. `Items` =
+1. «+ Insert» → dán vào ô tìm:
+```
+Vertical gallery
+```
+2. Bấm «Vertical gallery» (danh sách cuộn dọc). Nếu hỏi chọn dữ liệu: chọn `HocSinh`.
+3. Đổi tên thành:
+```
+galChuaNop
+```
+**«Items»**:
+```
+Filter(HocSinh, !(student_id in NguyenVong.student_id))
+```
+**«WrapCount»** (máy tính hiện 3 cột):
+```
+If(App.Width < 900, 1, 3)
+```
+**«TemplateSize»**:
+```
+50
+```
+**«Height»**:
+```
+400
+```
+**«Width»**:
+```
+Parent.Width
+```
+4. Bên trong danh sách, bấm vào dòng chữ đầu tiên. Mục **«Text»**:
+```
+ThisItem.student_id & " – " & ThisItem.name & " (" & ThisItem.class_id & ")"
+```
+5. Các thứ thừa trong dòng mẫu (dòng chữ thứ hai, ảnh, mũi tên): bấm vào → phím `Delete`.
+
+## 5. Bảng đếm nguyện vọng 1 theo câu lạc bộ
+
+1. Thêm «Vertical gallery» mới. Tên:
+```
+galThongKe
+```
+**«Items»**:
 ```
 AddColumns(colCLB, NV1, CountRows(Filter(NguyenVong, pref_1 = club_id)))
 ```
-3. `Height` = `400`, `Width` = `Parent.Width`, `TemplateSize` = `50`.
-4. Label trong ô mẫu: `Text` = `ThisItem.name & ":  " & ThisItem.NV1 & " NV1 / chỉ tiêu " & ThisItem.capacity`.
-   ⚠️ Bản mới có thể đòi `AddColumns(colCLB, "NV1", …)` (tên cột trong ngoặc kép) hoặc ngược lại. Báo đỏ ở `NV1` → thử dạng còn lại.
+**«Height»**:
+```
+400
+```
+**«Width»**:
+```
+Parent.Width
+```
+**«TemplateSize»**:
+```
+50
+```
+2. Bấm dòng chữ đầu tiên trong danh sách. Mục **«Text»**:
+```
+ThisItem.name & ":  " & ThisItem.NV1 & " NV1 / chỉ tiêu " & ThisItem.capacity
+```
+⚠️ Báo đỏ ở chữ `NV1` trong «Items»: dán bản này thay thế:
+```
+AddColumns(colCLB, "NV1", CountRows(Filter(NguyenVong, pref_1 = club_id)))
+```
 
-## 6. Nút `btnMoList`
-`Text` = `"Mở danh sách để xuất CSV"` · `OnSelect` (thay bằng "ĐỊA CHỈ SITE" thật):
+## 6. Nút mở bảng để tải dữ liệu về
+
+Thêm «Button». Tên:
+```
+btnMoList
+```
+**«Text»**:
+```
+"Mở danh sách để xuất CSV"
+```
+**«OnSelect»** — dán, rồi **thay phần địa chỉ** bằng ĐỊA CHỈ TRANG của bạn (giữ nguyên đuôi `/Lists/NguyenVong`):
 ```
 Launch("https://truong.sharepoint.com/sites/CLB-2026/Lists/NguyenVong")
 ```
 
-**Ctrl+S.**
+Bấm `Ctrl` + `S`.
 
-> Biểu tượng tam giác vàng (*delegation*) ở `galChuaNop`, `lblQTSoLieu`: bình thường khi ≤ 2000 học sinh (PA02 phần 5).
+> Hình tam giác vàng hiện ở vài chỗ: đây chỉ là nhắc nhở với danh sách rất dài. Trường dưới 2000 học sinh thì không sao.
 
 - [ ] Xong.

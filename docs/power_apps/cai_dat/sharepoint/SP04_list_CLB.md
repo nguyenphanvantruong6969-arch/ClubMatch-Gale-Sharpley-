@@ -1,28 +1,58 @@
-# SP04 — List `CLB`
+# SP04 — Bảng câu lạc bộ
 
-⏱ 10 phút · [← SP03](SP03_thao_tac_list_co_ban.md) · Tiếp: [SP05](SP05_list_HocSinh.md)
+Mất khoảng 10 phút · [← SP03](SP03_thao_tac_list_co_ban.md) · Tiếp theo: [SP05](SP05_list_HocSinh.md)
 
-**Cần có trước:** SP02, SP03.
+Làm lần lượt từng bước. Mỗi bước sao chép đúng chữ trong ô xám.
 
-| # | Thao tác | Tên | Kiểu | Bắt buộc | Số lẻ |
-|---|---|---|---|---|---|
-| 1 | T1 | List `CLB` | | | |
-| 2 | T2 | `club_id` | (Title) | Có | |
-| 3 | T3 | `name` | Single line of text | Có | |
-| 4 | T3 | `capacity` | Number | Có | 0 |
-| 5 | T3 | `reserve_capacity` | Number | | 0 |
-| 6 | T3 | `reserve_group` | Single line of text | | |
-| 7 | T3 | `mo_ta` | Multiple lines of text | | |
-| 8 | T3 | `co_thi` | Yes/No | | |
-| 9 | T4 | cột `club_id` | | | |
-| 10 | T5 | cột `club_id` | | | |
+**Bước 1 — Làm T1.** Tên bảng:
+```
+CLB
+```
 
-- [ ] Làm xong 10 dòng trên, theo thứ tự.
+**Bước 2 — Làm T2.** Tên mới cho cột «Title» (mã câu lạc bộ):
+```
+club_id
+```
 
-## Kiểm tra xong
-- 👀 Tiêu đề cột đúng thứ tự: `club_id, name, capacity, reserve_capacity, reserve_group, mo_ta, co_thi`. Sai thứ tự → *Column ordering* (SP03).
-- 5 cột đầu **phải** đúng thứ tự này (khớp tệp mẫu kiosk `mau_csv/05_danh_sach_club.csv`).
+**Bước 3 — Làm T3.** Loại «Single line of text», **Bắt buộc**. Tên cột (tên câu lạc bộ):
+```
+name
+```
+
+**Bước 4 — Làm T3.** Loại «Number», 0 số lẻ, **Bắt buộc**. Tên cột (số chỗ):
+```
+capacity
+```
+
+**Bước 5 — Làm T3.** Loại «Number», 0 số lẻ. Tên cột (số chỗ ưu tiên):
+```
+reserve_capacity
+```
+
+**Bước 6 — Làm T3.** Loại «Single line of text». Tên cột (nhóm được ưu tiên):
+```
+reserve_group
+```
+
+**Bước 7 — Làm T3.** Loại «Multiple lines of text». Tên cột (giới thiệu):
+```
+mo_ta
+```
+
+**Bước 8 — Làm T3.** Loại «Yes/No». Tên cột (có thi tuyển không):
+```
+co_thi
+```
+
+**Bước 9 — Làm T4** với cột `club_id`.
+
+**Bước 10 — Làm T5** với cột `club_id`.
+
+## Kiểm tra
+
+- [ ] Các cột theo đúng thứ tự: `club_id`, `name`, `capacity`, `reserve_capacity`, `reserve_group`, `mo_ta`, `co_thi`. Sai thứ tự: xem "đổi thứ tự cột" ở SP03.
 
 ## Lưu ý
-- `club_id`: không dấu, không cách, ví dụ `clb_bongro`. **Không đổi mã sau khi mở đăng ký.**
-- `reserve_capacity` nằm **trong** `capacity`, không cộng thêm.
+
+- Mã câu lạc bộ viết liền, không dấu, ví dụ `clb_bongro`. **Đã mở cho học sinh đăng ký thì không đổi mã nữa.**
+- Số chỗ ưu tiên **nằm trong** số chỗ, không cộng thêm.

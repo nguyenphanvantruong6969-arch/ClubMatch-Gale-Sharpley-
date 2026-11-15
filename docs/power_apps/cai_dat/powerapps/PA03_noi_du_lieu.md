@@ -1,23 +1,28 @@
-# PA03 — Nối app với các List
+# PA03 — Nối ứng dụng với các bảng dữ liệu
 
-⏱ 5 phút · [← PA02](PA02_tao_app.md) · Tiếp: [PA04](PA04_cong_thuc_app.md)
+Mất khoảng 5 phút · [← PA02](PA02_tao_app.md) · Tiếp theo: [PA04](PA04_cong_thuc_app.md)
 
-**Cần có trước:** List SP04–SP07 đã tạo; "ĐỊA CHỈ SITE".
+**Cần có:** đã tạo các bảng ở SP04 đến SP07; có ĐỊA CHỈ TRANG.
 
-1. Trong Studio, thanh dọc bên trái bấm biểu tượng **Data** (hình trụ ⛁).
-2. Bấm **+ Add data**.
-3. Ô tìm kiếm gõ `SharePoint`.
-4. Bấm **SharePoint** (biểu tượng chữ **S** xanh lá).
-5. Nếu hiện **+ Add a connection** → bấm → chọn **Connect directly (cloud services)** → **Connect**. Hỏi đăng nhập/cho phép → **Allow**.
-6. Khung *Connect to a SharePoint site*:
-   - Thấy `CLB-2026` trong *Recent sites* → bấm.
-   - Không thấy → dán "ĐỊA CHỈ SITE" vào ô *Enter the URL for a SharePoint site* → **Connect**.
-7. Tick: `CLB`, `HocSinh`, `NguyenVong`, `ChonThi` (nếu có).
-8. Bấm **Connect**.
-   👀 Khung Data liệt kê đủ các List.
-9. **Ctrl+S**.
+1. Ở màn hình thiết kế, dải biểu tượng dọc bên trái: bấm hình **cái trụ** («Data»).
+2. Bấm «+ Add data».
+3. Bấm vào ô tìm kiếm, dán:
+```
+SharePoint
+```
+4. Bấm «SharePoint» (biểu tượng chữ S màu xanh lá).
+5. Nếu hiện «+ Add a connection»: bấm vào → chọn «Connect directly (cloud services)» → «Connect». Nếu hỏi cho phép: bấm «Allow».
+6. Ở bảng «Connect to a SharePoint site»:
+   - Thấy `CLB-2026` trong «Recent sites»: bấm vào.
+   - Không thấy: bấm vào ô nhập địa chỉ, dán ĐỊA CHỈ TRANG → bấm «Connect».
+7. Đánh dấu các bảng: `CLB`, `HocSinh`, `NguyenVong`, và `ChonThi` (nếu có).
+8. Bấm «Connect».
 
-⚠️ List không hiện → bấm **⟳** làm mới, kiểm đúng site, đúng tài khoản.
-⚠️ Một List bị hiện tên `CLB_1` → bạn đã nối hai lần. Bấm **⋯** cạnh tên thừa → **Remove**.
+👀 Khung bên trái liệt kê đủ tên các bảng.
 
-- [ ] Đủ List trong khung Data.
+9. Bấm `Ctrl` + `S`.
+
+⚠️ Không thấy bảng: bấm biểu tượng mũi tên vòng tròn để làm mới; kiểm tra đúng trang, đúng tài khoản.
+⚠️ Một bảng hiện thành `CLB_1`: bạn đã nối hai lần. Bấm «⋯» cạnh tên thừa → «Remove».
+
+- [ ] Đủ tên các bảng trong khung bên trái.

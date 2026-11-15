@@ -1,40 +1,66 @@
-# PA09 — Màn đăng ký: báo lỗi và nút Nộp
+# PA09 — Trang đăng ký: dòng báo lỗi và nút Nộp
 
-⏱ 15 phút · [← PA08](PA08_dang_ky_o_chon.md) · Tiếp: [PA10](PA10_man_xac_nhan.md)
+Mất khoảng 15 phút · [← PA08](PA08_dang_ky_o_chon.md) · Tiếp theo: [PA10](PA10_man_xac_nhan.md)
 
-Cả hai đặt trong `conKhung_DangKy`, **dưới** `conLuoi`.
+Cả hai thêm vào `conKhung_DangKy`, nằm **dưới** `conLuoi`.
 
-## Phần 1 — Label báo lỗi `lblLoi`
-1. Cây: bấm `conKhung_DangKy` → **+ Insert → Text label** → đổi tên `lblLoi`.
-2. Thuộc tính:
+## Phần 1 — Dòng báo lỗi
 
-| Thuộc tính | Dán |
-|---|---|
-| `Text` | khối dưới |
-| `Color` | `Color.Red` |
-| `Visible` | `!IsBlank(Self.Text)` |
-| `Width` | `Parent.Width` |
-| `AutoHeight` | `true` |
+1. Cây bên trái: bấm `conKhung_DangKy` → thêm «Text label». Đổi tên thành:
+```
+lblLoi
+```
+2. Điền các mục:
 
+**«Text»** — dán:
 ```
 With({ds: Filter([ddNV1.Selected.club_id, ddNV2.Selected.club_id, ddNV3.Selected.club_id, ddNV4.Selected.club_id, ddNV5.Selected.club_id, ddNV6.Selected.club_id, ddNV7.Selected.club_id, ddNV8.Selected.club_id, ddNV9.Selected.club_id, ddNV10.Selected.club_id], !IsBlank(Value))},
   If(CountRows(ds) = 0, "Em chưa chọn CLB nào.",
      CountRows(Distinct(ds, Value)) < CountRows(ds), "Có CLB bị chọn trùng.",
      ""))
 ```
+**«Color»** — dán:
+```
+Color.Red
+```
+**«Visible»** — dán:
+```
+!IsBlank(Self.Text)
+```
+**«Width»** — dán:
+```
+Parent.Width
+```
+**«AutoHeight»** — dán:
+```
+true
+```
 
-## Phần 2 — Nút `btnNop`
-3. Cây: bấm `conKhung_DangKy` → **+ Insert → Button** → đổi tên `btnNop`.
-4. Thuộc tính:
+## Phần 2 — Nút Nộp
 
-| Thuộc tính | Dán |
-|---|---|
-| `Text` | `If(IsBlank(varNV), "Nộp nguyện vọng", "Cập nhật nguyện vọng")` |
-| `DisplayMode` | `If(HetHan || !IsBlank(lblLoi.Text), DisplayMode.Disabled, DisplayMode.Edit)` |
-| `Width` | `Parent.Width` |
-| `Height` | `48` |
-| `OnSelect` | khối dưới |
+3. Cây bên trái: bấm `conKhung_DangKy` → thêm «Button». Đổi tên thành:
+```
+btnNop
+```
+4. Điền các mục:
 
+**«Text»** — dán:
+```
+If(IsBlank(varNV), "Nộp nguyện vọng", "Cập nhật nguyện vọng")
+```
+**«DisplayMode»** — dán:
+```
+If(HetHan || !IsBlank(lblLoi.Text), DisplayMode.Disabled, DisplayMode.Edit)
+```
+**«Width»** — dán:
+```
+Parent.Width
+```
+**«Height»** — dán:
+```
+48
+```
+**«OnSelect»** (việc làm khi bấm nút) — dán:
 ```
 With({ds: Filter([ddNV1.Selected.club_id, ddNV2.Selected.club_id, ddNV3.Selected.club_id, ddNV4.Selected.club_id, ddNV5.Selected.club_id, ddNV6.Selected.club_id, ddNV7.Selected.club_id, ddNV8.Selected.club_id, ddNV9.Selected.club_id, ddNV10.Selected.club_id], !IsBlank(Value))},
   If(Now() > HanChot,
@@ -64,14 +90,16 @@ With({ds: Filter([ddNV1.Selected.club_id, ddNV2.Selected.club_id, ddNV3.Selected
       Navigate(scrXacNhan, ScreenTransition.Fade))))
 ```
 
-5. **Ctrl+S**.
+5. Bấm `Ctrl` + `S`.
 
-## Giải thích ngắn (để tự sửa khi cần)
-- Bỏ trống ô ở giữa → các lựa chọn tự **dồn lên** (`pref_1`, `pref_2`…).
-- Nộp lại → **ghi đè** đúng dòng cũ (`Coalesce(LookUp…)`), không tạo dòng mới.
-- Kiểm hạn chót **lần nữa** lúc bấm, phòng học sinh mở app từ trước hạn.
+## Nút này làm gì
 
-## Kiểm tra xong
-- [ ] Không còn gạch đỏ ở `lblLoi`, `btnNop` (trừ `scrXacNhan` nếu chưa có — đã có từ PA05).
-- ⚠️ Gạch đỏ ở `Blank()` → bật *Formula-level error management* (PA02 phần 4).
-- ⚠️ Gạch đỏ ở `student_id` / `club_id` → thay bằng `Title`.
+- Học sinh bỏ trống một ô ở giữa: các lựa chọn tự **dồn lên trên**.
+- Nộp lại lần nữa: **ghi đè** đúng phiếu cũ, không sinh phiếu mới.
+- Kiểm tra hạn chót **một lần nữa** lúc bấm, phòng trường hợp học sinh mở ứng dụng từ trước giờ hết hạn.
+
+## Kiểm tra
+
+- [ ] Không còn gạch đỏ ở `lblLoi` và `btnNop`.
+- ⚠️ Gạch đỏ ở chữ `Blank()`: bật «Formula-level error management» (PA02, Phần 4).
+- ⚠️ Gạch đỏ ở `student_id` hoặc `club_id`: thay bằng `Title`.

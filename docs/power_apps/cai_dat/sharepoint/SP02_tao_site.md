@@ -1,36 +1,44 @@
-# SP02 — Tạo SharePoint site
+# SP02 — Tạo trang chứa dữ liệu
 
-⏱ 10 phút · [← SP01](SP01_kiem_quyen.md) · Tiếp: [SP03](SP03_thao_tac_list_co_ban.md)
+Mất khoảng 10 phút · [← SP01](SP01_kiem_quyen.md) · Tiếp theo: [SP03](SP03_thao_tac_list_co_ban.md)
 
-**Cần có trước:** SP01 đạt A, B.
+**Cần có:** SP01 đạt A và B.
 
-## Đường 1 — Bạn tự tạo được (SP01 đạt C)
-1. Vào `https://www.office.com` → **ô 9 chấm** → **SharePoint**.
-2. Bấm **+ Create site**.
-3. Bấm **Team site**.
-4. Nếu hỏi mẫu (template): chọn **Standard team** → **Use template**.
-5. Ô **Site name**: gõ `CLB-2026`.
-6. Nhìn dòng **Site address** bên dưới; chép địa chỉ vào sổ tay.
-7. **Privacy settings**: chọn **Private – only members can access this site**.
-8. **Language**: để **English** hoặc **Vietnamese** (không đổi được sau).
-9. Bấm **Next** (hoặc **Create site**).
-10. Màn hỏi thêm thành viên: bấm **Finish** (thêm sau ở SP09).
-    👀 Trang chủ site, tên `CLB-2026` ở trên, menu trái *Home, Documents, Pages, Site contents…*
-    ⚠️ *Name already in use* → gõ `CLB-2026-A`.
-11. Copy nguyên địa chỉ trên thanh trình duyệt, chỉ lấy đến hết tên site, ví dụ `https://truong.sharepoint.com/sites/CLB-2026`. Dán vào sổ tay, ghi **"ĐỊA CHỈ SITE"**.
-- [ ] **Xong Đường 1**
+## Cách 1 — Tự tạo (khi SP01 đạt C)
 
-## Khi bị chặn (*Site is unavailable due to admin setting*)
-Thử lần lượt, dừng ở cách đầu tiên chạy được:
+1. Vào trang SharePoint (như SP01 bước 10) → bấm «+ Create site».
+2. Bấm «Team site».
+3. Nếu hỏi chọn mẫu: chọn «Standard team» → bấm «Use template».
+4. Bấm vào ô «Site name», dán:
+```
+CLB-2026
+```
+5. Mục «Privacy settings»: chọn «Private – only members can access this site» (chỉ thành viên mới vào được).
+6. Mục «Language»: để nguyên.
+7. Bấm «Next» (hoặc «Create site»).
+8. Màn hình hỏi thêm thành viên: bấm «Finish» (sẽ thêm sau ở SP09).
 
-| # | Cách | Thao tác | Ghi chú |
-|---|---|---|---|
-| a | Qua Microsoft Teams | Teams → **Teams** → **Join or create a team** → **Create team** → **From scratch** → **Private** → tên `CLB-2026` → kênh **General** → tab **Files** → **⋯ → Open in SharePoint** | Mỗi Team có sẵn một site. Nhiều trường chặn cả đây |
-| b | Nhờ IT tạo | Gửi tin nhắn mẫu ở SP01; xin quyền **Owner** | Chắc chắn được, phải chờ |
-| c | Nhờ giáo viên đã có site | Giáo viên đó vào site của họ → **⚙ → Site permissions** → thêm bạn làm **Owner**; bạn tạo List trong site đó | Tên site khác `CLB-2026`: chỉ cần ghi đúng "ĐỊA CHỈ SITE" |
-| d | Thử nghiệm tạm bằng Microsoft Lists cá nhân | `https://lists.live.com` hoặc ứng dụng **Lists** trong ô 9 chấm → **+ New list** → lưu vào **My lists** | **Chỉ để học và thử** với vài tài khoản. Không dùng cho 800 học sinh: list thuộc riêng bạn, khó phân quyền |
+👀 Trang mới có chữ `CLB-2026` ở trên, cột trái có «Home», «Documents», «Site contents»…
 
-- [ ] **Có "ĐỊA CHỈ SITE"** (hoặc đang dùng tạm cách d)
+⚠️ Báo tên đã có người dùng: làm lại bước 4, dán `CLB-2026-A`.
 
-## Kiểm tra xong
-- Mở lại "ĐỊA CHỈ SITE" trong tab mới → vào được trang site.
+9. Bấm vào thanh địa chỉ của trình duyệt, sao chép phần từ đầu đến hết chữ `CLB-2026`. Ví dụ: `https://truong.sharepoint.com/sites/CLB-2026`.
+10. Dán vào sổ tay, đặt tên là **ĐỊA CHỈ TRANG**. Các tệp sau sẽ cần.
+
+- [ ] **Đã có ĐỊA CHỈ TRANG**
+
+## Khi bị chặn («Site is unavailable due to admin setting»)
+
+Thử lần lượt. Cách nào được thì dừng ở đó.
+
+**Cách a — Nhờ bộ phận tin học tạo giúp.** Gửi tin nhắn mẫu ở cuối SP01. Chắc chắn được, nhưng phải chờ.
+
+**Cách b — Nhờ một giáo viên đã có trang SharePoint.** Giáo viên đó vào trang của họ → bấm hình bánh răng ⚙ ở góc trên phải → «Site permissions» → thêm bạn với quyền «Owner». Bạn dùng luôn trang đó; ĐỊA CHỈ TRANG là địa chỉ trang của họ.
+
+**Cách c — Qua Microsoft Teams.** Mở Teams → «Teams» → «Join or create a team» → «Create team» → «From scratch» → «Private» → đặt tên `CLB-2026`. Sau đó vào kênh «General» → thẻ «Files» → bấm «⋯» → «Open in SharePoint». Nhiều trường chặn cả cách này.
+
+**Cách d — Chỉ để tập làm.** Mở ứng dụng «Lists» (trong 9 chấm vuông) → «+ New list» → lưu vào «My lists». Dùng để luyện tay với vài tài khoản. **Không dùng cho cả trường**, vì bảng thuộc riêng tài khoản bạn và khó chia quyền.
+
+## Kiểm tra
+
+- [ ] Dán ĐỊA CHỈ TRANG vào một thẻ mới → mở được trang.

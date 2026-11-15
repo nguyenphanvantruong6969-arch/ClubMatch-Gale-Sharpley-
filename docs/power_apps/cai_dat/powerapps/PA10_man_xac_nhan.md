@@ -1,14 +1,35 @@
-# PA10 — Màn xác nhận
+# PA10 — Trang xác nhận đã nộp
 
-⏱ 10 phút · [← PA09](PA09_dang_ky_nut_nop.md) · Tiếp: [PA11](PA11_man_chon_thi.md)
+Mất khoảng 10 phút · [← PA09](PA09_dang_ky_nut_nop.md) · Tiếp theo: [PA11](PA11_man_chon_thi.md)
 
-Mọi control chèn trong `conKhung_XacNhan`.
+Mọi thứ dưới đây thêm vào `conKhung_XacNhan`. Mỗi lần thêm: bấm `conKhung_XacNhan` ở cây bên trái trước.
 
-## 1. Label tiêu đề `lblXNTieuDe`
-`Text` = `"Đã lưu nguyện vọng"` · `Size` = `If(LaPhone, 22, 26)` · `Width` = `Parent.Width`
+## 1. Ô chữ tiêu đề
 
-## 2. Label tóm tắt `lblXNTomTat`
-`Width` = `Parent.Width` · `AutoHeight` = `true` · `Size` = `If(LaPhone, 16, 14)` · `Text` =
+Thêm «Text label». Tên:
+```
+lblXNTieuDe
+```
+**«Text»**:
+```
+"Đã lưu nguyện vọng"
+```
+**«Size»**:
+```
+If(LaPhone, 22, 26)
+```
+**«Width»**:
+```
+Parent.Width
+```
+
+## 2. Ô chữ liệt kê các nguyện vọng
+
+Thêm «Text label». Tên:
+```
+lblXNTomTat
+```
+**«Text»**:
 ```
 "Lần lưu: " & Text(varNV.nop_luc, "dd/mm/yyyy hh:mm") & Char(10) &
 Concat(
@@ -18,13 +39,65 @@ Concat(
     !IsBlank(c)),
   k & ". " & LookUp(colCLB, club_id = c).name, Char(10))
 ```
+**«Width»**:
+```
+Parent.Width
+```
+**«AutoHeight»**:
+```
+true
+```
+**«Size»**:
+```
+If(LaPhone, 16, 14)
+```
 
-## 3. Label nhắc `lblXNNhac`
-`Text` = `"Em có thể sửa đến hạn chót. Lần lưu cuối cùng được tính."` · `Width` = `Parent.Width` · `AutoHeight` = `true`
+## 3. Ô chữ nhắc nhở
 
-## 4. Nút `btnSuaLai`
-`Text` = `"Sửa lại"` · `OnSelect` = `Navigate(scrDangKy, ScreenTransition.Fade)` · `Visible` = `!HetHan` · `Width` = `Parent.Width` · `Height` = `48`
+Thêm «Text label». Tên:
+```
+lblXNNhac
+```
+**«Text»**:
+```
+"Em có thể sửa đến hạn chót. Lần lưu cuối cùng được tính."
+```
+**«Width»**:
+```
+Parent.Width
+```
+**«AutoHeight»**:
+```
+true
+```
 
-**Ctrl+S.**
+## 4. Nút "Sửa lại"
 
-- [ ] Xong 4 control.
+Thêm «Button». Tên:
+```
+btnSuaLai
+```
+**«Text»**:
+```
+"Sửa lại"
+```
+**«OnSelect»**:
+```
+Navigate(scrDangKy, ScreenTransition.Fade)
+```
+**«Visible»**:
+```
+!HetHan
+```
+**«Width»**:
+```
+Parent.Width
+```
+**«Height»**:
+```
+48
+```
+
+Bấm `Ctrl` + `S`.
+
+- [ ] Xong 4 thứ trên.

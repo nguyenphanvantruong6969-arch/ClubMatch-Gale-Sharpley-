@@ -1,36 +1,57 @@
-# PA14 — Publish, chia sẻ, link, mã QR
+# PA14 — Phát hành, gửi đường dẫn, mã QR
 
-⏱ 15 phút · [← PA13](PA13_man_dau_tien_va_chay_thu.md) · Tiếp: [PA15](PA15_thu_3_hoc_sinh.md)
+Mất khoảng 15 phút · [← PA13](PA13_man_dau_tien_va_chay_thu.md) · Tiếp theo: [PA15](PA15_thu_3_hoc_sinh.md)
 
-## Phần 1 — Publish
-1. Studio: **Ctrl+S**.
-2. Bấm **Publish** (biểu tượng ⬆ góc trên phải, cạnh 💾).
-3. Hỏi *Version notes* → gõ `Ban dau` → **Publish this version**.
-   👀 Thông báo đã phát hành.
-> **Mỗi lần sửa app phải Publish lại**, nếu không học sinh vẫn thấy bản cũ.
+## Phần 1 — Phát hành
+
+1. Bấm `Ctrl` + `S`.
+2. Bấm «Publish» (hình mũi tên lên, góc trên phải, cạnh nút lưu).
+3. Nếu hỏi ghi chú phiên bản, dán:
+```
+Ban dau
+```
+4. Bấm «Publish this version».
+
+👀 Thông báo đã phát hành.
+
+> **Mỗi lần sửa ứng dụng đều phải phát hành lại.** Nếu không, học sinh vẫn thấy bản cũ.
 
 ## Phần 2 — Chia sẻ
-4. Thanh trên bấm **Share** (hoặc ngoài trang **Apps**: chọn `DangKyCLB` → **⋯ → Share**).
-5. Ô *Enter a name, email address, or Everyone*: gõ tên nhóm học sinh → chọn.
-6. **Không** tick *Co-owner* cho học sinh.
-7. Gõ email từng giáo viên quản trị → chọn → **tick Co-owner**.
-8. Bỏ tick **Send an email invitation** (nếu không muốn gửi thư).
-9. Hiện mục *Data permissions* cho SharePoint → bỏ qua (đã làm ở SP09).
-10. Bấm **Share**.
-    ⚠️ Không tìm thấy nhóm → nhóm mới tạo cần vài giờ để đồng bộ, hoặc đó là *danh sách phân phối* (không dùng được) → hỏi IT.
 
-## Phần 3 — Lấy link
-11. make.powerapps.com → menu trái **Apps**.
-12. Bấm **⋯** cạnh `DangKyCLB` → **Details**.
-13. Dòng **Web link** → **Copy**. 👀 Dạng `https://apps.powerapps.com/play/e/.../a/...`.
-14. Dán vào sổ tay: **"LINK APP"**.
+5. Thanh trên bấm «Share». (Hoặc ngoài trang «Apps»: bấm «⋯» cạnh `DangKyCLB` → «Share».)
+6. Bấm vào ô nhập tên, dán tên nhóm học sinh:
+```
+HS-CLB-2026
+```
+7. Chọn nhóm hiện ra. **Không** đánh dấu «Co-owner» cho học sinh.
+8. Dán thư điện tử từng giáo viên phụ trách → chọn → **đánh dấu «Co-owner»** (được sửa ứng dụng).
+9. Bỏ đánh dấu «Send an email invitation» nếu không muốn gửi thư tự động.
+10. Nếu hiện phần nói về quyền dữ liệu SharePoint: bỏ qua (đã làm ở SP09).
+11. Bấm «Share».
+
+⚠️ Không tìm thấy nhóm: nhóm mới tạo cần vài giờ mới hiện, hoặc đó là loại nhóm chỉ để gửi thư (không dùng được). Hỏi bộ phận tin học.
+
+## Phần 3 — Lấy đường dẫn
+
+12. Vào make.powerapps.com → cột trái bấm «Apps».
+13. Bấm «⋯» cạnh `DangKyCLB` → «Details».
+14. Dòng «Web link» → bấm «Copy».
+
+👀 Đường dẫn có dạng `https://apps.powerapps.com/play/e/.../a/...`
+
+15. Dán vào sổ tay, đặt tên **ĐƯỜNG DẪN ỨNG DỤNG**.
 
 ## Phần 4 — Mã QR
-15. Dùng công cụ tạo QR được trường cho phép (hỏi IT nếu không chắc). **Chỉ dán "LINK APP"**, không nhập thông tin học sinh.
-16. Tải ảnh QR, in kèm dòng: *"Quét mã → đăng nhập bằng email trường → chọn CLB."*
 
-## Cách học sinh mở
-- Điện thoại: quét QR → mở trình duyệt → đăng nhập email trường. Hoặc cài app **Power Apps** (App Store / Google Play) → đăng nhập → chọn `DangKyCLB`.
-- Laptop: mở "LINK APP" trên Edge/Chrome.
+16. Dùng trang tạo mã QR mà trường cho phép (hỏi bộ phận tin học nếu chưa chắc). **Chỉ dán ĐƯỜNG DẪN ỨNG DỤNG**, không nhập thông tin học sinh.
+17. Tải ảnh mã QR. In kèm dòng chữ sau:
+```
+Quét mã → đăng nhập bằng email trường → chọn câu lạc bộ theo thứ tự em thích.
+```
 
-- [ ] Đã Publish, Share, có LINK APP và QR.
+## Học sinh mở ứng dụng thế nào
+
+- **Điện thoại:** quét mã QR → mở trong trình duyệt → đăng nhập thư điện tử của trường. Hoặc cài ứng dụng «Power Apps» từ App Store / Google Play → đăng nhập → chọn `DangKyCLB`.
+- **Máy tính:** mở ĐƯỜNG DẪN ỨNG DỤNG bằng Edge hoặc Chrome.
+
+- [ ] Đã phát hành, đã chia sẻ, có đường dẫn và mã QR.

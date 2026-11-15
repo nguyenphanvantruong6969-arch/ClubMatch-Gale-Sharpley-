@@ -1,25 +1,50 @@
-# SP05 — List `HocSinh`
+# SP05 — Bảng học sinh
 
-⏱ 10 phút · [← SP04](SP04_list_CLB.md) · Tiếp: [SP06](SP06_list_NguyenVong.md)
+Mất khoảng 10 phút · [← SP04](SP04_list_CLB.md) · Tiếp theo: [SP06](SP06_list_NguyenVong.md)
 
-| # | Thao tác | Tên | Kiểu | Bắt buộc |
-|---|---|---|---|---|
-| 1 | T1 | List `HocSinh` | | |
-| 2 | T2 | `student_id` | (Title) | Có |
-| 3 | T3 | `name` | Single line of text | Có |
-| 4 | T3 | `class_id` | Single line of text | |
-| 5 | T3 | `email` | Single line of text | Có |
-| 6 | T3 | `reserve_group` | Single line of text | |
-| 7 | T4 | cột `student_id` | | |
-| 8 | T5 | cột `student_id` | | |
-| 9 | T4 | cột `email` | | |
-| 10 | T5 | cột `email` | | |
+**Bước 1 — Làm T1.** Tên bảng:
+```
+HocSinh
+```
 
-- [ ] Làm xong 10 dòng trên.
+**Bước 2 — Làm T2.** Tên mới cho cột «Title» (mã học sinh):
+```
+student_id
+```
 
-## Kiểm tra xong
-- 👀 Tiêu đề: `student_id, name, class_id, email, reserve_group`.
+**Bước 3 — Làm T3.** Loại «Single line of text», **Bắt buộc**. Tên cột (họ tên):
+```
+name
+```
+
+**Bước 4 — Làm T3.** Loại «Single line of text». Tên cột (lớp):
+```
+class_id
+```
+
+**Bước 5 — Làm T3.** Loại «Single line of text», **Bắt buộc**. Tên cột (thư điện tử):
+```
+email
+```
+
+**Bước 6 — Làm T3.** Loại «Single line of text». Tên cột (nhóm được ưu tiên):
+```
+reserve_group
+```
+
+**Bước 7 — Làm T4** với cột `student_id`.
+
+**Bước 8 — Làm T5** với cột `student_id`.
+
+**Bước 9 — Làm T4** với cột `email`.
+
+**Bước 10 — Làm T5** với cột `email`.
+
+## Kiểm tra
+
+- [ ] Các cột theo đúng thứ tự: `student_id`, `name`, `class_id`, `email`, `reserve_group`.
 
 ## Lưu ý
-- App nhận diện học sinh **bằng email đăng nhập**, so với cột `email`. Email phải **chữ thường**, đúng tuyệt đối.
-- Học sinh không có trong List này sẽ không nộp được.
+
+- Ứng dụng nhận ra học sinh **qua thư điện tử lúc đăng nhập**. Thư điện tử trong bảng phải viết **chữ thường** và đúng từng chữ.
+- Học sinh không có trong bảng này thì không nộp được.
