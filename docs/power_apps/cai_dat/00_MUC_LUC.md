@@ -30,6 +30,8 @@ Trong lúc làm, bạn sẽ được nhắc ghi lại 4 thứ. Mở sẵn một 
 
 ## Phần A — Kho dữ liệu (SharePoint)
 
+> **Có người quản trị Microsoft 365 của trường giúp?** Nhờ họ làm [SP00 — tệp lệnh tự động](sharepoint/SP00_tu_dong.md). Tệp lệnh làm thay toàn bộ SP02 đến SP09 (và bảng của PA16). Làm xong thì bỏ qua Phần A, sang thẳng PA01.
+
 | Xong | Tệp | Việc |
 |---|---|---|
 | [ ] | [SP01](sharepoint/SP01_kiem_quyen.md) | Kiểm tra tài khoản và quyền |

@@ -1,0 +1,4 @@
+club_id,name,capacity,reserve_capacity,reserve_group,mo_ta,co_thi
+clb_bongro,CLB Bóng rổ (giả),2,0,,Ví dụ giả,No
+clb_tienganh,CLB Tiếng Anh (giả),2,1,chinh_sach,Ví dụ giả,Yes
+clb_robot,CLB Robot (giả),2,0,,Ví dụ giả,Yes
