@@ -1,6 +1,6 @@
 # SP05 — Bảng học sinh
 
-Mất khoảng 10 phút · [← SP04](SP04_list_CLB.md) · Tiếp theo: [SP06](SP06_list_NguyenVong.md)
+[← SP04](SP04_list_CLB.md) · Tiếp theo: [SP06](SP06_list_NguyenVong.md)
 
 **Bước 1 — Làm T1.** Tên bảng:
 ```

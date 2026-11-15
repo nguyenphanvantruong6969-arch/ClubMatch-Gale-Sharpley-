@@ -1,6 +1,6 @@
 # SP06 — Bảng nguyện vọng
 
-Mất khoảng 15 phút · [← SP05](SP05_list_HocSinh.md) · Tiếp theo: [SP07](SP07_list_ChonThi.md)
+[← SP05](SP05_list_HocSinh.md) · Tiếp theo: [SP07](SP07_list_ChonThi.md)
 
 Ứng dụng sẽ tự ghi phiếu của học sinh vào bảng này. Bạn chỉ tạo cột, **không** điền gì. **Không bật Bắt buộc** cho cột nào ở bảng này.
 

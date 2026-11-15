@@ -1,6 +1,6 @@
 # PA13 — Chọn trang mở đầu, chạy thử
 
-Mất khoảng 10 phút · [← PA12](PA12_man_quan_tri.md) · Tiếp theo: [PA14](PA14_phat_hanh_chia_se.md)
+[← PA12](PA12_man_quan_tri.md) · Tiếp theo: [PA14](PA14_phat_hanh_chia_se.md)
 
 ## Phần 1 — Trang mở đầu
 

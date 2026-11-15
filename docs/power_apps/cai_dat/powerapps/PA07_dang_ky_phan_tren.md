@@ -1,6 +1,6 @@
 # PA07 — Trang đăng ký: lời chào, hạn chót, lời dặn
 
-Mất khoảng 10 phút · [← PA06](PA06_man_khong_co_ten.md) · Tiếp theo: [PA08](PA08_dang_ky_o_chon.md)
+[← PA06](PA06_man_khong_co_ten.md) · Tiếp theo: [PA08](PA08_dang_ky_o_chon.md)
 
 Thêm 3 ô chữ vào `conKhung_DangKy`. Với **mỗi** ô chữ: bấm `conKhung_DangKy` ở cây bên trái → «+ Insert» → «Text label» → đổi tên → điền các mục.
 

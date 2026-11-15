@@ -1,6 +1,6 @@
 # PA05 — Tạo các trang và khung tự co giãn
 
-Mất khoảng 20 phút · [← PA04](PA04_cong_thuc_app.md) · Tiếp theo: [PA06](PA06_man_khong_co_ten.md)
+[← PA04](PA04_cong_thuc_app.md) · Tiếp theo: [PA06](PA06_man_khong_co_ten.md)
 
 ## Phần 1 — Tạo và đặt tên trang
 

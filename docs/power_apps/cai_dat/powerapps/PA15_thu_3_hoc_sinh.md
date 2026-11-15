@@ -1,6 +1,6 @@
 # PA15 — Thử với 3 học sinh, rồi dọn dẹp
 
-Mất khoảng 30 phút · [← PA14](PA14_phat_hanh_chia_se.md) · [Mục lục](../00_MUC_LUC.md)
+[← PA14](PA14_phat_hanh_chia_se.md) · [Mục lục](../00_MUC_LUC.md)
 
 **Cần có:** 3 tài khoản trường để thử (nhờ bộ phận tin học tạo, hoặc mượn 3 em tình nguyện), đều nằm trong nhóm học sinh. Đặt mã giả `HS901`, `HS902`, `HS903`. Mọi dữ liệu ở đây đều là dữ liệu thử.
 

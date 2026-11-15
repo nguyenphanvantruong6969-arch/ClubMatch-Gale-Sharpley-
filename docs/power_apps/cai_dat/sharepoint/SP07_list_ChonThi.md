@@ -1,6 +1,6 @@
 # SP07 — Bảng chọn câu lạc bộ thi (có thể bỏ qua)
 
-Mất khoảng 10 phút · [← SP06](SP06_list_NguyenVong.md) · Tiếp theo: [SP08](SP08_nap_excel.md)
+[← SP06](SP06_list_NguyenVong.md) · Tiếp theo: [SP08](SP08_nap_excel.md)
 
 **Bỏ qua tệp này** nếu không câu lạc bộ nào thi tuyển. Khi bỏ qua thì cũng bỏ PA11.
 

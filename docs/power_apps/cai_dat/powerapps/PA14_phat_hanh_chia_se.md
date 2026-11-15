@@ -1,6 +1,6 @@
 # PA14 — Phát hành, gửi đường dẫn, mã QR
 
-Mất khoảng 15 phút · [← PA13](PA13_man_dau_tien_va_chay_thu.md) · Tiếp theo: [PA15](PA15_thu_3_hoc_sinh.md)
+[← PA13](PA13_man_dau_tien_va_chay_thu.md) · Tiếp theo: [PA15](PA15_thu_3_hoc_sinh.md)
 
 ## Phần 1 — Phát hành
 

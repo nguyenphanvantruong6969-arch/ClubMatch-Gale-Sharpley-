@@ -1,6 +1,6 @@
 # PA12 — Trang theo dõi cho giáo viên
 
-Mất khoảng 20 phút · [← PA11](PA11_man_chon_thi.md) · Tiếp theo: [PA13](PA13_man_dau_tien_va_chay_thu.md)
+[← PA11](PA11_man_chon_thi.md) · Tiếp theo: [PA13](PA13_man_dau_tien_va_chay_thu.md)
 
 Mọi thứ thêm vào `conKhung_QuanTri`. Mỗi lần thêm: bấm `conKhung_QuanTri` ở cây bên trái trước.
 

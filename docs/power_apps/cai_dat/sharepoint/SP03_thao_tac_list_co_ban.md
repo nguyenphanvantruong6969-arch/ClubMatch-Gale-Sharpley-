@@ -1,6 +1,6 @@
 # SP03 — 5 thao tác cơ bản với bảng dữ liệu
 
-Mất khoảng 10 phút · [← SP02](SP02_tao_site.md) · Tiếp theo: [SP04](SP04_list_CLB.md)
+[← SP02](SP02_tao_site.md) · Tiếp theo: [SP04](SP04_list_CLB.md)
 
 Trên SharePoint, **bảng dữ liệu** được gọi là «List». Mỗi bảng giống một trang tính Excel: mỗi dòng là một người hoặc một câu lạc bộ, mỗi cột là một thông tin.
 

@@ -1,6 +1,6 @@
 # PA06 — Trang báo "không có tên"
 
-Mất khoảng 5 phút · [← PA05](PA05_tao_man_hinh_va_khung.md) · Tiếp theo: [PA07](PA07_dang_ky_phan_tren.md)
+[← PA05](PA05_tao_man_hinh_va_khung.md) · Tiếp theo: [PA07](PA07_dang_ky_phan_tren.md)
 
 Trang này hiện khi thư điện tử đăng nhập không có trong bảng học sinh.
 

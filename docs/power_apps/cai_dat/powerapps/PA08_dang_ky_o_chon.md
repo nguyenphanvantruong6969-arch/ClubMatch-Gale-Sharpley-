@@ -1,6 +1,6 @@
 # PA08 — Trang đăng ký: 10 ô chọn câu lạc bộ
 
-Mất khoảng 30 phút · [← PA07](PA07_dang_ky_phan_tren.md) · Tiếp theo: [PA09](PA09_dang_ky_nut_nop.md)
+[← PA07](PA07_dang_ky_phan_tren.md) · Tiếp theo: [PA09](PA09_dang_ky_nut_nop.md)
 
 Làm **ô 1 thật kỹ**, chạy thử thấy đúng, rồi mới nhân ra 9 ô còn lại.
 

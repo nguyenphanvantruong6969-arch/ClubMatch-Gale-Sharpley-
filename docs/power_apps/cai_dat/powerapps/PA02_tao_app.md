@@ -1,6 +1,6 @@
 # PA02 — Tạo ứng dụng trống, chỉnh cho điện thoại và máy tính
 
-Mất khoảng 10 phút · [← PA01](PA01_dang_nhap_moi_truong.md) · Tiếp theo: [PA03](PA03_noi_du_lieu.md)
+[← PA01](PA01_dang_nhap_moi_truong.md) · Tiếp theo: [PA03](PA03_noi_du_lieu.md)
 
 ## Phần 1 — Tạo ứng dụng
 

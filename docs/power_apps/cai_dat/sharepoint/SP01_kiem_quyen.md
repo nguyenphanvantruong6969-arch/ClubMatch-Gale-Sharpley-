@@ -1,6 +1,6 @@
 # SP01 — Kiểm tra tài khoản và quyền
 
-Mất khoảng 10 phút · [← Mục lục](../00_MUC_LUC.md) · Tiếp theo: [SP02](SP02_tao_site.md)
+[← Mục lục](../00_MUC_LUC.md) · Tiếp theo: [SP02](SP02_tao_site.md)
 
 **Cần có:** máy tính có trình duyệt Edge hoặc Chrome, địa chỉ thư điện tử của trường (dạng `ten@truong.edu.vn`).
 

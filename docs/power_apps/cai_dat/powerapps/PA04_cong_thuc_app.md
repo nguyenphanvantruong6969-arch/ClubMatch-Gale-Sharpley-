@@ -1,6 +1,6 @@
 # PA04 — Điền hạn chót, số nguyện vọng, giáo viên phụ trách
 
-Mất khoảng 10 phút · [← PA03](PA03_noi_du_lieu.md) · Tiếp theo: [PA05](PA05_tao_man_hinh_va_khung.md)
+[← PA03](PA03_noi_du_lieu.md) · Tiếp theo: [PA05](PA05_tao_man_hinh_va_khung.md)
 
 ## Cách dán một đoạn cài đặt (dùng cho mọi tệp PA)
 

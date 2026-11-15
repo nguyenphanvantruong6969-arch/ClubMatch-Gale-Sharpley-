@@ -1,6 +1,6 @@
 # SP08 — Đưa danh sách học sinh và câu lạc bộ từ Excel vào
 
-Mất khoảng 20 phút · [← SP07](SP07_list_ChonThi.md) · Tiếp theo: [SP09](SP09_phan_quyen.md)
+[← SP07](SP07_list_ChonThi.md) · Tiếp theo: [SP09](SP09_phan_quyen.md)
 
 **Cần có:** đã xong SP04 và SP05.
 

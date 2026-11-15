@@ -1,6 +1,6 @@
 # PA01 — Đăng nhập và chọn đúng khu làm việc
 
-Mất khoảng 5 phút · [← SP09](../sharepoint/SP09_phan_quyen.md) · Tiếp theo: [PA02](PA02_tao_app.md)
+[← SP09](../sharepoint/SP09_phan_quyen.md) · Tiếp theo: [PA02](PA02_tao_app.md)
 
 Power Apps chia thành nhiều **khu làm việc** (trên màn hình gọi là «Environment»), giống các ngăn tủ. Ứng dụng và dữ liệu phải nằm **cùng một ngăn**. Chọn nhầm ngăn là lỗi hay gặp nhất.
 

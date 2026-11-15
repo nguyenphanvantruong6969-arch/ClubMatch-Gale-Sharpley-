@@ -1,6 +1,6 @@
 # SP04 — Bảng câu lạc bộ
 
-Mất khoảng 10 phút · [← SP03](SP03_thao_tac_list_co_ban.md) · Tiếp theo: [SP05](SP05_list_HocSinh.md)
+[← SP03](SP03_thao_tac_list_co_ban.md) · Tiếp theo: [SP05](SP05_list_HocSinh.md)
 
 Làm lần lượt từng bước. Mỗi bước sao chép đúng chữ trong ô xám.
 

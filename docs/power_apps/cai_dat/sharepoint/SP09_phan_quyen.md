@@ -1,6 +1,6 @@
 # SP09 — Ai được xem, ai được sửa
 
-Mất khoảng 20 phút · [← SP08](SP08_nap_excel.md) · Tiếp theo: [PA01](../powerapps/PA01_dang_nhap_moi_truong.md)
+[← SP08](SP08_nap_excel.md) · Tiếp theo: [PA01](../powerapps/PA01_dang_nhap_moi_truong.md)
 
 **Mục tiêu:**
 - Giáo viên phụ trách xem được tất cả.

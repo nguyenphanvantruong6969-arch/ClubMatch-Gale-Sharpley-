@@ -1,6 +1,6 @@
 # SP02 — Tạo trang chứa dữ liệu
 
-Mất khoảng 10 phút · [← SP01](SP01_kiem_quyen.md) · Tiếp theo: [SP03](SP03_thao_tac_list_co_ban.md)
+[← SP01](SP01_kiem_quyen.md) · Tiếp theo: [SP03](SP03_thao_tac_list_co_ban.md)
 
 **Cần có:** SP01 đạt A và B.
 

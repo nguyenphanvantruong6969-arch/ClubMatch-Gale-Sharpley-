@@ -1,6 +1,6 @@
 # PA09 — Trang đăng ký: dòng báo lỗi và nút Nộp
 
-Mất khoảng 15 phút · [← PA08](PA08_dang_ky_o_chon.md) · Tiếp theo: [PA10](PA10_man_xac_nhan.md)
+[← PA08](PA08_dang_ky_o_chon.md) · Tiếp theo: [PA10](PA10_man_xac_nhan.md)
 
 Cả hai thêm vào `conKhung_DangKy`, nằm **dưới** `conLuoi`.
 

@@ -1,6 +1,6 @@
 # PA10 — Trang xác nhận đã nộp
 
-Mất khoảng 10 phút · [← PA09](PA09_dang_ky_nut_nop.md) · Tiếp theo: [PA11](PA11_man_chon_thi.md)
+[← PA09](PA09_dang_ky_nut_nop.md) · Tiếp theo: [PA11](PA11_man_chon_thi.md)
 
 Mọi thứ dưới đây thêm vào `conKhung_XacNhan`. Mỗi lần thêm: bấm `conKhung_XacNhan` ở cây bên trái trước.
 

@@ -1,6 +1,6 @@
 # PA11 — Trang chọn câu lạc bộ thi (có thể bỏ qua)
 
-Mất khoảng 20 phút · [← PA10](PA10_man_xac_nhan.md) · Tiếp theo: [PA12](PA12_man_quan_tri.md)
+[← PA10](PA10_man_xac_nhan.md) · Tiếp theo: [PA12](PA12_man_quan_tri.md)
 
 **Bỏ qua** nếu không có bảng `ChonThi` (đã bỏ SP07).
 

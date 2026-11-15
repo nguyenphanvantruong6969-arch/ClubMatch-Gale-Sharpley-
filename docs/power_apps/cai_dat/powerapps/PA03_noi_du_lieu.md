@@ -1,6 +1,6 @@
 # PA03 — Nối ứng dụng với các bảng dữ liệu
 
-Mất khoảng 5 phút · [← PA02](PA02_tao_app.md) · Tiếp theo: [PA04](PA04_cong_thuc_app.md)
+[← PA02](PA02_tao_app.md) · Tiếp theo: [PA04](PA04_cong_thuc_app.md)
 
 **Cần có:** đã tạo các bảng ở SP04 đến SP07; có ĐỊA CHỈ TRANG.
 
