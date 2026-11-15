@@ -3,6 +3,7 @@
 > **Dành cho ai?** Giáo viên hoặc cán bộ IT chưa từng dùng Power Apps. Đọc từ trên xuống, làm theo từng bước, tick vào ô vuông khi xong. Không cần hỏi ai thêm.
 > **Kết quả cuối cùng:** học sinh quét mã QR, đăng ký nguyện vọng CLB trên điện thoại; giáo viên xuất dữ liệu và nạp vào phần mềm **rbda-kiosk** trên máy Windows để xếp CLB.
 > **Tài liệu kỹ thuật đi kèm:** [`HUONG_DAN_POWER_APPS_DANG_KY.md`](HUONG_DAN_POWER_APPS_DANG_KY.md) (công thức chi tiết, gọi tắt là **Tài liệu kỹ thuật**). Tài liệu này chỉ hướng dẫn thao tác; công thức nằm ở tài liệu kia.
+> **Bản tách nhỏ (mỗi tệp một việc, khuyên dùng):** [`cai_dat/00_MUC_LUC.md`](cai_dat/00_MUC_LUC.md).
 > **Lưu ý về giao diện Microsoft:** Microsoft đổi tên nút và vị trí menu khá thường xuyên, và mỗi trường có thể thấy bản khác nhau. Khi tên nút bạn thấy khác tài liệu, mình luôn ghi đường dẫn thay thế. Nếu vẫn không thấy, tìm nút có ý nghĩa tương tự hoặc dùng ô tìm kiếm của trang. Các ví dụ dưới đây là **dữ liệu giả để thử**, không phải số liệu khảo sát thật.
 
 ### Giải thích 6 từ sẽ gặp nhiều lần (đọc một lần là đủ)
