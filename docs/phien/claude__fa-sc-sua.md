@@ -16,7 +16,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - [x] L2 FA-SC-4 sheet "Cần xử lý" (P1-2) — bca5941, checker NO BUGS b1d956b
 - [x] L3 FA-SC-4b per-club dropped-response report (P1-4) — 7c3d3b3, checker NO BUGS 35e4938
 - [x] L4 FA-SC-2 per-class confirmation sheet (P1-3) — db28790, checker NO BUGS 0c81390
-- [ ] L5 FA-SC-10 per-day lottery lock (P2-1; approved 2026-11-15)
+- [x] L5 FA-SC-10 per-day lottery lock (P2-1; approved 2026-11-15) — 98b8b09, checker NO BUGS 91f3da8
 
 ### Lot L1 — roster input (FA-SC-6)
 - New optional arg on `chuyen_fa_daa` + CLI flag (e.g. `danh_sach_truong=None` / `--danh-sach-truong CSV`): the roster
@@ -98,7 +98,7 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 | checker L4 | session_01YVAytziarxgVP2ttMTk2LY | Sonnet medium | archived |
 | lead L5 | session_01YVAyu2GQZcAWLnBkzjQFwa | Sonnet medium | active |
 | writer L5 | session_01YVAytzPQwmCph4tHz5hnUR | Sonnet medium | active |
-| checker L5 | session_01YVAyu1NyBNoy8DMPNpoLfb | Sonnet medium | waiting |
+| checker L5 | session_01YVAyu1NyBNoy8DMPNpoLfb | Sonnet medium | archived |
 
 ## Needs Truong (never built automatically)
 - Phase 0 (P0-1…P0-7): wording, checklists, decisions D-SC2…D-SC7 (plan §4 has a recommendation for each).
@@ -141,3 +141,10 @@ OFF; without it the converter output is byte-identical (invariant 1). New sheets
 - D-SC7: (a) no rerun with a changed student list after announcing; then (b) build P2-1 per-day lottery lock.
 - Confirmation sheet: do NOT show the student's own score.
 - Still open: D-SC4, D-SC5, D-SC6, P2-2, P2-3, form changes (S37, change-after-test), path A roster, kiosk tab wiring.
+
+## Tổng kết L5 (2026-11-15, tiếng Việt)
+**Đã làm:** khoá thứ tự bốc thăm THEO NGÀY (bảng mới `stb_buoi`, tạo bằng `di_tru_schema`: idempotent, sao lưu trước). Lần chạy đầu dùng đúng hàm cũ → kết quả giống hệt (`kiem_nhanh` 7/7, 60/60). Lần sau: em cũ giữ thứ tự tương đối ở mọi ngày, em mới được chèn đều ngẫu nhiên. Ba nơi đọc (chạy, `get_so_boc_tham_theo_buoi`, vòng 2) đều dùng thứ tự đã lưu; ghi cùng một giao dịch với kết quả (checker đã thử ép lỗi commit: không đổi gì). `force_redraw_stb` xoá bảng và để lại cảnh báo.
+**Số đo (mô phỏng):** d12 em cũ đổi CLB 20 → 1; d16 18 → 0.
+**Workspace cũ:** lần chạy đầu sau khi nâng cấp dùng cách tính cũ rồi mới lưu, kèm một cảnh báo; không có gì đổi âm thầm. CHANGELOG ghi: chạy lại sau khi đổi danh sách học sinh nay KHÁC các lần chạy lại cũ (chủ ý).
+**Cần Truong:** (1) xác nhận cách diễn đạt bất biến 3 mở rộng sang thứ tự theo ngày; (2) dấu vân tay FA-9 KHÔNG gồm thứ tự theo ngày (đã ghi và có test) — chấp nhận hay muốn gồm?; (3) `tests/test_a13_13_kiem_nhan.py::test_F1` đã lỗi sẵn từ trước L5 (`du_lieu_test/su_co/chung.py` thiếu `"wharton": False`), không do L5 — cần một lô riêng.
+**Nhật ký AI:** lead + 2 writer (writer đầu bàn giao ở 200k token) + 1 checker, đều Claude Sonnet medium; checker kiểm độc lập (test, drill, so sánh giống hệt, thử rollback). Số liệu là mô phỏng; không có kết luận báo cáo nào do AI viết.
