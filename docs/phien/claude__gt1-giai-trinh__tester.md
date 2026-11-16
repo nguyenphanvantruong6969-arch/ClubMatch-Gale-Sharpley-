@@ -24,3 +24,16 @@ Edge cases tried: empty/None/diacritic unknown id -> `gt1_khong_co_hoc_sinh` ok;
 Bugs 1-3 fixed and covered by new tests (NO_CHOICES; gt1_lan_chay_cu; gt1_khong_tim_thay_lan_chay). On 2ccfd01:
 test_gt1_giai_trinh + test_fa_ly_do + test_fa_n1_ly_do_mot_phan + test_i18n_khoa_dc_khong_chet + test_i18n_sync
 = 72 passed; kiem_nhanh 7/7 (9 cases identical, i18n in sync, ruff clean).
+
+## L2 | reviewed de39b20..0a57c37 | verdict: 1 BUG
+OK: tests/test_giao_dien_gt1_tra_cuu.py 5 passed; `search_students(q)` / `(q, None)` unchanged (2 rows), `lop` filter ok
+(`10A1`->1, unknown->0); XSS: student name `<img src=x onerror=...>` rendered as text (no img, no handler fired,
+textContent only); EN mode: labels English, no internal codes (VI-only sentences accepted per lead); "All class"
+label is singular (cosmetic, ignore).
+Bug:
+1. `js/14_giai_trinh.js:xem/tim` — stale search response repopulates the suggestion list AFTER a student is selected,
+   so the panel holds another student's name. `xem()` clears `#gtDs` but the pending `callApiMoiNhat("gt_tim", ...)`
+   is on a different channel and still resolves. Repro (Chromium, search request delayed 1.5 s via page.route on
+   `**/__api__/search_students`): type "s" -> list shown; type "n" (slow) ; click s1 at once; after 2 s `#gtDs`
+   contains "Nguyễn Văn Ánh (s1)" and the other student's name (s2). Expected: after selecting, DOM has only the
+   chosen student (bump the `gt_tim` channel counter in `xem`, or ignore results until the next input).
