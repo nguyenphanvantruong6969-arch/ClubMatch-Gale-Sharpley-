@@ -35,12 +35,13 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 |---|---|---|---|
 | lead | session_01TGThn8ujS9oohKhbgDiJgD | claude-opus-5-5 | active |
 | writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | archived (handoff 54e8c0d, ~217k) |
-| writer 2 | session_01TGThn4KfT4gVBLHBdZiZXv | claude-sonnet-5-5 | active (waits L1 review) |
+| writer 2 | session_01TGThn4KfT4gVBLHBdZiZXv | claude-sonnet-5-5 | archived (handoff 0eedd17, ~229k) |
+| writer 3 | session_01TGThn8kaGCdSNUJwzjvqVX | claude-sonnet-5-5 | active |
 | checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | active (idle) |
 
 ## Current state (overwrite each handoff)
 - Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
-- In progress: L3 (GO L3 sent). L1 2ccfd01, L2 2d2c947 done.
+- In progress: L3 done 35a16d2, in review. L1 2ccfd01, L2 2d2c947 done.
 - Tests: none yet.
 - Open problems: none.
 
@@ -48,6 +49,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 - (none yet)
 
 ## Decisions and gotchas (keep short)
+- L3: appeal "trong N ngày" printed only when fa_khieu_nai is ON (lead accepted).
 - L1/L2: outcome sentences (fa_ly_do) are Vietnamese only; EN mode switches labels only (spec allows). L2 panel always uses latest run.
 - Decisions D-GT1…D-GT9 in the protocol §0 are final; do not ask again.
 
@@ -65,3 +67,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | 2026-11-16 | Opus lead | WRITER DONE L1 6fda292; REVIEW L1 sent; writer handoff -> writer 2 | |
 | 2026-11-16 | Opus lead | L1 fix1 2ccfd01 NO BUGS; ticked; GO L2 | |
 | 2026-11-16 | Opus lead | L2 fix1 2d2c947 NO BUGS; ticked; GO L3 | |
+| 2026-11-16 | Opus lead | WRITER DONE L3 35a16d2; REVIEW L3; writer 2 handoff -> writer 3 | |
