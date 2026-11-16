@@ -237,3 +237,57 @@ def test_browser_host_di_qua_cung_mot_cong(api, co_tk):
     co_tk("quantri")
     assert _post(base, token, "create_or_update_club", ["A", "CLB A", 5, 0, ""])["ok"]
     assert hang(api, "clubs") == 1
+
+
+# ------------------------------------------------- đọc bảng tài khoản bị hỏng (đóng khi lỗi)
+def _lam_hong_doc(monkeypatch):
+    def hong(self):
+        raise sqlite3.OperationalError("database is locked")
+    monkeypatch.setattr(PipelineAPI, "_co_tai_khoan", hong)
+
+
+def test_api_moi_tren_csdl_co_tai_khoan_doc_hong_van_chan(api, co_tk, monkeypatch):
+    co_tk(None)
+    api2 = PipelineAPI(api.db_path)             # tiến trình mới trên CSDL đã có tài khoản
+    _lam_hong_doc(monkeypatch)
+    r = api2.reset_data()
+    assert not r["ok"] and ma_loi(r) == ["gt3_can_dang_nhap"]
+    assert api2.create_or_update_club("A", "CLB A", 5, 0, "")["errors"][0]["code"] == "gt3_can_dang_nhap"
+    assert hang(api2, "clubs") == 0
+
+
+def test_doc_hong_lan_dau_khong_co_nho_coi_nhu_da_co_tai_khoan(api, monkeypatch):
+    api._co_tk_nho.clear()                      # chưa từng đọc được
+    _lam_hong_doc(monkeypatch)
+    assert ma_loi(api.get_dashboard_status()) == ["gt3_can_dang_nhap"]
+
+
+def test_doc_hong_sau_khi_da_doc_duoc_dung_ket_qua_cu(api, co_tk, monkeypatch):
+    assert api.get_dashboard_status()["ok"]       # quản trị đã đăng nhập, bộ nhớ đệm = có tài khoản
+    _lam_hong_doc(monkeypatch)
+    assert api.get_dashboard_status()["ok"]       # vẫn là phiên quản trị hợp lệ
+    api.dang_xuat()
+    assert ma_loi(api.get_dashboard_status()) == ["gt3_can_dang_nhap"]
+
+
+def test_chua_co_tai_khoan_doc_duoc_thi_bo_nho_la_false_va_hong_van_chay_nhu_cu(api, monkeypatch):
+    assert api.get_dashboard_status()["ok"]
+    assert api._co_tk_nho[api.db_path] is False
+    _lam_hong_doc(monkeypatch)
+    assert api.get_dashboard_status()["ok"]       # đã biết CSDL này chưa có tài khoản
+
+
+def test_bo_nho_theo_tung_csdl(api, co_tk, tmp_path, monkeypatch):
+    """Đổi sang CSDL khác (workspace) chưa từng đọc được thì không mượn kết quả của CSDL trước."""
+    assert api.get_dashboard_status()["ok"]
+    api.db_path = str(tmp_path / "khac.db")
+    _lam_hong_doc(monkeypatch)
+    assert api._co_tai_khoan_nho() is True
+
+
+def test_thieu_bang_tai_khoan_la_chua_co_tai_khoan(api, monkeypatch):
+    def thieu(self):
+        raise sqlite3.OperationalError("no such table: tai_khoan")
+    monkeypatch.setattr(PipelineAPI, "_co_tai_khoan", thieu)
+    assert api._co_tai_khoan_nho() is False
+    assert api.get_dashboard_status()["ok"]

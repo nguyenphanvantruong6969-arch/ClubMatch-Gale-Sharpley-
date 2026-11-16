@@ -25,7 +25,7 @@ class TaiKhoanMixin:
         # Đồng hồ tiêm được: test thay `api._dong_ho` bằng đồng hồ giả.
         self._dong_ho = time.monotonic
         self._dang_nhap = tk.TrangThaiDangNhap(lambda: self._dong_ho())
-        self._co_tk_cuoi = False       # kết quả đọc gần nhất, dùng khi CSDL tạm không đọc được (cổng L2)
+        self._co_tk_nho = {}           # {đường dẫn CSDL: có tài khoản?} — lần đọc thành công gần nhất (cổng L2)
 
     # ------------------------------------------------------------- nội bộ
     def _co_tai_khoan(self) -> bool:
@@ -35,13 +35,20 @@ class TaiKhoanMixin:
     def _co_tai_khoan_nho(self) -> bool:
         """Cho cổng phân quyền (L2): như `_co_tai_khoan` nhưng không bao giờ ném lỗi.
 
-        Chưa có bảng / CSDL tạm bận thì dùng kết quả đọc được lần trước (mặc định False = chạy như cũ).
+        Chưa có bảng `tai_khoan` = chưa có tài khoản. Đọc hỏng (CSDL tạm bận...) thì dùng lần đọc thành công gần nhất
+        CỦA CSDL ĐANG MỞ; CSDL này chưa từng đọc được thì coi như ĐÃ CÓ tài khoản (đóng khi lỗi, không để lọt cổng).
         """
+        db = self.db_path
         try:
-            self._co_tk_cuoi = self._co_tai_khoan()
+            co = self._co_tai_khoan()
+        except sqlite3.OperationalError as e:
+            if "no such table" not in str(e):
+                return self._co_tk_nho.get(db, True)
+            co = False
         except Exception:
-            pass
-        return self._co_tk_cuoi
+            return self._co_tk_nho.get(db, True)
+        self._co_tk_nho[db] = co
+        return co
 
     def _hoat_dong(self) -> bool:
         """Dùng cho cổng phân quyền (L2): có thể làm thao tác không, và làm mới giờ nghỉ.

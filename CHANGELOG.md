@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L2 fix1: cổng phân quyền đóng khi đọc bảng tài khoản hỏng
+
+`api_tai_khoan.py:_co_tai_khoan_nho`: bộ nhớ đệm theo từng CSDL (`_co_tk_nho`); đọc hỏng (vd. "database is locked") mà CSDL đó chưa từng đọc được thì coi như ĐÃ CÓ tài khoản (từ chối `gt3_can_dang_nhap`); thiếu bảng = chưa có tài khoản. `api.py` mồi bộ nhớ đệm sau `init_db` trong hàm khởi tạo. Test mới (6) trong `tests/test_gt3_phan_quyen.py`.
+
 ## 2026-11-16 — GT3-L2 (mục cha E1-lite; ngoài sổ): cổng phân quyền trung tâm
 
 Chỉ có tác dụng khi bảng `tai_khoan` có dòng; chưa có tài khoản thì mọi hàm chạy y như trước (kết quả, ngoại lệ không đổi). Chỉ là điều khiển truy cập, không dính `compute_club_priority`.

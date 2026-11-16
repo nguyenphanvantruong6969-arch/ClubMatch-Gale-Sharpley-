@@ -134,6 +134,7 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
         self._window = None
         self._khoi_tao_tai_khoan()      # GT3: tài khoản + phiên đăng nhập (bảng rỗng = như cũ)
         init_db(self.db_path)
+        self._co_tai_khoan_nho()        # GT3-L2: mồi bộ nhớ đệm khi CSDL còn nguyên (để cổng không phải đoán)
 
     def _set_window(self, window) -> None:
         """
