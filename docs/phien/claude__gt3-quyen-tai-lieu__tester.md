@@ -55,3 +55,12 @@ Ran: `test_gt3_phan_quyen`, `test_giao_dien_gt3_phan_quyen`, `test_gt3_tai_khoan
   (teacher work). Mild disagreement for `submit_preferences`, `submit_huy_chuong`, `submit_test_selection`: they rewrite
   allocation inputs of ANY student with no lock; acceptable only because L3 logs them — make sure L3 logs these three
   (and the score/attendance writes), else move them to `quan_tri`.
+
+## L2 fix1 — reviewed 22fb361..5208c6d — verdict: NO BUGS
+Bug 1 fixed (per-db cache `_co_tk_nho`, primed in `__init__`, unread DB + read error => accounts ON). Verified with accounts
+present, never-read cache and errors: "database is locked", "unable to open database file", "disk I/O error", "malformed",
+"no such column", a non-sqlite RuntimeError, and a real exclusive lock held by a second connection => all
+`gt3_can_dang_nhap` (closed). Only "no such table" => OFF (legacy DB without the table => OFF; cannot be triggered by a lock
+message). Error after an earlier success uses the cached True. DB switch (as `open_workspace` does): db2 without accounts =>
+OFF, back to db1 => ON and gated, never-read db3 + read error => ON; login session is bound to its DB (gone after switch).
+Related tests 124 passed (L2 + L1 + do_api + browser_host); `ruff` clean; `kiem_nhanh` 7/7.
