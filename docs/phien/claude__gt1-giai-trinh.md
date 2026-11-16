@@ -18,7 +18,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
       Tests `tests/test_gt1_giai_trinh.py` (a)–(e).
 - [x] L2 Lookup screen (admin/teacher) (2d2c947, checker NO BUGS): panel "Tra cứu một học sinh" in results tab, `js/14_giai_trinh.js`,
       `<!-- GT1 -->` block in `index.html`. Tests `tests/test_giao_dien_gt1_tra_cuu.py` (Chromium).
-- [ ] L3 Printable slip: `export_phieu_giai_trinh`, buttons in L2 panel. Tests `tests/test_gt1_phieu.py`.
+- [x] L3 Printable slip (35a16d2, checker NO BUGS): `export_phieu_giai_trinh`, buttons in L2 panel. Tests `tests/test_gt1_phieu.py`.
 - [ ] L4 Lookup codes + student self-lookup mode: table `ma_tra_cuu`, `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`,
       `export_ma_tra_cuu_csv`, `tra_cuu_hoc_sinh`, lockout, overlay UI. Tests `tests/test_gt1_ma_tra_cuu.py`,
       `tests/test_giao_dien_gt1_hoc_sinh.py`.
@@ -41,7 +41,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 
 ## Current state (overwrite each handoff)
 - Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
-- In progress: L3 done 35a16d2, in review. L1 2ccfd01, L2 2d2c947 done.
+- In progress: L4 (GO L4 sent). L1-L3 done. L1 2ccfd01, L2 2d2c947 done.
 - Tests: none yet.
 - Open problems: none.
 
@@ -68,3 +68,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | 2026-11-16 | Opus lead | L1 fix1 2ccfd01 NO BUGS; ticked; GO L2 | |
 | 2026-11-16 | Opus lead | L2 fix1 2d2c947 NO BUGS; ticked; GO L3 | |
 | 2026-11-16 | Opus lead | WRITER DONE L3 35a16d2; REVIEW L3; writer 2 handoff -> writer 3 | |
+| 2026-11-16 | Opus lead | L3 NO BUGS; ticked; GO L4 to writer 3 | |
