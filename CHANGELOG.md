@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2026-11-16 — GT1-L4 (mục cha C3): mã tra cứu và chế độ học sinh tự tra cứu
+
+Không đổi cách xếp (`kiem_nhanh` trùng khít). Số liệu MÔ PHỎNG.
+- Bảng MỚI `ma_tra_cuu(student_id PK, ma, tao_luc)` (`rbda_priority_pipeline.py`, sau khối `giu_cho`, `CREATE TABLE IF NOT EXISTS`;
+  không có dòng nào cho tới khi quản trị bấm tạo mã). Xoá học sinh / `reset_data` cũng xoá mã (`api_quan_ly.py`).
+- `ma_tra_cuu.py` (mới): mã 8 ký tự `secrets`, bảng chữ không ký tự dễ nhầm; không liên quan số khoá bốc thăm.
+- API (`api_xuat.py`, khối GT1-L4): `tao_ma_tra_cuu(chi_hs_chua_co=True)`, `tao_lai_ma_tra_cuu(student_id)`,
+  `export_ma_tra_cuu_csv(output_path, lop)`, `tra_cuu_hoc_sinh(student_id, ma)` (`hmac.compare_digest`; sai mã và mã học sinh lạ cùng
+  lỗi `gt1_ma_sai`; 5 lần sai → `gt1_tam_khoa` 60 giây theo từng mã học sinh, đồng hồ thay được `_gt1_dong_ho`). Lỗi mới: `gt1_ma_sai`,
+  `gt1_tam_khoa`, `gt1_chua_co_ma`. Phiếu in (L3) in mã của CHÍNH em khi đã có.
+- Giao diện: ba nút ở khung tra cứu (tạo mã, xuất CSV, "Chế độ học sinh tra cứu"); lớp phủ toàn màn hình, phần còn lại của ứng dụng
+  `inert`, 60 giây không thao tác thì xoá thẻ, thoát có hỏi lại (`js/14_giai_trinh.js`, `index.html`, `i18n.js` `gt_*`, `style.css`).
+- Test mới: `tests/test_gt1_ma_tra_cuu.py` (13 ca), `tests/test_giao_dien_gt1_hoc_sinh.py` (7 ca).
+
 ## 2026-11-16 — GT1-L3 (mục cha C3): phiếu giải trình in cho từng học sinh
 
 Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.

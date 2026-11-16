@@ -1381,5 +1381,17 @@ window.I18N_ERROR_MESSAGES = {
   "gt1_khong_tim_thay_lan_chay": {
     "vi": "Không tìm thấy lần xếp này.",
     "en": "That allocation run was not found."
+  },
+  "gt1_ma_sai": {
+    "vi": "Mã học sinh hoặc mã tra cứu chưa đúng. Hãy kiểm tra lại trên phiếu.",
+    "en": "The student ID or lookup code is not right. Please check the slip."
+  },
+  "gt1_tam_khoa": {
+    "vi": "Đã nhập sai quá nhiều lần. Hãy đợi một phút rồi thử lại.",
+    "en": "Too many wrong tries. Please wait a minute and try again."
+  },
+  "gt1_chua_co_ma": {
+    "vi": "Chưa tạo mã tra cứu nào. Hãy tạo mã trước.",
+    "en": "No lookup codes have been created yet. Create the codes first."
   }
 };

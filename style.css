@@ -2990,3 +2990,9 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 .gt-duoc-xep td { font-weight: 600; background: #dcfce7; color: #14532d; }
 .gt-buoi { margin-top: 12px; }
 #gtIn[hidden], #btnGtInLop[hidden] { display: none; }   /* .search-row đặt display:flex nên đè thuộc tính hidden */
+
+/* GT1-L4: chế độ học sinh tự tra cứu (toàn màn hình) */
+.gt-hs { position: fixed; inset: 0; z-index: 10000; background: var(--paper); overflow: auto; }
+.gt-hs[hidden], #gtHsXacNhan[hidden] { display: none; }
+.gt-hs-khung { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+.gt-hs-loi { min-height: 1.5em; color: #b91c1c; margin: 8px 0; }

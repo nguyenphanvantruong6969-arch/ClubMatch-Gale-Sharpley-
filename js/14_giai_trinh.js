@@ -70,8 +70,8 @@
     return khung;
   }
 
-  function ve(d) {
-    const g = el("gtKetQua");
+  /* `g`: chỗ vẽ thẻ; `quanTri` false = thẻ trong chế độ học sinh (không có nút quản trị). */
+  function ve(d, g = el("gtKetQua"), quanTri = true) {
     g.textContent = "";
     const ten = d.lop ? t("gt_the_ten", { ten: d.ten, ma: d.student_id, lop: d.lop })
                       : t("gt_the_ten_khong_lop", { ten: d.ten, ma: d.student_id });
@@ -87,8 +87,10 @@
     if (!d.fa_bat && r.luat_xep && r.luat_xep.wharton) tc += t("gt_tieu_chi_diem_quyet_tam");
     g.appendChild(mot("p", "gt-tieu-chi", tc));
     d.buoi.forEach((b) => g.appendChild(veBuoi(b, d.buoi.length > 1 || b.buoi !== BUOI_MAC_DINH)));
-    el("gtIn").hidden = false;
-    el("btnGtInLop").hidden = !d.lop;
+    if (quanTri) {
+      el("gtIn").hidden = false;
+      el("btnGtInLop").hidden = !d.lop;
+    }
   }
 
   function xem(sid) {
@@ -168,6 +170,93 @@
   }
   el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
   el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
+
+  /* Mã tra cứu: tạo (chỉ em chưa có), xuất CSV để in phiếu. KHÔNG hiện mã trên màn hình quản trị. */
+  el("btnGtTaoMa").addEventListener("click", () => {
+    callApi("tao_ma_tra_cuu", true).then((res) => {
+      const o = el("gtMaPhanHoi");
+      o.textContent = res.ok ? t("gt_tao_ma_xong", { n: res.data.n_tao, co: res.data.n_co_san })
+                             : trErrs(res.errors).join(" ");
+    });
+  });
+  el("btnGtXuatMa").addEventListener("click", () => {
+    chayXuat([["gt_xuat_ma_muc", "export_ma_tra_cuu_csv", [""],
+      (d) => t("gt_xuat_ma_xong", { n: d.n_dong, path: d.path })]], el("gtMaPhanHoi"));
+  });
+
+  /* ---- Chế độ học sinh tự tra cứu (toàn màn hình) ----
+     Chỉ có hai ô, một nút Xem và nút Thoát (có hỏi lại). Các phần còn lại của ứng dụng bị `inert` nên không bấm
+     hay Tab tới được. Thẻ chỉ chứa dữ liệu của MỘT em và bị xoá sau 60 giây không thao tác. */
+  const GIAY_NHAN = 60000;
+  let henGio = null;
+  let hsDangMo = false;
+
+  function xoaThe() {
+    el("gtHsKetQua").textContent = "";
+    el("gtHsLoi").textContent = "";
+    el("gtHsMa").value = "";
+    el("gtHsMaTra").value = "";
+  }
+
+  function datHenGio() {
+    clearTimeout(henGio);
+    if (!hsDangMo) return;
+    henGio = setTimeout(() => {
+      const coThe = el("gtHsKetQua").childElementCount > 0;
+      xoaThe();
+      if (coThe) el("gtHsLoi").textContent = t("gt_hs_het_gio");
+    }, GIAY_NHAN);
+  }
+
+  function khoaPhanConLai(bat) {
+    Array.from(document.body.children).forEach((n) => {
+      if (n.id === "gtHs" || n.tagName === "SCRIPT") return;
+      if (bat) n.setAttribute("inert", ""); else n.removeAttribute("inert");
+    });
+  }
+
+  function moHs() {
+    hsDangMo = true;
+    xoaThe();
+    el("gtHsXacNhan").hidden = true;
+    khoaPhanConLai(true);
+    el("gtHs").hidden = false;
+    el("gtHsMa").focus();
+    datHenGio();
+  }
+
+  function thoatHs() {
+    hsDangMo = false;
+    clearTimeout(henGio);
+    xoaThe();
+    el("gtHs").hidden = true;
+    khoaPhanConLai(false);
+  }
+
+  el("btnGtCheDoHs").addEventListener("click", moHs);
+  el("btnGtHsThoat").addEventListener("click", () => { el("gtHsXacNhan").hidden = false; });
+  el("btnGtHsKhong").addEventListener("click", () => { el("gtHsXacNhan").hidden = true; });
+  el("btnGtHsCo").addEventListener("click", thoatHs);
+  ["input", "click", "keydown", "pointerdown"].forEach((ev) => el("gtHs").addEventListener(ev, datHenGio));
+  el("gtHsForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ma = el("gtHsMa").value;
+    const maTra = el("gtHsMaTra").value;
+    el("gtHsKetQua").textContent = "";
+    el("gtHsLoi").textContent = "";
+    callApi("tra_cuu_hoc_sinh", ma, maTra).then((res) => {
+      if (!hsDangMo) return;
+      el("gtHsMaTra").value = "";             // không để mã nằm lại trên màn hình
+      if (!res.ok) {
+        el("gtHsLoi").textContent = trErrs(res.errors).join(" ");
+        return;
+      }
+      ve(res.data, el("gtHsKetQua"), false);
+    });
+  });
+  window.addEventListener("langchange", () => {
+    if (hsDangMo && el("gtHsKetQua").childElementCount) el("gtHsKetQua").textContent = "";
+  });
 
   el("gtTim").addEventListener("input", tim);
   el("gtTim").addEventListener("focus", () => { napLop(); if (!el("gtDs").children.length) tim(); });

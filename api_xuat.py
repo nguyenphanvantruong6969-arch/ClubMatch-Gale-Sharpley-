@@ -8,6 +8,7 @@ import datetime
 import os
 import shutil
 import sys
+import time
 
 from api_chung import (
     _an_toan_cho_excel,
@@ -1785,8 +1786,10 @@ class XuatKetQuaMixin:
                 return _fail(err("gt1_khong_co_hoc_sinh"))
             bat_kn, so_ngay_kn = self._co_khieu_nai()      # luật của workspace; chỉ in số ngày khi khiếu nại BẬT
             so_ngay = so_ngay_kn if bat_kn else None
+            with self._ket_noi_doc() as cur:
+                ma_cua = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))   # GT1-L4: mã của CHÍNH em
             cac_em = [(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, sid),
-                       (sid, thong_tin_hs[sid][0], thong_tin_hs[sid][1]), None) for sid in chon]
+                       (sid, thong_tin_hs[sid][0], thong_tin_hs[sid][1]), ma_cua.get(sid)) for sid in chon]
             html = phieu_giai_trinh.dung_phieu_html(cac_em, so_ngay)
             duong = self._duong_xuat(output_path, "phieu_giai_trinh.html")
             with open(duong, "w", encoding="utf-8") as f:
@@ -1798,6 +1801,126 @@ class XuatKetQuaMixin:
             return _fail(loi_cau_hinh(e))
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
+    # ===== GT1-L4: mã tra cứu + em tự tra cứu =====
+    # Đồng hồ cho khoá tạm: bài kiểm thay `self._gt1_dong_ho` để khỏi phải chờ thật.
+    _gt1_dong_ho = staticmethod(time.monotonic)
+
+    def tao_ma_tra_cuu(self, chi_hs_chua_co=True):
+        """GT1-L4: tạo mã tra cứu (8 ký tự, `secrets`). `chi_hs_chua_co` True: chỉ em chưa có mã (mã cũ giữ nguyên,
+        nên in lại phiếu vẫn đúng mã); False: tạo lại cho MỌI em. Trả {n_tao, n_co_san, n_hoc_sinh}; KHÔNG trả mã
+        (xuất qua `export_ma_tra_cuu_csv`). Không đụng kết quả xếp, số khoá bốc thăm hay lịch sử chạy."""
+        import ma_tra_cuu
+        try:
+            with self._ket_noi_ghi() as cur:
+                hs = [r[0] for r in cur.execute("SELECT student_id FROM students ORDER BY student_id")]
+                if not hs:
+                    return _fail(err("gt1_khong_co_hoc_sinh"))
+                co = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))
+                if not chi_hs_chua_co:
+                    co = {}
+                da_dung = set(co.values())
+                n_tao = 0
+                gio = datetime.datetime.now().isoformat(timespec="seconds")
+                for sid in hs:
+                    if sid in co:
+                        continue
+                    m = ma_tra_cuu.sinh_ma_moi(da_dung)
+                    da_dung.add(m)
+                    cur.execute("INSERT OR REPLACE INTO ma_tra_cuu (student_id, ma, tao_luc) VALUES (?, ?, ?)",
+                                (sid, m, gio))
+                    n_tao += 1
+            return _ok({"n_tao": n_tao, "n_co_san": len(hs) - n_tao, "n_hoc_sinh": len(hs)})
+        except Exception as e:
+            return _fail(err("error_reading_last_run", detail=str(e)))
+
+    def tao_lai_ma_tra_cuu(self, student_id):
+        """GT1-L4: cấp mã mới cho MỘT em (mất phiếu). Trả {student_id, ma}: người quản trị cần mã để in lại."""
+        import ma_tra_cuu
+        try:
+            with self._ket_noi_ghi() as cur:
+                if cur.execute("SELECT 1 FROM students WHERE student_id = ?", (student_id,)).fetchone() is None:
+                    return _fail(err("gt1_khong_co_hoc_sinh"))
+                da_dung = {r[0] for r in cur.execute("SELECT ma FROM ma_tra_cuu WHERE student_id != ?",
+                                                     (student_id,))}
+                m = ma_tra_cuu.sinh_ma_moi(da_dung)
+                cur.execute("INSERT OR REPLACE INTO ma_tra_cuu (student_id, ma, tao_luc) VALUES (?, ?, ?)",
+                            (student_id, m, datetime.datetime.now().isoformat(timespec="seconds")))
+            return _ok({"student_id": student_id, "ma": m})
+        except Exception as e:
+            return _fail(err("error_reading_last_run", detail=str(e)))
+
+    def export_ma_tra_cuu_csv(self, output_path: str = "", lop=None):
+        """GT1-L4: tệp CSV (student_id, name, class, code) để trộn thư in phiếu. `lop` chọn một lớp. Chỗ đặt như
+        mọi lần xuất (không ghi đè). Lỗi: `gt1_chua_co_ma`, `gt1_khong_co_hoc_sinh` (không em nào khớp)."""
+        return self._khoa_xuat(self._export_ma_tra_cuu_csv_da_khoa, output_path, lop)
+
+    def _export_ma_tra_cuu_csv_da_khoa(self, output_path, lop):
+        try:
+            with self._ket_noi_doc() as cur:
+                if cur.execute("SELECT COUNT(*) FROM ma_tra_cuu").fetchone()[0] == 0:
+                    return _fail(err("gt1_chua_co_ma"))
+                dong = cur.execute(
+                    "SELECT s.student_id, s.name, s.class_id, m.ma FROM ma_tra_cuu m "
+                    "JOIN students s ON s.student_id = m.student_id").fetchall()
+            if lop is not None and str(lop).strip():
+                lop_chuan = chuan_hoa_lop(lop)
+                dong = [r for r in dong if (r[2] or None) == lop_chuan]
+            if not dong:
+                return _fail(err("gt1_khong_co_hoc_sinh"))
+            dong.sort(key=lambda r: (self._khoa_lop_tu_nhien(r[2]), r[0]))
+            duong = self._duong_xuat(output_path, "ma_tra_cuu.csv")
+            _ghi_csv(duong, ["student_id", "name", "class", "code"],
+                     [[r[0], r[1] or "", r[2] or "", r[3]] for r in dong])
+            return _ok({"path": duong, "n_dong": len(dong)})
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
+    def tra_cuu_hoc_sinh(self, student_id, ma):
+        """GT1-L4: MỘT em tự xem lời giải thích của chính mình bằng mã học sinh + mã tra cứu. Trả đúng dữ liệu của
+        `get_giai_trinh_hoc_sinh` cho em đó và KHÔNG gì khác. Mã sai, mã học sinh lạ, em chưa có mã: cùng lỗi
+        `gt1_ma_sai` (không để dò ra mã nào có thật). Sai 5 lần cho một mã học sinh -> `gt1_tam_khoa` 60 giây
+        (trong bộ nhớ). So mã bằng `hmac.compare_digest`."""
+        import hmac
+
+        import ma_tra_cuu
+        try:
+            sid = str(student_id).strip() if student_id is not None else ""
+            thu = self._gt1_luot_sai.setdefault(sid[:64], [0, 0.0])
+            bay_gio = self._gt1_dong_ho()
+            if thu[1] and bay_gio < thu[1]:
+                return _fail(err("gt1_tam_khoa"))
+            if thu[1]:                                    # hết hạn khoá: đếm lại từ đầu
+                thu[0], thu[1] = 0, 0.0
+            with self._ket_noi_doc() as cur:
+                r = cur.execute("SELECT ma FROM ma_tra_cuu WHERE student_id = ?", (sid,)).fetchone()
+            that = r[0] if r else "-" * ma_tra_cuu.DO_DAI           # em lạ: vẫn so một chuỗi cùng độ dài
+            dung = hmac.compare_digest(ma_tra_cuu.chuan_hoa(ma).encode("utf-8"), that.encode("utf-8"))
+            if not (dung and r):
+                thu[0] += 1
+                if thu[0] >= ma_tra_cuu.SO_LAN_SAI_TOI_DA:
+                    thu[1] = bay_gio + ma_tra_cuu.GIAY_KHOA
+                if len(self._gt1_luot_sai) > 5000:        # chặn bộ nhớ khi bị dò bằng nhiều mã lạ
+                    self._gt1_luot_sai = {k: v for k, v in self._gt1_luot_sai.items() if v[1] > bay_gio}
+                return _fail(err("gt1_ma_sai"))
+            thu[0], thu[1] = 0, 0.0
+            return self._giai_trinh_hoc_sinh(sid, None)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_reading_last_run", detail=str(e)))
+
+    @property
+    def _gt1_luot_sai(self):
+        if "_gt1_luot_sai_d" not in self.__dict__:
+            self.__dict__["_gt1_luot_sai_d"] = {}
+        return self.__dict__["_gt1_luot_sai_d"]
+
+    @_gt1_luot_sai.setter
+    def _gt1_luot_sai(self, v):
+        self.__dict__["_gt1_luot_sai_d"] = v
 
     @staticmethod
     def _giai_trinh_them_ten(ra, ten_lop):

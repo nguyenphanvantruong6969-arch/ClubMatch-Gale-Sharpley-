@@ -329,6 +329,12 @@
             <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+          <div class="search-row">
+            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
+            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
+            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+          </div>
+          <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
         </div>
       </div>
     </section>
@@ -1253,6 +1259,28 @@
   <div class="ws-hop" id="wsHop"></div>
 </div>
 
+<!-- GT1-L4: chế độ học sinh tự tra cứu (toàn màn hình, không có nút quản trị); js/14_giai_trinh.js -->
+<div id="gtHs" class="gt-hs" role="dialog" aria-modal="true" aria-labelledby="gtHsTieuDe" hidden>
+  <div class="gt-hs-khung">
+    <h1 id="gtHsTieuDe" data-i18n="gt_hs_tieu_de">Xem kết quả của mình</h1>
+    <p class="gt-hs-huong-dan" data-i18n="gt_hs_huong_dan">Nhập mã và mã tra cứu in trên phiếu.</p>
+    <form id="gtHsForm" class="search-row" autocomplete="off">
+      <input type="text" id="gtHsMa" class="text-input" data-i18n-placeholder="gt_hs_ma_ph" placeholder="Mã" autocomplete="off">
+      <input type="password" id="gtHsMaTra" class="text-input" data-i18n-placeholder="gt_hs_ma_tra_ph" placeholder="Mã tra cứu" autocomplete="off">
+      <button type="submit" class="btn btn-primary" id="btnGtHsXem" data-i18n="gt_hs_xem">Xem</button>
+    </form>
+    <div id="gtHsLoi" class="gt-hs-loi" role="alert"></div>
+    <div id="gtHsKetQua" role="status"></div>
+    <div class="search-row">
+      <button type="button" class="btn btn-secondary" id="btnGtHsThoat" data-i18n="gt_hs_thoat">Thoát</button>
+      <span id="gtHsXacNhan" hidden>
+        <span data-i18n="gt_hs_hoi_thoat">Thoát chế độ này?</span>
+        <button type="button" class="btn btn-primary" id="btnGtHsCo" data-i18n="gt_hs_co">Thoát</button>
+        <button type="button" class="btn btn-secondary" id="btnGtHsKhong" data-i18n="gt_hs_khong">Ở lại</button>
+      </span>
+    </div>
+  </div>
+</div>
 <script src="i18n_loi.js"></script>
 <script src="i18n.js"></script>
 <script src="chung.js"></script>
