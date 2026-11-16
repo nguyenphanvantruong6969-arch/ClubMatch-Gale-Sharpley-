@@ -49,3 +49,20 @@ i18n sync/khoa); kiem_nhanh 7/7. Own hostile-data test (temp, deleted): names wi
 diacritics; per page exactly one `Mã:` id, no other student's escaped name or id, no script/http/src/link. Selection:
 all -> 3 pages; lop `10a1` (lowercase) -> 2; ids with duplicate+unknown -> 1; `[]`, unknown class, bare string "s1"
 -> `gt1_khong_co_hoc_sinh`; never-run -> `gt1_chua_chay` (tested by writer). Appeal days only when fa_khieu_nai ON (lead-accepted).
+
+## L4 | reviewed 807499d..f4132a3 | verdict: 1 BUG
+OK: 578 passed (L1-L4 tests + every test file mentioning delete_student/reset_data + i18n); kiem_nhanh 7/7 (60 cases);
+match_results/stb_lock/run_history identical after tao_ma/tao_lai/tra_cuu (own snapshot test); old DB without
+`ma_tra_cuu` reopened by two PipelineAPI instances -> table created, 2nd call idempotent; delete_student (new student)
+and reset_data("hoc_sinh","XOA") remove codes, run_history untouched; codes 8 chars of the right alphabet, unique;
+lockout: 5 wrong with " s1 "/"s1 "/"s1" variants share one key -> 6th = gt1_tam_khoa even with right code; "S1"
+is a different (nonexistent) id -> gt1_ma_sai; unlock after 61 s; unknown id/None -> same gt1_ma_sai; code accepted
+lowercase+spaces; response holds only that student; CSV UTF-8 BOM, diacritics ok, formula guard (`'=1+1`);
+overlay: Tab cycles only gtHsMa/gtHsMaTra/btnGtHsXem/btnGtHsThoat (+BODY), Escape / Alt+Left do not exit, no admin
+buttons in card, idle 61 s empties card DOM and both inputs.
+Bug:
+1. `js/14_giai_trinh.js` student-mode submit handler (`gtHsForm` -> `callApi("tra_cuu_hoc_sinh", ...)`): no
+   latest-wins guard, so a slow reply for student A lands AFTER student B submitted and renders A's card next to B's
+   inputs. Repro (Chromium; delay first `tra_cuu_hoc_sinh` fetch 1.5 s in-page): submit s1+code, 0.1 s later submit
+   s2+code; after 2.5 s card = "Nguyễn Văn Ánh (s1)" while inputs show s2. Expected: only the latest submit renders
+   (use `callApiMoiNhat("gt_hs", ...)` or a token like `luotTim`), so one student never sees another's card.
