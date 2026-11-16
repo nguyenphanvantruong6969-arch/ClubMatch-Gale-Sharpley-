@@ -24,3 +24,9 @@ Sidebar button instead of a Quan ly sub-tab: acceptable (keeps the existing UI t
 ### Notes (not bugs)
 - Idle refresh per API call comes with the L2 gate (as the lead said); `get_phien_dang_nhap` deliberately does not refresh.
 - Lock counters are kept in memory per name (also for unknown names); reset on restart — acceptable for a kiosk.
+
+## L1 fix1 — reviewed 53e453a..e62e24a — verdict: NO BUGS
+Bug 1 fixed: names and passwords NFC-normalised (`chuan_hoa_ten`, `_khoa_ten`, `bam_mat_khau`). Re-ran own edge script:
+NFD login of NFC admin name OK; NFD duplicate -> `gt3_ten_da_co`; NFD-typed password and name log in; delete via NFD name
+still blocked for the last admin. Related tests 65 passed; `ruff` clean; `kiem_nhanh` 7/7 (60 cases identical); lock,
+roles, idle, no-leak scan unchanged. Note: normalising passwords is safe now (L1 unreleased, no stored accounts).
