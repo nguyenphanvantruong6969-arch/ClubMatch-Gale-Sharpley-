@@ -169,3 +169,19 @@ thu_5 THU_5_4 rank 1; FA002 thu_2 THU_2_1 rank 3, thu_5 THU_5_1 rank 4; `get_ly_
 No leftover "phóng" step, no `THU_2_2`, no `fa_cot_bo_qua` claim. `test_gt3_tai_lieu` 22 passed; ruff clean; only docs/tests changed (invariant 1 untouched).
 434 `wharton_chua_dung_het` warnings: they are in `import_so_nhap` `data.warnings` (not in `canh_bao`); same 434 on `origin/main` with the same flow => pre-existing,
 out of GT3 scope. The doc describes it accurately (informational, does not block; "434 in the trial run").
+
+## CI-fix1 — reviewed b43ec10..1c79f2f — verdict: NO BUGS
+Ran: `test_gt3_*`, `test_giao_dien_gt3_*`, `test_do_api`, `test_ws_nhan`, `test_browser_host` -> 222 passed; `ruff` clean; `kiem_nhanh` 7/7.
+Own scripts (fake data, scratchpad):
+- Fail-closed holds: cache cleared (never-read) + exclusive lock held by another connection -> `csdl_dang_ban` (call refused), never open; after release OK.
+  Cached True + lock + anonymous write -> `gt3_can_dang_nhap` (closed) on 3 consecutive calls; cached True is never turned to False by a lock error.
+  `tao_tai_khoan` sets cache True and clears the back-off.
+- External `recovery.py --xoa-tai-khoan` while the app object stays open: the stale ON lasts at most the 5 s back-off, and only if a lock error happened
+  just before (measured: write still `gt3_can_dang_nhap` right after, `ok` after 5.2 s; with no lock error the refresh reads 0 at once). Stale direction = closed. Doc
+  says to run recovery with the app closed, so acceptable.
+- Denied write on a DB locked by another connection: 3.06 s now vs 6.01 s at b43ec10 (the fix halves it; the writer's "~6 s" is the OLD behaviour, and the
+  never-read path, which is a one-off). In-process `_khoa_ghi` held by another thread: denied call 1.00 s, failed login 1.06 s => L3 bound (<= 1 s wait, deferred
+  audit write) unchanged. No contradiction with the L3 spec.
+- Stress: `test_a13_9_stress` + `test_a13_11_stress` 84 passed in 68.5 s vs 66.6 s on origin/main (slowest cases 3.0-3.1 s on both).
+- `recovery.py` UTF-8 reconfigure: `--help` under `PYTHONIOENCODING=cp1252` exits 0 (new test); only runs in `__main__`, no effect on imports.
+Note (not a bug): `_co_tk_lui` is only reset by `tao_tai_khoan` or a later successful refresh; a workspace switch uses a different key, so it is unaffected.
