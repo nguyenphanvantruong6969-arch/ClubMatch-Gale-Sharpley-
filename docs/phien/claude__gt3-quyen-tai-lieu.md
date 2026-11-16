@@ -32,7 +32,8 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 |---|---|---|---|
 | lead | Opus | session_01YVAyu1qFUsCrfJzADRDejq | active |
 | writer | Sonnet | session_01YVAyu1P96ELQbaGCN11z8y | archived (handoff after L1, 95fad10) |
-| writer 2 | Sonnet | session_01YVAytzxaEXv7mrFdiaw85i | active |
+| writer 2 | Sonnet | session_01YVAytzxaEXv7mrFdiaw85i | archived (handoff mid-L3, 385afc1) |
+| writer 3 | Sonnet | session_01YVAytz9otUM5z9GiQks7T1 | active |
 | checker | Sonnet | session_01YVAytz3RuHwjzM5L3EVnKE | active |
 
 ## Needs Truong
