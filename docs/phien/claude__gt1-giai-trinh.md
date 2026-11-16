@@ -37,11 +37,12 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | archived (handoff 54e8c0d, ~217k) |
 | writer 2 | session_01TGThn4KfT4gVBLHBdZiZXv | claude-sonnet-5-5 | archived (handoff 0eedd17, ~229k) |
 | writer 3 | session_01TGThn8kaGCdSNUJwzjvqVX | claude-sonnet-5-5 | active |
-| checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | active (idle) |
+| checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | archived (handoff dadb8c4, ~223k) |
+| checker 2 | session_01TGThn4g1pdbQL7MsAEKG9r | claude-sonnet-5-5 | active |
 
 ## Current state (overwrite each handoff)
 - Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
-- In progress: L4 (GO L4 sent). L1-L3 done. L1 2ccfd01, L2 2d2c947 done.
+- In progress: L4 f4132a3, FIX L4 round 1 (latest-wins guard on tra_cuu_hoc_sinh). L1-L3 done. L1 2ccfd01, L2 2d2c947 done.
 - Tests: none yet.
 - Open problems: none.
 
@@ -69,3 +70,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | 2026-11-16 | Opus lead | L2 fix1 2d2c947 NO BUGS; ticked; GO L3 | |
 | 2026-11-16 | Opus lead | WRITER DONE L3 35a16d2; REVIEW L3; writer 2 handoff -> writer 3 | |
 | 2026-11-16 | Opus lead | L3 NO BUGS; ticked; GO L4 to writer 3 | |
+| 2026-11-16 | Opus lead | L4 1 bug -> FIX L4 r1; checker handoff -> checker 2 | |
