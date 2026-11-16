@@ -155,3 +155,23 @@ def test_tim_cham_ve_sau_khi_chon_khong_lam_lo_em_khac(api, mo):
     assert page.locator("#gtDs .gt-chon").count() == 0
     assert HS["s2"] not in page.locator("#gtPanel").inner_text()
     assert loi == []
+
+
+def test_nut_in_phieu_mot_em_va_ca_lop(api, mo, tmp_path):
+    page, loi, _ = mo
+    _dung(api, False)
+    assert api.run_pipeline(seed=3)["ok"]
+    api.thu_muc_xuat = str(tmp_path)
+    assert page.locator("#gtIn").is_hidden()
+    _tra(page, "anh")
+    page.click('#gtDs .gt-chon[data-student-id="s1"]')
+    page.wait_for_selector("#btnGtInMot", state="visible")
+    page.click("#btnGtInMot")
+    page.wait_for_function("document.querySelector('#gtXuatPhanHoi').innerText.includes('1 trang')")
+    page.click("#btnGtInLop")
+    page.wait_for_function("document.querySelector('#gtXuatPhanHoi').innerText.includes('trang')")
+    tep = sorted(p for p in os.listdir(tmp_path) if p.endswith(".html"))
+    assert len(tep) == 2
+    noi = [open(os.path.join(tmp_path, p), encoding="utf-8").read() for p in tep]
+    assert any("Trần Thị Bé" not in x and x.count('class="trang"') == 1 for x in noi)
+    assert loi == []

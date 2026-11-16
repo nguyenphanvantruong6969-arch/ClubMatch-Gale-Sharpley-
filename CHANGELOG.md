@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2026-11-16 — GT1-L3 (mục cha C3): phiếu giải trình in cho từng học sinh
+
+Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `phieu_giai_trinh.py` (mới, hàm thuần): MỘT tệp HTML tự đủ (CSS in, không địa chỉ ngoài, mọi giá trị qua `html.escape`), mỗi học sinh một trang:
+  mã, tên, lớp, bảng nguyện vọng của chính em, câu giải thích, cảnh báo "dữ liệu đã đổi" ở mọi trang, cách xin xem lại (số ngày chỉ khi
+  khiếu nại BẬT), chỗ trống cho mã tra cứu (L4).
+- API `export_phieu_giai_trinh(output_path="", student_ids=None, lop=None)` (`api_xuat.py`): dựng lại lần chạy MỘT lần
+  (`_giai_trinh_dung_lai`, tách từ `_giai_trinh_hoc_sinh`) rồi lặp; chỗ đặt theo `_duong_xuat` (không ghi đè); lỗi `gt1_chua_chay`,
+  `gt1_khong_co_hoc_sinh`.
+- Giao diện: hai nút "In phiếu cho học sinh này" / "In phiếu cả lớp" ở khung tra cứu (`js/14_giai_trinh.js`, `i18n.js` `gt_in_*`).
+- Test mới: `tests/test_gt1_phieu.py` (9 ca), thêm 1 ca vào `tests/test_giao_dien_gt1_tra_cuu.py`.
+
 ## 2026-11-16 — GT1-L2 (mục cha C3): khung "Tra cứu một học sinh" ở thẻ Kết quả
 
 Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.

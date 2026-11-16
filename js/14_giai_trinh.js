@@ -87,17 +87,21 @@
     if (!d.fa_bat && r.luat_xep && r.luat_xep.wharton) tc += t("gt_tieu_chi_diem_quyet_tam");
     g.appendChild(mot("p", "gt-tieu-chi", tc));
     d.buoi.forEach((b) => g.appendChild(veBuoi(b, d.buoi.length > 1 || b.buoi !== BUOI_MAC_DINH)));
+    el("gtIn").hidden = false;
+    el("btnGtInLop").hidden = !d.lop;
   }
 
   function xem(sid) {
     luotTim += 1;
     el("gtDs").textContent = "";
+    el("gtIn").hidden = true;
     el("gtKetQua").textContent = "";     // không để thẻ của em trước lẫn với em đang tải
     dangXem = null;
     callApiMoiNhat("gt_xem", "get_giai_trinh_hoc_sinh", sid).then((res) => {
       const g = el("gtKetQua");
       if (!res.ok) {
         dangXem = null;
+        el("gtIn").hidden = true;
         g.textContent = trErrs(res.errors).join(" ");
         return;
       }
@@ -156,6 +160,14 @@
       o.hidden = false;
     });
   }
+
+  /* Phiếu in: MỘT tệp HTML, mỗi em một trang (export_phieu_giai_trinh). */
+  function inPhieu(doiSo) {
+    chayXuat([["gt_in_muc", "export_phieu_giai_trinh", doiSo,
+      (d) => t("gt_in_xong", { n: d.n_trang, path: d.path })]], el("gtXuatPhanHoi"));
+  }
+  el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
+  el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
 
   el("gtTim").addEventListener("input", tim);
   el("gtTim").addEventListener("focus", () => { napLop(); if (!el("gtDs").children.length) tim(); });

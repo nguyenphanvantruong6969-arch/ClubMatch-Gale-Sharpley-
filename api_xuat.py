@@ -21,6 +21,7 @@ from api_chung import (
 from cau_hinh_ws import doc_cau_hinh
 from api_workspace import CauHinhHong, LoiDuongXuat, loi_cau_hinh
 from i18n_errors import err
+from lop_hoc_sinh import chuan_hoa_lop
 from nhan_ws import dien as dien_nhan
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
@@ -1747,6 +1748,65 @@ class XuatKetQuaMixin:
             return _fail(err("error_reading_last_run", detail=str(e)))
 
     def _giai_trinh_hoc_sinh(self, student_id, run_id):
+        import giai_trinh
+        r = self._giai_trinh_dung_lai(run_id)
+        if isinstance(r, dict):
+            return r
+        du_lieu, thong_tin_hs = r
+        if student_id not in thong_tin_hs:
+            return _fail(err("gt1_khong_co_hoc_sinh"))
+        return _ok(self._giai_trinh_them_ten(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id),
+                                             thong_tin_hs[student_id]))
+
+    def export_phieu_giai_trinh(self, output_path: str = "", student_ids=None, lop=None):
+        """GT1-L3: MỘT tệp HTML tự đủ để in, mỗi học sinh một trang (mã, tên, lớp, nguyện vọng, điểm của chính em,
+        câu giải thích; chỗ trống cho mã tra cứu). `student_ids` (danh sách mã) hoặc `lop` chọn em; không chọn gì
+        = mọi em. Dựng lại lần chạy MỘT lần rồi lặp. Chỗ đặt như mọi lần xuất (`_duong_xuat`, không ghi đè).
+        Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh` (không em nào khớp), `gt1_lan_chay_cu`. Trả {path, n_trang}."""
+        return self._khoa_xuat(self._export_phieu_giai_trinh_da_khoa, output_path, student_ids, lop)
+
+    def _export_phieu_giai_trinh_da_khoa(self, output_path, student_ids, lop):
+        import giai_trinh
+        import phieu_giai_trinh
+        try:
+            r = self._giai_trinh_dung_lai(None)
+            if isinstance(r, dict):
+                return r
+            du_lieu, thong_tin_hs = r
+            if student_ids is not None:
+                chon = [sid for sid in dict.fromkeys(str(x) for x in student_ids) if sid in thong_tin_hs]
+            else:
+                chon = list(thong_tin_hs)
+            if lop is not None and str(lop).strip():
+                lop_chuan = chuan_hoa_lop(lop)
+                chon = [sid for sid in chon if (thong_tin_hs[sid][1] or None) == lop_chuan]
+            chon.sort(key=lambda sid: (self._khoa_lop_tu_nhien(thong_tin_hs[sid][1]), sid))
+            if not chon:
+                return _fail(err("gt1_khong_co_hoc_sinh"))
+            bat_kn, so_ngay_kn = self._co_khieu_nai()      # luật của workspace; chỉ in số ngày khi khiếu nại BẬT
+            so_ngay = so_ngay_kn if bat_kn else None
+            cac_em = [(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, sid),
+                       (sid, thong_tin_hs[sid][0], thong_tin_hs[sid][1]), None) for sid in chon]
+            html = phieu_giai_trinh.dung_phieu_html(cac_em, so_ngay)
+            duong = self._duong_xuat(output_path, "phieu_giai_trinh.html")
+            with open(duong, "w", encoding="utf-8") as f:
+                f.write(html)
+            return _ok({"path": duong, "n_trang": len(chon)})
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
+    @staticmethod
+    def _giai_trinh_them_ten(ra, ten_lop):
+        ra["ten"], ra["lop"] = ten_lop[0] or "", ten_lop[1] or ""     # chỉ tên và lớp của chính em
+        return ra
+
+    def _giai_trinh_dung_lai(self, run_id):
+        """Dựng lại MỘT LẦN dữ liệu giải trình của lần chạy mới nhất (chỉ ĐỌC). Trả `(du_lieu,
+        {mã: (tên, lớp)})` hoặc một phản hồi lỗi `_fail(...)` (kiểu dict)."""
         import json
 
         import giai_trinh
@@ -1768,10 +1828,8 @@ class XuatKetQuaMixin:
                 return _fail(err("gt1_khong_tim_thay_lan_chay"))
             if chon["run_id"] != moi_nhat:   # chỉ lưu kết quả của lần mới nhất
                 return _fail(err("gt1_lan_chay_cu"))
-            ten_hs = cur.execute("SELECT name, class_id FROM students WHERE student_id = ?",
-                                 (student_id,)).fetchone()
-            if ten_hs is None:
-                return _fail(err("gt1_khong_co_hoc_sinh"))
+            thong_tin_hs = {r[0]: (r[1], r[2]) for r in cur.execute(
+                "SELECT student_id, name, class_id FROM students")}
             luat = json.loads(chon["luat_xep"]) if chon["luat_xep"] else None
             fa_bat = bool(luat and luat.get("fa_daa"))
             students, clubs, scores, applicants, prefs, stb_goc = _doc_du_lieu(cur, luat)
@@ -1833,9 +1891,7 @@ class XuatKetQuaMixin:
                     da_doi = True
         du_lieu = {"fa_bat": fa_bat, "du_lieu_da_doi": da_doi, "run": thong_tin,
                    "ds_buoi": ds_buoi, "buoi": theo_buoi}
-        ra = giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id)
-        ra["ten"], ra["lop"] = ten_hs[0] or "", ten_hs[1] or ""     # chỉ tên và lớp của chính em
-        return _ok(ra)
+        return du_lieu, thong_tin_hs
 
     def _export_ly_do_da_khoa(self, output_path: str = ""):
         import csv
