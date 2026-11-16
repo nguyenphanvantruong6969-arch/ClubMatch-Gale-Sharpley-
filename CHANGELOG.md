@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L1 (mục cha E1-lite; ngoài sổ): tài khoản và đăng nhập (quản trị / giáo viên)
+
+Tuỳ chọn MỚI, mặc định TẮT: bảng `tai_khoan` rỗng thì phần mềm chạy y như trước (không màn đăng nhập; chỉ thêm `CREATE TABLE IF NOT EXISTS`).
+`kiem_nhanh` 7/7, 60 ca trùng khít. Số liệu MÔ PHỎNG. Chỉ là điều khiển, không dính `compute_club_priority` (bất biến 2).
+- Bảng `tai_khoan(ten, vai, bam, muoi, tao_luc)` (duyệt D-GT8). Mật khẩu băm PBKDF2-SHA256 200.000 vòng + muối ngẫu nhiên; so sánh `hmac.compare_digest`;
+  mật khẩu / băm / muối không bao giờ được trả ra, ghi nhật ký hay đưa vào tham số lỗi. Tối thiểu 8 ký tự.
+- API mới (`api_tai_khoan.py`, mixin của `PipelineAPI`): `get_phien_dang_nhap`, `tao_tai_khoan`, `dang_nhap`, `dang_xuat`, `doi_mat_khau`,
+  `xoa_tai_khoan`, `liet_ke_tai_khoan`. Tài khoản đầu tiên phải là quản trị, không cần đăng nhập, và người tạo được đăng nhập luôn; các tài khoản sau cần phiên
+  quản trị. Không xoá quản trị cuối. 5 lần sai liên tiếp (theo từng tên) → khoá 60 giây. Nghỉ 15 phút → đăng xuất (đồng hồ tiêm được `api._dong_ho`;
+  hàm nội bộ `_hoat_dong()` để cổng phân quyền L2 làm mới giờ nghỉ). Phiên nằm trong bộ nhớ, gắn với đường dẫn CSDL đang mở (đổi workspace là hết hiệu lực).
+- Khôi phục: `recovery.xoa_tai_khoan_sau_sao_luu(db)`, `RecoveryAPI.xoa_tai_khoan_sau_sao_luu`, và `python recovery.py --xoa-tai-khoan <app.db>`: sao lưu bằng
+  SQLite Backup API rồi xoá toàn bộ tài khoản (quên mật khẩu; quyền = có máy trong tay).
+- Giao diện `js/16_tai_khoan.js`: màn đăng nhập chắn giao diện khi đã có tài khoản mà chưa đăng nhập; thanh bên có tên + vai + Đăng xuất + nút "Tài khoản"
+  (hộp: tạo quản trị đầu tiên / đổi mật khẩu / quản trị tạo, xoá tài khoản). Khác kế hoạch: hộp mở từ thanh bên, không phải tab con của Quản lý (để không đổi tab con hiện có).
+- Mã lỗi `gt3_*` (14) trong `i18n_errors.py`; khoá `tk_*` trong `i18n.js`.
+- Test mới: `tests/test_gt3_tai_khoan.py` (42 ca), `tests/test_giao_dien_gt3_dang_nhap.py` (6 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 300 tệp, 6.365 ca.
+
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 
 Chỉ tài liệu, mã không đổi. Đối chiếu góp ý vòng trước với kho mã và chia việc cho 3 nhóm tự động (mỗi nhóm: Opus dẫn,

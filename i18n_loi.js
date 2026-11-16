@@ -1365,5 +1365,61 @@ window.I18N_ERROR_MESSAGES = {
   "forms_tieu_de_trung": {
     "vi": "Đề thi có hai câu hoặc hai lựa chọn cùng chữ nên không phân biệt được trên biểu mẫu: {chi_tiet} Hãy đổi tên trong đề thi rồi sinh lại biểu mẫu.",
     "en": "The exam file has two questions or two options with the same wording, so they can't be told apart on the form: {chi_tiet} Rename them in the exam file, then generate the form again."
+  },
+  "gt3_loi_tai_khoan": {
+    "vi": "Không xử lý được yêu cầu về tài khoản. Hãy thử lại.",
+    "en": "The account request could not be processed. Please try again."
+  },
+  "gt3_ten_khong_hop_le": {
+    "vi": "Tên tài khoản không được để trống và dài tối đa {toi_da} ký tự.",
+    "en": "The account name must not be empty and can be at most {toi_da} characters long."
+  },
+  "gt3_vai_khong_hop_le": {
+    "vi": "Vai trò không hợp lệ. Chọn \"quản trị\" hoặc \"giáo viên\".",
+    "en": "Invalid role. Choose \"administrator\" or \"teacher\"."
+  },
+  "gt3_mat_khau_ngan": {
+    "vi": "Mật khẩu cần có ít nhất {toi_thieu} ký tự.",
+    "en": "The password must have at least {toi_thieu} characters."
+  },
+  "gt3_tai_khoan_dau_phai_quan_tri": {
+    "vi": "Tài khoản đầu tiên phải là tài khoản quản trị.",
+    "en": "The first account must be an administrator account."
+  },
+  "gt3_ten_da_co": {
+    "vi": "Tên tài khoản này đã có. Hãy chọn tên khác.",
+    "en": "This account name already exists. Choose another name."
+  },
+  "gt3_can_dang_nhap": {
+    "vi": "Cần đăng nhập để làm việc này.",
+    "en": "Sign-in is required to do this."
+  },
+  "gt3_khong_du_quyen": {
+    "vi": "Tài khoản này không có quyền làm việc này. Hãy nhờ người quản trị.",
+    "en": "This account is not allowed to do this. Ask an administrator."
+  },
+  "gt3_chua_co_tai_khoan": {
+    "vi": "Chưa có tài khoản nào nên không cần đăng nhập.",
+    "en": "There are no accounts yet, so no sign-in is needed."
+  },
+  "gt3_sai_thong_tin": {
+    "vi": "Tên tài khoản hoặc mật khẩu không đúng.",
+    "en": "The account name or password is not correct."
+  },
+  "gt3_tam_khoa": {
+    "vi": "Nhập sai quá nhiều lần. Tài khoản tạm khoá, thử lại sau {giay} giây.",
+    "en": "Too many wrong attempts. The account is locked for now; try again in {giay} seconds."
+  },
+  "gt3_khong_xoa_quan_tri_cuoi": {
+    "vi": "Không thể xoá tài khoản quản trị cuối cùng. Hãy tạo thêm một quản trị khác trước.",
+    "en": "The last administrator account cannot be deleted. Create another administrator first."
+  },
+  "gt3_khong_thay_tai_khoan": {
+    "vi": "Không tìm thấy tài khoản này.",
+    "en": "This account was not found."
+  },
+  "gt3_khong_xoa_duoc_tai_khoan": {
+    "vi": "Không xoá được tài khoản. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
+    "en": "The accounts could not be cleared. Check the data file and try again."
   }
 };

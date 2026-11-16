@@ -2151,6 +2151,16 @@ CREATE TABLE IF NOT EXISTS wharton_lock (
     locked_at TEXT,
     unlocked_at TEXT
 );
+
+-- GT3 (L1): tài khoản + vai. Bảng RỖNG = phần mềm chạy như cũ (không màn đăng nhập). `bam`/`muoi`:
+-- PBKDF2-SHA256 + muối; mật khẩu không bao giờ được lưu hay ghi nhật ký.
+CREATE TABLE IF NOT EXISTS tai_khoan (
+    ten TEXT PRIMARY KEY,
+    vai TEXT NOT NULL CHECK (vai IN ('quan_tri', 'giao_vien')),
+    bam BLOB NOT NULL,
+    muoi BLOB NOT NULL,
+    tao_luc TEXT NOT NULL
+);
 """
 
 # busy_timeout dai hon mac dinh (5s) — nhieu tien trinh cung mo app.db
