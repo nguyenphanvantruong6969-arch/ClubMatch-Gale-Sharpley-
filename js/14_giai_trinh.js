@@ -190,8 +190,10 @@
   const GIAY_NHAN = 60000;
   let henGio = null;
   let hsDangMo = false;
+  let luotHs = 0;      // mỗi lần gửi, xoá thẻ, mở hay thoát là bỏ mọi phản hồi đang bay (không để thẻ em này hiện cho em khác)
 
   function xoaThe() {
+    luotHs += 1;
     el("gtHsKetQua").textContent = "";
     el("gtHsLoi").textContent = "";
     el("gtHsMa").value = "";
@@ -244,8 +246,9 @@
     const maTra = el("gtHsMaTra").value;
     el("gtHsKetQua").textContent = "";
     el("gtHsLoi").textContent = "";
+    const luot = (luotHs += 1);
     callApi("tra_cuu_hoc_sinh", ma, maTra).then((res) => {
-      if (!hsDangMo) return;
+      if (!hsDangMo || luot !== luotHs) return;
       el("gtHsMaTra").value = "";             // không để mã nằm lại trên màn hình
       if (!res.ok) {
         el("gtHsLoi").textContent = trErrs(res.errors).join(" ");

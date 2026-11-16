@@ -12,7 +12,7 @@ Không đổi cách xếp (`kiem_nhanh` trùng khít). Số liệu MÔ PHỎNG.
   `gt1_tam_khoa`, `gt1_chua_co_ma`. Phiếu in (L3) in mã của CHÍNH em khi đã có.
 - Giao diện: ba nút ở khung tra cứu (tạo mã, xuất CSV, "Chế độ học sinh tra cứu"); lớp phủ toàn màn hình, phần còn lại của ứng dụng
   `inert`, 60 giây không thao tác thì xoá thẻ, thoát có hỏi lại (`js/14_giai_trinh.js`, `index.html`, `i18n.js` `gt_*`, `style.css`).
-- Test mới: `tests/test_gt1_ma_tra_cuu.py` (13 ca), `tests/test_giao_dien_gt1_hoc_sinh.py` (7 ca).
+- Test mới: `tests/test_gt1_ma_tra_cuu.py` (13 ca), `tests/test_giao_dien_gt1_hoc_sinh.py` (9 ca; fix1: phản hồi về muộn không hiện thẻ em trước cho em sau, `luotHs` huỷ khi gửi lại, hết giờ, mở, thoát).
 
 ## 2026-11-16 — GT1-L3 (mục cha C3): phiếu giải trình in cho từng học sinh
 

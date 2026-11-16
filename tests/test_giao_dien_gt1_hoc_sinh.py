@@ -170,3 +170,68 @@ def test_nut_tao_ma_o_man_hinh_quan_tri_khong_hien_ma(mo):
     with api._ket_noi_doc() as cur:
         assert [r[0] for r in cur.execute("SELECT ma FROM ma_tra_cuu")] == ma
     assert loi == []
+
+
+def _giu_yeu_cau_cua(page, sid):
+    """Giữ mọi yêu cầu `tra_cuu_hoc_sinh` của mã `sid`, cho qua các yêu cầu khác; trả (danh sách giữ, hàm thả)."""
+    giu = []
+
+    def xu_ly(route):
+        if ('"%s"' % sid) in (route.request.post_data or ""):
+            giu.append(route)
+        else:
+            route.continue_()
+    page.route("**/__api__/tra_cuu_hoc_sinh", xu_ly)
+
+    def tha():
+        for r in giu:
+            r.continue_()
+        giu.clear()
+    return giu, tha
+
+
+def _cho_giu(page, giu):
+    for _ in range(100):
+        if giu:
+            return
+        page.wait_for_timeout(50)
+    raise AssertionError("yêu cầu chưa tới")
+
+
+def test_phan_hoi_ve_muon_khong_hien_the_em_truoc_cho_em_sau(mo):
+    page, loi, api = mo
+    ma = _dung(api)
+    giu, tha = _giu_yeu_cau_cua(page, "s1")
+    page.click("#btnGtCheDoHs")
+    _vao(page, "s1", ma["s1"])
+    _cho_giu(page, giu)                                   # phản hồi của s1 bị giữ lại
+    _vao(page, "s2", ma["s2"])
+    page.wait_for_selector("#gtHsKetQua .gt-ten")
+    tha()                                                 # phản hồi s1 về MUỘN, sau khi s2 đã hiện
+    page.wait_for_timeout(500)
+    the = page.locator("#gtHs").inner_text()
+    assert HS["s2"] in the and HS["s1"] not in the and "s1" not in the
+    assert page.locator("#gtHsKetQua .gt-ten").count() == 1
+    assert loi == []
+
+
+def test_phan_hoi_ve_sau_khi_xoa_vi_het_gio_hay_thoat_bi_bo(mo):
+    page, loi, api = mo
+    ma = _dung(api)
+    giu, tha = _giu_yeu_cau_cua(page, "s1")
+    page.click("#btnGtCheDoHs")
+    _vao(page, "s1", ma["s1"])
+    _cho_giu(page, giu)
+    page.clock.run_for(61000)                             # hết 60 giây khi đang chờ
+    tha()
+    page.wait_for_timeout(500)
+    assert page.locator("#gtHsKetQua").inner_text() == "" and HS["s1"] not in page.locator("#gtHs").inner_text()
+    _vao(page, "s1", ma["s1"])                            # lần nữa, rồi thoát khi đang chờ
+    _cho_giu(page, giu)
+    page.click("#btnGtHsThoat")
+    page.click("#btnGtHsCo")
+    tha()
+    page.wait_for_timeout(500)
+    page.click("#btnGtCheDoHs")
+    assert page.locator("#gtHsKetQua").inner_text() == ""
+    assert loi == []
