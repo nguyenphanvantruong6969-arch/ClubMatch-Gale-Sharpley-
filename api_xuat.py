@@ -1768,7 +1768,7 @@ class XuatKetQuaMixin:
                 return _fail(err("gt1_khong_tim_thay_lan_chay"))
             if chon["run_id"] != moi_nhat:   # chỉ lưu kết quả của lần mới nhất
                 return _fail(err("gt1_lan_chay_cu"))
-            ten_hs = cur.execute("SELECT 1 FROM students WHERE student_id = ?",
+            ten_hs = cur.execute("SELECT name, class_id FROM students WHERE student_id = ?",
                                  (student_id,)).fetchone()
             if ten_hs is None:
                 return _fail(err("gt1_khong_co_hoc_sinh"))
@@ -1833,7 +1833,9 @@ class XuatKetQuaMixin:
                     da_doi = True
         du_lieu = {"fa_bat": fa_bat, "du_lieu_da_doi": da_doi, "run": thong_tin,
                    "ds_buoi": ds_buoi, "buoi": theo_buoi}
-        return _ok(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id))
+        ra = giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id)
+        ra["ten"], ra["lop"] = ten_hs[0] or "", ten_hs[1] or ""     # chỉ tên và lớp của chính em
+        return _ok(ra)
 
     def _export_ly_do_da_khoa(self, output_path: str = ""):
         import csv

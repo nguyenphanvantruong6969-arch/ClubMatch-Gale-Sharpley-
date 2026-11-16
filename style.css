@@ -2982,3 +2982,10 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
   #kqBang td:not(.kq-cd) { min-width: 5em; }
   #kqBang th, #kqBang td { padding-left: 6px; padding-right: 6px; }
 }
+
+/* GT1: khung "Tra cứu một học sinh" */
+#gtLop[hidden] { display: none; }
+.gt-ds { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.gt-canh-bao { padding: 8px 12px; border-left: 4px solid #b45309; background: #fef3c7; color: #78350f; }
+.gt-duoc-xep td { font-weight: 600; background: #dcfce7; color: #14532d; }
+.gt-buoi { margin-top: 12px; }

@@ -535,13 +535,15 @@ class QuanLyMixin:
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 
-    def search_students(self, query: str):
+    def search_students(self, query: str, lop=None):
+        """`lop` (GT1-L2, mặc định None = như cũ): chỉ lấy học sinh của lớp đó."""
         try:
             with self._ket_noi_doc() as cur:
+                loc, tham = ("", ()) if not lop else (" AND class_id = ?", (lop,))
                 rows = cur.execute(
                     "SELECT student_id, name FROM students "
-                    "WHERE khop_tim(student_id, ?) OR khop_tim(name, ?) LIMIT 20",
-                    (query, query),
+                    "WHERE (khop_tim(student_id, ?) OR khop_tim(name, ?))" + loc + " LIMIT 20",
+                    (query, query) + tham,
                 ).fetchall()
             return _ok([dict(r) for r in rows])
         except Exception as e:
