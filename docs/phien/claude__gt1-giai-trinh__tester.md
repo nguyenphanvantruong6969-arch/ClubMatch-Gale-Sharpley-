@@ -1,4 +1,52 @@
-# Checker verdicts — GT1 (branch claude/gt1-giai-trinh)
+# Branch handoff: claude/gt1-giai-trinh (CHECKER / tester)
+
+> Purpose: a fresh checker reads CLAUDE.md, docs/phien/GT_GIAO_THUC.md, the branch file, THEN this file.
+> Language: English. Cap: 150 lines. Protocol: GT_GIAO_THUC.md §5 steps 5-6, §7 formats. Never edit product code or tests.
+
+## Feature / goal
+Checker for GT1 (per-student explanation, parent C3). Reviews ONE lot diff per `REVIEW L<n> <base>..<head>` from the lead
+(session_01TGThn8ujS9oohKhbgDiJgD), runs related tests + `kiem_nhanh.py`, tries own edge cases (temp test files, deleted
+after), writes the verdict below, commits+pushes only this file, reports with send_message in §7 format.
+
+## Plan (ticked by checker after reporting)
+- [x] L1 reviewed -> 3 bugs -> fix1 re-check NO BUGS (2ccfd01)
+- [x] L2 reviewed -> 1 bug -> fix1 re-check NO BUGS (2d2c947)
+- [x] L3 reviewed -> NO BUGS (35a16d2)
+- [x] L4 reviewed 807499d..f4132a3 -> 1 BUG reported (verdict pushed 183a478); fix NOT yet re-checked
+
+## Current state (overwrite each handoff)
+- Done so far: L1-L3 closed with NO BUGS; L4 reported 1 bug to lead.
+- In progress: waiting for `FIX L4` / `REVIEW L4 <base>..<head>` (re-check) from lead.
+- Tests: last full related run on f4132a3: 578 passed (L1-L4 tests + all files mentioning delete_student/reset_data +
+  i18n); kiem_nhanh 7/7 (60 cases identical).
+- Open problems: L4 bug 1 (below) unfixed as of this handoff.
+
+## Decisions and gotchas (keep short)
+- `git pull --no-rebase` (protocol §1: never rebase a pushed branch) before push.
+- Temp tests go in tests/test_zz_checker_tmp.py and are deleted before commit (git status must be clean except verdict).
+- Chromium harness: reuse fixtures `mo` from tests/test_giao_dien_gt1_tra_cuu.py / _hoc_sinh.py; to delay API calls wrap
+  `window.fetch` in-page (sync Playwright route handlers block other requests, giving false results).
+- Student-id lockout is keyed on stripped id (case-sensitive); DB lookup is case-sensitive too (no bypass by case).
+- Re-check of L4 fix: repro = delay first `tra_cuu_hoc_sinh` fetch 1.5 s in page, submit s1+code then 0.1 s later s2+code,
+  wait 2.5 s: card must be s2's (or empty), never s1's.
+
+## Next steps (ordered)
+1. On `REVIEW L4 ... (fix1)`: pull, diff fix1 range, rerun tests/test_gt1_ma_tra_cuu.py, test_giao_dien_gt1_hoc_sinh.py,
+   test_gt1_giai_trinh.py, test_gt1_phieu.py, test_giao_dien_gt1_tra_cuu.py, i18n tests; run the L4 repro above.
+2. Append "L4 fix1" verdict below, commit+push, send CHECKER REPORT L4 (§7).
+3. Then wait for CI-gate / later FIX requests from lead.
+
+## Files touched
+- docs/phien/claude__gt1-giai-trinh__tester.md: this file (verdicts). No product code or tests edited.
+- .claude/phien_vai.json (gitignored): {"vai":"tester","coord_id":"session_01TGThn8ujS9oohKhbgDiJgD","nguong":200000}
+
+## Session log (append only, newest last)
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-16 | Sonnet checker | L1-L4 reviews; verdicts below; handoff at ~200k tokens | L4 bug 1 open |
+
+# Verdicts (append only)
+## (verdict history)
 
 ## L1 | reviewed a75a02b..6fda292 | verdict: 3 BUGS (all minor, none touches run paths)
 Verified OK: `tests/test_gt1_giai_trinh.py` 24 passed; `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7 DAT
