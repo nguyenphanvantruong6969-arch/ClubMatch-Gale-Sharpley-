@@ -89,3 +89,13 @@ Ran: `test_gt3_nhat_ky`, `test_giao_dien_gt3_dang_nhap`, `test_gt3_phan_quyen`, 
 - A denied/anonymous/teacher call now writes a row and therefore waits on `_khoa_ghi` (measured 2.8 s while another thread held it):
   during a long `run_pipeline` denied clicks and failed logins hang until the run ends. Acceptable for a kiosk; consider a short timeout.
 - Filter `nguoi` is exact and case-sensitive; anonymous rows (nguoi NULL) cannot be filtered by name.
+
+## L3 fix1 — reviewed 7fcba6a..ff12579 — verdict: NO BUGS
+Bug 1 fixed: after `create_workspace` + `open_workspace` the row lands in the PRE-call DB (+1 there, 0 in the new workspace).
+Deferred write (`ghi` waits <= 1 s on `_khoa_ghi`, then a daemon thread writes): denied call returns in 1.00 s while another
+thread holds the lock; the row appears after release; 6 concurrent denied calls during a held lock -> exactly 6 rows (no
+duplicates); DB file deleted while a write is pending -> warning only, file NOT recreated, thread ends, no crash.
+`nguoi` filter now matches NFC/NFD/any case of an account name (3/3/3) and 0 for unknown.
+Related tests 155 passed; `ruff` clean; `kiem_nhanh` 7/7.
+Note (not a bug): a deferred row is lost if the process exits within milliseconds of the lock release (daemon thread); only
+affects calls that were made concurrently with a long run, never the run's own row (written synchronously).
