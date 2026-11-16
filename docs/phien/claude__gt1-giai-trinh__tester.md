@@ -12,7 +12,7 @@ after), writes the verdict below, commits+pushes only this file, reports with se
 - [x] L1 reviewed -> 3 bugs -> fix1 re-check NO BUGS (2ccfd01)
 - [x] L2 reviewed -> 1 bug -> fix1 re-check NO BUGS (2d2c947)
 - [x] L3 reviewed -> NO BUGS (35a16d2)
-- [x] L4 reviewed 807499d..f4132a3 -> 1 BUG reported (verdict pushed 183a478); fix NOT yet re-checked
+- [x] L4 reviewed -> 1 BUG -> fix1 re-check NO BUGS (5facef0)
 
 ## Current state (overwrite each handoff)
 - Done so far: L1-L3 closed with NO BUGS; L4 reported 1 bug to lead.
@@ -114,3 +114,11 @@ Bug:
    inputs. Repro (Chromium; delay first `tra_cuu_hoc_sinh` fetch 1.5 s in-page): submit s1+code, 0.1 s later submit
    s2+code; after 2.5 s card = "Nguyễn Văn Ánh (s1)" while inputs show s2. Expected: only the latest submit renders
    (use `callApiMoiNhat("gt_hs", ...)` or a token like `luotTim`), so one student never sees another's card.
+
+## L4 fix1 | re-checked f4132a3..5facef0 | verdict: NO BUGS
+Fix: `luotHs` token in `js/14_giai_trinh.js` (bumped by submit, xoaThe, moHs, thoatHs; reply dropped if stale).
+Own Chromium repro (temp test, deleted; first `tra_cuu_hoc_sinh` fetch delayed in-page, fake clock):
+s1 slow then s2 -> card is s2's, no s1 name/id; s1 reply landing after 60 s idle clear -> card and both inputs stay
+empty; s1 reply landing after exit (and after reopening) -> nothing rendered, overlay hidden; normal single lookup still
+shows the card. Tests: gt1_ma_tra_cuu + giao_dien_gt1_hoc_sinh + giao_dien_gt1_tra_cuu + gt1_giai_trinh + gt1_phieu +
+i18n_sync = 73 passed; kiem_nhanh 7/7 (60 cases identical).
