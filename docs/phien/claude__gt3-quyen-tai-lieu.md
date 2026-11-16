@@ -25,6 +25,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 ### Lead notes per lot
 - All lots: every new table/option defaults OFF; accounts table empty ⇒ behaviour byte-identical to today.
 - L2: the `dir(PipelineAPI)` completeness test will fail on integration until GT1/GT2 methods are classified (I1); that is intended.
+- L3 (lead decision 2026-11-16, from checker L2): on-site entry writes (submit_preferences, submit_huy_chuong, submit_test_selection, attendance/score writes) stay `giao_vien`, so L3 audits EVERY write method of either role, not only `quan_tri` calls.
 
 ## Sessions
 | Role | Model | Session id | State |
@@ -39,7 +40,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created from `origin/claude/determined-allen-kig6ud`; this file written.
-- In progress: L2 sent to writer (GO L2). L1 done (e62e24a).
+- In progress: L2 fix1 (fail-closed account check) with writer.
 
 ## Decisions and gotchas (keep short)
 - Decisions D-GT1…D-GT9 in the protocol §0; do not ask again.
