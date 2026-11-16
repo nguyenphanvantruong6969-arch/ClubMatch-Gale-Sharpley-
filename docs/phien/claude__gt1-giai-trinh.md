@@ -34,12 +34,13 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn8ujS9oohKhbgDiJgD | claude-opus-5-5 | active |
-| writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | active (L1) |
+| writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | archived (handoff 54e8c0d, ~217k) |
+| writer 2 | session_01TGThn4KfT4gVBLHBdZiZXv | claude-sonnet-5-5 | active (waits L1 review) |
 | checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | active (idle) |
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, this file written.
-- In progress: L1 (GO L1 sent 2026-11-16).
+- In progress: L1 done by writer (6fda292), REVIEW L1 sent to checker.
 - Tests: none yet.
 - Open problems: none.
 
@@ -60,3 +61,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-16 | Opus lead | Branch + handoff file created | base 5926107 |
+| 2026-11-16 | Opus lead | WRITER DONE L1 6fda292; REVIEW L1 sent; writer handoff -> writer 2 | |
