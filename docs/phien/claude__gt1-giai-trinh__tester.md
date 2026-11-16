@@ -19,3 +19,8 @@ Bugs:
 3. `api_xuat._giai_trinh_hoc_sinh` — unknown `run_id` (9999) returns `gt1_chua_chay` ("chưa có lần xếp nào") though
    runs exist. Expected: a distinct message (e.g. run not found).
 Edge cases tried: empty/None/diacritic unknown id -> `gt1_khong_co_hoc_sinh` ok; never-run -> `gt1_chua_chay` ok.
+
+## L1 fix1 | re-checked 6fda292..2ccfd01 | verdict: NO BUGS
+Bugs 1-3 fixed and covered by new tests (NO_CHOICES; gt1_lan_chay_cu; gt1_khong_tim_thay_lan_chay). On 2ccfd01:
+test_gt1_giai_trinh + test_fa_ly_do + test_fa_n1_ly_do_mot_phan + test_i18n_khoa_dc_khong_chet + test_i18n_sync
+= 72 passed; kiem_nhanh 7/7 (9 cases identical, i18n in sync, ruff clean).
