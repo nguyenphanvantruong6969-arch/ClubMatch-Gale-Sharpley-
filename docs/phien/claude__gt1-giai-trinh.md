@@ -13,7 +13,7 @@ constraints, and why they got (or did not get) each club — on screen (admin/te
 self-lookup with a code. Reports/controls only: no run code path changes (invariants 1, 2, 3 untouched).
 
 ## Plan (written by Opus lead; ticked by lead after CHECKER NO BUGS)
-- [ ] L1 Explanation engine: `giai_trinh.py` (`giai_trinh_mot_hoc_sinh`), `fa_ly_do.cau_ly_do_rbda`, stale guard
+- [x] L1 Explanation engine (2ccfd01, checker NO BUGS 76864f5): `giai_trinh.py` (`giai_trinh_mot_hoc_sinh`), `fa_ly_do.cau_ly_do_rbda`, stale guard
       via `dau_van_tay_chay`, API `get_giai_trinh_hoc_sinh`, errors `gt1_khong_co_hoc_sinh`, `gt1_chua_chay`.
       Tests `tests/test_gt1_giai_trinh.py` (a)–(e).
 - [ ] L2 Lookup screen (admin/teacher): panel "Tra cứu một học sinh" in results tab, `js/14_giai_trinh.js`,
@@ -39,8 +39,8 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | active (idle) |
 
 ## Current state (overwrite each handoff)
-- Done so far: branch created, this file written.
-- In progress: L1 done by writer (6fda292), REVIEW L1 sent to checker.
+- Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
+- In progress: L2 (GO L2 sent). L1 done 2ccfd01.
 - Tests: none yet.
 - Open problems: none.
 
@@ -62,3 +62,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 |---|---|---|---|
 | 2026-11-16 | Opus lead | Branch + handoff file created | base 5926107 |
 | 2026-11-16 | Opus lead | WRITER DONE L1 6fda292; REVIEW L1 sent; writer handoff -> writer 2 | |
+| 2026-11-16 | Opus lead | L1 fix1 2ccfd01 NO BUGS; ticked; GO L2 | |
