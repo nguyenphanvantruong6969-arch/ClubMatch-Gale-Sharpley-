@@ -34,12 +34,12 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn8ujS9oohKhbgDiJgD | claude-opus-5-5 | active |
-| writer | (pending) | claude-sonnet-5-5 | — |
-| checker | (pending) | claude-sonnet-5-5 | — |
+| writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | active (L1) |
+| checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | active (idle) |
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, this file written.
-- In progress: L1 (GO sent once writer exists).
+- In progress: L1 (GO L1 sent 2026-11-16).
 - Tests: none yet.
 - Open problems: none.
 
