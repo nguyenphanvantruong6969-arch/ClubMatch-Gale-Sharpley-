@@ -37,3 +37,8 @@ Bug:
    `**/__api__/search_students`): type "s" -> list shown; type "n" (slow) ; click s1 at once; after 2 s `#gtDs`
    contains "Nguyễn Văn Ánh (s1)" and the other student's name (s2). Expected: after selecting, DOM has only the
    chosen student (bump the `gt_tim` channel counter in `xem`, or ignore results until the next input).
+
+## L2 fix1 | re-checked 0a57c37..2d2c947 | verdict: NO BUGS
+Own repro (delayed search, type "s" then slow "n", click s1): `#gtDs` empty, no other student in panel. A-then-B
+(first get_giai_trinh_hoc_sinh delayed 2 s, B picked meanwhile): card ends as B, A's late reply dropped. 8 passed
+(my 2 temp tests + tests/test_giao_dien_gt1_tra_cuu.py incl. new regression); temp tests deleted.
