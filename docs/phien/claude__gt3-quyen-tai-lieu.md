@@ -16,7 +16,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 
 ## Plan (written by Opus; ticked by the lead after checker NO BUGS)
 - [x] L1 Accounts and login (e62e24a, checker NO BUGS after fix1) (`tai_khoan.py`, API, lock/idle, recovery clear option, `js/16_tai_khoan.js`)
-- [ ] L2 Permission gate (`phan_quyen.py` map `QUYEN`, central enforcement, UI hides buttons)
+- [x] L2 Permission gate (5208c6d, checker NO BUGS after fix1) (`phan_quyen.py` map `QUYEN`, central enforcement, UI hides buttons)
 - [ ] L3 Audit log (`nhat_ky_thao_tac`, append-only triggers, viewer + CSV export)
 - [ ] L4 Evidence docs (`docs/giai_trinh/*.md`, `so_do_luong.svg`, `PHAN_CONG.md` template)
 - [ ] CI gate (§6) green on branch head
@@ -40,7 +40,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created from `origin/claude/determined-allen-kig6ud`; this file written.
-- In progress: L2 fix1 (fail-closed account check) with writer.
+- In progress: L3 sent to writer (GO L3). L1 e62e24a, L2 5208c6d done.
 
 ## Decisions and gotchas (keep short)
 - Decisions D-GT1…D-GT9 in the protocol §0; do not ask again.
