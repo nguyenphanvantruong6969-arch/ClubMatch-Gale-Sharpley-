@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-16 — GT1 sửa lỗi CI (không đổi hành vi xếp)
+
+- `i18n.js`: `gt_the_ten` bỏ gạch ngang nối ("{ten} ({ma}), {cohort_l} {lop}"), `gt_khong_co` thành "Không có" / "None", tiếng Anh `gt_lan_chay` bỏ từ "seed".
+- `index.html` + `js/14_giai_trinh.js`: lớp phủ học sinh chỉ mang `role="dialog"` / `aria-modal` khi đang mở (trước đây luôn nằm trong DOM làm các test chờ hộp thoại treo).
+- `tests/test_ws_nhan.py`: thêm khối `GT1` vào danh sách mã mới sau ảnh chụp (`gt1_*`).
+
 ## 2026-11-16 — GT1-L4 (mục cha C3): mã tra cứu và chế độ học sinh tự tra cứu
 
 Không đổi cách xếp (`kiem_nhanh` trùng khít). Số liệu MÔ PHỎNG.

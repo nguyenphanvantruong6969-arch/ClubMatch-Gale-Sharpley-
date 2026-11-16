@@ -222,6 +222,9 @@
     xoaThe();
     el("gtHsXacNhan").hidden = true;
     khoaPhanConLai(true);
+    /* role chỉ có khi đang mở: nơi khác (và test) coi mọi [role=dialog] trong DOM là hộp thoại đang hiện. */
+    el("gtHs").setAttribute("role", "dialog");
+    el("gtHs").setAttribute("aria-modal", "true");
     el("gtHs").hidden = false;
     el("gtHsMa").focus();
     datHenGio();
@@ -232,6 +235,8 @@
     clearTimeout(henGio);
     xoaThe();
     el("gtHs").hidden = true;
+    el("gtHs").removeAttribute("role");
+    el("gtHs").removeAttribute("aria-modal");
     khoaPhanConLai(false);
   }
 
