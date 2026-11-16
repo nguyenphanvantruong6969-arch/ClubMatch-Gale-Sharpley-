@@ -33,7 +33,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 | lead | Opus | session_01YVAyu1qFUsCrfJzADRDejq | active |
 | writer | Sonnet | session_01YVAyu1P96ELQbaGCN11z8y | archived (handoff after L1, 95fad10) |
 | writer 2 | Sonnet | session_01YVAytzxaEXv7mrFdiaw85i | archived (handoff mid-L3, 385afc1) |
-| writer 3 | Sonnet | session_01YVAytz9otUM5z9GiQks7T1 | active |
+| writer 3 | Sonnet | session_01YVAytz9otUM5z9GiQks7T1 | archived (handoff after L4, 86826b4); next writer created on demand |
 | checker | Sonnet | session_01YVAytz3RuHwjzM5L3EVnKE | archived (handoff after L3, e3e3202) |
 | checker 2 | Sonnet | session_01YVAytyzqdgFPNE63JLRF6h | active |
 
@@ -42,7 +42,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created from `origin/claude/determined-allen-kig6ud`; this file written.
-- In progress: L4 sent to writer (GO L4). L1 e62e24a, L2 5208c6d, L3 ff12579 done.
+- In progress: L4 (6d36d68) under review by checker 2. No active writer (create one for FIX/CI, continue from __impl.md).
 
 ## Decisions and gotchas (keep short)
 - Decisions D-GT1…D-GT9 in the protocol §0; do not ask again.
