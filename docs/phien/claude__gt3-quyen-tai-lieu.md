@@ -30,15 +30,15 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 | Role | Model | Session id | State |
 |---|---|---|---|
 | lead | Opus | session_01YVAyu1qFUsCrfJzADRDejq | active |
-| writer | Sonnet | (pending) | |
-| checker | Sonnet | (pending) | |
+| writer | Sonnet | session_01YVAyu1P96ELQbaGCN11z8y | active |
+| checker | Sonnet | session_01YVAytz3RuHwjzM5L3EVnKE | active |
 
 ## Needs Truong
 - (none yet)
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created from `origin/claude/determined-allen-kig6ud`; this file written.
-- In progress: creating writer/checker sessions; next `GO L1`.
+- In progress: L1 sent to writer (GO L1).
 
 ## Decisions and gotchas (keep short)
 - Decisions D-GT1…D-GT9 in the protocol §0; do not ask again.
