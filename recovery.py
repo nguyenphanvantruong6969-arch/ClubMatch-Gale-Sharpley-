@@ -256,6 +256,12 @@ def xoa_tai_khoan_sau_sao_luu(db_path: str) -> int:
 
 if __name__ == "__main__":
     import argparse
+    import sys
+
+    # Windows (bảng mã cp1252) không in được tiếng Việt: ép UTF-8, ký tự không in được thì thay dấu hỏi.
+    for _luong in (sys.stdout, sys.stderr):
+        if hasattr(_luong, "reconfigure"):
+            _luong.reconfigure(encoding="utf-8", errors="replace")
 
     ap = argparse.ArgumentParser(
         description="Công cụ khôi phục (chạy khi phần mềm đã đóng).")

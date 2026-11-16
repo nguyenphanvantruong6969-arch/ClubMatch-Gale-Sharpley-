@@ -12,11 +12,16 @@ import sqlite3
 import time
 
 import tai_khoan as tk
+from rbda_priority_pipeline import connect_db
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
 
 # Tên cố định, dùng để làm một lần băm "giả" khi tên không tồn tại (cùng thời gian phản hồi).
+# Chờ khoá tối đa khi cổng L2 làm mới "có tài khoản không" (đã có giá trị cũ để dùng).
+_CHO_KHOA_CONG_MS = 50
+# Làm mới thất bại vì khoá thì 5 giây sau mới thử lại: CSDL bận lâu không bị cộng thêm chờ ở MỖI lời gọi.
+_LUI_LAI_CONG_GIAY = 5.0
 _MAT_KHAU_GIA = "khong-ton-tai-0"
 
 
@@ -25,6 +30,7 @@ class TaiKhoanMixin:
         # Đồng hồ tiêm được: test thay `api._dong_ho` bằng đồng hồ giả.
         self._dong_ho = time.monotonic
         self._dang_nhap = tk.TrangThaiDangNhap(lambda: self._dong_ho())
+        self._co_tk_lui = {}           # {đường dẫn CSDL: mốc monotonic trước đó không làm mới lại}
         self._co_tk_nho = {}           # {đường dẫn CSDL: có tài khoản?} — lần đọc thành công gần nhất (cổng L2)
 
     # ------------------------------------------------------------- nội bộ
@@ -40,7 +46,24 @@ class TaiKhoanMixin:
         """
         db = self.db_path
         try:
-            co = self._co_tai_khoan()
+            if db in self._co_tk_nho and getattr(self._giao_dich, "conn", None) is None:
+                # Đã có giá trị đọc được của CSDL này: làm mới với thời gian chờ khoá NGẮN (CSDL đang bận thì
+                # dùng giá trị cũ, cổng không cộng thêm thời gian chờ vào lời gọi).
+                if time.monotonic() < self._co_tk_lui.get(db, 0.0):
+                    return self._co_tk_nho[db]
+                try:
+                    conn = connect_db(db, cho_khoa_ms=_CHO_KHOA_CONG_MS)
+                    try:
+                        co = tk.dem_tai_khoan(conn.cursor()) > 0
+                    finally:
+                        conn.close()
+                except sqlite3.OperationalError as e:
+                    if "no such table" not in str(e):
+                        self._co_tk_lui[db] = time.monotonic() + _LUI_LAI_CONG_GIAY
+                        return self._co_tk_nho[db]
+                    co = False
+            else:
+                co = self._co_tai_khoan()
         except sqlite3.OperationalError as e:
             if "no such table" not in str(e):
                 return self._co_tk_nho.get(db, True)
@@ -128,6 +151,8 @@ class TaiKhoanMixin:
                     tk.them(cur, ten_sach, mat_khau, vai)
                 except sqlite3.IntegrityError:
                     return _fail(err("gt3_ten_da_co"))
+            self._co_tk_nho[self.db_path] = True          # có tài khoản rồi (xoá không bao giờ về 0: giữ quản trị cuối)
+            self._co_tk_lui.pop(self.db_path, None)
             if dau_tien:
                 self._dang_nhap.bat_dau(ten_sach, vai, self.db_path)
             return _ok({"ten": ten_sach, "vai": vai})

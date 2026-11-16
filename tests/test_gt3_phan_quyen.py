@@ -292,3 +292,21 @@ def test_thieu_bang_tai_khoan_la_chua_co_tai_khoan(api, monkeypatch):
     monkeypatch.setattr(PipelineAPI, "_co_tai_khoan", thieu)
     assert api._co_tai_khoan_nho() is False
     assert api.get_dashboard_status()["ok"]
+
+
+def test_cong_khong_cong_them_thoi_gian_cho_khi_csdl_bi_khoa(api, co_tk):
+    """CSDL đang bị khoá ghi: bước hỏi "có tài khoản không" của cổng dùng giá trị nhớ, không chờ hết thời gian chờ khoá."""
+    import sqlite3
+    import time
+
+    assert api.get_dashboard_status()["ok"]
+    giu = sqlite3.connect(api.db_path)
+    giu.execute("BEGIN EXCLUSIVE")
+    try:
+        t0 = time.monotonic()
+        for _ in range(20):
+            assert api._co_tai_khoan_nho() is True
+        assert time.monotonic() - t0 < 1.0          # lần đầu chờ tối đa 50 ms, 19 lần sau không chờ
+    finally:
+        giu.rollback()
+        giu.close()

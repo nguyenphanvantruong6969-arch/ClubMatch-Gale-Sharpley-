@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3 CI fix1 (Windows)
+- `recovery.py` (dòng lệnh): ép stdout/stderr sang UTF-8 (`reconfigure`, có kiểm `hasattr`) — `--help` không còn UnicodeEncodeError trên console cp1252.
+- `api_tai_khoan._co_tai_khoan_nho`: đã có giá trị nhớ thì làm mới với thời gian chờ khoá 50 ms, thất bại do khoá thì 5 s sau mới thử lại; `tao_tai_khoan` cập nhật bộ nhớ ngay. Lần đầu (chưa từng đọc được) vẫn đóng khi lỗi. Đo trên Linux, CSDL bị khoá, tài khoản tắt: cổng cộng ≈ 0,05 s mỗi lời gọi (trước: ≈ 3 s).
+- Test mới: `test_recovery_help_chay_duoc_tren_console_cp1252`, `test_cong_khong_cong_them_thoi_gian_cho_khi_csdl_bi_khoa`.
+
 ## 2026-11-16 — GT3-L4 fix1: luồng nạp sổ mẫu đúng chế độ huy chương
 - `HUONG_DAN_CHAY.md` mục 4–6, `KICH_BAN_DEMO.md` bước 3–8, `KICH_BAN_VIDEO.md` bước 4–7: sổ `SO_NHAP_FA_MAU_120HS.xlsx` phải nạp vào không gian đã tích "Xếp theo loại CLB và huy chương" (chọn lúc tạo); bỏ bước "Phóng cho đủ 100" và lời nhắc `fa_cot_bo_qua`; số FA001/FA002 chạy lại thật (hạt giống 42); ghi chú câu giải thích từng học sinh đã có ở chế độ này.
 - Test mới trong `tests/test_gt3_tai_lieu.py` (22 ca): tài liệu dặn bật chế độ trước khi nạp; số liệu FA001/FA002 trong tài liệu khớp một lần nạp + chạy thật (hạt giống 42).

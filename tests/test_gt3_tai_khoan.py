@@ -485,3 +485,16 @@ def test_recovery_cho_lenh_dong_dong_goi():
     kq = subprocess.run([sys.executable, os.path.join(goc, "recovery.py"), "--help"],
                         capture_output=True, text=True, timeout=60)
     assert kq.returncode == 0 and "--xoa-tai-khoan" in kq.stdout
+
+
+def test_recovery_help_chay_duoc_tren_console_cp1252():
+    """Console Windows (cp1252) không in được tiếng Việt: lệnh phải tự ép UTF-8 thay vì UnicodeEncodeError."""
+    import subprocess
+    import sys
+
+    goc = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, PYTHONIOENCODING="cp1252", PYTHONUTF8="0")
+    kq = subprocess.run([sys.executable, os.path.join(goc, "recovery.py"), "--help"],
+                        capture_output=True, timeout=60, env=env)
+    assert kq.returncode == 0, kq.stderr.decode("utf-8", "replace")[-300:]
+    assert "--xoa-tai-khoan" in kq.stdout.decode("utf-8")
