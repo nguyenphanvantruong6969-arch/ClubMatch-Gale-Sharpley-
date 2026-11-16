@@ -160,3 +160,12 @@ no evaluation; no internal codes outside backticks; every quoted error text in D
 ### Notes (not bugs)
 - Test cannot catch bug 1 (it only checks form); acceptable, but the lead may ask the writer to rerun the doc steps after the fix.
 - "(sau tích hợp)" marker is present in both scripts as the spec asks.
+
+## L4 fix1 — reviewed 6d36d68..0b52a14 — verdict: NO BUGS
+Re-ran the documented flow on a fresh DB: `create_workspace(name, {"rules": {"fa_daa": True}})` (create-time option, label "Xếp theo loại CLB và huy chương"
+exists in `i18n.js`; menu ⋯ only adds features, as the doc now says) -> open -> preview 8/2/120/829/194, 0 errors, 0 warnings -> import ok ->
+`run_pipeline(42)` ok, not blocked, n_matched 120/120, rounds_run 8, steps backup..export done. Results equal the docs: FA001 thu_2 THU_2_4 rank 2,
+thu_5 THU_5_4 rank 1; FA002 thu_2 THU_2_1 rank 3, thu_5 THU_5_1 rank 4; `get_ly_do_ket_qua` fa_bat true, FA001 sentence text matches.
+No leftover "phóng" step, no `THU_2_2`, no `fa_cot_bo_qua` claim. `test_gt3_tai_lieu` 22 passed; ruff clean; only docs/tests changed (invariant 1 untouched).
+434 `wharton_chua_dung_het` warnings: they are in `import_so_nhap` `data.warnings` (not in `canh_bao`); same 434 on `origin/main` with the same flow => pre-existing,
+out of GT3 scope. The doc describes it accurately (informational, does not block; "434 in the trial run").
