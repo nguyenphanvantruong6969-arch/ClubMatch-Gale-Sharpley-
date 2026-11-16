@@ -11,18 +11,20 @@ GT1 (parent C3): per-student explanation for any run (RB-DA default and FA-DAA).
 `docs/ke_hoach/gt/GT1_GIAI_TRINH.md`. Reports/controls only: no run code path changes.
 
 ## Plan (ticked by writer; the lead ticks the branch file after checker NO BUGS)
-- [x] L1 explanation engine (+ fix1) - lead ticked, passed
-- [x] L2 lookup screen (+ fix1 stale search) - lead ticked 47b5751, passed
-- [x] L3 printable slip: committed + pushed, head 35a16d2, `WRITER DONE L3` sent. Awaiting checker.
-- [ ] L4 lookup codes + self-lookup mode  - wait for `GO L4` (or `FIX L3`)
+- [x] L1 explanation engine (+ fix1) - passed
+- [x] L2 lookup screen (+ fix1) - passed
+- [x] L3 printable slip - passed (ticked 807499d)
+- [x] L4 lookup codes + self-lookup mode (+ fix1 late-reply guard) - checker NO BUGS, lead ticked 5c166ce
+- [ ] CI gate (§6): FIX CI round 1 pushed at a3a9cf9 (`WRITER DONE CI fix1` sent); wait for lead's next CI result / FIX
 
 ## Current state (overwrite each handoff)
-- Done so far: L1, L2 passed review. L3 done: base 47b5751, head 35a16d2 (pushed).
-- In progress: nothing. No uncommitted work.
-- Tests: tests/test_gt1_phieu.py 9, test_giao_dien_gt1_tra_cuu.py 7, test_gt1_giai_trinh.py 26 passed; related set 120
-  passed; `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7 (60 cases identical); ruff clean.
-- tests/ row in CLAUDE_CHI_TIET.md: 301 files / 6359 cases.
-- Open: lead should confirm decision below (appeal days only when fa_khieu_nai ON).
+- Done: L1-L4 all passed review. CI fix1 (3 groups) pushed, head a3a9cf9 on claude/gt1-giai-trinh.
+- In progress: nothing; no uncommitted work.
+- Last CI run seen: run 43805857085 on 5c166ce (lint green, Linux 1/2/3 red; fixed in a3a9cf9: van_phong_tu_nhien strings,
+  role=dialog permanently in DOM, gt1_* codes in test_ws_nhan allowlist). Windows result unknown; new run triggered by push.
+- Tests: GT1 files (giai_trinh 26, phieu 9, ma_tra_cuu 13, giao_dien tra_cuu 7, giao_dien hoc_sinh 9) pass; related sets 552 + 127 + 797 passed;
+  kiem_nhanh 7/7 (60 cases identical); ruff clean.
+- tests/ row in CLAUDE_CHI_TIET.md: 303 files / 6381 cases.
 
 ## Decisions and gotchas (keep short)
 - Default workspace has Wharton ON; for plain RB-DA tests call `tests/_wharton.tat_wharton(api)` before loading data. FA tests: `tests/_fa.py`
@@ -35,26 +37,29 @@ GT1 (parent C3): per-student explanation for any run (RB-DA default and FA-DAA).
 - UI: `js/14_giai_trinh.js` IIFE; `luotTim` token cancels stale searches (card DOM must hold ONE student). `.search-row` is display:flex so
   `[hidden]` needs a CSS rule. UI strings must avoid "em/bạn/you/Wharton" (kiem_nhanh `chu_cam`). `i18n.js` keys `gt_*` (vi + en).
 - Chromium tests: `tests/test_giao_dien_gt1_tra_cuu.py` pattern (`mo` fixture, `_dung`, `_tra`); wait for specific text, not just a selector.
-- Commit trailer session id: `session_01TGThn4KfT4gVBLHBdZiZXv`... use the id from the attribution reminder of the NEW session, copied exactly.
 - Use `git pull --no-rebase` (protocol), never rebase a pushed branch. New test file => update tests/ row in CLAUDE_CHI_TIET.md.
 
-## Next steps (ordered)
-1. Wait for lead message (`FIX L3` or `GO L4`); read the lot section of the task file only.
-2. L4: table `ma_tra_cuu` after the `giu_cho` block (CREATE TABLE IF NOT EXISTS, idempotent); APIs `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`,
-   `export_ma_tra_cuu_csv`, `tra_cuu_hoc_sinh` (secrets, hmac.compare_digest, 5 tries -> 60 s lock, `gt1_ma_sai`, `gt1_tam_khoa`);
-   slip prints the code; overlay UI "Chế độ học sinh tra cứu" (60 s idle clear, exit confirm). Tests `tests/test_gt1_ma_tra_cuu.py`,
-   `tests/test_giao_dien_gt1_hoc_sinh.py`.
-3. Per lot: failing test first, minimal code, related tests, `kiem_nhanh`, soat-ma tiers, CHANGELOG + TIEN_DO row, commit, push, `WRITER DONE`.
+- L4: codes via `ma_tra_cuu.py` (secrets); lockout state in `PipelineAPI.__dict__["_gt1_luot_sai_d"]`, clock `_gt1_dong_ho` (tests replace it).
+  Overlay `#gtHs`: other body children get `inert`; `role=dialog` only while open; `luotHs` token drops late replies (send, clear, open, exit).
+- UI text rules (tests/test_van_phong_tu_nhien.py): no " – " / "—" joiners, no "seed"/STB, no "em/bạn/you". Any new `gt1_*` error code must also go
+  into `MA_MOI_SAU_ANH_CHUP` in tests/test_ws_nhan.py (GT1 block). Chromium tests may use `page.clock.install()` for 60 s timers.
+- Commit trailer session id: use `session_01TGThn8kaGCdSNUJwzjvqVX` (this writer) or the id in the NEW session's attribution reminder (check with get_session).
 
-## Files touched (L1-L3)
-- giai_trinh.py, phieu_giai_trinh.py (new); fa_ly_do.py (`cau_ly_do_rbda`); api_xuat.py (GT1 block: get/export APIs, replay helpers)
-- api_quan_ly.py: `search_students(query, lop=None)`
-- js/14_giai_trinh.js, js/_danh_sach.txt, index.html (GT1 block), i18n.js (`gt_*`), style.css (GT1 rules)
-- i18n_errors.py + i18n_loi.js: gt1_khong_co_hoc_sinh, gt1_chua_chay, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay
-- tests: test_gt1_giai_trinh.py, test_gt1_phieu.py, test_giao_dien_gt1_tra_cuu.py; CHANGELOG.md, TIEN_DO.md, CLAUDE_CHI_TIET.md
+## Next steps (ordered)
+1. Wait for lead message (`FIX CI` with failing test ids, or confirmation CI is green). Never skip/disable/weaken a test.
+2. On `FIX`: failing test first/reproduce, minimal fix, run the 4 failing files + GT1 tests + `kiem_nhanh.py --co-so origin/main --so-seed 20`,
+   commit, `git pull --no-rebase && git push`, report `WRITER DONE CI fix<k>` (§7 format) to the lead.
+3. Anything needing Truong goes on the "Needs Truong" list in the branch file (none from the writer so far).
+
+## Files touched (L1-L4 + CI fix)
+- giai_trinh.py, phieu_giai_trinh.py, ma_tra_cuu.py (new); fa_ly_do.py; api_xuat.py (GT1 blocks: explanation, slip, L4 code APIs)
+- api_quan_ly.py (search_students; delete_student/reset_data also delete ma_tra_cuu); rbda_priority_pipeline.py (table ma_tra_cuu after giu_cho)
+- js/14_giai_trinh.js, js/_danh_sach.txt, index.html (GT1 panel + #gtHs overlay), i18n.js (gt_*), style.css, i18n_errors.py + i18n_loi.js (gt1_*)
+- tests: test_gt1_giai_trinh/phieu/ma_tra_cuu.py, test_giao_dien_gt1_tra_cuu/hoc_sinh.py, test_ws_nhan.py (allowlist block); CHANGELOG, TIEN_DO, CLAUDE_CHI_TIET
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-16 | Sonnet writer | L1 done, pushed, reported; handoff at ~200k context | head 6fda292 |
 | 2026-11-16 | Sonnet writer 2 | L1 fix1, L2 (+fix1), L3 done and pushed; handoff at ~200k | head 35a16d2 |
+| 2026-11-16 | Sonnet writer 3 | L4 (+fix1) done, CI fix1 pushed (a3a9cf9); handoff on hook | head a3a9cf9 |
