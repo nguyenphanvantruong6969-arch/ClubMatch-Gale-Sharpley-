@@ -1,6 +1,50 @@
-# GT3 checker verdicts (tester)
+# Branch handoff: claude/gt3-quyen-tai-lieu (CHECKER / tester)
 
-All data fake/simulated. Checker never edits product code or tests.
+> Purpose: a fresh checker reads CLAUDE.md, docs/phien/GT_GIAO_THUC.md, the branch file, then THIS file. English. Cap 150 lines.
+> Role: CHECKER for GT3; lead = session_01YVAyu1qFUsCrfJzADRDejq. Never edit product code/tests; only this file. Report in protocol §7 format.
+
+## Feature / goal
+Review each GT3 lot diff (`REVIEW L<n> <base>..<head>`), run related tests + own edge cases on fake data, write the verdict below,
+push, then `send_message` the lead (claude-code-remote tool, session_id = lead) with `CHECKER REPORT L<n>`.
+
+## Plan (ticked by checker = verdict NO BUGS reached)
+- [x] L1 Accounts and login (NO BUGS at e62e24a)
+- [x] L2 Permission gate (NO BUGS at 5208c6d)
+- [x] L3 Audit log (NO BUGS at ff12579)
+- [ ] L4 Evidence docs (`docs/giai_trinh/*.md`, `tests/test_gt3_tai_lieu.py`) - wait for `REVIEW L4`
+- [ ] Integration lots I1-I4 on `claude/gt-tich-hop` (spec: GT3 task file "Integration lots")
+
+## Current state (overwrite each handoff)
+- Done so far: L1, L2, L3 each reviewed, bugs found (NFC names; fail-open gate on DB read error; audit row in wrong DB) and re-verified fixed.
+- In progress: nothing. No pending REVIEW message at handoff time.
+- Tests I run per lot: the lot's tests + `test_gt3_*`, `test_giao_dien_gt3_*`, `test_do_api`, `test_ws_nhan`, `test_browser_host`; last: 155 passed.
+- Invariant 1 each time: `.venv/bin/python .claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so origin/main --so-seed 20` (needs `git fetch origin main`) -> 7/7.
+- Open problems: none for L1-L3. Notes only (see verdicts below).
+
+## Decisions and gotchas (keep short)
+- Venv exists at `.venv` (pytest 9.2, ruff). `.claude/phien_vai.json` written (tester, coord_id = lead).
+- My scratch scripts live in the scratchpad dir (edge.py, l2.py, l2b.py, l3*.py); rewrite as needed, they use fake data only.
+- Use `git pull --no-rebase` (branch is pushed; no rebase). Merge commits on the tester file are expected.
+- Review method that worked: read diff, run tests, then drive `PipelineAPI` directly with an injectable clock (`api._dong_ho`),
+  scan responses/rows for secrets, simulate DB read errors (`api._co_tai_khoan = boom`), check accounts OFF vs ON and DB switches.
+- Lead decision: on-site entry writes stay `giao_vien` and are audited (L3).
+
+## Next steps (ordered)
+1. Wait for `REVIEW L4 <base>..<head>`; check every doc contains "mô phỏng", no internal codes (GT1, L2, C3) in text, files exist, tests pass.
+2. Then integration reviews I1 (permission map covers GT1/GT2 APIs, `dir(PipelineAPI)` test), I2 (student mode exit needs admin login), I3 (audit of trial runs/code generation/slip export), I4 (case + evidence pack).
+3. After each: append verdict section below, commit+push this file only, send CHECKER REPORT to the lead.
+
+## Files touched
+- docs/phien/claude__gt3-quyen-tai-lieu__tester.md: verdicts L1-L3 and this handoff
+
+## Session log (append only, newest last)
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-16 | Sonnet (checker) | Reviewed L1, L2, L3 incl. fix rounds (6 reviews), all NO BUGS at last head | handoff at ~200k tokens |
+
+---
+# Verdicts (append only)
+
 
 ## L1 — reviewed 1e39ae5..53e453a — verdict: 1 BUG (minor)
 
