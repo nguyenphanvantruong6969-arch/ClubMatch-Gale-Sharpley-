@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/GT_GIAO_THUC.md`. Lot specs: `docs/ke_hoach/gt/GT1_GIAI_TRINH.md`.
 
-Status: IN PROGRESS (base 5926107)
+Status: DONE 499edf1 CI green 2026-11-16 (run https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/43809965443)
 
 ## Feature / goal
 GT1 (parent item C3): per-student explanation for ANY run (default RB-DA and FA-DAA). The school can show each
@@ -22,7 +22,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 - [x] L4 Lookup codes (5facef0, checker NO BUGS 22df9c2) + student self-lookup mode: table `ma_tra_cuu`, `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`,
       `export_ma_tra_cuu_csv`, `tra_cuu_hoc_sinh`, lockout, overlay UI. Tests `tests/test_gt1_ma_tra_cuu.py`,
       `tests/test_giao_dien_gt1_hoc_sinh.py`.
-- [ ] CI gate (§6): lint + all shards + coverage ≥ 85 % green on head.
+- [x] CI gate (§6): lint + all shards + coverage ≥ 85 % green on 499edf1 (CI fix1 a3a9cf9: UI wording, role=dialog only while open, gt1_* in ws_nhan allowlist).
 
 ### Lead notes per lot (added to the spec; writer must follow)
 - All lots: error codes only `gt1_*`; i18n block appended at end of dict marked `# GT1`; run `python tao_i18n_js.py`.
@@ -33,21 +33,24 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
-| lead | session_01TGThn8ujS9oohKhbgDiJgD | claude-opus-5-5 | active |
+| lead | session_01TGThn8ujS9oohKhbgDiJgD | claude-opus-5-5 | done |
 | writer | session_01TGThn4UaExaTx1hj5kH5FF | claude-sonnet-5-5 | archived (handoff 54e8c0d, ~217k) |
 | writer 2 | session_01TGThn4KfT4gVBLHBdZiZXv | claude-sonnet-5-5 | archived (handoff 0eedd17, ~229k) |
-| writer 3 | session_01TGThn8kaGCdSNUJwzjvqVX | claude-sonnet-5-5 | active |
+| writer 3 | session_01TGThn8kaGCdSNUJwzjvqVX | claude-sonnet-5-5 | archived (handoff 499edf1, ~206k) |
+| writer 4 | session_01TGThn4vSjqxxSgmqbs9E7H | claude-sonnet-5-5 | archived (unused) |
 | checker | session_01TGThn8ZPKEmNQz6wmpDseA | claude-sonnet-5-5 | archived (handoff dadb8c4, ~223k) |
-| checker 2 | session_01TGThn4g1pdbQL7MsAEKG9r | claude-sonnet-5-5 | active |
+| checker 2 | session_01TGThn4g1pdbQL7MsAEKG9r | claude-sonnet-5-5 | archived |
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
-- In progress: §6 CI gate. L1-L4 done. L1 2ccfd01, L2 2d2c947 done.
-- Tests: none yet.
-- Open problems: none.
+- Done: L1-L4 + CI gate. Head 499edf1 green (lint, Linux 1-4/4, Windows 1-2/2, coverage >= 85 %). origin/main included.
+- New tests: test_gt1_giai_trinh, test_gt1_phieu, test_gt1_ma_tra_cuu, test_giao_dien_gt1_tra_cuu, test_giao_dien_gt1_hoc_sinh (+ GT1 block in test_ws_nhan allowlist).
+- Open problems: none. Truong merges to main / integration (§9, GT3 lead) picks this branch up.
 
-## Needs Truong
-- (none yet)
+## Needs Truong (decisions, nothing blocked)
+- Outcome sentences are Vietnamese only (EN mode switches labels only). Recommend: keep for the deadline; add EN sentences later if the jury demo is in English.
+- Only the latest run's results are stored, so an older run cannot be explained (error gt1_lan_chay_cu). Recommend: keep; storing per-run results would be a schema change beyond D-GT8.
+- Slip prints "trong N ngày" only when complaints (fa_khieu_nai) are ON. Recommend: keep.
+- Each lookup replays the run (read-only); fine at ~800 students, measure on the real kiosk PC.
 
 ## Decisions and gotchas (keep short)
 - L3: appeal "trong N ngày" printed only when fa_khieu_nai is ON (lead accepted).
@@ -55,11 +58,23 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 - Decisions D-GT1…D-GT9 in the protocol §0 are final; do not ask again.
 
 ## Next steps (ordered)
-1. Create writer + checker (§11 prompts), send `GO L1`.
-2. Run §5 loop L1 → L4, then §6 CI gate.
+1. GT3 lead integrates this branch (§9). 2. Truong: try the manual steps in the final summary below.
 
 ## Files touched
-- docs/phien/claude__gt1-giai-trinh.md: this file.
+- New: giai_trinh.py, phieu_giai_trinh.py, ma_tra_cuu.py, js/14_giai_trinh.js, 5 test files above.
+- Changed (GT1 blocks): fa_ly_do.py, api_xuat.py, api_quan_ly.py, rbda_priority_pipeline.py (table ma_tra_cuu), index.html,
+  i18n.js, style.css, js/_danh_sach.txt, i18n_errors.py + i18n_loi.js, tests/test_ws_nhan.py, CHANGELOG, TIEN_DO, CLAUDE_CHI_TIET.
+
+## Final summary (§10, tiếng Việt)
+- Lô xong: L1 bộ máy giải trình, L2 màn hình tra cứu (quản trị/giáo viên), L3 phiếu in, L4 mã tra cứu + chế độ học sinh tự tra cứu. Không lô nào bỏ.
+- Vòng sửa: L1 (3 lỗi nhỏ), L2 (1 lỗi lộ tên khi tìm chậm), L4 (1 lỗi lộ thẻ khi tra chậm), CI 1 vòng (văn phong, role=dialog, danh sách mã).
+- CI: xanh trên 499edf1 — https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/43809965443
+- Bất biến 1: kiem_nhanh.py 60 trường hợp (3 bộ × 20 seed) giống hệt sau mỗi lô.
+- Truong thử tay: (1) chạy xếp, mở tab Kết quả → "Tra cứu một học sinh", gõ tên không dấu, xem thẻ; (2) bấm "In phiếu cả lớp", mở HTML, in thử;
+  (3) tạo mã tra cứu, xuất CSV; (4) mở "Chế độ học sinh tra cứu", nhập đúng/sai mã 6 lần, xem khoá 60 s; (5) sửa một điểm rồi tra lại, xem cảnh báo "dữ liệu đã đổi".
+- Ghi chú nhật ký AI (docs/nhat_ky_ai/): "2026-11-16 GT1: Claude (Opus điều phối, Sonnet viết và soát) làm bộ giải trình từng học sinh, phiếu in,
+  mã tra cứu. Truong duyệt đặc tả GT1 và các quyết định D-GT1…D-GT9. Số liệu kiểm chứng là dữ liệu MÔ PHỎNG. Phần nhận xét và kết luận
+  trong báo cáo do học sinh tự viết."
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
@@ -72,3 +87,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | 2026-11-16 | Opus lead | L3 NO BUGS; ticked; GO L4 to writer 3 | |
 | 2026-11-16 | Opus lead | L4 1 bug -> FIX L4 r1; checker handoff -> checker 2 | |
 | 2026-11-16 | Opus lead | L4 fix1 NO BUGS; ticked; start CI gate | |
+| 2026-11-16 | Opus lead | CI fix1 a3a9cf9; CI green 499edf1; Status DONE; children archived | |
