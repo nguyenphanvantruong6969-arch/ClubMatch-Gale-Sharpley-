@@ -7,7 +7,8 @@ Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
   thẻ mỗi buổi: nguyện vọng, điểm của chính em, chỗ, mức vào được, câu giải thích, hàng được xếp tô nổi, cảnh báo "dữ liệu đã đổi".
   Chữ vi/en trong `i18n.js` (`gt_*`); CSS cuối `style.css`.
 - `api_xuat.get_giai_trinh_hoc_sinh` thêm `ten`, `lop` của CHÍNH em; `search_students(query, lop=None)` thêm lọc lớp (mặc định như cũ).
-- Test mới: `tests/test_giao_dien_gt1_tra_cuu.py` (5 ca, Chromium).
+- Sửa vòng 1 (checker): chọn một em huỷ mọi lần tìm đang bay, kết quả tìm về muộn không vẽ lại danh sách (không lộ tên em khác).
+- Test mới: `tests/test_giao_dien_gt1_tra_cuu.py` (6 ca, Chromium).
 
 ## 2026-11-16 — GT1-L1 (mục cha C3): động cơ giải trình một học sinh
 

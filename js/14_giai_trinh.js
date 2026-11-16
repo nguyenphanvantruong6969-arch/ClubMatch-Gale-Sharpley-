@@ -9,6 +9,7 @@
 (() => {
   let dangXem = null;          // {res, sid} gần nhất, để vẽ lại khi đổi ngôn ngữ
   let daNapLop = false;
+  let luotTim = 0;             // mỗi lần chọn một em là huỷ mọi lần tìm đang bay (kết quả về muộn bị bỏ)
 
   function mot(tag, lop, chu) {
     const n = document.createElement(tag);
@@ -89,6 +90,7 @@
   }
 
   function xem(sid) {
+    luotTim += 1;
     el("gtDs").textContent = "";
     el("gtKetQua").textContent = "";     // không để thẻ của em trước lẫn với em đang tải
     dangXem = null;
@@ -123,9 +125,11 @@
   }
 
   function tim() {
+    const luot = (luotTim += 1);
     const lop = el("gtLop").value;
     const args = lop ? [el("gtTim").value, lop] : [el("gtTim").value];
     callApiMoiNhat("gt_tim", "search_students", ...args).then((res) => {
+      if (luot !== luotTim) return;
       if (!res.ok) {
         el("gtDs").textContent = trErrs(res.errors).join(" ");
         return;

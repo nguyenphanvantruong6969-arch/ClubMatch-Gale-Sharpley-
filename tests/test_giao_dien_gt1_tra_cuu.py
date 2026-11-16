@@ -140,3 +140,18 @@ def test_ten_co_ma_doc_khong_chay_va_doi_ngon_ngu_ve_lai(api, mo):
     assert "{" not in chu and "undefined" not in chu
     assert "score" in chu.lower() and "cut-off" in chu.lower()
     assert loi == []
+
+
+def test_tim_cham_ve_sau_khi_chon_khong_lam_lo_em_khac(api, mo):
+    page, loi, _ = mo
+    _dung(api, False)
+    assert api.run_pipeline(seed=3)["ok"]
+    _tra(page, "anh")                                   # danh sách có s1
+    page.route("**/__api__/search_students", lambda r: (page.wait_for_timeout(1500), r.continue_()))
+    page.fill("#gtTim", "")                              # lần tìm chậm: sẽ trả CẢ HAI em về muộn
+    page.click('#gtDs .gt-chon[data-student-id="s1"]')   # chọn ngay trong lúc chờ
+    page.wait_for_selector("#gtKetQua .gt-ten")
+    page.wait_for_timeout(2500)
+    assert page.locator("#gtDs .gt-chon").count() == 0
+    assert HS["s2"] not in page.locator("#gtPanel").inner_text()
+    assert loi == []
