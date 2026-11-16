@@ -26,6 +26,7 @@ FULL_WHARTON = "FULL_WHARTON"      # điểm Wharton quyết định (A13, FA t�
 RESERVED = "RESERVED"
 NOT_TESTED = "NOT_TESTED"
 UNASSIGNED = "UNASSIGNED"
+NO_CHOICES = "NO_CHOICES"          # em chưa đăng ký nguyện vọng nào ở buổi này
 
 
 def dung_du_lieu_run(students, clubs, tested_scores, applicants, preferences, reserve_fn,
@@ -201,11 +202,12 @@ def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str) -> dict:
             for x in ds:
                 _them_cau(x)
         ket = b["assign"].get(student_id)
+        ma_tt = ACCEPTED if ket else (UNASSIGNED if ds else NO_CHOICES)
         ten = (b["clubs"].get(ket) or {}).get("ten") if ket else None
         ra_buoi.append({
             "buoi": buoi, "ket_qua": ket, "ten_clb": ten,
-            "ma_tom_tat": ACCEPTED if ket else UNASSIGNED,
-            "cau_tom_tat": (fa_ly_do.cau_ly_do_rbda({"ma": UNASSIGNED}, "") if not ket else ""),
+            "ma_tom_tat": ma_tt,
+            "cau_tom_tat": (fa_ly_do.cau_ly_do_rbda({"ma": ma_tt}, "") if not ket else ""),
             "cac_lua_chon": ds})
     return {"student_id": student_id, "fa_bat": fa,
             "du_lieu_da_doi": bool(du_lieu_run.get("du_lieu_da_doi")),

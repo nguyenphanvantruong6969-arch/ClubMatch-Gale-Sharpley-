@@ -1467,6 +1467,14 @@ MESSAGES = {
         "vi": "Chưa có lần xếp nào để giải thích. Hãy chạy xếp trước.",
         "en": "There is no allocation run to explain yet. Run the allocation first.",
     },
+    "gt1_lan_chay_cu": {
+        "vi": "Chỉ giải thích được lần xếp mới nhất, vì kết quả các lần cũ không còn được lưu.",
+        "en": "Only the latest allocation run can be explained, because results of older runs are not stored.",
+    },
+    "gt1_khong_tim_thay_lan_chay": {
+        "vi": "Không tìm thấy lần xếp này.",
+        "en": "That allocation run was not found.",
+    },
     # === end GT1 ===
 }
 

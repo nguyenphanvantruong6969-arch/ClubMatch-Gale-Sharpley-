@@ -7,8 +7,9 @@ Chỉ ĐỌC, không đụng đường chạy (cấu hình mặc định giống
   đã khoá; không ghi). Mã kết cục: ACCEPTED, HIGHER_CHOICE_ACCEPTED, FULL_SCORE, FULL_LOTTERY, FULL_GROUP, FULL_WHARTON, RESERVED, NOT_TESTED.
 - `fa_ly_do.cau_ly_do_rbda`: câu cho lần chạy thường (FA bật dùng lại `fa_ly_do` đã lưu).
 - API `get_giai_trinh_hoc_sinh(student_id, run_id=None)` (`api_xuat.py`): cờ `du_lieu_da_doi` (dấu vân tay khác, dựng lại khác kết quả
-  đã lưu, hay không phải lần mới nhất); lỗi `gt1_chua_chay`, `gt1_khong_co_hoc_sinh` (`i18n_errors.py`, `i18n_loi.js` sinh lại).
-- Test mới: `tests/test_gt1_giai_trinh.py` (24 ca).
+  đã lưu); lỗi `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`, `gt1_khong_tim_thay_lan_chay` (`i18n_errors.py`, `i18n_loi.js` sinh lại).
+- Sửa vòng 1 (checker): mã NO_CHOICES cho em chưa đăng ký nguyện vọng; `run_id` cũ -> `gt1_lan_chay_cu`; `run_id` lạ -> `gt1_khong_tim_thay_lan_chay`.
+- Test mới: `tests/test_gt1_giai_trinh.py` (26 ca).
 
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 

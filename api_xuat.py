@@ -1736,8 +1736,9 @@ class XuatKetQuaMixin:
 
         Trả {ok, data, errors}; `data` xem `giai_trinh.giai_trinh_mot_hoc_sinh`. FA bật: dùng lại dòng
         `fa_ly_do` đã lưu; FA tắt: dựng lại lần chạy trong bộ nhớ bằng bộ số bốc thăm đã khoá. Không ghi gì.
-        Dữ liệu đã đổi sau lần chạy (dấu vân tay khác, hay dựng lại ra khác kết quả đã lưu, hay không phải
-        lần mới nhất) -> `du_lieu_da_doi` True. Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`."""
+        Dữ liệu đã đổi sau lần chạy (dấu vân tay khác, hay dựng lại ra khác kết quả đã lưu) -> `du_lieu_da_doi`
+        True. Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu` (chỉ lần mới nhất có kết quả
+        lưu), `gt1_khong_tim_thay_lan_chay`."""
         try:
             return self._giai_trinh_hoc_sinh(student_id, run_id)
         except CauHinhHong as e:
@@ -1764,7 +1765,9 @@ class XuatKetQuaMixin:
             moi_nhat = lan[0]["run_id"]
             chon = next((r for r in lan if run_id is None or r["run_id"] == run_id), None)
             if chon is None:
-                return _fail(err("gt1_chua_chay"))
+                return _fail(err("gt1_khong_tim_thay_lan_chay"))
+            if chon["run_id"] != moi_nhat:   # chỉ lưu kết quả của lần mới nhất
+                return _fail(err("gt1_lan_chay_cu"))
             ten_hs = cur.execute("SELECT 1 FROM students WHERE student_id = ?",
                                  (student_id,)).fetchone()
             if ten_hs is None:
@@ -1776,7 +1779,7 @@ class XuatKetQuaMixin:
             clubs = {cid: dict(c, ten=ten_clb.get(cid, cid)) for cid, c in clubs.items()}
             luu = cur.execute("SELECT dau_van_tay FROM dau_van_tay_chay WHERE id = 1").fetchone()
             hien_tai = dau_van_tay_du_lieu(cur, luat)
-            da_doi = (chon["run_id"] != moi_nhat) or luu is None or luu[0] != hien_tai
+            da_doi = luu is None or luu[0] != hien_tai
             luu_kq = {}
             for sid, buoi, cid in cur.execute(
                     "SELECT student_id, buoi, club_id FROM match_results"):

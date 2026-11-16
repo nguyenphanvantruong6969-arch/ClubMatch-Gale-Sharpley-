@@ -51,7 +51,7 @@ def test_a_moi_clb_cao_hon_bi_tu_choi_co_ly_do_hop_le(api_factory, bo, seed):
         for b in d["buoi"]:
             ds = b["cac_lua_chon"]
             if b["ket_qua"] is None:
-                assert b["ma_tom_tat"] == "UNASSIGNED"
+                assert b["ma_tom_tat"] == ("UNASSIGNED" if ds else "NO_CHOICES")
             else:
                 assert b["ma_tom_tat"] == "ACCEPTED"
             xep = [i for i, x in enumerate(ds) if x["duoc_xep"]]
@@ -195,3 +195,27 @@ def test_wharton_bat_fa_tat_dung_lai_dung_ket_qua_va_co_ly_do(tmp_path):
                     assert x["ma"] in MA_TU_CHOI_HOP_LE and x["cau"], x
                     dem += 1
     assert dem > 0
+
+
+# ---------------------------------------------------------------------------- FIX L1 (vòng 1)
+def test_hoc_sinh_khong_nguyen_vong_khong_bi_noi_la_clb_da_day():
+    du_lieu = {"fa_bat": False, "du_lieu_da_doi": False, "run": {}, "ds_buoi": ["thu_2"],
+               "buoi": {"thu_2": {"clubs": {"S": {"ten": "CLB S", "capacity": 1}}, "prefs": {"s3": []},
+                                  "scores": {}, "stb": {}, "assign": {}, "base_rank": {}, "fa_rows": {}}}}
+    b = gt.giai_trinh_mot_hoc_sinh(du_lieu, "s3")["buoi"][0]
+    assert b["cac_lua_chon"] == [] and b["ma_tom_tat"] == gt.NO_CHOICES
+    assert "đủ chỗ" not in b["cau_tom_tat"] and "chưa đăng ký" in b["cau_tom_tat"]
+
+
+def test_run_id_cu_bi_tu_choi_va_run_id_la_bao_loi_rieng(api_factory):
+    api = _chay(api_factory, "sach", 5)
+    assert api.run_pipeline(seed=5)["ok"]
+    sid = _hs_va_nv(api)[0]
+    with api._ket_noi_doc() as cur:
+        ids = [r[0] for r in cur.execute("SELECT run_id FROM run_history ORDER BY run_id")]
+    assert len(ids) >= 2
+    assert ma(api.get_giai_trinh_hoc_sinh(sid, run_id=ids[0])["errors"]) == ["gt1_lan_chay_cu"]
+    ra = api.get_giai_trinh_hoc_sinh(sid, run_id=ids[-1])
+    assert ra["ok"] and ra["data"]["du_lieu_da_doi"] is False
+    assert api.get_giai_trinh_hoc_sinh(sid)["data"]["du_lieu_da_doi"] is False
+    assert ma(api.get_giai_trinh_hoc_sinh(sid, run_id=9999)["errors"]) == ["gt1_khong_tim_thay_lan_chay"]

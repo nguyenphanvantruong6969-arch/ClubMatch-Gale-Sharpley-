@@ -83,6 +83,8 @@ def cau_ly_do_rbda(dong: dict, ten_clb: str) -> str:
     if ma == "NOT_TESTED":
         return ("%s có thử thách đầu vào; em chưa có điểm nên được xét sau các bạn đã có điểm, "
                 "và CLB đã đủ chỗ." % ten_clb)
+    if ma == "NO_CHOICES":
+        return "Em chưa đăng ký nguyện vọng nào ở buổi này nên chưa được xếp CLB."
     if ma == "UNASSIGNED":
         return "Em chưa có chỗ ở buổi này: các CLB em chọn đều đã đủ chỗ."
     return ""
