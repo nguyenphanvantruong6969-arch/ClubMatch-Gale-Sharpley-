@@ -18,7 +18,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 - [x] L1 Accounts and login (e62e24a, checker NO BUGS after fix1) (`tai_khoan.py`, API, lock/idle, recovery clear option, `js/16_tai_khoan.js`)
 - [x] L2 Permission gate (5208c6d, checker NO BUGS after fix1) (`phan_quyen.py` map `QUYEN`, central enforcement, UI hides buttons)
 - [x] L3 Audit log (ff12579, checker NO BUGS after fix1) (`nhat_ky_thao_tac`, append-only triggers, viewer + CSV export)
-- [ ] L4 Evidence docs (`docs/giai_trinh/*.md`, `so_do_luong.svg`, `PHAN_CONG.md` template)
+- [x] L4 Evidence docs (0b52a14, checker NO BUGS after fix1) (`docs/giai_trinh/*.md`, `so_do_luong.svg`, `PHAN_CONG.md` template)
 - [ ] CI gate (§6) green on branch head
 - [ ] Integration §9 on `claude/gt-tich-hop`: I1 permissions, I2 student mode, I3 audit, I4 evidence pack, CI green
 
@@ -39,11 +39,12 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 | checker 2 | Sonnet | session_01YVAytyzqdgFPNE63JLRF6h | active |
 
 ## Needs Truong
-- (none yet)
+- **FA import warnings (pre-existing, not GT3):** importing `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` into an FA workspace returns 434 informational `wharton_chua_dung_het` warnings (same count on origin/main). Medals appear to be reported as unused commitment points. Recommendation: suppress that warning when `fa_daa` is ON (small fix under the FA item), so teachers are not flooded. Docs describe it as non-blocking for now.
+- **Student self-entry needs login when accounts are ON:** on-site entry methods (`submit_preferences`, `submit_huy_chuong`, `submit_test_selection`) are `giao_vien` (logged in audit). Recommendation: keep; switch to `cong_khai` only if students must enter alone at the kiosk without a teacher present.
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created from `origin/claude/determined-allen-kig6ud`; this file written.
-- In progress: FIX L4 (doc flow for FA sample) with writer 4.
+- In progress: §6 CI gate on branch head. L1 e62e24a, L2 5208c6d, L3 ff12579, L4 0b52a14 done.
 
 ## Decisions and gotchas (keep short)
 - Decisions D-GT1…D-GT9 in the protocol §0; do not ask again.
