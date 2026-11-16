@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L4 (mục cha E1-lite; ngoài sổ): bộ tài liệu minh chứng `docs/giai_trinh/`
+- Tệp mới: `VAI_TRO_AI.md`, `SO_DO_LUONG.md` + `so_do_luong.svg` (dựng bằng `ve_so_do.py`, chỉ thư viện chuẩn), `HUONG_DAN_CHAY.md` (các bước 1–7 đã chạy thật), `DU_LIEU_DAU_VAO.md` (trích nguyên văn thông báo lỗi từ `i18n_errors.py`), `PHAN_CONG.md` (mẫu trống), `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md` (bước cần tích hợp đánh dấu "(sau tích hợp)").
+- Toàn bộ nhãn "dữ liệu mô phỏng"; không có nhận xét hay kết luận (phần đó học sinh tự viết).
+- Test mới: `tests/test_gt3_tai_lieu.py` (20 ca: tệp tồn tại, có chữ "mô phỏng", không lộ mã nội bộ, mã lỗi và đường dẫn nhắc tới có thật, trích đúng nguyên văn, `PHAN_CONG.md` trống).
+
 ## 2026-11-16 — GT3-L3 fix1: nhật ký ghi đúng CSDL, không chặn lời gọi
 - `phan_quyen._boc` chụp `db_path` TRƯỚC lời gọi (open/delete_workspace không còn đẩy dòng nhật ký sang workspace khác; CSDL đã dời đi thì không tạo tệp rỗng).
 - `nhat_ky.ghi` chờ khoá ghi tối đa 1 s; quá hạn thì luồng nền ghi bù khi khoá nhả. Lọc `nguoi` không phân biệt hoa/thường (NFC + casefold).
