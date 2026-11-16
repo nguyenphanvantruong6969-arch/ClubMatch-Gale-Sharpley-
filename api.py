@@ -81,6 +81,7 @@ from api_sau_xep import SauXepMixin
 from api_tai_khoan import TaiKhoanMixin  # GT3
 from api_workspace import CauHinhHong, CsdlBan, WorkspaceMixin, loi_cau_hinh
 from api_xuat import XuatKetQuaMixin
+from phan_quyen import ap_dung_cong  # GT3-L2
 
 
 # PipelineAPI GHÉP từ các phần theo việc. Tách tệp chứ KHÔNG tách lớp:
@@ -1653,3 +1654,7 @@ def _xep_hang_cac_ham_doc():
 
 
 _xep_hang_cac_ham_doc()
+
+
+# GT3-L2: cổng phân quyền ngoài cùng (sau mọi lớp bọc khác); chỉ có tác dụng khi đã có tài khoản.
+ap_dung_cong(PipelineAPI)

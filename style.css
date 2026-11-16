@@ -2986,3 +2986,6 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 /* GT3-L1: khối tài khoản ở thanh bên */
 .tk-thanh-ben { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
 .tk-thanh-ben[hidden] { display: none; }
+
+/* GT3-L2: vai giáo viên không thấy phần chỉ dành cho quản trị (cổng thật nằm ở backend). Chưa có tài khoản / quản trị: không đổi gì. */
+body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }

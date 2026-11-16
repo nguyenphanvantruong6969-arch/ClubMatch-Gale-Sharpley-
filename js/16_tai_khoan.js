@@ -196,6 +196,19 @@
   }
 
   /* Hỏi phiên; vẽ lại thanh bên; bật/tắt màn đăng nhập. Trả Promise để nơi gọi nối tiếp. */
+  /* GT3-L2: ghi vai hiện tại lên <body> để CSS ẩn phần của quản trị khỏi giáo viên; nếu tab đang mở bị ẩn thì chuyển sang "Kết quả". */
+  function ganVai() {
+    const vai = phien && phien.co_tai_khoan && phien.dang_nhap ? phien.vai : "";
+    if (document.body.dataset.vai === vai) return;
+    document.body.dataset.vai = vai;
+    if (vai !== "giao_vien") return;
+    const dangMo = document.querySelector(".nav-item.is-active");
+    if (dangMo && dangMo.dataset.quyen === "quan_tri") {
+      const ketQua = document.querySelector('.nav-item[data-tab="results"]');
+      if (ketQua) ketQua.click();
+    }
+  }
+
   function capNhat() {
     return callApi("get_phien_dang_nhap").then((res) => {
       if (!res.ok) {
@@ -204,6 +217,7 @@
       }
       const truoc = phien;
       phien = res.data;
+      ganVai();
       veThanhBen();
       const canDangNhap = phien.co_tai_khoan && !phien.dang_nhap;
       if (canDangNhap && !el("tkNutDangNhap")) {

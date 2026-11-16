@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L2 (mục cha E1-lite; ngoài sổ): cổng phân quyền trung tâm
+
+Chỉ có tác dụng khi bảng `tai_khoan` có dòng; chưa có tài khoản thì mọi hàm chạy y như trước (kết quả, ngoại lệ không đổi). Chỉ là điều khiển truy cập, không dính `compute_club_priority`.
+- `phan_quyen.py`: bảng `QUYEN` phân mọi hàm công khai của `PipelineAPI` vào `cong_khai` (5 hàm đăng nhập/tài khoản, tự kiểm bên trong) / `giao_vien` (xem, xuất, nhập điểm, điểm danh, nhập hộ nguyện vọng tại chỗ, khiếu nại/phản hồi) / `quan_tri` (ghi dữ liệu, cấu hình, xoá, nạp tệp, workspace, tài khoản).
+  `ap_dung_cong(PipelineAPI)` gọi ở cuối `api.py` bọc từng hàm ở cấp lớp, nên pywebview và `browser_host.py` đi qua cùng một cổng. Chỉ kiểm ở lời gọi ngoài cùng (hàm công khai gọi hàm công khai bên trong không bị kiểm lại).
+  Chưa đăng nhập → `gt3_can_dang_nhap`; sai vai → `gt3_khong_du_quyen` với `params.hanh_dong`; hàm chưa có trong bảng bị từ chối cả với quản trị (đóng khi lỗi). Mỗi lời gọi bị kiểm đều làm mới giờ nghỉ 15 phút.
+  `api_tai_khoan.py`: thêm `_co_tai_khoan_nho` (không ném lỗi; CSDL tạm không đọc được thì dùng kết quả đọc lần trước).
+- Giao diện: `body[data-vai]` + `[data-quyen="quan_tri"]` ẩn các tab Xếp CLB / Quản lý / Chuẩn bị đợt và nút không gian làm việc khỏi giáo viên; giáo viên đang ở tab bị ẩn thì được đưa về Kết quả. Backend vẫn là cổng thật.
+- Test mới: `tests/test_gt3_phan_quyen.py` (17), `tests/test_giao_dien_gt3_phan_quyen.py` (3). Test liệt kê hàm công khai sẽ ĐỎ ở nhánh tích hợp cho tới khi hàm của GT1/GT2 được phân loại (đúng thiết kế, mục I1).
+
 ## 2026-11-16 — GT3-L1 fix1: chuẩn hoá Unicode NFC cho tên và mật khẩu
 
 `tai_khoan.py`: `chuan_hoa_ten`, `_khoa_ten`, `bam_mat_khau` chuẩn hoá NFC (stdlib `unicodedata`) → tên NFD trùng tên NFC bị chặn (`gt3_ten_da_co`), đăng nhập bằng NFD được; mật khẩu NFC/NFD băm như nhau (mật khẩu ASCII/NFC cũ không đổi). Tên lưu dạng NFC.

@@ -25,11 +25,23 @@ class TaiKhoanMixin:
         # Đồng hồ tiêm được: test thay `api._dong_ho` bằng đồng hồ giả.
         self._dong_ho = time.monotonic
         self._dang_nhap = tk.TrangThaiDangNhap(lambda: self._dong_ho())
+        self._co_tk_cuoi = False       # kết quả đọc gần nhất, dùng khi CSDL tạm không đọc được (cổng L2)
 
     # ------------------------------------------------------------- nội bộ
     def _co_tai_khoan(self) -> bool:
         with self._ket_noi_doc() as cur:
             return tk.dem_tai_khoan(cur) > 0
+
+    def _co_tai_khoan_nho(self) -> bool:
+        """Cho cổng phân quyền (L2): như `_co_tai_khoan` nhưng không bao giờ ném lỗi.
+
+        Chưa có bảng / CSDL tạm bận thì dùng kết quả đọc được lần trước (mặc định False = chạy như cũ).
+        """
+        try:
+            self._co_tk_cuoi = self._co_tai_khoan()
+        except Exception:
+            pass
+        return self._co_tk_cuoi
 
     def _hoat_dong(self) -> bool:
         """Dùng cho cổng phân quyền (L2): có thể làm thao tác không, và làm mới giờ nghỉ.
