@@ -11,8 +11,7 @@ GT3 writer: implement lots L1-L4 (accounts+login, permission gate, audit log, ev
 ## Plan (written by Opus; ticked by Sonnet)
 - [x] L1 Accounts and login (passed checker; fix1 NFC done)
 - [x] L2 Permission gate (passed checker after fix1: fail-closed account read)
-- [~] L3 Audit log: code + tests + docs DONE and committed locally/pushed; related-test run (58 files) was still running at
-      handoff; `WRITER DONE L3` NOT yet sent. See "Next steps".
+- [x] L3 Audit log: done; related run 1255 tests green (after allowlist fix in test_ws_nhan); WRITER DONE L3 sent.
 - [ ] L4 Evidence docs (wait for `GO L4`)
 
 ## Current state (overwrite each handoff)

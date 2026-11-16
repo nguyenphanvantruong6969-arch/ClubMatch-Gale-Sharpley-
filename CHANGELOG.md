@@ -10,6 +10,7 @@ Chỉ ghi khi bảng `tai_khoan` có dòng; chưa có tài khoản thì không g
 - API mới (`api_nhat_ky.py`, chỉ quản trị): `get_nhat_ky_thao_tac(page, page_size, nguoi, hanh_dong)` (mới nhất trước, 1..500 dòng/trang), `export_nhat_ky_thao_tac_csv(path, nguoi, hanh_dong)` (UTF-8 có BOM, cũ nhất trước). Mã lỗi mới `gt3_loi_nhat_ky`.
 - Giao diện: mục "Nhật ký thao tác" (lọc, phân trang, xuất CSV) ngay trong hộp Tài khoản của quản trị (không thêm tab con vào Quản lý, vì test tab con khẳng định đúng danh sách tab).
 - Test mới: `tests/test_gt3_nhat_ky.py` (24), thêm 1 ca vào `tests/test_giao_dien_gt3_dang_nhap.py`.
+- `tests/test_ws_nhan.py`: danh sách mã lỗi mới sau ảnh chụp cho phép thêm tiền tố `gt3_` (các mã tài khoản / nhật ký).
 
 ## 2026-11-16 — GT3-L2 fix1: cổng phân quyền đóng khi đọc bảng tài khoản hỏng
 
