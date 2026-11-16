@@ -42,3 +42,10 @@ Bug:
 Own repro (delayed search, type "s" then slow "n", click s1): `#gtDs` empty, no other student in panel. A-then-B
 (first get_giai_trinh_hoc_sinh delayed 2 s, B picked meanwhile): card ends as B, A's late reply dropped. 8 passed
 (my 2 temp tests + tests/test_giao_dien_gt1_tra_cuu.py incl. new regression); temp tests deleted.
+
+## L3 | reviewed 47b5751..35a16d2 | verdict: NO BUGS
+53 passed (test_gt1_phieu, test_gt1_giai_trinh [L1 behaviour unchanged after refactor], test_giao_dien_gt1_tra_cuu,
+i18n sync/khoa); kiem_nhanh 7/7. Own hostile-data test (temp, deleted): names with quotes, `<b>`, `&amp;`, `</td><script>`,
+diacritics; per page exactly one `Mã:` id, no other student's escaped name or id, no script/http/src/link. Selection:
+all -> 3 pages; lop `10a1` (lowercase) -> 2; ids with duplicate+unknown -> 1; `[]`, unknown class, bare string "s1"
+-> `gt1_khong_co_hoc_sinh`; never-run -> `gt1_chua_chay` (tested by writer). Appeal days only when fa_khieu_nai ON (lead-accepted).
