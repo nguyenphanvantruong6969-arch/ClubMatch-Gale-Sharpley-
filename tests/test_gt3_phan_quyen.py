@@ -90,7 +90,7 @@ def test_chua_co_tai_khoan_nam_ham_ghi_chay_nhu_cu(api):
 
 def test_bao_ham_giu_ten_chu_ky_va_ngoai_le(api):
     assert PipelineAPI.run_pipeline._gt3_cong
-    goc = PipelineAPI.run_pipeline.__wrapped__
+    goc = PipelineAPI.run_pipeline._gt3_goc
     assert inspect.signature(PipelineAPI.run_pipeline) == inspect.signature(goc)
     assert PipelineAPI.run_pipeline.__name__ == "run_pipeline"
     # ngoại lệ do chính hàm ném vẫn đi qua nguyên vẹn khi chưa có tài khoản

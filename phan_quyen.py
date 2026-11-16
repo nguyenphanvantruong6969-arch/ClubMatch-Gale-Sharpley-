@@ -12,6 +12,7 @@ Chỉ là điều khiển truy cập, không dính `compute_club_priority` (bấ
 """
 
 import functools
+import inspect
 import threading
 import types
 
@@ -100,6 +101,11 @@ def _boc(ten, ham):
         finally:
             _TL.sau = sau
     cong._gt3_cong = True
+    cong._gt3_goc = ham
+    cong.__signature__ = inspect.signature(ham)
+    if "__wrapped__" not in getattr(ham, "__dict__", {}):
+        # `__wrapped__` là dấu của lớp bọc hàm ĐỌC (api._xep_hang_doc); hàm ghi không được mang dấu đó.
+        del cong.__wrapped__
     return cong
 
 
