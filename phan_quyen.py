@@ -95,7 +95,7 @@ def kiem_quyen(api, ten: str):
     return _xet(api, ten)[2]
 
 
-def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None):
+def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None, db_path=None):
     """Một dòng nhật ký cho một lời gọi ngoài cùng (đã biết là đang có tài khoản)."""
     nguoi = phien["ten"] if phien else None
     vai = phien["vai"] if phien else None
@@ -111,7 +111,7 @@ def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None):
             except Exception:
                 co_that = False
             chi_tiet = chi_tiet if co_that else "{}"
-    nk.ghi(api, nguoi, vai, ten, ket_qua, chi_tiet)
+    nk.ghi(api, nguoi, vai, ten, ket_qua, chi_tiet, db_path)
 
 
 def _boc(ten, ham):
@@ -120,18 +120,19 @@ def _boc(ten, ham):
         sau = getattr(_TL, "sau", 0)
         if sau > 0:
             return ham(self, *args, **kwargs)
+        db0 = self.db_path           # chụp TRƯỚC lời gọi: open/delete_workspace đổi db_path giữa chừng
         co, phien, loi = _xet(self, ten)
         ghi = nk.nen_ghi(ten)
         if loi is not None:
             if co and ghi:
-                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(loi))
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(loi), None, db0)
             return loi
         _TL.sau = 1
         try:
             r = ham(self, *args, **kwargs)
         except Exception:
             if co and ghi:
-                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, "loi_ngoai_le")
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, "loi_ngoai_le", None, db0)
             raise
         finally:
             _TL.sau = 0
@@ -143,7 +144,7 @@ def _boc(ten, ham):
             if co:
                 if ten == "dang_xuat" and phien is None:
                     return r
-                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(r), r)
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(r), r, db0)
         return r
     cong._gt3_cong = True
     cong._gt3_goc = ham

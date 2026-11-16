@@ -286,3 +286,90 @@ def test_moi_ham_ghi_cua_bang_quyen_deu_duoc_ghi():
     khong_ghi = [n for n in pq.QUYEN if not nk.nen_ghi(n)]
     for n in khong_ghi:
         assert n.startswith(nk._DOC) or n in nk._KHONG_GHI, n
+
+
+# ------------------------------------------------------------------ fix1: db_path chụp trước, khoá có hạn, lọc tên
+def _api_hai_ws(tmp_path):
+    import workspace as ws
+    from api import PipelineAPI
+    goc = tmp_path / "goc"
+    goc.mkdir()
+    a = ws.tao(str(goc), "Truong A", None)
+    api = PipelineAPI(ws.duong_dan_db(str(goc), a), thu_muc_goc_ws=str(goc))
+    return api, a, str(goc)
+
+
+def _dong_tai(duong):
+    con = sqlite3.connect(duong)
+    try:
+        return [r[0] for r in con.execute("SELECT hanh_dong FROM nhat_ky_thao_tac ORDER BY id")]
+    finally:
+        con.close()
+
+
+def test_open_workspace_ghi_vao_csdl_cu_khong_phai_csdl_moi(tmp_path):
+    api, a, goc = _api_hai_ws(tmp_path)
+    db_a = api.db_path
+    assert api.tao_tai_khoan("quantri", MK, "quan_tri")["ok"]
+    b = api.create_workspace("Truong B")["data"]["slug"]
+    assert api.open_workspace(b)["ok"]
+    db_b = api.db_path
+    assert db_b != db_a
+    assert "open_workspace" in _dong_tai(db_a)
+    assert "open_workspace" not in _dong_tai(db_b)
+
+
+def test_xoa_workspace_ghi_vao_csdl_dang_mo_va_khong_tao_tep_la_o_cho_cu(tmp_path):
+    api, a, goc = _api_hai_ws(tmp_path)
+    assert api.tao_tai_khoan("quantri", MK, "quan_tri")["ok"]
+    b = api.create_workspace("Truong B")["data"]["slug"]
+    db_a = api.db_path
+    assert api.open_workspace(b)["ok"]
+    assert api.open_workspace(a)["ok"]              # A mở lại; xoá B (không mở) thành công
+    import os
+    assert api.delete_workspace(b, "XOA")["ok"]
+    assert "delete_workspace" in _dong_tai(db_a)
+    # ghi vào CSDL đã bị dời đi: không sinh tệp rỗng ở chỗ cũ
+    nk.ghi(api, "quantri", "quan_tri", "thu", "ok", "{}", db_path=os.path.join(goc, b, "app.db"))
+    assert not os.path.exists(os.path.join(goc, b, "app.db"))
+
+
+def test_khoa_ghi_dang_giu_thi_loi_goi_bi_tu_choi_tra_ve_ngay_va_dong_ghi_bu_sau(api, co_tk, monkeypatch):
+    import threading
+    import time
+    monkeypatch.setattr(nk, "_CHO_KHOA_GIAY", 0.2)
+    co_tk("gv1")
+    truoc = len(dong(api))
+    nha = threading.Event()
+    da_giu = threading.Event()
+
+    def giu():
+        with api._khoa_ghi:
+            da_giu.set()
+            nha.wait(10)
+    t = threading.Thread(target=giu)
+    t.start()
+    da_giu.wait(5)
+    try:
+        t0 = time.monotonic()
+        r = api.reset_data("tat_ca", "XOA")          # quản trị mới được làm: giáo viên bị từ chối
+        dt = time.monotonic() - t0
+        assert not r["ok"] and ma_loi(r) == ["gt3_khong_du_quyen"]
+        assert dt < 3
+        assert len(dong(api)) == truoc               # chưa ghi được: khoá còn bị giữ
+    finally:
+        nha.set()
+        t.join()
+    for _ in range(50):
+        if len(dong(api)) == truoc + 1:
+            break
+        time.sleep(0.1)
+    sau = dong(api)
+    assert len(sau) == truoc + 1 and sau[-1]["hanh_dong"] == "reset_data" and sau[-1]["ket_qua"] == "gt3_khong_du_quyen"
+
+
+def test_loc_nguoi_khong_phan_biet_hoa_thuong(api, co_tk):
+    _them_nhieu(api, 2)
+    chuan = api.get_nhat_ky_thao_tac(1, 50, nguoi="quantri")["data"]["tong"]
+    assert chuan > 0
+    assert api.get_nhat_ky_thao_tac(1, 50, nguoi="QuanTri")["data"]["tong"] == chuan

@@ -10,6 +10,7 @@ import inspect
 import json
 import logging
 import re
+import threading
 
 _log = logging.getLogger(__name__)
 
@@ -100,26 +101,71 @@ def ket_qua_tu(r) -> str:
     return "ok"
 
 
-def ghi(api, nguoi, vai, hanh_dong: str, ket_qua: str, chi_tiet=None) -> None:
-    """Thêm MỘT dòng. Hỏng thì chỉ cảnh báo trong log, không ném."""
+_CHO_KHOA_GIAY = 1.0      # chờ khoá ghi tối đa chừng này; quá thì ghi bù sau, lời gọi chính không bị giữ
+_SQL_GHI = "INSERT INTO nhat_ky_thao_tac (luc, nguoi, vai, hanh_dong, ket_qua, chi_tiet) VALUES (?, ?, ?, ?, ?, ?)"
+
+
+def _ghi_tai(api, duong, dong_ghi):
+    """Ghi thẳng vào CSDL `duong` (đã chụp TRƯỚC lời gọi). Gọi khi đang giữ khoá ghi."""
+    import os
+    from rbda_priority_pipeline import connect_db
+    chung = getattr(api._giao_dich, "conn", None)
+    if chung is not None and duong == api.db_path:
+        chung.cursor().execute(_SQL_GHI, dong_ghi)
+        return
+    if not os.path.exists(duong):         # workspace vừa bị dời đi: không tạo tệp rỗng
+        raise FileNotFoundError("CSDL không còn")
+    conn = connect_db(duong)
     try:
-        with api._ket_noi_ghi() as cur:
-            cur.execute(
-                "INSERT INTO nhat_ky_thao_tac (luc, nguoi, vai, hanh_dong, ket_qua, chi_tiet) VALUES (?, ?, ?, ?, ?, ?)",
-                (datetime.datetime.now().isoformat(timespec="seconds"), nguoi, vai, hanh_dong, ket_qua, chi_tiet))
-    except Exception as e:                                  # noqa: BLE001
-        _log.warning("không ghi được nhật ký thao tác %s (%s)", hanh_dong, type(e).__name__)
+        conn.execute(_SQL_GHI, dong_ghi)
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def ghi(api, nguoi, vai, hanh_dong: str, ket_qua: str, chi_tiet=None, db_path=None) -> None:
+    """Thêm MỘT dòng vào `db_path` (mặc định: CSDL hiện tại). Hỏng thì chỉ cảnh báo trong log, không ném.
+
+    Không bao giờ chờ khoá ghi quá `_CHO_KHOA_GIAY`: lời gọi bị từ chối / chạy song song với một lần chạy xếp
+    dài phải trả về ngay. Hết hạn chờ thì một luồng nền ghi bù khi khoá được nhả.
+    """
+    duong = db_path or api.db_path
+    dong_ghi = (datetime.datetime.now().isoformat(timespec="seconds"), nguoi, vai, hanh_dong, ket_qua, chi_tiet)
+
+    def lam():
+        try:
+            _ghi_tai(api, duong, dong_ghi)
+        except Exception as e:                              # noqa: BLE001
+            _log.warning("không ghi được nhật ký thao tác %s (%s)", hanh_dong, type(e).__name__)
+
+    khoa = api._khoa_ghi
+    if khoa.acquire(timeout=_CHO_KHOA_GIAY):
+        try:
+            lam()
+        finally:
+            khoa.release()
+        return
+
+    def sau():
+        with khoa:
+            lam()
+    threading.Thread(target=sau, name="nhat_ky_ghi_bu", daemon=True).start()
 
 
 # --------------------------------------------------------------------- đọc
 COT = ("id", "luc", "nguoi", "vai", "hanh_dong", "ket_qua", "chi_tiet")
 
 
-def _loc(nguoi, hanh_dong):
+def _loc(cur, nguoi, hanh_dong):
+    import tai_khoan as tk
     dk, tham = [], []
     if nguoi:
+        # Tên không phân biệt hoa/thường và NFC như tên tài khoản; không khớp tài khoản nào thì giữ nguyên chữ gõ.
         dk.append("nguoi = ?")
-        tham.append(str(nguoi))
+        tham.append(tk.tim_ten(cur, str(nguoi)) or str(nguoi))
     if hanh_dong:
         dk.append("hanh_dong = ?")
         tham.append(str(hanh_dong))
@@ -133,7 +179,7 @@ def doc_trang(cur, page, page_size, nguoi=None, hanh_dong=None):
         page_size = min(500, max(1, int(page_size)))
     except (TypeError, ValueError):
         page, page_size = 1, 50
-    where, tham = _loc(nguoi, hanh_dong)
+    where, tham = _loc(cur, nguoi, hanh_dong)
     tong = cur.execute("SELECT COUNT(*) FROM nhat_ky_thao_tac" + where, tham).fetchone()[0]
     dong = cur.execute(
         "SELECT " + ", ".join(COT) + " FROM nhat_ky_thao_tac" + where + " ORDER BY id DESC LIMIT ? OFFSET ?",
@@ -142,5 +188,5 @@ def doc_trang(cur, page, page_size, nguoi=None, hanh_dong=None):
 
 
 def doc_het(cur, nguoi=None, hanh_dong=None):
-    where, tham = _loc(nguoi, hanh_dong)
+    where, tham = _loc(cur, nguoi, hanh_dong)
     return cur.execute("SELECT " + ", ".join(COT) + " FROM nhat_ky_thao_tac" + where + " ORDER BY id", tham).fetchall()

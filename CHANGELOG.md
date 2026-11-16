@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L3 fix1: nhật ký ghi đúng CSDL, không chặn lời gọi
+- `phan_quyen._boc` chụp `db_path` TRƯỚC lời gọi (open/delete_workspace không còn đẩy dòng nhật ký sang workspace khác; CSDL đã dời đi thì không tạo tệp rỗng).
+- `nhat_ky.ghi` chờ khoá ghi tối đa 1 s; quá hạn thì luồng nền ghi bù khi khoá nhả. Lọc `nguoi` không phân biệt hoa/thường (NFC + casefold).
+- Test mới: 4 ca trong `tests/test_gt3_nhat_ky.py` (28 ca).
+
 ## 2026-11-16 — GT3-L3 (mục cha E2; ngoài sổ): nhật ký thao tác (chỉ thêm)
 
 Chỉ ghi khi bảng `tai_khoan` có dòng; chưa có tài khoản thì không ghi gì (chỉ thêm `CREATE TABLE/TRIGGER IF NOT EXISTS`). Chỉ là báo cáo, không dính `compute_club_priority`. `kiem_nhanh` 7/7, 60 ca trùng khít.
