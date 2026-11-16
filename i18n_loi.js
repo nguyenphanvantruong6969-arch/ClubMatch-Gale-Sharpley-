@@ -1365,5 +1365,13 @@ window.I18N_ERROR_MESSAGES = {
   "forms_tieu_de_trung": {
     "vi": "Đề thi có hai câu hoặc hai lựa chọn cùng chữ nên không phân biệt được trên biểu mẫu: {chi_tiet} Hãy đổi tên trong đề thi rồi sinh lại biểu mẫu.",
     "en": "The exam file has two questions or two options with the same wording, so they can't be told apart on the form: {chi_tiet} Rename them in the exam file, then generate the form again."
+  },
+  "gt1_khong_co_hoc_sinh": {
+    "vi": "Không tìm thấy học sinh này, hoặc chưa có học sinh nào được chọn.",
+    "en": "That student was not found, or no student was selected."
+  },
+  "gt1_chua_chay": {
+    "vi": "Chưa có lần xếp nào để giải thích. Hãy chạy xếp trước.",
+    "en": "There is no allocation run to explain yet. Run the allocation first."
   }
 };

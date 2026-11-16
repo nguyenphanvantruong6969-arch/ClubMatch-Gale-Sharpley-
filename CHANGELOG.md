@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-16 — GT1-L1 (mục cha C3): động cơ giải trình một học sinh
+
+Chỉ ĐỌC, không đụng đường chạy (cấu hình mặc định giống từng byte: `kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `giai_trinh.py` (mới): `giai_trinh_mot_hoc_sinh` (hàm thuần), `dung_du_lieu_run` (dựng lại lần chạy RB-DA trong bộ nhớ bằng bộ số
+  đã khoá; không ghi). Mã kết cục: ACCEPTED, HIGHER_CHOICE_ACCEPTED, FULL_SCORE, FULL_LOTTERY, FULL_GROUP, FULL_WHARTON, RESERVED, NOT_TESTED.
+- `fa_ly_do.cau_ly_do_rbda`: câu cho lần chạy thường (FA bật dùng lại `fa_ly_do` đã lưu).
+- API `get_giai_trinh_hoc_sinh(student_id, run_id=None)` (`api_xuat.py`): cờ `du_lieu_da_doi` (dấu vân tay khác, dựng lại khác kết quả
+  đã lưu, hay không phải lần mới nhất); lỗi `gt1_chua_chay`, `gt1_khong_co_hoc_sinh` (`i18n_errors.py`, `i18n_loi.js` sinh lại).
+- Test mới: `tests/test_gt1_giai_trinh.py` (24 ca).
+
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 
 Chỉ tài liệu, mã không đổi. Đối chiếu góp ý vòng trước với kho mã và chia việc cho 3 nhóm tự động (mỗi nhóm: Opus dẫn,

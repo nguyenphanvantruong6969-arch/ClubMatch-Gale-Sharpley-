@@ -49,3 +49,40 @@ def cau_ly_do(dong: dict, ten_clb: str) -> str:
         return ("Các CLB em đã chọn ở buổi này đều đủ chỗ nên em được xếp vào %s (CLB Tự do)."
                 % ten_clb)
     return ""
+
+
+# GT1-L1: câu giải thích cho lần chạy RB-DA thường (FA tắt). Mã do `giai_trinh.py` quyết định; câu CHỈ ở đây.
+def cau_ly_do_rbda(dong: dict, ten_clb: str) -> str:
+    """Câu tiếng Việt cho một lựa chọn của chính học sinh trong lần chạy RB-DA thường.
+
+    `dong["ma"]`: ACCEPTED, HIGHER_CHOICE_ACCEPTED, FULL_SCORE, FULL_LOTTERY, FULL_GROUP, FULL_WHARTON,
+    RESERVED, NOT_TESTED. Chỉ nói về học sinh đó và CLB — không mã, tên hay số bốc thăm của em khác.
+    """
+    ma = dong.get("ma")
+    if ma == "ACCEPTED":
+        hang = dong.get("rank_in_list")
+        return ("Em được xếp vào %s – nguyện vọng %s của em." % (ten_clb, hang) if hang
+                else "Em được xếp vào %s." % ten_clb)
+    if ma == "HIGHER_CHOICE_ACCEPTED":
+        return "Em đã được xếp vào một CLB em xếp cao hơn nên %s không cần xét." % ten_clb
+    if ma == "FULL_SCORE":
+        cau = "%s đã đủ chỗ với các bạn có điểm thử thách cao hơn" % ten_clb
+        if dong.get("cut_score") is not None and dong.get("diem_em") is not None:
+            cau += " (điểm chuẩn %s, em %s)" % (_so(dong["cut_score"]), _so(dong["diem_em"]))
+        return cau + "."
+    if ma == "FULL_LOTTERY":
+        return ("%s đã đủ chỗ; em bằng các bạn ở mọi tiêu chí nên chỗ cuối được quyết định bằng bốc thăm, "
+                "và số bốc thăm của em chưa trúng." % ten_clb)
+    if ma == "FULL_GROUP":
+        return "%s đã đủ chỗ; các bạn thuộc nhóm ưu tiên cao hơn được xét trước." % ten_clb
+    if ma == "FULL_WHARTON":
+        return ("%s đã đủ chỗ; em bằng các bạn ở các tiêu chí trước, và các bạn có điểm quyết tâm "
+                "cao hơn được xét trước." % ten_clb)
+    if ma == "RESERVED":
+        return "%s dành một số chỗ cho nhóm được giữ chỗ nên em chưa vào được." % ten_clb
+    if ma == "NOT_TESTED":
+        return ("%s có thử thách đầu vào; em chưa có điểm nên được xét sau các bạn đã có điểm, "
+                "và CLB đã đủ chỗ." % ten_clb)
+    if ma == "UNASSIGNED":
+        return "Em chưa có chỗ ở buổi này: các CLB em chọn đều đã đủ chỗ."
+    return ""

@@ -1458,6 +1458,16 @@ MESSAGES = {
               "form: {chi_tiet} Rename them in the exam file, then generate the form again.",
     },
     # === end SG-C ===
+    # === GT1 ===
+    "gt1_khong_co_hoc_sinh": {
+        "vi": "Không tìm thấy học sinh này, hoặc chưa có học sinh nào được chọn.",
+        "en": "That student was not found, or no student was selected.",
+    },
+    "gt1_chua_chay": {
+        "vi": "Chưa có lần xếp nào để giải thích. Hãy chạy xếp trước.",
+        "en": "There is no allocation run to explain yet. Run the allocation first.",
+    },
+    # === end GT1 ===
 }
 
 

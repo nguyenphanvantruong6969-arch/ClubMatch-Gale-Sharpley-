@@ -1730,6 +1730,108 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("error_reading_last_run", detail=str(e)))
 
+    # ===== GT1-L1: giải trình một học sinh (chỉ ĐỌC) =====
+    def get_giai_trinh_hoc_sinh(self, student_id, run_id=None):
+        """GT1-L1: vì sao MỘT học sinh có (hoặc không có) từng CLB, cho lần chạy mới nhất (hay `run_id`).
+
+        Trả {ok, data, errors}; `data` xem `giai_trinh.giai_trinh_mot_hoc_sinh`. FA bật: dùng lại dòng
+        `fa_ly_do` đã lưu; FA tắt: dựng lại lần chạy trong bộ nhớ bằng bộ số bốc thăm đã khoá. Không ghi gì.
+        Dữ liệu đã đổi sau lần chạy (dấu vân tay khác, hay dựng lại ra khác kết quả đã lưu, hay không phải
+        lần mới nhất) -> `du_lieu_da_doi` True. Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`."""
+        try:
+            return self._giai_trinh_hoc_sinh(student_id, run_id)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_reading_last_run", detail=str(e)))
+
+    def _giai_trinh_hoc_sinh(self, student_id, run_id):
+        import json
+
+        import giai_trinh
+        from rbda_priority_pipeline import (
+            _doc_du_lieu, cat_du_lieu_theo_buoi, default_reserve_eligible_fn, diem_wharton_hieu_luc,
+            doc_du_lieu_wharton, doc_stb_buoi, nhom_theo_buoi, sap_buoi, tham_so_luat,
+            tu_dien_wharton_mot_clb)
+
+        with self._ket_noi_doc() as cur:
+            lan = cur.execute(
+                "SELECT run_id, seed, run_at, luat_xep, buoi_da_chay FROM run_history "
+                "ORDER BY run_id DESC").fetchall()
+            co_kq = cur.execute("SELECT COUNT(*) FROM match_results").fetchone()[0] > 0
+            if not lan or not co_kq:
+                return _fail(err("gt1_chua_chay"))
+            moi_nhat = lan[0]["run_id"]
+            chon = next((r for r in lan if run_id is None or r["run_id"] == run_id), None)
+            if chon is None:
+                return _fail(err("gt1_chua_chay"))
+            ten_hs = cur.execute("SELECT 1 FROM students WHERE student_id = ?",
+                                 (student_id,)).fetchone()
+            if ten_hs is None:
+                return _fail(err("gt1_khong_co_hoc_sinh"))
+            luat = json.loads(chon["luat_xep"]) if chon["luat_xep"] else None
+            fa_bat = bool(luat and luat.get("fa_daa"))
+            students, clubs, scores, applicants, prefs, stb_goc = _doc_du_lieu(cur, luat)
+            ten_clb = {r[0]: (r[1] or r[0]) for r in cur.execute("SELECT club_id, name FROM clubs")}
+            clubs = {cid: dict(c, ten=ten_clb.get(cid, cid)) for cid, c in clubs.items()}
+            luu = cur.execute("SELECT dau_van_tay FROM dau_van_tay_chay WHERE id = 1").fetchone()
+            hien_tai = dau_van_tay_du_lieu(cur, luat)
+            da_doi = (chon["run_id"] != moi_nhat) or luu is None or luu[0] != hien_tai
+            luu_kq = {}
+            for sid, buoi, cid in cur.execute(
+                    "SELECT student_id, buoi, club_id FROM match_results"):
+                luu_kq.setdefault(buoi, {})[sid] = cid
+            stb_buoi = doc_stb_buoi(cur) or None
+            fa_dong, wharton = {}, None
+            if fa_bat:
+                _, dong, _ = self._doc_ly_do_moi_nhat(cur)
+                for r in dong:
+                    fa_dong.setdefault(r[1], {}).setdefault(r[0], []).append({
+                        "club_id": r[2], "outcome": r[4], "reason": r[5], "rank_in_list": r[6],
+                        "cut_score": r[7], "diem_em": r[8], "n_hoa": r[9], "k_cho": r[10],
+                        "waitlist_pos": r[11], "cut_medal": r[12]})
+            elif dung_wharton(luat):
+                wharton = doc_du_lieu_wharton(cur)
+
+        thong_tin = {"run_id": chon["run_id"], "seed": chon["seed"], "run_at": chon["run_at"],
+                     "luat_xep": luat, "buoi_da_chay": chon["buoi_da_chay"]}
+        if fa_bat:
+            nhom = nhom_theo_buoi(clubs)
+            ds_buoi = sap_buoi(set(nhom))
+            theo_buoi = {}
+            for buoi in ds_buoi:
+                clubs_b, scores_b, _, prefs_b = cat_du_lieu_theo_buoi(
+                    buoi, nhom[buoi], clubs, scores, applicants, prefs)
+                stb_b = (stb_buoi or {}).get(buoi) or stb_goc
+                theo_buoi[buoi] = {
+                    "clubs": {cid: {"ten": c["ten"], "capacity": c["capacity"],
+                                    "reserve_capacity": c["reserve_capacity"],
+                                    "chon_loc": bool(scores_b.get(cid))}
+                              for cid, c in clubs_b.items()},
+                    "prefs": prefs_b, "scores": scores_b, "stb": stb_b,
+                    "assign": {sid: cid for sid, cid in luu_kq.get(buoi, {}).items()},
+                    "base_rank": {}, "fa_rows": fa_dong.get(buoi, {})}
+        else:
+            reserve_fn = default_reserve_eligible_fn(students, clubs)
+            tham_so = tham_so_luat(luat, students)
+            diem_w = None
+            if wharton is not None:
+                w1, w2 = tu_dien_wharton_mot_clb(
+                    prefs, wharton["clb_thi"], wharton["w1"], wharton["w2"], clubs)
+                diem_w, _ = diem_wharton_hieu_luc(prefs, w1, w2, scores)
+            ket, theo_buoi = giai_trinh.dung_du_lieu_run(
+                students, clubs, scores, applicants, prefs, reserve_fn, tham_so["tier_rank"],
+                tham_so["bo_qua_du_tru"], diem_w, stb_goc, chon["seed"] or 0, stb_buoi)
+            ds_buoi = ket.ds_buoi
+            for buoi in ds_buoi:      # dựng lại ra KHÁC kết quả đã lưu = dữ liệu/ luật đã đổi
+                lai = {s: c for s, c in theo_buoi[buoi]["assign"].items() if c is not None}
+                luu_b = {s: c for s, c in luu_kq.get(buoi, {}).items() if c is not None}
+                if lai != luu_b:
+                    da_doi = True
+        du_lieu = {"fa_bat": fa_bat, "du_lieu_da_doi": da_doi, "run": thong_tin,
+                   "ds_buoi": ds_buoi, "buoi": theo_buoi}
+        return _ok(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id))
+
     def _export_ly_do_da_khoa(self, output_path: str = ""):
         import csv
         try:
