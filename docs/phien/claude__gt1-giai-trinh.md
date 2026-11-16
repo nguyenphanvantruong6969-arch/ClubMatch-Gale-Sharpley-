@@ -16,7 +16,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 - [x] L1 Explanation engine (2ccfd01, checker NO BUGS 76864f5): `giai_trinh.py` (`giai_trinh_mot_hoc_sinh`), `fa_ly_do.cau_ly_do_rbda`, stale guard
       via `dau_van_tay_chay`, API `get_giai_trinh_hoc_sinh`, errors `gt1_khong_co_hoc_sinh`, `gt1_chua_chay`.
       Tests `tests/test_gt1_giai_trinh.py` (a)–(e).
-- [ ] L2 Lookup screen (admin/teacher): panel "Tra cứu một học sinh" in results tab, `js/14_giai_trinh.js`,
+- [x] L2 Lookup screen (admin/teacher) (2d2c947, checker NO BUGS): panel "Tra cứu một học sinh" in results tab, `js/14_giai_trinh.js`,
       `<!-- GT1 -->` block in `index.html`. Tests `tests/test_giao_dien_gt1_tra_cuu.py` (Chromium).
 - [ ] L3 Printable slip: `export_phieu_giai_trinh`, buttons in L2 panel. Tests `tests/test_gt1_phieu.py`.
 - [ ] L4 Lookup codes + student self-lookup mode: table `ma_tra_cuu`, `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`,
@@ -40,7 +40,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 
 ## Current state (overwrite each handoff)
 - Done so far: L1 (engine, API, errors gt1_chua_chay, gt1_khong_co_hoc_sinh, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay; code NO_CHOICES).
-- In progress: L2 (GO L2 sent). L1 done 2ccfd01.
+- In progress: L3 (GO L3 sent). L1 2ccfd01, L2 2d2c947 done.
 - Tests: none yet.
 - Open problems: none.
 
@@ -48,6 +48,7 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 - (none yet)
 
 ## Decisions and gotchas (keep short)
+- L1/L2: outcome sentences (fa_ly_do) are Vietnamese only; EN mode switches labels only (spec allows). L2 panel always uses latest run.
 - Decisions D-GT1…D-GT9 in the protocol §0 are final; do not ask again.
 
 ## Next steps (ordered)
@@ -63,3 +64,4 @@ self-lookup with a code. Reports/controls only: no run code path changes (invari
 | 2026-11-16 | Opus lead | Branch + handoff file created | base 5926107 |
 | 2026-11-16 | Opus lead | WRITER DONE L1 6fda292; REVIEW L1 sent; writer handoff -> writer 2 | |
 | 2026-11-16 | Opus lead | L1 fix1 2ccfd01 NO BUGS; ticked; GO L2 | |
+| 2026-11-16 | Opus lead | L2 fix1 2d2c947 NO BUGS; ticked; GO L3 | |
