@@ -30,3 +30,28 @@ Bug 1 fixed: names and passwords NFC-normalised (`chuan_hoa_ten`, `_khoa_ten`, `
 NFD login of NFC admin name OK; NFD duplicate -> `gt3_ten_da_co`; NFD-typed password and name log in; delete via NFD name
 still blocked for the last admin. Related tests 65 passed; `ruff` clean; `kiem_nhanh` 7/7 (60 cases identical); lock,
 roles, idle, no-leak scan unchanged. Note: normalising passwords is safe now (L1 unreleased, no stored accounts).
+
+## L2 — reviewed 9f70aff..22fb361 — verdict: 1 BUG
+Ran: `test_gt3_phan_quyen`, `test_giao_dien_gt3_phan_quyen`, `test_gt3_tai_khoan`, `test_giao_dien_gt3_dang_nhap`, `test_do_api`,
+`test_browser_host` -> 116 passed; `ruff` clean; `kiem_nhanh` 7/7 (60 cases identical). Own script (fake data, scratchpad):
+- Accounts OFF: wrapper vs original (`_gt3_goc`) on 7 writes (create_student_if_missing, delete_student, reset_data,
+  create_or_update_club, run_pipeline, delete_club, set_student_class): identical returns/exceptions.
+- No session: every non-`cong_khai` method -> `gt3_can_dang_nhap` (only staticmethods `chuan_hoa_buoi`,
+  `chuan_hoa_nhom_du_tru` escape the wrapper; they are pure helpers, harmless).
+- Teacher: all 40+ `quan_tri` methods -> `gt3_khong_du_quyen`, DB dump hash unchanged (denied => nothing written); reads OK.
+- Admin passes the gate. Unclassified name while logged in -> denied (fail closed). `dir(PipelineAPI)` has no stale/missing names.
+- Idle: calls refresh the 15 min clock (3 x 14 min stays alive), `get_phien_dang_nhap` does not; 16 min idle -> logged out.
+- Nested depth: `_TL.sau` is thread-local (other thread sees 0); reset to 0 after an exception (TypeError); denied call after
+  an exception still denied. No giao_vien method calls a quan_tri public method (static scan). browser_host: test passes
+  (class-level wrap).
+### Bug
+1. `api_tai_khoan.py:_co_tai_khoan_nho` + `_khoa_tao_tai_khoan` default `_co_tk_cuoi = False` | repro: accounts exist, new
+   `PipelineAPI` on that DB (app restart), first account-table read raises (e.g. "database is locked"); with no login call
+   `reset_data()` -> the gate lets it through (reached its own validation `reset_confirmation_mismatch`) | expected: fail
+   CLOSED — read the count once in the constructor after `init_db` (and per DB on `open_workspace`), and when a read fails with
+   no earlier successful read for that DB treat accounts as ON (deny), not OFF. Also `_co_tk_cuoi` is not per DB.
+### Judgement calls (not bugs)
+- On-site entry methods as `giao_vien`: agree for `luu_diem_danh`, `submit_club_scores`, `submit_person_scores`, `gui_*`
+  (teacher work). Mild disagreement for `submit_preferences`, `submit_huy_chuong`, `submit_test_selection`: they rewrite
+  allocation inputs of ANY student with no lock; acceptable only because L3 logs them — make sure L3 logs these three
+  (and the score/attendance writes), else move them to `quan_tri`.
