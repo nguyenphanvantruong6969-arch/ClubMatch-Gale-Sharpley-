@@ -11,6 +11,7 @@ import hashlib
 import hmac
 import secrets
 import time
+import unicodedata
 
 VAI_QUAN_TRI = "quan_tri"
 VAI_GIAO_VIEN = "giao_vien"
@@ -28,7 +29,7 @@ def bam_mat_khau(mat_khau: str, muoi: bytes = None):
     """Trả `(bam, muoi)`. Muối ngẫu nhiên 16 byte nếu không đưa vào."""
     if muoi is None:
         muoi = secrets.token_bytes(16)
-    bam = hashlib.pbkdf2_hmac("sha256", mat_khau.encode("utf-8"), muoi, SO_VONG_BAM)
+    bam = hashlib.pbkdf2_hmac("sha256", unicodedata.normalize("NFC", mat_khau).encode("utf-8"), muoi, SO_VONG_BAM)
     return bam, muoi
 
 
@@ -41,7 +42,7 @@ def chuan_hoa_ten(ten):
     """Tên đã cắt khoảng trắng, hoặc None nếu không hợp lệ (rỗng / quá dài / không phải chuỗi)."""
     if not isinstance(ten, str):
         return None
-    ten = ten.strip()
+    ten = unicodedata.normalize("NFC", ten).strip()
     if not ten or len(ten) > TEN_TOI_DA:
         return None
     return ten
@@ -52,7 +53,7 @@ def mat_khau_hop_le(mat_khau) -> bool:
 
 
 def _khoa_ten(ten: str) -> str:
-    return ten.casefold()
+    return unicodedata.normalize("NFC", ten).casefold()
 
 
 # ----------------------------------------------------------------- bảng tai_khoan

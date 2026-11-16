@@ -156,6 +156,44 @@ def test_ten_co_dau_tieng_viet_duoc_va_trung_ten_bi_chan(api):
     assert api.dang_nhap("Trường", MK)["ok"]
 
 
+def test_ten_unicode_nfd_trung_nfc_va_dang_nhap_duoc(api):
+    import unicodedata
+    nfc = unicodedata.normalize("NFC", "Thầy Tâm")
+    nfd = unicodedata.normalize("NFD", nfc)
+    assert nfc != nfd
+    tao_quan_tri(api, nfc)
+    r = api.tao_tai_khoan(nfd, MK2, "giao_vien")
+    assert not r["ok"] and ma_loi(r) == ["gt3_ten_da_co"]
+    api.dang_xuat()
+    assert api.dang_nhap(nfd, MK)["ok"]
+    api.dang_xuat()
+    assert api.dang_nhap(nfc.upper(), MK)["ok"]
+
+
+def test_ten_nfd_duoc_luu_dang_nfc(api):
+    import unicodedata
+    nfd = unicodedata.normalize("NFD", "Trường")
+    tao_quan_tri(api, nfd)
+    con = sqlite3.connect(api.db_path)
+    try:
+        (t,) = con.execute("SELECT ten FROM tai_khoan").fetchone()
+    finally:
+        con.close()
+    assert t == unicodedata.normalize("NFC", "Trường")
+
+
+def test_mat_khau_nfc_nfd_nhu_nhau(api):
+    import unicodedata
+    mk_nfc = unicodedata.normalize("NFC", "mậtkhẩu-việt1")
+    mk_nfd = unicodedata.normalize("NFD", mk_nfc)
+    assert mk_nfc != mk_nfd
+    tao_quan_tri(api, "quantri", mk_nfc)
+    api.dang_xuat()
+    assert api.dang_nhap("quantri", mk_nfd)["ok"]
+    api.dang_xuat()
+    assert not api.dang_nhap("quantri", "sai" + mk_nfc)["ok"]
+
+
 def test_ten_duoc_cat_khoang_trang(api):
     tao_quan_tri(api, "  quantri  ")
     api.dang_xuat()

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L1 fix1: chuẩn hoá Unicode NFC cho tên và mật khẩu
+
+`tai_khoan.py`: `chuan_hoa_ten`, `_khoa_ten`, `bam_mat_khau` chuẩn hoá NFC (stdlib `unicodedata`) → tên NFD trùng tên NFC bị chặn (`gt3_ten_da_co`), đăng nhập bằng NFD được; mật khẩu NFC/NFD băm như nhau (mật khẩu ASCII/NFC cũ không đổi). Tên lưu dạng NFC.
+Test mới (3): `test_ten_unicode_nfd_trung_nfc_va_dang_nhap_duoc`, `test_ten_nfd_duoc_luu_dang_nfc`, `test_mat_khau_nfc_nfd_nhu_nhau` trong `tests/test_gt3_tai_khoan.py`. `kiem_nhanh` 7/7, 60 ca trùng khít.
+
 ## 2026-11-16 — GT3-L1 (mục cha E1-lite; ngoài sổ): tài khoản và đăng nhập (quản trị / giáo viên)
 
 Tuỳ chọn MỚI, mặc định TẮT: bảng `tai_khoan` rỗng thì phần mềm chạy y như trước (không màn đăng nhập; chỉ thêm `CREATE TABLE IF NOT EXISTS`).
