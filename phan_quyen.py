@@ -16,6 +16,8 @@ import inspect
 import threading
 import types
 
+import nhat_ky as nk
+import tai_khoan as tk
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 
@@ -50,7 +52,7 @@ xuat_ket_qua_list
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.
 _QUAN_TRI = """
-admin_save_wharton ai_chua_dang_ky bulk_set_reserve_group chay_vong_2_api chuyen_tep_forms clear_wharton
+admin_save_wharton ai_chua_dang_ky export_nhat_ky_thao_tac_csv get_nhat_ky_thao_tac bulk_set_reserve_group chay_vong_2_api chuyen_tep_forms clear_wharton
 create_or_update_club create_student_if_missing create_workspace dat_fa_duong delete_club delete_student
 delete_workspace doi_chieu_hai_lan duplicate_workspace export_workspace
 import_clubs_csv import_csv_auto import_preferences_csv import_so_nhap import_test_selection_csv
@@ -72,34 +74,77 @@ del _ten
 _TL = threading.local()
 
 
-def kiem_quyen(api, ten: str):
-    """None nếu được làm; ngược lại phản hồi lỗi đầy đủ `{ok: False, data: None, errors: [...]}`."""
+def _xet(api, ten: str):
+    """`(co_tai_khoan, phien, loi)`: `loi` là phản hồi lỗi đầy đủ hoặc None (được làm)."""
     muc = QUYEN.get(ten)
+    co = api._co_tai_khoan_nho()
     if muc == CONG_KHAI:
-        return None
-    if not api._co_tai_khoan_nho():
-        return None
+        return co, (api._dang_nhap.phien_hien_tai(api.db_path) if co else None), None
+    if not co:
+        return False, None, None
     phien = api._dang_nhap.cham_hoat_dong(api.db_path)       # làm mới giờ nghỉ
     if phien is None:
-        return _fail(err("gt3_can_dang_nhap"))
+        return True, None, _fail(err("gt3_can_dang_nhap"))
     if muc is None or (muc == QUAN_TRI and phien["vai"] != QUAN_TRI):
-        return _fail(err("gt3_khong_du_quyen", hanh_dong=ten))
-    return None
+        return True, phien, _fail(err("gt3_khong_du_quyen", hanh_dong=ten))
+    return True, phien, None
+
+
+def kiem_quyen(api, ten: str):
+    """None nếu được làm; ngược lại phản hồi lỗi đầy đủ `{ok: False, data: None, errors: [...]}`."""
+    return _xet(api, ten)[2]
+
+
+def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None):
+    """Một dòng nhật ký cho một lời gọi ngoài cùng (đã biết là đang có tài khoản)."""
+    nguoi = phien["ten"] if phien else None
+    vai = phien["vai"] if phien else None
+    chi_tiet = nk.tom_tat_tham_so(ham, ten, args, kwargs)
+    if ten == "dang_nhap":
+        if isinstance(ket_qua_goi, dict) and ket_qua_goi.get("ok"):
+            nguoi, vai = ket_qua_goi["data"]["ten"], ket_qua_goi["data"]["vai"]
+        else:
+            # Tên gõ vào chỉ được ghi khi là tên một tài khoản CÓ THẬT (người dùng hay gõ nhầm mật khẩu vào ô tên).
+            try:
+                with api._ket_noi_doc() as cur:
+                    co_that = tk.tim_ten(cur, args[0] if args else kwargs.get("ten", "")) is not None
+            except Exception:
+                co_that = False
+            chi_tiet = chi_tiet if co_that else "{}"
+    nk.ghi(api, nguoi, vai, ten, ket_qua, chi_tiet)
 
 
 def _boc(ten, ham):
     @functools.wraps(ham)
     def cong(self, *args, **kwargs):
         sau = getattr(_TL, "sau", 0)
-        if sau == 0:
-            loi = kiem_quyen(self, ten)
-            if loi is not None:
-                return loi
-        _TL.sau = sau + 1
-        try:
+        if sau > 0:
             return ham(self, *args, **kwargs)
+        co, phien, loi = _xet(self, ten)
+        ghi = nk.nen_ghi(ten)
+        if loi is not None:
+            if co and ghi:
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(loi))
+            return loi
+        _TL.sau = 1
+        try:
+            r = ham(self, *args, **kwargs)
+        except Exception:
+            if co and ghi:
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, "loi_ngoai_le")
+            raise
         finally:
-            _TL.sau = sau
+            _TL.sau = 0
+        if ghi:
+            if not co and ten == "tao_tai_khoan" and nk.ket_qua_tu(r) == "ok":
+                # Tài khoản đầu tiên vừa bật tính năng: ghi luôn, người tạo đã được đăng nhập.
+                co = self._co_tai_khoan_nho()
+                phien = self._dang_nhap.phien_hien_tai(self.db_path)
+            if co:
+                if ten == "dang_xuat" and phien is None:
+                    return r
+                _ghi_nhat_ky(self, ten, ham, args, kwargs, phien, nk.ket_qua_tu(r), r)
+        return r
     cong._gt3_cong = True
     cong._gt3_goc = ham
     cong.__signature__ = inspect.signature(ham)
@@ -112,7 +157,7 @@ def _boc(ten, ham):
 def ap_dung_cong(lop):
     """Bọc mọi hàm công khai của `lop` (trừ mức `cong_khai`). Gọi một lần, ở cuối api.py."""
     for ten in dir(lop):
-        if ten.startswith("_") or QUYEN.get(ten) == CONG_KHAI:
+        if ten.startswith("_") or ten == "get_phien_dang_nhap":
             continue
         ham = next((c.__dict__[ten] for c in lop.__mro__ if ten in c.__dict__), None)
         if isinstance(ham, types.FunctionType) and not getattr(ham, "_gt3_cong", False):

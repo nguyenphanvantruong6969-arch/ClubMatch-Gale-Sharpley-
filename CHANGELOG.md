@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L3 (mục cha E2; ngoài sổ): nhật ký thao tác (chỉ thêm)
+
+Chỉ ghi khi bảng `tai_khoan` có dòng; chưa có tài khoản thì không ghi gì (chỉ thêm `CREATE TABLE/TRIGGER IF NOT EXISTS`). Chỉ là báo cáo, không dính `compute_club_priority`. `kiem_nhanh` 7/7, 60 ca trùng khít.
+- Bảng `nhat_ky_thao_tac(id, luc, nguoi, vai, hanh_dong, ket_qua, chi_tiet)` (duyệt D-GT8) + hai trigger chặn UPDATE / DELETE; `reset_data` và các đường xoá khác không đụng tới.
+- Ghi ở MỘT chỗ: lớp bọc của cổng phân quyền (`phan_quyen.py:_boc`) cho lời gọi ngoài cùng của mọi hàm GHI (cả hai vai: nhập nguyện vọng, điểm, điểm danh, khiếu nại, xuất tệp…), đăng nhập (đúng / sai / bị khoá), đăng xuất, tạo / đổi mật khẩu / xoá tài khoản. Hàm chỉ đọc (`get_*`, `list_*`, `search_*`…) không ghi (`nhat_ky.nen_ghi`). Lời gọi bị từ chối cũng ghi, `ket_qua` = mã lỗi (`gt3_khong_du_quyen`, `gt3_can_dang_nhap`).
+- `chi_tiet` = tóm tắt tham số dạng JSON ≤ 300 ký tự: bỏ tham số giống mật khẩu / mã bí mật / nội dung tệp base64, chuỗi dài chỉ ghi độ dài, danh sách dài chỉ ghi số phần tử; `doi_mat_khau` không ghi gì. Đăng nhập sai chỉ ghi tên khi là tài khoản có thật (tránh lưu mật khẩu gõ nhầm vào ô tên).
+- Ghi nhật ký lỗi chỉ đưa cảnh báo vào log (không kèm tham số), kết quả thao tác chính không đổi.
+- API mới (`api_nhat_ky.py`, chỉ quản trị): `get_nhat_ky_thao_tac(page, page_size, nguoi, hanh_dong)` (mới nhất trước, 1..500 dòng/trang), `export_nhat_ky_thao_tac_csv(path, nguoi, hanh_dong)` (UTF-8 có BOM, cũ nhất trước). Mã lỗi mới `gt3_loi_nhat_ky`.
+- Giao diện: mục "Nhật ký thao tác" (lọc, phân trang, xuất CSV) ngay trong hộp Tài khoản của quản trị (không thêm tab con vào Quản lý, vì test tab con khẳng định đúng danh sách tab).
+- Test mới: `tests/test_gt3_nhat_ky.py` (24), thêm 1 ca vào `tests/test_giao_dien_gt3_dang_nhap.py`.
+
 ## 2026-11-16 — GT3-L2 fix1: cổng phân quyền đóng khi đọc bảng tài khoản hỏng
 
 `api_tai_khoan.py:_co_tai_khoan_nho`: bộ nhớ đệm theo từng CSDL (`_co_tk_nho`); đọc hỏng (vd. "database is locked") mà CSDL đó chưa từng đọc được thì coi như ĐÃ CÓ tài khoản (từ chối `gt3_can_dang_nhap`); thiếu bảng = chưa có tài khoản. `api.py` mồi bộ nhớ đệm sau `init_db` trong hàm khởi tạo. Test mới (6) trong `tests/test_gt3_phan_quyen.py`.

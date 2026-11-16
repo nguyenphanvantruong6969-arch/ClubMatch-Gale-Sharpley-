@@ -98,7 +98,7 @@
     if (!phien.co_tai_khoan) veTaoDauTien(hop);
     else if (phien.dang_nhap) {
       veDoiMatKhau(hop);
-      if (phien.vai === "quan_tri") veDanhSach(hop);
+      if (phien.vai === "quan_tri") { veDanhSach(hop); veNhatKy(hop); }
     }
     hop.appendChild(mot("div", { style: "margin-top:18px" },
       mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutDong", text: t("tk_dong"), onclick: dongLopPhu })));
@@ -179,6 +179,52 @@
           mot("span", { text: tk.ten + " — " + tenVai(tk.vai) }), nutXoa));
       });
     });
+  }
+
+  /* ------------------------------------------------------------ nhật ký thao tác (GT3-L3, chỉ quản trị) */
+  function veNhatKy(hop) {
+    const trang = { so: 1, nguoi: "", hanhDong: "" };
+    const khung = mot("div", { style: "margin-top:24px", id: "tkNhatKy" }, mot("h3", { text: t("tk_nk_tieu_de") }),
+      mot("p", { class: "hint-text", text: t("tk_nk_ghi_chu") }));
+    const locNguoi = oNhap("tkNkNguoi", t("tk_nk_loc_nguoi"), "text");
+    const locHd = oNhap("tkNkHanhDong", t("tk_nk_loc_hanh_dong"), "text");
+    const nutLoc = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkLoc", text: t("tk_nk_loc_nut") });
+    const nutXuat = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkXuat", text: t("tk_nk_xuat") });
+    const bang = mot("div", { id: "tkNkBang" });
+    const nutTruoc = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkTruoc", text: t("tk_nk_truoc") });
+    const nutSau = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkSau", text: t("tk_nk_sau") });
+    const nhan = mot("span", { id: "tkNkTrang", class: "hint-text", style: "margin:0 8px" });
+    khung.append(locNguoi.nhom, locNguoi.o, locHd.nhom, locHd.o,
+      mot("div", { style: "margin:8px 0" }, nutLoc, " ", nutXuat), bang,
+      mot("div", { style: "margin-top:8px" }, nutTruoc, nhan, nutSau));
+    hop.appendChild(khung);
+
+    function ve() {
+      callApi("get_nhat_ky_thao_tac", trang.so, 20, trang.nguoi || null, trang.hanhDong || null).then((res) => {
+        if (!res.ok) { showErrorToast(res.errors); return; }
+        const d = res.data;
+        bang.textContent = "";
+        if (!d.dong.length) bang.appendChild(mot("p", { class: "hint-text", text: t("tk_nk_trong") }));
+        else {
+          const cot = [["luc", "tk_nk_cot_luc"], ["nguoi", "tk_nk_cot_nguoi"], ["vai", "tk_nk_cot_vai"],
+            ["hanh_dong", "tk_nk_cot_hanh_dong"], ["ket_qua", "tk_nk_cot_ket_qua"], ["chi_tiet", "tk_nk_cot_chi_tiet"]];
+          const tb = mot("table", { class: "data-table", id: "tkNkTable" },
+            mot("thead", {}, mot("tr", {}, ...cot.map(([, k]) => mot("th", { text: t(k) })))),
+            mot("tbody", {}, ...d.dong.map((r) => mot("tr", {}, ...cot.map(([c]) => mot("td", { text: r[c] == null ? "" : String(r[c]) }))))));
+          bang.appendChild(mot("div", { style: "overflow-x:auto" }, tb));
+        }
+        nhan.textContent = t("tk_nk_trang", { trang: d.page, so_trang: d.so_trang, tong: d.tong });
+        nutTruoc.disabled = d.page <= 1;
+        nutSau.disabled = d.page >= d.so_trang;
+      });
+    }
+    nutLoc.addEventListener("click", () => { trang.so = 1; trang.nguoi = locNguoi.o.value.trim(); trang.hanhDong = locHd.o.value.trim(); ve(); });
+    nutTruoc.addEventListener("click", () => { if (trang.so > 1) { trang.so -= 1; ve(); } });
+    nutSau.addEventListener("click", () => { trang.so += 1; ve(); });
+    nutXuat.addEventListener("click", () => chayNut(nutXuat,
+      () => callApi("export_nhat_ky_thao_tac_csv", "", trang.nguoi || null, trang.hanhDong || null),
+      (res) => { if (!res.ok) { showErrorToast(res.errors); return; } showToast(t("tk_nk_da_xuat", { n: res.data.n_rows }), "success"); }));
+    ve();
   }
 
   /* ------------------------------------------------------------ thanh bên */

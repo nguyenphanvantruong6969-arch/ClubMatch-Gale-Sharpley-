@@ -74,7 +74,7 @@ def test_ham_ghi_la_quan_tri_ham_doc_la_giao_vien():
               "submit_club_scores", "luu_diem_danh"):
         assert pq.QUYEN[n] == pq.GIAO_VIEN, n
     for n in cac_ham_cong_khai():
-        if n.startswith(("get_", "list_")) and n not in ("get_phien_dang_nhap",):
+        if n.startswith(("get_", "list_")) and n not in ("get_phien_dang_nhap", "get_nhat_ky_thao_tac"):
             assert pq.QUYEN[n] != pq.QUAN_TRI, n
 
 
@@ -98,9 +98,10 @@ def test_bao_ham_giu_ten_chu_ky_va_ngoai_le(api):
         api.create_or_update_club()
 
 
-def test_ham_cong_khai_khong_bi_bao(api):
-    for n in ("dang_nhap", "get_phien_dang_nhap", "tao_tai_khoan"):
-        assert not getattr(getattr(PipelineAPI, n), "_gt3_cong", False), n
+def test_ham_cong_khai_chi_bi_bao_de_ghi_nhat_ky(api):
+    assert not getattr(PipelineAPI.get_phien_dang_nhap, "_gt3_cong", False)       # không ghi, không kiểm
+    for n in ("dang_nhap", "dang_xuat", "tao_tai_khoan", "doi_mat_khau"):
+        assert getattr(getattr(PipelineAPI, n), "_gt3_cong", False), n
 
 
 # ---------------------------------------------------------------- có tài khoản

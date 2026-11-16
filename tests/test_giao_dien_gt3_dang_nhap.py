@@ -127,3 +127,22 @@ def test_nut_xoa_can_bam_hai_lan(trang):
     page.click('[data-xoa="gv1"]')
     page.wait_for_function("window.pywebview.api.liet_ke_tai_khoan().then(r => r.data.length === 1)")
     assert not loi, loi
+
+
+def test_nhat_ky_thao_tac_hien_trong_hop_tai_khoan_cua_quan_tri(trang):
+    page, api, url, loi = trang
+    assert api.tao_tai_khoan("quantri", MK, "quan_tri")["ok"]
+    assert api.create_or_update_club("A", "Câu lạc bộ Đẹp", 5, 0, "")["ok"]
+    page.goto(url)
+    page.wait_for_selector("#tkNutMoHop")
+    page.click("#tkNutMoHop")
+    page.wait_for_selector("#tkNkTable")
+    chu = page.inner_text("#tkNkTable")
+    assert "create_or_update_club" in chu and "tao_tai_khoan" in chu
+    assert "Câu lạc bộ Đẹp" in chu
+    page.fill("#tkNkHanhDong", "create_or_update_club")
+    page.click("#tkNkLoc")
+    page.wait_for_function("!document.querySelector('#tkNkTable').innerText.includes('tao_tai_khoan')")
+    assert "1 dòng" in page.inner_text("#tkNkTrang")
+    assert page.is_disabled("#tkNkTruoc") and page.is_disabled("#tkNkSau")
+    assert not loi, loi

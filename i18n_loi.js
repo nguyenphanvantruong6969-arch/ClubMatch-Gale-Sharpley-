@@ -1366,6 +1366,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Đề thi có hai câu hoặc hai lựa chọn cùng chữ nên không phân biệt được trên biểu mẫu: {chi_tiet} Hãy đổi tên trong đề thi rồi sinh lại biểu mẫu.",
     "en": "The exam file has two questions or two options with the same wording, so they can't be told apart on the form: {chi_tiet} Rename them in the exam file, then generate the form again."
   },
+  "gt3_loi_nhat_ky": {
+    "vi": "Không đọc hoặc xuất được nhật ký thao tác. Hãy thử lại.",
+    "en": "The activity log could not be read or exported. Please try again."
+  },
   "gt3_loi_tai_khoan": {
     "vi": "Không xử lý được yêu cầu về tài khoản. Hãy thử lại.",
     "en": "The account request could not be processed. Please try again."

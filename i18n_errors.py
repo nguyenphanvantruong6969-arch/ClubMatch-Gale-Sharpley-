@@ -1459,6 +1459,10 @@ MESSAGES = {
     },
     # === end SG-C ===
     # === GT3 (L1) ===
+    "gt3_loi_nhat_ky": {
+        "vi": "Không đọc hoặc xuất được nhật ký thao tác. Hãy thử lại.",
+        "en": "The activity log could not be read or exported. Please try again.",
+    },
     "gt3_loi_tai_khoan": {
         "vi": "Không xử lý được yêu cầu về tài khoản. Hãy thử lại.",
         "en": "The account request could not be processed. Please try again.",

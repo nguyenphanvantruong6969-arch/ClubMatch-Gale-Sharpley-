@@ -76,6 +76,7 @@ from api_forms import FormsMixin
 from api_forms_bo import FormsBoMixin
 from api_forms_nap import FormsNapMixin
 from api_nhap import NhapDuLieuMixin
+from api_nhat_ky import NhatKyMixin  # GT3-L3
 from api_quan_ly import QuanLyMixin
 from api_sau_xep import SauXepMixin
 from api_tai_khoan import TaiKhoanMixin  # GT3
@@ -94,7 +95,7 @@ from phan_quyen import ap_dung_cong  # GT3-L2
 # thay đó chỉ có tác dụng với mã nằm trong CHÍNH tệp này.
 class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                   XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin,
-                  FormsMixin, FormsNapMixin, FormsBoMixin, TaiKhoanMixin):
+                  FormsMixin, FormsNapMixin, FormsBoMixin, TaiKhoanMixin, NhatKyMixin):
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
         self.db_path = db_path

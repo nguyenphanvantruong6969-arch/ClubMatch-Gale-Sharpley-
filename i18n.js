@@ -1049,6 +1049,25 @@
       tk_dong: "Đóng",
       tk_dang_la: "{ten} ({vai})",
       /* === end GT3 (L1) === */
+      /* === GT3 (L3) === */
+      tk_nk_tieu_de: "Nhật ký thao tác",
+      tk_nk_ghi_chu: "Mỗi thao tác làm thay đổi dữ liệu, mỗi lần đăng nhập và mỗi thay đổi tài khoản để lại một dòng. Không xoá, không sửa được.",
+      tk_nk_loc_nguoi: "Người làm",
+      tk_nk_loc_hanh_dong: "Thao tác",
+      tk_nk_loc_nut: "Lọc",
+      tk_nk_cot_luc: "Lúc",
+      tk_nk_cot_nguoi: "Người",
+      tk_nk_cot_vai: "Vai",
+      tk_nk_cot_hanh_dong: "Thao tác",
+      tk_nk_cot_ket_qua: "Kết quả",
+      tk_nk_cot_chi_tiet: "Chi tiết",
+      tk_nk_trong: "Chưa có dòng nào.",
+      tk_nk_trang: "Trang {trang} / {so_trang} ({tong} dòng)",
+      tk_nk_truoc: "Trang trước",
+      tk_nk_sau: "Trang sau",
+      tk_nk_xuat: "Xuất tệp CSV",
+      tk_nk_da_xuat: "Đã xuất {n} dòng.",
+      /* === end GT3 (L3) === */
     },
 
     en: {
@@ -2081,6 +2100,25 @@
       tk_dong: "Close",
       tk_dang_la: "{ten} ({vai})",
       /* === end GT3 (L1) === */
+      /* === GT3 (L3) === */
+      tk_nk_tieu_de: "Activity log",
+      tk_nk_ghi_chu: "Every action that changes data, every sign-in and every account change leaves one line. Lines cannot be edited or deleted.",
+      tk_nk_loc_nguoi: "Done by",
+      tk_nk_loc_hanh_dong: "Action",
+      tk_nk_loc_nut: "Filter",
+      tk_nk_cot_luc: "Time",
+      tk_nk_cot_nguoi: "Person",
+      tk_nk_cot_vai: "Role",
+      tk_nk_cot_hanh_dong: "Action",
+      tk_nk_cot_ket_qua: "Result",
+      tk_nk_cot_chi_tiet: "Details",
+      tk_nk_trong: "No lines yet.",
+      tk_nk_trang: "Page {trang} / {so_trang} ({tong} lines)",
+      tk_nk_truoc: "Previous page",
+      tk_nk_sau: "Next page",
+      tk_nk_xuat: "Export CSV file",
+      tk_nk_da_xuat: "Exported {n} lines.",
+      /* === end GT3 (L3) === */
     },
   };
 
