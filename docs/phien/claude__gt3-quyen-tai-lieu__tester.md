@@ -64,3 +64,28 @@ present, never-read cache and errors: "database is locked", "unable to open data
 message). Error after an earlier success uses the cached True. DB switch (as `open_workspace` does): db2 without accounts =>
 OFF, back to db1 => ON and gated, never-read db3 + read error => ON; login session is bound to its DB (gone after switch).
 Related tests 124 passed (L2 + L1 + do_api + browser_host); `ruff` clean; `kiem_nhanh` 7/7.
+
+## L3 — reviewed 656c12a..7fcba6a — verdict: 1 BUG
+Ran: `test_gt3_nhat_ky`, `test_giao_dien_gt3_dang_nhap`, `test_gt3_phan_quyen`, `test_gt3_tai_khoan`, `test_ws_nhan`, `test_do_api` ->
+151 passed; `ruff` clean; `kiem_nhanh` 7/7. Own scripts (fake data, scratchpad) confirmed:
+- `test_ws_nhan` edit is a legitimate allowlist extension (`ws_` -> `ws_`/`gt3_` for NEW codes); the assertion that every existing
+  message is unchanged (`lech`) is untouched. Not weakened.
+- Accounts OFF: 0 rows (login attempts, reset_data, create_student). First `tao_tai_khoan` logs 1 row (author logged in): fine.
+- No secret in any row: wrong passwords, `mat_khau=` kwarg, odd kwarg `pw_xx`, `doi_mat_khau` (params `{}`), a password typed into the
+  name field (`chi_tiet` `{}` because not a real account), `tao_tai_khoan` rows keep only ten/vai.
+- UPDATE and DELETE abort (trigger message). `reset_data` (hoc_sinh and tat_ca, accounts ON and OFF) works; log rows kept.
+- Failing log write (`OperationalError` inside `ghi`): action result/login result unchanged, no exception to caller, only a log warning.
+- Exactly one row for: config change, run_pipeline, failed login, logout (none when already logged out); anonymous denied write =
+  1 row (`gt3_can_dang_nhap`, nguoi NULL); teacher denied/allowed writes = 1 row each; reads (get_*) = 0 rows.
+- Pagination (newest first, last page, beyond range = empty, bad args clamp), filters (exact), SQL-injection string = 0 rows,
+  CSV UTF-8 BOM with Vietnamese intact, formula guard on a user name starting with `=`. Teacher cannot view/export (`gt3_khong_du_quyen`).
+### Bug
+1. `phan_quyen.py:_boc` (+ `_ghi_nhat_ky`/`nk.ghi` use `api.db_path` AFTER the call) | repro: accounts ON in workspace A; admin calls
+   `create_workspace("B")` then `open_workspace(slug)`; the row for `open_workspace` is written into workspace B's DB (which has NO
+   accounts): B now holds 1 audit row although accounts are OFF there, and A has no record of the switch | expected: write the row
+   to the DB that was current BEFORE the call (capture `db_path` before running; pass it to `ghi`), so A logs the switch and an
+   accounts-OFF workspace stays at zero rows. Same for any method that changes/removes the open DB (e.g. `delete_workspace` of the open one).
+### Notes (not bugs)
+- A denied/anonymous/teacher call now writes a row and therefore waits on `_khoa_ghi` (measured 2.8 s while another thread held it):
+  during a long `run_pipeline` denied clicks and failed logins hang until the run ends. Acceptable for a kiosk; consider a short timeout.
+- Filter `nguoi` is exact and case-sensitive; anonymous rows (nguoi NULL) cannot be filtered by name.
