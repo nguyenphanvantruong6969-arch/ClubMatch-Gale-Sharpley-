@@ -143,3 +143,20 @@ duplicates); DB file deleted while a write is pending -> warning only, file NOT 
 Related tests 155 passed; `ruff` clean; `kiem_nhanh` 7/7.
 Note (not a bug): a deferred row is lost if the process exits within milliseconds of the lock release (daemon thread); only
 affects calls that were made concurrently with a long run, never the run's own row (written synchronously).
+
+## L4 — reviewed 8ee111c..6d36d68 — verdict: 2 BUGS
+Ran: `test_gt3_tai_lieu` 20 passed; `ruff` clean; `kiem_nhanh` 7/7 (no product code touched). Fresh DB, fake data, scripts in scratchpad.
+Integrity: PHAN_CONG table empty (test would catch a filled cell); all 7 md + svg contain "mô phỏng"; VAI_TRO_AI cites `docs/nhat_ky_ai/*` and contains
+no evaluation; no internal codes outside backticks; every quoted error text in DU_LIEU_DAU_VAO matches `i18n_errors.py` (test enforces).
+### Bugs
+1. `HUONG_DAN_CHAY.md` §4-6 (+ `KICH_BAN_DEMO.md` steps 3-8, `KICH_BAN_VIDEO.md` steps 4-6) | The sample `SO_NHAP_FA_MAU_120HS.xlsx` is made for a
+   workspace with FA-DAA ON (its header says so; its 60/30/10 are medals). Docs load it into the DEFAULT workspace (FA off, Wharton on): the run is blocked
+   (`wharton_ho_so_chua_hop_le`, n=120, reproduced) and the docs tell the teacher to click "Phóng cho đủ 100", which turns medals into invented commitment
+   points. Repro of the correct path: new DB, `rules.fa_daa = True` (menu ⋯ "Tính năng sau khi xếp"/FA on), import the same file (0 warnings), `run_pipeline(42)` -> ok,
+   no block, no "phóng". Results differ from the docs: FA001 gets Robot (rank 2) on thu_2, not rank 1 (`get_ly_do_ket_qua` returns the sentences, `fa_bat: True`).
+   | expected: docs say to turn FA mode on before loading this sample (or use a non-FA sample), drop the "phóng" step, fix the FA001/FA002 values in HUONG_DAN_CHAY
+   §6, DEMO 7-8, VIDEO 6, and note that per-student sentences already work in FA mode. The sample itself is fine; the doc flow is wrong.
+2. `HUONG_DAN_CHAY.md` §4 | claims the import returns a `fa_cot_bo_qua` warning; on the default workspace the preview and import return 0 warnings (reproduced) | expected: remove the claim (follows from bug 1).
+### Notes (not bugs)
+- Test cannot catch bug 1 (it only checks form); acceptable, but the lead may ask the writer to rerun the doc steps after the fix.
+- "(sau tích hợp)" marker is present in both scripts as the spec asks.
