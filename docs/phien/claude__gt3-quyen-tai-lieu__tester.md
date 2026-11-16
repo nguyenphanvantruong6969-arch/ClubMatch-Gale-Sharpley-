@@ -185,3 +185,8 @@ Own scripts (fake data, scratchpad):
 - Stress: `test_a13_9_stress` + `test_a13_11_stress` 84 passed in 68.5 s vs 66.6 s on origin/main (slowest cases 3.0-3.1 s on both).
 - `recovery.py` UTF-8 reconfigure: `--help` under `PYTHONIOENCODING=cp1252` exits 0 (new test); only runs in `__main__`, no effect on imports.
 Note (not a bug): `_co_tk_lui` is only reset by `tao_tai_khoan` or a later successful refresh; a workspace switch uses a different key, so it is unaffected.
+
+## CI-fix2 — reviewed 18e8535..8c033b4 — verdict: NO BUGS
+Test-only change (`test_recovery_cho_lenh_dong_dong_goi`: `text=True` -> `encoding="utf-8"`); both assertions (`returncode == 0`, `--xoa-tai-khoan` in stdout)
+unchanged, so it is not a weakening: it decodes the bytes `recovery.py` now forces to UTF-8 (CI-fix1) instead of the locale codec. Passes with default env and with
+`PYTHONIOENCODING=cp1252 PYTHONUTF8=0`; `ruff` clean. No product code touched (invariant 1 unaffected). UI-timeout flakiness not re-run by me (writer: 3x equal on both commits).
