@@ -100,3 +100,58 @@ def test_vai_tro_ai_dan_nguon_nhat_ky_va_noi_khong_co_mo_hinh_hoc_may():
     req = open(os.path.join(GOC, "requirements.txt"), encoding="utf-8").read().lower()
     for thu_vien in ("torch", "tensorflow", "sklearn", "scikit", "transformers", "openai", "anthropic"):
         assert thu_vien not in req, thu_vien                # lời khẳng định "không có mô hình" phải còn đúng
+
+
+# ---- Số liệu tài liệu nêu phải khớp một lần chạy THẬT (không gian bật chế độ huy chương, hạt giống 42) ----
+
+def test_huong_dan_chay_dan_bat_che_do_huy_chuong_truoc_khi_nap_va_khong_con_buoc_phong():
+    van_ban = doc("HUONG_DAN_CHAY.md")
+    assert "Xếp theo loại CLB và huy chương" in van_ban
+    assert "fa_cot_bo_qua" not in van_ban
+    for ten in ("HUONG_DAN_CHAY.md", "KICH_BAN_DEMO.md", "KICH_BAN_VIDEO.md"):
+        vb = doc(ten)
+        assert "Phóng cho đủ" not in vb.replace("Không dùng nút \"Phóng cho đủ 100\"", ""), ten
+        assert "phong_wharton_hang_loat" not in vb, ten
+    assert van_ban.index("Bật chế độ huy chương trước khi nạp") < van_ban.index("kéo tệp")
+
+
+def test_so_lieu_fa001_fa002_trong_tai_lieu_khop_lan_chay_that(tmp_path):
+    import base64
+    import csv
+
+    pytest.importorskip("openpyxl")
+    import cau_hinh_ws as ch
+    from api import PipelineAPI
+
+    api = PipelineAPI(str(tmp_path / "app.db"))
+    ch.ghi_cau_hinh(api.db_path, {"rules": {"fa_daa": True}})
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"), "rb") as f:
+        b64 = base64.b64encode(f.read()).decode()
+    tt = api.xem_truoc_so_nhap(b64)
+    assert tt["ok"] and tt["data"]["canh_bao"] == [] and tt["data"]["loi"] == []
+    assert (tt["data"]["n_clb"], tt["data"]["n_buoi"], tt["data"]["n_hoc_sinh"], tt["data"]["n_nguyen_vong"],
+            tt["data"]["n_thi"]) == (8, 2, 120, 829, 194)
+    assert api.import_so_nhap(b64)["ok"]
+    kq = api.run_pipeline(42)
+    assert kq["ok"] and kq["data"]["n_matched"] == 120 and kq["data"]["rounds_run"] == 8
+    with open(kq["data"]["export_path"], encoding="utf-8") as f:
+        dong = {(r["student_id"], r["buoi"]): (r["club_id"], r["rank_in_student_pref"]) for r in csv.DictReader(f)}
+    ly_do = api.get_ly_do_ket_qua()["data"]
+    assert ly_do["fa_bat"] is True and ly_do["cau"]["FA001"]["thu_2"]
+
+    van_ban = doc("HUONG_DAN_CHAY.md")
+    # Bảng FA001 trong mục 6 và dòng FA002 ngay dưới đó.
+    for buoi in ("thu_2", "thu_5"):
+        clb, hang = dong[("FA001", buoi)]
+        assert "| `%s` | `%s` | %s |" % (buoi, clb, hang) in van_ban, (buoi, clb, hang)
+    fa2 = "FA002` cùng hạt giống: `thu_2` nhận `%s` (hạng %s), `thu_5` nhận `%s` (hạng %s)" % (
+        dong[("FA002", "thu_2")][0], dong[("FA002", "thu_2")][1],
+        dong[("FA002", "thu_5")][0], dong[("FA002", "thu_5")][1])
+    assert fa2 in van_ban
+    demo, video = doc("KICH_BAN_DEMO.md"), doc("KICH_BAN_VIDEO.md")
+    h = {k: v[1] for k, v in dong.items()}
+    assert "Thứ 5 nhận nguyện vọng %s (`%s`)" % (h[("FA001", "thu_5")], dong[("FA001", "thu_5")][0]) in demo
+    assert "Thứ 2 nhận nguyện vọng %s (`%s`)" % (h[("FA001", "thu_2")], dong[("FA001", "thu_2")][0]) in demo
+    assert "Thứ 2 nhận nguyện vọng %s, Thứ 5 nhận nguyện vọng %s" % (h[("FA002", "thu_2")], h[("FA002", "thu_5")]) in demo
+    assert "FA001: Thứ 5 hạng %s, Thứ 2 hạng %s; FA002: Thứ 2 hạng %s, Thứ 5 hạng %s" % (
+        h[("FA001", "thu_5")], h[("FA001", "thu_2")], h[("FA002", "thu_2")], h[("FA002", "thu_5")]) in video

@@ -1,8 +1,9 @@
 # Hướng dẫn chạy từ bản sao mới
 
 > **Dữ liệu mô phỏng.** Sổ mẫu dùng ở đây gồm 120 học sinh do máy sinh (hạt giống cố định); không có học sinh thật.
-> Các bước 1–7 đã được chạy thật trên Linux (Python 3.11), kết quả ghi bên dưới. Lệnh Windows ghi cạnh lệnh Linux; riêng
-> lệnh Windows chưa chạy lại trong lần soạn này.
+> Các bước 1–7 (bước 4–6 ở không gian bật chế độ huy chương) đã được chạy thật trên Linux (Python 3.11), kết quả ghi bên dưới. Lệnh Windows ghi cạnh lệnh Linux; riêng
+> lệnh Windows và các thao tác bấm trên giao diện (ví dụ tích chế độ huy chương lúc tạo không gian) chưa chạy lại trong lần soạn này;
+> phần đã chạy là lời gọi API tương đương.
 
 Mọi lệnh chạy từ thư mục gốc của kho mã. Linux dùng `.venv/bin/python`; Windows dùng `.venv\Scripts\python`.
 
@@ -41,12 +42,19 @@ không kèm mã thì bị từ chối `403`. **Chưa kiểm:** cửa sổ pywebv
 
 ## 4. Nạp sổ nhập mẫu
 
-Trong giao diện, thẻ **Xếp**: kéo tệp `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` vào vùng thả tệp. Việc tương đương qua API:
+**Bật chế độ huy chương trước khi nạp.** Sổ `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` dành cho không gian làm việc xếp theo loại CLB và
+huy chương (các cột 60/30/10 là huy chương, không phải điểm quyết tâm). Không gian mặc định không có chế độ này và sẽ chặn lần chạy
+(`wharton_ho_so_chua_hop_le`). Cách làm: mở màn chọn không gian làm việc, bấm **Tạo mới**, tích **"Xếp theo loại CLB và huy chương"**,
+đặt tên rồi mở không gian vừa tạo. Chế độ này chọn **lúc tạo**; menu **⋯ → "Tính năng sau khi xếp…"** chỉ bật thêm tính năng cho
+không gian đã có chế độ này (với không gian thường, hộp đó báo đang tắt). Trong mã, cấu hình tương đương là `rules.fa_daa = true`.
+Không dùng nút "Phóng cho đủ 100": nút đó dành cho điểm quyết tâm và sẽ biến huy chương thành điểm tự đặt.
+
+Rồi trong thẻ **Xếp**: kéo tệp `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` vào vùng thả tệp. Việc tương đương qua API:
 `xem_truoc_so_nhap` rồi `import_so_nhap`.
 
-Mong đợi ở bước xem trước: **8 CLB, 2 buổi, 120 học sinh, 829 nguyện vọng, 194 lượt thi**. Nạp xong, phản hồi có
-`n_clb: 8, n_hoc_sinh: 120`, cùng một cảnh báo `fa_cot_bo_qua` (tệp mẫu có các cột của chế độ FA-DAA, không gian làm việc mặc
-định chưa bật chế độ đó nên các cột này bị bỏ qua, không lưu).
+Mong đợi ở bước xem trước: **8 CLB, 2 buổi, 120 học sinh, 829 nguyện vọng, 194 lượt thi**, không lỗi và không cảnh báo. Nạp xong,
+phản hồi có `n_clb: 8, n_hoc_sinh: 120`. Khi nạp, phần mềm có thể liệt kê nhiều cảnh báo `wharton_chua_dung_het` ("Chưa dùng hết điểm
+quyết tâm…"; lần chạy thử có 434 dòng); đó chỉ là lưu ý, không chặn việc chạy xếp.
 
 Muốn thử sổ có lỗi: nạp `du_lieu_test/SO_NHAP_CO_LOI_CO_Y.xlsx`. Mong đợi: năm lỗi (`so_nhap_chi_tieu_sai`, `so_nhap_clb_khong_co`,
 `so_nhap_diem_sai`, `so_nhap_hs_trung`, `so_nhap_nv_trung`) và **không nạp gì**.
@@ -55,12 +63,9 @@ Muốn thử sổ có lỗi: nạp `du_lieu_test/SO_NHAP_CO_LOI_CO_Y.xlsx`. Mong
 
 Bấm chạy xếp với hạt giống 42 (hoặc `run_pipeline(42)`).
 
-**Lần chạy đầu bị chặn là đúng:** sổ mẫu có điểm quyết tâm của 120 học sinh chưa chia đủ 100, nên `validate` dừng với
-`wharton_ho_so_chua_hop_le` (n = 120). Cách xử lý theo đúng lời nhắn: thẻ Quản lý, mục Điểm quyết tâm, bấm **"Phóng cho đủ 100 theo
-tỉ lệ"** (API `phong_wharton_hang_loat("PHONG")`, phản hồi `n_phong: 120`). Chạy lại.
-
-Mong đợi: các bước `backup`, `validate`, `stb_lottery`, `rbda_cascade`, `write_results`, `export` đều `done`; thư mục xuất có
-`match_results.csv`; trạng thái kết quả `co_ket_qua: true`.
+Mong đợi: lần chạy **không bị chặn**; các bước `backup`, `validate`, `stb_lottery`, `rbda_cascade`, `write_results`, `export` đều
+`done`; `n_matched: 120` trên `n_total: 120`, `rounds_run: 8`; thư mục xuất có `match_results.csv`; trạng thái kết quả
+`co_ket_qua: true`.
 
 ## 6. Tra cứu một học sinh
 
@@ -68,11 +73,14 @@ Thẻ Kết quả, ô tìm kiếm: gõ `FA001` (tên "Học sinh mô phỏng 001
 
 | Buổi | CLB | Hạng nguyện vọng |
 |---|---|---|
-| `thu_2` | `THU_2_2` | 1 |
+| `thu_2` | `THU_2_4` | 2 |
 | `thu_5` | `THU_5_4` | 1 |
 
-Chế độ giải thích từng học sinh (`get_ly_do_ket_qua`) chỉ có nội dung khi bật chế độ FA-DAA; ở không gian làm việc mặc định nó trả
-`fa_bat: False`. Phần giải thích bằng câu cho từng học sinh, phiếu in và tra cứu bằng mã tại kiosk: (sau tích hợp).
+Học sinh `FA002` cùng hạt giống: `thu_2` nhận `THU_2_1` (hạng 3), `thu_5` nhận `THU_5_1` (hạng 4).
+
+Ở chế độ huy chương, phần giải thích bằng câu cho từng học sinh **đã có sẵn**: `get_ly_do_ket_qua` trả `fa_bat: true` cùng các câu
+cho từng buổi, ví dụ FA001 buổi Thứ 2: "Em và các bạn bằng điểm; các bạn có huy chương cao hơn ở CLB Cờ vua (Giới hạn A) được xét
+trước." rồi "Em được xếp vào CLB Robot (Tuyển chọn) – nguyện vọng 2 của em." Phiếu in và tra cứu bằng mã tại kiosk: (sau tích hợp).
 
 ## 7. Xuất
 

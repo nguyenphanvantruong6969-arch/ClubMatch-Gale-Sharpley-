@@ -9,10 +9,10 @@
 | 1 | Tiêu đề và dòng "Dữ liệu mô phỏng" | Tên đề tài, ngày quay |
 | 2 | Sơ đồ luồng `docs/giai_trinh/so_do_luong.svg` mở trên màn hình | 12 ô, mũi tên từ biểu mẫu đến lịch sử chạy |
 | 3 | Mở phần mềm, kéo sổ có lỗi `du_lieu_test/SO_NHAP_CO_LOI_CO_Y.xlsx` vào | Bảng năm lỗi, không nạp gì |
-| 4 | Kéo sổ đúng `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` | "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi" |
-| 5 | Bấm chạy xếp, thấy bị chặn, phóng điểm quyết tâm, chạy lại | Thông báo chặn rồi các bước đều "xong" |
-| 6 | Tra cứu `FA001` | Hai buổi, hạng nguyện vọng 1 |
-| 7 | Giải thích một học sinh được nguyện vọng 1 và một học sinh không được, bằng câu và dữ liệu của chính học sinh đó | (sau tích hợp) |
+| 4 | Tạo không gian có tích "Xếp theo loại CLB và huy chương", mở nó, rồi kéo sổ đúng `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` | "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi" |
+| 5 | Bấm chạy xếp (hạt giống 42) | Các bước đều "xong", 120/120 học sinh có chỗ; không bị chặn |
+| 6 | Tra cứu `FA001` và `FA002`; mở phần giải thích bằng câu của từng em | FA001: Thứ 5 hạng 1, Thứ 2 hạng 2; FA002: Thứ 2 hạng 3, Thứ 5 hạng 4; câu giải thích theo dữ liệu của chính em đó |
+| 7 | Giải trình nâng cao cho một học sinh | (sau tích hợp) |
 | 8 | In phiếu; học sinh tra cứu bằng mã tại kiosk | (sau tích hợp) |
 | 9 | Đổi thử một tiêu chí, so sánh với kết quả chính thức, áp dụng | (sau tích hợp) |
 | 10 | Chạy lại cùng hạt giống | Kết quả y hệt; lịch sử chạy có thêm một dòng |

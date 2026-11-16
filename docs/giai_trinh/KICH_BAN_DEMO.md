@@ -7,12 +7,12 @@ Chuẩn bị: làm theo `HUONG_DAN_CHAY.md` mục 1; thư mục làm việc tr�
 
 1. **Mở phần mềm** (`main.py`). Màn hình: thẻ Xếp, vùng thả tệp trống. Nói: phần mềm chạy ngoại tuyến, không có mô hình AI (`VAI_TRO_AI.md` mục 1).
 2. **Nạp sổ nhập có lỗi** `du_lieu_test/SO_NHAP_CO_LOI_CO_Y.xlsx`. Màn hình: bảng năm lỗi kèm sheet, dòng, mã học sinh; "không nạp gì". Chỉ một lỗi, đọc thông báo.
-3. **Nạp sổ đúng** `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx`. Màn hình: "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi", không lỗi chặn.
-4. **Bấm chạy xếp** (hạt giống 42). Màn hình: bị chặn với thông báo điểm quyết tâm chưa hợp lệ (120 học sinh). Nói: phần mềm dừng và nói rõ, không đoán.
-5. **Thẻ Quản lý → Điểm quyết tâm → "Phóng cho đủ 100 theo tỉ lệ"**, xác nhận. Màn hình: 120 học sinh được phóng; có bản sao lưu. Chạy xếp lại.
-6. **Xem kết quả.** Màn hình: các bước `backup → validate → stb_lottery → rbda_cascade → write_results → export` đều xong. Mở thẻ Kết quả.
-7. **Tra cứu một học sinh nhận nguyện vọng 1**: gõ `FA001`. Màn hình: hai buổi, cả hai hạng nguyện vọng 1. Giải thích bằng câu cho học sinh này: **(sau tích hợp)**.
-8. **Tra cứu một học sinh không nhận nguyện vọng 1** (chọn trong danh sách, ví dụ `FA002`: buổi Thứ 5 nhận nguyện vọng 4). Giải thích vì sao không nhận nguyện vọng cao hơn, bằng chính dữ liệu của em đó: **(sau tích hợp)**.
+3. **Tạo không gian làm việc bật chế độ huy chương** (chuẩn bị trước buổi trình diễn): màn chọn không gian → **Tạo mới** → tích "Xếp theo loại CLB và huy chương" → mở không gian đó. Làm việc này **trước** khi nạp sổ; sổ mẫu là sổ huy chương và không chạy được ở không gian mặc định.
+4. **Nạp sổ đúng** `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx`. Màn hình: "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi", không lỗi chặn.
+5. **Bấm chạy xếp** (hạt giống 42). Màn hình: các bước `backup → validate → stb_lottery → rbda_cascade → write_results → export` đều xong, 120/120 học sinh có chỗ; không bị chặn, không cần "phóng" điểm.
+6. **Xem kết quả.** Mở thẻ Kết quả; nói: phần mềm dừng và nói rõ khi hồ sơ sai (đã thấy ở bước 2), còn sổ đúng thì chạy thẳng.
+7. **Tra cứu một học sinh nhận nguyện vọng 1 ở một buổi**: gõ `FA001`. Màn hình: Thứ 5 nhận nguyện vọng 1 (`THU_5_4`); Thứ 2 nhận nguyện vọng 2 (`THU_2_4`). Giải thích bằng câu cho học sinh này **đã có sẵn** ở chế độ huy chương (`get_ly_do_ket_qua`): đọc hai câu của buổi Thứ 2.
+8. **Tra cứu một học sinh không nhận nguyện vọng 1**: gõ `FA002` (Thứ 2 nhận nguyện vọng 3, Thứ 5 nhận nguyện vọng 4). Màn hình: các câu giải thích nêu mốc điểm chưa đạt và các bạn có huy chương cao hơn được xét trước, bằng chính dữ liệu của em đó. Bản gộp thêm phần giải trình nâng cao: **(sau tích hợp)**.
 9. **In phiếu của một học sinh** và **tra cứu tại kiosk bằng mã tra cứu**: **(sau tích hợp)**.
 10. **Đổi thử một tiêu chí** trong chế độ chạy thử, **so sánh** với kết quả chính thức (ai đổi chỗ, theo nhóm), rồi **áp dụng** hoặc bỏ: **(sau tích hợp)**. Nói: chạy thử không ghi đè kết quả chính thức.
 11. **Chạy lại cùng hạt giống.** Màn hình: kết quả y hệt (số bốc thăm đã khoá). Mở lịch sử chạy: mỗi lần chạy một dòng, không dòng nào bị sửa.

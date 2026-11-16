@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3-L4 fix1: luồng nạp sổ mẫu đúng chế độ huy chương
+- `HUONG_DAN_CHAY.md` mục 4–6, `KICH_BAN_DEMO.md` bước 3–8, `KICH_BAN_VIDEO.md` bước 4–7: sổ `SO_NHAP_FA_MAU_120HS.xlsx` phải nạp vào không gian đã tích "Xếp theo loại CLB và huy chương" (chọn lúc tạo); bỏ bước "Phóng cho đủ 100" và lời nhắc `fa_cot_bo_qua`; số FA001/FA002 chạy lại thật (hạt giống 42); ghi chú câu giải thích từng học sinh đã có ở chế độ này.
+- Test mới trong `tests/test_gt3_tai_lieu.py` (22 ca): tài liệu dặn bật chế độ trước khi nạp; số liệu FA001/FA002 trong tài liệu khớp một lần nạp + chạy thật (hạt giống 42).
+
 ## 2026-11-16 — GT3-L4 (mục cha E1-lite; ngoài sổ): bộ tài liệu minh chứng `docs/giai_trinh/`
 - Tệp mới: `VAI_TRO_AI.md`, `SO_DO_LUONG.md` + `so_do_luong.svg` (dựng bằng `ve_so_do.py`, chỉ thư viện chuẩn), `HUONG_DAN_CHAY.md` (các bước 1–7 đã chạy thật), `DU_LIEU_DAU_VAO.md` (trích nguyên văn thông báo lỗi từ `i18n_errors.py`), `PHAN_CONG.md` (mẫu trống), `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md` (bước cần tích hợp đánh dấu "(sau tích hợp)").
 - Toàn bộ nhãn "dữ liệu mô phỏng"; không có nhận xét hay kết luận (phần đó học sinh tự viết).
