@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-16 — GT3 CI fix2
+- `tests/test_gt3_tai_khoan.py::test_recovery_cho_lenh_dong_dong_goi`: đọc đầu ra của lệnh con bằng `encoding="utf-8"` (nghiêm ngặt) thay vì bảng mã mặc định của máy (Windows cp1252 làm luồng đọc ném lỗi). Không sửa mã sản phẩm.
+
 ## 2026-11-16 — GT3 CI fix1 (Windows)
 - `recovery.py` (dòng lệnh): ép stdout/stderr sang UTF-8 (`reconfigure`, có kiểm `hasattr`) — `--help` không còn UnicodeEncodeError trên console cp1252.
 - `api_tai_khoan._co_tai_khoan_nho`: đã có giá trị nhớ thì làm mới với thời gian chờ khoá 50 ms, thất bại do khoá thì 5 s sau mới thử lại; `tao_tai_khoan` cập nhật bộ nhớ ngay. Lần đầu (chưa từng đọc được) vẫn đóng khi lỗi. Đo trên Linux, CSDL bị khoá, tài khoản tắt: cổng cộng ≈ 0,05 s mỗi lời gọi (trước: ≈ 3 s).

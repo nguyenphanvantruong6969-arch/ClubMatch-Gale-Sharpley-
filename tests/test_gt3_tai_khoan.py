@@ -483,7 +483,7 @@ def test_recovery_cho_lenh_dong_dong_goi():
 
     goc = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     kq = subprocess.run([sys.executable, os.path.join(goc, "recovery.py"), "--help"],
-                        capture_output=True, text=True, timeout=60)
+                        capture_output=True, encoding="utf-8", timeout=60)
     assert kq.returncode == 0 and "--xoa-tai-khoan" in kq.stdout
 
 
