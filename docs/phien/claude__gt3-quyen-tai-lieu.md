@@ -78,6 +78,7 @@ Schema changes approved (D-GT8): tables `tai_khoan`, `nhat_ky_thao_tac` after th
 | 2026-11-16 | Opus (lead) | §9 watch 16:26-22:26 UTC, GT2 absent; handoff to lead 2 session_01YVAyu27w5WZmfqRfkjo3Av | context ~400k |
 | 2026-11-16 | Opus (lead 2) | Hourly check scheduled task trig_01W71KuYwPkLHj5cSWusJgME (cron 27 * * * *) bound to session_01YVAyu27w5WZmfqRfkjo3Av; GT2 still absent 22:28 UTC | — |
 | 2026-11-17 | Opus (lead 2) | GT2 lead started 02:40 UTC: session_01YVAyu3PPHv9SNntepRSLwh (branch claude/gt2-tieu-chi, not yet pushed); hourly §9 watch continues | — |
+| 2026-11-17 | Opus (lead 2) | 03:27 UTC: origin/claude/gt2-tieu-chi pushed, Status IN PROGRESS (L3) | — |
 
 ## Final summary GT3 (§10, tiếng Việt)
 - **Lô xong:** L1 tài khoản + đăng nhập (e62e24a), L2 cổng phân quyền (5208c6d), L3 nhật ký thao tác chỉ-thêm (ff12579), L4 bộ tài liệu minh chứng `docs/giai_trinh/` (0b52a14). Không lô nào bỏ dở. Mỗi lô 1 vòng sửa sau soát.
