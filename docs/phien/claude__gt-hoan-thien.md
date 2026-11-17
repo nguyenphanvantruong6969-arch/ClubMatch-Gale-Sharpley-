@@ -1,0 +1,55 @@
+# Branch handoff: claude/gt-hoan-thien
+
+> Fresh session: read CLAUDE.md, then `docs/ke_hoach/gt/GT4_HOAN_THIEN.md` (lot specs, rules, decisions), then THIS file.
+> English. Cap 150 lines. WRITER owns this file (rewrites "Lot ledger"/"Current state", appends "Session log").
+> CHECKER never edits this file; it writes `docs/phien/claude__gt-hoan-thien__tester.md` only. No lead session.
+
+Status: NOT STARTED   (writer sets `DONE <sha> CI green <date>` at the very end)
+
+## Feature / goal
+GT4: fix the problems found by the review of `claude/gt-tich-hop` (`docs/ke_hoach/gt/GT4_RA_SOAT.md`, R0-R10) without touching
+the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-tich-hop` c9e3830 + plan files). Truong merges to
+`main` himself. No PR.
+
+## Sessions (exactly two; nobody creates more sessions or subagents)
+| Role | Model | Session id | Notes |
+|---|---|---|---|
+| writer | Sonnet | (fill at start) | writes code/tests, owns this file |
+| checker | Sonnet | (fill at start) | reviews + plays the user in Chromium, owns `__tester.md` |
+
+## Lot ledger (writer updates; states: TODO / READY <sha> / FIX / CHECKED <sha> / BLOCKED <why>)
+| Lot | State | Head sha | Round | Note |
+|---|---|---|---|---|
+| L0 official-only reader (R0) | TODO | | 0 | |
+| L1 audit log hygiene (R1) | TODO | | 0 | |
+| L2 controls match the role (R3) | TODO | | 0 | |
+| L3 account setup + recovery (R2, R4) | TODO | | 0 | |
+| L4 explanations cannot be misread (R5, R6) | TODO | | 0 | |
+| L5 student screen + lookup placement (R9) | TODO | | 0 | |
+| L6 readable audit log (R7) | TODO | | 0 | |
+| L7 criteria + comparison polish (R8) | TODO | | 0 | |
+| L8 stretch: vocabulary-aware sentences | TODO | | 0 | |
+| Gate: ruff + kiem_nhanh + tests + CI green | TODO | | 0 | |
+
+## Current state (overwrite each handoff)
+- Done so far: nothing (plan only).
+- In progress:
+- Tests: baseline on the base commit = `tests/test_gt*` + `tests/test_giao_dien_gt*` green, ruff clean, kiem_nhanh 7/7.
+- Open problems:
+
+## Needs Truong (writer appends, each with a recommendation)
+1. Windows `.exe` + `QUEN_MAT_KHAU.bat` recovery cannot be tested on Linux (L3). Recommend: Truong tries it once on Windows.
+2. Existing DBs used before GT4 may hold lookup codes in old audit rows (append-only). Recommend: regenerate all codes before real use.
+(carry-overs from `claude__gt-tich-hop.md` Needs Truong 1-10 stay open.)
+
+## Decisions and gotchas
+- D4-1..D4-5 in the spec. Rounds per lot: max 3, then BLOCKED + move on.
+- Reproduction of R0 (49/120 students mismatch after a trial) is the failing test of L0.
+
+## Next steps (ordered)
+1. Writer: set up venv, baseline, L0 ... L7 (L8 if time), gate. 2. Checker: review each READY lot, then final persona walk-through.
+
+## Session log (append only, newest last)
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-17 | Sonnet (reviewer) | review of gt-tich-hop; plan + prompts written | files: GT4_RA_SOAT.md, GT4_HOAN_THIEN.md, GT4_PROMPT_*.md |
