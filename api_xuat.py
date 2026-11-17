@@ -1943,7 +1943,7 @@ class XuatKetQuaMixin:
         with self._ket_noi_doc() as cur:
             lan = cur.execute(
                 "SELECT run_id, seed, run_at, luat_xep, buoi_da_chay FROM run_history "
-                "ORDER BY run_id DESC").fetchall()
+                "WHERE %s ORDER BY run_id DESC" % loc_chinh_thuc(cur)).fetchall()   # GT4-L0: bỏ lần chạy thử
             co_kq = cur.execute("SELECT COUNT(*) FROM match_results").fetchone()[0] > 0
             if not lan or not co_kq:
                 return _fail(err("gt1_chua_chay"))

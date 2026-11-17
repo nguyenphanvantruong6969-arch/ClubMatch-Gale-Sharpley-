@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L0: lời giải trình chỉ đọc lần chạy chính thức (R0)
+
+- `api_xuat._giai_trinh_dung_lai`: truy vấn `run_history` qua `loc_chinh_thuc(cur)` (bỏ lần chạy thử). Trước đó, sau một lần "Chạy thử", màn tra cứu, phiếu in và học sinh tự tra cứu hiện kết quả của lần thử thay cho `match_results` (49/120 em lệch).
+- Rà các nơi đọc `run_history`: chỉ-chính-thức = `api.get_run_history`, `api_xuat` (lý do FA mới nhất), `fa_sau_xep`, `rbda_priority_pipeline` (lần chạy mới nhất), và nay `_giai_trinh_dung_lai`. Cố ý KHÔNG lọc: `api_tieu_chi` (danh sách/đọc theo run_id/áp dụng lần thử), `api.py` `MAX(run_id)` ngay sau khi ghi (cùng giao dịch), `api_sau_xep` (đọc theo run_id của kết quả đã lưu), `rbda_priority_pipeline` `COUNT(*)` kiểm tra đã chạy chưa (mọi lần chạy đều tính).
+- Test mới: `tests/test_gt4_chay_thu_giai_trinh.py` (4 test: giải trình/tra cứu/phiếu in khớp `match_results` sau 1–2 lần thử và sau `ap_dung_tieu_chi`; không đạt trên mã cũ).
+
 ## 2026-11-17 — I4 sửa (tích hợp): tên thẻ trong kịch bản demo/video
 
 - `docs/giai_trinh/KICH_BAN_DEMO.md` (bước 10), `KICH_BAN_VIDEO.md` (dòng 9): "thẻ Quản trị" → "thẻ Quản lý" (nhãn thật, i18n `nav_admin`); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.
