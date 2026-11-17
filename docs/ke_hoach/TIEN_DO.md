@@ -178,3 +178,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | GT3-L4 (tài liệu minh chứng `docs/giai_trinh/`; mục cha E1-lite) | xong (chờ checker) | 2026-11-16 | docs/giai_trinh/*, CHANGELOG.md, CLAUDE_CHI_TIET.md | tests/test_gt3_tai_lieu.py | |
 | I1 (bảng quyền hàm GT1/GT2; tích hợp) | xong (chờ checker) | 2026-11-17 | phan_quyen.py, CHANGELOG.md | tests/test_gt3_phan_quyen.py |
 | I2 (chế độ học sinh khoá ở backend; tích hợp) | xong (chờ checker) | 2026-11-17 | api_tai_khoan.py, phan_quyen.py, nhat_ky.py, i18n_errors.py, i18n_loi.js, js/14_giai_trinh.js, js/16_tai_khoan.js, index.html, i18n.js, style.css, CHANGELOG.md | tests/test_gt_tich_hop.py, tests/test_giao_dien_gt3_hoc_sinh.py |
+| I2 fix3 (trả lời phiên cũ) | xong (chờ checker) | 2026-11-17 | js/14_giai_trinh.js, js/16_tai_khoan.js, CHANGELOG.md | tests/test_giao_dien_gt3_hoc_sinh.py |

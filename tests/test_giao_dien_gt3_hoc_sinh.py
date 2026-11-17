@@ -136,3 +136,38 @@ def test_tai_lai_trang_o_che_do_hoc_sinh_van_con_lop_phu_va_quan_tri_thoat_duoc(
     page.click('button.nav-item[data-tab="admin"]')                      # sau khi thoát, tab bấm được
     page.wait_for_function("document.querySelector('.nav-item[data-tab=admin]').classList.contains('is-active')")
     assert loi == []
+
+
+def test_tra_loi_phien_cu_khong_mo_lai_lop_phu_sau_khi_quan_tri_thoat(mo):
+    """Trả lời get_phien_dang_nhap (che_do_hs: true) bị giữ chậm, tới sau khi quản trị đã thoát: bỏ, lớp phủ không mở lại."""
+    page, loi, vao = mo
+    vao(True)
+    page.click("#btnGtCheDoHs")
+    page.wait_for_selector("#gtHs", state="visible")
+    page.wait_for_timeout(300)
+    page.evaluate("""() => {
+        const goc = window.fetch.bind(window);
+        window.__giu = true;
+        window.fetch = async (...a) => {
+            const r = await goc(...a);
+            if (window.__giu && String(a[0]).includes("get_phien_dang_nhap")) {
+                window.__giu = false;                       // chỉ giữ MỘT trả lời
+                await new Promise((x) => setTimeout(x, 1500));
+            }
+            return r;
+        };
+    }""")
+    page.evaluate("window.dispatchEvent(new Event('tkLamMoi'))")   # lần hỏi bị giữ (backend vẫn trả che_do_hs: true)
+    page.wait_for_timeout(200)
+    page.click("#btnGtHsThoat")
+    page.click("#btnGtHsCo")
+    page.wait_for_selector("#gtHsQuanTri", state="visible")
+    page.fill("#gtHsQtTen", "quantri")
+    page.fill("#gtHsQtMk", MK)
+    page.click("#btnGtHsQtThoat")
+    page.wait_for_function("document.querySelector('.app-shell').inert === false")
+    page.wait_for_timeout(2200)                                      # trả lời cũ tới nơi
+    assert page.evaluate("document.getElementById('gtHs').hidden") is True
+    assert page.evaluate("document.querySelector('.app-shell').inert") is False
+    assert _goi(page, "get_run_history")["ok"] is True
+    assert loi == []

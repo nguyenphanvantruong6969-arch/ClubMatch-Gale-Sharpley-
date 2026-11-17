@@ -255,8 +255,11 @@
     }
   }
 
+  let luotHoi = 0;
   function capNhat() {
+    const luot = ++luotHoi;
     return callApi("get_phien_dang_nhap").then((res) => {
+      if (luot !== luotHoi) return;   // I2: trả lời cũ (đã có lần hỏi mới hơn, ví dụ sau khi thoát chế độ học sinh) thì bỏ
       if (!res.ok) {
         if (!phien) showErrorToast(res.errors);   // lần hỏi đầu hỏng thì báo; các lần hỏi định kỳ sau không dội thông báo
         return;

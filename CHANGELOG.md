@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-17 — I2 fix3: trả lời phiên cũ không mở lại lớp phủ học sinh
+
+- `js/16_tai_khoan.js` `capNhat`: bộ đếm lượt hỏi, bỏ trả lời cũ hơn lần hỏi mới nhất (kể cả sau khi quản trị thoát). `js/14_giai_trinh.js`: lớp phủ do `tkPhien` mở lại sẽ đóng khi `che_do_hs` là false. Test mới: `test_giao_dien_gt3_hoc_sinh.py::test_tra_loi_phien_cu_...` (giữ một trả lời 1,5 giây).
+
 ## 2026-11-17 — I2 fix1: tải lại trang ở chế độ học sinh
 
 - `api_tai_khoan.get_phien_dang_nhap` trả thêm `che_do_hs`; `js/16_tai_khoan.js` phát sự kiện `tkPhien`; `js/14_giai_trinh.js` mở lại lớp phủ học sinh khi cờ còn bật (trước đó tải lại trang để lại backend khoá mà không có nút thoát). `CLAUDE_CHI_TIET.md`: thêm dòng bản đồ mã GT3 (cờ nằm trong bộ nhớ). Test mới: `test_giao_dien_gt3_hoc_sinh.py::test_tai_lai_trang_...`.

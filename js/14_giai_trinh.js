@@ -190,6 +190,7 @@
   const GIAY_NHAN = 60000;
   let henGio = null;
   let hsDangMo = false;
+  let moBoiHoiPhien = false;   // lớp phủ do tkPhien mở lại (không phải do học sinh bấm)
   let luotHs = 0;      // mỗi lần gửi, xoá thẻ, mở hay thoát là bỏ mọi phản hồi đang bay (không để thẻ em này hiện cho em khác)
 
   function xoaThe() {
@@ -232,6 +233,7 @@
 
   function moLopHs() {
     hsDangMo = true;
+    moBoiHoiPhien = false;
     xoaThe();
     el("gtHsXacNhan").hidden = true;
     khoaPhanConLai(true);
@@ -246,6 +248,7 @@
 
   function thoatHs() {
     hsDangMo = false;
+    moBoiHoiPhien = false;
     clearTimeout(henGio);
     xoaThe();
     el("gtHs").hidden = true;
@@ -262,6 +265,9 @@
     if (e.detail && e.detail.che_do_hs && !hsDangMo) {
       vaoXong = Promise.resolve({ ok: true, data: { khoa: true } });
       moLopHs();
+      moBoiHoiPhien = true;
+    } else if (e.detail && !e.detail.che_do_hs && hsDangMo && moBoiHoiPhien) {
+      thoatHs();                                          // backend đã mở khoá mà lớp phủ do hỏi phiên mở vẫn còn: đóng
     }
   });
 
