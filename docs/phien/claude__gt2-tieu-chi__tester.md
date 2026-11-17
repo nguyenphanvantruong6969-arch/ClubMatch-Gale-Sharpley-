@@ -1,4 +1,58 @@
-# Checker verdict — GT2 (branch claude/gt2-tieu-chi)
+# Branch handoff: claude/gt2-tieu-chi (CHECKER session)
+
+> Purpose: a fresh CHECKER reads CLAUDE.md, docs/phien/GT_GIAO_THUC.md, docs/phien/claude__gt2-tieu-chi.md, then THIS file.
+> Language: English. Cap: 150 lines. Verdicts per lot are kept below the log (append only).
+> Lead session: session_01YVAyu3PPHv9SNntepRSLwh. Role file: .claude/phien_vai.json = {"vai":"tester","coord_id":<lead>,"nguong":200000} (gitignored; rewrite it).
+
+## Feature / goal
+CHECKER for GT2 (criteria in plain words, trial runs, compare runs, adopt criteria). Reviews ONE lot diff per
+"REVIEW L<n> <base>..<head>", runs related tests, own edge cases, writes verdict here, pushes only this file, reports
+to lead in protocol §7 format. Never edits product code or tests.
+
+## Plan
+- [x] L1 reviewed: fix0 1 BUG (wharton box), fix1 1 BUG (not restored), fix2 NO BUGS (head 48ad9d8)
+- [x] L2 reviewed 7162a5e..9613648: 1 BUG (minor) + 1 note, report sent; waiting for FIX/re-REVIEW
+- [ ] L3 compare two runs, [ ] L4 adopt criteria (wait for REVIEW)
+
+## Current state
+- Done: L1 (3 rounds, closed NO BUGS), L2 first review reported.
+- In progress: nothing; awaiting lead (`FIX L2` -> expect `REVIEW L2 <base>..<head>` re-check, or `REVIEW L3`).
+- Tests: `.venv/bin/python -m pytest -q -p no:cacheprovider --no-header -rf --tb=no tests/test_gt2_tieu_chi.py
+  tests/test_giao_dien_gt2_tieu_chi.py tests/test_gt2_chay_thu.py` -> 144 passed at 9613648.
+  `.venv/bin/python .claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so <base> --so-seed 20` -> 7/7.
+- Open problems (L2, to re-verify after fix): (1) `_run_thu_da_khoa` refuses if SAVED fa_daa is on even when
+  rules_thu turns it off; message tells the admin to do the impossible. (2) note: rules_thu accepts keys outside
+  LUAT_XEP_MAC_DINH (max_tests, fa_duong) that are absent from run_history.luat_xep.
+- Not exercised: trial with Wharton ON (du_lieu_test datasets lack Wharton profiles -> official run fails).
+
+## Decisions and gotchas
+- Use `git pull --no-rebase` (protocol forbids rebasing pushed branches) and push only the verdict file.
+- Workspace mode must be ON for update_workspace_config/get_tieu_chi tests (else `ws_tat_che_do`): use
+  `workspace.tao(goc, name, None)` + `PipelineAPI(ws.duong_dan_db(goc, slug), thu_muc_xuat=..., thu_muc_goc_ws=goc)`,
+  or `d.nap_bo(tmp, tep)` from du_lieu_test/do_anh_huong_seed.py with `cau_hinh_ws.ghi_cau_hinh(db, {"rules":{"wharton":False}})`.
+- Throwaway checks: scratch scripts in /tmp/claude-0/-home-user-TESTING-DEV/976575b9-a06d-5167-a224-b62bd5869d05/scratchpad
+  (edge.py, edge2.py, l2.py, l2b.py); temporary test files in tests/ were deleted, never commit them.
+- Full-table before/after dump (all sqlite tables) is the best proof that a feature writes only where allowed.
+- Existing Chromium tests mask UI bugs when they pre-set checkboxes: always add the "do not touch the box" path.
+
+## Next steps
+1. Wait for `FIX L2` / `REVIEW L2 <base>..<head>`: re-run repro for bug 3 (saved FA on + rules_thu FA off) and the note.
+2. `REVIEW L3`: check `so_sanh_lan_chay` numbers on a hand-made 10-student fixture, same-run-vs-itself = zero changes,
+   changed list == direct diff, privacy (only aggregate/own data), HTML export opens offline, CSV contract unchanged.
+3. `REVIEW L4`: saved rules == trial's, no result table changes until an official run, next official
+   run_history.luat_xep == trial's; confirm dialog shows L1 description; never copies trial results.
+
+## Files touched
+- docs/phien/claude__gt2-tieu-chi__tester.md: this handoff + verdicts (only file the checker commits)
+
+## Session log (append only, newest last)
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-17 | Sonnet (checker) | Setup; reviewed L1 (3 rounds -> NO BUGS) and L2 (1 minor bug + 1 note) | handoff at ~200k tokens |
+
+---
+# Verdicts (append only)
+
 
 ## L1 | reviewed 1ff5794..4738551 | verdict: 1 BUG (UI), rest OK
 
