@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/GT_GIAO_THUC.md`. Lot specs: `docs/ke_hoach/gt/GT2_TIEU_CHI.md`.
 
-Status: IN PROGRESS (L3)
+Status: IN PROGRESS (L4)
 
 ## Feature / goal
 GT2 (parents A1, Z7-lite): an authorised admin sees the allocation criteria as a plain ordered list, changes them only
@@ -18,7 +18,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 ## Plan (written by Opus; ticked by the lead after checker NO BUGS)
 - [x] L1 (48ad9d8, checker NO BUGS after fix2) Criteria in plain words + closed allow-list (`tieu_chi.py` `mo_ta_tieu_chi`, `cac_lua_chon_hop_le`; API `get_tieu_chi`; panel "Tiêu chí xếp")
 - [x] L2 (e36fc60, checker NO BUGS after fix1) Trial runs, labelled, append-only (`loai_chay`, `ket_qua_thu`, API `run_thu`, all official readers ignore trials)
-- [ ] L3 Compare two runs (`so_sanh_lan_chay`, HTML + CSV export, UI "Thử cấu hình")
+- [x] L3 (1cca309, checker NO BUGS) Compare two runs (`so_sanh_lan_chay`, HTML + CSV export, UI "Thử cấu hình")
 - [ ] L4 Adopt a trial's criteria (confirm dialog, save via `update_workspace_config`, no result copy)
 - [ ] CI gate (§6) green on branch head
 
@@ -45,8 +45,9 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 - GT2-L2: chạy thử chế độ huy chương (FA) chưa hỗ trợ — `run_thu` từ chối bằng `gt2_thu_chua_ho_tro_fa` vì đường FA (`fa_daa.chay_fa_daa`) đọc/ghi hồ sơ `fa_*` trong cùng đường chạy. Đề xuất: để sau, ngoài phạm vi 1 tuần.
 
 ## Current state (overwrite each handoff)
-- Done: L1 passed checker (48ad9d8); L2 passed checker (e36fc60).
-- In progress: L3 under checker 2 review (5ae7003..1cca309).
+- Done: L1 passed checker (48ad9d8); L2 passed checker (e36fc60); L3 passed checker (1cca309).
+- In progress: L4 (writer 4).
+- For integration (GT3 I1): GT2 APIs (get_tieu_chi, run_thu, list_lan_chay, so_sanh_lan_chay, export_so_sanh_html/csv, L4 adopt) must be classified quan_tri; the compare student list is admin-only. HTML export is Vietnamese only (non-blocking).
 - Tests: —
 - Open problems: —
 
