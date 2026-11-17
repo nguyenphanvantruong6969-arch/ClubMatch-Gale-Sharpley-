@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L3: thiết lập tài khoản và lấy lại quyền (R2, R4, D4-4, D4-5)
+
+- `js/16_tai_khoan.js` + `i18n.js` (vi, en): ô nhập lại mật khẩu và ô "Hiện mật khẩu" ở form tạo tài khoản đầu tiên, "Thêm tài khoản" và "Đổi mật khẩu" (lệch → một câu báo lỗi, không gọi backend); sau khi tạo quản trị ĐẦU TIÊN hộp mở lại với thẻ "Bước tiếp theo" (tạo giáo viên / ghi nhớ mật khẩu / cách lấy lại quyền) và con trỏ ở ô tên của "Thêm tài khoản"; khi chưa có tài khoản nào hộp có dòng cảnh báo "tạo quản trị đầu tiên trước khi đưa máy cho học sinh" (D4-5: chỉ bằng lời + nhập lại mật khẩu + tài liệu, không thêm bí mật).
+- `recovery.chay_xoa_tai_khoan_dong_lenh` + `main.py` (`--xoa-tai-khoan [app.db] [--yes]`, chạy trước khi nạp pywebview): hỏi gõ `XOA`, sao lưu rồi xoá hết tài khoản; không đường dẫn thì quét mọi workspace cạnh chương trình; bản đóng gói (không console) còn ghi `QUEN_MAT_KHAU_ket_qua.txt`. Không có nút nào trong ứng dụng xoá tài khoản (D4-4).
+- Mới: `QUEN_MAT_KHAU.bat` (cạnh `.exe`; hỏi `XOA`, gọi exe với `--yes`, in kết quả), được chép bởi `build_windows.bat` và `.github/workflows/build-windows-exe.yml`. Không kiểm được trên Linux.
+- Tài liệu: `HUONG_DAN_CAI_DAT.md` (mục "Quên mật khẩu quản trị"), `docs/giai_trinh/HUONG_DAN_CHAY.md` §8.
+- Sửa test cũ theo L3: `tests/test_giao_dien_gt3_dang_nhap.py` điền thêm ô nhập lại mật khẩu.
+- Test mới: `tests/test_giao_dien_gt4_tai_khoan.py` (5 test: cảnh báo, nhập lại lệch, hiện/ẩn, thẻ bước tiếp + con trỏ, đổi mật khẩu), `tests/test_gt4_khoi_phuc.py` (5 test, subprocess `main.py --xoa-tai-khoan`: sao lưu, 0 tài khoản, kết quả xếp nguyên, xác nhận sai không xoá, quét workspace).
+
 ## 2026-11-17 — GT4-L2: nút hiện ra khớp với vai (R3, D4-1)
 
 - `phan_quyen.py`: `vao_che_do_hoc_sinh` chuyển từ `_GIAO_VIEN` sang `_QUAN_TRI` (D4-1: vào = thoát = quản trị; giáo viên không còn tự khoá được kiosk).

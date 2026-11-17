@@ -184,6 +184,23 @@ cửa sổ riêng — không thanh địa chỉ, không thanh tab. Toàn bộ t�
 
 ---
 
+## Quên mật khẩu quản trị (lấy lại quyền)
+
+Chỉ cần khi trường đã bật tài khoản và không ai nhớ mật khẩu quản trị. **Không** cần cài Python.
+
+1. Đóng phần mềm.
+2. Mở thư mục chứa `PhanBoCauLacBo.exe`, bấm đúp **`QUEN_MAT_KHAU.bat`** (tệp nằm cạnh tệp `.exe`).
+3. Gõ `XOA` rồi Enter. Phần mềm sao lưu tệp dữ liệu, xoá **toàn bộ** tài khoản (quản trị và giáo viên) và in kết quả.
+   Kết quả xếp, danh sách học sinh và câu lạc bộ giữ nguyên.
+4. Mở lại phần mềm, bấm **Tài khoản** và tạo tài khoản quản trị mới.
+
+Cách khác (dòng lệnh): `PhanBoCauLacBo.exe --xoa-tai-khoan` (thêm đường dẫn `app.db` nếu chỉ muốn xử lý một tệp, thêm `--yes` để bỏ bước hỏi).
+
+**Lưu ý khi bật tài khoản lần đầu:** hãy tạo tài khoản quản trị **trước khi** đưa máy cho học sinh dùng. Khi chưa có tài khoản nào,
+ai mở hộp *Tài khoản* trước thì tạo được tài khoản quản trị đầu tiên.
+
+---
+
 ## Ghi chú cho phần trình bày đề tài
 
 Nếu cần nhắc tới điều này trong báo cáo, các dữ kiện là:

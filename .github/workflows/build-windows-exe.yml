@@ -165,6 +165,8 @@ jobs:
           # nhat viet cho nguoi chua tung mo chuong trinh bao gio.
           Copy-Item HUONG_DAN_SU_DUNG.md dist/PhanBoCauLacBo/
           Copy-Item ky_va_tin_cay.ps1    dist/PhanBoCauLacBo/
+          # GT4-L3: lay lai quyen khi quen mat khau quan tri (canh .exe, khong trong _internal/).
+          Copy-Item QUEN_MAT_KHAU.bat    dist/PhanBoCauLacBo/
           Copy-Item mau_csv              dist/PhanBoCauLacBo/mau_csv -Recurse
           Copy-Item du_lieu_test         dist/PhanBoCauLacBo/du_lieu_test -Recurse
           # Truy duoc ban cai tren may nha truong ra tu commit nao. Khong

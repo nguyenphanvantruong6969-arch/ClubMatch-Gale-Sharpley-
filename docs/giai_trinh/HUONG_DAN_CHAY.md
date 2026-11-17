@@ -115,6 +115,11 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
   nhập); xem lời giải trình của một em được ghi một dòng (người xem + mã học sinh). Cơ sở dữ liệu đã dùng **trước bản này** có thể còn mã
   tra cứu trong các dòng nhật ký cũ (bảng chỉ thêm, không xoá được): hãy **tạo lại toàn bộ mã** (`tao_ma_tra_cuu(chi_hs_chua_co=False)`)
   trước khi dùng thật.
+- **Quên mật khẩu với bản `.exe` (không có Python):** đóng phần mềm, bấm đúp `QUEN_MAT_KHAU.bat` cạnh `PhanBoCauLacBo.exe`, gõ `XOA`
+  (hoặc dòng lệnh `PhanBoCauLacBo.exe --xoa-tai-khoan [app.db] [--yes]`; chạy từ mã nguồn: `python main.py --xoa-tai-khoan <app.db> --yes`).
+  Sao lưu trước, xoá toàn bộ tài khoản, dữ liệu phân bổ giữ nguyên.
+- **Tạo quản trị đầu tiên trước khi đưa máy cho học sinh dùng:** khi chưa có tài khoản nào, ai mở hộp *Tài khoản* trước sẽ tạo được tài khoản
+  quản trị đầu tiên. Hộp tạo tài khoản có ô nhập lại mật khẩu để tránh gõ nhầm.
 - Đăng nhập sai nhiều lần thì tài khoản tạm khoá (`gt3_tam_khoa`); phiên đăng nhập hết hạn khi không hoạt động.
 
 ## 9. Kiểm "trùng khít" (tuỳ chọn)

@@ -14,6 +14,7 @@
   const CHU_KY_HOI_PHIEN_MS = 30000;
   let phien = null;            // data của get_phien_dang_nhap
   let dangMoHop = false;       // hộp "Tài khoản" (đóng được) đang mở
+  let vuaTaoDau = false;       // GT4-L3: vừa tạo tài khoản quản trị đầu tiên: hộp mở lại với thẻ "Bước tiếp theo"
 
   function mot(tag, thuocTinh, ...con) {
     const e = document.createElement(tag);
@@ -35,6 +36,19 @@
   function oNhap(id, nhan, loai, tuDong) {
     const o = mot("input", { id, type: loai || "text", class: "text-input", autocomplete: tuDong || "off", spellcheck: "false" });
     return { o, nhom: mot("label", { class: "ws-sua-nhan", for: id, style: "display:block;margin:8px 0 2px" }, nhan) };
+  }
+
+  /* GT4-L3: ô mật khẩu + ô nhập lại + ô tích "Hiện mật khẩu" (đổi loại cả hai ô). */
+  function oMatKhauKep(idMk, nhanMk, tuDong, idHien) {
+    const mk = oNhap(idMk, nhanMk, "password", tuDong);
+    const mk2 = oNhap(idMk + "2", t("tk_nhap_lai_mk"), "password", tuDong);
+    const hien = mot("input", { type: "checkbox", id: idHien });
+    hien.addEventListener("change", () => {
+      mk.o.type = hien.checked ? "text" : "password";
+      mk2.o.type = hien.checked ? "text" : "password";
+    });
+    const nhomHien = mot("label", { for: idHien, style: "display:block;margin:6px 0 0" }, hien, " " + t("tk_hien_mk"));
+    return { mk, mk2, cacPhanTu: [mk.nhom, mk.o, mk2.nhom, mk2.o, nhomHien] };
   }
 
   function lopPhu() {
@@ -95,40 +109,58 @@
     dangMoHop = true;
     const hop = mot("div", { class: "ws-hop", role: "dialog", "aria-modal": "true", "aria-labelledby": "tkTieuDe", style: "max-width:560px" });
     hop.appendChild(mot("h2", { class: "ws-tieu-de", id: "tkTieuDe", tabindex: "-1", text: t("tk_tieu_de_quan_ly") }));
+    const vuaTaoQuanTriDau = vuaTaoDau;
+    vuaTaoDau = false;
     if (!phien.co_tai_khoan) veTaoDauTien(hop);
     else if (phien.dang_nhap) {
+      if (vuaTaoQuanTriDau && phien.vai === "quan_tri") hop.appendChild(veBuocTiep());
       veDoiMatKhau(hop);
       if (phien.vai === "quan_tri") { veDanhSach(hop); veNhatKy(hop); }
     }
     hop.appendChild(mot("div", { style: "margin-top:18px" },
       mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutDong", text: t("tk_dong"), onclick: dongLopPhu })));
     o.appendChild(hop);
-    hop.querySelector("input") ? hop.querySelector("input").focus() : el("tkTieuDe").focus();
+    const oTen = vuaTaoQuanTriDau ? el("tkTaoTen") : null;   // GT4-L3: sau quản trị đầu tiên, con trỏ ở "Thêm tài khoản"
+    if (oTen) oTen.focus();
+    else hop.querySelector("input") ? hop.querySelector("input").focus() : el("tkTieuDe").focus();
+  }
+
+  /* GT4-L3: ba việc nên làm ngay sau khi tạo quản trị đầu tiên. */
+  function veBuocTiep() {
+    return mot("div", { id: "tkBuocTiep", class: "hint-text", role: "status", style: "margin:8px 0 12px" },
+      mot("h3", { text: t("tk_buoc_tiep_tieu_de") }),
+      mot("ol", {}, mot("li", { text: t("tk_buoc_tiep_1") }), mot("li", { text: t("tk_buoc_tiep_2") }),
+        mot("li", { text: t("tk_buoc_tiep_3") })));
   }
 
   function veTaoDauTien(hop) {
     hop.appendChild(mot("p", { class: "hint-text", text: t("tk_tao_dau_tien_ghi") }));
+    hop.appendChild(mot("p", { class: "hint-text", id: "tkCanhBaoDauTien", role: "note", style: "font-weight:600",
+      text: t("tk_canh_bao_dau_tien") }));
     hop.appendChild(veFormTao("quan_tri", true));
   }
 
   function veFormTao(vaiCoDinh, laDauTien) {
     const ten = oNhap("tkTaoTen", t("tk_ten"), "text", "off");
-    const mk = oNhap("tkTaoMk", t("tk_mk_moi"), "password", "new-password");
+    const kep = oMatKhauKep("tkTaoMk", t("tk_mk_moi"), "new-password", "tkTaoHien");
+    const mk = kep.mk, mk2 = kep.mk2;
     const vai = mot("select", { id: "tkTaoVai", class: "text-input" },
       mot("option", { value: "giao_vien", text: t("tk_vai_giao_vien") }),
       mot("option", { value: "quan_tri", text: t("tk_vai_quan_tri") }));
     const tin = mot("div", { class: "save-feedback", id: "tkTaoTin", role: "alert" });
     const nut = mot("button", { type: "submit", class: "btn btn-primary", id: "tkNutTao", text: t("tk_tao_nut") });
-    const form = mot("form", { id: "tkFormTao", style: "margin-top:8px" }, ten.nhom, ten.o, mk.nhom, mk.o);
+    const form = mot("form", { id: "tkFormTao", style: "margin-top:8px" }, ten.nhom, ten.o, ...kep.cacPhanTu);
     if (!vaiCoDinh) form.append(mot("label", { class: "ws-sua-nhan", for: "tkTaoVai", style: "display:block;margin:8px 0 2px", text: t("tk_vai") }), vai);
     form.append(mot("div", { style: "margin-top:12px" }, nut), tin);
     form.addEventListener("submit", (ev) => {
       ev.preventDefault();
       const tenGui = ten.o.value, mkGui = mk.o.value, vaiGui = vaiCoDinh || vai.value;
-      mk.o.value = "";
+      if (mkGui !== mk2.o.value) { feedback(tin, t("tk_mk_khong_khop"), true); mk2.o.focus(); return; }   // GT4-L3
+      mk.o.value = ""; mk2.o.value = "";
       chayNut(nut, () => callApi("tao_tai_khoan", tenGui, mkGui, vaiGui), (res) => {
         if (!res.ok) { feedbackErrors(tin, res.errors); return; }
         showToast(t("tk_da_tao", { ten: res.data.ten }), "success");
+        if (laDauTien) vuaTaoDau = true;
         capNhat().then(() => { if (dangMoHop) veHop(); });
       });
     });
@@ -138,15 +170,17 @@
   function veDoiMatKhau(hop) {
     hop.appendChild(mot("p", { class: "hint-text", text: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }) }));
     const cu = oNhap("tkMkCu", t("tk_mk_cu"), "password", "current-password");
-    const moi = oNhap("tkMkMoi", t("tk_mk_moi"), "password", "new-password");
+    const kep = oMatKhauKep("tkMkMoi", t("tk_mk_moi"), "new-password", "tkMkHien");
+    const moi = kep.mk, moi2 = kep.mk2;
     const tin = mot("div", { class: "save-feedback", id: "tkDoiTin", role: "alert" });
     const nut = mot("button", { type: "submit", class: "btn btn-secondary", id: "tkNutDoiMk", text: t("tk_doi_mk_nut") });
-    const form = mot("form", { id: "tkFormDoiMk" }, mot("h3", { text: t("tk_doi_mk_tieu_de") }), cu.nhom, cu.o, moi.nhom, moi.o,
+    const form = mot("form", { id: "tkFormDoiMk" }, mot("h3", { text: t("tk_doi_mk_tieu_de") }), cu.nhom, cu.o, ...kep.cacPhanTu,
       mot("div", { style: "margin-top:12px" }, nut), tin);
     form.addEventListener("submit", (ev) => {
       ev.preventDefault();
       const cuGui = cu.o.value, moiGui = moi.o.value;
-      cu.o.value = ""; moi.o.value = "";
+      if (moiGui !== moi2.o.value) { feedback(tin, t("tk_mk_khong_khop"), true); moi2.o.focus(); return; }   // GT4-L3
+      cu.o.value = ""; moi.o.value = ""; moi2.o.value = "";
       chayNut(nut, () => callApi("doi_mat_khau", cuGui, moiGui), (res) => {
         if (!res.ok) { feedbackErrors(tin, res.errors); return; }
         feedback(tin, t("tk_da_doi"), false);

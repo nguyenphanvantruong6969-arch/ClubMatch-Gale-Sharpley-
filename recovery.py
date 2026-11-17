@@ -254,6 +254,52 @@ def xoa_tai_khoan_sau_sao_luu(db_path: str) -> int:
         src.close()
 
 
+def chay_xoa_tai_khoan_dong_lenh(argv, thu_muc_goc, doc=input, ghi=print) -> int:
+    """GT4-L3 (D4-4) — `main.py --xoa-tai-khoan [APP_DB] [--yes]`: lối thoát khi quên mật khẩu quản trị cho bản
+    đóng gói (không có Python). Chạy TRƯỚC khi mở cửa sổ. Có đường dẫn thì chỉ xử lý tệp đó; không thì xử lý mọi
+    `app.db` của các workspace cạnh chương trình (và `app.db` cũ nếu còn). Hỏi gõ `XOA` trừ khi có `--yes`; sao lưu
+    rồi xoá HẾT tài khoản, dữ liệu phân bổ giữ nguyên. Trả mã thoát: 0 xong, 1 không xác nhận / lỗi, 2 không có tệp.
+    Không có nút nào trong ứng dụng làm việc này (xoá tài khoản bằng nút sẽ làm hỏng mục đích của đăng nhập)."""
+    import workspace
+
+    vao = [a for a in argv if a != "--xoa-tai-khoan"]
+    dong_y = "--yes" in vao
+    duong = [a for a in vao if not a.startswith("--")]
+    if duong:
+        muc_tieu = [os.path.abspath(duong[0])]
+    else:
+        muc_tieu = [w["path"] for w in workspace.danh_sach(thu_muc_goc)]
+        cu = os.path.join(thu_muc_goc, "app.db")
+        if os.path.isfile(cu):
+            muc_tieu.append(cu)
+    muc_tieu = [m for m in muc_tieu if os.path.isfile(m)]
+    if not muc_tieu:
+        ghi("Không tìm thấy tệp dữ liệu nào để khôi phục. Hãy chạy lại và ghi kèm đường dẫn tới tệp app.db.")
+        return 2
+    ghi("Sẽ XOÁ TOÀN BỘ tài khoản (quản trị và giáo viên) trong %d tệp dữ liệu:" % len(muc_tieu))
+    for m in muc_tieu:
+        ghi("  - " + m)
+    ghi("Mỗi tệp được sao lưu trước. Kết quả xếp, danh sách học sinh và câu lạc bộ giữ nguyên.")
+    if not dong_y:
+        try:
+            tra_loi = doc("Go XOA de xac nhan: ")
+        except (EOFError, OSError, RuntimeError):
+            tra_loi = ""
+        if (tra_loi or "").strip() != "XOA":
+            ghi("Chưa xác nhận nên KHÔNG xoá gì.")
+            return 1
+    tong = 0
+    for m in muc_tieu:
+        try:
+            tong += xoa_tai_khoan_sau_sao_luu(m)
+        except Exception as exc:
+            ghi("Không xoá được tài khoản trong %s: %s" % (m, exc))
+            return 1
+    ghi("Đã sao lưu và xoá %d tài khoản. Mở lại phần mềm: chưa có tài khoản nào, hãy tạo tài khoản quản trị mới "
+        "ngay trước khi đưa máy cho học sinh dùng." % tong)
+    return 0
+
+
 if __name__ == "__main__":
     import argparse
     import sys

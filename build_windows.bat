@@ -24,6 +24,10 @@ if errorlevel 1 goto :loi
 pyinstaller kiosk.spec --noconfirm
 if errorlevel 1 goto :loi
 
+REM GT4-L3: cong cu lay lai quyen khi quen mat khau quan tri (nam CANH .exe).
+copy /Y QUEN_MAT_KHAU.bat dist\PhanBoCauLacBo\
+if errorlevel 1 goto :loi
+
 echo.
 echo ============================================================
 echo  XONG. File chay duoc nam o:

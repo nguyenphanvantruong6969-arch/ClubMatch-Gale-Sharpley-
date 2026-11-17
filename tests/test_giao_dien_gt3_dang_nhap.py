@@ -43,6 +43,7 @@ def test_chua_co_tai_khoan_khong_man_dang_nhap_va_tao_quan_tri_dau_tien(trang):
     page.click("#tkNutMoHop")
     page.fill("#tkTaoTen", "quantri")
     page.fill("#tkTaoMk", MK)
+    page.fill("#tkTaoMk2", MK)                       # GT4-L3: ô nhập lại mật khẩu
     page.click("#tkNutTao")
     page.wait_for_selector("#tkHuyHieu")
     assert "quantri" in page.inner_text("#tkHuyHieu")
@@ -99,6 +100,7 @@ def test_quan_tri_tao_giao_vien_va_giao_vien_chi_thay_doi_mat_khau(trang):
     page.wait_for_selector("#tkFormTao")
     page.fill("#tkTaoTen", "co_lan")
     page.fill("#tkTaoMk", MK2)
+    page.fill("#tkTaoMk2", MK2)                      # GT4-L3: ô nhập lại mật khẩu
     page.select_option("#tkTaoVai", "giao_vien")
     page.click("#tkNutTao")
     page.wait_for_selector('[data-xoa="co_lan"]')
