@@ -63,7 +63,8 @@ def test_bang_quyen_khong_co_ten_thua():
 def test_muc_quyen_hop_le_va_hai_nhom_khong_chong_nhau():
     assert set(pq.QUYEN.values()) == {pq.CONG_KHAI, pq.GIAO_VIEN, pq.QUAN_TRI}
     assert {n for n, m in pq.QUYEN.items() if m == pq.CONG_KHAI} == {
-        "dang_nhap", "dang_xuat", "get_phien_dang_nhap", "tao_tai_khoan", "doi_mat_khau"}
+        "dang_nhap", "dang_xuat", "get_phien_dang_nhap", "tao_tai_khoan", "doi_mat_khau",
+        "tra_cuu_hoc_sinh"}  # I1: học sinh tự tra cứu
 
 
 def test_ham_ghi_la_quan_tri_ham_doc_la_giao_vien():
@@ -74,8 +75,16 @@ def test_ham_ghi_la_quan_tri_ham_doc_la_giao_vien():
               "submit_club_scores", "luu_diem_danh"):
         assert pq.QUYEN[n] == pq.GIAO_VIEN, n
     for n in cac_ham_cong_khai():
-        if n.startswith(("get_", "list_")) and n not in ("get_phien_dang_nhap", "get_nhat_ky_thao_tac"):
+        if n.startswith(("get_", "list_")) and n not in (
+                "get_phien_dang_nhap", "get_nhat_ky_thao_tac",
+                "get_tieu_chi", "list_lan_chay"):  # I1: danh sách so sánh lộ kết quả học sinh khác -> chỉ quản trị
             assert pq.QUYEN[n] != pq.QUAN_TRI, n
+    # I1: GT1/GT2
+    assert pq.QUYEN["get_giai_trinh_hoc_sinh"] == pq.GIAO_VIEN
+    assert pq.QUYEN["export_phieu_giai_trinh"] == pq.GIAO_VIEN
+    for n in ("tao_ma_tra_cuu", "tao_lai_ma_tra_cuu", "export_ma_tra_cuu_csv", "get_tieu_chi", "run_thu",
+              "list_lan_chay", "so_sanh_lan_chay", "export_so_sanh_html", "export_so_sanh_csv", "ap_dung_tieu_chi"):
+        assert pq.QUYEN[n] == pq.QUAN_TRI, n
 
 
 # ------------------------------------------------------------ chưa có tài khoản

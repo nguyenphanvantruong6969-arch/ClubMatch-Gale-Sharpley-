@@ -20,7 +20,7 @@ Truong merges to main himself. No PR.
       Done when: no conflict markers (`git grep -nE '^(<<<<<<<|>>>>>>>)'` empty), `ruff check .` clean, all
       `tests/test_gt1_*`, `test_gt2_*`, `test_gt3_*` (non-UI) pass except the intended `dir(PipelineAPI)` completeness
       failure in `test_gt3_phan_quyen.py` (fixed in I1), kiem_nhanh invariant-1 identical.
-- [ ] I1 permission map: classify every GT1/GT2 PipelineAPI method in `QUYEN`.
+- [x] I1 permission map: classify every GT1/GT2 PipelineAPI method in `QUYEN`.
       GT1: `tra_cuu_hoc_sinh` → `cong_khai`; lookup / slip view+export → `giao_vien`; code (re)generation → `quan_tri`.
       GT2: get_tieu_chi, run_thu, list_lan_chay, so_sanh_lan_chay, export_so_sanh_html, export_so_sanh_csv,
       ap_dung_tieu_chi → `quan_tri` (GT2 lead: compare student list is admin-only; stricter than the task file's

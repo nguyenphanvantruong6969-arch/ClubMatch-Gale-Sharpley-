@@ -26,7 +26,8 @@ GIAO_VIEN = "giao_vien"
 QUAN_TRI = "quan_tri"
 
 # Hàm tự kiểm quyền bên trong (api_tai_khoan.py): tài khoản đầu tiên không cần đăng nhập, v.v.
-_CONG_KHAI = ("dang_nhap dang_xuat get_phien_dang_nhap tao_tai_khoan doi_mat_khau").split()
+_CONG_KHAI = ("dang_nhap dang_xuat get_phien_dang_nhap tao_tai_khoan doi_mat_khau\n"
+              " tra_cuu_hoc_sinh").split()  # I1: học sinh tự tra cứu (GT1)
 
 # Chỉ đọc, xuất, và việc của giáo viên (nhập điểm, điểm danh, nhập hộ học sinh tại chỗ, khiếu nại / phản hồi).
 _GIAO_VIEN = """
@@ -48,7 +49,8 @@ list_wharton_admin list_wharton_canh_bao list_workspaces luu_diem_danh mo_thu_mu
 preview_import_csv search_students submit_club_scores submit_huy_chuong submit_person_scores
 submit_preferences submit_test_selection tai_mau_de_thi tao_so_nhap_mau xem_truoc_so_nhap xlsx_to_csv_text
 xuat_ket_qua_list
-""".split()
+get_giai_trinh_hoc_sinh export_phieu_giai_trinh
+""".split()  # I1: GT1 tra cứu / phiếu
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.
 _QUAN_TRI = """
@@ -60,7 +62,9 @@ import_workspace liet_ke_tai_khoan luu_gioi_han_gv mo_khoa_wharton nap_de_thi na
 nhap_phan_hoi_forms nhap_sau_ket_qua_forms open_workspace phong_wharton_hang_loat rename_workspace
 reset_data reset_student_entry run_pipeline save_as_template set_student_class set_student_reserve_group
 submit_wharton tao_bo_bieu_mau_api tra_loi_moi update_workspace_config xoa_tai_khoan xu_ly_khieu_nai
-""".split()
+tao_ma_tra_cuu tao_lai_ma_tra_cuu export_ma_tra_cuu_csv
+get_tieu_chi run_thu list_lan_chay so_sanh_lan_chay export_so_sanh_html export_so_sanh_csv ap_dung_tieu_chi
+""".split()  # I1: GT1 mã, GT2 tiêu chí
 
 QUYEN = {}
 for _ten in _CONG_KHAI:

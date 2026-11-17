@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-17 — I1 (tích hợp GT1+GT2+GT3): bảng quyền cho hàm GT1/GT2
+
+- `phan_quyen.py`: `tra_cuu_hoc_sinh` → công khai; `get_giai_trinh_hoc_sinh`, `export_phieu_giai_trinh` → giáo viên; `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`, `export_ma_tra_cuu_csv` và 7 hàm GT2 (`get_tieu_chi`, `run_thu`, `list_lan_chay`, `so_sanh_lan_chay`, `export_so_sanh_html`, `export_so_sanh_csv`, `ap_dung_tieu_chi`) → quản trị (danh sách so sánh lộ kết quả học sinh khác).
+- `tests/test_gt3_phan_quyen.py`: cập nhật danh sách công khai và kiểm các hàm mới. Không đổi hành vi xếp.
+
 ## 2026-11-16 — GT1 sửa lỗi CI (không đổi hành vi xếp)
 
 - `i18n.js`: `gt_the_ten` bỏ gạch ngang nối ("{ten} ({ma}), {cohort_l} {lop}"), `gt_khong_co` thành "Không có" / "None", tiếng Anh `gt_lan_chay` bỏ từ "seed".
