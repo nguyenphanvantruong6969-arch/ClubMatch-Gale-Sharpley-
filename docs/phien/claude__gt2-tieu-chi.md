@@ -33,7 +33,8 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 | Role | Model | Session id | State |
 |---|---|---|---|
 | lead | Opus | session_01YVAyu3PPHv9SNntepRSLwh | active |
-| writer | Sonnet | session_01YVAyu1MNvsxmVCMTkDDtfN | active (GO L1 sent 02:41Z) |
+| writer | Sonnet | session_01YVAyu1MNvsxmVCMTkDDtfN | archived (handoff after L1, e4991a3) |
+| writer 2 | Sonnet | session_01YVAyu2JngdLXo2QUfsDamp | active |
 | checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | active |
 
 ## Needs Truong
@@ -41,7 +42,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 
 ## Current state (overwrite each handoff)
 - Done: branch created from origin/claude/determined-allen-kig6ud; this file.
-- In progress: L1 (writer).
+- In progress: L1 under checker review (1ff5794..4738551).
 - Tests: —
 - Open problems: —
 
