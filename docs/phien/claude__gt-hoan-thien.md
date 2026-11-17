@@ -26,13 +26,13 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | L3 account setup + recovery (R2, R4) | READY d824937 | d824937 | 1 | retype+show/hide in 3 forms, next-steps card, warning; `main.py --xoa-tai-khoan` (recovery.chay_xoa_tai_khoan_dong_lenh) + QUEN_MAT_KHAU.bat, copied by build_windows.bat + workflow. Exe/bat NOT testable on Linux. Try: wrong confirmation, no-path default scan of workspaces. |
 | L4 explanations cannot be misread (R5, R6) | READY bceb2f5 | bceb2f5 | 1 | RESERVED rows: no numeric cut, cell 'Chỗ dành riêng' + fixed sentence fa_ly_do.CAU_GIU_CHO; giong arg (default byte-identical, teacher panel = neutral); kq_desc reworded; CA_MAU.md + GOI_MINH_CHUNG regenerated. Try: slip vs panel vs student screen for a RESERVED student. |
 | L5 student screen + lookup placement (R9) | READY 6ecf9cb | 6ecf9cb | 1 | labels, school name (no logo field in workspace), lang toggle, Enter, focus, countdown (backend gives `giay`), row click, jump link, 4-step helper (admin only), new `mo_tep` API (allow-list of ext, export roots) + button. Try: lock out a student id and watch the countdown; click a results row; export slips then 'Mở tệp'. |
-| L6 readable audit log (R7) | TODO | | 0 | |
+| L6 readable audit log (R7) | READY f59862a | f59862a | 1 | log in its own tab; dictionary nkhd_* (all 87 logged functions) vi+en; select/refused-only/date (server side, gt4_ngay_sai); null actor = 'Học sinh tự tra cứu'; CSV stays raw. Try: change language while the log tab is open; unknown action shows raw name. |
 | L7 criteria + comparison polish (R8) | TODO | | 0 | |
 | L8 stretch: vocabulary-aware sentences | TODO | | 0 | |
 | Gate: ruff + kiem_nhanh + tests + CI green | TODO | | 0 | |
 
 ## Current state (overwrite each handoff)
-- Done so far: L0-L5 READY.
+- Done so far: L0-L6 READY.
 - In progress:
 - Tests: baseline on the base commit = `tests/test_gt*` + `tests/test_giao_dien_gt*` green, ruff clean, kiem_nhanh 7/7.
 - Open problems:
