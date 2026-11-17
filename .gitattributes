@@ -3,3 +3,6 @@
 # (core.autocrlf=true) doi LF thanh CRLF khi checkout, lam test do du tep
 # van dung — chinh loi da chan ban build Windows. Ep giu LF o moi may.
 i18n_loi.js text eol=lf
+# docs/giai_trinh/CA_MAU.md duoc SINH boi du_lieu_test/tao_ca_mau_giai_trinh.py (LF) va
+# tests/test_gt_tich_hop.py so sanh tung byte; giu LF ca tren Windows.
+docs/giai_trinh/CA_MAU.md text eol=lf
