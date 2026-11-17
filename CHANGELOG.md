@@ -105,6 +105,75 @@ Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60
   `gt2_tieu_chi_khong_hop_le`; lô L2 thêm khi `run_thu` cần.
 - Test mới: `tests/test_gt2_tieu_chi.py` (107 ca: mọi tổ hợp luật, khoá chặt tập khoá, API), `tests/test_giao_dien_gt2_tieu_chi.py`
   (6 ca Chromium). `CLAUDE_CHI_TIET.md` hàng `tests/`: 300 tệp, 6.430 ca.
+## 2026-11-16 — GT3 CI fix2
+- `tests/test_gt3_tai_khoan.py::test_recovery_cho_lenh_dong_dong_goi`: đọc đầu ra của lệnh con bằng `encoding="utf-8"` (nghiêm ngặt) thay vì bảng mã mặc định của máy (Windows cp1252 làm luồng đọc ném lỗi). Không sửa mã sản phẩm.
+
+## 2026-11-16 — GT3 CI fix1 (Windows)
+- `recovery.py` (dòng lệnh): ép stdout/stderr sang UTF-8 (`reconfigure`, có kiểm `hasattr`) — `--help` không còn UnicodeEncodeError trên console cp1252.
+- `api_tai_khoan._co_tai_khoan_nho`: đã có giá trị nhớ thì làm mới với thời gian chờ khoá 50 ms, thất bại do khoá thì 5 s sau mới thử lại; `tao_tai_khoan` cập nhật bộ nhớ ngay. Lần đầu (chưa từng đọc được) vẫn đóng khi lỗi. Đo trên Linux, CSDL bị khoá, tài khoản tắt: cổng cộng ≈ 0,05 s mỗi lời gọi (trước: ≈ 3 s).
+- Test mới: `test_recovery_help_chay_duoc_tren_console_cp1252`, `test_cong_khong_cong_them_thoi_gian_cho_khi_csdl_bi_khoa`.
+
+## 2026-11-16 — GT3-L4 fix1: luồng nạp sổ mẫu đúng chế độ huy chương
+- `HUONG_DAN_CHAY.md` mục 4–6, `KICH_BAN_DEMO.md` bước 3–8, `KICH_BAN_VIDEO.md` bước 4–7: sổ `SO_NHAP_FA_MAU_120HS.xlsx` phải nạp vào không gian đã tích "Xếp theo loại CLB và huy chương" (chọn lúc tạo); bỏ bước "Phóng cho đủ 100" và lời nhắc `fa_cot_bo_qua`; số FA001/FA002 chạy lại thật (hạt giống 42); ghi chú câu giải thích từng học sinh đã có ở chế độ này.
+- Test mới trong `tests/test_gt3_tai_lieu.py` (22 ca): tài liệu dặn bật chế độ trước khi nạp; số liệu FA001/FA002 trong tài liệu khớp một lần nạp + chạy thật (hạt giống 42).
+
+## 2026-11-16 — GT3-L4 (mục cha E1-lite; ngoài sổ): bộ tài liệu minh chứng `docs/giai_trinh/`
+- Tệp mới: `VAI_TRO_AI.md`, `SO_DO_LUONG.md` + `so_do_luong.svg` (dựng bằng `ve_so_do.py`, chỉ thư viện chuẩn), `HUONG_DAN_CHAY.md` (các bước 1–7 đã chạy thật), `DU_LIEU_DAU_VAO.md` (trích nguyên văn thông báo lỗi từ `i18n_errors.py`), `PHAN_CONG.md` (mẫu trống), `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md` (bước cần tích hợp đánh dấu "(sau tích hợp)").
+- Toàn bộ nhãn "dữ liệu mô phỏng"; không có nhận xét hay kết luận (phần đó học sinh tự viết).
+- Test mới: `tests/test_gt3_tai_lieu.py` (20 ca: tệp tồn tại, có chữ "mô phỏng", không lộ mã nội bộ, mã lỗi và đường dẫn nhắc tới có thật, trích đúng nguyên văn, `PHAN_CONG.md` trống).
+
+## 2026-11-16 — GT3-L3 fix1: nhật ký ghi đúng CSDL, không chặn lời gọi
+- `phan_quyen._boc` chụp `db_path` TRƯỚC lời gọi (open/delete_workspace không còn đẩy dòng nhật ký sang workspace khác; CSDL đã dời đi thì không tạo tệp rỗng).
+- `nhat_ky.ghi` chờ khoá ghi tối đa 1 s; quá hạn thì luồng nền ghi bù khi khoá nhả. Lọc `nguoi` không phân biệt hoa/thường (NFC + casefold).
+- Test mới: 4 ca trong `tests/test_gt3_nhat_ky.py` (28 ca).
+
+## 2026-11-16 — GT3-L3 (mục cha E2; ngoài sổ): nhật ký thao tác (chỉ thêm)
+
+Chỉ ghi khi bảng `tai_khoan` có dòng; chưa có tài khoản thì không ghi gì (chỉ thêm `CREATE TABLE/TRIGGER IF NOT EXISTS`). Chỉ là báo cáo, không dính `compute_club_priority`. `kiem_nhanh` 7/7, 60 ca trùng khít.
+- Bảng `nhat_ky_thao_tac(id, luc, nguoi, vai, hanh_dong, ket_qua, chi_tiet)` (duyệt D-GT8) + hai trigger chặn UPDATE / DELETE; `reset_data` và các đường xoá khác không đụng tới.
+- Ghi ở MỘT chỗ: lớp bọc của cổng phân quyền (`phan_quyen.py:_boc`) cho lời gọi ngoài cùng của mọi hàm GHI (cả hai vai: nhập nguyện vọng, điểm, điểm danh, khiếu nại, xuất tệp…), đăng nhập (đúng / sai / bị khoá), đăng xuất, tạo / đổi mật khẩu / xoá tài khoản. Hàm chỉ đọc (`get_*`, `list_*`, `search_*`…) không ghi (`nhat_ky.nen_ghi`). Lời gọi bị từ chối cũng ghi, `ket_qua` = mã lỗi (`gt3_khong_du_quyen`, `gt3_can_dang_nhap`).
+- `chi_tiet` = tóm tắt tham số dạng JSON ≤ 300 ký tự: bỏ tham số giống mật khẩu / mã bí mật / nội dung tệp base64, chuỗi dài chỉ ghi độ dài, danh sách dài chỉ ghi số phần tử; `doi_mat_khau` không ghi gì. Đăng nhập sai chỉ ghi tên khi là tài khoản có thật (tránh lưu mật khẩu gõ nhầm vào ô tên).
+- Ghi nhật ký lỗi chỉ đưa cảnh báo vào log (không kèm tham số), kết quả thao tác chính không đổi.
+- API mới (`api_nhat_ky.py`, chỉ quản trị): `get_nhat_ky_thao_tac(page, page_size, nguoi, hanh_dong)` (mới nhất trước, 1..500 dòng/trang), `export_nhat_ky_thao_tac_csv(path, nguoi, hanh_dong)` (UTF-8 có BOM, cũ nhất trước). Mã lỗi mới `gt3_loi_nhat_ky`.
+- Giao diện: mục "Nhật ký thao tác" (lọc, phân trang, xuất CSV) ngay trong hộp Tài khoản của quản trị (không thêm tab con vào Quản lý, vì test tab con khẳng định đúng danh sách tab).
+- Test mới: `tests/test_gt3_nhat_ky.py` (24), thêm 1 ca vào `tests/test_giao_dien_gt3_dang_nhap.py`.
+- `tests/test_ws_nhan.py`: danh sách mã lỗi mới sau ảnh chụp cho phép thêm tiền tố `gt3_` (các mã tài khoản / nhật ký).
+
+## 2026-11-16 — GT3-L2 fix1: cổng phân quyền đóng khi đọc bảng tài khoản hỏng
+
+`api_tai_khoan.py:_co_tai_khoan_nho`: bộ nhớ đệm theo từng CSDL (`_co_tk_nho`); đọc hỏng (vd. "database is locked") mà CSDL đó chưa từng đọc được thì coi như ĐÃ CÓ tài khoản (từ chối `gt3_can_dang_nhap`); thiếu bảng = chưa có tài khoản. `api.py` mồi bộ nhớ đệm sau `init_db` trong hàm khởi tạo. Test mới (6) trong `tests/test_gt3_phan_quyen.py`.
+
+## 2026-11-16 — GT3-L2 (mục cha E1-lite; ngoài sổ): cổng phân quyền trung tâm
+
+Chỉ có tác dụng khi bảng `tai_khoan` có dòng; chưa có tài khoản thì mọi hàm chạy y như trước (kết quả, ngoại lệ không đổi). Chỉ là điều khiển truy cập, không dính `compute_club_priority`.
+- `phan_quyen.py`: bảng `QUYEN` phân mọi hàm công khai của `PipelineAPI` vào `cong_khai` (5 hàm đăng nhập/tài khoản, tự kiểm bên trong) / `giao_vien` (xem, xuất, nhập điểm, điểm danh, nhập hộ nguyện vọng tại chỗ, khiếu nại/phản hồi) / `quan_tri` (ghi dữ liệu, cấu hình, xoá, nạp tệp, workspace, tài khoản).
+  `ap_dung_cong(PipelineAPI)` gọi ở cuối `api.py` bọc từng hàm ở cấp lớp, nên pywebview và `browser_host.py` đi qua cùng một cổng. Chỉ kiểm ở lời gọi ngoài cùng (hàm công khai gọi hàm công khai bên trong không bị kiểm lại).
+  Chưa đăng nhập → `gt3_can_dang_nhap`; sai vai → `gt3_khong_du_quyen` với `params.hanh_dong`; hàm chưa có trong bảng bị từ chối cả với quản trị (đóng khi lỗi). Mỗi lời gọi bị kiểm đều làm mới giờ nghỉ 15 phút.
+  `api_tai_khoan.py`: thêm `_co_tai_khoan_nho` (không ném lỗi; CSDL tạm không đọc được thì dùng kết quả đọc lần trước).
+- Giao diện: `body[data-vai]` + `[data-quyen="quan_tri"]` ẩn các tab Xếp CLB / Quản lý / Chuẩn bị đợt và nút không gian làm việc khỏi giáo viên; giáo viên đang ở tab bị ẩn thì được đưa về Kết quả. Backend vẫn là cổng thật.
+- Test mới: `tests/test_gt3_phan_quyen.py` (17), `tests/test_giao_dien_gt3_phan_quyen.py` (3). Test liệt kê hàm công khai sẽ ĐỎ ở nhánh tích hợp cho tới khi hàm của GT1/GT2 được phân loại (đúng thiết kế, mục I1).
+
+## 2026-11-16 — GT3-L1 fix1: chuẩn hoá Unicode NFC cho tên và mật khẩu
+
+`tai_khoan.py`: `chuan_hoa_ten`, `_khoa_ten`, `bam_mat_khau` chuẩn hoá NFC (stdlib `unicodedata`) → tên NFD trùng tên NFC bị chặn (`gt3_ten_da_co`), đăng nhập bằng NFD được; mật khẩu NFC/NFD băm như nhau (mật khẩu ASCII/NFC cũ không đổi). Tên lưu dạng NFC.
+Test mới (3): `test_ten_unicode_nfd_trung_nfc_va_dang_nhap_duoc`, `test_ten_nfd_duoc_luu_dang_nfc`, `test_mat_khau_nfc_nfd_nhu_nhau` trong `tests/test_gt3_tai_khoan.py`. `kiem_nhanh` 7/7, 60 ca trùng khít.
+
+## 2026-11-16 — GT3-L1 (mục cha E1-lite; ngoài sổ): tài khoản và đăng nhập (quản trị / giáo viên)
+
+Tuỳ chọn MỚI, mặc định TẮT: bảng `tai_khoan` rỗng thì phần mềm chạy y như trước (không màn đăng nhập; chỉ thêm `CREATE TABLE IF NOT EXISTS`).
+`kiem_nhanh` 7/7, 60 ca trùng khít. Số liệu MÔ PHỎNG. Chỉ là điều khiển, không dính `compute_club_priority` (bất biến 2).
+- Bảng `tai_khoan(ten, vai, bam, muoi, tao_luc)` (duyệt D-GT8). Mật khẩu băm PBKDF2-SHA256 200.000 vòng + muối ngẫu nhiên; so sánh `hmac.compare_digest`;
+  mật khẩu / băm / muối không bao giờ được trả ra, ghi nhật ký hay đưa vào tham số lỗi. Tối thiểu 8 ký tự.
+- API mới (`api_tai_khoan.py`, mixin của `PipelineAPI`): `get_phien_dang_nhap`, `tao_tai_khoan`, `dang_nhap`, `dang_xuat`, `doi_mat_khau`,
+  `xoa_tai_khoan`, `liet_ke_tai_khoan`. Tài khoản đầu tiên phải là quản trị, không cần đăng nhập, và người tạo được đăng nhập luôn; các tài khoản sau cần phiên
+  quản trị. Không xoá quản trị cuối. 5 lần sai liên tiếp (theo từng tên) → khoá 60 giây. Nghỉ 15 phút → đăng xuất (đồng hồ tiêm được `api._dong_ho`;
+  hàm nội bộ `_hoat_dong()` để cổng phân quyền L2 làm mới giờ nghỉ). Phiên nằm trong bộ nhớ, gắn với đường dẫn CSDL đang mở (đổi workspace là hết hiệu lực).
+- Khôi phục: `recovery.xoa_tai_khoan_sau_sao_luu(db)`, `RecoveryAPI.xoa_tai_khoan_sau_sao_luu`, và `python recovery.py --xoa-tai-khoan <app.db>`: sao lưu bằng
+  SQLite Backup API rồi xoá toàn bộ tài khoản (quên mật khẩu; quyền = có máy trong tay).
+- Giao diện `js/16_tai_khoan.js`: màn đăng nhập chắn giao diện khi đã có tài khoản mà chưa đăng nhập; thanh bên có tên + vai + Đăng xuất + nút "Tài khoản"
+  (hộp: tạo quản trị đầu tiên / đổi mật khẩu / quản trị tạo, xoá tài khoản). Khác kế hoạch: hộp mở từ thanh bên, không phải tab con của Quản lý (để không đổi tab con hiện có).
+- Mã lỗi `gt3_*` (14) trong `i18n_errors.py`; khoá `tk_*` trong `i18n.js`.
+- Test mới: `tests/test_gt3_tai_khoan.py` (42 ca), `tests/test_giao_dien_gt3_dang_nhap.py` (6 ca). `CLAUDE_CHI_TIET.md` hàng `tests/`: 300 tệp, 6.365 ca.
 
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 

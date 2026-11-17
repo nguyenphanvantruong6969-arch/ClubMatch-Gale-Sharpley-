@@ -12,7 +12,7 @@ run integration lots I1-I4 (spec: `docs/ke_hoach/gt/GT3_QUYEN_TAI_LIEU.md` § "I
 Truong merges to main himself. No PR.
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] I0 merges: GT1 already merged by lead (a38fef8, clean). Writer: `git merge --no-ff origin/claude/gt2-tieu-chi`,
+- [x] I0 merges: GT1 already merged by lead (a38fef8, clean). Writer: `git merge --no-ff origin/claude/gt2-tieu-chi`,
       then `git merge --no-ff origin/claude/gt3-quyen-tai-lieu`. Conflicts are shared files only (CHANGELOG.md,
       docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/TIEN_DO.md, i18n_errors.py, i18n_loi.js, index.html,
       js/_danh_sach.txt, style.css): keep every team's block, GT1→GT2→GT3 order, renumber/reformat nothing;

@@ -29,14 +29,14 @@
       </details>
     </div>
 
-    <button type="button" class="ws-switcher" id="btnWorkspace" hidden aria-haspopup="dialog"
+    <button type="button" class="ws-switcher" id="btnWorkspace" data-quyen="quan_tri" hidden aria-haspopup="dialog"
             data-i18n-aria-label="ws_switcher_aria">
       <span class="ws-switcher-nhan" data-i18n="ws_switcher_nhan">Không gian làm việc</span>
       <span class="ws-switcher-ten" id="wsTenHienTai"></span>
     </button>
 
     <div class="nav-group">
-      <button class="nav-item is-active" data-tab="pipeline">
+      <button class="nav-item is-active" data-tab="pipeline" data-quyen="quan_tri">
         <span data-i18n="nav_pipeline">Xếp CLB</span>
       </button>
       <button class="nav-item" data-tab="results">
@@ -48,18 +48,20 @@
       <button class="nav-item" data-tab="fallback">
         <span data-i18n="nav_fallback">Nhập nguyện vọng</span>
       </button>
-      <button class="nav-item" data-tab="admin">
+      <button class="nav-item" data-tab="admin" data-quyen="quan_tri">
         <span data-i18n="nav_admin">Quản lý</span>
       </button>
       <button class="nav-item" data-tab="scoring">
         <span data-i18n="nav_scoring">Nhập điểm</span>
       </button>
-      <button class="nav-item" data-tab="chuan_bi" hidden>
+      <button class="nav-item" data-tab="chuan_bi" data-quyen="quan_tri" hidden>
         <span data-i18n="nav_chuan_bi">Chuẩn bị đợt</span>
       </button>
     </div>
 
     <div class="sidebar-footer">
+      <!-- GT3-L1: tài khoản + đăng nhập; js/16_tai_khoan.js vẽ nội dung -->
+      <div id="tkThanhBen" class="tk-thanh-ben" hidden></div>
       <!-- T3-12: chỉ hiện khi mất kết nối; hai dòng dưới chỉ để ẩn (mốc đồng bộ cho chương trình và test). -->
       <div id="dbStatusLine" class="db-status" data-i18n="db_status_loading" hidden>Đang tải…</div>
       <div id="lastRunLine" class="db-status db-status-sub" hidden></div>
@@ -1359,6 +1361,7 @@
 <script src="js/13_chuan_bi_bo.js"></script>
 <script src="js/14_giai_trinh.js"></script>
 <script src="js/15_tieu_chi.js"></script><!-- GT2 -->
+<script src="js/16_tai_khoan.js"></script>
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

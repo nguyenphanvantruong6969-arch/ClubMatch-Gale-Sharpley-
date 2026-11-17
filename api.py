@@ -77,11 +77,14 @@ from api_forms import FormsMixin
 from api_forms_bo import FormsBoMixin
 from api_forms_nap import FormsNapMixin
 from api_nhap import NhapDuLieuMixin
+from api_nhat_ky import NhatKyMixin  # GT3-L3
 from api_quan_ly import QuanLyMixin
 from api_sau_xep import SauXepMixin
 from api_tieu_chi import TieuChiMixin  # GT2
+from api_tai_khoan import TaiKhoanMixin  # GT3
 from api_workspace import CauHinhHong, CsdlBan, WorkspaceMixin, loi_cau_hinh
 from api_xuat import XuatKetQuaMixin
+from phan_quyen import ap_dung_cong  # GT3-L2
 
 
 # PipelineAPI GHÉP từ các phần theo việc. Tách tệp chứ KHÔNG tách lớp:
@@ -94,7 +97,7 @@ from api_xuat import XuatKetQuaMixin
 # thay đó chỉ có tác dụng với mã nằm trong CHÍNH tệp này.
 class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                   XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin, TieuChiMixin,
-                  FormsMixin, FormsNapMixin, FormsBoMixin):
+                  FormsMixin, FormsNapMixin, FormsBoMixin, TaiKhoanMixin, NhatKyMixin):
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
         self.db_path = db_path
@@ -132,7 +135,9 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
         # DẤU GẠCH DƯỚI LÀ BẮT BUỘC, không phải quy ước cho đẹp. Xem
         # _set_window() ngay dưới đây.
         self._window = None
+        self._khoi_tao_tai_khoan()      # GT3: tài khoản + phiên đăng nhập (bảng rỗng = như cũ)
         init_db(self.db_path)
+        self._co_tai_khoan_nho()        # GT3-L2: mồi bộ nhớ đệm khi CSDL còn nguyên (để cổng không phải đoán)
 
     def _set_window(self, window) -> None:
         """
@@ -1654,3 +1659,7 @@ def _xep_hang_cac_ham_doc():
 
 
 _xep_hang_cac_ham_doc()
+
+
+# GT3-L2: cổng phân quyền ngoài cùng (sau mọi lớp bọc khác); chỉ có tác dụng khi đã có tài khoản.
+ap_dung_cong(PipelineAPI)

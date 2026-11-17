@@ -3003,3 +3003,9 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 #gt2ThuApDungXacNhan[hidden] { display: none; }
 .gt2-ad-ds { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 6px; }
 .gt2-ad-ds li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+/* GT3-L1: khối tài khoản ở thanh bên */
+.tk-thanh-ben { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.tk-thanh-ben[hidden] { display: none; }
+
+/* GT3-L2: vai giáo viên không thấy phần chỉ dành cho quản trị (cổng thật nằm ở backend). Chưa có tài khoản / quản trị: không đổi gì. */
+body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }

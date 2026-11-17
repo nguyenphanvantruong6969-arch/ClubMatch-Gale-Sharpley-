@@ -2190,6 +2190,32 @@ CREATE TABLE IF NOT EXISTS wharton_lock (
     locked_at TEXT,
     unlocked_at TEXT
 );
+
+-- GT3 (L1): tài khoản + vai. Bảng RỖNG = phần mềm chạy như cũ (không màn đăng nhập). `bam`/`muoi`:
+-- PBKDF2-SHA256 + muối; mật khẩu không bao giờ được lưu hay ghi nhật ký.
+CREATE TABLE IF NOT EXISTS tai_khoan (
+    ten TEXT PRIMARY KEY,
+    vai TEXT NOT NULL CHECK (vai IN ('quan_tri', 'giao_vien')),
+    bam BLOB NOT NULL,
+    muoi BLOB NOT NULL,
+    tao_luc TEXT NOT NULL
+);
+
+-- GT3 (L3): nhật ký thao tác (CHỈ THÊM). Hai trigger chặn UPDATE / DELETE. Chỉ có dòng khi đã có tài khoản.
+-- `chi_tiet`: tóm tắt tham số đã bỏ mọi thứ giống mật khẩu / mã bí mật, cắt ngắn (xem nhat_ky.py).
+CREATE TABLE IF NOT EXISTS nhat_ky_thao_tac (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    luc TEXT NOT NULL,
+    nguoi TEXT,
+    vai TEXT,
+    hanh_dong TEXT NOT NULL,
+    ket_qua TEXT NOT NULL,
+    chi_tiet TEXT
+);
+CREATE TRIGGER IF NOT EXISTS nhat_ky_thao_tac_khong_sua BEFORE UPDATE ON nhat_ky_thao_tac
+BEGIN SELECT RAISE(ABORT, 'nhat_ky_thao_tac chi duoc them dong'); END;
+CREATE TRIGGER IF NOT EXISTS nhat_ky_thao_tac_khong_xoa BEFORE DELETE ON nhat_ky_thao_tac
+BEGIN SELECT RAISE(ABORT, 'nhat_ky_thao_tac chi duoc them dong'); END;
 """
 
 # busy_timeout dai hon mac dinh (5s) — nhieu tien trinh cung mo app.db
