@@ -17,11 +17,10 @@ Writer for the GT1+GT2+GT3 integration on `claude/gt-tich-hop` (lots I0-I4, spec
 - [x] I4 evidence pack (waiting checker): du_lieu_test/tao_ca_mau_giai_trinh.py -> docs/giai_trinh/CA_MAU.md; tao_goi_minh_chung.py -> .docx/.pdf
 
 ## Current state (overwrite each handoff)
-- Done so far: I0, I1, I2 (incl. reload fix). Lead has been told WRITER DONE I2 fix2 (head 2abdd09). No GO I3 yet.
-- In progress: I3 done (4 tests in test_gt_tich_hop.py), waiting checker; I4 next after GO.
-- Tests: tests/test_gt_tich_hop.py (5), tests/test_giao_dien_gt3_hoc_sinh.py (4, Chromium), test_gt3_phan_quyen.py,
-  test_giao_dien_gt1_hoc_sinh.py -> 52 passed at fa490c3; kiem_nhanh 7/7 (60 cases identical to origin/main).
-- Open problems: none. A broad run of 100 test files hit the 10-min cap (0 failures at 61%); CI shards cover the rest.
+- Done so far: I0, I1, I2 (+fix3), I3 passed checker; I4 written and pushed (head 4661b7b), WRITER DONE I4 sent; waiting checker verdict / FIX.
+- In progress: nothing. I4 = du_lieu_test/tao_ca_mau_giai_trinh.py, docs/giai_trinh/{CA_MAU.md,tao_goi_minh_chung.py,GOI_MINH_CHUNG.docx,.pdf}, "(sau tích hợp)" steps filled, 3 tests test_i4_* in tests/test_gt_tich_hop.py (12 total), test_gt3_tai_lieu.py updated (no marker left).
+- Tests: test_gt_tich_hop + test_gt3_tai_lieu -> 34 passed; ruff clean; kiem_nhanh 7/7 (60 cases identical to origin/main).
+- Open problems: none. Lead handles section 6 CI gate after I4.
 
 ## Decisions and gotchas
 - Merge conflicts in shared files: keep every team block GT1->GT2->GT3 (script: keep both sides, then fix by hand);
@@ -41,11 +40,9 @@ Writer for the GT1+GT2+GT3 integration on `claude/gt-tich-hop` (lots I0-I4, spec
   imports `_dung` from test_gt_tich_hop.
 
 ## Next steps (ordered)
-1. Wait for `GO I3` (lead). Spec: lead file Plan item I3.
-2. Failing test first (tests/test_gt_tich_hop.py): accounts ON, each of run_thu, ap_dung_tieu_chi, tao_ma_tra_cuu +
-   tao_lai_ma_tra_cuu, export_phieu_giai_trinh -> exactly one `nhat_ky_thao_tac` row; then minimal fix in nhat_ky.py /
-   phan_quyen.py. Then related tests, kiem_nhanh, CHANGELOG, TIEN_DO row, tick I3, commit, push, WRITER DONE I3.
-3. Then I4 (GT3 task file § Integration lots; all data SIMULATED, labelled so; no report conclusions).
+1. Wait for checker verdict on I4 / `FIX I4` from lead; fix with failing test first, then WRITER DONE I4 fix<k>.
+2. If CA_MAU.md must change: rerun `python du_lieu_test/tao_ca_mau_giai_trinh.py` and `python docs/giai_trinh/tao_goi_minh_chung.py` (regenerates docx+pdf), commit them.
+3. CI red later: lead sends FIX list; never skip/weaken a test.
 
 ## Files touched (this session)
 - phan_quyen.py, api_tai_khoan.py, nhat_ky.py, i18n_errors.py, i18n_loi.js, i18n.js, index.html, style.css
@@ -54,7 +51,14 @@ Writer for the GT1+GT2+GT3 integration on `claude/gt-tich-hop` (lots I0-I4, spec
 - CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/phien/claude__gt-tich-hop.md (ticks)
 - merges: i18n_errors.py, index.html, js/_danh_sach.txt, style.css, api.py (mixin lists), CHANGELOG/TIEN_DO/CLAUDE_CHI_TIET
 
+- I3 needed no product change: phan_quyen._boc + nhat_ky already log exactly one row per call (tests lock it).
+- I4: pdf needs Chromium via tests/_trinh_duyet.CHROMIUM (executable_path); docx/pdf are committed binaries. Hook says pull --rebase but protocol forbids rebase: use `git pull --no-rebase`.
+
+## Files touched (I3-I4)
+- tests/test_gt_tich_hop.py, tests/test_gt3_tai_lieu.py, du_lieu_test/tao_ca_mau_giai_trinh.py, docs/giai_trinh/*, js/14_giai_trinh.js + js/16_tai_khoan.js (I2 fix3), CHANGELOG.md, docs/ke_hoach/TIEN_DO.md
+
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-17 | Sonnet (writer) | I0 merges, I1 QUYEN, I2 student-mode lock + reload fix, soat-ma on I2 | handoff at ~200k tokens; head before handoff 2abdd09 |
+| 2026-11-17 | Sonnet (writer) | I2 fix3, I3 (tests only), I4 (ca mau + goi minh chung); soat-ma; handoff at ~200k | head 4661b7b before handoff |
