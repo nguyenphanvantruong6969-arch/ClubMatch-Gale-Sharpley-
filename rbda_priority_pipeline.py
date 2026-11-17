@@ -2044,6 +2044,15 @@ CREATE TABLE IF NOT EXISTS giu_cho (
     PRIMARY KEY (club_id, student_id)
 );
 
+-- GT1-L4: mã tra cứu để học sinh tự xem lời giải thích của chính mình. Bảng MỚI như giu_cho: CREATE TABLE IF
+-- NOT EXISTS đã đủ cho CSDL cũ. Không khoá ngoại (xoá học sinh thì mã bị xoá trong api_quan_ly). Chỉ có dữ liệu
+-- sau khi người quản trị bấm tạo mã; mã không bao giờ đi vào thuật toán xếp.
+CREATE TABLE IF NOT EXISTS ma_tra_cuu (
+    student_id TEXT PRIMARY KEY,
+    ma TEXT NOT NULL,
+    tao_luc TEXT NOT NULL
+);
+
 -- Nhóm phòng của CLB Tự do (FA-DAA, FA-4): CHỈ GHI THÊM, như run_history (không khoá ngoại: là dấu vết
 -- của từng lần chạy). CREATE TABLE IF NOT EXISTS đã đủ cho CSDL cũ.
 CREATE TABLE IF NOT EXISTS fa_nhom (

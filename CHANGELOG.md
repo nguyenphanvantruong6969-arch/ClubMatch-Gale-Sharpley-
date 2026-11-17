@@ -1,5 +1,67 @@
 # CHANGELOG
 
+## 2026-11-16 — GT1 sửa lỗi CI (không đổi hành vi xếp)
+
+- `i18n.js`: `gt_the_ten` bỏ gạch ngang nối ("{ten} ({ma}), {cohort_l} {lop}"), `gt_khong_co` thành "Không có" / "None", tiếng Anh `gt_lan_chay` bỏ từ "seed".
+- `index.html` + `js/14_giai_trinh.js`: lớp phủ học sinh chỉ mang `role="dialog"` / `aria-modal` khi đang mở (trước đây luôn nằm trong DOM làm các test chờ hộp thoại treo).
+- `tests/test_ws_nhan.py`: thêm khối `GT1` vào danh sách mã mới sau ảnh chụp (`gt1_*`).
+
+## 2026-11-16 — GT1-L4 (mục cha C3): mã tra cứu và chế độ học sinh tự tra cứu
+
+Không đổi cách xếp (`kiem_nhanh` trùng khít). Số liệu MÔ PHỎNG.
+- Bảng MỚI `ma_tra_cuu(student_id PK, ma, tao_luc)` (`rbda_priority_pipeline.py`, sau khối `giu_cho`, `CREATE TABLE IF NOT EXISTS`;
+  không có dòng nào cho tới khi quản trị bấm tạo mã). Xoá học sinh / `reset_data` cũng xoá mã (`api_quan_ly.py`).
+- `ma_tra_cuu.py` (mới): mã 8 ký tự `secrets`, bảng chữ không ký tự dễ nhầm; không liên quan số khoá bốc thăm.
+- API (`api_xuat.py`, khối GT1-L4): `tao_ma_tra_cuu(chi_hs_chua_co=True)`, `tao_lai_ma_tra_cuu(student_id)`,
+  `export_ma_tra_cuu_csv(output_path, lop)`, `tra_cuu_hoc_sinh(student_id, ma)` (`hmac.compare_digest`; sai mã và mã học sinh lạ cùng
+  lỗi `gt1_ma_sai`; 5 lần sai → `gt1_tam_khoa` 60 giây theo từng mã học sinh, đồng hồ thay được `_gt1_dong_ho`). Lỗi mới: `gt1_ma_sai`,
+  `gt1_tam_khoa`, `gt1_chua_co_ma`. Phiếu in (L3) in mã của CHÍNH em khi đã có.
+- Giao diện: ba nút ở khung tra cứu (tạo mã, xuất CSV, "Chế độ học sinh tra cứu"); lớp phủ toàn màn hình, phần còn lại của ứng dụng
+  `inert`, 60 giây không thao tác thì xoá thẻ, thoát có hỏi lại (`js/14_giai_trinh.js`, `index.html`, `i18n.js` `gt_*`, `style.css`).
+- Test mới: `tests/test_gt1_ma_tra_cuu.py` (13 ca), `tests/test_giao_dien_gt1_hoc_sinh.py` (9 ca; fix1: phản hồi về muộn không hiện thẻ em trước cho em sau, `luotHs` huỷ khi gửi lại, hết giờ, mở, thoát).
+
+## 2026-11-16 — GT1-L3 (mục cha C3): phiếu giải trình in cho từng học sinh
+
+Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `phieu_giai_trinh.py` (mới, hàm thuần): MỘT tệp HTML tự đủ (CSS in, không địa chỉ ngoài, mọi giá trị qua `html.escape`), mỗi học sinh một trang:
+  mã, tên, lớp, bảng nguyện vọng của chính em, câu giải thích, cảnh báo "dữ liệu đã đổi" ở mọi trang, cách xin xem lại (số ngày chỉ khi
+  khiếu nại BẬT), chỗ trống cho mã tra cứu (L4).
+- API `export_phieu_giai_trinh(output_path="", student_ids=None, lop=None)` (`api_xuat.py`): dựng lại lần chạy MỘT lần
+  (`_giai_trinh_dung_lai`, tách từ `_giai_trinh_hoc_sinh`) rồi lặp; chỗ đặt theo `_duong_xuat` (không ghi đè); lỗi `gt1_chua_chay`,
+  `gt1_khong_co_hoc_sinh`.
+- Giao diện: hai nút "In phiếu cho học sinh này" / "In phiếu cả lớp" ở khung tra cứu (`js/14_giai_trinh.js`, `i18n.js` `gt_in_*`).
+- Test mới: `tests/test_gt1_phieu.py` (9 ca), thêm 1 ca vào `tests/test_giao_dien_gt1_tra_cuu.py`.
+
+## 2026-11-16 — GT1-L2 (mục cha C3): khung "Tra cứu một học sinh" ở thẻ Kết quả
+
+Chỉ ĐỌC (`kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `js/14_giai_trinh.js` (mới, thêm vào `js/_danh_sach.txt` và `index.html`, khối `<!-- GT1 -->`): ô tìm (có / không dấu), lọc theo lớp,
+  thẻ mỗi buổi: nguyện vọng, điểm của chính em, chỗ, mức vào được, câu giải thích, hàng được xếp tô nổi, cảnh báo "dữ liệu đã đổi".
+  Chữ vi/en trong `i18n.js` (`gt_*`); CSS cuối `style.css`.
+- `api_xuat.get_giai_trinh_hoc_sinh` thêm `ten`, `lop` của CHÍNH em; `search_students(query, lop=None)` thêm lọc lớp (mặc định như cũ).
+- Sửa vòng 1 (checker): chọn một em huỷ mọi lần tìm đang bay, kết quả tìm về muộn không vẽ lại danh sách (không lộ tên em khác).
+- Test mới: `tests/test_giao_dien_gt1_tra_cuu.py` (6 ca, Chromium).
+
+## 2026-11-16 — GT1-L1 (mục cha C3): động cơ giải trình một học sinh
+
+Chỉ ĐỌC, không đụng đường chạy (cấu hình mặc định giống từng byte: `kiem_nhanh` 60 ca trùng khít). Số liệu MÔ PHỎNG.
+- `giai_trinh.py` (mới): `giai_trinh_mot_hoc_sinh` (hàm thuần), `dung_du_lieu_run` (dựng lại lần chạy RB-DA trong bộ nhớ bằng bộ số
+  đã khoá; không ghi). Mã kết cục: ACCEPTED, HIGHER_CHOICE_ACCEPTED, FULL_SCORE, FULL_LOTTERY, FULL_GROUP, FULL_WHARTON, RESERVED, NOT_TESTED.
+- `fa_ly_do.cau_ly_do_rbda`: câu cho lần chạy thường (FA bật dùng lại `fa_ly_do` đã lưu).
+- API `get_giai_trinh_hoc_sinh(student_id, run_id=None)` (`api_xuat.py`): cờ `du_lieu_da_doi` (dấu vân tay khác, dựng lại khác kết quả
+  đã lưu); lỗi `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`, `gt1_khong_tim_thay_lan_chay` (`i18n_errors.py`, `i18n_loi.js` sinh lại).
+- Sửa vòng 1 (checker): mã NO_CHOICES cho em chưa đăng ký nguyện vọng; `run_id` cũ -> `gt1_lan_chay_cu`; `run_id` lạ -> `gt1_khong_tim_thay_lan_chay`.
+- Test mới: `tests/test_gt1_giai_trinh.py` (26 ca).
+
+## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
+
+Chỉ tài liệu, mã không đổi. Đối chiếu góp ý vòng trước với kho mã và chia việc cho 3 nhóm tự động (mỗi nhóm: Opus dẫn,
+Sonnet viết, Sonnet soát), chạy đến khi xong và CI xanh. Quyết định D-GT1…D-GT9 của Truong (15/11/2026), gồm duyệt đổi
+cấu trúc CSDL (quy tắc 7) cho `ma_tra_cuu`, `run_history.loai_chay`, `ket_qua_thu`, `tai_khoan`, `nhat_ky_thao_tac`.
+- Mới: `docs/ke_hoach/GT_KE_HOACH.md`, `docs/ke_hoach/gt/GT1_GIAI_TRINH.md`, `GT2_TIEU_CHI.md`, `GT3_QUYEN_TAI_LIEU.md`,
+  `docs/phien/GT_GIAO_THUC.md`, `docs/phien/claude__determined-allen-kig6ud.md`.
+- Test mới: không có (chỉ tài liệu).
+
 ## 2026-11-14 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
 
 Chỉ bộ chuyển đổi, kiosk không đổi. Tuỳ chọn MỚI, mặc định TẮT: không có nó thì đầu ra giống từng byte (`chuyen_fa_daa` trên đợt giả

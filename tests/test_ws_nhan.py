@@ -70,6 +70,13 @@ MA_MOI_SAU_ANH_CHUP = {
 
     # (spacer: unchanged line between marker blocks)
 
+    # === GT1 ===
+    "gt1_khong_co_hoc_sinh", "gt1_chua_chay", "gt1_lan_chay_cu", "gt1_khong_tim_thay_lan_chay",
+    "gt1_ma_sai", "gt1_tam_khoa", "gt1_chua_co_ma",
+    # === end GT1 ===
+
+    # (spacer: unchanged line between marker blocks)
+
     # === SG-B: add below ===
     "so_nhap_canh_bao_wharton_trong",
     "phieu_nd_phieu_thieu_cau_2", "phieu_nd_phieu_thieu_phong", "phieu_nd_phieu_thieu_cho", "phieu_nd_phieu_moc_sai", "phieu_nd_phieu_toi_thieu_sai", "phieu_nd_phieu_tu_do_co_ly_do_gioi_han", "phieu_nd_phieu_thieu_ly_do", "phieu_nd_phieu_thieu_cau_4", "phieu_nd_phieu_thu_thach_khong_tu_cham", "phieu_nd_phieu_thieu_tieu_chi", "phieu_nd_phieu_cho_duyet_tuyen_chon", "phieu_nd_phieu_nop_nhieu_lan", "phieu_nd_phieu_mac_dinh_ky_truoc", "phieu_clb_khong_co_clb_hop_le",

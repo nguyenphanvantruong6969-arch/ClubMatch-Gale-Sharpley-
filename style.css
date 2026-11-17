@@ -2982,3 +2982,17 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
   #kqBang td:not(.kq-cd) { min-width: 5em; }
   #kqBang th, #kqBang td { padding-left: 6px; padding-right: 6px; }
 }
+
+/* GT1: khung "Tra cứu một học sinh" */
+#gtLop[hidden] { display: none; }
+.gt-ds { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.gt-canh-bao { padding: 8px 12px; border-left: 4px solid #b45309; background: #fef3c7; color: #78350f; }
+.gt-duoc-xep td { font-weight: 600; background: #dcfce7; color: #14532d; }
+.gt-buoi { margin-top: 12px; }
+#gtIn[hidden], #btnGtInLop[hidden] { display: none; }   /* .search-row đặt display:flex nên đè thuộc tính hidden */
+
+/* GT1-L4: chế độ học sinh tự tra cứu (toàn màn hình) */
+.gt-hs { position: fixed; inset: 0; z-index: 10000; background: var(--paper); overflow: auto; }
+.gt-hs[hidden], #gtHsXacNhan[hidden] { display: none; }
+.gt-hs-khung { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+.gt-hs-loi { min-height: 1.5em; color: #b91c1c; margin: 8px 0; }

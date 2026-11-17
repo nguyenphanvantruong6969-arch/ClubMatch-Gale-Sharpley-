@@ -1365,5 +1365,33 @@ window.I18N_ERROR_MESSAGES = {
   "forms_tieu_de_trung": {
     "vi": "Đề thi có hai câu hoặc hai lựa chọn cùng chữ nên không phân biệt được trên biểu mẫu: {chi_tiet} Hãy đổi tên trong đề thi rồi sinh lại biểu mẫu.",
     "en": "The exam file has two questions or two options with the same wording, so they can't be told apart on the form: {chi_tiet} Rename them in the exam file, then generate the form again."
+  },
+  "gt1_khong_co_hoc_sinh": {
+    "vi": "Không tìm thấy học sinh này, hoặc chưa có học sinh nào được chọn.",
+    "en": "That student was not found, or no student was selected."
+  },
+  "gt1_chua_chay": {
+    "vi": "Chưa có lần xếp nào để giải thích. Hãy chạy xếp trước.",
+    "en": "There is no allocation run to explain yet. Run the allocation first."
+  },
+  "gt1_lan_chay_cu": {
+    "vi": "Chỉ giải thích được lần xếp mới nhất, vì kết quả các lần cũ không còn được lưu.",
+    "en": "Only the latest allocation run can be explained, because results of older runs are not stored."
+  },
+  "gt1_khong_tim_thay_lan_chay": {
+    "vi": "Không tìm thấy lần xếp này.",
+    "en": "That allocation run was not found."
+  },
+  "gt1_ma_sai": {
+    "vi": "Mã học sinh hoặc mã tra cứu chưa đúng. Hãy kiểm tra lại trên phiếu.",
+    "en": "The student ID or lookup code is not right. Please check the slip."
+  },
+  "gt1_tam_khoa": {
+    "vi": "Đã nhập sai quá nhiều lần. Hãy đợi một phút rồi thử lại.",
+    "en": "Too many wrong tries. Please wait a minute and try again."
+  },
+  "gt1_chua_co_ma": {
+    "vi": "Chưa tạo mã tra cứu nào. Hãy tạo mã trước.",
+    "en": "No lookup codes have been created yet. Create the codes first."
   }
 };
