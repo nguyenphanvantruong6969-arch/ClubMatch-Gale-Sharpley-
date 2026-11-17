@@ -48,3 +48,10 @@ the stale reply fires `tkPhien` with `che_do_hs: true` while `hsDangMo` is false
 not close it. Admin can recover by exiting again. Expected: ignore replies older than the exit (sequence counter in
 capNhat, or re-ask `get_phien_dang_nhap` before reopening, or close the overlay when `che_do_hs` is false and it was reopened by the poll).
 Real-world window is only a few ms per 30 s poll.
+
+## I2 fix3 | reviewed 2abdd09..cbcc10b | verdict: NO BUGS
+Stale-reply race re-run with the same scratch Chromium script (reply held 1.5 s): after admin exit and after polls settle,
+flag False, overlay hidden, app-shell not inert (was: overlay open + inert). js/16 request counter drops older replies;
+js/14 closes a poll-reopened overlay when che_do_hs is false. No regression: reload reopens overlay, no tab reachable,
+admin exit then tab active, accounts OFF unchanged. Tests 106 passed (hoc_sinh/tich_hop/gt3 tai_khoan+phan_quyen/UI gt1+gt3);
+kiem_nhanh 7/7 DAT. => I2 clean.
