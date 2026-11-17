@@ -36,7 +36,8 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 | lead | Opus | session_01YVAyu3PPHv9SNntepRSLwh | active |
 | writer | Sonnet | session_01YVAyu1MNvsxmVCMTkDDtfN | archived (handoff after L1, e4991a3) |
 | writer 2 | Sonnet | session_01YVAyu2JngdLXo2QUfsDamp | archived (handoff mid-L2, 3f5957c) |
-| writer 3 | Sonnet | session_01YVAyu2U827tpBVb8oi1vsW | active |
+| writer 3 | Sonnet | session_01YVAyu2U827tpBVb8oi1vsW | archived (handoff after L3, 9947e41) |
+| writer 4 | Sonnet | session_01YVAyu29HSdnV77Lo8qJeao | active |
 | checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | archived (handoff after L2 review, b34457c) |
 | checker 2 | Sonnet | session_01YVAyu11AFfpoJo5WWiwUja | active |
 
@@ -45,7 +46,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 
 ## Current state (overwrite each handoff)
 - Done: L1 passed checker (48ad9d8); L2 passed checker (e36fc60).
-- In progress: L3 (writer 3).
+- In progress: L3 under checker 2 review (5ae7003..1cca309).
 - Tests: —
 - Open problems: —
 
