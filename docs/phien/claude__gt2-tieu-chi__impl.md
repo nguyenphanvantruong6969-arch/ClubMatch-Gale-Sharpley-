@@ -7,36 +7,36 @@
 GT2 writer role: implement lots L1-L4 (criteria in plain words, trial runs, compare, adopt), one lot per `GO L<n>` from the lead.
 
 ## Plan (lead ticks after checker NO BUGS)
-- [x] L1 Criteria in plain words (passed; fixes 9b67a95, 48ad9d8)
-- [~] L2 Trial runs: code + tests + docs written, committed as WIP; related-test run NOT yet confirmed; `WRITER DONE L2` NOT yet sent
-- [ ] L3 Compare two runs
+- [x] L1 Criteria in plain words (passed)
+- [x] L2 Trial runs (passed; fix1 passed, lead ticked at 5ae7003)
+- [~] L3 Compare two runs: code, UI, tests, docs pushed at 1cca309; `WRITER DONE L3` sent; awaiting REVIEW/FIX
 - [ ] L4 Adopt a trial's criteria
 
 ## Current state (overwrite each handoff)
-- Done (L2, uncommitted before this handoff, committed now): `run_thu(rules_thu, chi_buoi=None)` in api_tieu_chi.py; schema `run_history.loai_chay` (CREATE + di_tru_schema ALTER) and table `ket_qua_thu` (SCHEMA + di_tru) in rbda_priority_pipeline.py; helpers `loc_chinh_thuc(cur)` / `run_chinh_thuc_moi_nhat(cur)` there; official readers filtered: api.get_run_history, api_xuat._doc_ly_do_moi_nhat, fa_sau_xep.run_goc_theo_buoi; error codes gt2_* in i18n_errors.py (+ i18n_loi.js regenerated); CHANGELOG, TIEN_DO row, CLAUDE_CHI_TIET count (301 files / 6.461 cases), Needs Truong line (FA trial unsupported).
-- Verified: tests/test_gt2_chay_thu.py 25 passed; ruff clean; kiem_nhanh 7/7, 60 cases identical.
-- NOT verified: the broad related-test run (48 files that grep run_history / di_tru_schema / sqlite_master / PRAGMA table_info) was started in background and unfinished. Re-run it: `F=$(grep -l "run_history\|di_tru_schema\|run_goc_theo_buoi\|_doc_ly_do_moi_nhat\|get_run_history\|sqlite_master\|PRAGMA table_info" tests/*.py)`; run quiet per protocol (can take >10 min; run in background). Fix any failure (likely: tests asserting exact table lists / run_history column order / di_tru_schema()==[] on new DB).
-- soat-ma four tiers (SKILL.md) not yet read through; only kiem_nhanh run.
+- L3 done and pushed (base 5ae7003, head 1cca309): `tieu_chi.so_sanh_lan_chay` + `dung_html_so_sanh`; API `list_lan_chay`, `so_sanh_lan_chay(run_a, run_b=None)`, `export_so_sanh_html`, `export_so_sanh_csv` in api_tieu_chi.py; UI panel `gt2ThuPanel` (index.html, js/15_tieu_chi.js, style.css, i18n.js keys gt2_thu_* / gt2_ss_*); error codes gt2_lan_chay_khong_co, gt2_so_sanh_lan_cu.
+- Verified: tests/test_gt2_so_sanh.py 9, tests/test_giao_dien_gt2_thu.py 4, related run 99 files all pass, kiem_nhanh 7/7, ruff clean. Not run: full suite (CI).
+- Extra fixes made in L3 commit: tests/test_ws_nhan.py GT2 code block (all gt2_* codes), index.html placeholder = catalog text, no `ORDER BY ... buoi` in SQL, no em dash in UI sentences.
 
 ## Decisions and gotchas
-- FA trial refused with gt2_thu_chua_ho_tro_fa (saved or trial fa_daa true); STB never drawn: missing numbers -> gt2_thu_stb_chua_day; needs official run + locked STB else gt2_chua_co_lan_chinh_thuc.
-- ket_qua_thu.rank_in_list = rank_in_student_pref of the assigned club.
-- Trial rules validated by cau_hinh_ws._chuan_hoa(tron_len(saved, {"rules": rules_thu}), kiem_trung=False); ValueError -> gt2_tieu_chi_khong_hop_le.
-- Official `MAX(run_id)` uses in api.py left as is (inside the official transaction, serialized by _khoa_ghi).
+- Official run comparison only for the LATEST official run (match_results holds only that); older -> gt2_so_sanh_lan_cu.
+- Only sessions present in both runs are compared. Cut-off = lowest club test score among admitted students who have one.
+- `hidden` attribute is overridden by `display:grid/flex`: needs CSS `[hidden]{display:none}` per id (done for gt2ThuChon, gt2ThuNut).
+- Repo checks that bite new UI/i18n: no dash joining sentences in i18n.js; index.html placeholder must equal the catalog; every new error code goes in tests/test_ws_nhan.py MA_MOI block.
+- Local branch can end up detached/stale after session restart: `git checkout claude/gt2-tieu-chi` then merge origin before pushing.
 - Env: .venv ready; .claude/phien_vai.json written (impl).
 
 ## Next steps (ordered)
-1. Run the related tests (above) and fix failures; run soat-ma tiers (report only).
-2. If green: amend nothing, commit fixes, `git pull --no-rebase && git push`, send `WRITER DONE L2` (format §7) to the lead.
-3. Wait for REVIEW/FIX L2 or GO L3.
+1. Wait for `REVIEW L3` / `FIX L3` or `GO L4` from the lead (spec: "Lot L4" in docs/ke_hoach/gt/GT2_TIEU_CHI.md).
+2. L4: button "Dung tieu chi nay..." saving a trial's `luat_xep` via `update_workspace_config` after a confirm showing the L1 description; tests/test_gt2_ap_dung.py; never copy trial results into match_results.
 
-## Files touched
-- api_tieu_chi.py, rbda_priority_pipeline.py, api.py, api_xuat.py, fa_sau_xep.py, i18n_errors.py, i18n_loi.js
-- tests/test_gt2_chay_thu.py
-- CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/phien/claude__gt2-tieu-chi.md (Needs Truong line)
+## Files touched (L3)
+- tieu_chi.py, api_tieu_chi.py, index.html, js/15_tieu_chi.js, style.css, i18n.js, i18n_errors.py, i18n_loi.js
+- tests/test_gt2_so_sanh.py, tests/test_giao_dien_gt2_thu.py, tests/test_ws_nhan.py
+- CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md (303 files / 6.478 cases)
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-17 | Sonnet (writer) | L1 implemented, tested, pushed, reported | context >200k, handed off |
 | 2026-11-17 | Sonnet (writer 2) | L1 fix1+fix2 passed; L2 coded and tested (25 new), WIP committed | related-test run unfinished; context >200k, handed off |
+| 2026-11-17 | Sonnet (writer 3) | L2 related run + fix1 passed; L3 coded, tested, pushed, reported | context >200k, handed off |
