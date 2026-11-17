@@ -44,6 +44,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 
 ## Needs Truong
 - GT2-L2: chạy thử chế độ huy chương (FA) chưa hỗ trợ — `run_thu` từ chối bằng `gt2_thu_chua_ho_tro_fa` vì đường FA (`fa_daa.chay_fa_daa`) đọc/ghi hồ sơ `fa_*` trong cùng đường chạy. Đề xuất: để sau, ngoài phạm vi 1 tuần.
+- GT2-L4 (thấp): lần chạy thử chỉ lưu tiêu chí dạng hiệu lực (`luat_xep`), không lưu nguyên văn tiêu chí đã chọn; khi "Dùng tiêu chí này", vài khóa không có tác dụng có thể bị lưu ở dạng chuẩn hoá (kết quả xếp vẫn y hệt). Muốn giữ nguyên văn cần thêm cột ngoài D-GT8. Đề xuất: giữ như hiện tại.
 
 ## Current state (overwrite each handoff)
 - Done: L1 passed checker (48ad9d8); L2 passed checker (e36fc60); L3 passed checker (1cca309); L4 passed checker (a41f7bc).
