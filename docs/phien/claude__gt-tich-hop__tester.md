@@ -35,3 +35,16 @@ JS re-opens the overlay, so even an admin cannot log in or exit the mode until t
 giao_vien login, vao_che_do_hoc_sinh(), reload page, try dang_nhap with admin -> refused. Expected: admin login/exit still
 reachable after reload (e.g. on load, if flag on, re-open the overlay via get_phien_dang_nhap/ a status field; or allow
 `dang_nhap` for quan_tri to clear the flag).
+
+## I2 fix1 | reviewed 67b2faf..fa490c3 | verdict: 1 BUG (low)
+Original bug FIXED: Chromium, accounts ON, student mode, reload -> overlay reopens by itself (flag True, no second
+vao_che_do_hoc_sinh), app-shell inert, `get_run_history` refused; admin exits through the reopened overlay and tabs work.
+Accounts OFF: `che_do_hs` is `bool(co and flag)` = False, unchanged. Tests 89 passed (hoc_sinh UI, tich_hop, gt3 tai_khoan/phan_quyen/UI); kiem_nhanh 7/7.
+BUG 2 (low; narrow timing): stale `get_phien_dang_nhap` response reopens the overlay after a legitimate admin exit.
+Repro (scratch Chromium script, response of get_phien held 1.5 s after backend answered): student mode, trigger a poll
+(`tkLamMoi`/30 s interval) -> backend answers `che_do_hs: true`; before it arrives admin exits (flag False, overlay closes);
+the stale reply fires `tkPhien` with `che_do_hs: true` while `hsDangMo` is false -> `js/14_giai_trinh.js` listener calls
+`moLopHs()`. Result: backend flag False but overlay open and app-shell inert; the later reply (`che_do_hs: false`) does
+not close it. Admin can recover by exiting again. Expected: ignore replies older than the exit (sequence counter in
+capNhat, or re-ask `get_phien_dang_nhap` before reopening, or close the overlay when `che_do_hs` is false and it was reopened by the poll).
+Real-world window is only a few ms per 30 s poll.
