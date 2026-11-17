@@ -3009,3 +3009,7 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 
 /* GT3-L2: vai giáo viên không thấy phần chỉ dành cho quản trị (cổng thật nằm ở backend). Chưa có tài khoản / quản trị: không đổi gì. */
 body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
+
+/* I2: đăng nhập quản trị để thoát chế độ học sinh */
+#gtHsQuanTri[hidden] { display: none; }
+.gt-hs-qt { margin-top: 12px; display: grid; gap: 8px; max-width: 360px; }

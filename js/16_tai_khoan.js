@@ -277,6 +277,7 @@
   function initTaiKhoan() {
     capNhat();
     setInterval(capNhat, CHU_KY_HOI_PHIEN_MS);
+    window.addEventListener("tkLamMoi", capNhat);     // I2: vừa thoát chế độ học sinh bằng tài khoản quản trị
     window.addEventListener("langchange", () => {
       veThanhBen();
       if (!lopPhu().hidden) { if (phien && phien.co_tai_khoan && !phien.dang_nhap) veManDangNhap(); else if (dangMoHop) veHop(); }

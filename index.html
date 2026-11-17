@@ -1340,6 +1340,14 @@
         <button type="button" class="btn btn-secondary" id="btnGtHsKhong" data-i18n="gt_hs_khong">Ở lại</button>
       </span>
     </div>
+    <!-- I2: có tài khoản thì thoát chế độ này cần đăng nhập quản trị -->
+    <form id="gtHsQuanTri" class="gt-hs-qt" autocomplete="off" hidden>
+      <p data-i18n="gt_hs_qt_huong_dan">Nhập tài khoản quản trị để thoát.</p>
+      <input type="text" id="gtHsQtTen" class="text-input" data-i18n-placeholder="tk_ten" placeholder="Tên tài khoản" autocomplete="off">
+      <input type="password" id="gtHsQtMk" class="text-input" data-i18n-placeholder="tk_mat_khau" placeholder="Mật khẩu" autocomplete="off">
+      <button type="submit" class="btn btn-primary" id="btnGtHsQtThoat" data-i18n="gt_hs_co">Thoát</button>
+      <div id="gtHsQtLoi" class="gt-hs-loi" role="alert"></div>
+    </form>
   </div>
 </div>
 <script src="i18n_loi.js"></script>

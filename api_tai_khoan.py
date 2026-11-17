@@ -31,6 +31,7 @@ class TaiKhoanMixin:
         self._dong_ho = time.monotonic
         self._dang_nhap = tk.TrangThaiDangNhap(lambda: self._dong_ho())
         self._co_tk_lui = {}           # {đường dẫn CSDL: mốc monotonic trước đó không làm mới lại}
+        self._che_do_hs = False        # I2: đang ở chế độ học sinh tự tra cứu (chỉ có nghĩa khi có tài khoản)
         self._co_tk_nho = {}           # {đường dẫn CSDL: có tài khoản?} — lần đọc thành công gần nhất (cổng L2)
 
     # ------------------------------------------------------------- nội bộ
@@ -181,6 +182,34 @@ class TaiKhoanMixin:
             self._dang_nhap.xoa_dem(ten_sach)
             self._dang_nhap.bat_dau(dong[0], dong[1], self.db_path)
             return _ok({"ten": dong[0], "vai": dong[1]})
+        except Exception as e:
+            return _fail(err("gt3_loi_tai_khoan", detail=str(e)))
+
+    def vao_che_do_hoc_sinh(self):
+        """I2: giao diện vào chế độ học sinh tự tra cứu. Có tài khoản: từ đây chỉ `tra_cuu_hoc_sinh` (và thoát) còn
+        chạy được cho tới khi một quản trị đăng nhập lại. Chưa có tài khoản: không khoá gì (như cũ)."""
+        try:
+            khoa = self._co_tai_khoan()
+            self._che_do_hs = khoa
+            return _ok({"khoa": khoa})
+        except Exception as e:
+            return _fail(err("gt3_loi_tai_khoan", detail=str(e)))
+
+    def thoat_che_do_hoc_sinh(self, ten, mat_khau):
+        """I2: thoát chế độ học sinh. Có tài khoản: cần đăng nhập đúng một tài khoản QUẢN TRỊ; mọi lý do không
+        vào được đều trả cùng một lỗi (không lộ phần nào sai); tên, mật khẩu không bao giờ vào nhật ký."""
+        try:
+            if not self._co_tai_khoan():
+                self._che_do_hs = False
+                return _ok(None)
+            r = self.dang_nhap(ten, mat_khau)
+            if not r.get("ok"):
+                return r
+            if r["data"]["vai"] != tk.VAI_QUAN_TRI:
+                self._dang_nhap.ket_thuc()          # đúng mật khẩu nhưng không phải quản trị: không để lại phiên
+                return _fail(err("gt3_sai_thong_tin"))
+            self._che_do_hs = False
+            return r
         except Exception as e:
             return _fail(err("gt3_loi_tai_khoan", detail=str(e)))
 

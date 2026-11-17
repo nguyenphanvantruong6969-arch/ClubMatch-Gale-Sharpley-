@@ -27,7 +27,7 @@ QUAN_TRI = "quan_tri"
 
 # Hàm tự kiểm quyền bên trong (api_tai_khoan.py): tài khoản đầu tiên không cần đăng nhập, v.v.
 _CONG_KHAI = ("dang_nhap dang_xuat get_phien_dang_nhap tao_tai_khoan doi_mat_khau\n"
-              " tra_cuu_hoc_sinh").split()  # I1: học sinh tự tra cứu (GT1)
+              " tra_cuu_hoc_sinh thoat_che_do_hoc_sinh").split()  # I1/I2: học sinh tự tra cứu (GT1)
 
 # Chỉ đọc, xuất, và việc của giáo viên (nhập điểm, điểm danh, nhập hộ học sinh tại chỗ, khiếu nại / phản hồi).
 _GIAO_VIEN = """
@@ -49,7 +49,7 @@ list_wharton_admin list_wharton_canh_bao list_workspaces luu_diem_danh mo_thu_mu
 preview_import_csv search_students submit_club_scores submit_huy_chuong submit_person_scores
 submit_preferences submit_test_selection tai_mau_de_thi tao_so_nhap_mau xem_truoc_so_nhap xlsx_to_csv_text
 xuat_ket_qua_list
-get_giai_trinh_hoc_sinh export_phieu_giai_trinh
+get_giai_trinh_hoc_sinh export_phieu_giai_trinh vao_che_do_hoc_sinh
 """.split()  # I1: GT1 tra cứu / phiếu
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.
@@ -75,6 +75,9 @@ for _ten in _QUAN_TRI:
     QUYEN.setdefault(_ten, QUAN_TRI)
 del _ten
 
+# I2: khi (có tài khoản và) đang ở chế độ học sinh, CHỈ các hàm này chạy được, bất kể phiên đăng nhập nào.
+_HS_DUOC = frozenset(("tra_cuu_hoc_sinh", "thoat_che_do_hoc_sinh", "get_phien_dang_nhap"))
+
 _TL = threading.local()
 
 
@@ -82,6 +85,8 @@ def _xet(api, ten: str):
     """`(co_tai_khoan, phien, loi)`: `loi` là phản hồi lỗi đầy đủ hoặc None (được làm)."""
     muc = QUYEN.get(ten)
     co = api._co_tai_khoan_nho()
+    if co and getattr(api, "_che_do_hs", False) and ten not in _HS_DUOC:
+        return True, None, _fail(err("gt3_che_do_hoc_sinh"))
     if muc == CONG_KHAI:
         return co, (api._dang_nhap.phien_hien_tai(api.db_path) if co else None), None
     if not co:

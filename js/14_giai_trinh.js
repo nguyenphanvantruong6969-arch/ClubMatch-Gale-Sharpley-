@@ -198,6 +198,7 @@
     el("gtHsLoi").textContent = "";
     el("gtHsMa").value = "";
     el("gtHsMaTra").value = "";
+    el("gtHsQtMk").value = "";
   }
 
   function datHenGio() {
@@ -217,7 +218,19 @@
     });
   }
 
+  let vaoXong = Promise.resolve({ ok: true, data: { khoa: false } });   // phản hồi của vao_che_do_hoc_sinh
+
   function moHs() {
+    /* I2: mở lớp phủ ngay (như trước); có tài khoản thì backend khoá mọi hàm trừ tra cứu của học sinh. Backend
+       từ chối (phiên hết hạn...) thì đóng lại. */
+    moLopHs();
+    vaoXong = callApi("vao_che_do_hoc_sinh");
+    vaoXong.then((res) => {
+      if (!res.ok && hsDangMo) { thoatHs(); showErrorToast(res.errors); }
+    });
+  }
+
+  function moLopHs() {
     hsDangMo = true;
     xoaThe();
     el("gtHsXacNhan").hidden = true;
@@ -225,6 +238,7 @@
     /* role chỉ có khi đang mở: nơi khác (và test) coi mọi [role=dialog] trong DOM là hộp thoại đang hiện. */
     el("gtHs").setAttribute("role", "dialog");
     el("gtHs").setAttribute("aria-modal", "true");
+    el("gtHsQuanTri").hidden = true;
     el("gtHs").hidden = false;
     el("gtHsMa").focus();
     datHenGio();
@@ -243,7 +257,35 @@
   el("btnGtCheDoHs").addEventListener("click", moHs);
   el("btnGtHsThoat").addEventListener("click", () => { el("gtHsXacNhan").hidden = false; });
   el("btnGtHsKhong").addEventListener("click", () => { el("gtHsXacNhan").hidden = true; });
-  el("btnGtHsCo").addEventListener("click", thoatHs);
+  /* I2: không có tài khoản thì thoát như cũ; có tài khoản thì hỏi tài khoản quản trị (backend mới là nơi quyết định). */
+  function laiPhien() { window.dispatchEvent(new Event("tkLamMoi")); }
+  el("btnGtHsCo").addEventListener("click", () => {
+    vaoXong.then((v) => {
+      if (v.ok && v.data.khoa) {
+        el("gtHsXacNhan").hidden = true;
+        el("gtHsQtLoi").textContent = "";
+        el("gtHsQuanTri").hidden = false;
+        el("gtHsQtTen").focus();
+        return;
+      }
+      if (!v.ok) return;                                  // lớp phủ đã đóng ở moHs
+      thoatHs();
+      callApi("thoat_che_do_hoc_sinh", "", "");           // không có tài khoản: chỉ để backend xoá cờ
+    });
+  });
+  el("gtHsQuanTri").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ten = el("gtHsQtTen").value;
+    const mk = el("gtHsQtMk").value;
+    el("gtHsQtMk").value = "";                    // mật khẩu không nằm lại trên màn hình
+    el("gtHsQtLoi").textContent = "";
+    callApi("thoat_che_do_hoc_sinh", ten, mk).then((res) => {
+      if (!res.ok) { el("gtHsQtLoi").textContent = trErrs(res.errors).join(" "); return; }
+      el("gtHsQtTen").value = "";
+      thoatHs();
+      laiPhien();
+    });
+  });
   ["input", "click", "keydown", "pointerdown"].forEach((ev) => el("gtHs").addEventListener(ev, datHenGio));
   el("gtHsForm").addEventListener("submit", (e) => {
     e.preventDefault();

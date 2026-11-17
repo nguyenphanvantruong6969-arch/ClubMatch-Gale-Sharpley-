@@ -22,6 +22,7 @@ _CHI_GIU = {
     "tao_tai_khoan": ("ten", "vai"),
     "xoa_tai_khoan": ("ten",),
     "doi_mat_khau": (),
+    "thoat_che_do_hoc_sinh": (),      # I2: tên gõ vào có thể là mật khẩu gõ nhầm ô
 }
 _GIOI_HAN_GIA_TRI = 80
 _GIOI_HAN_TONG = 300

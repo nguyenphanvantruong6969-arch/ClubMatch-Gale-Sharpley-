@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-17 — I2 (tích hợp GT1+GT2+GT3): chế độ học sinh khoá ở backend khi có tài khoản
+
+- `api_tai_khoan.py`: `vao_che_do_hoc_sinh` (giáo viên trở lên; đặt cờ khi CÓ tài khoản) và `thoat_che_do_hoc_sinh(ten, mat_khau)` (công khai; có tài khoản thì chỉ tài khoản quản trị mới thoát được, mọi lý do không vào được trả cùng `gt3_sai_thong_tin`; tên và mật khẩu không vào nhật ký). Không có tài khoản: không khoá gì, như cũ.
+- `phan_quyen.py`: khi cờ bật, chỉ `tra_cuu_hoc_sinh`, `thoat_che_do_hoc_sinh`, `get_phien_dang_nhap` chạy được, bất kể phiên đăng nhập (lỗi mới `gt3_che_do_hoc_sinh` trong `i18n_errors.py`).
+- `js/14_giai_trinh.js`, `index.html`, `i18n.js`, `style.css`, `js/16_tai_khoan.js`: nút Thoát hỏi tài khoản quản trị khi có tài khoản; sau khi thoát giao diện cập nhật phiên ngay.
+- Tests mới: `tests/test_gt_tich_hop.py` (5), `tests/test_giao_dien_gt3_hoc_sinh.py` (3, Chromium). Không đổi hành vi xếp.
+
 ## 2026-11-17 — I1 (tích hợp GT1+GT2+GT3): bảng quyền cho hàm GT1/GT2
 
 - `phan_quyen.py`: `tra_cuu_hoc_sinh` → công khai; `get_giai_trinh_hoc_sinh`, `export_phieu_giai_trinh` → giáo viên; `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`, `export_ma_tra_cuu_csv` và 7 hàm GT2 (`get_tieu_chi`, `run_thu`, `list_lan_chay`, `so_sanh_lan_chay`, `export_so_sanh_html`, `export_so_sanh_csv`, `ap_dung_tieu_chi`) → quản trị (danh sách so sánh lộ kết quả học sinh khác).

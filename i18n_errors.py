@@ -1551,6 +1551,10 @@ MESSAGES = {
         "vi": "Cần đăng nhập để làm việc này.",
         "en": "Sign-in is required to do this.",
     },
+    "gt3_che_do_hoc_sinh": {
+        "vi": "Máy đang ở chế độ học sinh tự xem kết quả. Chỉ người quản trị mới thoát được.",
+        "en": "This device is in student self-lookup mode. Only an administrator can leave it.",
+    },
     "gt3_khong_du_quyen": {
         "vi": "Tài khoản này không có quyền làm việc này. Hãy nhờ người quản trị.",
         "en": "This account is not allowed to do this. Ask an administrator.",
