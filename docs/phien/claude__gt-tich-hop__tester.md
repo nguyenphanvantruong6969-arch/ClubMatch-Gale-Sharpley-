@@ -55,3 +55,18 @@ flag False, overlay hidden, app-shell not inert (was: overlay open + inert). js/
 js/14 closes a poll-reopened overlay when che_do_hs is false. No regression: reload reopens overlay, no tab reachable,
 admin exit then tab active, accounts OFF unchanged. Tests 106 passed (hoc_sinh/tich_hop/gt3 tai_khoan+phan_quyen/UI gt1+gt3);
 kiem_nhanh 7/7 DAT. => I2 clean.
+
+## I3 | reviewed 2d0a068..d9a3f50 | verdict: NO BUGS (2 notes)
+Diff is tests + docs only (no product code). Tests: test_gt_tich_hop, gt3_nhat_ky, gt3_phan_quyen, gt2_ap_dung: 69 passed; kiem_nhanh 7/7.
+(1) Own script, accounts ON: tao_lai_ma_tra_cuu, run_thu, export_phieu_giai_trinh, tao_ma_tra_cuu, export_ma_tra_cuu_csv each leave exactly
+one row; ap_dung_tieu_chi leaves one row and none for nested update_workspace_config (repo test).
+(2) chi_tiet: no password (a `mat_khau` key inside the trial rules is dropped), no lookup code (new code from tao_lai_ma_tra_cuu not in
+any row), no student name, no score. NOTE A: chi_tiet DOES hold student ids that are arguments: `{"student_id":"s1"}` for
+tao_lai_ma_tra_cuu and `{"student_ids":["s1","s2"]}` for export_phieu_giai_trinh. Ids are not secret and the table is admin-only
+and useful for audit; lead asked for "no student id other than the actor" -> decide; if strict, drop/redact these keys in nhat_ky.
+(3) Refused calls: giao_vien run_thu/ap_dung_tieu_chi/tao_ma_tra_cuu -> one row each, ket_qua gt3_khong_du_quyen, nguoi gv1;
+logged-out caller -> one row with nguoi NULL, gt3_can_dang_nhap (GT3 rule). NOTE B (pre-existing GT3, not I3): anonymous calls
+can append unlimited NULL rows (log flooding); table is append-only.
+(4) Accounts OFF: no row written for any of these (same as GT3 DONE); kiem_nhanh 7/7.
+(5) Mutation (monkeypatched `nhat_ky._KHONG_GHI` per method): removing logging for run_thu -> 4 tests fail; ap_dung_tieu_chi ->
+1; tao_lai_ma_tra_cuu -> 3; export_phieu_giai_trinh -> 2. The tests do fail without the wrapper.
