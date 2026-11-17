@@ -27,6 +27,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 - All lots: Windows CI console is cp1252 — any CLI print must reconfigure stdout to UTF-8; tests spawning CLIs decode with `encoding="utf-8"`.
 - L1: user-facing text plain Vietnamese, no internal codes; the fixed "không dùng thứ hạng nguyện vọng…" note is mandatory.
 - L2: re-grep `run_history` / `MAX(run_id)` / `ORDER BY run_id` in ALL .py files (not only those listed) before coding; prefer one helper `run_chinh_thuc_moi_nhat(cur)`. Trial must never redraw or relock STB.
+- L2 (lead decision 2026-11-17): rules_thu keys must be ⊆ LUAT_XEP_MAC_DINH; FA refusal decided on merged effective rules.
 - L2 FA: if the FA solver cannot take a rules override without touching `fa_*`, refuse with `gt2_thu_chua_ho_tro_fa` and add a Needs Truong line.
 
 ## Sessions
@@ -36,14 +37,15 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 | writer | Sonnet | session_01YVAyu1MNvsxmVCMTkDDtfN | archived (handoff after L1, e4991a3) |
 | writer 2 | Sonnet | session_01YVAyu2JngdLXo2QUfsDamp | archived (handoff mid-L2, 3f5957c) |
 | writer 3 | Sonnet | session_01YVAyu2U827tpBVb8oi1vsW | active |
-| checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | active |
+| checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | archived (handoff after L2 review, b34457c) |
+| checker 2 | Sonnet | session_01YVAyu11AFfpoJo5WWiwUja | active |
 
 ## Needs Truong
 - GT2-L2: chạy thử chế độ huy chương (FA) chưa hỗ trợ — `run_thu` từ chối bằng `gt2_thu_chua_ho_tro_fa` vì đường FA (`fa_daa.chay_fa_daa`) đọc/ghi hồ sơ `fa_*` trong cùng đường chạy. Đề xuất: để sau, ngoài phạm vi 1 tuần.
 
 ## Current state (overwrite each handoff)
 - Done: L1 passed checker (48ad9d8).
-- In progress: L2 (writer 2).
+- In progress: L2 FIX round 1 (writer 3): FA refusal on merged rules; rules_thu keys ⊆ LUAT_XEP_MAC_DINH.
 - Tests: —
 - Open problems: —
 
