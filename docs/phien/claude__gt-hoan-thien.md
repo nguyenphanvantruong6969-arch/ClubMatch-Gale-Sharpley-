@@ -23,7 +23,7 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | L0 official-only reader (R0) | READY 9546761 | 9546761 | 1 | `_giai_trinh_dung_lai` now filters via loc_chinh_thuc; test fails on old code (4/4). Try: other readers of run_history (list in CHANGELOG), trial then lookup/slip. |
 | L1 audit log hygiene (R1) | READY 5605535 | 5605535 | 1 | lookup rows: only student_id (guarded: real id only), nguoi/vai NULL; `ma` hidden everywhere; get_giai_trinh_hoc_sinh logged. Try: scan nhat_ky CSV after wrong/right codes, teacher view = 1 row. |
 | L2 controls match the role (R3) | READY 8316d81 | 8316d81 | 1 | vao_che_do_hoc_sinh now quan_tri; data-quyen on GT3 buttons + create-student row, btnChayVong2, wharton save, reset/delete student. Sweep test fails on old code. Skipped: JS-generated list buttons (xu_ly_khieu_nai, tra_loi_moi). Try: teacher walk-through of every tab. |
-| L3 account setup + recovery (R2, R4) | TODO | | 0 | |
+| L3 account setup + recovery (R2, R4) | READY d824937 | d824937 | 1 | retype+show/hide in 3 forms, next-steps card, warning; `main.py --xoa-tai-khoan` (recovery.chay_xoa_tai_khoan_dong_lenh) + QUEN_MAT_KHAU.bat, copied by build_windows.bat + workflow. Exe/bat NOT testable on Linux. Try: wrong confirmation, no-path default scan of workspaces. |
 | L4 explanations cannot be misread (R5, R6) | TODO | | 0 | |
 | L5 student screen + lookup placement (R9) | TODO | | 0 | |
 | L6 readable audit log (R7) | TODO | | 0 | |
@@ -32,7 +32,7 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | Gate: ruff + kiem_nhanh + tests + CI green | TODO | | 0 | |
 
 ## Current state (overwrite each handoff)
-- Done so far: L0, L1, L2 READY.
+- Done so far: L0, L1, L2, L3 READY.
 - In progress:
 - Tests: baseline on the base commit = `tests/test_gt*` + `tests/test_giao_dien_gt*` green, ruff clean, kiem_nhanh 7/7.
 - Open problems:
