@@ -146,3 +146,25 @@ Own full-table dump (dataset 0, wharton off) before/after run_thu:
 - keys max_tests / fa_duong / "điểm" -> gt2_tieu_chi_khong_hop_le naming the key, nothing written. (note fixed)
 - empty trial and tiers with diacritics run fine. Saved FA + {fa_daa:False} on data without Wharton profiles fails with the
   same wharton_* data errors as the official run would (by design, no write).
+
+## L3 | reviewed 5ae7003..1cca309 | verdict: NO BUGS
+
+Tests: 208 passed (gt2 L1+L2+L3 incl. Chromium, test_ws_nhan). `kiem_nhanh.py --co-so 5ae7003 --so-seed 20` -> 7/7 DAT.
+Verified (own scripts, fake data):
+- Hand-recomputed 10-student fixture (2 clubs, 2 groups, 2 classes): totals A 8/10 assigned, 40% 1st, 70% top3, mean rank 1.88;
+  B 8/10, 50%, 70%, 1.75; cut-offs C1 5->4, C2 3->3; per group G1/G2 and per class 10A/10B all equal my hand numbers.
+  Percentages are over ALL slots (unassigned included); mean rank over assigned only (consistent, documented in code).
+- Changed list == direct diff: pure fixture (assigned<->unassigned included) and real DB (3 datasets x 2 trials: 4/66/75/48/49
+  changes; API list == SQL diff of match_results vs ket_qua_thu). Self vs self and official vs official = 0 changes.
+  Sessions: only sessions present in BOTH runs are compared (buoi_chung); n counts only those. Empty rows -> None, no crash.
+- Errors: unknown/bool/str/None run id -> gt2_lan_chay_khong_co; no official run -> gt2_chua_co_lan_chinh_thuc (also exports);
+  old official id after a 2nd official run -> gt2_so_sanh_lan_cu (no invented numbers). list_lan_chay shows latest official + trials.
+- Writes: full-table dump before/after compare + both exports: nothing changed. HTML: one file, no external refs, escaped
+  (`<script>` + quotes + & in a name -> &lt;script&gt; in the changed-students table), labels "Chạy thử số n"/"Chính thức số n".
+  CSV: UTF-8 BOM, header student_id,ho_ten,lop,buoi,clb_a,clb_b. UI uses textContent only; no internal codes in i18n text.
+- Test fixes (item 6): diff 5ae7003..1cca309 on tests/ is INSERT-ONLY (new files + 7 added lines in test_ws_nhan = GT2 codes
+  added to the expected set). index.html placeholder fix is product text, not a weakened test.
+- FA on (saved fa_daa+wharton): list/compare run, read-only. No official run: refused cleanly.
+Notes (non-blocking): (a) HTML export text is Vietnamese only (no English variant); (b) so_sanh_lan_chay returns the student
+list to any caller of the admin API (same as other admin APIs; accounts/roles arrive with GT3 integration I1) — nothing in a
+student-facing path calls it (grep: only js/15_tieu_chi.js admin panel).
