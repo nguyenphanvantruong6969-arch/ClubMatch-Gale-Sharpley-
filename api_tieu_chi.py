@@ -27,6 +27,7 @@ from rbda_priority_pipeline import (
     load_from_sqlite_kem_dau_van_tay,
     load_from_sqlite_kem_dau_van_tay_wharton,
     luat_xep_cua,
+    luat_xep_hieu_luc,
     luat_xep_de_ghi,
     nhom_theo_buoi,
     run_chinh_thuc_moi_nhat,
@@ -353,3 +354,31 @@ class TieuChiMixin:
             return _ok({"path": duong, "so_doi": kq["so_doi"]})
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
+    # ------------------------------------------------------------------------------------------
+    # L4 — dùng tiêu chí của một lần chạy thử cho lần chính thức kế tiếp (chỉ lưu cấu hình)
+    # ------------------------------------------------------------------------------------------
+    def ap_dung_tieu_chi(self, run_id, slug=""):
+        """Lưu luật xếp của MỘT lần chạy thử vào cấu hình workspace (qua `update_workspace_config`,
+        giữ nguyên mọi khoá ngoài tiêu chí). KHÔNG chạy xếp, KHÔNG chép kết quả thử vào bảng chính
+        thức: kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức. Chỉ nhận lần chạy THỬ."""
+        try:
+            with self._ket_noi_doc() as cur:
+                cot = {r[1] for r in cur.execute("PRAGMA table_info(run_history)")}
+                dong = None
+                if "loai_chay" in cot and isinstance(run_id, int) and not isinstance(run_id, bool):
+                    dong = cur.execute(
+                        "SELECT luat_xep FROM run_history WHERE run_id = ? AND loai_chay = 'thu'",
+                        (run_id,)).fetchone()
+        except Exception as e:
+            return _fail(err("error_reading_results", detail=str(e)))
+        if dong is None:
+            return _fail(err("gt2_lan_chay_khong_co", run_id=str(run_id)))
+        luat = luat_xep_hieu_luc(self._luat_tu_dong(dong))
+        rules = {k: luat[k] for k in LUAT_XEP_MAC_DINH if k in luat}
+        kq = self.update_workspace_config({"rules": rules}, slug)
+        if not kq.get("ok"):
+            return kq
+        return _ok({"run_id": run_id, "luat": rules,
+                    "mo_ta": tieu_chi.mo_ta_tieu_chi(rules, "vi"),
+                    "mo_ta_en": tieu_chi.mo_ta_tieu_chi(rules, "en")})

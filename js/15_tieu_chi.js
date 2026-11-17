@@ -161,6 +161,68 @@ function gt2SsVeLuaChon() {
   });
 }
 
+/* ---- GT2-L4: dùng tiêu chí của một lần chạy thử. Chỉ LƯU cấu hình; không chạy, không chép kết quả. ---- */
+function gt2AdTomTat(x) {
+  const mo = gt2TcLang() === "en" ? x.mo_ta_en : x.mo_ta;
+  return mo.filter((m) => m.nhom !== "khong_dung").map((m) => m.chu);
+}
+
+function gt2AdVeDanhSach() {
+  const ds = gt2SsDs ? gt2SsDs.thu : [];
+  el("gt2ThuApDung").hidden = !ds.length;
+  const ul = el("gt2ThuApDungDs");
+  clear(ul);
+  ds.forEach((x) => {
+    const li = document.createElement("li");
+    const ten = document.createElement("span");
+    ten.textContent = gt2SsNhan(x);
+    const nut = document.createElement("button");
+    nut.type = "button";
+    nut.className = "btn";
+    nut.dataset.runId = String(x.run_id);
+    nut.textContent = t("gt2_ad_nut");
+    nut.addEventListener("click", () => gt2AdHoi(x));
+    li.appendChild(ten);
+    li.appendChild(nut);
+    ul.appendChild(li);
+  });
+}
+
+function gt2AdHoi(x) {
+  const bar = el("gt2ThuApDungXacNhan");
+  clear(bar);
+  bar.hidden = false;
+  const tieuDe = document.createElement("p");
+  tieuDe.textContent = t("gt2_ad_hoi", { id: x.run_id });
+  const ol = document.createElement("ol");
+  gt2AdTomTat(x).forEach((chu) => {
+    const li = document.createElement("li");
+    li.textContent = chu;
+    ol.appendChild(li);
+  });
+  const dong = document.createElement("button");
+  dong.type = "button";
+  dong.className = "btn btn-primary";
+  dong.id = "gt2ThuApDungXacNhanNut";
+  dong.textContent = t("gt2_ad_xac_nhan");
+  dong.addEventListener("click", () => chayNut(dong, () => callApi("ap_dung_tieu_chi", x.run_id), (res) => {
+    bar.hidden = true;
+    const o = el("gt2ThuApDungPhanHoi");
+    if (!res.ok) {
+      feedbackErrors(o, res.errors);
+      return;
+    }
+    feedback(o, t("gt2_ad_da_luu"), false);
+    return taiTieuChi();
+  }));
+  const huy = document.createElement("button");
+  huy.type = "button";
+  huy.className = "btn";
+  huy.textContent = t("gt2_ad_huy");
+  huy.addEventListener("click", () => { bar.hidden = true; });
+  [tieuDe, ol, dong, huy].forEach((n) => bar.appendChild(n));
+}
+
 function gt2SsTai(chonLai) {
   return callApi("list_lan_chay").then((res) => {
     if (!res.ok) {
@@ -169,6 +231,7 @@ function gt2SsTai(chonLai) {
     }
     gt2SsDs = res.data;
     gt2SsVeLuaChon();
+    gt2AdVeDanhSach();
     if (chonLai && gt2SsDs.chinh_thuc) {
       el("gt2ThuB").value = String(gt2SsDs.chinh_thuc.run_id);
       if (gt2SsDs.thu.length) el("gt2ThuA").value = String(gt2SsDs.thu[0].run_id);
@@ -299,6 +362,8 @@ function khoiTaoThuCauHinh() {
   el("gt2ThuXuatHtml").addEventListener("click", () => gt2SsXuat("export_so_sanh_html", "gt2_thu_xuat_html"));
   el("gt2ThuXuatCsv").addEventListener("click", () => gt2SsXuat("export_so_sanh_csv", "gt2_thu_xuat_csv"));
   window.addEventListener("langchange", () => {
+    el("gt2ThuApDungXacNhan").hidden = true;
+    gt2AdVeDanhSach();
     gt2SsVeLuaChon();
     gt2SsVeKetQua();
   });

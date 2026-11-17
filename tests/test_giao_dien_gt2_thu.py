@@ -5,6 +5,7 @@ một lần; chưa có lần chính thức thì báo dễ hiểu; tên có thẻ
 so sánh; không có `undefined` / `NaN` / `[object Object]`."""
 
 import os
+import shutil
 import sqlite3
 import sys
 
@@ -15,6 +16,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 
 import browser_host  # noqa: E402
 import cau_hinh_ws  # noqa: E402
+import workspace as ws  # noqa: E402
 from api import PipelineAPI  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,7 +49,13 @@ def mo(tmp_path):
                   (XSS,))
         c.commit()
         c.close()
-        api = PipelineAPI(db)
+        goc = str(tmp_path / "goc")                  # chế độ workspace: lưu tiêu chí (L4) cần nó
+        os.makedirs(goc)
+        slug = ws.tao(goc, "Thu tieu chi", {})
+        shutil.copyfile(db, ws.duong_dan_db(goc, slug))
+        db = ws.duong_dan_db(goc, slug)
+        api = PipelineAPI(db, thu_muc_goc_ws=goc)
+        assert api.open_workspace(slug)["ok"]
         if chay:
             assert api.run_pipeline(seed=42)["ok"]
         url = browser_host.serve(api, GOC, "index.html", open_browser=False)
@@ -134,4 +142,27 @@ def test_doi_ngon_ngu_ve_lai_va_xuat_trang_so_sanh(mo, tmp_path):
     page.locator("#gt2ThuXuatHtml").click()
     page.wait_for_function("document.querySelector('#gt2ThuXuat').textContent.length > 0")
     assert "Saved" in page.locator("#gt2ThuXuat").inner_text()
+    assert not loi, loi
+
+
+def test_dung_tieu_chi_cua_lan_thu_hoi_truoc_roi_luu_khong_doi_ket_qua(mo):
+    page, api, db, loi = mo()
+    assert not page.locator("#gt2ThuApDung").is_visible()          # chưa có lần thử nào
+    page.select_option("#gt2TcPriority", "tier")
+    page.locator("#gt2ThuChay").click()
+    page.wait_for_selector("#gt2ThuApDungDs button")
+    truoc = _sql(db, "SELECT * FROM match_results ORDER BY student_id, buoi")
+    cu = cau_hinh_ws.doc_cau_hinh(db)["rules"]["priority"]
+    page.locator("#gt2ThuApDungDs button").click()
+    chu = page.locator("#gt2ThuApDungXacNhan").inner_text()
+    assert "Thứ tự sẽ là" in chu and page.locator("#gt2ThuApDungXacNhan li").count() >= 1
+    page.get_by_text("Không lưu").click()                          # hủy: không ghi gì
+    assert cau_hinh_ws.doc_cau_hinh(db)["rules"]["priority"] == cu
+    page.locator("#gt2ThuApDungDs button").click()
+    page.locator("#gt2ThuApDungXacNhanNut").click()
+    page.wait_for_function("document.querySelector('#gt2ThuApDungPhanHoi').innerText.length > 0")
+    assert page.locator("#gt2ThuApDungPhanHoi").inner_text().startswith("Đã lưu tiêu chí")
+    assert cau_hinh_ws.doc_cau_hinh(db)["rules"]["priority"] == "tier"
+    assert _sql(db, "SELECT * FROM match_results ORDER BY student_id, buoi") == truoc
+    _sach(page)
     assert not loi, loi

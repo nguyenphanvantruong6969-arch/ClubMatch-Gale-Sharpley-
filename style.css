@@ -2985,4 +2985,8 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 
 /* GT2-L3: display:grid / flex đè thuộc tính hidden */
 #gt2ThuChon[hidden],
-#gt2ThuNut[hidden] { display: none; }
+#gt2ThuNut[hidden],
+#gt2ThuApDung[hidden],
+#gt2ThuApDungXacNhan[hidden] { display: none; }
+.gt2-ad-ds { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 6px; }
+.gt2-ad-ds li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }

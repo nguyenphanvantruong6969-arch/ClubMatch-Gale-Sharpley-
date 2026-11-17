@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-17 — GT2-L4 (mục GT2, mục cha A1/Z7-lite): Dùng tiêu chí của một lần chạy thử
+
+Quản trị chọn một lần chạy thử, xem thứ tự tiêu chí bằng lời thường rồi lưu làm tiêu chí đang dùng; lần xếp chính thức
+kế tiếp sẽ dùng nó. Chỉ LƯU cấu hình (qua `update_workspace_config`, giữ nguyên khoá ngoài tiêu chí); không chạy xếp,
+không chép kết quả thử vào `match_results`. Bất biến 1: mặc định TẮT, `kiem_nhanh.py` 7/7. Số liệu MÔ PHỎNG.
+
+- `api_tieu_chi.py`: `ap_dung_tieu_chi(run_id, slug="")` (chỉ nhận lần chạy thử; lần chính thức hoặc mã lạ → `gt2_lan_chay_khong_co`).
+- `index.html`, `js/15_tieu_chi.js`, `style.css`, `i18n.js`: danh sách lần thử có nút "Dùng tiêu chí này cho lần chạy chính thức", thanh xác nhận nội tuyến hiện mô tả L1, nhắc chạy xếp chính thức sau khi lưu.
+- Test mới: `tests/test_gt2_ap_dung.py` (5 ca), `tests/test_giao_dien_gt2_thu.py` (+1 ca, fixture chuyển sang chế độ workspace).
+
 ## 2026-11-17 — GT2-L3 (mục GT2, mục cha A1/Z7-lite): So sánh hai lần chạy
 
 So sánh một lần chạy thử với lần chính thức (hoặc hai lần thử) ngay trong thẻ Quản lý. Chỉ ĐỌC, không bốc thăm, không ghi
