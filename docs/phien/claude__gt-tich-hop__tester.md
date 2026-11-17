@@ -70,3 +70,20 @@ can append unlimited NULL rows (log flooding); table is append-only.
 (4) Accounts OFF: no row written for any of these (same as GT3 DONE); kiem_nhanh 7/7.
 (5) Mutation (monkeypatched `nhat_ky._KHONG_GHI` per method): removing logging for run_thu -> 4 tests fail; ap_dung_tieu_chi ->
 1; tao_lai_ma_tra_cuu -> 3; export_phieu_giai_trinh -> 2. The tests do fail without the wrapper.
+
+## I4 | reviewed 250b5c5..4661b7b | verdict: 1 BUG (low, docs)
+Tests test_gt_tich_hop + test_gt3_tai_lieu 34 passed; kiem_nhanh 7/7 (no product code in this lot).
+(1) Regenerated CA_MAU.md in a fresh process: `cmp` IDENTICAL. Test checks every case against live get_giai_trinh_hoc_sinh sentences,
+blocked-run and rejected-criteria messages (real i18n via format_all) and the swap count. Committed GOI_MINH_CHUNG.docx text == fresh
+build (33284 chars, no "(sau tích hợp)", has MÔ PHỎNG); PDF 26 pages, contains Ca 6, no "(sau tích hợp)".
+(2) Every file and the package banner say DỮ LIỆU MÔ PHỎNG; names are generated; no school or real person found.
+(3) Integrity: no sentence reads as a conclusion or interpretation. Only facts, app sentences, tables, and demo-script instructions.
+Readability notes (not bugs, facts as the app prints them): section 3 prints the same app message twice; section 5 "Tiêu chí chính thức"
+lists Tier 1 and Tier 2 back to back without a tier label, so items look repeated.
+(4) Per-student cases hold only that student's own rows. Section 5 lists 8 named students with both outcomes: admin comparison, fake data.
+(5) test_gt3_tai_lieu change is legitimate: the 3-doc "(sau tích hợp) present" assert became "absent from every .md" plus assert
+that "Thử cấu hình" and "Chế độ học sinh tra cứu" are in the demo/video docs. Stricter in scope, not weaker.
+(6) Labels checked against index.html/i18n.js: "Tra cứu một học sinh", "In phiếu cho học sinh này", "Tạo mã tra cứu",
+"Chế độ học sinh tra cứu", "Tiêu chí xếp", "Thử cấu hình", "Chạy thử", "So sánh", "Dùng tiêu chí của một lần chạy thử" all match.
+BUG 1 (low): KICH_BAN_DEMO.md step 10 and KICH_BAN_VIDEO.md row 9 say "thẻ **Quản trị**" but the tab label in the UI is "Quản lý"
+(i18n `nav_admin`; EN "Manage"). Expected: "thẻ Quản lý". No test covers tab names.
