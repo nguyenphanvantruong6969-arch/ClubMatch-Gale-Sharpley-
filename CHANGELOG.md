@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 2026-11-17 — GT2-L2 (mục GT2, mục cha A1/Z7-lite): Chạy thử tiêu chí (ghi riêng, không công bố)
+
+Chạy thử một bộ tiêu chí trong giới hạn đã duyệt (D-GT1) mà KHÔNG đụng kết quả chính thức. Mặc định TẮT: chưa ai chạy
+thử thì mọi hành vi y như cũ. Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60 ca. Số liệu MÔ PHỎNG.
+- Lược đồ (D-GT8, idempotent, sao lưu trước): cột `run_history.loai_chay` (NULL = chính thức, 'thu' = chạy thử; thêm vào
+  `di_tru_schema` và `CREATE TABLE`), bảng `ket_qua_thu` (sau khối `fa_phan_hoi`).
+- Mới: `PipelineAPI.run_thu(rules_thu, chi_buoi=None)` ở `api_tieu_chi.py`: kiểm luật bằng `cau_hinh_ws._chuan_hoa`,
+  dùng đúng bộ số bốc thăm đã khoá (không vẽ lại, không khoá), giải + hai chốt như lần chính thức, ghi MỘT giao dịch
+  (một dòng `run_history` + `ket_qua_thu`); không ghi `match_results`, `ket_qua_truoc`, `dau_van_tay_chay`, `stb_lock`, `fa_*`,
+  tệp xuất. Trợ giúp dùng chung `loc_chinh_thuc`, `run_chinh_thuc_moi_nhat` (`rbda_priority_pipeline.py`).
+- Mọi chỗ đọc `run_history` chính thức bỏ lần thử: `get_run_history`, `api_xuat._doc_ly_do_moi_nhat`, `fa_sau_xep.run_goc_theo_buoi`.
+- Mã lỗi mới (`i18n_errors.py`, `i18n_loi.js` sinh lại): `gt2_tieu_chi_khong_hop_le`, `gt2_chua_co_lan_chinh_thuc`,
+  `gt2_thu_chua_ho_tro_fa` (chế độ huy chương chưa hỗ trợ chạy thử), `gt2_thu_stb_chua_day`.
+- Test mới: `tests/test_gt2_chay_thu.py` (25 ca).
+
 ## 2026-11-17 — GT2-L1 (mục GT2, mục cha A1/Z7-lite): Tiêu chí xếp bằng lời thường
 
 Chỉ ĐỌC và hiển thị; thuật toán, CSDL và tệp xuất không đổi. Không có tiêu chí mới: chỉ mô tả luật xếp đã có

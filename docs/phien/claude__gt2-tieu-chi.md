@@ -38,7 +38,7 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 | checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | active |
 
 ## Needs Truong
-- (none yet)
+- GT2-L2: chạy thử chế độ huy chương (FA) chưa hỗ trợ — `run_thu` từ chối bằng `gt2_thu_chua_ho_tro_fa` vì đường FA (`fa_daa.chay_fa_daa`) đọc/ghi hồ sơ `fa_*` trong cùng đường chạy. Đề xuất: để sau, ngoài phạm vi 1 tuần.
 
 ## Current state (overwrite each handoff)
 - Done: L1 passed checker (48ad9d8).

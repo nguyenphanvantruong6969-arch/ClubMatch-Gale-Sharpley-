@@ -1365,5 +1365,21 @@ window.I18N_ERROR_MESSAGES = {
   "forms_tieu_de_trung": {
     "vi": "Đề thi có hai câu hoặc hai lựa chọn cùng chữ nên không phân biệt được trên biểu mẫu: {chi_tiet} Hãy đổi tên trong đề thi rồi sinh lại biểu mẫu.",
     "en": "The exam file has two questions or two options with the same wording, so they can't be told apart on the form: {chi_tiet} Rename them in the exam file, then generate the form again."
+  },
+  "gt2_tieu_chi_khong_hop_le": {
+    "vi": "Tiêu chí thử chưa hợp lệ: {chi_tiet} Hãy chọn lại trong các lựa chọn có sẵn.",
+    "en": "The trial criteria are not valid: {chi_tiet} Pick again from the available choices."
+  },
+  "gt2_chua_co_lan_chinh_thuc": {
+    "vi": "Chưa thể chạy thử vì chưa có lần xếp chính thức nào (hoặc số bốc thăm chưa được khoá). Hãy chạy xếp chính thức một lần trước.",
+    "en": "A trial can't run yet because there is no official allocation yet (or the draw numbers are not locked). Run the official allocation once first."
+  },
+  "gt2_thu_chua_ho_tro_fa": {
+    "vi": "Chạy thử chưa hỗ trợ chế độ huy chương. Hãy tắt chế độ huy chương trong tiêu chí thử, hoặc dùng lần xếp chính thức.",
+    "en": "Trial runs do not support medal mode yet. Turn medal mode off in the trial criteria, or use the official allocation."
+  },
+  "gt2_thu_stb_chua_day": {
+    "vi": "Chưa thể chạy thử vì có {n} người mới chưa có số bốc thăm. Hãy chạy xếp chính thức để bổ sung số bốc thăm rồi thử lại.",
+    "en": "A trial can't run because {n} new people have no draw number yet. Run the official allocation to add their numbers, then try again."
   }
 };

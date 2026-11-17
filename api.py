@@ -57,6 +57,7 @@ from rbda_priority_pipeline import (
     load_from_sqlite,
     load_from_sqlite_kem_dau_van_tay,
     load_from_sqlite_kem_dau_van_tay_wharton,
+    loc_chinh_thuc,
     nhom_theo_buoi,
     run_rbda_nhieu_buoi,
     sanity_check_result,
@@ -691,7 +692,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 rows = cur.execute(
                     "SELECT run_id, seed, run_at, rounds_run, n_matched, n_total, "
                     "       stb_redrawn, so_buoi, buoi_da_chay, che_do_boc_tham, luat_xep "
-                    "FROM run_history ORDER BY run_id DESC LIMIT ?",
+                    "FROM run_history WHERE " + loc_chinh_thuc(cur) +      # GT2: bỏ lần chạy thử
+                    " ORDER BY run_id DESC LIMIT ?",
                     (limit,),
                 ).fetchall()
             return _ok([dict(r) for r in rows])

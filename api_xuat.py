@@ -27,6 +27,7 @@ from i18n_errors import phan_hoi_ok as _ok
 from rbda_priority_pipeline import (
     dung_fa_daa,
     BUOI_MAC_DINH, dau_van_tay_du_lieu, diem_theo_nguoi, dung_wharton, khoa_sap_buoi,
+    loc_chinh_thuc,
 )
 import fa_bien_ban
 import fa_ly_do
@@ -1667,7 +1668,8 @@ class XuatKetQuaMixin:
         không có lý do và được liệt kê ở phần thứ ba. `run_id` trả về = lần FA mới nhất được dùng;
         không buổi nào có lý do -> (None, [], buổi...)."""
         runs = cur.execute(
-            "SELECT run_id, buoi_da_chay FROM run_history ORDER BY run_id DESC").fetchall()
+            "SELECT run_id, buoi_da_chay FROM run_history WHERE %s ORDER BY run_id DESC"
+            % loc_chinh_thuc(cur)).fetchall()      # GT2: bỏ lần chạy thử
         buoi_ket_qua = {r[0] for r in cur.execute(
             "SELECT DISTINCT buoi FROM match_results").fetchall()}
         buoi_ly_do = {(r[0], r[1]) for r in cur.execute(
