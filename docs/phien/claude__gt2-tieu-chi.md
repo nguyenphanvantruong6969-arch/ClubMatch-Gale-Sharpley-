@@ -34,7 +34,8 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 |---|---|---|---|
 | lead | Opus | session_01YVAyu3PPHv9SNntepRSLwh | active |
 | writer | Sonnet | session_01YVAyu1MNvsxmVCMTkDDtfN | archived (handoff after L1, e4991a3) |
-| writer 2 | Sonnet | session_01YVAyu2JngdLXo2QUfsDamp | active |
+| writer 2 | Sonnet | session_01YVAyu2JngdLXo2QUfsDamp | archived (handoff mid-L2, 3f5957c) |
+| writer 3 | Sonnet | session_01YVAyu2U827tpBVb8oi1vsW | active |
 | checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | active |
 
 ## Needs Truong
