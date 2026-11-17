@@ -1385,6 +1385,24 @@ def stb_theo_buoi_da_khoa(
     return ra
 
 
+def loc_chinh_thuc(cur, bang: str = "run_history") -> str:
+    """GT2: mệnh đề `loai_chay IS NULL` (lần chạy CHÍNH THỨC; chạy thử có `loai_chay = 'thu'`).
+
+    Trả chuỗi rỗng nếu bảng chưa có cột (CSDL cũ chưa di trú) — khi đó mọi dòng đều chính thức."""
+    try:
+        co = any(r[1] == "loai_chay" for r in cur.execute("PRAGMA table_info(%s)" % bang))
+    except Exception:
+        co = False
+    return "loai_chay IS NULL" if co else "1=1"
+
+
+def run_chinh_thuc_moi_nhat(cur):
+    """Dòng `run_history` CHÍNH THỨC mới nhất (run_id, seed, luat_xep...) hoặc None. Bỏ qua chạy thử."""
+    return cur.execute(
+        "SELECT * FROM run_history WHERE %s ORDER BY run_id DESC LIMIT 1" % loc_chinh_thuc(cur)
+    ).fetchone()
+
+
 def doc_stb_buoi(cur) -> dict[str, dict[str, int]]:
     """{buoi: {student_id: so}} đã lưu trong `stb_buoi` ({} nếu bảng chưa có hoặc rỗng)."""
     ra: dict[str, dict[str, int]] = {}
@@ -1950,7 +1968,9 @@ CREATE TABLE IF NOT EXISTS run_history (
     -- score_scope, tiers). NULL = luat mac dinh cua truong hoc. Luat doi duoc giua hai
     -- lan chay; khong ghi lai thi hai lan chay cung seed ra ket qua khac nhau ma
     -- khong dau vet nao giai thich.
-    luat_xep TEXT
+    luat_xep TEXT,
+    -- GT2: NULL = lan chay chinh thuc; 'thu' = chay thu (khong cong bo, khong dong vao ket qua chinh thuc).
+    loai_chay TEXT
 );
 
 -- Khoa so bac tham (STB). Chi 1 dong duy nhat. Khi da_khoa = 1, nut
@@ -2150,6 +2170,16 @@ CREATE TABLE IF NOT EXISTS fa_phan_hoi (
     kho_nhat TEXT CHECK (kho_nhat IN ('chon_clb', 'xep_thu_tu', 'huy_chuong', 'thu_thach', 'khong_co')),
     con_di INTEGER CHECK (con_di IN (0, 1)),
     muon_doi INTEGER CHECK (muon_doi IN (0, 1))
+);
+
+-- GT2: kết quả của các lần CHẠY THỬ (run_history.loai_chay = 'thu'). Chỉ ghi thêm; không bao giờ đọc vào
+-- match_results hay xuất chính thức. rank_in_list = thứ hạng nguyện vọng của CLB được xếp (chỉ để so sánh).
+CREATE TABLE IF NOT EXISTS ket_qua_thu (
+    run_id INTEGER NOT NULL,
+    buoi TEXT,
+    student_id TEXT NOT NULL,
+    club_id TEXT,
+    rank_in_list INTEGER
 );
 
 -- Khoá điểm Wharton (A13.3): RIÊNG, không dính stb_lock. Lần chạy phân bổ thành công khi Wharton
@@ -2467,6 +2497,15 @@ def di_tru_schema(db_path: str) -> list[str]:
             sao_luu_truoc_khi_sua()
             cur.execute("ALTER TABLE run_history ADD COLUMN luat_xep TEXT")
             da_lam.append("run_history.luat_xep")
+
+        # GT2: `run_history.loai_chay` — NULL = chính thức (mọi dòng cũ), 'thu' = chạy thử. Chỉ ADD COLUMN.
+        if "run_history" in co_bang and not _co_cot(cur, "run_history", "loai_chay"):
+            sao_luu_truoc_khi_sua()
+            cur.execute("ALTER TABLE run_history ADD COLUMN loai_chay TEXT")
+            da_lam.append("run_history.loai_chay")
+        if "ket_qua_thu" not in co_bang and "run_history" in co_bang:
+            cur.execute("CREATE TABLE IF NOT EXISTS ket_qua_thu (run_id INTEGER NOT NULL, buoi TEXT, "
+                        "student_id TEXT NOT NULL, club_id TEXT, rank_in_list INTEGER)")
 
         if "match_results" in co_bang and not _co_cot(cur, "match_results", "buoi"):
             sao_luu_truoc_khi_sua()

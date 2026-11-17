@@ -52,6 +52,59 @@ Chỉ ĐỌC, không đụng đường chạy (cấu hình mặc định giống
   đã lưu); lỗi `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`, `gt1_khong_tim_thay_lan_chay` (`i18n_errors.py`, `i18n_loi.js` sinh lại).
 - Sửa vòng 1 (checker): mã NO_CHOICES cho em chưa đăng ký nguyện vọng; `run_id` cũ -> `gt1_lan_chay_cu`; `run_id` lạ -> `gt1_khong_tim_thay_lan_chay`.
 - Test mới: `tests/test_gt1_giai_trinh.py` (26 ca).
+## 2026-11-17 — GT2-L4 (mục GT2, mục cha A1/Z7-lite): Dùng tiêu chí của một lần chạy thử
+
+Quản trị chọn một lần chạy thử, xem thứ tự tiêu chí bằng lời thường rồi lưu làm tiêu chí đang dùng; lần xếp chính thức
+kế tiếp sẽ dùng nó. Chỉ LƯU cấu hình (qua `update_workspace_config`, giữ nguyên khoá ngoài tiêu chí); không chạy xếp,
+không chép kết quả thử vào `match_results`. Bất biến 1: mặc định TẮT, `kiem_nhanh.py` 7/7. Số liệu MÔ PHỎNG.
+
+- `api_tieu_chi.py`: `ap_dung_tieu_chi(run_id, slug="")` (chỉ nhận lần chạy thử; lần chính thức hoặc mã lạ → `gt2_lan_chay_khong_co`).
+- `index.html`, `js/15_tieu_chi.js`, `style.css`, `i18n.js`: danh sách lần thử có nút "Dùng tiêu chí này cho lần chạy chính thức", thanh xác nhận nội tuyến hiện mô tả L1, nhắc chạy xếp chính thức sau khi lưu.
+- Sửa sau soát (fix1): lưu từ luật ĐÃ LƯU, chỉ ghi đè khoá có tác dụng của lần thử (khoá vô tác dụng, nhóm đã nhập giữ nguyên); sau khi lưu luật hiệu lực phải bằng luật lần thử, nếu không thì từ chối `gt2_ap_dung_khong_khop`, không ghi gì.
+- Test mới: `tests/test_gt2_ap_dung.py` (8 ca), `tests/test_giao_dien_gt2_thu.py` (+1 ca, fixture chuyển sang chế độ workspace).
+
+## 2026-11-17 — GT2-L3 (mục GT2, mục cha A1/Z7-lite): So sánh hai lần chạy
+
+So sánh một lần chạy thử với lần chính thức (hoặc hai lần thử) ngay trong thẻ Quản lý. Chỉ ĐỌC, không bốc thăm, không ghi
+`match_results`. Bất biến 1: mặc định TẮT, `kiem_nhanh.py` trùng khít. Số liệu MÔ PHỎNG.
+
+- `tieu_chi.py`: `so_sanh_lan_chay(a, b, ctx)` (hàm thuần: tổng quan, từng CLB gồm điểm chuẩn, nhóm ưu tiên, lớp, danh sách em
+  đổi chỗ; chỉ so các buổi cả hai lần cùng có) và `dung_html_so_sanh` (HTML một tệp, không nạp gì từ ngoài, mọi chữ qua `escape`).
+- `api_tieu_chi.py`: `list_lan_chay`, `so_sanh_lan_chay(run_a, run_b=None)`, `export_so_sanh_html`, `export_so_sanh_csv`
+  (UTF-8 có BOM). Lần chính thức cũ không còn dòng kết quả → `gt2_so_sanh_lan_cu` (không bịa số); mã mới `gt2_lan_chay_khong_co`.
+- Giao diện: khung "Thử cấu hình" (`index.html`, `js/15_tieu_chi.js`, `style.css`, khoá `gt2_thu_*` / `gt2_ss_*` trong `i18n.js`).
+- Sửa kèm: `tests/test_ws_nhan.py` (khối GT2 cho mã lỗi mới của L1–L3), chữ gợi ý ô nhóm trong `index.html` khớp danh mục.
+- Test mới: `tests/test_gt2_so_sanh.py` (9 ca, kiểm tay 10 em), `tests/test_giao_dien_gt2_thu.py` (4 ca, Chromium).
+
+## 2026-11-17 — GT2-L2 (mục GT2, mục cha A1/Z7-lite): Chạy thử tiêu chí (ghi riêng, không công bố)
+
+Chạy thử một bộ tiêu chí trong giới hạn đã duyệt (D-GT1) mà KHÔNG đụng kết quả chính thức. Mặc định TẮT: chưa ai chạy
+thử thì mọi hành vi y như cũ. Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60 ca. Số liệu MÔ PHỎNG.
+
+Sửa vòng 1 (fix1): `run_thu` quyết định FA theo luật HIỆU LỰC (đã trộn luật đã lưu với luật thử), không theo luật đã lưu; luật thử chỉ nhận khoá của `LUAT_XEP_MAC_DINH` (khoá lạ → `gt2_tieu_chi_khong_hop_le`). +4 ca trong `tests/test_gt2_chay_thu.py`.
+- Lược đồ (D-GT8, idempotent, sao lưu trước): cột `run_history.loai_chay` (NULL = chính thức, 'thu' = chạy thử; thêm vào
+  `di_tru_schema` và `CREATE TABLE`), bảng `ket_qua_thu` (sau khối `fa_phan_hoi`).
+- Mới: `PipelineAPI.run_thu(rules_thu, chi_buoi=None)` ở `api_tieu_chi.py`: kiểm luật bằng `cau_hinh_ws._chuan_hoa`,
+  dùng đúng bộ số bốc thăm đã khoá (không vẽ lại, không khoá), giải + hai chốt như lần chính thức, ghi MỘT giao dịch
+  (một dòng `run_history` + `ket_qua_thu`); không ghi `match_results`, `ket_qua_truoc`, `dau_van_tay_chay`, `stb_lock`, `fa_*`,
+  tệp xuất. Trợ giúp dùng chung `loc_chinh_thuc`, `run_chinh_thuc_moi_nhat` (`rbda_priority_pipeline.py`).
+- Mọi chỗ đọc `run_history` chính thức bỏ lần thử: `get_run_history`, `api_xuat._doc_ly_do_moi_nhat`, `fa_sau_xep.run_goc_theo_buoi`.
+- Mã lỗi mới (`i18n_errors.py`, `i18n_loi.js` sinh lại): `gt2_tieu_chi_khong_hop_le`, `gt2_chua_co_lan_chinh_thuc`,
+  `gt2_thu_chua_ho_tro_fa` (chế độ huy chương chưa hỗ trợ chạy thử), `gt2_thu_stb_chua_day`.
+- Test mới: `tests/test_gt2_chay_thu.py` (25 ca).
+
+## 2026-11-17 — GT2-L1 (mục GT2, mục cha A1/Z7-lite): Tiêu chí xếp bằng lời thường
+
+Chỉ ĐỌC và hiển thị; thuật toán, CSDL và tệp xuất không đổi. Không có tiêu chí mới: chỉ mô tả luật xếp đã có
+(`LUAT_XEP_MAC_DINH`) theo luật hiệu lực (`luat_xep_hieu_luc`), và cho chọn lại trong đúng tập giá trị đã duyệt (D-GT1).
+Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60 ca. Số liệu trong test là MÔ PHỎNG.
+- Mới: `tieu_chi.py` (`mo_ta_tieu_chi`, `cac_lua_chon_hop_le`, `tieu_de_tang`, `KHOA_NGOAI_LUAT_XEP`, `GHI_CHU`),
+  `api_tieu_chi.py` (`TieuChiMixin.get_tieu_chi`, nối vào `PipelineAPI`), `js/15_tieu_chi.js`, khung "Tiêu chí xếp" ở thẻ
+  Quản lý (`index.html`, khối `GT2`), chuỗi `gt2_tc_*` trong `i18n.js`. Lưu vẫn qua `update_workspace_config`.
+- Kiểm khoá lạ / giá trị lạ của `rules` đã có sẵn ở `cau_hinh_ws._chuan_hoa` (báo `ws_du_lieu_sai`), nên chưa thêm mã
+  `gt2_tieu_chi_khong_hop_le`; lô L2 thêm khi `run_thu` cần.
+- Test mới: `tests/test_gt2_tieu_chi.py` (107 ca: mọi tổ hợp luật, khoá chặt tập khoá, API), `tests/test_giao_dien_gt2_tieu_chi.py`
+  (6 ca Chromium). `CLAUDE_CHI_TIET.md` hàng `tests/`: 300 tệp, 6.430 ca.
 
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 
@@ -296,7 +349,7 @@ Cấu hình mặc định giữ từng byte (`kiem_nhanh` 7/7, 60 ca = 3 bộ ×
 - Giao diện `js/12_chuan_bi_nap.js` (bước 5): ba khối — nút "Xuất KETQUA_NHAP_LIST.csv"; ô chọn CSV danh sách lớp + nút "Tạo danh sách
   chưa đăng ký" (khoá tới khi chọn tệp; cảnh báo vượt giới hạn Power Automate); hai ô chọn CSV cũ / mới + nút "Đối chiếu" (CHỈ đường A).
   Chuỗi `cb_nap_s5_*` (vi + en). Không mã lỗi mới (dùng `forms_thieu_email`, `forms_thieu_danh_sach_lop`, `forms_khong_chuyen_duoc`...).
-- Tệp test mới: `tests/test_fa_m10_sau_xep_nut.py` (8 ca API), `tests/test_giao_dien_fa_m10_nut.py` (5 ca Chromium).
+- Tệp test mới: `tests/test_fa_m10_sau_xep_nut.py` (8 ca API), `tests/test_giao_dien_fa_m10_nut.py` (6 ca Chromium).
 - Đột biến đã chạy: (1) API ghi thêm ký tự vào `KETQUA_NHAP_LIST.csv` -> `test_xuat_ket_qua_list_bang_cli_cung_tep` đỏ; (2) giao diện bỏ điều kiện
   "đã chọn tệp" của nút "Ai chưa đăng ký" -> `test_nut_ai_chua_dang_ky_khoa_den_khi_chon_tep_roi_ghi_thu_muc` đỏ; khôi phục -> xanh.
 - Mặc định không đổi: không đụng lõi DA, schema, cột CSV; ba tập lệnh dòng lệnh không đổi.
@@ -585,7 +638,7 @@ Cấu hình mặc định giữ từng byte (`kiem_nhanh` 7/7, 60 ca = 3 bộ ×
 
 - `api_quan_ly.py`: `get_student_entry_state` thêm khoá `huy_chuong` khi FA bật (`_trang_thai_huy_chuong`: huy chương đã lưu, loại và buổi của từng CLB trong nguyện vọng, khoá). Tắt: phản hồi như cũ.
 - `index.html`, `js/04_nhap_tai_cho.js` (`renderHuyChuongStep`, `hcDoi`, `hcCapNhatNhac`, `hcThuThap`): FA bật thì bước 3 là ba ô vàng / bạc / đồng mỗi ngày thay cho điểm quyết tâm; điền sẵn theo thứ tự nguyện vọng, bỏ CLB Tự do (D2, chỉ ở lớp đăng ký); chọn CLB đang có huy chương khác thì đổi chỗ (đủ 6 cách đặt); câu nhắc V§6.1 khi vàng ở CLB Tuyển chọn; lưu qua `submit_huy_chuong`, lỗi server hiện ra. `i18n.js`: chữ vi + en.
-- Test mới: `tests/test_giao_dien_fa_huy_chuong.py` (5 ca Chromium). `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 220 tệp test.
+- Test mới: `tests/test_giao_dien_fa_huy_chuong.py` (6 ca Chromium). `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 220 tệp test.
 
 ## 2026-11-09 — FA-UI-2: cột FA trong bảng CLB ở thẻ Quản lý (đêm 3)
 

@@ -23,6 +23,7 @@ function init() {
   initAdminHandlers();
   initScoringHandlers();
   initKetQuaHandlers();
+  khoiTaoTieuChi();  // GT2 (js/15_tieu_chi.js)
   initWorkspace();   // nút đổi workspace ở thanh bên + màn chọn (js/075_workspace.js)
   loadPipelineTab(); // tab mặc định đang mở khi khởi động
 }

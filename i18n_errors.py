@@ -1488,6 +1488,36 @@ MESSAGES = {
         "en": "No lookup codes have been created yet. Create the codes first.",
     },
     # === end GT1 ===
+    # === GT2 ===
+    "gt2_tieu_chi_khong_hop_le": {
+        "vi": "Tiêu chí thử chưa hợp lệ: {chi_tiet} Hãy chọn lại trong các lựa chọn có sẵn.",
+        "en": "The trial criteria are not valid: {chi_tiet} Pick again from the available choices.",
+    },
+    "gt2_chua_co_lan_chinh_thuc": {
+        "vi": "Chưa thể chạy thử vì chưa có lần xếp chính thức nào (hoặc số bốc thăm chưa được khoá). Hãy chạy xếp chính thức một lần trước.",
+        "en": "A trial can't run yet because there is no official allocation yet (or the draw numbers are not locked). Run the official allocation once first.",
+    },
+    "gt2_thu_chua_ho_tro_fa": {
+        "vi": "Chạy thử chưa hỗ trợ chế độ huy chương. Hãy tắt chế độ huy chương trong tiêu chí thử, hoặc dùng lần xếp chính thức.",
+        "en": "Trial runs do not support medal mode yet. Turn medal mode off in the trial criteria, or use the official allocation.",
+    },
+    "gt2_thu_stb_chua_day": {
+        "vi": "Chưa thể chạy thử vì có {n} người mới chưa có số bốc thăm. Hãy chạy xếp chính thức để bổ sung số bốc thăm rồi thử lại.",
+        "en": "A trial can't run because {n} new people have no draw number yet. Run the official allocation to add their numbers, then try again.",
+    },
+    "gt2_lan_chay_khong_co": {
+        "vi": "Không tìm thấy lần chạy số {run_id}. Hãy chọn một lần trong danh sách.",
+        "en": "Run number {run_id} was not found. Please pick one from the list.",
+    },
+    "gt2_so_sanh_lan_cu": {
+        "vi": "Lần xếp chính thức số {run_id} đã được thay bằng lần mới hơn nên không còn kết quả chi tiết để so sánh. Hãy so với lần chính thức mới nhất hoặc một lần chạy thử.",
+        "en": "Official allocation number {run_id} has been replaced by a newer one, so its detailed results are no longer available. Compare with the latest official allocation or with a trial.",
+    },
+    "gt2_ap_dung_khong_khop": {
+        "vi": "Không thể lưu tiêu chí của lần chạy thử số {run_id} thành đúng như lần đó đã dùng. Cấu hình hiện tại chưa bị đổi. Hãy chọn lại các tiêu chí ở khung phía trên rồi lưu.",
+        "en": "The criteria of trial {run_id} cannot be saved exactly as that trial used them. The current settings were not changed. Please set the criteria in the box above and save.",
+    },
+    # === end GT2 ===
 }
 
 

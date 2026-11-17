@@ -57,6 +57,7 @@ from rbda_priority_pipeline import (
     load_from_sqlite,
     load_from_sqlite_kem_dau_van_tay,
     load_from_sqlite_kem_dau_van_tay_wharton,
+    loc_chinh_thuc,
     nhom_theo_buoi,
     run_rbda_nhieu_buoi,
     sanity_check_result,
@@ -78,6 +79,7 @@ from api_forms_nap import FormsNapMixin
 from api_nhap import NhapDuLieuMixin
 from api_quan_ly import QuanLyMixin
 from api_sau_xep import SauXepMixin
+from api_tieu_chi import TieuChiMixin  # GT2
 from api_workspace import CauHinhHong, CsdlBan, WorkspaceMixin, loi_cau_hinh
 from api_xuat import XuatKetQuaMixin
 
@@ -91,7 +93,7 @@ from api_xuat import XuatKetQuaMixin
 # `api.connect_db`, `api.run_rbda_nhieu_buoi`... để giả lập sự cố, và phép
 # thay đó chỉ có tác dụng với mã nằm trong CHÍNH tệp này.
 class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
-                  XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin,
+                  XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin, TieuChiMixin,
                   FormsMixin, FormsNapMixin, FormsBoMixin):
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
@@ -690,7 +692,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 rows = cur.execute(
                     "SELECT run_id, seed, run_at, rounds_run, n_matched, n_total, "
                     "       stb_redrawn, so_buoi, buoi_da_chay, che_do_boc_tham, luat_xep "
-                    "FROM run_history ORDER BY run_id DESC LIMIT ?",
+                    "FROM run_history WHERE " + loc_chinh_thuc(cur) +      # GT2: bỏ lần chạy thử
+                    " ORDER BY run_id DESC LIMIT ?",
                     (limit,),
                 ).fetchall()
             return _ok([dict(r) for r in rows])

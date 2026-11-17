@@ -9,6 +9,8 @@ giờ đi vào `compute_club_priority` (bất biến 2).
 import datetime
 import re
 
+from rbda_priority_pipeline import loc_chinh_thuc
+
 # GAP-0 ---------------------------------------------------------------------------------------------------------------
 KIND = ("release", "invite_offer", "invite_accept", "invite_decline", "invite_expire", "round2", "appeal_rerun")
 KIND_DOI_CHO = ("release", "invite_accept", "round2")        # chỉ ba loại này làm đổi chỗ
@@ -42,7 +44,8 @@ def vi_tri_hien_tai(ket_qua: dict, run_goc: dict, dieu_chinh) -> tuple:
 def run_goc_theo_buoi(cur) -> dict:
     """{buoi: run_id}: lần chạy MỚI NHẤT có chạy buổi đó (`buoi_da_chay` rỗng = mọi buổi), như
     `api_xuat._doc_ly_do_moi_nhat`."""
-    runs = cur.execute("SELECT run_id, buoi_da_chay FROM run_history ORDER BY run_id DESC").fetchall()
+    runs = cur.execute("SELECT run_id, buoi_da_chay FROM run_history WHERE %s ORDER BY run_id DESC"
+                       % loc_chinh_thuc(cur)).fetchall()      # GT2: bỏ lần chạy thử
     ra = {}
     for (buoi,) in cur.execute("SELECT DISTINCT buoi FROM match_results").fetchall():
         for run_id, da_chay in runs:
