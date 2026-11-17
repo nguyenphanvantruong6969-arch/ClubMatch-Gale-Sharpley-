@@ -80,6 +80,10 @@ Look at what a real person would see: read the visible text, screenshot (view th
     official `match_results` at EVERY step (the R0 regression); degenerate-config hint; exports (HTML/CSV) open and read well.
  E. RECOVERY: forget the admin password -> follow ONLY the written instructions (docs + .bat text) with `python main.py --xoa-tai-khoan <db>`;
     is every step understandable to a school IT person? Is a backup made, were allocation results untouched?
+DESIGN BAR (Truong called the Quản lý > Tiêu chí xếp / Thử cấu hình screen "horrible"): for every UI lot judge the screenshot like a
+designer, not only the DOM: alignment, label-above-field, spacing rhythm, hierarchy (one primary action per panel), default-browser
+lists/controls left unstyled, overlap, run-on text, contrast, 1024 px and 125% zoom. Compare with the club form on the same tab as the
+reference of "good". A panel that still looks unfinished is a BUG [nên sửa] for L7 even if its tests pass; attach the screenshot.
 For each scenario note: what a first-time user would not understand, wasted clicks, dead ends, wording problems, visual defects
 (overlap, truncation, tiny targets), missing feedback, and the smallest change that would fix it. Be honest and specific; praise only what you verified.
 

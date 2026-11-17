@@ -105,15 +105,40 @@ time shown as local `dd/mm/yyyy hh:mm`; `chi_tiet` rendered as `key: value` text
 that modal (account list and password change stay short).
 Done when: tests for every label key present in vi+en, the filter by date/refused, null-actor label, raw CSV unchanged.
 
-### L7 — criteria and comparison polish (R8)
-(a) fix the layout of "Tiêu chí xếp"/"Thử cấu hình" (use the existing form-grid classes of the Quản lý tab or add small rules in
-`style.css`; labels above fields, checkbox with its own row, ordered lists styled like the rest of the app); (b) in the compare
-view render the two criteria descriptions as two short lists (tier 1 / tier 2 separated), never one run-on paragraph; (c) hide
-the "Buổi" column when there is only one buổi and never print `__mac_dinh__` (friendly "Mặc định" if shown); (d) a yellow hint
-(not a block) before "Chạy thử" when the selected options are degenerate: `priority = tier` with no groups declared ("không có
-nhóm nào nên thực chất chỉ bốc thăm"), or `tier_mode = strict` with an empty list; (e) one-sentence summary on top of the compare
-view built only from the numbers already computed ("49 học sinh đổi CLB; tỉ lệ được nguyện vọng 1: 53,3% → 60%") — no judgement words.
-Done when: UI tests for each point + `tieu_chi` unit tests for the summary string; the exported HTML shows the same.
+### L7 — criteria and comparison: real design pass (R8; Truong: "this design is horrible")
+Root cause found by the review: `index.html` `#gt2TcDieuKhien` / `#gt2ThuChon` reuse `.admin-form-grid` (a bare flex-wrap row) but put
+each `<label>` and its control as SEPARATE flex items, so they run on as one line ("Xếp theo [select] Cách dùng nhóm ưu tiên [select]
+Phạm vi điểm …"); `.check-row` has no CSS at all (checkbox overlaps the hint text); the two criteria lists use the browser's default
+`<ol>`; the compare result is one wall of tables. The same tab already has a good pattern: the club form (`.club-field` = label above
+control, `.club-field-label`, `.text-input`, `.btn`). Reuse it and the existing design tokens (`--ink`, `--gold`, `--paper-2`, spacing of
+`.panel`); do not invent a new style language. If the skill `anthropic-skills:formal-uidesign` is available, load it first and follow it
+(serious but warm); otherwise follow the visible style of the Xếp CLB / Quản lý panels.
+Required (each point has a Chromium test or a screenshot check in the checker's walk-through):
+(a) **Tiêu chí xếp panel**: two columns at >= 1000 px (left: the "order" card; right: the form), one column below. Left card: two
+numbered steps rendered as styled lists (number badges, 14-15 px, 8 px rhythm) under the headings "Học sinh đã có điểm thi…" and
+"Học sinh chưa có điểm thi…", with the "(chưa có tác dụng)" lines greyed. Form: every field = label ABOVE control (`.club-field`),
+selects full width of the column (max 360 px), the textarea has a visible label and a one-line hint under it, the checkbox sits in its own
+row with its label to the right and its hint indented below it (new `.check-row` rule), buttons right-aligned at the bottom with
+"Lưu tiêu chí" primary. No label may ever share a line with another field's control at 1024 px.
+(b) **Thử cấu hình panel**: step header "1 Chạy thử → 2 Chọn hai lần để so sánh → 3 So sánh / xuất"; the two selects as labelled fields
+side by side ("Lần thứ nhất" / "Lần thứ hai"); buttons grouped: primary "So sánh", secondary exports; the "Dùng tiêu chí…" block visually
+separated (top border) with a short sentence of what it does and does not do (it only saves the criteria; the official result changes
+only after the official run).
+(c) **Compare view**: a header strip with the two runs as two cards (title "Chính thức số 1" / "Chạy thử số 2", date, and the criteria as
+two short lists each: tier 1 / tier 2 separated — never one run-on paragraph); the one-sentence summary (numbers only, e.g. "49 học sinh
+đổi CLB; được nguyện vọng 1: 53,3% → 60%") on top; section tables with sticky header, right-aligned numbers, the changed value
+highlighted (small coloured delta, not colour alone: also "+3"/"−2" text); the list of changed students collapsed by default with a
+count and a "Hiện danh sách" toggle; hide the "Buổi" column when there is one buổi and never print `__mac_dinh__` (friendly
+"Mặc định" if shown); the exported HTML must carry the same structure.
+(d) A yellow hint (not a block) before "Chạy thử" when the options are degenerate: `priority = tier` with no groups declared ("không có
+nhóm nào nên thực chất chỉ bốc thăm"), or `tier_mode = strict` with an empty list.
+(e) **Same pass for every UI GT added**: the lookup panel (`#gtPanel`), the account modal and audit section (L6), the student screen (L5):
+labels above fields, consistent spacing, no default-browser lists, focus rings visible, targets >= 36 px high, text >= 14 px, contrast
+>= 4.5:1 (check with a quick script on the computed colours of body text, hints and buttons).
+Done when: Chromium tests that (1) at 1280 and 1024 px no label shares a row with another field (compare `getBoundingClientRect().top` of
+each label/control pair), (2) the checkbox and its hint do not overlap, (3) the compare header shows two separate criteria lists, (4) no
+text node `__mac_dinh__`, (5) the degenerate hint appears/disappears with the options, (6) the summary string unit test in `tieu_chi`;
+plus before/after screenshots of the Quản lý tab at 1280 px attached in the ledger note (writer) and judged by the checker.
 
 ### L8 — stretch (only if all above are green; otherwise list under Needs Truong)
 Vocabulary-aware explanation sentences: pass the workspace vocabulary (the same source `{person_l}`/`{slot_sl}` use in the UI)
