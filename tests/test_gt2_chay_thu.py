@@ -160,10 +160,30 @@ def test_loi_sau_khi_ghi_run_history_van_rollback(tmp_path, monkeypatch):
     assert _sql(db, "SELECT COUNT(*) FROM run_history WHERE loai_chay = 'thu'") == [(0,)]
 
 
+def _bo_cot_loai_chay(c):
+    """Dựng lại `run_history` theo cột trước GT2 (SQLite của CI không cho DROP COLUMN trên lược đồ này)."""
+    cot = [x for x in c.execute("PRAGMA table_info(run_history)") if x[1] != "loai_chay"]
+    dinh_nghia = []
+    for _cid, ten, kieu, khong_null, mac_dinh, khoa in cot:
+        d_ = "%s %s" % (ten, kieu)
+        if khoa:
+            d_ += " PRIMARY KEY AUTOINCREMENT"
+        if khong_null and not khoa:
+            d_ += " NOT NULL"
+        if mac_dinh is not None:
+            d_ += " DEFAULT %s" % mac_dinh
+        dinh_nghia.append(d_)
+    ten_cot = ", ".join(x[1] for x in cot)
+    c.execute("CREATE TABLE run_history_cu (%s)" % ", ".join(dinh_nghia))
+    c.execute("INSERT INTO run_history_cu (%s) SELECT %s FROM run_history" % (ten_cot, ten_cot))
+    c.execute("DROP TABLE run_history")
+    c.execute("ALTER TABLE run_history_cu RENAME TO run_history")
+
+
 def test_csdl_cu_khong_co_cot_di_tru_hai_lan_khong_loi(tmp_path):
     a, db = _mo(tmp_path, BO[0][2])
     c = sqlite3.connect(db)
-    c.execute("ALTER TABLE run_history DROP COLUMN loai_chay")
+    _bo_cot_loai_chay(c)
     c.execute("DROP TABLE ket_qua_thu")
     c.commit()
     c.close()
