@@ -42,3 +42,11 @@ BUG 2 (UI, minor): js/15_tieu_chi.js `gt2TcDongBoWharton` unchecks the box but n
 
 Note (not blocking, pre-existing from L1): changing language re-runs gt2TcVeDieuKhien/gt2TcDatGiaTri, which resets
 unsaved selects, textarea and box to the saved values.
+
+## L1 fix2 | reviewed 9b67a95..48ad9d8 | verdict: NO BUGS
+
+119 passed (L1 unit + Chromium incl. 4 new round-trip cases FA on/off). BUG 1 and BUG 2 repros no longer fail.
+Own chain (box unchecked by admin -> tier -> per_person -> score -> per_slot): box re-enabled, stays unchecked (the
+admin's own choice), saves wharton=false; tier+save+back to score: enabled, no error.
+Residual (not a "Done when" item, not blocking): after a language switch, `gt2TcDongBoWharton` may reuse a stale
+remembered value over the saved one in the rare case of pending edits; selects are reset to saved anyway.
