@@ -111,6 +111,10 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
 
   Windows: `.venv\Scripts\python recovery.py --xoa-tai-khoan <đường dẫn app.db>`. Lệnh sao lưu `app.db` rồi xoá **toàn bộ** tài khoản
   (dữ liệu phân bổ giữ nguyên); đã chạy thật, in `Da sao luu va xoa 1 tai khoan.`. Sau đó phần mềm trở về trạng thái chưa có tài khoản.
+- **Mã tra cứu và nhật ký:** lượt học sinh tự tra cứu chỉ ghi mã học sinh (không ghi mã tra cứu, không ghi tên người đang đăng
+  nhập); xem lời giải trình của một em được ghi một dòng (người xem + mã học sinh). Cơ sở dữ liệu đã dùng **trước bản này** có thể còn mã
+  tra cứu trong các dòng nhật ký cũ (bảng chỉ thêm, không xoá được): hãy **tạo lại toàn bộ mã** (`tao_ma_tra_cuu(chi_hs_chua_co=False)`)
+  trước khi dùng thật.
 - Đăng nhập sai nhiều lần thì tài khoản tạm khoá (`gt3_tam_khoa`); phiên đăng nhập hết hạn khi không hoạt động.
 
 ## 9. Kiểm "trùng khít" (tuỳ chọn)

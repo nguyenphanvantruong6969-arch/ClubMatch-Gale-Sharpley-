@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L1: nhật ký thao tác không giữ mã tra cứu (R1, D4-2, D4-3)
+
+- `nhat_ky.py`: `tra_cuu_hoc_sinh` chỉ giữ `student_id` (`_CHI_GIU`); tham số tên `ma` bị ẩn ở mọi hàm (`_AN`); `get_giai_trinh_hoc_sinh` được ghi (`_GHI_DU_LA_DOC`, chỉ `student_id`, `run_id`).
+- `phan_quyen._ghi_nhat_ky`: dòng `tra_cuu_hoc_sinh` ghi `nguoi = NULL, vai = NULL`; mã học sinh chỉ ghi khi là mã có thật (dán mã tra cứu vào ô mã em thì `chi_tiet = {}`).
+- `docs/giai_trinh/HUONG_DAN_CHAY.md` §8: ghi chú CSDL cũ có thể còn mã trong nhật ký cũ → tạo lại toàn bộ mã trước khi dùng thật.
+- Test mới: `tests/test_gt4_nhat_ky.py` (4 test: quét mọi cột + CSV xuất; ẩn tham số `ma`; một dòng cho lượt xem giải trình; ô mã em dán nhầm).
+
 ## 2026-11-17 — GT4-L0: lời giải trình chỉ đọc lần chạy chính thức (R0)
 
 - `api_xuat._giai_trinh_dung_lai`: truy vấn `run_history` qua `loc_chinh_thuc(cur)` (bỏ lần chạy thử). Trước đó, sau một lần "Chạy thử", màn tra cứu, phiếu in và học sinh tự tra cứu hiện kết quả của lần thử thay cho `match_results` (49/120 em lệch).

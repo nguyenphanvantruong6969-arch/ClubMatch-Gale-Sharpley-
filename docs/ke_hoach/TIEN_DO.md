@@ -182,3 +182,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | I3 (nhật ký thao tác GT1/GT2; tích hợp) | xong | 2026-11-17 | CHANGELOG.md | tests/test_gt_tich_hop.py |
 | I4 (ca mẫu + gói minh chứng; tích hợp) | xong (checker: 1 lỗi tên thẻ, đã sửa) | 2026-11-17 | du_lieu_test/tao_ca_mau_giai_trinh.py, docs/giai_trinh/{CA_MAU.md,tao_goi_minh_chung.py,GOI_MINH_CHUNG.docx,GOI_MINH_CHUNG.pdf,KICH_BAN_*.md,HUONG_DAN_CHAY.md,SO_DO_LUONG.md}, CHANGELOG.md | tests/test_gt_tich_hop.py, tests/test_gt3_tai_lieu.py |
 | GT4-L0 (giải trình chỉ đọc lần chính thức; nhánh claude/gt-hoan-thien) | xong (chờ checker) | 2026-11-17 | api_xuat.py, CHANGELOG.md, CLAUDE_CHI_TIET.md | tests/test_gt4_chay_thu_giai_trinh.py | |
+| GT4-L1 (nhật ký không giữ mã tra cứu; R1, D4-2, D4-3) | xong (chờ checker) | 2026-11-17 | nhat_ky.py, phan_quyen.py, docs/giai_trinh/HUONG_DAN_CHAY.md, CHANGELOG.md, CLAUDE_CHI_TIET.md | tests/test_gt4_nhat_ky.py | |

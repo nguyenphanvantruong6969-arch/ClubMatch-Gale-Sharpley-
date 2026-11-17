@@ -109,6 +109,18 @@ def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None, 
     nguoi = phien["ten"] if phien else None
     vai = phien["vai"] if phien else None
     chi_tiet = nk.tom_tat_tham_so(ham, ten, args, kwargs)
+    if ten == "tra_cuu_hoc_sinh":
+        # GT4-L1 (D4-3): học sinh tự tra cứu bằng phiên dùng chung của chế độ học sinh -> không ghi tên người
+        # đang đăng nhập; mã học sinh chỉ được ghi khi là mã CÓ THẬT (người gõ có thể dán mã tra cứu vào ô mã em).
+        nguoi = vai = None
+        try:
+            with api._ket_noi_doc() as cur:
+                co_that = cur.execute("SELECT 1 FROM students WHERE student_id = ?",
+                                      (str(args[0] if args else kwargs.get("student_id", "")),)).fetchone()
+        except Exception:
+            co_that = None
+        if not co_that:
+            chi_tiet = "{}"
     if ten == "dang_nhap":
         if isinstance(ket_qua_goi, dict) and ket_qua_goi.get("ok"):
             nguoi, vai = ket_qua_goi["data"]["ten"], ket_qua_goi["data"]["vai"]

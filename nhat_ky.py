@@ -15,7 +15,7 @@ import threading
 _log = logging.getLogger(__name__)
 
 # Tên tham số / khoá nghe như bí mật hoặc là nội dung tệp: bỏ hẳn.
-_AN = re.compile(r"mat_khau|password|passwd|(^|_)pw($|_)|token|secret|tra_cuu|bi_mat|base64|^cu$|^moi$", re.I)
+_AN = re.compile(r"mat_khau|password|passwd|(^|_)pw($|_)|token|secret|tra_cuu|bi_mat|base64|^cu$|^moi$|^ma$", re.I)   # GT4-L1: `ma` = mã tra cứu của học sinh
 # Hàm có tham số vị trí khó đoán: chỉ giữ đúng những tên này.
 _CHI_GIU = {
     "dang_nhap": ("ten",),
@@ -23,7 +23,11 @@ _CHI_GIU = {
     "xoa_tai_khoan": ("ten",),
     "doi_mat_khau": (),
     "thoat_che_do_hoc_sinh": (),      # I2: tên gõ vào có thể là mật khẩu gõ nhầm ô
+    "tra_cuu_hoc_sinh": ("student_id",),            # GT4-L1: mã tra cứu (đúng hay gõ sai) không bao giờ vào nhật ký
+    "get_giai_trinh_hoc_sinh": ("student_id", "run_id"),   # GT4-L1 (D4-2): xem lời giải trình của một em
 }
+# Tên bắt đầu bằng `get_` nhưng đọc dữ liệu riêng tư của một học sinh: vẫn để lại một dòng nhật ký (D4-2).
+_GHI_DU_LA_DOC = frozenset({"get_giai_trinh_hoc_sinh"})
 _GIOI_HAN_GIA_TRI = 80
 _GIOI_HAN_TONG = 300
 _TOI_DA_PHAN_TU = 8
@@ -39,7 +43,7 @@ def nen_ghi(ten: str) -> bool:
     """Hàm này có để lại dòng nhật ký khi đã có tài khoản không? Mặc định CÓ (ghi thừa còn hơn thiếu)."""
     if ten in _KHONG_GHI:
         return False
-    if ten in _CHI_GIU:
+    if ten in _CHI_GIU or ten in _GHI_DU_LA_DOC:
         return True
     return not ten.startswith(_DOC)
 
