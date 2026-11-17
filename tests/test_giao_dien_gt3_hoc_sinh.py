@@ -133,4 +133,6 @@ def test_tai_lai_trang_o_che_do_hoc_sinh_van_con_lop_phu_va_quan_tri_thoat_duoc(
     page.click("#btnGtHsQtThoat")
     page.wait_for_function("document.querySelector('.app-shell').inert === false")
     assert _goi(page, "get_run_history")["ok"] is True
+    page.click('button.nav-item[data-tab="admin"]')                      # sau khi thoát, tab bấm được
+    page.wait_for_function("document.querySelector('.nav-item[data-tab=admin]').classList.contains('is-active')")
     assert loi == []
