@@ -168,3 +168,28 @@ Verified (own scripts, fake data):
 Notes (non-blocking): (a) HTML export text is Vietnamese only (no English variant); (b) so_sanh_lan_chay returns the student
 list to any caller of the admin API (same as other admin APIs; accounts/roles arrive with GT3 integration I1) — nothing in a
 student-facing path calls it (grep: only js/15_tieu_chi.js admin panel).
+
+## L4 | reviewed 0f157e0..20f396d | verdict: 1 BUG (minor, behavioural surprise)
+
+Tests: 214 passed (gt2 L1-L4 + Chromium + test_ws_nhan). `kiem_nhanh.py --co-so 0f157e0 --so-seed 20` -> 7/7 DAT.
+Verified (workspace mode, dataset 1, saved extra key max_tests=3, twin workspace saving the same raw criteria directly):
+- 7 criteria sets (tier, tier+groups, per_person, score+tier reserve/strict, strict+groups, {}): trial luat_xep == next official
+  run_history.luat_xep; next official luat_xep and match_results == the twin; max_tests kept; apply changes ONLY workspace_settings
+  (match_results, ket_qua_thu, ket_qua_truoc, stb_lock, fa_* untouched). Ids 1/999/"x"/True/None/-1 and official ids ->
+  gt2_lan_chay_khong_co, nothing written. FA saved ON + trial FA off -> saved fa/wharton off, fa_* tables untouched; wharton ON
+  + trial priority=tier -> saved wharton off (no error). UI: confirm bar lists the L1 plain-words order, "Không lưu" writes nothing,
+  confirm saves and refreshes the L1 panel; no internal codes in vi/en text.
+
+BUG 4 (minor): api_tieu_chi.py `ap_dung_tieu_chi` saves the NORMALISED `luat_xep_hieu_luc`, which differs from what the L1 panel
+stores for the same criteria and leaves surprising saved values.
+- repro A: trial {"priority":"tier"} -> apply -> saved tier_mode="strict" (L1 direct save keeps "reserve"). Then in the L1 panel
+  the admin switches priority back to "Điểm" and saves (`update_workspace_config({"rules":{"priority":"score"}})`): saved
+  tier_mode stays "strict", i.e. score ordering with HARD groups; an admin who never touched the group mode now gets different
+  results than the same two clicks on a fresh workspace (reserve).
+- repro B: trial {"priority":"score+tier","tier_mode":"reserve","tiers":["Đội tuyển","Khác"]} -> apply -> saved priority="score",
+  tiers=[] (group list the admin typed is erased; L1 direct save keeps both). Behaviour identical until the admin wants groups back.
+- expected: apply keeps the admin's raw criteria for keys that are inert in the trial (tier_mode when priority=tier, score_scope,
+  tiers when groups not hard, priority score+tier when not hard): e.g. save the trial's raw luat (`luat_xep_cua(run_history.luat_xep)`
+  when stored, else trial's effective merged onto the current saved rules) and assert `luat_xep_hieu_luc(saved) == trial's
+  effective` (what really must be equal) instead of equality of the stored dict. Results/run_history stay identical (verified by A/B twin).
+Not blocking for results; blocking only if lead wants "same as L1 panel" semantics. Test gap: no test saves back after a tier adopt.
