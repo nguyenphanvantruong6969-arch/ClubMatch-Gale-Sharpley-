@@ -112,6 +112,28 @@ def test_luu_khoa_diem_quyet_tam_khi_chi_xet_nhom_khong_loi(mo):
     assert not loi, loi
 
 
+def test_luu_chi_xet_nhom_khong_can_bo_tick_diem_quyet_tam(mo):
+    """Không gọi .uncheck(): ô tự tắt, khóa lại, lưu thành công, có giải thích."""
+    page, api, loi = mo()
+    page.select_option("#gt2TcPriority", "tier")
+    page.fill("#gt2TcTiers", "Khối 12")
+    assert not page.locator("#gt2TcWharton").is_checked()
+    assert page.locator("#gt2TcWharton").is_disabled()
+    assert page.locator("#gt2TcWhartonGoiY").inner_text().strip()
+    page.locator("#gt2TcLuu").click()
+    page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
+    assert not loi, loi
+
+
+def test_luu_diem_theo_nguoi_khong_can_bo_tick_diem_quyet_tam(mo):
+    page, api, loi = mo()
+    page.select_option("#gt2TcScoreScope", "per_person")
+    assert page.locator("#gt2TcWharton").is_disabled()
+    page.locator("#gt2TcLuu").click()
+    page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
+    assert not loi, loi
+
+
 def test_doi_ngon_ngu_doi_chu(mo):
     page, api, loi = mo()
     page.evaluate("window.I18N.setLang('en')")

@@ -72,6 +72,18 @@ function gt2TcDatGiaTri() {
   el("gt2TcWharton").checked = d.luat.wharton === true;
 }
 
+/* Điểm quyết tâm chỉ dùng được khi xếp theo điểm và tính điểm theo từng suất; ngoài ra tự tắt. */
+function gt2TcDongBoWharton() {
+  const o = el("gt2TcWharton");
+  const khong = el("gt2TcPriority").value === "tier" || el("gt2TcScoreScope").value === "per_person";
+  if (khong) o.checked = false;
+  o.disabled = khong;
+  const goiY = el("gt2TcWhartonGoiY");
+  const fa = !!(gt2TcDuLieu && gt2TcDuLieu.luat && gt2TcDuLieu.luat.fa_daa);
+  goiY.textContent = khong ? t(fa ? "gt2_tc_wharton_tat_fa" : "gt2_tc_wharton_tat") : "";
+  goiY.hidden = !khong;
+}
+
 function taiTieuChi() {
   return chayTai(callApi("get_tieu_chi"), (res) => {
     if (!res.ok) {
@@ -82,6 +94,7 @@ function taiTieuChi() {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
     gt2TcDatGiaTri();
+    gt2TcDongBoWharton();
   });
 }
 
@@ -111,9 +124,10 @@ function gt2TcLuu() {
 
 function khoiTaoTieuChi() {
   el("gt2TcLuu").addEventListener("click", gt2TcLuu);
+  ["gt2TcPriority", "gt2TcScoreScope"].forEach((id) => el(id).addEventListener("change", gt2TcDongBoWharton));
   window.addEventListener("langchange", () => {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
-    if (gt2TcDuLieu) gt2TcDatGiaTri();
+    if (gt2TcDuLieu) { gt2TcDatGiaTri(); gt2TcDongBoWharton(); }
   });
 }
