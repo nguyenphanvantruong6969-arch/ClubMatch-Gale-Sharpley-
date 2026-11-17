@@ -138,13 +138,14 @@ def test_nhat_ky_thao_tac_hien_trong_hop_tai_khoan_cua_quan_tri(trang):
     page.goto(url)
     page.wait_for_selector("#tkNutMoHop")
     page.click("#tkNutMoHop")
+    page.click("#tkTabNhatKy")                      # GT4-L6: nhật ký nằm ở thẻ riêng của hộp
     page.wait_for_selector("#tkNkTable")
     chu = page.inner_text("#tkNkTable")
-    assert "create_or_update_club" in chu and "tao_tai_khoan" in chu
+    assert "Tạo hoặc sửa câu lạc bộ" in chu and "Tạo tài khoản" in chu     # GT4-L6: nhãn tiếng Việt, không tên hàm
     assert "Câu lạc bộ Đẹp" in chu
-    page.fill("#tkNkHanhDong", "create_or_update_club")
+    page.select_option("#tkNkHanhDong", "create_or_update_club")           # GT4-L6: ô chọn thay cho ô gõ tay
     page.click("#tkNkLoc")
-    page.wait_for_function("!document.querySelector('#tkNkTable').innerText.includes('tao_tai_khoan')")
+    page.wait_for_function("!document.querySelector('#tkNkTable').innerText.includes('Tạo tài khoản')")
     assert "1 dòng" in page.inner_text("#tkNkTrang")
     assert page.is_disabled("#tkNkTruoc") and page.is_disabled("#tkNkSau")
     assert not loi, loi

@@ -164,7 +164,12 @@ def ghi(api, nguoi, vai, hanh_dong: str, ket_qua: str, chi_tiet=None, db_path=No
 COT = ("id", "luc", "nguoi", "vai", "hanh_dong", "ket_qua", "chi_tiet")
 
 
-def _loc(cur, nguoi, hanh_dong):
+_RE_NGAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _loc(cur, nguoi, hanh_dong, chi_tu_choi=False, ngay=None):
+    """Điều kiện lọc. `chi_tu_choi`: chỉ dòng có kết quả khác `ok` (bị từ chối hoặc lỗi). `ngay`: `YYYY-MM-DD` (ngày
+    giờ máy, đúng như cột `luc`); sai dạng -> `ValueError` (API đổi thành `gt4_ngay_sai`); rỗng/None = không lọc."""
     import tai_khoan as tk
     dk, tham = [], []
     if nguoi:
@@ -174,17 +179,33 @@ def _loc(cur, nguoi, hanh_dong):
     if hanh_dong:
         dk.append("hanh_dong = ?")
         tham.append(str(hanh_dong))
+    if chi_tu_choi:
+        dk.append("ket_qua <> 'ok'")
+    if ngay:
+        try:
+            datetime.date.fromisoformat(str(ngay))
+        except ValueError:
+            raise ValueError("ngay") from None
+        if not _RE_NGAY.match(str(ngay)):
+            raise ValueError("ngay")
+        dk.append("substr(luc, 1, 10) = ?")
+        tham.append(str(ngay))
     return (" WHERE " + " AND ".join(dk)) if dk else "", tham
 
 
-def doc_trang(cur, page, page_size, nguoi=None, hanh_dong=None):
+def hanh_dong_co(cur):
+    """Các tên hành động đang có trong nhật ký (không trùng, xếp tên) — cho ô chọn lọc."""
+    return [r[0] for r in cur.execute("SELECT DISTINCT hanh_dong FROM nhat_ky_thao_tac ORDER BY hanh_dong")]
+
+
+def doc_trang(cur, page, page_size, nguoi=None, hanh_dong=None, chi_tu_choi=False, ngay=None):
     """`(dòng, tổng)` — mới nhất trước. `page` tính từ 1; `page_size` 1..500."""
     try:
         page = max(1, int(page))
         page_size = min(500, max(1, int(page_size)))
     except (TypeError, ValueError):
         page, page_size = 1, 50
-    where, tham = _loc(cur, nguoi, hanh_dong)
+    where, tham = _loc(cur, nguoi, hanh_dong, chi_tu_choi, ngay)
     tong = cur.execute("SELECT COUNT(*) FROM nhat_ky_thao_tac" + where, tham).fetchone()[0]
     dong = cur.execute(
         "SELECT " + ", ".join(COT) + " FROM nhat_ky_thao_tac" + where + " ORDER BY id DESC LIMIT ? OFFSET ?",
@@ -192,6 +213,6 @@ def doc_trang(cur, page, page_size, nguoi=None, hanh_dong=None):
     return [dict(zip(COT, r)) for r in dong], tong, page, page_size
 
 
-def doc_het(cur, nguoi=None, hanh_dong=None):
-    where, tham = _loc(cur, nguoi, hanh_dong)
+def doc_het(cur, nguoi=None, hanh_dong=None, chi_tu_choi=False, ngay=None):
+    where, tham = _loc(cur, nguoi, hanh_dong, chi_tu_choi, ngay)
     return cur.execute("SELECT " + ", ".join(COT) + " FROM nhat_ky_thao_tac" + where + " ORDER BY id", tham).fetchall()

@@ -94,7 +94,7 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
   `quan_tri`; người tạo được đăng nhập luôn. Từ lúc đó mọi thao tác cần đăng nhập.
 - **Hai vai:** `quan_tri` (làm mọi việc, kể cả chạy xếp, đổi cấu hình, quản lý tài khoản, xem nhật ký) và `giao_vien` (nhập dữ liệu,
   xem kết quả; không làm việc dành riêng cho quản trị). Thao tác bị từ chối trả `gt3_khong_du_quyen` và vẫn được ghi nhật ký.
-- **Nhật ký thao tác:** hộp *Tài khoản*, mục *Nhật ký thao tác* (chỉ quản trị): mới nhất trước, lọc theo người và hành động, xuất
+- **Nhật ký thao tác:** hộp *Tài khoản*, thẻ *Nhật ký thao tác* (chỉ quản trị): mới nhất trước, hiện bằng chữ dễ đọc (tên thao tác, vai, kết quả, giờ địa phương), lọc theo người, thao tác, ngày, hoặc chỉ các dòng bị từ chối; xuất
   CSV `nhat_ky_thao_tac.csv` (`export_nhat_ky_thao_tac_csv`). Bảng chỉ thêm; không sửa, không xoá được. Mật khẩu và nội dung tệp không
   bao giờ vào nhật ký. Ví dụ hai dòng đầu của một lần thử (dữ liệu mô phỏng):
 

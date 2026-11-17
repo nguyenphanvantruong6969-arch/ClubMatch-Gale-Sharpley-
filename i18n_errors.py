@@ -174,6 +174,10 @@ MESSAGES = {
         "vi": "Không mở được thư mục \"{path}\". Chỉ mở được thư mục chứa tệp phần mềm vừa xuất.",
         "en": "Cannot open the folder \"{path}\". Only folders holding files this app exported can be opened.",
     },
+    "gt4_ngay_sai": {
+        "vi": "Ngày lọc phải có dạng năm-tháng-ngày, ví dụ 2026-11-17.",
+        "en": "The filter date must look like year-month-day, for example 2026-11-17.",
+    },
     "tep_khong_hop_le": {
         "vi": "Không mở được tệp \"{path}\". Chỉ mở được tệp báo cáo (.html, .csv, .xlsx, .pdf, .docx) mà phần mềm vừa xuất.",
         "en": "Cannot open the file \"{path}\". Only report files (.html, .csv, .xlsx, .pdf, .docx) this app exported can be opened.",

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L6: nhật ký thao tác đọc được (R7)
+
+- `nhat_ky.py` + `api_nhat_ky.py`: lọc phía máy chủ thêm `chi_tu_choi` (kết quả khác `ok`) và `ngay` (`YYYY-MM-DD`, sai dạng → lỗi mới `gt4_ngay_sai` ở `i18n_errors.py`); `get_nhat_ky_thao_tac` trả thêm `hanh_dong_co` (các tên hành động có mặt, cho ô chọn). CSV xuất vẫn DẠNG THÔ (tên hành động, mã kết quả nguyên văn), chỉ thêm hai tham số lọc.
+- `js/16_tai_khoan.js` + `i18n.js` (vi+en): nhật ký ra khỏi phần đầu hộp Tài khoản sang thẻ riêng "Nhật ký thao tác" (hai thẻ, thẻ đang mở được giữ khi đổi ngôn ngữ); một từ điển `nkhd_*` (87 hàm có ghi nhật ký), `nkvai_*`, `nkkq_*`, `nkkey_*` với nhãn Việt/Anh, tên lạ giữ nguyên chữ; ô lọc "Thao tác" là `<select>` điền từ `hanh_dong_co`; ô "chỉ bị từ chối hoặc lỗi"; ô ngày; giờ hiện `dd/mm/yyyy hh:mm`; `chi_tiet` hiện `khoá: giá trị`; dòng `tra_cuu_hoc_sinh` không có người → "Học sinh tự tra cứu".
+- Sửa test cũ theo L6: `tests/test_giao_dien_gt3_dang_nhap.py::test_nhat_ky_thao_tac_hien_trong_hop_tai_khoan_cua_quan_tri` (mở thẻ nhật ký, nhãn tiếng Việt, chọn hành động bằng `<select>`).
+- `docs/giai_trinh/HUONG_DAN_CHAY.md` §8 cập nhật mô tả nhật ký (gói `GOI_MINH_CHUNG` dựng lại ở lô cuối).
+- Test mới: `tests/test_gt4_nhat_ky_doc.py` (8 test + từ điển đủ khoá vi/en cho mọi hàm có ghi nhật ký), `tests/test_giao_dien_gt4_nhat_ky.py` (4 test Chromium).
+
 ## 2026-11-17 — GT4-L5: màn học sinh và vị trí khung tra cứu (R9)
 
 - Màn học sinh (`index.html`, `js/14_giai_trinh.js`, `style.css`, `i18n.js` vi+en): nhãn thấy được "Mã {person_l}" / "Mã tra cứu" (theo từ vựng workspace), tên workspace nếu có (workspace chưa có trường logo nên chỉ tên), nút đổi ngôn ngữ ngay trên màn, Enter gửi, lỗi thì con trỏ về ô đầu, khoá tạm thì đếm ngược số giây còn lại và khoá nút Xem.

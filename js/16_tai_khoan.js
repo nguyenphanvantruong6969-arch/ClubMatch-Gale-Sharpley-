@@ -14,6 +14,7 @@
   const CHU_KY_HOI_PHIEN_MS = 30000;
   let phien = null;            // data của get_phien_dang_nhap
   let dangMoHop = false;       // hộp "Tài khoản" (đóng được) đang mở
+  let theHienTai = "tk";       // GT4-L6: thẻ đang mở của hộp (tk | nk); giữ khi hộp được vẽ lại vì đổi ngôn ngữ
   let vuaTaoDau = false;       // GT4-L3: vừa tạo tài khoản quản trị đầu tiên: hộp mở lại với thẻ "Bước tiếp theo"
 
   function mot(tag, thuocTinh, ...con) {
@@ -113,9 +114,33 @@
     vuaTaoDau = false;
     if (!phien.co_tai_khoan) veTaoDauTien(hop);
     else if (phien.dang_nhap) {
-      if (vuaTaoQuanTriDau && phien.vai === "quan_tri") hop.appendChild(veBuocTiep());
-      veDoiMatKhau(hop);
-      if (phien.vai === "quan_tri") { veDanhSach(hop); veNhatKy(hop); }
+      if (phien.vai === "quan_tri") {
+        /* GT4-L6: nhật ký ở thẻ riêng (hộp tài khoản giữ ngắn): hai thẻ "Tài khoản" | "Nhật ký thao tác". */
+        const khungTk = mot("div", { id: "tkKhungTaiKhoan", role: "tabpanel" });
+        const khungNk = mot("div", { id: "tkKhungNhatKy", role: "tabpanel", hidden: true });
+        const nutTk = mot("button", { type: "button", class: "btn btn-secondary", id: "tkTabTaiKhoan", role: "tab",
+          "aria-selected": "true", text: t("tk_tab_tai_khoan") });
+        const nutNk = mot("button", { type: "button", class: "btn btn-secondary", id: "tkTabNhatKy", role: "tab",
+          "aria-selected": "false", text: t("tk_tab_nhat_ky") });
+        let daVeNk = false;
+        const chon = (nhat) => {
+          theHienTai = nhat ? "nk" : "tk";
+          khungTk.hidden = nhat; khungNk.hidden = !nhat;
+          nutTk.setAttribute("aria-selected", nhat ? "false" : "true");
+          nutNk.setAttribute("aria-selected", nhat ? "true" : "false");
+          if (nhat && !daVeNk) { daVeNk = true; veNhatKy(khungNk); }
+        };
+        nutTk.addEventListener("click", () => chon(false));
+        nutNk.addEventListener("click", () => chon(true));
+        hop.appendChild(mot("div", { role: "tablist", style: "display:flex;gap:8px;margin:8px 0 12px" }, nutTk, nutNk));
+        if (vuaTaoQuanTriDau) khungTk.appendChild(veBuocTiep());
+        veDoiMatKhau(khungTk);
+        veDanhSach(khungTk);
+        hop.append(khungTk, khungNk);
+        if (theHienTai === "nk" && !vuaTaoQuanTriDau) chon(true);
+      } else {
+        veDoiMatKhau(hop);
+      }
     }
     hop.appendChild(mot("div", { style: "margin-top:18px" },
       mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutDong", text: t("tk_dong"), onclick: dongLopPhu })));
@@ -216,48 +241,116 @@
   }
 
   /* ------------------------------------------------------------ nhật ký thao tác (GT3-L3, chỉ quản trị) */
+  /* GT4-L6: chỉ là cách HIỆN. Tên hành động, vai, mã kết quả và khoá chi tiết đi qua từ điển trong i18n.js
+     (nkhd_*, nkvai_*, nkkq_*, nkkey_*); không có trong từ điển thì giữ nguyên chữ gốc. CSV xuất vẫn là dạng thô. */
+  function nhanNk(tienTo, goc) {
+    if (goc === null || goc === undefined || goc === "") return "";
+    const k = tienTo + goc;
+    const v = t(k);
+    return v === k ? String(goc) : v;
+  }
+
+  function gioDiaPhuong(luc) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/.exec(String(luc || ""));
+    return m ? m[3] + "/" + m[2] + "/" + m[1] + " " + m[4] + ":" + m[5] : String(luc || "");
+  }
+
+  function chiTietNk(raw) {
+    if (!raw) return "";
+    let o;
+    try { o = JSON.parse(raw); } catch (e) { return String(raw); }
+    if (o === null || typeof o !== "object" || Array.isArray(o)) return String(raw);
+    return Object.keys(o).map((k) => {
+      const v = o[k];
+      const chu = v !== null && typeof v === "object" ? JSON.stringify(v) : String(v);
+      return nhanNk("nkkey_", k) + ": " + chu;
+    }).join("; ");
+  }
+
   function veNhatKy(hop) {
-    const trang = { so: 1, nguoi: "", hanhDong: "" };
-    const khung = mot("div", { style: "margin-top:24px", id: "tkNhatKy" }, mot("h3", { text: t("tk_nk_tieu_de") }),
+    const trang = { so: 1, nguoi: "", hanhDong: "", tuChoi: false, ngay: "" };
+    const khung = mot("div", { style: "margin-top:12px", id: "tkNhatKy" }, mot("h3", { text: t("tk_nk_tieu_de") }),
       mot("p", { class: "hint-text", text: t("tk_nk_ghi_chu") }));
     const locNguoi = oNhap("tkNkNguoi", t("tk_nk_loc_nguoi"), "text");
-    const locHd = oNhap("tkNkHanhDong", t("tk_nk_loc_hanh_dong"), "text");
+    const chonHd = mot("select", { id: "tkNkHanhDong", class: "text-input" });
+    const nhanHd = mot("label", { class: "ws-sua-nhan", for: "tkNkHanhDong", style: "display:block;margin:8px 0 2px",
+      text: t("tk_nk_loc_hanh_dong") });
+    const locNgay = oNhap("tkNkNgay", t("tk_nk_loc_ngay"), "date");
+    const oTuChoi = mot("input", { type: "checkbox", id: "tkNkTuChoi" });
+    const nhanTuChoi = mot("label", { for: "tkNkTuChoi", style: "display:block;margin:8px 0" }, oTuChoi, " " + t("tk_nk_chi_tu_choi"));
     const nutLoc = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkLoc", text: t("tk_nk_loc_nut") });
     const nutXuat = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkXuat", text: t("tk_nk_xuat") });
     const bang = mot("div", { id: "tkNkBang" });
     const nutTruoc = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkTruoc", text: t("tk_nk_truoc") });
     const nutSau = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkSau", text: t("tk_nk_sau") });
     const nhan = mot("span", { id: "tkNkTrang", class: "hint-text", style: "margin:0 8px" });
-    khung.append(locNguoi.nhom, locNguoi.o, locHd.nhom, locHd.o,
+    khung.append(locNguoi.nhom, locNguoi.o, nhanHd, chonHd, locNgay.nhom, locNgay.o, nhanTuChoi,
       mot("div", { style: "margin:8px 0" }, nutLoc, " ", nutXuat), bang,
       mot("div", { style: "margin-top:8px" }, nutTruoc, nhan, nutSau));
     hop.appendChild(khung);
+    let dsHd = null;       // các tên hành động đã nạp vào ô chọn (nạp lại khi ngôn ngữ đổi)
+    let dongCuoi = null;
+
+    function napOChon(co) {
+      dsHd = co;
+      const dang = trang.hanhDong;
+      chonHd.textContent = "";
+      chonHd.appendChild(mot("option", { value: "", text: t("tk_nk_tat_ca_hanh_dong") }));
+      const muc = co.map((k) => [k, nhanNk("nkhd_", k)]).sort((a, b) => a[1].localeCompare(b[1], window.I18N.getLang()));
+      muc.forEach(([k, nhanK]) => chonHd.appendChild(mot("option", { value: k, text: nhanK })));
+      chonHd.value = dang;
+    }
+
+    function veBang(d) {
+      bang.textContent = "";
+      if (!d.dong.length) bang.appendChild(mot("p", { class: "hint-text", text: t("tk_nk_trong") }));
+      else {
+        const cot = [["luc", "tk_nk_cot_luc"], ["nguoi", "tk_nk_cot_nguoi"], ["vai", "tk_nk_cot_vai"],
+          ["hanh_dong", "tk_nk_cot_hanh_dong"], ["ket_qua", "tk_nk_cot_ket_qua"], ["chi_tiet", "tk_nk_cot_chi_tiet"]];
+        const gtri = (r, c) => {
+          if (c === "luc") return gioDiaPhuong(r.luc);
+          if (c === "nguoi") return r.nguoi == null ? (r.hanh_dong === "tra_cuu_hoc_sinh" ? t("nk_hoc_sinh_tu_tra_cuu") : "") : r.nguoi;
+          if (c === "vai") return nhanNk("nkvai_", r.vai);
+          if (c === "hanh_dong") return nhanNk("nkhd_", r.hanh_dong);
+          if (c === "ket_qua") return nhanNk("nkkq_", r.ket_qua);
+          return chiTietNk(r.chi_tiet);
+        };
+        const tb = mot("table", { class: "data-table", id: "tkNkTable" },
+          mot("thead", {}, mot("tr", {}, ...cot.map(([, k]) => mot("th", { text: t(k) })))),
+          mot("tbody", {}, ...d.dong.map((r) => mot("tr", {}, ...cot.map(([c]) => mot("td", { text: gtri(r, c) }))))));
+        bang.appendChild(mot("div", { style: "overflow-x:auto" }, tb));
+      }
+      nhan.textContent = t("tk_nk_trang", { trang: d.page, so_trang: d.so_trang, tong: d.tong });
+      nutTruoc.disabled = d.page <= 1;
+      nutSau.disabled = d.page >= d.so_trang;
+    }
 
     function ve() {
-      callApi("get_nhat_ky_thao_tac", trang.so, 20, trang.nguoi || null, trang.hanhDong || null).then((res) => {
+      callApi("get_nhat_ky_thao_tac", trang.so, 20, trang.nguoi || null, trang.hanhDong || null, trang.tuChoi,
+        trang.ngay || null).then((res) => {
         if (!res.ok) { showErrorToast(res.errors); return; }
         const d = res.data;
-        bang.textContent = "";
-        if (!d.dong.length) bang.appendChild(mot("p", { class: "hint-text", text: t("tk_nk_trong") }));
-        else {
-          const cot = [["luc", "tk_nk_cot_luc"], ["nguoi", "tk_nk_cot_nguoi"], ["vai", "tk_nk_cot_vai"],
-            ["hanh_dong", "tk_nk_cot_hanh_dong"], ["ket_qua", "tk_nk_cot_ket_qua"], ["chi_tiet", "tk_nk_cot_chi_tiet"]];
-          const tb = mot("table", { class: "data-table", id: "tkNkTable" },
-            mot("thead", {}, mot("tr", {}, ...cot.map(([, k]) => mot("th", { text: t(k) })))),
-            mot("tbody", {}, ...d.dong.map((r) => mot("tr", {}, ...cot.map(([c]) => mot("td", { text: r[c] == null ? "" : String(r[c]) }))))));
-          bang.appendChild(mot("div", { style: "overflow-x:auto" }, tb));
-        }
-        nhan.textContent = t("tk_nk_trang", { trang: d.page, so_trang: d.so_trang, tong: d.tong });
-        nutTruoc.disabled = d.page <= 1;
-        nutSau.disabled = d.page >= d.so_trang;
+        if (dsHd === null || d.hanh_dong_co.join("|") !== dsHd.join("|")) napOChon(d.hanh_dong_co);
+        dongCuoi = d;
+        veBang(d);
       });
     }
-    nutLoc.addEventListener("click", () => { trang.so = 1; trang.nguoi = locNguoi.o.value.trim(); trang.hanhDong = locHd.o.value.trim(); ve(); });
+    function docLoc() {
+      trang.so = 1; trang.nguoi = locNguoi.o.value.trim(); trang.hanhDong = chonHd.value;
+      trang.tuChoi = oTuChoi.checked; trang.ngay = locNgay.o.value;
+    }
+    nutLoc.addEventListener("click", () => { docLoc(); ve(); });
     nutTruoc.addEventListener("click", () => { if (trang.so > 1) { trang.so -= 1; ve(); } });
     nutSau.addEventListener("click", () => { trang.so += 1; ve(); });
     nutXuat.addEventListener("click", () => chayNut(nutXuat,
-      () => callApi("export_nhat_ky_thao_tac_csv", "", trang.nguoi || null, trang.hanhDong || null),
+      () => callApi("export_nhat_ky_thao_tac_csv", "", trang.nguoi || null, trang.hanhDong || null, trang.tuChoi,
+        trang.ngay || null),
       (res) => { if (!res.ok) { showErrorToast(res.errors); return; } showToast(t("tk_nk_da_xuat", { n: res.data.n_rows }), "success"); }));
+    window.addEventListener("langchange", () => {              // nhãn theo ngôn ngữ đang chọn: vẽ lại ô chọn và bảng
+      if (!document.body.contains(khung)) return;
+      if (dsHd) napOChon(dsHd);
+      if (dongCuoi) veBang(dongCuoi);
+    });
     ve();
   }
 
@@ -271,7 +364,8 @@
       hop.appendChild(mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutDangXuat", text: t("tk_dang_xuat"),
         onclick: () => callApi("dang_xuat").then(() => capNhat().then(() => veManDangNhap())) }));
     }
-    hop.appendChild(mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutMoHop", text: t("tk_nut_thanh_ben"), onclick: veHop }));
+    hop.appendChild(mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutMoHop", text: t("tk_nut_thanh_ben"),
+      onclick: () => { theHienTai = "tk"; veHop(); } }));
     hop.hidden = false;
   }
 
