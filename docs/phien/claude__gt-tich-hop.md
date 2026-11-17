@@ -48,6 +48,8 @@ Truong merges to main himself. No PR.
 | Role | Model | Session | State |
 |---|---|---|---|
 | lead | Opus | session_01YVAyu27w5WZmfqRfkjo3Av | running |
+| writer | Sonnet | session_01YVAytzUoskbGS1rGPtH4ZW | GO I0 sent 05:30 UTC |
+| checker | Sonnet | session_01YVAytyqoQv2u5JTmCyKLkE | waiting for REVIEW I0 |
 
 ## Needs Truong
 1. Compare view permission: task file says `giao_vien`; GT2 lead classified all GT2 APIs `quan_tri` because the
