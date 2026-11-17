@@ -159,3 +159,15 @@ def test_so_lieu_fa001_fa002_trong_tai_lieu_khop_lan_chay_that(tmp_path):
     assert "Thứ 2 nhận nguyện vọng %s, Thứ 5 nhận nguyện vọng %s" % (h[("FA002", "thu_2")], h[("FA002", "thu_5")]) in demo
     assert "FA001: Thứ 5 hạng %s, Thứ 2 hạng %s; FA002: Thứ 2 hạng %s, Thứ 5 hạng %s" % (
         h[("FA001", "thu_5")], h[("FA001", "thu_2")], h[("FA002", "thu_2")], h[("FA002", "thu_5")]) in video
+
+
+def test_ten_the_trong_kich_ban_khop_nhan_giao_dien():
+    """Mọi "thẻ X" trong kịch bản demo/video phải là nhãn thẻ thật trên giao diện (i18n.js nav_*)."""
+    with open(os.path.join(GOC, "i18n.js"), encoding="utf-8") as f:
+        nhan = {n.strip() for n in re.findall(r'nav_\w+:\s*"([^"{]+)', f.read())}
+    for ten in ("KICH_BAN_DEMO.md", "KICH_BAN_VIDEO.md"):
+        with open(os.path.join(THU_MUC, ten), encoding="utf-8") as f:
+            noi_dung = f.read()
+        for the in re.findall(r"thẻ \**([A-ZĐÀ-Ỹ][\wÀ-ỹ]*(?: [a-zà-ỹ][\wà-ỹ]*)?)", noi_dung):
+            the = the.strip("*").strip()
+            assert any(the == n or n.startswith(the) or the.startswith(n) for n in nhan), (ten, the)

@@ -3,7 +3,7 @@
 > Fresh session: read CLAUDE.md, docs/phien/GT_GIAO_THUC.md (§5, §6, §9), then THIS file.
 > English. Cap 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: IN PROGRESS (I0 merges)
+Status: IN PROGRESS (§6 CI gate)
 
 ## Feature / goal
 Integrate GT1 (giải trình, `claude/gt1-giai-trinh` DONE 499edf1), GT2 (tiêu chí, `claude/gt2-tieu-chi` DONE 8965d2b)
@@ -29,7 +29,7 @@ Truong merges to main himself. No PR.
       `cong_khai` methods work. Done when a Chromium test shows a student cannot reach any tab.
 - [x] I3 audit: run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly one audit row.
       Done when tested (`tests/test_gt_tich_hop.py` or a `test_gt3_*` file).
-- [ ] I4 evidence pack: `du_lieu_test/tao_ca_mau_giai_trinh.py` (simulated 120 students, fixed seed) writes
+- [x] I4 evidence pack (4661b7b; checker bug 1 tab name fixed in the I4-fix commit): `du_lieu_test/tao_ca_mau_giai_trinh.py` (simulated 120 students, fixed seed) writes
       `docs/giai_trinh/CA_MAU.md` (3 got 1st choice, 3 did not — GT1 sentences + data; 1 run blocked by missing data,
       real message; 1 conflicting criteria rejected at save, real message; GT2 table default vs one alternative:
       changed students, per-group effects). Then `docs/giai_trinh/tao_goi_minh_chung.py` builds
@@ -38,11 +38,11 @@ Truong merges to main himself. No PR.
 - [ ] §6 CI gate on `claude/gt-tich-hop` (lint + all shards + coverage ≥ 85 %).
 
 ## Current state (overwrite each handoff)
-- Done so far: branch created from origin/main 35609f7; GT1 merged (a38fef8). GT2 merge aborted (shared-file
-  conflicts) for the writer.
-- In progress: I0.
-- Tests: none run on this branch yet.
-- Open problems: none.
+- Done: I0-I4. I4 checker bug 1 ("thẻ Quản trị" -> "thẻ Quản lý" in KICH_BAN_DEMO/VIDEO) fixed + test
+  `test_gt3_tai_lieu.py::test_ten_the_trong_kich_ban_khop_nhan_giao_dien`; GOI_MINH_CHUNG.docx/.pdf rebuilt.
+- In progress: §6 CI gate (run by the original GT3 lead session after the integration sessions stopped on the
+  account spend limit, 2026-11-17).
+- Tests: test_gt3_tai_lieu.py + test_gt_tich_hop.py 35 passed; ruff clean (docs/test-only change, no product code).
 
 ## Sessions
 | Role | Model | Session | State |

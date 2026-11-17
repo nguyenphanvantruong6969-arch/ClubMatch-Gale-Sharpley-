@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-17 — I4 sửa (tích hợp): tên thẻ trong kịch bản demo/video
+
+- `docs/giai_trinh/KICH_BAN_DEMO.md` (bước 10), `KICH_BAN_VIDEO.md` (dòng 9): "thẻ Quản trị" → "thẻ Quản lý" (nhãn thật, i18n `nav_admin`); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.
+- Test mới: `tests/test_gt3_tai_lieu.py::test_ten_the_trong_kich_ban_khop_nhan_giao_dien` (mọi "thẻ X" trong hai kịch bản phải là nhãn thẻ có thật).
+
 ## 2026-11-17 — I4 (tích hợp GT1+GT2+GT3): ca mẫu và gói minh chứng
 
 - Mới: `du_lieu_test/tao_ca_mau_giai_trinh.py` sinh `docs/giai_trinh/CA_MAU.md` (bộ TEST_0* 120 em MÔ PHỎNG, hạt giống 42): 3 em được nguyện vọng 1, 3 em không (câu giải trình + bảng), 1 lần chạy bị chặn vì thiếu dữ liệu, 1 tiêu chí mâu thuẫn bị từ chối khi lưu, bảng so sánh mặc định với một tiêu chí thử (số em đổi chỗ, theo nhóm, theo CLB). Chỉ dữ kiện và câu của phần mềm, không có nhận xét.
