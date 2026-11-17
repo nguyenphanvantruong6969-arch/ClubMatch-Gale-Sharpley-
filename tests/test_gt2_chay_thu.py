@@ -183,3 +183,29 @@ def test_cac_cho_doc_chinh_thuc_bo_qua_lan_thu_o_csdl_co_ca_hai(tmp_path):
     with a._ket_noi_doc() as cur:
         goc = rb.run_chinh_thuc_moi_nhat(cur)
     assert goc["loai_chay"] is None and goc["run_id"] == ls[0]["run_id"]
+
+
+def test_luat_luu_la_fa_nhung_luat_thu_tat_fa_thi_van_chay_duoc(tmp_path):
+    """FIX L2 #1: quyết định theo luật HIỆU LỰC (đã trộn), không theo luật đã lưu."""
+    a, db = _mo(tmp_path, BO[0][2])
+    cau_hinh_ws.ghi_cau_hinh(db, {"rules": {"wharton": True, "fa_daa": True}})
+    truoc = _chup(a, db, str(tmp_path))
+    r = a.run_thu({"fa_daa": False, "wharton": False})
+    assert r["ok"], r
+    assert _sql(db, "SELECT COUNT(*) FROM ket_qua_thu WHERE run_id = ?", (r["data"]["run_id"],))[0][0] > 0
+    for bang in ("fa_ly_do", "fa_nhom", "fa_dieu_chinh", "match_results", "stb_lock"):
+        assert _chup(a, db, str(tmp_path))[bang] == truoc[bang], bang
+    # luật thử vẫn bật FA thì vẫn bị từ chối bằng lời dễ hiểu
+    r2 = a.run_thu({})
+    assert not r2["ok"] and r2["errors"][0]["code"] == "gt2_thu_chua_ho_tro_fa"
+
+
+@pytest.mark.parametrize("khoa", ["max_tests", "fa_duong", "max_choices_khac"])
+def test_luat_thu_chi_nhan_khoa_tieu_chi(tmp_path, khoa):
+    """FIX L2 #2: khoá ngoài `LUAT_XEP_MAC_DINH` bị từ chối, không ghi gì."""
+    a, db = _mo(tmp_path, BO[0][2])
+    truoc = _sql(db, "SELECT COUNT(*) FROM run_history")
+    r = a.run_thu({khoa: 1})
+    assert not r["ok"] and r["errors"][0]["code"] == "gt2_tieu_chi_khong_hop_le", r
+    assert _sql(db, "SELECT COUNT(*) FROM run_history") == truoc
+    assert _sql(db, "SELECT COUNT(*) FROM ket_qua_thu") == [(0,)]

@@ -4,6 +4,8 @@
 
 Chạy thử một bộ tiêu chí trong giới hạn đã duyệt (D-GT1) mà KHÔNG đụng kết quả chính thức. Mặc định TẮT: chưa ai chạy
 thử thì mọi hành vi y như cũ. Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60 ca. Số liệu MÔ PHỎNG.
+
+Sửa vòng 1 (fix1): `run_thu` quyết định FA theo luật HIỆU LỰC (đã trộn luật đã lưu với luật thử), không theo luật đã lưu; luật thử chỉ nhận khoá của `LUAT_XEP_MAC_DINH` (khoá lạ → `gt2_tieu_chi_khong_hop_le`). +4 ca trong `tests/test_gt2_chay_thu.py`.
 - Lược đồ (D-GT8, idempotent, sao lưu trước): cột `run_history.loai_chay` (NULL = chính thức, 'thu' = chạy thử; thêm vào
   `di_tru_schema` và `CREATE TABLE`), bảng `ket_qua_thu` (sau khối `fa_phan_hoi`).
 - Mới: `PipelineAPI.run_thu(rules_thu, chi_buoi=None)` ở `api_tieu_chi.py`: kiểm luật bằng `cau_hinh_ws._chuan_hoa`,

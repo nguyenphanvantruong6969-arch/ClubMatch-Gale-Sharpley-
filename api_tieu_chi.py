@@ -13,6 +13,7 @@ from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
 from rbda_priority_pipeline import (
     BUOI_MAC_DINH,
+    LUAT_XEP_MAC_DINH,
     CHE_DO_BOC_THAM_MAC_DINH,
     cac_dong_match_results,
     cat_du_lieu_theo_buoi,
@@ -81,13 +82,16 @@ class TieuChiMixin:
                 return _fail(loi_cau_hinh(e))
             if not isinstance(rules_thu, dict):
                 return _fail(err("gt2_tieu_chi_khong_hop_le", chi_tiet=""))
+            la_khoa = sorted(str(k) for k in rules_thu if k not in LUAT_XEP_MAC_DINH)
+            if la_khoa:
+                return _fail(err("gt2_tieu_chi_khong_hop_le", chi_tiet=", ".join(la_khoa)))
             try:
                 cfg = cau_hinh_ws._chuan_hoa(
                     cau_hinh_ws.tron_len(da_luu, {"rules": rules_thu}), kiem_trung=False)
             except ValueError as e:
                 return _fail(err("gt2_tieu_chi_khong_hop_le", chi_tiet=str(e)))
             luat = cfg["rules"]
-            if dung_fa_daa(luat) or dung_fa_daa(da_luu["rules"]):
+            if dung_fa_daa(luat):
                 return _fail(err("gt2_thu_chua_ho_tro_fa"))
 
             # 2) Cần một lần chính thức và bộ số bốc thăm đã khoá.
