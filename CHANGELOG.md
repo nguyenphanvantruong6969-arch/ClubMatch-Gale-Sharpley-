@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 2026-11-17 — GT2-L3 (mục GT2, mục cha A1/Z7-lite): So sánh hai lần chạy
+
+So sánh một lần chạy thử với lần chính thức (hoặc hai lần thử) ngay trong thẻ Quản lý. Chỉ ĐỌC, không bốc thăm, không ghi
+`match_results`. Bất biến 1: mặc định TẮT, `kiem_nhanh.py` trùng khít. Số liệu MÔ PHỎNG.
+
+- `tieu_chi.py`: `so_sanh_lan_chay(a, b, ctx)` (hàm thuần: tổng quan, từng CLB gồm điểm chuẩn, nhóm ưu tiên, lớp, danh sách em
+  đổi chỗ; chỉ so các buổi cả hai lần cùng có) và `dung_html_so_sanh` (HTML một tệp, không nạp gì từ ngoài, mọi chữ qua `escape`).
+- `api_tieu_chi.py`: `list_lan_chay`, `so_sanh_lan_chay(run_a, run_b=None)`, `export_so_sanh_html`, `export_so_sanh_csv`
+  (UTF-8 có BOM). Lần chính thức cũ không còn dòng kết quả → `gt2_so_sanh_lan_cu` (không bịa số); mã mới `gt2_lan_chay_khong_co`.
+- Giao diện: khung "Thử cấu hình" (`index.html`, `js/15_tieu_chi.js`, `style.css`, khoá `gt2_thu_*` / `gt2_ss_*` trong `i18n.js`).
+- Sửa kèm: `tests/test_ws_nhan.py` (khối GT2 cho mã lỗi mới của L1–L3), chữ gợi ý ô nhóm trong `index.html` khớp danh mục.
+- Test mới: `tests/test_gt2_so_sanh.py` (9 ca, kiểm tay 10 em), `tests/test_giao_dien_gt2_thu.py` (4 ca, Chromium).
+
 ## 2026-11-17 — GT2-L2 (mục GT2, mục cha A1/Z7-lite): Chạy thử tiêu chí (ghi riêng, không công bố)
 
 Chạy thử một bộ tiêu chí trong giới hạn đã duyệt (D-GT1) mà KHÔNG đụng kết quả chính thức. Mặc định TẮT: chưa ai chạy

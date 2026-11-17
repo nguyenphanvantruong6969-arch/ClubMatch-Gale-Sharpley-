@@ -7,7 +7,6 @@ import os
 import sqlite3
 import sys
 
-import pytest
 
 import api as api_mod
 import cau_hinh_ws

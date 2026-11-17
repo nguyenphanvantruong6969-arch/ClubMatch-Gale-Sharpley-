@@ -2982,3 +2982,7 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
   #kqBang td:not(.kq-cd) { min-width: 5em; }
   #kqBang th, #kqBang td { padding-left: 6px; padding-right: 6px; }
 }
+
+/* GT2-L3: display:grid / flex đè thuộc tính hidden */
+#gt2ThuChon[hidden],
+#gt2ThuNut[hidden] { display: none; }

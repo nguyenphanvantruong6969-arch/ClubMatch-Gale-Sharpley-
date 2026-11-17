@@ -275,14 +275,14 @@ class TieuChiMixin:
         if dong["loai_chay"] == "thu":
             rows = [tuple(r) for r in cur.execute(
                 "SELECT student_id, buoi, club_id, rank_in_list FROM ket_qua_thu WHERE run_id = ? "
-                "ORDER BY student_id, buoi", (run_id,))]
+                "ORDER BY student_id", (run_id,))]
             nhan = "thu"
         else:
             if goc is None or goc["run_id"] != run_id:
                 return None, err("gt2_so_sanh_lan_cu", run_id=str(run_id))
             rows = [tuple(r) for r in cur.execute(
                 "SELECT student_id, buoi, club_id, rank_in_student_pref FROM match_results "
-                "ORDER BY student_id, buoi")]
+                "ORDER BY student_id")]
             nhan = "chinh_thuc"
         return {"nhan": nhan, "run_id": run_id, "luat": self._luat_tu_dong(dong), "rows": rows}, None
 
