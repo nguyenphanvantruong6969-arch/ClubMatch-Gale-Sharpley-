@@ -14,11 +14,11 @@ to lead in protocol §7 format (send_message to the lead). Never edits product c
 - [x] L2 reviewed: first review 1 minor bug + 1 note; fix1 (9613648..e36fc60) -> NO BUGS
 - [x] L3 reviewed 5ae7003..1cca309 -> NO BUGS
 - [x] L4 reviewed 0f157e0..20f396d -> 1 BUG (minor) reported to lead; awaiting `FIX L4` then re-REVIEW
-- [ ] L4 fix1 re-check (wait for "REVIEW L4 <base>..<head>")
+- [x] L4 fix1 reviewed 20f396d..a41f7bc -> NO BUGS (BUG 4 fixed)
 
 ## Current state
 - Done: L1-L3 closed. L4 first review reported (BUG 4 below).
-- In progress: nothing; awaiting lead.
+- In progress: nothing; L4 closed NO BUGS. No further duty unless asked.
 - Tests: `.venv/bin/python -m pytest -q -p no:cacheprovider --no-header -rf --tb=no tests/test_gt2_ap_dung.py
   tests/test_gt2_so_sanh.py tests/test_giao_dien_gt2_thu.py tests/test_gt2_tieu_chi.py tests/test_giao_dien_gt2_tieu_chi.py
   tests/test_gt2_chay_thu.py tests/test_ws_nhan.py` -> 214 passed at 20f396d.
@@ -37,6 +37,7 @@ to lead in protocol §7 format (send_message to the lead). Never edits product c
 - Existing Chromium tests mask UI bugs when they pre-set controls: add the "do not touch it" path.
 
 ## Next steps
+0. (done by checker 3) L4 fix1 verified NO BUGS; lead runs CI gate. Old list below kept for reference.
 1. Wait for `FIX L4` / `REVIEW L4 <base>..<head>` (fix1): re-run repro A (trial tier -> apply -> panel priority back to score:
    saved tier_mode must stay as before the trial, i.e. reserve) and repro B (score+tier reserve with groups -> apply -> saved
    keeps priority/tiers or stays equivalent); re-confirm `luat_xep_hieu_luc(saved) == trial's effective`, next official
@@ -51,6 +52,7 @@ to lead in protocol §7 format (send_message to the lead). Never edits product c
 |---|---|---|---|
 | 2026-11-17 | Sonnet (checker 1) | Setup; reviewed L1 (3 rounds -> NO BUGS) and L2 (1 minor bug + 1 note) | handoff at ~200k tokens |
 | 2026-11-17 | Sonnet (checker 2) | L2 fix1 NO BUGS; L3 NO BUGS; L4 1 minor bug reported | handoff at ~200k tokens |
+| 2026-11-17 | Sonnet (checker 3) | L4 fix1 NO BUGS | no handoff needed |
 
 ---
 # Verdicts (condensed, append only)
@@ -77,3 +79,11 @@ to lead in protocol §7 format (send_message to the lead). Never edits product c
   A: trial priority=tier -> apply -> tier_mode="strict" (L1 keeps "reserve"); panel back to score + save keeps strict = hard groups.
   B: trial score+tier/reserve/tiers=[A,B] -> apply -> priority="score", tiers=[] (typed groups erased).
   Expected: keep raw criteria for inert keys; assert `luat_xep_hieu_luc(saved) == trial's effective`. Results unaffected.
+
+## L4 fix1 | 20f396d..a41f7bc | NO BUGS (217 passed, 7/7)
+- BUG 4 fixed: `_luat_ap_dung` starts from saved rules, overrides only active keys, keeps saved priority when equivalent.
+- Brute force 28 valid saved x 28 trial rule sets (784 pairs): effective(saved after apply) == trial's, result valid for
+  cau_hinh_ws, saved already-equivalent => unchanged. End-to-end (tier / score+tier strict / per_person): equal effective,
+  apply changes only workspace_settings, next official match_results == direct-save twin, luat_xep == trial's.
+- `gt2_ap_dung_khong_khop` forced via patch: not ok, config unchanged, vi/en plain, in i18n_loi.js.
+- Not exercised: trial with Wharton/FA ON (datasets lack profiles; trial refused by existing codes).
