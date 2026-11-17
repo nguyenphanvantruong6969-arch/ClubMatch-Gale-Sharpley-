@@ -1,7 +1,7 @@
 # Kịch bản trình diễn trực tiếp
 
 > **Dữ liệu mô phỏng.** Trình diễn bằng sổ mẫu 120 học sinh do máy sinh; nói rõ điều này với người xem. Thời lượng dự kiến 10–12 phút.
-> Bước nào có ghi **(sau tích hợp)** cần bản đã gộp các tính năng giải trình và tiêu chí; trước đó bỏ qua hoặc nói "sắp có".
+> Các bước 8–10 dùng tính năng giải trình và tiêu chí, có trong bản đã gộp. Ca mẫu có sẵn số liệu để đối chiếu: `CA_MAU.md`.
 
 Chuẩn bị: làm theo `HUONG_DAN_CHAY.md` mục 1; thư mục làm việc trống; tắt thông báo của máy.
 
@@ -12,9 +12,9 @@ Chuẩn bị: làm theo `HUONG_DAN_CHAY.md` mục 1; thư mục làm việc tr�
 5. **Bấm chạy xếp** (hạt giống 42). Màn hình: các bước `backup → validate → stb_lottery → rbda_cascade → write_results → export` đều xong, 120/120 học sinh có chỗ; không bị chặn, không cần "phóng" điểm.
 6. **Xem kết quả.** Mở thẻ Kết quả; nói: phần mềm dừng và nói rõ khi hồ sơ sai (đã thấy ở bước 2), còn sổ đúng thì chạy thẳng.
 7. **Tra cứu một học sinh nhận nguyện vọng 1 ở một buổi**: gõ `FA001`. Màn hình: Thứ 5 nhận nguyện vọng 1 (`THU_5_4`); Thứ 2 nhận nguyện vọng 2 (`THU_2_4`). Giải thích bằng câu cho học sinh này **đã có sẵn** ở chế độ huy chương (`get_ly_do_ket_qua`): đọc hai câu của buổi Thứ 2.
-8. **Tra cứu một học sinh không nhận nguyện vọng 1**: gõ `FA002` (Thứ 2 nhận nguyện vọng 3, Thứ 5 nhận nguyện vọng 4). Màn hình: các câu giải thích nêu mốc điểm chưa đạt và các bạn có huy chương cao hơn được xét trước, bằng chính dữ liệu của em đó. Bản gộp thêm phần giải trình nâng cao: **(sau tích hợp)**.
-9. **In phiếu của một học sinh** và **tra cứu tại kiosk bằng mã tra cứu**: **(sau tích hợp)**.
-10. **Đổi thử một tiêu chí** trong chế độ chạy thử, **so sánh** với kết quả chính thức (ai đổi chỗ, theo nhóm), rồi **áp dụng** hoặc bỏ: **(sau tích hợp)**. Nói: chạy thử không ghi đè kết quả chính thức.
+8. **Tra cứu một học sinh không nhận nguyện vọng 1**: gõ `FA002` (Thứ 2 nhận nguyện vọng 3, Thứ 5 nhận nguyện vọng 4). Màn hình: các câu giải thích nêu mốc điểm chưa đạt và các bạn có huy chương cao hơn được xét trước, bằng chính dữ liệu của em đó. Giải trình nâng cao: thẻ **Kết quả**, ô "Tra cứu một học sinh", gõ mã hoặc tên rồi chọn em đó; màn hình hiện từng nguyện vọng kèm điểm của em, điểm chuẩn, số chỗ đã nhận và câu giải thích.
+9. **In phiếu của một học sinh** (nút "In phiếu cho học sinh này" ở ô tra cứu) và **tra cứu tại kiosk bằng mã tra cứu**: bấm "Tạo mã tra cứu" trước, rồi "Chế độ học sinh tra cứu"; học sinh gõ mã học sinh và mã tra cứu in trên phiếu, chỉ thấy phần của mình. Khi đã có tài khoản, thoát chế độ này cần đăng nhập quản trị.
+10. **Đổi thử một tiêu chí** trong chế độ chạy thử, **so sánh** với kết quả chính thức (ai đổi chỗ, theo nhóm), rồi **áp dụng** hoặc bỏ: thẻ **Quản trị**, mục "Tiêu chí xếp" (xem tiêu chí bằng lời) và mục "Thử cấu hình" (đổi tiêu chí, bấm "Chạy thử", chọn hai lần chạy, bấm "So sánh", dùng "Dùng tiêu chí của một lần chạy thử" để áp dụng). Nói: chạy thử không ghi đè kết quả chính thức.
 11. **Chạy lại cùng hạt giống.** Màn hình: kết quả y hệt (số bốc thăm đã khoá). Mở lịch sử chạy: mỗi lần chạy một dòng, không dòng nào bị sửa.
 12. **Bật tài khoản.** Hộp *Tài khoản* → tạo quản trị `quantri` (mật khẩu thử) → đăng xuất → đăng nhập bằng tài khoản giáo viên → thử thao tác dành cho quản trị; màn hình: "Tài khoản này không có quyền làm việc này. Hãy nhờ người quản trị."
 13. **Xem nhật ký thao tác** (đăng nhập quản trị → hộp *Tài khoản* → *Nhật ký thao tác*). Màn hình: các dòng mới nhất trước, gồm cả thao tác bị từ chối; xuất CSV. Nói: mật khẩu và nội dung tệp không có trong nhật ký.

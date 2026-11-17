@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-17 — I4 (tích hợp GT1+GT2+GT3): ca mẫu và gói minh chứng
+
+- Mới: `du_lieu_test/tao_ca_mau_giai_trinh.py` sinh `docs/giai_trinh/CA_MAU.md` (bộ TEST_0* 120 em MÔ PHỎNG, hạt giống 42): 3 em được nguyện vọng 1, 3 em không (câu giải trình + bảng), 1 lần chạy bị chặn vì thiếu dữ liệu, 1 tiêu chí mâu thuẫn bị từ chối khi lưu, bảng so sánh mặc định với một tiêu chí thử (số em đổi chỗ, theo nhóm, theo CLB). Chỉ dữ kiện và câu của phần mềm, không có nhận xét.
+- Mới: `docs/giai_trinh/tao_goi_minh_chung.py` dựng `GOI_MINH_CHUNG.docx` (python-docx, đã có trong requirements-dev) và `.pdf` (Chromium in); hai tệp đã dựng kèm theo.
+- Điền các bước "(sau tích hợp)" trong `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md`, `HUONG_DAN_CHAY.md`, `SO_DO_LUONG.md` bằng tên nút thật trên giao diện; `test_gt3_tai_lieu.py::test_kich_ban_khong_con_buoc_cho_tich_hop` thay cho test cũ đòi dấu "(sau tích hợp)".
+- Test mới: `tests/test_gt_tich_hop.py::test_i4_*` (3 test: sinh lại CA_MAU.md giống từng byte, mỗi ca khớp đầu ra thật, gói dựng được).
+
 ## 2026-11-17 — I3 (tích hợp GT1+GT2+GT3): nhật ký thao tác cho chạy thử, áp dụng tiêu chí, mã tra cứu, phiếu
 
 - Không đổi mã sản phẩm: cơ chế `phan_quyen._boc` + `nhat_ky` đã ghi đúng MỘT dòng cho `run_thu`, `ap_dung_tieu_chi` (lời gọi lồng `update_workspace_config` không ghi thêm), `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`, `export_ma_tra_cuu_csv`, `export_phieu_giai_trinh`; giáo viên bị từ chối vẫn để lại một dòng kèm mã lỗi. Test mới (khoá hành vi này): `tests/test_gt_tich_hop.py::test_i3_*` (4 test).

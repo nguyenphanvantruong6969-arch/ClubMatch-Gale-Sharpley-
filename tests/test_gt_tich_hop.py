@@ -156,3 +156,75 @@ def test_i3_chi_tiet_dong_nhat_ky_khong_lo_bi_mat(co_tk):
         (dong,) = _dong_nk(api, ten)
         assert len(dong["chi_tiet"] or "") <= 300 and "Nguyễn" not in (dong["chi_tiet"] or ""), ten
     assert "s2" not in (_dong_nk(api, "tao_lai_ma_tra_cuu")[0]["chi_tiet"] or "")
+
+
+# ----------------------------------------------------------------------------- I4: ca mẫu + gói minh chứng
+def _nap_ca_mau():
+    import os
+    import sys
+    goc = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(goc, "du_lieu_test"))
+    sys.path.insert(0, os.path.join(goc, "docs", "giai_trinh"))
+    import tao_ca_mau_giai_trinh as t
+    return goc, t
+
+
+def test_i4_ca_mau_sinh_lai_giong_het_tung_byte():
+    import os
+    goc, t = _nap_ca_mau()
+    with open(os.path.join(goc, "docs", "giai_trinh", "CA_MAU.md"), encoding="utf-8", newline="") as f:
+        co_san = f.read()
+    lan1, lan2 = t.tao_ca_mau(), t.tao_ca_mau()
+    assert lan1 == lan2                     # hai lần chạy cho cùng tệp
+    assert lan1 == co_san, "CA_MAU.md đã cũ: chạy python du_lieu_test/tao_ca_mau_giai_trinh.py"
+    assert "DỮ LIỆU MÔ PHỎNG" in co_san
+
+
+def test_i4_moi_ca_khop_dau_ra_that_cua_phan_mem(tmp_path):
+    import os
+    import re
+    goc, t = _nap_ca_mau()
+    with open(os.path.join(goc, "docs", "giai_trinh", "CA_MAU.md"), encoding="utf-8") as f:
+        van_ban = f.read()
+    a, slug, _db = t._dung_workspace(str(tmp_path))
+    ca = re.findall(r"^### Ca (\d+) — .+ \((\w+)\)$", van_ban, re.M)
+    assert [int(n) for n, _ in ca] == [1, 2, 3, 4, 5, 6]
+    with a._ket_noi_doc() as cur:
+        xep = dict(cur.execute("SELECT student_id, club_id FROM match_results"))
+        ten_clb = dict(cur.execute("SELECT club_id, name FROM clubs"))
+        nv1 = dict(cur.execute("SELECT student_id, club_id FROM preferences WHERE rank = 1"))
+    for n, sid in ca:
+        duoc_nv1 = xep.get(sid) == nv1.get(sid)
+        assert duoc_nv1 is (int(n) <= 3), f"ca {n} ({sid}): sai nhóm được/không được nguyện vọng 1"
+        ket = ten_clb.get(xep.get(sid))
+        assert f"Kết quả: **{ket or 'chưa có chỗ'}**" in van_ban
+        gt = a.get_giai_trinh_hoc_sinh(sid)["data"]["buoi"][0]
+        for x in gt["cac_lua_chon"]:
+            assert f"- (hạng {x['hang']}) {x['cau']}" in van_ban, (sid, x["hang"])
+    # thông báo lỗi trong tệp = thông báo thật
+    r = a.update_workspace_config({"rules": t.LUAT_XUNG_DOT}, slug)
+    assert not r["ok"] and f"- {t._msg(r)}" in van_ban
+    for dong in t.i18n_errors.format_all(t._ca_bi_chan(str(tmp_path / "chan"))["errors"], "vi"):
+        assert f"- {dong}" in van_ban
+    # chạy thử không ghi đè kết quả chính thức, số em đổi chỗ khớp
+    truoc = dict(xep)
+    thu = a.run_thu(t.LUAT_THU)
+    so_doi = a.so_sanh_lan_chay(thu["data"]["run_id"])["data"]["so_doi"]
+    assert f"Số em đổi chỗ: **{so_doi}**." in van_ban
+    with a._ket_noi_doc() as cur:
+        assert dict(cur.execute("SELECT student_id, club_id FROM match_results")) == truoc
+
+
+def test_i4_goi_minh_chung_dung_duoc_docx_va_html(tmp_path, monkeypatch):
+    pytest.importorskip("docx")
+    import docx
+    _goc, _t = _nap_ca_mau()
+    import tao_goi_minh_chung as g
+    monkeypatch.setattr(g, "DUONG_DOCX", str(tmp_path / "goi.docx"))
+    cac_tep = g.doc_cac_tep()
+    assert [ten for ten, _ in cac_tep] == g.THU_TU
+    assert g.ghi_docx(cac_tep)
+    chu = "\n".join(p.text for p in docx.Document(str(tmp_path / "goi.docx")).paragraphs)
+    assert "DỮ LIỆU MÔ PHỎNG" in chu and "Ca mẫu giải trình và tiêu chí" in chu
+    trang = g.dung_html(cac_tep)
+    assert "<table>" in trang and "Ca 6 —" in trang and "(sau tích hợp)" not in trang

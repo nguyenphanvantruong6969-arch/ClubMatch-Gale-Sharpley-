@@ -87,9 +87,13 @@ def test_phan_cong_chi_la_mau_trong():
     assert "Mã nguồn" in van_ban and "Nghiên cứu" in van_ban
 
 
-def test_kich_ban_danh_dau_buoc_can_tich_hop():
+def test_kich_ban_khong_con_buoc_cho_tich_hop():
+    """I4: bản gộp đã có giải trình + tiêu chí, nên không còn dấu "(sau tích hợp)" ở tài liệu nào."""
+    for ten in sorted(os.listdir(THU_MUC)):
+        if ten.endswith(".md"):
+            assert "(sau tích hợp)" not in doc(ten), ten
     for ten in ("KICH_BAN_DEMO.md", "KICH_BAN_VIDEO.md"):
-        assert "(sau tích hợp)" in doc(ten), ten
+        assert "Thử cấu hình" in doc(ten) and "Chế độ học sinh tra cứu" in doc(ten), ten
         assert re.search(r"^(\s*1\.\s|\|\s*1\s*\|)", doc(ten), re.M), f"{ten}: phải đánh số bước"
 
 

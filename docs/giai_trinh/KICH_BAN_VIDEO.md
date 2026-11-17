@@ -1,7 +1,7 @@
 # Kịch bản video minh chứng
 
 > **Dữ liệu mô phỏng.** Mọi cảnh quay dùng sổ mẫu do máy sinh; đặt dòng chữ "Dữ liệu mô phỏng" ở góc màn hình suốt video.
-> Bước có **(sau tích hợp)** chỉ quay được khi đã có bản gộp tính năng giải trình và tiêu chí. Thời lượng dự kiến 5–6 phút.
+> Các bước 7–9 quay trên bản đã gộp tính năng giải trình và tiêu chí. Thời lượng dự kiến 5–6 phút.
 > Phần lời dẫn (nhận xét, kết luận) do học sinh tự viết; cột "Cảnh" dưới đây chỉ ghi việc cần quay.
 
 | Bước | Cảnh | Màn hình phải thấy |
@@ -12,9 +12,9 @@
 | 4 | Tạo không gian có tích "Xếp theo loại CLB và huy chương", mở nó, rồi kéo sổ đúng `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` | "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi" |
 | 5 | Bấm chạy xếp (hạt giống 42) | Các bước đều "xong", 120/120 học sinh có chỗ; không bị chặn |
 | 6 | Tra cứu `FA001` và `FA002`; mở phần giải thích bằng câu của từng em | FA001: Thứ 5 hạng 1, Thứ 2 hạng 2; FA002: Thứ 2 hạng 3, Thứ 5 hạng 4; câu giải thích theo dữ liệu của chính em đó |
-| 7 | Giải trình nâng cao cho một học sinh | (sau tích hợp) |
-| 8 | In phiếu; học sinh tra cứu bằng mã tại kiosk | (sau tích hợp) |
-| 9 | Đổi thử một tiêu chí, so sánh với kết quả chính thức, áp dụng | (sau tích hợp) |
+| 7 | Giải trình nâng cao cho một học sinh (thẻ Kết quả, ô "Tra cứu một học sinh") | Bảng nguyện vọng: điểm của em, điểm chuẩn, số chỗ đã nhận; câu giải thích từng nguyện vọng |
+| 8 | In phiếu; học sinh tra cứu bằng mã tại kiosk ("Chế độ học sinh tra cứu") | Phiếu một trang cho mỗi em; màn hình tra cứu chỉ có phần của em gõ mã |
+| 9 | Đổi thử một tiêu chí, so sánh với kết quả chính thức, áp dụng (thẻ Quản trị, mục "Thử cấu hình") | Bảng so sánh hai lần chạy, danh sách em đổi chỗ, nhóm; thông báo chạy thử không ghi đè kết quả chính thức |
 | 10 | Chạy lại cùng hạt giống | Kết quả y hệt; lịch sử chạy có thêm một dòng |
 | 11 | Tạo tài khoản quản trị, đăng nhập giáo viên, thao tác bị từ chối | "Tài khoản này không có quyền làm việc này. Hãy nhờ người quản trị." |
 | 12 | Nhật ký thao tác, xuất CSV | Dòng mới nhất trước; không có mật khẩu |

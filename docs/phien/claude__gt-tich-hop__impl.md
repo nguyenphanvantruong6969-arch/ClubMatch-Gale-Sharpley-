@@ -14,7 +14,7 @@ Writer for the GT1+GT2+GT3 integration on `claude/gt-tich-hop` (lots I0-I4, spec
 - [x] I1 permission map (9f5962d; checker NO BUGS)
 - [x] I2 student mode locked in backend (67b2faf, fix1 fa490c3, fix2 2abdd09; checker verdict 24c030e; waiting lead tick)
 - [x] I3 audit rows (tests only, no product change; waiting checker): run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly ONE row
-- [ ] I4 evidence pack: du_lieu_test/tao_ca_mau_giai_trinh.py -> docs/giai_trinh/CA_MAU.md; tao_goi_minh_chung.py -> .docx/.pdf
+- [x] I4 evidence pack (waiting checker): du_lieu_test/tao_ca_mau_giai_trinh.py -> docs/giai_trinh/CA_MAU.md; tao_goi_minh_chung.py -> .docx/.pdf
 
 ## Current state (overwrite each handoff)
 - Done so far: I0, I1, I2 (incl. reload fix). Lead has been told WRITER DONE I2 fix2 (head 2abdd09). No GO I3 yet.

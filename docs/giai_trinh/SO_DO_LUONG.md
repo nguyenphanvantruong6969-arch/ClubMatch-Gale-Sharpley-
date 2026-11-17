@@ -21,7 +21,7 @@ Tệp vẽ: `docs/giai_trinh/so_do_luong.svg`, dựng lại bằng `docs/giai_tr
 | 8. Soát ổn định | Kiểm bằng chính hàm lựa chọn: không có cặp học sinh – CLB nào cùng muốn nhau hơn kết quả | `rbda_priority_pipeline.py` (`verify_stability`) | Có vấn đề thì lần chạy dừng trước khi ghi kết quả |
 | 9. Lưu kết quả | Ghi `match_results` và `run_history` trong **một giao dịch** | `api.py` (`run_pipeline`), bước `write_results` | Lỗi giữa chừng thì quay về như trước khi chạy |
 | 10. Xuất tệp | Excel kết quả, `match_results.csv`, bảng theo lớp | `api_xuat.py` | Chưa có kết quả thì từ chối xuất |
-| 11. Tra cứu, khiếu nại | Xem kết quả từng học sinh, nhận và xử lý khiếu nại, nhập thêm sau khi có kết quả; giải thích từng học sinh, phiếu in và tra cứu tại kiosk (sau tích hợp) | `api_sau_xep.py`, `api_bao_cao.py` | Khiếu nại quá hạn bị từ chối, nêu số ngày |
+| 11. Tra cứu, khiếu nại | Xem kết quả từng học sinh, nhận và xử lý khiếu nại, nhập thêm sau khi có kết quả; giải thích từng học sinh, phiếu in và tra cứu tại kiosk; chạy thử tiêu chí và so sánh với kết quả chính thức | `api_sau_xep.py`, `api_bao_cao.py` | Khiếu nại quá hạn bị từ chối, nêu số ngày |
 | 12. Lịch sử chạy | Mỗi lần chạy thêm một dòng `run_history`; không sửa, không xoá | `rbda_priority_pipeline.py` | — |
 
 ## Thứ tự cố định của một lần chạy
