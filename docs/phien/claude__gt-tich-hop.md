@@ -27,7 +27,7 @@ Truong merges to main himself. No PR.
       "compare view → giao_vien", see Needs Truong #1). Done when `test_gt3_phan_quyen.py` passes.
 - [x] I2 student mode: accounts ON → leaving the self-lookup overlay needs an admin login; while in it only
       `cong_khai` methods work. Done when a Chromium test shows a student cannot reach any tab.
-- [ ] I3 audit: run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly one audit row.
+- [x] I3 audit: run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly one audit row.
       Done when tested (`tests/test_gt_tich_hop.py` or a `test_gt3_*` file).
 - [ ] I4 evidence pack: `du_lieu_test/tao_ca_mau_giai_trinh.py` (simulated 120 students, fixed seed) writes
       `docs/giai_trinh/CA_MAU.md` (3 got 1st choice, 3 did not — GT1 sentences + data; 1 run blocked by missing data,
@@ -55,6 +55,11 @@ Truong merges to main himself. No PR.
 1. Compare view permission: task file says `giao_vien`; GT2 lead classified all GT2 APIs `quan_tri` because the
    compare student list shows other students' outcomes. Recommend: keep `quan_tri` (privacy); loosen later if
    teachers need it.
+2. Audit rows keep student ids passed as arguments (e.g. which student's slip was exported); no names, scores,
+   codes or passwords. Recommend: keep (admin-only log, needed to answer "who printed whose slip").
+3. (pre-existing GT3) Calls while logged out each add one refused row with no user; nothing limits how many.
+   Recommend: accept for a single offline kiosk; add a rate limit only if the log grows in practice.
+4. Student mode lock is held in memory: restarting the app clears it and every login session (by design).
 (GT1/GT2/GT3 branch files hold their own Needs Truong lists; they are carried into the final summary.)
 
 ## Decisions and gotchas
