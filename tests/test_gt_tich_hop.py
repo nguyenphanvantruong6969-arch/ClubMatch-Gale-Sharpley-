@@ -88,3 +88,71 @@ def test_mat_khau_khong_vao_nhat_ky(co_tk):
 def test_bang_quyen_che_do_hoc_sinh():
     assert pq.QUYEN["thoat_che_do_hoc_sinh"] == pq.CONG_KHAI
     assert pq.QUYEN["vao_che_do_hoc_sinh"] == pq.GIAO_VIEN
+
+
+# ----------------------------------------------------------------------------- I3: nhật ký cho thao tác GT1/GT2
+def _dong_nk(api, hanh_dong):
+    with api._ket_noi_doc() as cur:
+        return [dict(zip(("nguoi", "vai", "ket_qua", "chi_tiet"), r)) for r in cur.execute(
+            "SELECT nguoi, vai, ket_qua, chi_tiet FROM nhat_ky_thao_tac WHERE hanh_dong = ? ORDER BY id",
+            (hanh_dong,))]
+
+
+def test_i3_moi_thao_tac_gt1_gt2_de_lai_dung_mot_dong(co_tk):
+    api, ma = co_tk
+    assert api.dang_xuat()["ok"] and api.dang_nhap("quantri", MK)["ok"]
+    luat_thu = {"priority": "tier", "tiers": ["khong_co_nhom_nay"]}
+    r = api.run_thu(luat_thu)
+    assert r["ok"], r
+    assert api.tao_ma_tra_cuu()["ok"]
+    lai = api.tao_lai_ma_tra_cuu("s1")
+    assert lai["ok"], lai
+    assert api.export_ma_tra_cuu_csv()["ok"]
+    assert api.export_phieu_giai_trinh()["ok"]
+    # đúng MỘT dòng cho mỗi lời gọi (`_dung` gọi tao_ma_tra_cuu khi chưa có tài khoản nên không để dòng nào)
+    for ten in ("run_thu", "tao_ma_tra_cuu", "tao_lai_ma_tra_cuu", "export_ma_tra_cuu_csv", "export_phieu_giai_trinh"):
+        dong = _dong_nk(api, ten)
+        assert len(dong) == 1, ten
+        assert dong[0]["ket_qua"] == "ok" and dong[0]["nguoi"] == "quantri" and dong[0]["vai"] == "quan_tri", ten
+    # mã tra cứu / mật khẩu / mã của học sinh khác không nằm trong nhật ký
+    with api._ket_noi_doc() as cur:
+        toan = str(cur.execute("SELECT * FROM nhat_ky_thao_tac").fetchall())
+    for bi_mat in [lai["data"].get("ma", "?x?"), MK, *ma.values()]:
+        assert str(bi_mat) not in toan
+
+
+def test_i3_ap_dung_tieu_chi_de_lai_dung_mot_dong(tmp_path):
+    from test_gt2_ap_dung import LUAT_THU, _mo
+    a, _db, slug = _mo(tmp_path)
+    assert a.tao_tai_khoan("quantri", MK, "quan_tri")["ok"]
+    r = a.run_thu(LUAT_THU)
+    assert r["ok"], r
+    k = a.ap_dung_tieu_chi(r["data"]["run_id"], slug)
+    assert k["ok"], k
+    for ten in ("run_thu", "ap_dung_tieu_chi"):
+        dong = _dong_nk(a, ten)
+        assert len(dong) == 1 and dong[0]["ket_qua"] == "ok" and dong[0]["nguoi"] == "quantri", ten
+    assert _dong_nk(a, "update_workspace_config") == []         # lời gọi lồng bên trong không ghi thêm dòng
+
+
+def test_i3_giao_vien_bi_tu_choi_quan_tri_va_dong_nhat_ky_ghi_loi(co_tk):
+    api, _ = co_tk
+    for ten, goi in (("run_thu", lambda: api.run_thu({"priority": "tier"})),
+                     ("tao_lai_ma_tra_cuu", lambda: api.tao_lai_ma_tra_cuu("s1")),
+                     ("export_ma_tra_cuu_csv", lambda: api.export_ma_tra_cuu_csv())):
+        r = goi()
+        assert not r["ok"]
+        dong = _dong_nk(api, ten)
+        assert len(dong) == 1 and dong[0]["nguoi"] == "gv1" and dong[0]["ket_qua"] != "ok", ten
+
+
+def test_i3_chi_tiet_dong_nhat_ky_khong_lo_bi_mat(co_tk):
+    api, _ = co_tk
+    assert api.dang_xuat()["ok"] and api.dang_nhap("quantri", MK)["ok"]
+    assert api.run_thu({"priority": "tier", "tiers": ["khong_co_nhom_nay"]})["ok"]
+    assert api.tao_lai_ma_tra_cuu("s1")["ok"]
+    assert api.export_phieu_giai_trinh(student_ids=["s1"])["ok"]
+    for ten in ("run_thu", "tao_lai_ma_tra_cuu", "export_phieu_giai_trinh"):
+        (dong,) = _dong_nk(api, ten)
+        assert len(dong["chi_tiet"] or "") <= 300 and "Nguyễn" not in (dong["chi_tiet"] or ""), ten
+    assert "s2" not in (_dong_nk(api, "tao_lai_ma_tra_cuu")[0]["chi_tiet"] or "")

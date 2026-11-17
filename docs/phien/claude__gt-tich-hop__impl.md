@@ -13,12 +13,12 @@ Writer for the GT1+GT2+GT3 integration on `claude/gt-tich-hop` (lots I0-I4, spec
 - [x] I0 merges (gt2 then gt3 into branch; head d4447a5; checker NO BUGS)
 - [x] I1 permission map (9f5962d; checker NO BUGS)
 - [x] I2 student mode locked in backend (67b2faf, fix1 fa490c3, fix2 2abdd09; checker verdict 24c030e; waiting lead tick)
-- [ ] I3 audit rows: run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly ONE row
+- [x] I3 audit rows (tests only, no product change; waiting checker): run_thu, ap_dung_tieu_chi, code (re)generation, slip export each log exactly ONE row
 - [ ] I4 evidence pack: du_lieu_test/tao_ca_mau_giai_trinh.py -> docs/giai_trinh/CA_MAU.md; tao_goi_minh_chung.py -> .docx/.pdf
 
 ## Current state (overwrite each handoff)
 - Done so far: I0, I1, I2 (incl. reload fix). Lead has been told WRITER DONE I2 fix2 (head 2abdd09). No GO I3 yet.
-- In progress: nothing; I3 NOT started.
+- In progress: I3 done (4 tests in test_gt_tich_hop.py), waiting checker; I4 next after GO.
 - Tests: tests/test_gt_tich_hop.py (5), tests/test_giao_dien_gt3_hoc_sinh.py (4, Chromium), test_gt3_phan_quyen.py,
   test_giao_dien_gt1_hoc_sinh.py -> 52 passed at fa490c3; kiem_nhanh 7/7 (60 cases identical to origin/main).
 - Open problems: none. A broad run of 100 test files hit the 10-min cap (0 failures at 61%); CI shards cover the rest.

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-17 — I3 (tích hợp GT1+GT2+GT3): nhật ký thao tác cho chạy thử, áp dụng tiêu chí, mã tra cứu, phiếu
+
+- Không đổi mã sản phẩm: cơ chế `phan_quyen._boc` + `nhat_ky` đã ghi đúng MỘT dòng cho `run_thu`, `ap_dung_tieu_chi` (lời gọi lồng `update_workspace_config` không ghi thêm), `tao_ma_tra_cuu`, `tao_lai_ma_tra_cuu`, `export_ma_tra_cuu_csv`, `export_phieu_giai_trinh`; giáo viên bị từ chối vẫn để lại một dòng kèm mã lỗi. Test mới (khoá hành vi này): `tests/test_gt_tich_hop.py::test_i3_*` (4 test).
+
 ## 2026-11-17 — I2 fix3: trả lời phiên cũ không mở lại lớp phủ học sinh
 
 - `js/16_tai_khoan.js` `capNhat`: bộ đếm lượt hỏi, bỏ trả lời cũ hơn lần hỏi mới nhất (kể cả sau khi quản trị thoát). `js/14_giai_trinh.js`: lớp phủ do `tkPhien` mở lại sẽ đóng khi `che_do_hs` là false. Test mới: `test_giao_dien_gt3_hoc_sinh.py::test_tra_loi_phien_cu_...` (giữ một trả lời 1,5 giây).
