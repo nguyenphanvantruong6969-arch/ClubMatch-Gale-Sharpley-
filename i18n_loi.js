@@ -1381,5 +1381,13 @@ window.I18N_ERROR_MESSAGES = {
   "gt2_thu_stb_chua_day": {
     "vi": "Chưa thể chạy thử vì có {n} người mới chưa có số bốc thăm. Hãy chạy xếp chính thức để bổ sung số bốc thăm rồi thử lại.",
     "en": "A trial can't run because {n} new people have no draw number yet. Run the official allocation to add their numbers, then try again."
+  },
+  "gt2_lan_chay_khong_co": {
+    "vi": "Không tìm thấy lần chạy số {run_id}. Hãy chọn một lần trong danh sách.",
+    "en": "Run number {run_id} was not found. Please pick one from the list."
+  },
+  "gt2_so_sanh_lan_cu": {
+    "vi": "Lần xếp chính thức số {run_id} đã được thay bằng lần mới hơn nên không còn kết quả chi tiết để so sánh. Hãy so với lần chính thức mới nhất hoặc một lần chạy thử.",
+    "en": "Official allocation number {run_id} has been replaced by a newer one, so its detailed results are no longer available. Compare with the latest official allocation or with a trial."
   }
 };

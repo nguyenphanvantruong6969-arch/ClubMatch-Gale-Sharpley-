@@ -6,8 +6,8 @@ với một CSDL riêng, không cần bật chế độ workspace.
 
 import cau_hinh_ws
 import tieu_chi
-from api_chung import _fail_co_buoc, _now
-from api_workspace import CauHinhHong, loi_cau_hinh
+from api_chung import _fail_co_buoc, _ghi_csv, _now
+from api_workspace import CauHinhHong, LoiDuongXuat, loi_cau_hinh
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
@@ -226,3 +226,130 @@ class TieuChiMixin:
                 except Exception:
                     pass
                 conn.close()
+
+    # ------------------------------------------------------------------------------------------
+    # L3 — so sánh hai lần chạy (chỉ ĐỌC; danh sách em đổi chỗ chỉ cho màn quản lý / giáo viên)
+    # ------------------------------------------------------------------------------------------
+    def list_lan_chay(self):
+        """Lần chính thức mới nhất + các lần chạy thử (mới trước): run_id, run_at, nhãn, tóm tắt tiêu chí.
+
+        Chạy thử không bị xoá nên luôn so lại được. Lần chính thức CŨ hơn không còn dòng kết quả
+        (bảng kết quả chỉ giữ lần mới nhất) nên không có trong danh sách."""
+        try:
+            with self._ket_noi_doc() as cur:
+                cot = {r[1] for r in cur.execute("PRAGMA table_info(run_history)")}
+                if "loai_chay" not in cot:
+                    return _ok({"chinh_thuc": None, "thu": []})
+                goc = run_chinh_thuc_moi_nhat(cur)
+                thu = cur.execute(
+                    "SELECT run_id, run_at, luat_xep, n_matched, n_total, buoi_da_chay FROM run_history "
+                    "WHERE loai_chay = 'thu' ORDER BY run_id DESC").fetchall()
+            return _ok({"chinh_thuc": self._dong_lan_chay(goc, "chinh_thuc") if goc else None,
+                        "thu": [self._dong_lan_chay(r, "thu") for r in thu]})
+        except Exception as e:
+            return _fail(err("error_reading_results", detail=str(e)))
+
+    @staticmethod
+    def _luat_tu_dong(dong) -> dict:
+        import json
+        try:
+            v = json.loads(dong["luat_xep"]) if dong["luat_xep"] else {}
+        except (ValueError, TypeError):
+            v = {}
+        return v if isinstance(v, dict) else {}
+
+    def _dong_lan_chay(self, dong, nhan: str) -> dict:
+        luat = self._luat_tu_dong(dong)
+        return {"run_id": dong["run_id"], "run_at": dong["run_at"], "nhan": nhan,
+                "n_matched": dong["n_matched"], "n_total": dong["n_total"],
+                "mo_ta": tieu_chi.mo_ta_tieu_chi(luat, "vi"),
+                "mo_ta_en": tieu_chi.mo_ta_tieu_chi(luat, "en")}
+
+    def _tai_lan_chay(self, cur, run_id, goc):
+        """(lần chạy, None) hoặc (None, lỗi). Chính thức: chỉ lần MỚI NHẤT (kết quả cũ không còn dòng)."""
+        if isinstance(run_id, bool) or not isinstance(run_id, int):
+            return None, err("gt2_lan_chay_khong_co", run_id=str(run_id))
+        dong = cur.execute("SELECT * FROM run_history WHERE run_id = ?", (run_id,)).fetchone()
+        if dong is None:
+            return None, err("gt2_lan_chay_khong_co", run_id=str(run_id))
+        if dong["loai_chay"] == "thu":
+            rows = [tuple(r) for r in cur.execute(
+                "SELECT student_id, buoi, club_id, rank_in_list FROM ket_qua_thu WHERE run_id = ? "
+                "ORDER BY student_id, buoi", (run_id,))]
+            nhan = "thu"
+        else:
+            if goc is None or goc["run_id"] != run_id:
+                return None, err("gt2_so_sanh_lan_cu", run_id=str(run_id))
+            rows = [tuple(r) for r in cur.execute(
+                "SELECT student_id, buoi, club_id, rank_in_student_pref FROM match_results "
+                "ORDER BY student_id, buoi")]
+            nhan = "chinh_thuc"
+        return {"nhan": nhan, "run_id": run_id, "luat": self._luat_tu_dong(dong), "rows": rows}, None
+
+    def _so_sanh_da_doc(self, run_a, run_b):
+        with self._ket_noi_doc() as cur:
+            goc = run_chinh_thuc_moi_nhat(cur)
+            if goc is None:
+                return None, err("gt2_chua_co_lan_chinh_thuc")
+            if run_b is None:
+                run_b = goc["run_id"]
+            a, loi = self._tai_lan_chay(cur, run_a, goc)
+            if loi:
+                return None, loi
+            b, loi = self._tai_lan_chay(cur, run_b, goc)
+            if loi:
+                return None, loi
+            hs = {r[0]: {"ten": r[1] or "", "lop": r[2] or "", "nhom": r[3] or ""} for r in cur.execute(
+                "SELECT student_id, name, class_id, reserve_group FROM students")}
+            clb = {r[0]: {"ten": r[1] or r[0], "capacity": r[2]} for r in cur.execute(
+                "SELECT club_id, name, capacity FROM clubs")}
+            diem = {}
+            for sid, cid, d in cur.execute("SELECT student_id, club_id, score FROM club_scores"):
+                diem.setdefault(cid, {})[sid] = d
+        try:
+            tiers = luat_xep_cua(self._cfg_ws(nghiem=True)["rules"])["tiers"]
+        except CauHinhHong as e:
+            return None, loi_cau_hinh(e)
+        return tieu_chi.so_sanh_lan_chay(
+            a, b, {"students": hs, "clubs": clb, "diem": diem, "tiers": tiers}), None
+
+    def so_sanh_lan_chay(self, run_a, run_b=None):
+        """So sánh hai lần chạy (mặc định B = lần chính thức mới nhất). Chỉ đọc; không ghi gì.
+
+        data: a, b (nhãn "chinh_thuc"/"thu", run_id, tiêu chí bằng lời), buoi_chung, tong, clb, nhom, lop,
+        doi (em đổi chỗ — CHỈ cho màn quản lý / giáo viên), so_doi. Lần chính thức cũ không còn dòng
+        kết quả thì báo `gt2_so_sanh_lan_cu` (không bịa số)."""
+        try:
+            kq, loi = self._so_sanh_da_doc(run_a, run_b)
+        except Exception as e:
+            return _fail(err("error_reading_results", detail=str(e)))
+        return _fail(loi) if loi else _ok(kq)
+
+    def export_so_sanh_csv(self, output_path: str = "", run_a=None, run_b=None):
+        """CSV (UTF-8 có BOM) các em đổi chỗ giữa hai lần chạy. Màn quản lý / giáo viên, không cho học sinh."""
+        return self._khoa_xuat(self._export_so_sanh_da_khoa, "csv", output_path, run_a, run_b)
+
+    def export_so_sanh_html(self, output_path: str = "", run_a=None, run_b=None):
+        """Trang HTML một tệp, mở được khi không có mạng (không nạp gì từ ngoài), bản so sánh hai lần chạy."""
+        return self._khoa_xuat(self._export_so_sanh_da_khoa, "html", output_path, run_a, run_b)
+
+    def _export_so_sanh_da_khoa(self, kieu, output_path, run_a, run_b):
+        try:
+            kq, loi = self._so_sanh_da_doc(run_a, run_b)
+            if loi:
+                return _fail(loi)
+            ten = "so_sanh_%s_%s.%s" % (kq["a"]["run_id"], kq["b"]["run_id"], kieu)
+            try:
+                duong = self._duong_xuat(output_path, ten, kem_duoi=())
+            except LoiDuongXuat as e:
+                return _fail(e.loi)
+            if kieu == "csv":
+                _ghi_csv(duong, ["student_id", "ho_ten", "lop", "buoi", "clb_a", "clb_b"],
+                         [[d["student_id"], d["ten"], d["lop"], d["buoi"], d["tu_ten"], d["den_ten"]]
+                          for d in kq["doi"]])
+            else:
+                with open(duong, "w", encoding="utf-8") as f:
+                    f.write(tieu_chi.dung_html_so_sanh(kq))
+            return _ok({"path": duong, "so_doi": kq["so_doi"]})
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
