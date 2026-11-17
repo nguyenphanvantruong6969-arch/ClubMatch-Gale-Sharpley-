@@ -20,7 +20,7 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 ## Lot ledger (writer updates; states: TODO / READY <sha> / FIX / CHECKED <sha> / BLOCKED <why>)
 | Lot | State | Head sha | Round | Note |
 |---|---|---|---|---|
-| L0 official-only reader (R0) | TODO | | 0 | |
+| L0 official-only reader (R0) | READY 9546761 | 9546761 | 1 | `_giai_trinh_dung_lai` now filters via loc_chinh_thuc; test fails on old code (4/4). Try: other readers of run_history (list in CHANGELOG), trial then lookup/slip. |
 | L1 audit log hygiene (R1) | TODO | | 0 | |
 | L2 controls match the role (R3) | TODO | | 0 | |
 | L3 account setup + recovery (R2, R4) | TODO | | 0 | |
@@ -32,7 +32,7 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | Gate: ruff + kiem_nhanh + tests + CI green | TODO | | 0 | |
 
 ## Current state (overwrite each handoff)
-- Done so far: nothing (plan only).
+- Done so far: L0 READY.
 - In progress:
 - Tests: baseline on the base commit = `tests/test_gt*` + `tests/test_giao_dien_gt*` green, ruff clean, kiem_nhanh 7/7.
 - Open problems:
