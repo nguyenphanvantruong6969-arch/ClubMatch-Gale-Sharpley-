@@ -11,3 +11,12 @@
 - Tests tests/test_gt1_*, gt2_*, gt3_* (incl. UI): 319 passed, 2 failed = the intended test_gt3_phan_quyen.py failures
   (13 GT1/GT2 methods missing from QUYEN; KeyError get_giai_trinh_hoc_sinh) -> fixed in I1.
 - Not covered here: full suite (CI), invariants 2/4/5 unchanged by a merge-only lot.
+
+## I1 | reviewed 4970006..9f5962d | verdict: NO BUGS
+- (a) Test edits not weakened: the get_/list_ exemption lists exactly get_tieu_chi and list_lan_chay (plus the 2
+  pre-existing names); CONG_KHAI set now = old 5 + tra_cuu_hoc_sinh; new asserts pin all 13 methods (2 giao_vien, 11 quan_tri).
+- (b) Own check on real PipelineAPI, accounts ON: logged out -> only tra_cuu_hoc_sinh of the 13 passes the gate;
+  giao_vien -> get_giai_trinh_hoc_sinh, export_phieu_giai_trinh, tra_cuu_hoc_sinh only (all 7 GT2 + code
+  generate/regenerate/CSV refused); quan_tri -> all 13. tra_cuu_hoc_sinh itself still needs id + code (gt1_ma_sai, lockout).
+- (c) Accounts OFF: no method refused by the gate; kiem_nhanh 7/7 DAT (60 cases identical).
+- Tests: test_gt3_phan_quyen + all gt1/gt2 files 225 passed; test_gt3_nhat_ky + test_giao_dien_gt3_phan_quyen 31 passed.
