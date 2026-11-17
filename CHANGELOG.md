@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 2026-11-17 — GT2-L1 (mục GT2, mục cha A1/Z7-lite): Tiêu chí xếp bằng lời thường
+
+Chỉ ĐỌC và hiển thị; thuật toán, CSDL và tệp xuất không đổi. Không có tiêu chí mới: chỉ mô tả luật xếp đã có
+(`LUAT_XEP_MAC_DINH`) theo luật hiệu lực (`luat_xep_hieu_luc`), và cho chọn lại trong đúng tập giá trị đã duyệt (D-GT1).
+Bất biến 1: `kiem_nhanh.py --co-so origin/main --so-seed 20` trùng khít 60 ca. Số liệu trong test là MÔ PHỎNG.
+- Mới: `tieu_chi.py` (`mo_ta_tieu_chi`, `cac_lua_chon_hop_le`, `tieu_de_tang`, `KHOA_NGOAI_LUAT_XEP`, `GHI_CHU`),
+  `api_tieu_chi.py` (`TieuChiMixin.get_tieu_chi`, nối vào `PipelineAPI`), `js/15_tieu_chi.js`, khung "Tiêu chí xếp" ở thẻ
+  Quản lý (`index.html`, khối `GT2`), chuỗi `gt2_tc_*` trong `i18n.js`. Lưu vẫn qua `update_workspace_config`.
+- Kiểm khoá lạ / giá trị lạ của `rules` đã có sẵn ở `cau_hinh_ws._chuan_hoa` (báo `ws_du_lieu_sai`), nên chưa thêm mã
+  `gt2_tieu_chi_khong_hop_le`; lô L2 thêm khi `run_thu` cần.
+- Test mới: `tests/test_gt2_tieu_chi.py` (107 ca: mọi tổ hợp luật, khoá chặt tập khoá, API), `tests/test_giao_dien_gt2_tieu_chi.py`
+  (6 ca Chromium). `CLAUDE_CHI_TIET.md` hàng `tests/`: 300 tệp, 6.430 ca.
+
 ## 2026-11-15 — GT-KH (kế hoạch, ngoài sổ; mục cha C3, A1, E1, E2): trả lời góp ý của hội đồng
 
 Chỉ tài liệu, mã không đổi. Đối chiếu góp ý vòng trước với kho mã và chia việc cho 3 nhóm tự động (mỗi nhóm: Opus dẫn,
@@ -243,7 +256,7 @@ Cấu hình mặc định giữ từng byte (`kiem_nhanh` 7/7, 60 ca = 3 bộ ×
 - Giao diện `js/12_chuan_bi_nap.js` (bước 5): ba khối — nút "Xuất KETQUA_NHAP_LIST.csv"; ô chọn CSV danh sách lớp + nút "Tạo danh sách
   chưa đăng ký" (khoá tới khi chọn tệp; cảnh báo vượt giới hạn Power Automate); hai ô chọn CSV cũ / mới + nút "Đối chiếu" (CHỈ đường A).
   Chuỗi `cb_nap_s5_*` (vi + en). Không mã lỗi mới (dùng `forms_thieu_email`, `forms_thieu_danh_sach_lop`, `forms_khong_chuyen_duoc`...).
-- Tệp test mới: `tests/test_fa_m10_sau_xep_nut.py` (8 ca API), `tests/test_giao_dien_fa_m10_nut.py` (5 ca Chromium).
+- Tệp test mới: `tests/test_fa_m10_sau_xep_nut.py` (8 ca API), `tests/test_giao_dien_fa_m10_nut.py` (6 ca Chromium).
 - Đột biến đã chạy: (1) API ghi thêm ký tự vào `KETQUA_NHAP_LIST.csv` -> `test_xuat_ket_qua_list_bang_cli_cung_tep` đỏ; (2) giao diện bỏ điều kiện
   "đã chọn tệp" của nút "Ai chưa đăng ký" -> `test_nut_ai_chua_dang_ky_khoa_den_khi_chon_tep_roi_ghi_thu_muc` đỏ; khôi phục -> xanh.
 - Mặc định không đổi: không đụng lõi DA, schema, cột CSV; ba tập lệnh dòng lệnh không đổi.
@@ -532,7 +545,7 @@ Cấu hình mặc định giữ từng byte (`kiem_nhanh` 7/7, 60 ca = 3 bộ ×
 
 - `api_quan_ly.py`: `get_student_entry_state` thêm khoá `huy_chuong` khi FA bật (`_trang_thai_huy_chuong`: huy chương đã lưu, loại và buổi của từng CLB trong nguyện vọng, khoá). Tắt: phản hồi như cũ.
 - `index.html`, `js/04_nhap_tai_cho.js` (`renderHuyChuongStep`, `hcDoi`, `hcCapNhatNhac`, `hcThuThap`): FA bật thì bước 3 là ba ô vàng / bạc / đồng mỗi ngày thay cho điểm quyết tâm; điền sẵn theo thứ tự nguyện vọng, bỏ CLB Tự do (D2, chỉ ở lớp đăng ký); chọn CLB đang có huy chương khác thì đổi chỗ (đủ 6 cách đặt); câu nhắc V§6.1 khi vàng ở CLB Tuyển chọn; lưu qua `submit_huy_chuong`, lỗi server hiện ra. `i18n.js`: chữ vi + en.
-- Test mới: `tests/test_giao_dien_fa_huy_chuong.py` (5 ca Chromium). `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 220 tệp test.
+- Test mới: `tests/test_giao_dien_fa_huy_chuong.py` (6 ca Chromium). `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 220 tệp test.
 
 ## 2026-11-09 — FA-UI-2: cột FA trong bảng CLB ở thẻ Quản lý (đêm 3)
 

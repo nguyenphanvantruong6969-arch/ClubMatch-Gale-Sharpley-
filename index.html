@@ -855,6 +855,32 @@
         </div>
       </div>
 
+      <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
+      <div class="panel" id="gt2TieuChiPanel">
+        <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tiêu chí xếp</h2></div>
+        <div class="panel-body">
+          <p class="hint-text" data-i18n="gt2_tc_mo_ta">Thứ tự dưới đây là cách phần mềm xếp những người cùng đăng ký một suất. Chỉ chọn được trong các lựa chọn có sẵn.</p>
+          <div id="gt2TcDanhSach"></div>
+          <div id="gt2TcKhongDung" class="hint-text" hidden></div>
+          <div class="admin-form-grid" id="gt2TcDieuKhien">
+            <label for="gt2TcPriority" id="gt2TcPriorityNhan"></label>
+            <select id="gt2TcPriority" class="text-input"></select>
+            <label for="gt2TcTierMode" id="gt2TcTierModeNhan"></label>
+            <select id="gt2TcTierMode" class="text-input"></select>
+            <label for="gt2TcScoreScope" id="gt2TcScoreScopeNhan"></label>
+            <select id="gt2TcScoreScope" class="text-input"></select>
+            <label for="gt2TcTiers" id="gt2TcTiersNhan"></label>
+            <textarea id="gt2TcTiers" class="text-input" rows="3" data-i18n-placeholder="gt2_tc_nhom_goi_y" placeholder="Mỗi dòng một nhóm"></textarea>
+            <label class="check-row"><input type="checkbox" id="gt2TcWharton"> <span id="gt2TcWhartonNhan"></span></label>
+          </div>
+          <p class="hint-text" id="gt2TcGhiChu"></p>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
+          </div>
+          <div id="gt2TcPhanHoi" class="save-feedback" role="status"></div>
+        </div>
+      </div>
+
       <!-- Tab con của thẻ Quản lý (A13.5). Hai tab điểm (wh, dc) chỉ hiện khi bật điểm quyết tâm:
            js/05_quan_ly.js (capNhatTabConQl) bỏ thuộc tính hidden khi khối tương ứng hiện. -->
       <div class="ql-tabs" id="qlTabs" role="tablist" data-i18n-aria-label="ql_tab_nhom_aria" aria-label="Các mục của thẻ Quản lý">
@@ -1253,6 +1279,7 @@
 <script src="js/11_chuan_bi.js"></script>
 <script src="js/12_chuan_bi_nap.js"></script>
 <script src="js/13_chuan_bi_bo.js"></script>
+<script src="js/15_tieu_chi.js"></script><!-- GT2 -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

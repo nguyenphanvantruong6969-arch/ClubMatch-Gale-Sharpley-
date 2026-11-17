@@ -12,4 +12,5 @@
 11_chuan_bi
 12_chuan_bi_nap
 13_chuan_bi_bo
+15_tieu_chi
 08_khoi_dong
