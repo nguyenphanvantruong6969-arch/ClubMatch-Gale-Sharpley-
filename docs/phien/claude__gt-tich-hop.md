@@ -3,7 +3,7 @@
 > Fresh session: read CLAUDE.md, docs/phien/GT_GIAO_THUC.md (§5, §6, §9), then THIS file.
 > English. Cap 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: IN PROGRESS (§6 CI gate)
+Status: DONE 572685d CI green 2026-11-17 (run https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44052031595)
 
 ## Feature / goal
 Integrate GT1 (giải trình, `claude/gt1-giai-trinh` DONE 499edf1), GT2 (tiêu chí, `claude/gt2-tieu-chi` DONE 8965d2b)
@@ -35,13 +35,12 @@ Truong merges to main himself. No PR.
       changed students, per-group effects). Then `docs/giai_trinh/tao_goi_minh_chung.py` builds
       `GOI_MINH_CHUNG.docx` + `.pdf`; fill the "(sau tích hợp)" steps. Done when `tests/test_gt_tich_hop.py`
       regenerates CA_MAU.md byte-identically and every case matches app output. All data SIMULATED, labelled so.
-- [ ] §6 CI gate on `claude/gt-tich-hop` (lint + all shards + coverage ≥ 85 %).
+- [x] §6 CI gate on `claude/gt-tich-hop` (572685d; fixes: CA_MAU.md LF via .gitattributes, code-map wording) (lint + all shards + coverage ≥ 85 %).
 
 ## Current state (overwrite each handoff)
 - Done: I0-I4. I4 checker bug 1 ("thẻ Quản trị" -> "thẻ Quản lý" in KICH_BAN_DEMO/VIDEO) fixed + test
   `test_gt3_tai_lieu.py::test_ten_the_trong_kich_ban_khop_nhan_giao_dien`; GOI_MINH_CHUNG.docx/.pdf rebuilt.
-- In progress: §6 CI gate (run by the original GT3 lead session after the integration sessions stopped on the
-  account spend limit, 2026-11-17).
+- In progress: none. Integration DONE; Truong merges to main himself.
 - Tests: test_gt3_tai_lieu.py + test_gt_tich_hop.py 35 passed; ruff clean (docs/test-only change, no product code).
 
 ## Sessions
@@ -73,3 +72,22 @@ Truong merges to main himself. No PR.
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-17 | Opus (lead) | GT2 DONE verified (run 44018417803 success); branch created, GT1 merged, file written | — |
+
+| 2026-11-17 | Opus (orig. GT3 lead) | I4 fix + 2 CI fixes, CI green 572685d, Status DONE | integration sessions had stopped on spend limit |
+
+## Final summary (§10, tiếng Việt)
+- **Xong:** I0 gộp GT1+GT2+GT3; I1 bảng quyền cho hàm GT1/GT2; I2 chế độ học sinh tự tra cứu khoá ở backend; I3 nhật ký cho chạy thử / áp dụng tiêu chí / mã tra cứu / phiếu; I4 ca mẫu + gói minh chứng (`docs/giai_trinh/CA_MAU.md`, `GOI_MINH_CHUNG.docx/.pdf`). Không lô nào bỏ.
+- **CI:** xanh đủ 8 job trên 572685d — https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44052031595 . Nhánh đã chứa main mới nhất.
+- **Needs Truong (gộp 4 nhánh, kèm khuyến nghị):**
+  1. Xem so sánh chạy thử chỉ cho quản trị (đặc tả ghi giáo viên). KN: giữ quản trị (riêng tư).
+  2. Nhật ký giữ mã học sinh trong tham số (vd in phiếu của ai). KN: giữ.
+  3. Gọi khi chưa đăng nhập mỗi lần thêm một dòng bị từ chối, không giới hạn. KN: chấp nhận cho kiosk đơn.
+  4. Cờ chế độ học sinh nằm trong bộ nhớ; khởi động lại là mất. KN: giữ (đúng thiết kế).
+  5. (GT1) Câu giải trình chỉ tiếng Việt. KN: giữ; thêm tiếng Anh nếu hội đồng cần.
+  6. (GT1) Chỉ giải trình được lần chạy mới nhất. KN: giữ.
+  7. (GT2) Chạy thử chưa hỗ trợ chế độ huy chương. KN: để sau.
+  8. (GT2) Chạy thử lưu tiêu chí dạng chuẩn hoá. KN: giữ.
+  9. (GT3) 434 cảnh báo khi nạp sổ mẫu chế độ huy chương (có sẵn trên main). KN: ẩn cảnh báo khi bật huy chương.
+  10. (GT3) Học sinh tự nhập nguyện vọng cần đăng nhập khi đã bật tài khoản. KN: giữ.
+- **Truong thử tay:** (1) chạy kiosk, chưa tạo tài khoản → như cũ; (2) tạo quản trị, tra cứu một học sinh, in phiếu; (3) "Thử cấu hình": đổi một tiêu chí, Chạy thử, So sánh, xem kết quả chính thức không đổi; (4) bật "Chế độ học sinh tra cứu", thử thoát → phải đăng nhập quản trị; (5) mở `docs/giai_trinh/GOI_MINH_CHUNG.pdf`.
+- **Nháp nhật ký AI (các em tự viết lại):** 16–17/11/2026 AI (Opus điều phối, Sonnet viết/soát) làm GT1, GT2, GT3 trên 3 nhánh rồi gộp; người soát AI bắt lỗi trước mỗi lô; CI xanh. Học sinh cần tự thử 5 bước và quyết 10 mục trên. Mọi số liệu là MÔ PHỎNG.
