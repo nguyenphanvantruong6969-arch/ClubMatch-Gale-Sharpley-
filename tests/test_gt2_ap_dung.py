@@ -60,7 +60,7 @@ def test_luat_da_luu_bang_luat_lan_thu_va_khoa_khac_giu_nguyen(tmp_path):
     sau = cau_hinh_ws.doc_cau_hinh(db)
     ghi = rb.luat_xep_hieu_luc(json.loads(
         _sql(db, "SELECT luat_xep FROM run_history WHERE run_id = ?", (r["data"]["run_id"],))[0][0]))
-    assert {x: sau["rules"][x] for x in rb.LUAT_XEP_MAC_DINH} == ghi
+    assert rb.luat_xep_hieu_luc(sau["rules"]) == ghi          # tier_mode vô tác dụng: giữ giá trị đã lưu
     assert rb.luat_xep_hieu_luc(sau["rules"]) == rb.luat_xep_hieu_luc(r["data"]["luat"])
     assert sau["rules"]["priority"] == "tier"
     assert sau["rules"]["wharton"] is False
@@ -106,3 +106,48 @@ def test_khong_tu_dong_chay_va_khong_dung_run_thu(tmp_path):
     n = _sql(db, "SELECT COUNT(*) FROM run_history")
     a.ap_dung_tieu_chi(r["data"]["run_id"], slug)
     assert _sql(db, "SELECT COUNT(*) FROM run_history") == n
+
+
+def _ap_dung(a, db, slug, luat_thu):
+    r = a.run_thu(luat_thu)
+    assert r["ok"], r
+    k = a.ap_dung_tieu_chi(r["data"]["run_id"], slug)
+    assert k["ok"], k
+    return cau_hinh_ws.doc_cau_hinh(db)["rules"], r["data"]["run_id"]
+
+
+def _luat_thu_ghi(db, run_id):
+    x = _sql(db, "SELECT luat_xep FROM run_history WHERE run_id = ?", (run_id,))[0][0]
+    return rb.luat_xep_hieu_luc(json.loads(x) if x else {})
+
+
+def test_khoa_vo_tac_dung_giu_gia_tri_da_luu_tier_mode(tmp_path):
+    """Lần thử priority=tier: tier_mode / score_scope vô tác dụng nên giữ như đã lưu (không thành 'strict')."""
+    a, db, slug = _mo(tmp_path)
+    luu = cau_hinh_ws.doc_cau_hinh(db)["rules"]
+    sau, rid = _ap_dung(a, db, slug, {"priority": "tier", "tiers": ["A", "B"]})
+    assert sau["priority"] == "tier" and sau["tiers"] == ["A", "B"]
+    assert sau["tier_mode"] == luu["tier_mode"] == "reserve" and sau["score_scope"] == luu["score_scope"]
+    assert rb.luat_xep_hieu_luc(sau) == _luat_thu_ghi(db, rid)
+    # Đưa priority về "score" rồi lưu như bảng điều khiển: không còn nhóm cứng ngầm.
+    cau_hinh_ws.ghi_cau_hinh(db, {"rules": {"priority": "score"}})
+    assert rb.nhom_xep_cung(rb.luat_xep_cua(cau_hinh_ws.doc_cau_hinh(db)["rules"])) is False
+
+
+def test_nhom_da_nhap_khong_bi_xoa_khi_lan_thu_nhom_mem(tmp_path):
+    """Đã lưu score+tier/reserve/[A,B]; lần thử cho kết quả hiệu lực 'score' (nhóm mềm): giữ nguyên nhóm đã nhập."""
+    a, db, slug = _mo(tmp_path)
+    cau_hinh_ws.ghi_cau_hinh(db, cau_hinh_ws.tron_len(cau_hinh_ws.doc_cau_hinh(db), {"rules": {
+        "priority": "score+tier", "tier_mode": "reserve", "tiers": ["A", "B"], "wharton": False}}))
+    sau, rid = _ap_dung(a, db, slug, {"priority": "score"})
+    assert sau["tiers"] == ["A", "B"] and sau["priority"] == "score+tier" and sau["tier_mode"] == "reserve"
+    assert rb.luat_xep_hieu_luc(sau) == _luat_thu_ghi(db, rid)
+
+
+def test_luat_hieu_luc_sau_khi_luu_bang_luat_lan_thu_nhieu_to_hop(tmp_path):
+    for thu in ({}, {"priority": "tier", "tiers": ["A"]}, {"priority": "score+tier", "tier_mode": "strict",
+                                                            "tiers": ["A", "B"]},
+                {"priority": "score", "score_scope": "per_person"}):
+        a, db, slug = _mo(tmp_path / ("x%d" % len(json.dumps(thu, sort_keys=True))))
+        sau, rid = _ap_dung(a, db, slug, thu)
+        assert rb.luat_xep_hieu_luc(sau) == _luat_thu_ghi(db, rid), thu

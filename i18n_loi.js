@@ -1389,5 +1389,9 @@ window.I18N_ERROR_MESSAGES = {
   "gt2_so_sanh_lan_cu": {
     "vi": "Lần xếp chính thức số {run_id} đã được thay bằng lần mới hơn nên không còn kết quả chi tiết để so sánh. Hãy so với lần chính thức mới nhất hoặc một lần chạy thử.",
     "en": "Official allocation number {run_id} has been replaced by a newer one, so its detailed results are no longer available. Compare with the latest official allocation or with a trial."
+  },
+  "gt2_ap_dung_khong_khop": {
+    "vi": "Không thể lưu tiêu chí của lần chạy thử số {run_id} thành đúng như lần đó đã dùng. Cấu hình hiện tại chưa bị đổi. Hãy chọn lại các tiêu chí ở khung phía trên rồi lưu.",
+    "en": "The criteria of trial {run_id} cannot be saved exactly as that trial used them. The current settings were not changed. Please set the criteria in the box above and save."
   }
 };

@@ -8,7 +8,8 @@ không chép kết quả thử vào `match_results`. Bất biến 1: mặc đị
 
 - `api_tieu_chi.py`: `ap_dung_tieu_chi(run_id, slug="")` (chỉ nhận lần chạy thử; lần chính thức hoặc mã lạ → `gt2_lan_chay_khong_co`).
 - `index.html`, `js/15_tieu_chi.js`, `style.css`, `i18n.js`: danh sách lần thử có nút "Dùng tiêu chí này cho lần chạy chính thức", thanh xác nhận nội tuyến hiện mô tả L1, nhắc chạy xếp chính thức sau khi lưu.
-- Test mới: `tests/test_gt2_ap_dung.py` (5 ca), `tests/test_giao_dien_gt2_thu.py` (+1 ca, fixture chuyển sang chế độ workspace).
+- Sửa sau soát (fix1): lưu từ luật ĐÃ LƯU, chỉ ghi đè khoá có tác dụng của lần thử (khoá vô tác dụng, nhóm đã nhập giữ nguyên); sau khi lưu luật hiệu lực phải bằng luật lần thử, nếu không thì từ chối `gt2_ap_dung_khong_khop`, không ghi gì.
+- Test mới: `tests/test_gt2_ap_dung.py` (8 ca), `tests/test_giao_dien_gt2_thu.py` (+1 ca, fixture chuyển sang chế độ workspace).
 
 ## 2026-11-17 — GT2-L3 (mục GT2, mục cha A1/Z7-lite): So sánh hai lần chạy
 

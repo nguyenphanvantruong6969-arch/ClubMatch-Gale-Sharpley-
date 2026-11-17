@@ -28,6 +28,7 @@ from rbda_priority_pipeline import (
     load_from_sqlite_kem_dau_van_tay_wharton,
     luat_xep_cua,
     luat_xep_hieu_luc,
+    nhom_xep_cung,
     luat_xep_de_ghi,
     nhom_theo_buoi,
     run_chinh_thuc_moi_nhat,
@@ -358,6 +359,25 @@ class TieuChiMixin:
     # ------------------------------------------------------------------------------------------
     # L4 — dùng tiêu chí của một lần chạy thử cho lần chính thức kế tiếp (chỉ lưu cấu hình)
     # ------------------------------------------------------------------------------------------
+    @staticmethod
+    def _luat_ap_dung(da_luu: dict, thu: dict) -> dict:
+        """Luật sẽ lưu: bắt đầu từ luật ĐÃ LƯU, chỉ ghi đè khoá CÓ TÁC DỤNG trong luật hiệu lực của lần thử.
+        Khoá vô tác dụng (tier_mode / score_scope khi nhóm luôn cứng, tiers khi nhóm không cứng) giữ giá trị
+        đã lưu, để không xoá danh sách nhóm đã nhập; priority đã lưu giữ nguyên nếu vẫn cho cùng kết quả."""
+        moi = {k: (list(v) if k == "tiers" else v) for k, v in da_luu.items()}
+        co_dinh = thu["priority"] == "tier"
+        for k in ("priority", "wharton", "fa_daa"):
+            moi[k] = thu[k]
+        if not co_dinh:
+            moi["tier_mode"], moi["score_scope"] = thu["tier_mode"], thu["score_scope"]
+        if nhom_xep_cung(thu):
+            moi["tiers"] = list(thu["tiers"])
+        if da_luu["priority"] != moi["priority"]:
+            thu_lai = dict(moi, priority=da_luu["priority"])
+            if luat_xep_hieu_luc(thu_lai) == thu:
+                moi = thu_lai
+        return moi
+
     def ap_dung_tieu_chi(self, run_id, slug=""):
         """Lưu luật xếp của MỘT lần chạy thử vào cấu hình workspace (qua `update_workspace_config`,
         giữ nguyên mọi khoá ngoài tiêu chí). KHÔNG chạy xếp, KHÔNG chép kết quả thử vào bảng chính
@@ -374,8 +394,14 @@ class TieuChiMixin:
             return _fail(err("error_reading_results", detail=str(e)))
         if dong is None:
             return _fail(err("gt2_lan_chay_khong_co", run_id=str(run_id)))
-        luat = luat_xep_hieu_luc(self._luat_tu_dong(dong))
-        rules = {k: luat[k] for k in LUAT_XEP_MAC_DINH if k in luat}
+        thu = luat_xep_hieu_luc(self._luat_tu_dong(dong))
+        try:
+            da_luu = luat_xep_cua(self._cfg_ws(nghiem=True)["rules"])
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        rules = self._luat_ap_dung(da_luu, thu)
+        if luat_xep_hieu_luc(rules) != thu:
+            return _fail(err("gt2_ap_dung_khong_khop", run_id=str(run_id)))
         kq = self.update_workspace_config({"rules": rules}, slug)
         if not kq.get("ok"):
             return kq

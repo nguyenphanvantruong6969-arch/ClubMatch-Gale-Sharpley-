@@ -63,7 +63,7 @@ MA_MOI_SAU_ANH_CHUP = {
     # (spacer: unchanged line between marker blocks)
 
     # === GT2: add below ===
-    "gt2_chua_co_lan_chinh_thuc", "gt2_lan_chay_khong_co", "gt2_so_sanh_lan_cu", "gt2_thu_chua_ho_tro_fa",
+    "gt2_chua_co_lan_chinh_thuc", "gt2_lan_chay_khong_co", "gt2_so_sanh_lan_cu", "gt2_ap_dung_khong_khop", "gt2_thu_chua_ho_tro_fa",
     "gt2_thu_stb_chua_day", "gt2_tieu_chi_khong_hop_le",
     # === end GT2 ===
 
