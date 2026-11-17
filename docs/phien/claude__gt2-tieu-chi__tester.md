@@ -26,3 +26,19 @@ BUG 1 (UI): js/15_tieu_chi.js `gt2TcLuatDangChon` always sends `wharton: el("gt2
   in plain words that FA turns off). 
 - why tests missed it: `test_luu_khoa_diem_quyet_tam_khi_chi_xet_nhom_khong_loi` calls `.uncheck()` first. Add a
   case that does NOT uncheck.
+
+## L1 fix1 | reviewed 4738551..9b67a95 | verdict: 1 BUG (minor)
+
+Tests: 115 passed (L1 unit + Chromium). Original bug fixed: priority=tier / per_person -> box unchecked + disabled,
+hint shown, save succeeds without .uncheck(); FA-on hint text present (vi + en).
+
+BUG 2 (UI, minor): js/15_tieu_chi.js `gt2TcDongBoWharton` unchecks the box but never restores it.
+- repro (Chromium, fresh workspace, saved wharton=true): choose priority "tier", then back to "score" -> box is
+  ENABLED but UNCHECKED (same after per_person -> per_slot). Save now sends wharton=false: commitment points are
+  silently turned off; with FA on the save is refused (fa_can_diem_quyet_tam) although the admin only toggled and
+  reverted a select.
+- expected: switching back to score + per_slot restores the box to the last state the admin chose (remember the
+  pre-disable checked value, or reset to the saved value), hint hides.
+
+Note (not blocking, pre-existing from L1): changing language re-runs gt2TcVeDieuKhien/gt2TcDatGiaTri, which resets
+unsaved selects, textarea and box to the saved values.
