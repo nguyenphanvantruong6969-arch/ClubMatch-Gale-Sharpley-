@@ -50,3 +50,34 @@ Own chain (box unchecked by admin -> tier -> per_person -> score -> per_slot): b
 admin's own choice), saves wharton=false; tier+save+back to score: enabled, no error.
 Residual (not a "Done when" item, not blocking): after a language switch, `gt2TcDongBoWharton` may reuse a stale
 remembered value over the saved one in the rare case of pending edits; selects are reset to saved anyway.
+
+## L2 | reviewed 7162a5e..9613648 (product 3f5957c) | verdict: 1 BUG (minor), 1 note
+
+Tests: 144 passed (gt2 L1+L2 + Chromium) + 123 passed in 6 older files that touch run_history/get_run_history/di_tru_schema.
+`kiem_nhanh.py --co-so 7162a5e --so-seed 20` -> 7/7 DAT (60 cases identical).
+
+Verified (own scripts, fake data, dataset 0 of du_lieu_test, wharton off):
+- Readers: re-grep of run_history / MAX(run_id) / ORDER BY run_id / COUNT(*) in all non-test .py. Official readers
+  filtered via `loc_chinh_thuc`: api.get_run_history, api_xuat (FA reason lookup), fa_sau_xep.run_goc_theo_buoi,
+  rbda.run_chinh_thuc_moi_nhat (used by run_thu). NOT filtered, judged safe: api.py MAX(run_id) x2 (read inside the
+  official transaction right after its own INSERT), rbda `_chan_neu_la_du_lieu_that` COUNT(*) (CLI guard; a trial
+  requires an official run first so it only ever counts MORE rows). api_quan_ly/api_bao_cao use run_meta only.
+- Full-table dump before/after a trial: ONLY run_history (+1 row, loai_chay='thu') and ket_qua_thu changed;
+  match_results, ket_qua_truoc, dau_van_tay_chay, stb_lock, stb_buoi, run_meta, fa_*, students untouched.
+- Official -> 2 trials -> official vs control DB (official -> official): match_results identical; run_history ids
+  1,2(thu),3(thu),4 vs 1,2; get_run_history shows [4,1] / [2,1] (trial rows hidden, id gap only).
+- No official run yet / STB not locked -> gt2_chua_co_lan_chinh_thuc, no rows written. 9 bad rules_thu (unknown
+  key, bad value, tiers str, list, None, fa_khieu_nai, max_choices=1 -> pref_too_many) leave run_history/ket_qua_thu counts
+  unchanged. Rollback and double-migration covered by writer tests; trial with same rules == official (3x5 seeds).
+- Not exercised by me: trial with Wharton ON (official run of that dataset needs Wharton profiles); reader code shows no writes.
+
+BUG 3 (minor, message): api_tieu_chi.py `_run_thu_da_khoa` refuses when `dung_fa_daa(da_luu["rules"])` even if
+rules_thu switches fa_daa/wharton OFF. repro: workspace with saved fa_daa=true (+wharton), official run done,
+`run_thu({"fa_daa": False, "wharton": False})` -> gt2_thu_chua_ho_tro_fa, whose text says "Hãy tắt chế độ huy chương
+trong tiêu chí thử" — impossible to follow. expected: either allow a trial whose merged rules have FA off (does not
+touch fa_* tables) or change the message to "đang bật chế độ huy chương ở trường: chưa chạy thử được; dùng lần xếp
+chính thức" for the saved-FA case.
+
+Note (non-blocking, spec "bounded" D-GT1): rules_thu accepts non-criteria workspace keys (`max_tests`, `fa_duong`
+accepted and run; `max_choices` rejected only by data check). They do not enter `run_history.luat_xep`, so a trial
+label would not show them. Suggest rejecting any key outside LUAT_XEP_MAC_DINH with gt2_tieu_chi_khong_hop_le.
