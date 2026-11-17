@@ -4,7 +4,7 @@
 > English. Cap 150 lines. WRITER owns this file (rewrites "Lot ledger"/"Current state", appends "Session log").
 > CHECKER never edits this file; it writes `docs/phien/claude__gt-hoan-thien__tester.md` only. No lead session.
 
-Status: NOT STARTED   (writer sets `DONE <sha> CI green <date>` at the very end)
+Status: IN PROGRESS   (writer sets `DONE <sha> CI green <date>` at the very end)
 
 ## Feature / goal
 GT4: fix the problems found by the review of `claude/gt-tich-hop` (`docs/ke_hoach/gt/GT4_RA_SOAT.md`, R0-R10) without touching
@@ -14,7 +14,7 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 ## Sessions (exactly two; nobody creates more sessions or subagents)
 | Role | Model | Session id | Notes |
 |---|---|---|---|
-| writer | Sonnet | (fill at start) | writes code/tests, owns this file |
+| writer | Sonnet | session_01VfPzNuryTWQ7HDGsXwVf1g | writes code/tests, owns this file |
 | checker | Sonnet | (fill at start) | reviews + plays the user in Chromium, owns `__tester.md` |
 
 ## Lot ledger (writer updates; states: TODO / READY <sha> / FIX / CHECKED <sha> / BLOCKED <why>)
