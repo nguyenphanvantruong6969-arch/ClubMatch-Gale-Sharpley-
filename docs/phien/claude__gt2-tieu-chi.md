@@ -39,14 +39,15 @@ adopt a trial's criteria for the next official run. Schema (D-GT8): column `run_
 | writer 3 | Sonnet | session_01YVAyu2U827tpBVb8oi1vsW | archived (handoff after L3, 9947e41) |
 | writer 4 | Sonnet | session_01YVAyu29HSdnV77Lo8qJeao | active |
 | checker | Sonnet | session_01YVAyu2C5sE334n7iiw4hsP | archived (handoff after L2 review, b34457c) |
-| checker 2 | Sonnet | session_01YVAyu11AFfpoJo5WWiwUja | active |
+| checker 2 | Sonnet | session_01YVAyu11AFfpoJo5WWiwUja | archived (handoff after L4 review, 5dfcdcf) |
+| checker 3 | Sonnet | session_01YVAyu1oGvGojvGmWkNvEa3 | active |
 
 ## Needs Truong
 - GT2-L2: chạy thử chế độ huy chương (FA) chưa hỗ trợ — `run_thu` từ chối bằng `gt2_thu_chua_ho_tro_fa` vì đường FA (`fa_daa.chay_fa_daa`) đọc/ghi hồ sơ `fa_*` trong cùng đường chạy. Đề xuất: để sau, ngoài phạm vi 1 tuần.
 
 ## Current state (overwrite each handoff)
 - Done: L1 passed checker (48ad9d8); L2 passed checker (e36fc60); L3 passed checker (1cca309).
-- In progress: L4 (writer 4).
+- In progress: L4 FIX round 1 (writer 4): adopt must merge only ACTIVE trial keys onto saved rules (keep inert keys, e.g. tier_mode, tiers).
 - For integration (GT3 I1): GT2 APIs (get_tieu_chi, run_thu, list_lan_chay, so_sanh_lan_chay, export_so_sanh_html/csv, L4 adopt) must be classified quan_tri; the compare student list is admin-only. HTML export is Vietnamese only (non-blocking).
 - Tests: —
 - Open problems: —
