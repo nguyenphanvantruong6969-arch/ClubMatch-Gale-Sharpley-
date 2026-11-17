@@ -135,3 +135,14 @@ chính thức" for the saved-FA case.
 Note (non-blocking, spec "bounded" D-GT1): rules_thu accepts non-criteria workspace keys (`max_tests`, `fa_duong`
 accepted and run; `max_choices` rejected only by data check). They do not enter `run_history.luat_xep`, so a trial
 label would not show them. Suggest rejecting any key outside LUAT_XEP_MAC_DINH with gt2_tieu_chi_khong_hop_le.
+
+## L2 fix1 | reviewed 9613648..e36fc60 | verdict: NO BUGS
+
+Tests: 148 passed (gt2 L1+L2+Chromium). `kiem_nhanh.py --co-so 7162a5e --so-seed 20` -> 7/7 DAT (60 cases identical).
+Own full-table dump (dataset 0, wharton off) before/after run_thu:
+- saved fa_daa+wharton ON, run_thu({fa_daa:False,wharton:False}) -> ok; changed tables ONLY run_history, ket_qua_thu (+sqlite_sequence); fa_* untouched. (bug 3 fixed)
+- saved FA ON, run_thu({}) -> gt2_thu_chua_ho_tro_fa, nothing written; message now followable (merged rules still FA).
+- saved FA ON, run_thu({wharton:False}) -> gt2_tieu_chi_khong_hop_le with plain reason, nothing written.
+- keys max_tests / fa_duong / "điểm" -> gt2_tieu_chi_khong_hop_le naming the key, nothing written. (note fixed)
+- empty trial and tiers with diacritics run fine. Saved FA + {fa_daa:False} on data without Wharton profiles fails with the
+  same wharton_* data errors as the official run would (by design, no write).
