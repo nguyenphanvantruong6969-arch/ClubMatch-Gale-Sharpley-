@@ -45,9 +45,15 @@ def test_chua_co_tai_khoan_che_do_hoc_sinh_khong_khoa_gi(api):
     assert api.thoat_che_do_hoc_sinh("", "")["ok"]
 
 
+def _quan_tri_vao_che_do_hs(api):
+    """GT4 D4-1: chỉ quản trị vào được chế độ học sinh (trước đây giáo viên cũng vào được)."""
+    assert api.dang_xuat()["ok"] and api.dang_nhap("quantri", MK)["ok"]
+    return api.vao_che_do_hoc_sinh()
+
+
 def test_o_che_do_hoc_sinh_chi_con_tra_cuu_va_thoat(co_tk):
     api, ma = co_tk
-    assert api.vao_che_do_hoc_sinh()["data"]["khoa"] is True
+    assert _quan_tri_vao_che_do_hs(api)["data"]["khoa"] is True
     for goi in (lambda: api.get_run_history(), lambda: api.export_ket_qua(), lambda: api.run_pipeline(seed=1),
                 lambda: api.reset_data(), lambda: api.get_giai_trinh_hoc_sinh("s2"),
                 lambda: api.tao_lai_ma_tra_cuu(), lambda: api.dang_nhap("quantri", MK),
@@ -62,7 +68,7 @@ def test_o_che_do_hoc_sinh_chi_con_tra_cuu_va_thoat(co_tk):
 
 def test_thoat_can_dung_quan_tri_khong_ma_hoi_phan_nao_sai(co_tk):
     api, _ = co_tk
-    api.vao_che_do_hoc_sinh()
+    _quan_tri_vao_che_do_hs(api)
     sai = [api.thoat_che_do_hoc_sinh("quantri", "sai"), api.thoat_che_do_hoc_sinh("khongco", MK)]
     assert [_ma_loi(r) for r in sai] == [["gt3_sai_thong_tin"]] * 2
     assert sai[0]["errors"] == sai[1]["errors"]
@@ -77,7 +83,7 @@ def test_thoat_can_dung_quan_tri_khong_ma_hoi_phan_nao_sai(co_tk):
 
 def test_mat_khau_khong_vao_nhat_ky(co_tk):
     api, _ = co_tk
-    api.vao_che_do_hoc_sinh()
+    _quan_tri_vao_che_do_hs(api)
     api.thoat_che_do_hoc_sinh("quantri", "sai-bi-mat-xyz")
     api.thoat_che_do_hoc_sinh("quantri", MK)
     with api._ket_noi_doc() as cur:
@@ -87,7 +93,7 @@ def test_mat_khau_khong_vao_nhat_ky(co_tk):
 
 def test_bang_quyen_che_do_hoc_sinh():
     assert pq.QUYEN["thoat_che_do_hoc_sinh"] == pq.CONG_KHAI
-    assert pq.QUYEN["vao_che_do_hoc_sinh"] == pq.GIAO_VIEN
+    assert pq.QUYEN["vao_che_do_hoc_sinh"] == pq.QUAN_TRI        # GT4 D4-1: vào = thoát = quản trị
 
 
 # ----------------------------------------------------------------------------- I3: nhật ký cho thao tác GT1/GT2
@@ -228,3 +234,11 @@ def test_i4_goi_minh_chung_dung_duoc_docx_va_html(tmp_path, monkeypatch):
     assert "DỮ LIỆU MÔ PHỎNG" in chu and "Ca mẫu giải trình và tiêu chí" in chu
     trang = g.dung_html(cac_tep)
     assert "<table>" in trang and "Ca 6 —" in trang and "(sau tích hợp)" not in trang
+
+
+def test_giao_vien_khong_vao_duoc_che_do_hoc_sinh(co_tk):
+    """GT4 D4-1: giáo viên bấm "Chế độ học sinh" bị từ chối và không khoá được kiosk."""
+    api, _ = co_tk
+    r = api.vao_che_do_hoc_sinh()
+    assert not r["ok"] and _ma_loi(r) == ["gt3_khong_du_quyen"]
+    assert api.get_run_history()["ok"]                           # vẫn dùng được bình thường

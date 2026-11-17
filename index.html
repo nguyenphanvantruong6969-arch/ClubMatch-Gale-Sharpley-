@@ -332,9 +332,9 @@
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
           <div class="search-row">
-            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
-            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
-            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
+            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
+            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
           </div>
           <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
         </div>
@@ -659,7 +659,7 @@
           </div>
           <div class="panel-actions">
             <select id="v2Buoi" class="text-input text-input-sm" data-i18n-aria-label="kn_buoi"></select>
-            <button class="btn btn-primary" id="btnChayVong2" type="button" data-i18n="v2_chay">Chạy vòng 2</button>
+            <button class="btn btn-primary" id="btnChayVong2" data-quyen="quan_tri" type="button" data-i18n="v2_chay">Chạy vòng 2</button>
           </div>
         </div>
         <div class="panel-body">
@@ -760,7 +760,7 @@
           <input type="text" id="studentSearchInput" class="text-input" data-i18n-placeholder="placeholder_fallback_search" placeholder="Nhập mã học sinh hoặc tên…">
           <button class="btn btn-secondary" id="btnStudentSearch" data-i18n="btn_search">Tìm</button>
         </div>
-        <div class="new-student-row">
+        <div class="new-student-row" data-quyen="quan_tri">
           <input type="text" id="newStudentId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_new_student_id" placeholder="Mã học sinh mới">
           <input type="text" id="newStudentName" class="text-input" data-i18n-placeholder="placeholder_full_name" placeholder="Họ tên">
           <select id="newStudentLop" class="text-input text-input-sm" data-i18n-aria-label="kiosk_lop_nhan" hidden></select>
@@ -783,8 +783,8 @@
               <summary class="btn btn-ghost" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn">⋯</summary>
               <div class="menu-khac-hop">
                 <button type="button" class="menu-khac-muc" id="btnXuatEmNay" data-i18n="btn_xuat_em_nay">Xuất CSV học sinh này</button>
-                <button type="button" class="menu-khac-muc" id="btnResetStudentEntry" data-giu-menu="1" data-i18n="btn_reset_entry">Xoá toàn bộ phiếu của học sinh này</button>
-                <button type="button" class="menu-khac-muc nguy-hiem" id="btnDeleteStudent" data-giu-menu="1" data-i18n="btn_delete_student">Xoá học sinh</button>
+                <button type="button" class="menu-khac-muc" id="btnResetStudentEntry" data-quyen="quan_tri" data-giu-menu="1" data-i18n="btn_reset_entry">Xoá toàn bộ phiếu của học sinh này</button>
+                <button type="button" class="menu-khac-muc nguy-hiem" id="btnDeleteStudent" data-quyen="quan_tri" data-giu-menu="1" data-i18n="btn_delete_student">Xoá học sinh</button>
               </div>
             </details>
           </div>
@@ -835,7 +835,7 @@
             <p class="hint-text" data-i18n="fallback_step3_hint">Chia đúng 100 điểm cho các CLB đã thi và đúng 100 điểm cho các CLB không thi, ở mỗi buổi. Ô để trống tính là 0 điểm.</p>
             <p class="wh-khoa-ghi-chu" id="fbWhartonKhoa" role="status" hidden data-i18n="wharton_da_khoa_kiosk">Điểm quyết tâm đang khoá vì đã chạy xếp. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần sửa.</p>
             <div id="fbWhartonBody"></div>
-            <button class="btn btn-primary" id="btnSubmitWharton" data-i18n="btn_save_wharton">Lưu điểm quyết tâm</button>
+            <button class="btn btn-primary" id="btnSubmitWharton" data-quyen="quan_tri" data-i18n="btn_save_wharton">Lưu điểm quyết tâm</button>
             <span class="chua-luu" id="chuaLuuWharton" hidden data-i18n="fallback_chua_luu">• Chưa lưu</span>
             <span class="save-feedback" role="status" aria-live="polite" id="whartonFeedback"></span>
           </div>

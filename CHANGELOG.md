@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L2: nút hiện ra khớp với vai (R3, D4-1)
+
+- `phan_quyen.py`: `vao_che_do_hoc_sinh` chuyển từ `_GIAO_VIEN` sang `_QUAN_TRI` (D4-1: vào = thoát = quản trị; giáo viên không còn tự khoá được kiosk).
+- `index.html`: `data-quyen="quan_tri"` trên `btnGtTaoMa`, `btnGtXuatMa`, `btnGtCheDoHs`, `btnChayVong2`, `btnSubmitWharton`, `btnResetStudentEntry`, `btnDeleteStudent` và khối `.new-student-row` (đều gọi hàm mức quản trị). Các điều khiển GT2 (tiêu chí, chạy thử) nằm trong thẻ Quản lý, đã ẩn với giáo viên. Không bao phủ: nút do JS sinh động trong danh sách (xử lý khiếu nại `xu_ly_khieu_nai`, trả lời mời `tra_loi_moi`) — còn nếu giáo viên bấm thì vẫn bị từ chối và ghi nhật ký.
+- Sửa test cũ theo D4-1: `tests/test_gt_tich_hop.py` (bảng quyền `vao_che_do_hoc_sinh` = quản trị; ba test chế độ học sinh đăng nhập bằng quản trị), `tests/test_giao_dien_gt3_hoc_sinh.py` (đăng nhập quản trị trước khi bấm "Chế độ học sinh").
+- Test mới: `tests/test_giao_dien_gt4_vai.py` (quét vai giáo viên: bấm mọi nút nhìn thấy, nhật ký không có `gt3_khong_du_quyen`, kiosk không bị khoá; không đạt trên mã cũ) và `tests/test_gt_tich_hop.py::test_giao_vien_khong_vao_duoc_che_do_hoc_sinh`.
+
 ## 2026-11-17 — GT4-L1: nhật ký thao tác không giữ mã tra cứu (R1, D4-2, D4-3)
 
 - `nhat_ky.py`: `tra_cuu_hoc_sinh` chỉ giữ `student_id` (`_CHI_GIU`); tham số tên `ma` bị ẩn ở mọi hàm (`_AN`); `get_giai_trinh_hoc_sinh` được ghi (`_GHI_DU_LA_DOC`, chỉ `student_id`, `run_id`).
