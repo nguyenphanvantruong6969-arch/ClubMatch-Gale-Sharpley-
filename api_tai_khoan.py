@@ -107,7 +107,8 @@ class TaiKhoanMixin:
         try:
             co = self._co_tai_khoan()
             phien = self._dang_nhap.phien_hien_tai(self.db_path) if co else None
-            d = {"co_tai_khoan": co, "dang_nhap": phien is not None, "ten": None, "vai": None}
+            d = {"co_tai_khoan": co, "dang_nhap": phien is not None, "ten": None, "vai": None,
+                 "che_do_hs": bool(co and self._che_do_hs)}     # I2: giao diện tải lại vẫn mở lại lớp phủ học sinh
             if phien is not None:
                 d["ten"], d["vai"] = phien["ten"], phien["vai"]
             return _ok(d)

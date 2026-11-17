@@ -263,6 +263,7 @@
       }
       const truoc = phien;
       phien = res.data;
+      window.dispatchEvent(new CustomEvent("tkPhien", { detail: phien }));   // I2: js/14 mở lại lớp phủ học sinh sau khi tải lại trang
       ganVai();
       veThanhBen();
       const canDangNhap = phien.co_tai_khoan && !phien.dang_nhap;

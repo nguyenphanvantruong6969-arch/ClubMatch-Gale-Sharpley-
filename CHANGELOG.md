@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-17 — I2 fix1: tải lại trang ở chế độ học sinh
+
+- `api_tai_khoan.get_phien_dang_nhap` trả thêm `che_do_hs`; `js/16_tai_khoan.js` phát sự kiện `tkPhien`; `js/14_giai_trinh.js` mở lại lớp phủ học sinh khi cờ còn bật (trước đó tải lại trang để lại backend khoá mà không có nút thoát). `CLAUDE_CHI_TIET.md`: thêm dòng bản đồ mã GT3 (cờ nằm trong bộ nhớ). Test mới: `test_giao_dien_gt3_hoc_sinh.py::test_tai_lai_trang_...`.
+
 ## 2026-11-17 — I2 (tích hợp GT1+GT2+GT3): chế độ học sinh khoá ở backend khi có tài khoản
 
 - `api_tai_khoan.py`: `vao_che_do_hoc_sinh` (giáo viên trở lên; đặt cờ khi CÓ tài khoản) và `thoat_che_do_hoc_sinh(ten, mat_khau)` (công khai; có tài khoản thì chỉ tài khoản quản trị mới thoát được, mọi lý do không vào được trả cùng `gt3_sai_thong_tin`; tên và mật khẩu không vào nhật ký). Không có tài khoản: không khoá gì, như cũ.

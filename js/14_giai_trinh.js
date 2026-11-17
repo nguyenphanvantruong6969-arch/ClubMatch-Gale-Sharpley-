@@ -257,6 +257,14 @@
   el("btnGtCheDoHs").addEventListener("click", moHs);
   el("btnGtHsThoat").addEventListener("click", () => { el("gtHsXacNhan").hidden = false; });
   el("btnGtHsKhong").addEventListener("click", () => { el("gtHsXacNhan").hidden = true; });
+  /* I2: tải lại trang khi backend còn khoá chế độ học sinh -> mở lại lớp phủ (không gọi vao lần nữa). */
+  window.addEventListener("tkPhien", (e) => {
+    if (e.detail && e.detail.che_do_hs && !hsDangMo) {
+      vaoXong = Promise.resolve({ ok: true, data: { khoa: true } });
+      moLopHs();
+    }
+  });
+
   /* I2: không có tài khoản thì thoát như cũ; có tài khoản thì hỏi tài khoản quản trị (backend mới là nơi quyết định). */
   function laiPhien() { window.dispatchEvent(new Event("tkLamMoi")); }
   el("btnGtHsCo").addEventListener("click", () => {

@@ -106,3 +106,31 @@ def test_khong_co_tai_khoan_thoat_nhu_cu(mo):
     page.wait_for_function("document.querySelector('.app-shell').inert === false")
     assert page.locator("#gtHsQuanTri").is_hidden() and page.locator("#gtHs").is_hidden()
     assert loi == []
+
+
+def test_tai_lai_trang_o_che_do_hoc_sinh_van_con_lop_phu_va_quan_tri_thoat_duoc(mo):
+    page, loi, vao = mo
+    ma = vao(True)
+    page.click("#btnGtCheDoHs")
+    page.wait_for_selector("#gtHs", state="visible")
+    page.wait_for_timeout(300)                        # để vao_che_do_hoc_sinh kịp tới backend
+    page.reload()
+    page.wait_for_selector("#gtPanel", state="attached")
+    page.wait_for_selector("#gtHs", state="visible")                    # mở lại, không cần bấm gì
+    assert page.evaluate("document.querySelector('.app-shell').inert") is True
+    assert page.evaluate("[...document.querySelectorAll('.nav-item')].every(n => n.closest('[inert]'))") is True
+    r = _goi(page, "get_run_history")
+    assert r["ok"] is False and r["errors"][0]["code"] == "gt3_che_do_hoc_sinh"
+    page.fill("#gtHsMa", "s1")                                          # học sinh vẫn tra cứu được sau khi tải lại
+    page.fill("#gtHsMaTra", ma["s1"])
+    page.click("#btnGtHsXem")
+    page.wait_for_selector("#gtHsKetQua .gt-ten")
+    page.click("#btnGtHsThoat")
+    page.click("#btnGtHsCo")
+    page.wait_for_selector("#gtHsQuanTri", state="visible")
+    page.fill("#gtHsQtTen", "quantri")
+    page.fill("#gtHsQtMk", MK)
+    page.click("#btnGtHsQtThoat")
+    page.wait_for_function("document.querySelector('.app-shell').inert === false")
+    assert _goi(page, "get_run_history")["ok"] is True
+    assert loi == []
