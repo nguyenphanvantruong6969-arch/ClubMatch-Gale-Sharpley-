@@ -174,6 +174,14 @@ MESSAGES = {
         "vi": "Không mở được thư mục \"{path}\". Chỉ mở được thư mục chứa tệp phần mềm vừa xuất.",
         "en": "Cannot open the folder \"{path}\". Only folders holding files this app exported can be opened.",
     },
+    "tep_khong_hop_le": {
+        "vi": "Không mở được tệp \"{path}\". Chỉ mở được tệp báo cáo (.html, .csv, .xlsx, .pdf, .docx) mà phần mềm vừa xuất.",
+        "en": "Cannot open the file \"{path}\". Only report files (.html, .csv, .xlsx, .pdf, .docx) this app exported can be opened.",
+    },
+    "tep_khong_mo_duoc": {
+        "vi": "Máy không mở được tệp. Hãy mở thủ công theo đường dẫn hiện trên màn hình.",
+        "en": "The computer could not open the file. Open it by hand using the path shown on screen.",
+    },
     "thu_muc_khong_mo_duoc": {
         "vi": "Máy không mở được thư mục. Hãy mở thủ công theo đường dẫn hiện trên màn hình.",
         "en": "The computer could not open the folder. Open it by hand using the path shown on screen.",

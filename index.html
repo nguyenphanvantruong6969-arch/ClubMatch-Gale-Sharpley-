@@ -248,6 +248,7 @@
         <h1 data-i18n="kq_title">Kết quả</h1>
         <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào. Bảng này không có điểm hay số bốc thăm; khung tra cứu (dành cho quản trị và giáo viên) cho xem chi tiết riêng của từng {person_l}.</p>
       </header>
+      <p class="kq-nhay"><a href="#gtPanel" id="gtNhay" class="btn btn-ghost" data-i18n="gt_nhay">Tra cứu một {person_l} ↓</a></p>
       <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
         <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
       </div>
@@ -320,6 +321,12 @@
       <div class="panel" id="gtPanel">
         <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
         <div class="panel-body">
+          <ol class="gt-buoc" id="gtBuocHuongDan" data-quyen="quan_tri" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
+            <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
+            <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
+            <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
+            <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
+          </ol>
           <div class="search-row">
             <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
             <input type="text" id="gtTim" class="text-input" data-i18n-placeholder="gt_tim_ph" placeholder="Tìm mã hoặc tên">
@@ -1323,13 +1330,24 @@
 <!-- GT1-L4: chế độ học sinh tự tra cứu (toàn màn hình, không có nút quản trị); js/14_giai_trinh.js -->
 <div id="gtHs" class="gt-hs" aria-labelledby="gtHsTieuDe" hidden>
   <div class="gt-hs-khung">
+    <div class="gt-hs-dau">
+      <p id="gtHsTruong" class="gt-hs-truong" hidden></p>
+      <button type="button" class="lang-toggle" id="btnGtHsNgonNgu" data-i18n="lang_toggle_label">EN</button>
+    </div>
     <h1 id="gtHsTieuDe" data-i18n="gt_hs_tieu_de">Xem kết quả của mình</h1>
     <p class="gt-hs-huong-dan" data-i18n="gt_hs_huong_dan">Nhập mã và mã tra cứu in trên phiếu.</p>
-    <form id="gtHsForm" class="search-row" autocomplete="off">
-      <input type="text" id="gtHsMa" class="text-input" data-i18n-placeholder="gt_hs_ma_ph" placeholder="Mã" autocomplete="off">
-      <input type="password" id="gtHsMaTra" class="text-input" data-i18n-placeholder="gt_hs_ma_tra_ph" placeholder="Mã tra cứu" autocomplete="off">
+    <form id="gtHsForm" class="gt-hs-form" autocomplete="off">
+      <div class="gt-hs-o">
+        <label for="gtHsMa" data-i18n="gt_hs_ma_nhan">Mã {person_l}</label>
+        <input type="text" id="gtHsMa" class="text-input" data-i18n-placeholder="gt_hs_ma_ph" placeholder="Mã" autocomplete="off">
+      </div>
+      <div class="gt-hs-o">
+        <label for="gtHsMaTra" data-i18n="gt_hs_ma_tra_nhan">Mã tra cứu</label>
+        <input type="password" id="gtHsMaTra" class="text-input" data-i18n-placeholder="gt_hs_ma_tra_ph" placeholder="Mã tra cứu" autocomplete="off">
+      </div>
       <button type="submit" class="btn btn-primary" id="btnGtHsXem" data-i18n="gt_hs_xem">Xem</button>
     </form>
+    <div id="gtHsDemNguoc" class="gt-hs-dem" role="status" aria-live="polite" hidden></div>
     <div id="gtHsLoi" class="gt-hs-loi" role="alert"></div>
     <div id="gtHsKetQua" role="status"></div>
     <div class="search-row">

@@ -1040,6 +1040,31 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("thu_muc_khong_mo_duoc", detail=str(e)))
 
+    # Đuôi tệp mà phần mềm tự xuất ra; chỉ những đuôi này `mo_tep` mới mở (không bao giờ .exe, .bat, .ps1, .lnk ...).
+    _DUOI_TEP_XUAT = (".html", ".csv", ".xlsx", ".pdf", ".docx")
+
+    def mo_tep(self, path: str):
+        """GT4-L5: mở đúng TỆP vừa xuất bằng chương trình mặc định của máy (cạnh nút "Mở thư mục").
+
+        AN TOÀN (gọi được từ JavaScript, nên là cửa chạy chương trình ngoài): chỉ mở TỆP có thật nằm trong chỗ phần
+        mềm đặt tệp xuất (`_goc_xuat_hop_le`, so bằng `realpath` + `commonpath`) VÀ có đuôi trong `_DUOI_TEP_XUAT`.
+        Thư mục, tệp lạ, tệp chạy được: `tep_khong_hop_le`. Không chạy qua shell.
+        """
+        try:
+            p = os.path.realpath((path or "").strip()) if (path or "").strip() else ""
+            if (not p or not os.path.isfile(p) or not p.lower().endswith(self._DUOI_TEP_XUAT)
+                    or not any(self._nam_trong(os.path.dirname(p), g) for g in self._goc_xuat_hop_le())):
+                return _fail(err("tep_khong_hop_le", path=path))
+            if sys.platform == "win32":
+                os.startfile(p)  # noqa: S606 — tep da duoc soat o tren (trong cho xuat, duoi an toan)
+            else:
+                import subprocess
+                lenh = "open" if sys.platform == "darwin" else "xdg-open"
+                subprocess.Popen([lenh, p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return _ok({"path": p})
+        except Exception as e:
+            return _fail(err("tep_khong_mo_duoc", detail=str(e)))
+
     # -----------------------------------------------------------------
     # KẾT QUẢ CÓ CÒN KHỚP DỮ LIỆU KHÔNG — và đã đổi gì so với lần trước
     # -----------------------------------------------------------------
@@ -1893,7 +1918,7 @@ class XuatKetQuaMixin:
             thu = self._gt1_luot_sai.setdefault(sid[:64], [0, 0.0])
             bay_gio = self._gt1_dong_ho()
             if thu[1] and bay_gio < thu[1]:
-                return _fail(err("gt1_tam_khoa"))
+                return _fail(err("gt1_tam_khoa", giay=max(1, int(thu[1] - bay_gio + 0.999))))   # GT4-L5: đếm ngược
             if thu[1]:                                    # hết hạn khoá: đếm lại từ đầu
                 thu[0], thu[1] = 0, 0.0
             with self._ket_noi_doc() as cur:

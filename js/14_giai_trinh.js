@@ -168,8 +168,18 @@
   /* Phiếu in: MỘT tệp HTML, mỗi em một trang (export_phieu_giai_trinh). */
   function inPhieu(doiSo) {
     chayXuat([["gt_in_muc", "export_phieu_giai_trinh", doiSo,
-      (d) => t("gt_in_xong", { n: d.n_trang, path: d.path })]], el("gtXuatPhanHoi"));
+      (d) => t("gt_in_xong", { n: d.n_trang, path: d.path })]], el("gtXuatPhanHoi"), true);
   }
+  /* GT4-L5: bấm một dòng của bảng kết quả -> mở lời giải thích của em đó ở khung này (cuộn tới khung). */
+  window.gtMoHocSinh = (sid) => {
+    el("gtPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    xem(sid);
+  };
+  el("gtNhay").addEventListener("click", (ev) => {
+    ev.preventDefault();
+    el("gtPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    el("gtTim").focus();
+  });
   el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
   el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
 
@@ -183,7 +193,7 @@
   });
   el("btnGtXuatMa").addEventListener("click", () => {
     chayXuat([["gt_xuat_ma_muc", "export_ma_tra_cuu_csv", [""],
-      (d) => t("gt_xuat_ma_xong", { n: d.n_dong, path: d.path })]], el("gtMaPhanHoi"));
+      (d) => t("gt_xuat_ma_xong", { n: d.n_dong, path: d.path })]], el("gtMaPhanHoi"), true);
   });
 
   /* ---- Chế độ học sinh tự tra cứu (toàn màn hình) ----
@@ -202,6 +212,29 @@
     el("gtHsMa").value = "";
     el("gtHsMaTra").value = "";
     el("gtHsQtMk").value = "";
+  }
+
+  /* GT4-L5: khoá tạm do nhập sai nhiều lần -> đếm ngược số giây còn lại (backend gửi `giay`), khoá nút Xem. */
+  let henDem = null;
+  function dungDem() {
+    clearInterval(henDem);
+    henDem = null;
+    el("gtHsDemNguoc").hidden = true;
+    el("btnGtHsXem").disabled = false;
+  }
+  function batDem(giay) {
+    dungDem();
+    let con = Math.max(1, Math.floor(giay) || 60);
+    const ve = () => { el("gtHsDemNguoc").textContent = t("gt_hs_dem_nguoc", { n: con }); };
+    el("gtHsDemNguoc").hidden = false;
+    el("btnGtHsXem").disabled = true;
+    ve();
+    henDem = setInterval(() => {
+      con -= 1;
+      if (con <= 0) { dungDem(); el("gtHsMa").focus(); return; }
+      ve();
+    }, 1000);
+    window.gtHsDem = () => con;
   }
 
   function datHenGio() {
@@ -243,6 +276,9 @@
     el("gtHs").setAttribute("role", "dialog");
     el("gtHs").setAttribute("aria-modal", "true");
     el("gtHsQuanTri").hidden = true;
+    const truong = (el("wsTenHienTai") && el("wsTenHienTai").textContent || "").trim();   // GT4-L5: tên trường nếu có
+    el("gtHsTruong").textContent = truong;
+    el("gtHsTruong").hidden = !truong;
     el("gtHs").hidden = false;
     el("gtHsMa").focus();
     datHenGio();
@@ -252,6 +288,7 @@
     hsDangMo = false;
     moBoiHoiPhien = false;
     clearTimeout(henGio);
+    dungDem();
     xoaThe();
     el("gtHs").hidden = true;
     el("gtHs").removeAttribute("role");
@@ -305,6 +342,7 @@
   ["input", "click", "keydown", "pointerdown"].forEach((ev) => el("gtHs").addEventListener(ev, datHenGio));
   el("gtHsForm").addEventListener("submit", (e) => {
     e.preventDefault();
+    if (henDem !== null) return;                  // đang đếm ngược khoá tạm: Enter cũng không gửi
     const ma = el("gtHsMa").value;
     const maTra = el("gtHsMaTra").value;
     el("gtHsKetQua").textContent = "";
@@ -315,6 +353,9 @@
       el("gtHsMaTra").value = "";             // không để mã nằm lại trên màn hình
       if (!res.ok) {
         el("gtHsLoi").textContent = trErrs(res.errors).join(" ");
+        const khoa = (res.errors || []).find((x) => x && x.code === "gt1_tam_khoa");
+        if (khoa) batDem((khoa.params && khoa.params.giay) || 60);
+        else el("gtHsMa").focus();                 // lỗi: con trỏ về ô đầu để gõ lại
         return;
       }
       ve(res.data, el("gtHsKetQua"), false);
@@ -322,6 +363,10 @@
   });
   window.addEventListener("langchange", () => {
     if (hsDangMo && el("gtHsKetQua").childElementCount) el("gtHsKetQua").textContent = "";
+    if (henDem !== null && window.gtHsDem) el("gtHsDemNguoc").textContent = t("gt_hs_dem_nguoc", { n: window.gtHsDem() });
+  });
+  el("btnGtHsNgonNgu").addEventListener("click", () => {      // GT4-L5: đổi ngôn ngữ ngay trên màn học sinh
+    window.I18N.setLang(window.I18N.getLang() === "vi" ? "en" : "vi");
   });
 
   el("gtTim").addEventListener("input", tim);

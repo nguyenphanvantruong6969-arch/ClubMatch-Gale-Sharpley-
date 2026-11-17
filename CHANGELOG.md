@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L5: màn học sinh và vị trí khung tra cứu (R9)
+
+- Màn học sinh (`index.html`, `js/14_giai_trinh.js`, `style.css`, `i18n.js` vi+en): nhãn thấy được "Mã {person_l}" / "Mã tra cứu" (theo từ vựng workspace), tên workspace nếu có (workspace chưa có trường logo nên chỉ tên), nút đổi ngôn ngữ ngay trên màn, Enter gửi, lỗi thì con trỏ về ô đầu, khoá tạm thì đếm ngược số giây còn lại và khoá nút Xem.
+- `api_xuat.tra_cuu_hoc_sinh`: lỗi `gt1_tam_khoa` kèm tham số `giay` (số giây còn lại; thông báo giữ nguyên).
+- Thẻ Kết quả: liên kết "Tra cứu một {person_l} ↓" ở đầu thẻ; bấm một dòng của bảng (`js/09_the_xem.js`) mở lời giải thích của em đó ở khung tra cứu (`window.gtMoHocSinh`); khung tra cứu có dải bốn bước (tạo mã → xuất mã/in phiếu → chế độ học sinh → thoát bằng tài khoản quản trị), chỉ quản trị thấy (`data-quyen`).
+- "Mở tệp": `api_xuat.mo_tep(path)` mới (mức giáo viên như `mo_thu_muc`, không ghi nhật ký): chỉ mở TỆP có thật trong chỗ xuất và đuôi .html/.csv/.xlsx/.pdf/.docx; lỗi mới `tep_khong_hop_le`, `tep_khong_mo_duoc` (`i18n_errors.py`, đã chạy `tao_i18n_js.py`). Nút "Mở tệp" cạnh "Mở thư mục" sau khi xuất phiếu / mã tra cứu (`chayXuat(..., kemMoTep)` ở `js/03_ket_qua.js`).
+- Test mới: `tests/test_giao_dien_gt4_man_hoc_sinh.py` (6 test Chromium, đồng hồ giả `page.clock`), `tests/test_gt4_mo_tep.py` (16 ca).
+
 ## 2026-11-17 — GT4-L4: lời giải trình không bị hiểu sai (R5, R6)
 
 - `fa_ly_do.py`: `cau_ly_do_rbda(dong, ten_clb, giong="hoc_sinh")` — giọng `giao_vien` trung tính (ngôi thứ ba), mặc định giữ nguyên từng byte; hằng `CAU_GIU_CHO` (một nguồn) cho câu chú thích chỗ dành riêng. Câu chế độ FA (`cau_ly_do`) không đổi.

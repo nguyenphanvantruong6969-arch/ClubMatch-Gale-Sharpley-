@@ -1134,7 +1134,7 @@ function capNhatChonHs() {
 /* Chay lan luot cac lan xuat; ghi ket qua vao o phan hoi (KHONG tu tat —
    duong dan tep phai doc duoc) va mot toast tom tat. Dung chung cho the
    Ket qua va the 04. */
-function chayXuat(dsMuc, oPhanHoi) {
+function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
   /* Bam dup se ghi them mot bo tep "(2)": khoa moi nut xuat trong luc xuat. */
   if (khoa.dangXuat) return;
   datKhoa("dangXuat", true);
@@ -1173,7 +1173,7 @@ function chayXuat(dsMuc, oPhanHoi) {
     .then(() => {
       datKhoa("dangXuat", false);
       if (cu) dong.push(t("xuat_kq_cu"));
-      veKetQuaXuat(o, dong, coLoi, duongMo);
+      veKetQuaXuat(o, dong, coLoi, duongMo, kemMoTep);
       showToast(dong[0] || "", coLoi ? "error" : "success");
       if (currentTabName() === "others") veXuatPanel();
     });
@@ -1202,7 +1202,7 @@ function boHsKhongConTonTai(errors) {
 
 /* Ghi ket qua xuat vao `o` (KHONG tu tat — duong dan phai doc duoc) kem
    nut "Mo thu muc". Dung chung cho the 02, 03, 04. */
-function veKetQuaXuat(o, dong, coLoi, duongMo) {
+function veKetQuaXuat(o, dong, coLoi, duongMo, kemMoTep) {
   o.textContent = dong.join("\n");
   o.className = "save-feedback xuat-ket-qua " + (coLoi ? "is-error" : "is-success");
   if (!duongMo) return;
@@ -1217,6 +1217,19 @@ function veKetQuaXuat(o, dong, coLoi, duongMo) {
   });
   o.appendChild(document.createElement("br"));
   o.appendChild(nut);
+  /* GT4-L5: kèm nút "Mở tệp" cho đúng tệp vừa ghi (chỉ khi đường dẫn là một tệp báo cáo). */
+  if (kemMoTep && /\.(html|csv|xlsx|pdf|docx)$/i.test(duongMo)) {
+    const tep = document.createElement("button");
+    tep.type = "button";
+    tep.className = "btn btn-ghost nut-mo-tep";
+    tep.textContent = t("btn_mo_tep");
+    tep.addEventListener("click", () => {
+      callApi("mo_tep", duongMo).then((res) => {
+        if (!res.ok) showToast(trErrs(res.errors).join("; "), "error");
+      });
+    });
+    o.appendChild(tep);
+  }
 }
 
 /* Chua co ket qua xep: muc xuat ket qua (va o kem CSV) bi khoa, bo chon, kem mot dong vang.

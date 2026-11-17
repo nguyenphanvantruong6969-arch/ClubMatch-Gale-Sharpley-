@@ -3013,3 +3013,19 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 /* I2: đăng nhập quản trị để thoát chế độ học sinh */
 #gtHsQuanTri[hidden] { display: none; }
 .gt-hs-qt { margin-top: 12px; display: grid; gap: 8px; max-width: 360px; }
+
+/* GT4-L5: màn học sinh (nhãn trên ô, tên trường, đếm ngược) + liên kết nhảy + bốn bước */
+.gt-hs-dau { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.gt-hs-truong { margin: 0; font-weight: 600; font-size: 1.1rem; }
+.gt-hs-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 12px 0; }
+.gt-hs-o { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1 1 200px; }
+.gt-hs-o label { font-weight: 600; font-size: 0.95rem; }
+.gt-hs-dem { color: #b45309; font-weight: 600; margin: 4px 0; }
+.gt-hs-dem[hidden] { display: none; }
+.kq-nhay { margin: 0 0 8px; }
+.gt-buoc { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 0; margin: 0 0 12px; list-style: none; counter-reset: gtb; }
+.gt-buoc li { counter-increment: gtb; display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+.gt-buoc li::before { content: counter(gtb); display: inline-flex; width: 24px; height: 24px; align-items: center;
+  justify-content: center; border-radius: 50%; background: var(--gold, #b8860b); color: #fff; font-weight: 700; font-size: 0.85rem; }
+#kqThan tr[data-student-id] { cursor: pointer; }
+#kqThan tr[data-student-id]:hover { background: var(--paper-2, #f4efe6); }
