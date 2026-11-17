@@ -32,10 +32,15 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | Gate: ruff + kiem_nhanh + tests + CI green | TODO | | 0 | |
 
 ## Current state (overwrite each handoff)
-- Done so far: L0-L7 READY. GOI_MINH_CHUNG docx/pdf must be rebuilt once more at the gate (HUONG_DAN_CHAY.md changed in L6).
-- In progress:
-- Tests: baseline on the base commit = `tests/test_gt*` + `tests/test_giao_dien_gt*` green, ruff clean, kiem_nhanh 7/7.
-- Open problems:
+- Done: L0-L7 all READY and pushed (see ledger shas). Ruff clean, kiem_nhanh 7/7 at last run. New tests: test_gt4_* (chay_thu_giai_trinh, nhat_ky, khoi_phuc, cau_giai_trinh, mo_tep, nhat_ky_doc, so_sanh) and test_giao_dien_gt4_* (vai, tai_khoan, giai_trinh, man_hoc_sinh, nhat_ky, tieu_chi).
+- No checker file (docs/phien/claude__gt-hoan-thien__tester.md) existed at last fetch (~17:20 UTC 2026-11-17). A send_later was set for 17:40 UTC.
+- Not done: L8 (only if L0-L7 CHECKED); GATE. At the gate also rebuild docs/giai_trinh GOI_MINH_CHUNG.docx/.pdf (`python docs/giai_trinh/tao_goi_minh_chung.py`) because HUONG_DAN_CHAY.md changed in L6.
+- Open: JS-generated buttons (xu_ly_khieu_nai, tra_loi_moi) not hidden for teachers (refused + logged). Workspace has no logo field (student screen shows name only).
+
+## Next steps (ordered)
+1. git fetch origin claude/gt-hoan-thien; read the checker file; for each lot with BUGS set State=FIX, test first, fix, Round+1, commit `GT4-L<n> fix<k>: ...`.
+2. If nothing pending: wait via send_later 20 min (give up after 6h from 17:20 UTC, note under Needs Truong).
+3. GATE: ruff; kiem_nhanh --so-seed 20; all tests/test_gt*.py + tests/test_giao_dien_gt*.py; rebuild GOI_MINH_CHUNG; push; CI green (mcp__github__actions_list, tests.yml); set Status DONE; final Vietnamese summary + 3-5 manual steps (incl. Windows exe recovery) + AI-log draft.
 
 ## Needs Truong (writer appends, each with a recommendation)
 1. Windows `.exe` + `QUEN_MAT_KHAU.bat` recovery cannot be tested on Linux (L3). Recommend: Truong tries it once on Windows.
@@ -53,3 +58,4 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-17 | Sonnet (reviewer) | review of gt-tich-hop; plan + prompts written | files: GT4_RA_SOAT.md, GT4_HOAN_THIEN.md, GT4_PROMPT_*.md |
+| 2026-11-17 | Sonnet (writer) | L0-L7 implemented, tested, pushed; waiting for checker; handoff at ~400k context | branch claude/gt-hoan-thien |
