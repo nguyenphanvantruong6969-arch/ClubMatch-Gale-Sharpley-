@@ -286,7 +286,8 @@ class TieuChiMixin:
                 "SELECT student_id, buoi, club_id, rank_in_student_pref FROM match_results "
                 "ORDER BY student_id")]
             nhan = "chinh_thuc"
-        return {"nhan": nhan, "run_id": run_id, "luat": self._luat_tu_dong(dong), "rows": rows}, None
+        return {"nhan": nhan, "run_id": run_id, "run_at": dong["run_at"], "luat": self._luat_tu_dong(dong),
+                "rows": rows}, None
 
     def _so_sanh_da_doc(self, run_a, run_b):
         with self._ket_noi_doc() as cur:

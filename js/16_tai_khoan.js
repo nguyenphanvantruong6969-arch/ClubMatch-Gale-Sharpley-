@@ -55,7 +55,7 @@
   function lopPhu() {
     let o = el("tkOverlay");
     if (!o) {
-      o = mot("div", { class: "ws-overlay", id: "tkOverlay", hidden: true, style: "z-index:120" });
+      o = mot("div", { class: "ws-overlay gt-ui", id: "tkOverlay", hidden: true, style: "z-index:120" });
       document.body.appendChild(o);
     }
     return o;

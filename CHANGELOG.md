@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L7: thiết kế lại khung Tiêu chí xếp / Thử cấu hình / so sánh (R8)
+
+- Nguyên nhân gốc: nhãn và ô chọn là các phần tử flex rời nhau trong `.admin-form-grid`, `.check-row` không có CSS, `<ol>` mặc định. Làm lại bằng mẫu `.club-field` (nhãn trên ô) và các biến màu sẵn có (`style.css`, khối "GT4-L7"); `index.html` dựng lại hai khung; không dùng kỹ năng `formal-uidesign` (không có trong môi trường).
+- Tiêu chí xếp: hai cột ≥ 1000 px (thẻ thứ tự bên trái với số thứ tự dạng huy hiệu, biểu mẫu bên phải), một cột dưới đó; nhãn trên ô, ô chọn ≤ 360 px, ô văn bản có nhãn + gợi ý một dòng, ô tích có hàng riêng và gợi ý thụt vào, nút Lưu căn phải; dòng "chưa dùng" là danh sách màu xám.
+- Thử cấu hình: dải ba bước, hai ô chọn lần cạnh nhau, nút So sánh chính + hai nút xuất phụ, khối "Dùng tiêu chí…" tách bằng đường viền có câu nói rõ chỉ lưu tiêu chí; cảnh báo vàng (không chặn) khi chỉ theo nhóm mà chưa có nhóm, hoặc "nhóm đứng trước điểm" với danh sách rỗng.
+- So sánh: `tieu_chi.tom_tat_so_sanh` (một câu chỉ có số, vi/en), `tieu_chi.chenh` (+3 / −2), `so_sanh_lan_chay` thêm `run_at`, `tang`, `tom_tat` (khoá thêm, không đổi khoá cũ); giao diện: câu tóm tắt, hai thẻ lần chạy với tiêu chí hai tầng tách riêng, bảng tiêu đề cố định + số căn phải + chênh lệch có chữ, danh sách đổi chỗ gập mặc định (nút "Hiện danh sách (n)"), cột Buổi chỉ khi nhiều buổi, không in `__mac_dinh__`. Tệp HTML xuất (`dung_html_so_sanh`) có cùng cấu trúc (thẻ, `<details>`, sticky, +/−).
+- Cùng nhịp cho khung tra cứu, hộp tài khoản, màn học sinh (lớp `.gt-ui`: nhãn trên ô, chữ ≥ 14 px, ô ≥ 36 px, tương phản ≥ 4,5:1, vòng focus 3 px).
+- Ảnh trước/sau ở 1280 px (MÔ PHỎNG): `docs/phien/anh_gt4/l7_{truoc,sau}_{tieu_chi,thu}_1280.png`.
+- Test mới: `tests/test_gt4_so_sanh.py` (7), `tests/test_giao_dien_gt4_tieu_chi.py` (13 ca Chromium: 1280/1024 px, nhãn–ô, hai cột, ô tích, thẻ so sánh, cảnh báo, tương phản/cỡ chữ/ô bấm, focus).
+
 ## 2026-11-17 — GT4-L6: nhật ký thao tác đọc được (R7)
 
 - `nhat_ky.py` + `api_nhat_ky.py`: lọc phía máy chủ thêm `chi_tu_choi` (kết quả khác `ok`) và `ngay` (`YYYY-MM-DD`, sai dạng → lỗi mới `gt4_ngay_sai` ở `i18n_errors.py`); `get_nhat_ky_thao_tac` trả thêm `hanh_dong_co` (các tên hành động có mặt, cho ô chọn). CSV xuất vẫn DẠNG THÔ (tên hành động, mã kết quả nguyên văn), chỉ thêm hai tham số lọc.
