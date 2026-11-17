@@ -134,6 +134,31 @@ def test_luu_diem_theo_nguoi_khong_can_bo_tick_diem_quyet_tam(mo):
     assert not loi, loi
 
 
+@pytest.mark.parametrize("fa", [False, True])
+@pytest.mark.parametrize("khoa,tat,bat", [("gt2TcPriority", "tier", "score"),
+                                         ("gt2TcScoreScope", "per_person", "per_slot")])
+def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
+    page, api, loi = mo()
+    if fa:
+        assert api.update_workspace_config({"rules": {"fa_daa": True, "wharton": True}})["ok"]
+        page.reload()
+        page.wait_for_selector("#dropZone")
+        page.locator('[data-tab="admin"]').click()
+        page.wait_for_selector("#gt2TcDanhSach li")
+    o = page.locator("#gt2TcWharton")
+    assert o.is_checked()
+    page.select_option("#" + khoa, tat)
+    assert o.is_disabled() and not o.is_checked()
+    page.select_option("#" + khoa, bat)
+    assert o.is_enabled() and o.is_checked()
+    assert page.locator("#gt2TcWhartonGoiY").is_hidden()
+    page.locator("#gt2TcLuu").click()
+    page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
+    rules = api.get_workspace_config()["data"]["config"]["rules"]
+    assert rules["wharton"] is True
+    assert not loi, loi
+
+
 def test_doi_ngon_ngu_doi_chu(mo):
     page, api, loi = mo()
     page.evaluate("window.I18N.setLang('en')")
