@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-17 — GT4-L4: lời giải trình không bị hiểu sai (R5, R6)
+
+- `fa_ly_do.py`: `cau_ly_do_rbda(dong, ten_clb, giong="hoc_sinh")` — giọng `giao_vien` trung tính (ngôi thứ ba), mặc định giữ nguyên từng byte; hằng `CAU_GIU_CHO` (một nguồn) cho câu chú thích chỗ dành riêng. Câu chế độ FA (`cau_ly_do`) không đổi.
+- `giai_trinh.py`: hàng `RESERVED` không còn `diem_chuan` (loại `giu_cho`); mỗi buổi có thêm `chu_thich` (câu cố định khi có hàng chỗ dành riêng); `giai_trinh_mot_hoc_sinh(..., giong)`.
+- `api_xuat.py`: khung tra cứu (`get_giai_trinh_hoc_sinh`) dùng giọng `giao_vien`; phiếu in và màn học sinh (`tra_cuu_hoc_sinh`) giữ giọng "Em". `phieu_giai_trinh.py`: ô "Chỗ dành riêng" + câu chú thích dưới bảng. `js/14_giai_trinh.js`, `i18n.js` (`gt_chuan_giu_cho`; `kq_desc` vi/en nói rõ bảng không có điểm còn khung tra cứu thì có), `index.html` (phụ đề `kq_desc`).
+- Sinh lại `docs/giai_trinh/CA_MAU.md`, `GOI_MINH_CHUNG.docx/.pdf` (câu trong khung tra cứu nay ở giọng trung tính; gói cũng nhận các ghi chú L1/L3).
+- Test mới: `tests/test_gt4_cau_giai_trinh.py` (7 test: mặc định giữ từng byte, giọng giáo viên không "Em", RESERVED không số + chú thích ở khung/màn học sinh/phiếu, phụ đề), `tests/test_giao_dien_gt4_giai_trinh.py` (Chromium: ô "Chỗ dành riêng" + chú thích + giọng trung tính).
+
 ## 2026-11-17 — GT4-L3: thiết lập tài khoản và lấy lại quyền (R2, R4, D4-4, D4-5)
 
 - `js/16_tai_khoan.js` + `i18n.js` (vi, en): ô nhập lại mật khẩu và ô "Hiện mật khẩu" ở form tạo tài khoản đầu tiên, "Thêm tài khoản" và "Đổi mật khẩu" (lệch → một câu báo lỗi, không gọi backend); sau khi tạo quản trị ĐẦU TIÊN hộp mở lại với thẻ "Bước tiếp theo" (tạo giáo viên / ghi nhớ mật khẩu / cách lấy lại quyền) và con trỏ ở ô tên của "Thêm tài khoản"; khi chưa có tài khoản nào hộp có dòng cảnh báo "tạo quản trị đầu tiên trước khi đưa máy cho học sinh" (D4-5: chỉ bằng lời + nhập lại mật khẩu + tài liệu, không thêm bí mật).

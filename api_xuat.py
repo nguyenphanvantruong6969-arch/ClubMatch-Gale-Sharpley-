@@ -1744,13 +1744,13 @@ class XuatKetQuaMixin:
         True. Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu` (chỉ lần mới nhất có kết quả
         lưu), `gt1_khong_tim_thay_lan_chay`."""
         try:
-            return self._giai_trinh_hoc_sinh(student_id, run_id)
+            return self._giai_trinh_hoc_sinh(student_id, run_id, "giao_vien")   # GT4-L4: khung tra cứu = giọng trung tính
         except CauHinhHong as e:
             return _fail(loi_cau_hinh(e))
         except Exception as e:
             return _fail(err("error_reading_last_run", detail=str(e)))
 
-    def _giai_trinh_hoc_sinh(self, student_id, run_id):
+    def _giai_trinh_hoc_sinh(self, student_id, run_id, giong="hoc_sinh"):
         import giai_trinh
         r = self._giai_trinh_dung_lai(run_id)
         if isinstance(r, dict):
@@ -1758,7 +1758,7 @@ class XuatKetQuaMixin:
         du_lieu, thong_tin_hs = r
         if student_id not in thong_tin_hs:
             return _fail(err("gt1_khong_co_hoc_sinh"))
-        return _ok(self._giai_trinh_them_ten(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id),
+        return _ok(self._giai_trinh_them_ten(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, student_id, giong),
                                              thong_tin_hs[student_id]))
 
     def export_phieu_giai_trinh(self, output_path: str = "", student_ids=None, lop=None):

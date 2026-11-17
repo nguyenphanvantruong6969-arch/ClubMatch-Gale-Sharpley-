@@ -28,6 +28,7 @@
     }
     if (x.diem_chuan_loai === "boc_tham") return t("gt_chuan_boc_tham");
     if (x.diem_chuan_loai === "con_cho") return t("gt_chuan_con_cho");
+    if (x.diem_chuan_loai === "giu_cho") return t("gt_chuan_giu_cho");   // GT4-L4: chỗ dành riêng, không hiện số
     return t("gt_khong_co");
   }
 
@@ -66,6 +67,7 @@
       const cuon = mot("div", "scroll-x");
       cuon.appendChild(bang);
       khung.appendChild(cuon);
+      if (b.chu_thich) khung.appendChild(mot("p", "gt-chu-thich hint-text", b.chu_thich));   // câu cố định từ backend
     }
     return khung;
   }
