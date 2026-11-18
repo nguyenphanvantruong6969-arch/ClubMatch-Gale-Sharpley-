@@ -119,9 +119,24 @@ def test_huy_chuong_du_lieu_chua_san_sang_sua_tai_cho_den_khi_san_sang(mo_trang)
         page.wait_for_function(
             "n => document.querySelectorAll('#ux1aSanSang .ux1a-vien[data-loai=\"GIOI_HAN\"]').length < n"
             " || !!document.getElementById('ux1aSanSangXong')", arg=n)
+    # loại CLB đã đủ, nhưng sổ này nạp ở chế độ thường (ô huy chương là điểm quyết tâm): KHÔNG được nói "Sẵn sàng"
+    page.wait_for_selector("#ux1aSsHuyChuongSai")
+    assert "không phải huy chương" in page.locator("#ux1aSsHuyChuongSai").inner_text()
+    assert page.locator("#ux1aSanSangXong").count() == 0
+    assert api.get_san_sang_huy_chuong()["data"]["san_sang"] is False
+    assert api.run_pipeline(42)["ok"] is False                   # đúng như bảng báo: lần chạy vẫn bị chặn
+    assert not loi, loi
+
+
+def test_so_huy_chuong_hop_le_o_che_do_huy_chuong_hien_san_sang(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"), "rb") as f:
+        assert api.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    _vao_cai_dat(page)
     page.wait_for_selector("#ux1aSanSangXong")
     assert page.locator("#ux1aSanSangXong").inner_text().strip() == "Sẵn sàng"
-    assert api.get_san_sang_huy_chuong()["data"]["san_sang"] is True
+    assert page.locator("#ux1aSsHuyChuongSai").count() == 0
     assert not loi, loi
 
 
@@ -136,8 +151,15 @@ def test_cai_dat_khong_con_o_tick_viec_sau_khi_xep(mo_trang):  # noqa: F811
     assert not loi, loi
 
 
-def test_hanh_dong_sau_khi_xep_chi_hien_o_che_do_huy_chuong(mo_trang):  # noqa: F811
+def test_hanh_dong_sau_khi_xep_chi_hien_o_che_do_huy_chuong(mo_trang, monkeypatch):  # noqa: F811
     page, api, goc, loi = mo_trang()
+    goc_fn = api.get_em_chua_co_cho
+
+    def co_3():                    # "Mở vòng 2" chỉ có nghĩa khi còn em chưa có chỗ (fix2)
+        kq = goc_fn()
+        kq["data"] = dict(kq["data"], so_em=3, tong_hoc_sinh=max(kq["data"]["tong_hoc_sinh"], 3))
+        return kq
+    monkeypatch.setattr(api, "get_em_chua_co_cho", co_3)
     page.locator('.nav-item[data-tab="others"]').click()
     page.wait_for_selector("#xuatPanel")
     assert page.locator("#ux1aSauXep").is_hidden()                 # mặc định Chia 100 điểm: không có
@@ -180,4 +202,47 @@ def test_thay_doi_mo_muc_nang_cao_voi_tieu_chi_xep(mo_trang):  # noqa: F811
     page.locator("#ux1aThayDoi").click()
     page.wait_for_selector("#gt2TieuChiPanel", state="visible")
     assert page.evaluate("document.getElementById('ux1aNangCao').open")
+    assert not loi, loi
+
+
+def test_sau_khi_xep_chi_hien_mo_vong_2_khi_con_em_chua_co_cho_va_moi_cho_khi_con_cho_trong(mo_trang, monkeypatch):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"), "rb") as f:
+        assert api.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    assert api.run_pipeline(42)["ok"]                            # 120/120 có chỗ
+    trong = sum(max(0, (c.get("capacity") or 0) - (c.get("matched") or 0))
+                for c in api.get_club_fill_stats()["data"] if not c.get("tu_do"))
+    page.locator('.nav-item[data-tab="others"]').click()
+    page.wait_for_selector("#ux1aSauXep", state="visible")
+    assert page.locator("#ux1aSx_fa_vong_2").count() == 0        # 0 em chưa có chỗ -> không mời mở vòng 2
+    assert (page.locator("#ux1aSx_fa_vong_doi_cho").count() == 0) == (trong <= 0)
+    assert page.locator("#ux1aSx_fa_khieu_nai").count() == 1 and page.locator("#ux1aSx_fa_diem_danh").count() == 1
+    assert not loi, loi
+
+
+def test_sau_khi_xep_co_em_chua_co_cho_thi_hien_mo_vong_2(mo_trang, monkeypatch):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    goc_fn = api.get_em_chua_co_cho
+
+    def co_3():
+        kq = goc_fn()
+        kq["data"] = dict(kq["data"], so_em=3, tong_hoc_sinh=max(kq["data"]["tong_hoc_sinh"], 3))
+        return kq
+    monkeypatch.setattr(api, "get_em_chua_co_cho", co_3)
+    page.locator('.nav-item[data-tab="others"]').click()
+    page.wait_for_selector("#ux1aSx_fa_vong_2")
+    assert "3" in page.locator("#ux1aSx_fa_vong_2").inner_text()
+    assert not loi, loi
+
+
+def test_nut_hoan_tac_tren_thong_bao_xanh_doc_duoc(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _vao_cai_dat(page)
+    page.locator("#ux1aHuyChuong").click()
+    nut = page.locator(".toast .toast-hanh-dong", has_text="Hoàn tác")
+    nut.wait_for()
+    kieu = nut.evaluate("e => { const s = getComputedStyle(e); return [s.color, s.textDecorationLine]; }")
+    assert kieu[0] == "rgb(255, 255, 255)" and "underline" in kieu[1]
     assert not loi, loi

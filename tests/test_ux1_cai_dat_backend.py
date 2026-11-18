@@ -39,8 +39,21 @@ def test_dat_loai_tung_clb_den_khi_san_sang(api_120):
         thay.add(c["buoi"])
         assert api_120.dat_loai_clb(c["club_id"], loai)["ok"]
     d2 = api_120.get_san_sang_huy_chuong()["data"]
-    assert d2["thieu_loai"] == [] and d2["buoi_thieu_tu_do"] == [] and d2["san_sang"] is True
+    assert d2["thieu_loai"] == [] and d2["buoi_thieu_tu_do"] == []
+    # UX1A-L2b fix2: loại CLB đã đủ NHƯNG sổ này nạp ở chế độ thường nên các ô huy chương là điểm quyết tâm 0-100
+    # -> chưa sẵn sàng; nói đúng số em, không tự đổi dữ liệu.
+    assert d2["huy_chuong_sai"] > 100 and d2["huy_chuong_sai_vd"] and d2["san_sang"] is False
     assert len(cids) == 9
+
+
+def test_so_huy_chuong_hop_le_o_che_do_huy_chuong_thi_san_sang(api_ws):  # noqa: F811
+    assert api_ws.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"), "rb") as f:
+        assert api_ws.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    d = api_ws.get_san_sang_huy_chuong()["data"]
+    assert d["huy_chuong_sai"] == 0 and d["san_sang"] is True
+    assert api_ws.run_pipeline(42)["ok"]                         # và lần chạy thật cũng qua: "Sẵn sàng" không nói dối
+
 
 
 def test_tuyen_chon_can_diem_san(api_120):

@@ -201,9 +201,18 @@ class QuanLyMixin:
             thieu_buoi = [b for b in buoi if b not in co_tu_do]
             thieu_diem = [c["club_id"] for c in clubs
                           if c["loai"] == fa_daa.TUYEN_CHON and c["diem_san"] is None]
+            # Hồ sơ huy chương (đọc CSDL, chỉ ĐỌC): học sinh có ô không phải huy chương hợp lệ (vd. điểm quyết tâm
+            # 0-100 nạp từ sổ cũ) hoặc huy chương đặt ở CLB Tự do. Không tự đổi dữ liệu.
+            with self._ket_noi_doc() as cur:
+                clubs_fa, _, prefs = fa_daa.doc_clubs_va_nguyen_vong(cur)
+                _, _, huy = fa_daa.doc_du_lieu_fa(cur)
+            loi_hc = fa_daa.chi_loi_chan(fa_daa.kiem_ho_so_huy_chuong(prefs, huy, clubs_fa))
+            hs_sai = sorted({e["params"].get("student_id") for e in loi_hc
+                             if e["params"].get("student_id") is not None}, key=str)
             return _ok({"clubs": clubs, "thieu_loai": thieu_loai, "buoi_thieu_tu_do": thieu_buoi,
                         "thieu_diem_san": thieu_diem,
-                        "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem)})
+                        "huy_chuong_sai": len(hs_sai), "huy_chuong_sai_vd": str(hs_sai[0]) if hs_sai else "",
+                        "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem or hs_sai)})
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 

@@ -18,15 +18,16 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L8-A docs + screenshots + After table (coder DONE ad569c2, waiting for checker)
 
 ## Current state (overwrite each handoff)
-- L1, L2, L2b, L3, L5, L5b passed by checker. L8-A reported (ad569c2) and FIX round 1 reported as "CODER DONE L8-A fix1 | base ad569c2 head 326dbc6" (pushed; the sample book has 32 unplaced students, not 12); waiting for the checker.
-- All coder lots of team A are done. Remaining (lead side): CI gate, user review UX1_DANH_GIA_A.md, integration with team B (lots I1/I2 handled by
-  team A's coder in this same session when the lead sends GO).
-- L8-A: user guide, giai_trinh scripts, code map, poster data text, screenshots (docs/ke_hoach/ux/anh, poster/hinh), chup_luong_chinh.py (prints measured
-  clicks), UX1_RA_SOAT.md section 2b "After" table (admin 4, unplaced 1, homeroom <=2, student 2; slip + principal = team B).
-- Needs Truong (told lead): poster PDF/PPTX not rebuilt (poster/tao_poster.py needs python-pptx + matplotlib, not installed: new library).
-- Open: the checker's L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md was never read.
-- Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here and keep this file current. The Stop hook "hand off" nag cannot be
-  silenced by me (.claude/phien_vai.json edit was denied): update this file, push, continue.
+- All 7 lots passed the checker; the lead's CI gate ran on 64bc133, then the lead sent FIX L2b round 2 (push allowed; CI is superseded).
+- FIX L2b round 2 is CODED (WIP commit): (1) get_san_sang_huy_chuong also returns huy_chuong_sai (+_vd) via fa_daa.kiem_ho_so_huy_chuong (read-only);
+  san_sang is false when > 0; panel line #ux1aSsHuyChuongSai (js/18_cai_dat.js ux1aVeSanSang, i18n ux1a_ss_huy_chuong_sai); (2) #ux1aSauXep shows
+  "Mở vòng 2" only when unplaced > 0 and "Mời danh sách chờ" only when empty seats > 0 (shown anyway when the flag is already on); (3) .toast .toast-hanh-dong
+  CSS (white, underlined). Tests updated/added in tests/test_ux1_cai_dat_backend.py and tests/test_giao_dien_ux1_cai_dat.py (14 + backend pass).
+- Still to do: read the related regression result (/tmp/claude-0/fix2.txt, may be gone: re-run test_giao_dien_ux1_*, test_ux1_*, fg1_bat_tinh_nang,
+  giao_dien_fa_*, sg2, sg11b, gt3_phan_quyen, i18n_*, ws_nhan in the BACKGROUND with nohup + Monitor), fix reds, add CHANGELOG line, commit, push,
+  report "CODER DONE L2b fix2 | base <sha> head <sha>" to the lead.
+- Open: checker L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md never read.
+- Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here. Do NOT push while the lead says a CI run is in flight unless a FIX/GO arrives.
 
 ## Decisions and gotchas (keep short)
 - Group nav (L2): sub-items `.nav-item[data-tab]` stay visible under 4 `.nav-nhom` headings because 75 tests click
@@ -74,3 +75,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | 2026-11-18 | Sonnet 5.5 | L5b done, pushed 4cae05b, reported | same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L8-A done (docs, screenshots, After table), pushed ad569c2, reported | same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L8-A fix1 (32 unplaced, poster line in lead file) pushed 326dbc6, reported | same session per lead |
+| 2026-11-18 | Sonnet 5.5 | FIX L2b round 2 coded (readiness honesty, pointless actions hidden, Hoàn tác contrast), WIP pushed | regression pending |

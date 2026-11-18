@@ -81,6 +81,12 @@ function ux1aVeSanSang(hop, d, taiLai) {
     return;
   }
   hop.append(ux1aEl("p", { class: "ux1a-ss-dau", text: t("ux1a_ss_con_thieu") }));
+  /* Dữ liệu huy chương đã nạp không phải huy chương (vd. điểm quyết tâm của sổ cũ) hoặc đặt ở CLB Tự do: nói MỘT dòng,
+     không tự đổi dữ liệu; cách sửa là nạp lại sổ có cột Huy chương. */
+  if (d.huy_chuong_sai > 0) {
+    hop.append(ux1aEl("p", { class: "ux1a-ss-hc-sai", id: "ux1aSsHuyChuongSai",
+      text: t("ux1a_ss_huy_chuong_sai", { n: d.huy_chuong_sai, vd: d.huy_chuong_sai_vd }) }));
+  }
   const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }
     taiLai();
@@ -277,15 +283,17 @@ const UX1A_SAU_XEP = [
 function ux1aVeSauXep() {
   const hop = el("ux1aSauXep");
   if (!hop) return Promise.resolve();
-  return Promise.all([callApi("get_workspace_config"), callApi("get_em_chua_co_cho")]).then(([cfg, cho]) => {
+  return Promise.all([callApi("get_workspace_config"), callApi("get_em_chua_co_cho"), callApi("get_club_fill_stats")]).then(([cfg, cho, lap]) => {
     const luat = cfg.ok ? (cfg.data.config.rules || {}) : {};
     /* Chỉ ở chế độ Huy chương (backend: fa_tinh_nang_can_fa). Chế độ khác: không hiện gì. */
     hop.hidden = !(cfg.ok && luat.fa_daa === true);
     if (hop.hidden) return;
     const so = cho.ok ? cho.data.so_em : 0;
+    /* Chỗ trống còn lại (không tính CLB Tự do: không giới hạn chỗ), cùng cách tính với thẻ "Chỗ trống". */
+    const trong = lap.ok ? lap.data.reduce((a, c) => a + (c.tu_do ? 0 : Math.max(0, (c.capacity || 0) - (c.matched || 0))), 0) : 0;
     const luoi = el("ux1aSauXepLuoi");
     /* Không vẽ lại khi chưa có gì đổi: giữ nguyên ô đang gõ dở và vị trí con trỏ (nhiều nơi cùng gọi hàm này). */
-    const dau = JSON.stringify([UX1A_SAU_XEP.map((m) => luat[m.co] === true), luat.fa_khieu_nai_so_ngay, so, window.I18N.getLang()]);
+    const dau = JSON.stringify([UX1A_SAU_XEP.map((m) => luat[m.co] === true), luat.fa_khieu_nai_so_ngay, so, trong, window.I18N.getLang()]);
     if (luoi.dataset.dau === dau && luoi.children.length) return;
     luoi.dataset.dau = dau;
     /* Vẽ lại (sau một hành động khác) không được xoá số ngày người dùng đang gõ dở. */
@@ -293,6 +301,10 @@ function ux1aVeSauXep() {
     luoi.textContent = "";
     UX1A_SAU_XEP.forEach((m) => {
       const bat = luat[m.co] === true;
+      /* "Vào lúc có nghĩa": mở vòng 2 khi còn người chưa có chỗ, mời danh sách chờ khi còn chỗ trống. Đang bật thì vẫn
+         hiện để tắt được. */
+      if (!bat && m.co === "fa_vong_2" && so <= 0) return;
+      if (!bat && m.co === "fa_vong_doi_cho" && trong <= 0) return;
       const dong = ux1aEl("div", { class: "ux1a-sx-dong", "data-co": m.co });
       const nhan = m.co === "fa_vong_2" ? t(m.nut, { n: so }) : t(m.nut);
       let oNgay = null;

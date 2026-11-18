@@ -3157,3 +3157,9 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .ux1a-san-sang-xong { margin: 0; font-weight: 600; }
 .ux1a-cach-xet { margin: 14px 0 0; }
 .ux1a-sx-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
+
+/* UX1A-L2b fix2: nút "Hoàn tác" trong thông báo nổi phải đọc được trên nền xanh/đỏ/vàng */
+.toast .toast-hanh-dong { color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+.toast .toast-hanh-dong:hover { background: rgba(255,255,255,0.18); }
+.toast .toast-hanh-dong:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ux1a-ss-hc-sai { margin: 6px 0; color: #B42318; font-weight: 600; }
