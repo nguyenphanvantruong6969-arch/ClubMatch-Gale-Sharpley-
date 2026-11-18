@@ -52,14 +52,17 @@ def test_gui_sai_ma_hien_loi(mo):  # noqa: F811
 
 
 def test_wizard_co_o_khieu_nai(mo_trang):  # noqa: F811
+    # UX1A-L2b: không còn ô tick ở bước luật; "Nhận khiếu nại trong [n] ngày" là hành động ở thẻ Chi tiết.
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt khiếu nại")
-    assert not page.locator("#wzFaKhieuNai").is_checked()
-    page.locator("#wzFaDaa").check()
-    page.locator("#wzFaKhieuNai").check()
+    assert page.locator("#wzFaKhieuNai").count() == 0
+    page.locator("#wzHuyChuong").click()
     page.locator("#wzTiep").click()
-    assert page.locator("#rvFaKhieuNai").inner_text() == "Bật"
     page.locator("#wzTao").click()
     _cho_ten(page, "Đợt khiếu nại")
+    page.locator('.nav-item[data-tab="others"]').click()
+    page.wait_for_selector("#ux1aSx_fa_khieu_nai", state="visible")
+    page.locator("#ux1aSx_fa_khieu_nai").click()
+    page.wait_for_function("document.getElementById('ux1aSx_fa_khieu_nai').getAttribute('aria-pressed') === 'true'")
     assert api.get_workspace_config()["data"]["config"]["rules"]["fa_khieu_nai"] is True
     assert not loi, loi

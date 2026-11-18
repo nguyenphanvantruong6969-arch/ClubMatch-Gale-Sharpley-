@@ -105,7 +105,6 @@ def test_luu_khoa_diem_quyet_tam_khi_chi_xet_nhom_khong_loi(mo):
     page, api, loi = mo()
     page.select_option("#gt2TcPriority", "tier")
     page.fill("#gt2TcTiers", "Khối 12")
-    page.locator("#gt2TcWharton").uncheck()
     page.locator("#gt2TcLuu").click()
     page.wait_for_function(
         "() => document.querySelectorAll('#gt2TcDanhSach ol[data-tang=\"tang_1\"]').length === 0")
@@ -114,24 +113,23 @@ def test_luu_khoa_diem_quyet_tam_khi_chi_xet_nhom_khong_loi(mo):
 
 
 def test_luu_chi_xet_nhom_khong_can_bo_tick_diem_quyet_tam(mo):
-    """Không gọi .uncheck(): ô tự tắt, khóa lại, lưu thành công, có giải thích."""
+    """UX1A-L2b: ô tick đã bỏ (thẻ ở trang Cài đặt giữ cờ); lưu "chỉ xét nhóm" thành công và cờ tự tắt."""
     page, api, loi = mo()
     page.select_option("#gt2TcPriority", "tier")
     page.fill("#gt2TcTiers", "Khối 12")
-    assert not page.locator("#gt2TcWharton").is_checked()
-    assert page.locator("#gt2TcWharton").is_disabled()
-    assert page.locator("#gt2TcWhartonGoiY").inner_text().strip()
+    assert page.locator("#gt2TcWharton").count() == 0
     page.locator("#gt2TcLuu").click()
     page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
+    assert api.get_workspace_config()["data"]["config"]["rules"]["wharton"] is False
     assert not loi, loi
 
 
 def test_luu_diem_theo_nguoi_khong_can_bo_tick_diem_quyet_tam(mo):
     page, api, loi = mo()
     page.select_option("#gt2TcScoreScope", "per_person")
-    assert page.locator("#gt2TcWharton").is_disabled()
     page.locator("#gt2TcLuu").click()
     page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
+    assert api.get_workspace_config()["data"]["config"]["rules"]["wharton"] is False
     assert not loi, loi
 
 
@@ -147,13 +145,10 @@ def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
         page.locator('[data-tab="admin"]').click()
         page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
         page.wait_for_selector("#gt2TcDanhSach li")
-    o = page.locator("#gt2TcWharton")
-    assert o.is_checked()
+    # UX1A-L2b: không còn ô tick; chọn rồi chọn lại giá trị cũ thì cờ điểm quyết tâm đã lưu được giữ nguyên.
+    assert api.get_workspace_config()["data"]["config"]["rules"]["wharton"] is True
     page.select_option("#" + khoa, tat)
-    assert o.is_disabled() and not o.is_checked()
     page.select_option("#" + khoa, bat)
-    assert o.is_enabled() and o.is_checked()
-    assert page.locator("#gt2TcWhartonGoiY").is_hidden()
     page.locator("#gt2TcLuu").click()
     page.wait_for_function("() => document.querySelector('#gt2TcPhanHoi').textContent.includes('Đã lưu')")
     rules = api.get_workspace_config()["data"]["config"]["rules"]
@@ -178,7 +173,6 @@ def test_ten_nhom_la_html_khong_chay_ma_va_loi_api_hien_thong_bao(mo):
     page.evaluate("window.__xss = 0")
     page.select_option("#gt2TcPriority", "tier")
     page.fill("#gt2TcTiers", "<img src=x onerror=window.__xss=1>")
-    page.locator("#gt2TcWharton").uncheck()
     page.locator("#gt2TcLuu").click()
     page.wait_for_function(
         "() => document.querySelector('#gt2TcDanhSach li') && "

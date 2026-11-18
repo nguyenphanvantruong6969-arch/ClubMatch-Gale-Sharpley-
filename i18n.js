@@ -1182,8 +1182,8 @@
       /* === SG-B: add below === */
       ws_tn_wharton: "Dùng điểm quyết tâm",
       ws_tn_wharton_goi_y: "Tắt nếu học sinh không tự chia điểm quyết tâm cho các nguyện vọng; khi đó kết quả xếp chỉ dựa trên điểm thi và bốc thăm.",
-      wh_goi_y_tat: "Nếu không dùng điểm quyết tâm, hãy tắt ở Tính năng sau khi xếp…, rồi chạy lại.",
-      wh_mo_tinh_nang: "Mở Tính năng sau khi xếp…",
+      wh_goi_y_tat: "Nếu không dùng điểm quyết tâm, hãy chọn «Chỉ xếp thứ tự» ở Cài đặt, rồi chạy lại.",
+      wh_mo_tinh_nang: "Mở Cài đặt",
       ws_tn_wharton_can_fa: "Không gian làm việc đang xếp theo loại CLB và huy chương, cách này cần điểm quyết tâm nên không tắt được.",
       cb_cot_gio: "Giờ",
       cb_cot_dia_diem: "Địa điểm",
@@ -2531,8 +2531,8 @@
       /* === SG-B: add below === */
       ws_tn_wharton: "Use commitment points",
       ws_tn_wharton_goi_y: "Turn off if students do not split commitment points across their choices; results then depend on test scores and the lottery only.",
-      wh_goi_y_tat: "If commitment points are not used, turn them off in After-allocation features…, then run again.",
-      wh_mo_tinh_nang: "Open After-allocation features…",
+      wh_goi_y_tat: "If commitment points are not used, choose \"Ranking only\" in Settings, then run again.",
+      wh_mo_tinh_nang: "Open Settings",
       ws_tn_wharton_can_fa: "This workspace allocates by club type and medals, which needs commitment points, so they cannot be turned off.",
       cb_cot_gio: "Time",
       cb_cot_dia_diem: "Place",

@@ -53,7 +53,7 @@ function ux1aTaoThe(tienTo, khiChon) {
     nut[c.ma] = b;
     luoi.append(b);
   });
-  const loi = ux1aEl("p", { class: "ux1a-loi", role: "alert", id: tienTo + "Loi", hidden: true });
+  const loi = ux1aEl("p", { class: "ux1a-loi", role: "alert", id: tienTo + "LoiThe", hidden: true });
   const sanSang = ux1aEl("div", { class: "ux1a-san-sang", id: tienTo + "SanSang", hidden: true });
   const hop = ux1aEl("div", { class: "ux1a-cai-dat" }, cauHoi, luoi, loi, sanSang);
   return {
