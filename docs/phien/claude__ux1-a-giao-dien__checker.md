@@ -1,6 +1,8 @@
 # Checker — UX1A (branch claude/ux1-a-giao-dien) — latest verdict first
 
-## L8-A — REVIEW c2c7a30..ad569c2 — 1 doc BUG (minor) → FIX L8-A
+## L8-A fix1 — REVIEW ad569c2..326dbc6 — NO BUGS: §2b row 2 now "88 em có chỗ, 32 em chưa có chỗ" (matches my measurement); no other "12 em" left; poster line added to Needs Truong. Only docs touched.
+
+## L8-A — REVIEW c2c7a30..ad569c2 — 1 doc BUG (fixed in fix1)
 - Tests: 166 passed (i18n_sync, ws_nhan, fg7, tai_lieu*, bang_loi, vi_du_huong_dan, kich_ban_nhap_tay …); `tao_i18n_js.py` regenerates `i18n_loi.js` with no diff. `pytest --collect-only` = 6845 tests / 339 files → CLAUDE_CHI_TIET counts exact.
 - Re-ran `chup_luong_chinh.py` (images restored afterwards, nothing left in the tree): admin load→run→export = 4 clicks (state xu_ly), unplaced = 1 click on the bar, homeroom = 0 clicks (app opens on Kết quả) + 1 to see own class, student = 2. All match "After" table.
 - BUG (docs): UX1_RA_SOAT §2b row 2 says "sổ mẫu còn 12 em chưa có chỗ"; measured on SO_NHAP_DQT_120HS_HOP_LE seed 42 (and default seed) = **32 unplaced, 88 placed**. Fix the number (the script prints no count; the "Ghi chú" wording is fine).
