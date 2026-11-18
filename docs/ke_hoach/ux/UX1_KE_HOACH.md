@@ -1,0 +1,148 @@
+# UX1 — Implementation plan (for the coding collaborator)
+
+> Item **UX1 — direct UI, fewer steps** (opened by Truong 2026-11-18, outside the 33-item registry).
+> Audit and screenshots: `docs/ke_hoach/ux/UX1_RA_SOAT.md`, `docs/ke_hoach/ux/anh/`. Read the audit first.
+> Truong's decisions (2026-11-18): all four user groups; PDF via **Print → Save as PDF** (no new library);
+> cutoff ("mức vào được") may be printed on the slip for clubs the student tested; tab names may change and the
+> user guide, demo/video scripts and poster are updated in the same item.
+> Branch: create `claude/ux1-giao-dien` from `claude/gt-tich-hop`; handoff file `docs/phien/claude__ux1-giao-dien.md`.
+
+## 0. Hard rules (from CLAUDE.md — read it)
+- **UI and presentation only.** No change to `rbda_priority_pipeline.py`, `compute_club_priority`, STB, seeds,
+  `run_history`, schema or the CSV contract. Invariant 1 (byte-identical `match_results`) must stay green:
+  `python .claude/skills/soat-ma/scripts/kiem_nhanh.py` (needs `git fetch origin main`).
+- **Keep every element `id` and every `data-tab` value.** About 97 Chromium tests (`tests/test_giao_dien_*`) select by
+  them. Move DOM blocks; do not rename them. If a test really must change, change the selector, never skip the test.
+- New backend method → add it to `QUYEN` in `phan_quyen.py` (the completeness test in `tests/test_gt3_phan_quyen.py`
+  fails otherwise) and log one audit row if it exports/prints student data (GT I3 rule).
+- New user text → `i18n.js` (vi + en; `kiem_nhanh` checks both). Error text → `i18n_errors.py`, then
+  `python tao_i18n_js.py`. Use vocabulary placeholders (`{person_l}`, `{slot_l}`, `{cohort_l}`…), never hard-code "học sinh/CLB".
+- Test first per lot; run only related tests (`python -m pytest -q <file>`); full suite only at the gate.
+- After each lot: tick the plan in the handoff file, one line in `CHANGELOG.md` and `docs/ke_hoach/TIEN_DO.md`.
+- No subagents. Before push: skill `soat-ma`.
+
+## 1. Targets (measured with `docs/ke_hoach/ux/chup_luong_chinh.py` / `chup_phieu.py`)
+| Task | Now | Target |
+|---|---|---|
+| Admin: load book → run → download results | 5 clicks | 4 |
+| Admin: deal with unplaced students | 4–6 | 2 |
+| Slip PDF for one student | ~8 | 4 (search → pick → "In / Lưu PDF" → Save) |
+| Homeroom teacher: own class results | 3 | 2 |
+| Principal: summary report | none | 1 |
+| Student self-lookup | 2 | 2 (unchanged) |
+
+## 2. Lots (do in order; each ends with its "Done when")
+
+### L1 — "Next step" bar
+- New block `#viecTiepTheo` at the top of `<main>` in `index.html` (admin only: `data-quyen="quan_tri"`), one primary
+  button + one sentence. State is computed in JS from data already fetched by `refreshSidebarStatus()`
+  (`js/01_khung.js`) and the run result in `executeRun()` (`js/02_van_hanh.js`); no new backend call unless needed.
+- States, in order: no data → "Nạp sổ" (focus `#dropZone`); data + blocking warning → "Xem cảnh báo"; data, never run
+  → "Chạy sắp xếp" (`#btnRun`); just run, n unplaced > 0 → "Xử lý n {person_l} chưa có {slot_l}" (opens the unplaced
+  panel `#chuaCoChoPanelBody`, expanded, scrolled into view); otherwise → "Xuất kết quả" (`#btnXuatTuyChon`).
+- Make the "n Cần xử lý" summary card (`tomTat…` in the results/others view) a button with the same action.
+- Put the code in a new script `js/17_viec_tiep_theo.js`; add it to `js/_danh_sach.txt` and the script list in `index.html`.
+- Done when: new `tests/test_giao_dien_ux1_tiep_theo.py` drives the 120-student book (`du_lieu_test/SO_NHAP_DQT_120HS_HOP_LE.xlsx`)
+  through every state and asserts the button label and target; the admin task above takes 4 clicks.
+
+### L2 — Navigation 6 → 4 groups
+- Sidebar shows 4 groups: **1. Nạp & xếp** (view `pipeline`: import, warnings, run — already one page),
+  **2. Nhập tay** (`fallback`, `scoring`), **3. Kết quả & phiếu** (`results`, `others`), **Cài đặt** (`admin`, `chuan_bi`).
+  No view is split, so no DOM block has to move between views.
+- Recommended mechanism (keeps tests green): each group button opens its first view; inside the group a small
+  segmented control holds the existing buttons with their **existing** `data-tab` values, so `switchTab(name)` and
+  test selectors such as `[data-tab="fallback"]` keep working. Edit `initTabs/switchTab/doiThe` in `js/01_khung.js`.
+- Respect `data-quyen` and `hidden` rules already on the nav items (workspace rules can hide "Nhập điểm"; `chuan_bi`
+  is hidden until enabled). A group whose views are all hidden disappears.
+- Inside **Cài đặt**, fold "Tiêu chí xếp" and "Thử cấu hình" (GT2 panels, `js/15_tieu_chi.js`) under one closed
+  `<details>` "Nâng cao"; club editing comes first.
+- Done when: `tests/test_giao_dien_ux1_dieu_huong.py` checks 4 groups for admin, correct groups for `giao_vien` and
+  the student lock (GT I2) still blocks every tab; all existing `test_giao_dien_*` pass unchanged or with selector-only edits.
+
+### L3 — Results page: lookup first, one export menu
+- Move the lookup panel `#gtPanel` to the TOP of view `results` (above the table). Remove the GT4 jump link
+  "Tra cứu một học sinh ↓" (no longer needed) — keep its i18n key only if something else uses it.
+- Collect the export buttons of view `others` (`#btnXuatTuyChon`, `#btnXuatTheoLop`, `#btnXuatLyDo`, `#btnXuatNhuCau`,
+  `#btnXuatGoiY`, `#btnXuatBienBan`, …) into one "Xuất…" menu button (reuse the existing `menu-khac-muc` pattern);
+  "Xuất kết quả (Excel)" and "Xuất theo {cohort_l}" stay visible as the two main buttons. Keep ids and handlers.
+- Show the import success message once (today: file box + line + toast). Keep the toast, drop the duplicate line.
+- Done when: a test asserts `#gtPanel` is above `#kqBang`, only two export buttons are visible by default, and the
+  import message appears once.
+
+### L4 — Role pages (homeroom teacher, principal)
+- `giao_vien` login lands on **3. Kết quả & phiếu** with: class picker, "Xuất theo {cohort_l}", "In phiếu cả {cohort_l}".
+- New one-click **"Báo cáo tổng hợp"** (principal): a printable HTML built from existing aggregates only (summary cards,
+  per-club fill, preference satisfaction, unplaced count per class) — **no names, scores or lottery numbers**.
+  Backend: new pure builder `bao_cao_tong_hop.py` + method `export_bao_cao_tong_hop` in `api_xuat.py`;
+  `QUYEN` = `giao_vien`; one audit row. Opens with the same print flow as L6.
+- Done when: unit test for the builder (no student id/name in output; numbers equal the summary API) and a Chromium
+  test that a `giao_vien` account reaches both actions in ≤ 2 clicks.
+
+### L5 — Warning severity and wording
+- In `api.py` validation, the three oversubscription warnings (`health_oversubscribed`, `…_buoi`,
+  `…_chua_khai_buoi`) move from `"info"` to `"medium"` (non-blocking; only `"high"` blocks — verify in the run gate).
+- Shorten their texts in `i18n_errors.py` to one sentence + one action, e.g. "{session} {buoi}: {n_seats} chỗ cho
+  {n_students} {person_l} — ít nhất {n_short} em sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}." Then `tao_i18n_js.py`.
+- Done when: tests that assert these codes/severities are updated (grep `health_oversubscribed` in `tests/`);
+  invariant 1 green (severity is display-only).
+
+### L6 — Slip: "In / Lưu PDF" directly
+- New method `get_phieu_giai_trinh_html(student_ids=None, lop=None)` in `api_xuat.py` returning the HTML string from
+  `phieu_giai_trinh.dung_phieu_html` (same data path as `export_phieu_giai_trinh`); `QUYEN` = `giao_vien`; one audit row.
+- In `js/14_giai_trinh.js`: button "In / Lưu PDF" loads the HTML into a hidden `<iframe srcdoc>` and calls
+  `iframe.contentWindow.print()`. Keep the old "export file" path as fallback in the menu (needed for whole-class batches
+  and if printing is blocked).
+- Add `@page { size: A4; margin: 14mm }` to the slip CSS; one student per page already holds.
+- **Manual check on Windows (Truong):** print dialog opens in the packaged pywebview/WebView2 window and in browser
+  fallback (`browser_host.py`). Record the result in the handoff file.
+- Done when: Chromium test intercepts `print()` (stub `window.print` in the iframe) and asserts it was called with the
+  student's page; audit has exactly one row; slip PDF task = 4 clicks.
+
+### L7 — Slip content
+In `phieu_giai_trinh.py` (and the on-screen card in `js/14_giai_trinh.js`, same wording):
+1. **Summary line** under the name: "Em có {k}/{n} buổi: CLB Làm vườn (Thứ 4), CLB Mỹ thuật (Thứ 6)." or
+   "Em chưa có {slot_l} ở buổi nào."
+2. **Scores of every club the student tested** (from `tested_scores`), including tested clubs not in the ranking.
+3. **Small inline SVG bar per tested club**: own score vs cutoff ("mức vào được"). Only clubs the student tested; no
+   other student's data. Pure SVG string, escaped, no external files (slip must stay self-contained).
+4. **"Em nên làm gì tiếp"** block when a session has no place: list only features that are on for this workspace
+   (round 2, invitation to empty places, data-error complaint) + "hỏi giáo viên phụ trách".
+5. Plain words: drop "số khoá bốc thăm: {seed}" from the student-facing card and slip (i18n `gt_lan_chay`; keep the seed
+   in admin detail and exports); column "Mức vào được" shows a score or "Chọn ngẫu nhiên khi bằng điểm" instead of
+   "Bốc thăm"; same column names on screen and slip ("Điểm thi", "Chỗ đã nhận / tối đa").
+- Gotcha: `tests/test_gt_tich_hop.py::test_i4_*` regenerates `docs/giai_trinh/CA_MAU.md` **byte-identically** from app
+  sentences. After changing sentences, rerun `python du_lieu_test/tao_ca_mau_giai_trinh.py` and
+  `python docs/giai_trinh/tao_goi_minh_chung.py`, commit the new files in the same lot. Also check `tests/test_gt1_*`.
+- Done when: unit tests on `dung_phieu_html` for a student placed everywhere, partly, and nowhere (summary line,
+  tested-club scores, SVG present only for tested clubs, next-steps block only when unplaced, no other student id in
+  the page); `chup_phieu.py` regenerated `anh/phieu_mau.pdf` looks right.
+
+### L8 — Docs
+- Update tab names and steps: `HUONG_DAN_SU_DUNG.md`, `docs/giai_trinh/KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md`,
+  `HUONG_DAN_CHAY.md`, `SO_DO_LUONG.md`, poster files under `poster/`, code map in `docs/ke_hoach/CLAUDE_CHI_TIET.md`.
+  `tests/test_gt3_tai_lieu.py` checks that every "thẻ X" in the scripts is a real tab label.
+- Re-run both capture scripts; replace screenshots in `docs/ke_hoach/ux/anh/`; add an "After" table to the audit with
+  measured clicks.
+- Done when: `test_gt3_tai_lieu.py` passes; audit "After" table meets §1 targets.
+
+### L9 — Gate
+- `ruff check .`, `kiem_nhanh.py` 7/7, skill `soat-ma` four tiers, full CI green (coverage ≥ 85 %). Status DONE in
+  the handoff file; Truong merges.
+
+## 3. Risks
+| Risk | Mitigation |
+|---|---|
+| 97 UI tests break on layout change | keep ids/`data-tab`; move blocks only; fix selectors, never skip |
+| `print()` blocked in WebView2 | keep file export + "Mở tệp" fallback; Truong checks on Windows (L6) |
+| Slip wording change breaks CA_MAU byte test | regenerate CA_MAU + evidence pack in L7 |
+| Role pages leak data | builder/unit tests assert no names/scores/lottery numbers; QUYEN classification |
+| Scope creep into the algorithm | any change outside UI → stop and ask Truong (rule 7) |
+
+## 4. Prompt to paste into the coding session (Sonnet)
+```
+Branch: create claude/ux1-giao-dien from origin/claude/gt-tich-hop. Read CLAUDE.md, then
+docs/ke_hoach/ux/UX1_RA_SOAT.md and docs/ke_hoach/ux/UX1_KE_HOACH.md, then docs/phien/claude__ux1-giao-dien.md.
+Implement lots L1 → L9 in order, test first, one commit per lot, tick the Plan in the handoff file after each lot.
+UI/presentation only; keep every element id and data-tab; invariant 1 must stay green (kiem_nhanh.py).
+Stop and ask Truong if a lot needs an algorithm, schema or CSV change, or a new library.
+```
