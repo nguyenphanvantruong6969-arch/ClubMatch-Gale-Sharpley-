@@ -51,7 +51,7 @@ function viecTinhTrangThai(dash, suc, cho) {
   if (!dash.ok) return null;
   if (!dash.data.n_students || !dash.data.n_clubs) return { ten: "nap_so" };
   if (suc.ok && suc.data.n_high > 0) return { ten: "canh_bao" };
-  if (!(dash.data.n_matched > 0)) return { ten: "chay" };
+  if (!(dash.data.has_results || dash.data.n_matched > 0)) return { ten: "chay" };
   const n = cho.ok ? cho.data.so_em : 0;
   return n > 0 ? { ten: "xu_ly", n } : { ten: "xuat" };
 }

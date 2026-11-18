@@ -181,6 +181,12 @@
       kpi_can_xu_ly: "Cần xử lý",
       kpi_on: "Ổn",
       kpi_bam_de_xem: "Bấm để mở mục chi tiết",
+      /* UX1A-L2: nhóm điều hướng */
+      ux1a_nhom_nap_xep: "1. Nạp & xếp",
+      ux1a_nhom_nhap_tay: "2. Nhập tay",
+      ux1a_nhom_ket_qua: "3. Kết quả & phiếu",
+      ux1a_nhom_cai_dat: "Cài đặt",
+      ux1a_nang_cao: "Nâng cao: tiêu chí xếp, thử cấu hình",
       /* UX1A-L1: thanh "Việc tiếp theo" */
       ux1a_cau_nap_so: "Chưa có dữ liệu. Nạp sổ nhập để bắt đầu.",
       ux1a_nut_nap_so: "Nạp sổ",
@@ -1494,6 +1500,12 @@
       kpi_can_xu_ly: "Needs action",
       kpi_on: "OK",
       kpi_bam_de_xem: "Click to open the detail section",
+      /* UX1A-L2: navigation groups */
+      ux1a_nhom_nap_xep: "1. Load & run",
+      ux1a_nhom_nhap_tay: "2. Manual entry",
+      ux1a_nhom_ket_qua: "3. Results & slips",
+      ux1a_nhom_cai_dat: "Settings",
+      ux1a_nang_cao: "Advanced: ranking criteria, trial configuration",
       /* UX1A-L1: "Next step" bar */
       ux1a_cau_nap_so: "No data yet. Load the input book to start.",
       ux1a_nut_nap_so: "Load book",

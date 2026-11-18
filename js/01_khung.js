@@ -30,6 +30,34 @@ function initTabs() {
   navItems.forEach((btn) => {
     btn.addEventListener("click", () => switchTab(btn.dataset.tab));
   });
+  /* UX1A-L2: nút nhóm mở thẻ đầu tiên đang hiện của nhóm; nhóm không còn thẻ hiện thì tự ẩn. */
+  document.querySelectorAll(".nav-nhom-nut").forEach((nut) => {
+    nut.addEventListener("click", () => {
+      const dau = Array.from(nut.parentElement.querySelectorAll(".nav-item")).find(thanhDieuHuongDangHien);
+      if (dau) switchTab(dau.dataset.tab);
+    });
+  });
+  const thanBen = document.querySelector(".nav-group");
+  if (thanBen && window.MutationObserver) {
+    const quan = new MutationObserver(capNhatNhomDieuHuong);
+    quan.observe(thanBen, { attributes: true, attributeFilter: ["hidden"], subtree: true });
+    quan.observe(document.body, { attributes: true, attributeFilter: ["data-vai"] });
+  }
+  capNhatNhomDieuHuong();
+}
+
+/* UX1A-L2: "hiện" tính theo hiển thị thật (thuộc tính hidden, ẩn theo vai trò bằng CSS, workspace). */
+function thanhDieuHuongDangHien(btn) {
+  return btn.getClientRects().length > 0;
+}
+
+function capNhatNhomDieuHuong() {
+  document.querySelectorAll(".nav-nhom").forEach((nhom) => {
+    const coThe = Array.from(nhom.querySelectorAll(".nav-item")).some(thanhDieuHuongDangHien);
+    /* Chỉ ghi khi đổi: gán lại cùng giá trị vẫn sinh bản ghi cho MutationObserver -> vòng lặp vô hạn. */
+    if (nhom.hidden === coThe) nhom.hidden = !coThe;
+    nhom.classList.toggle("is-active", !!nhom.querySelector(".nav-item.is-active"));
+  });
 }
 
 function currentTabName() {
@@ -56,6 +84,7 @@ function doiThe(tabName) {
     if (dangMo) btn.setAttribute("aria-current", "page");
     else btn.removeAttribute("aria-current");
   });
+  capNhatNhomDieuHuong(); /* UX1A-L2 */
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("is-active", view.id === "view-" + tabName);
   });

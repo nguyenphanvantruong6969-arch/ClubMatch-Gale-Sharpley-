@@ -271,8 +271,9 @@ def test_thanh_ben_sau_khi_gop_va_bao_chua_co_ket_qua(mo):
     nut = page.evaluate("""() => Array.from(document.querySelectorAll('.nav-item'))
         .map(n => [n.dataset.tab, /^\\d+\\s/.test(n.textContent.trim())])""")
     # FG-9: thanh bên không còn số thứ tự (trước đây 01–07); thứ tự thẻ giữ nguyên.
-    assert nut == [["pipeline", False], ["results", False], ["others", False],
-                   ["fallback", False], ["admin", False], ["scoring", False], ["chuan_bi", False]]
+    # UX1A-L2: thẻ xếp theo 4 nhóm (Nạp & xếp / Nhập tay / Kết quả & phiếu / Cài đặt).
+    assert nut == [["pipeline", False], ["fallback", False], ["scoring", False],
+                   ["results", False], ["others", False], ["admin", False], ["chuan_bi", False]]
     for tang1 in ("lop", "clb", "ma"):
         _mo_ket_qua(page, tang1)
         page.wait_for_function("() => !document.getElementById('kqRong').hidden")

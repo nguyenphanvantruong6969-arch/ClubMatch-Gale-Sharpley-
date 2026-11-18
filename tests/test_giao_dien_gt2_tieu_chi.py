@@ -45,6 +45,7 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
+        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
         page.wait_for_selector("#gt2TcDanhSach li")
         return page, api, loi
 
@@ -144,6 +145,7 @@ def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
         page.reload()
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
+        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
         page.wait_for_selector("#gt2TcDanhSach li")
     o = page.locator("#gt2TcWharton")
     assert o.is_checked()

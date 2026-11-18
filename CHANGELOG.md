@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L2: thanh bên 4 nhóm
+
+- Thanh bên: 4 nhóm "1. Nạp & xếp" (pipeline), "2. Nhập tay" (fallback, scoring), "3. Kết quả & phiếu" (results, others), "Cài đặt" (admin, chuan_bi). Nút nhóm mở thẻ đầu còn hiện; nhóm không còn thẻ hiện (vai giáo viên, thẻ ẩn) tự ẩn (`capNhatNhomDieuHuong`, `js/01_khung.js`). Mọi `.nav-item[data-tab]` và id giữ nguyên, vẫn bấm được từ nhóm khác. Giáo viên vào "Kết quả" như cũ.
+- Cài đặt: "Tiêu chí xếp" + "Thử cấu hình" gấp vào `<details id="ux1aNangCao">` đóng mặc định, đặt SAU phần sửa CLB/học sinh.
+- Việc tiếp theo (L1): trạng thái "đã chạy" dùng `has_results` (hoặc `n_matched > 0`).
+- Test mới: `tests/test_giao_dien_ux1_dieu_huong.py` (5). Sửa test theo selector: GT2/GT4 mở `#ux1aNangCao` sau khi vào thẻ Quản lý; `test_giao_dien_a14_lop.py` đổi thứ tự thẻ kỳ vọng.
+
 ## 2026-11-18 — UX1A-L1: thanh "Việc tiếp theo"
 
 - Mới: `#viecTiepTheo` ở đầu `<main>` (chỉ quản trị) — một nút chính theo trạng thái: nạp sổ → xem cảnh báo chặn → chạy → xử lý n {person_l} chưa có {slot_l} → xuất. Ô "Cần xử lý" ở thẻ "Chi tiết" dùng chung hành động. Mã: `js/17_viec_tiep_theo.js` (mới), móc ở `js/02_van_hanh.js`, `js/03_ket_qua.js`, `js/08_khoi_dong.js`; khoá i18n `ux1a_*`.

@@ -3117,3 +3117,17 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 }
 .viec-tiep-theo[hidden] { display: none; }
 .viec-tiep-theo-cau { font-weight: 600; }
+
+/* UX1A-L2: nhóm điều hướng */
+.nav-nhom { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.nav-nhom[hidden] { display: none; }
+.nav-nhom-nut {
+  text-align: left; background: transparent; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.55); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 6px 12px 2px;
+}
+.nav-nhom-nut:hover, .nav-nhom.is-active .nav-nhom-nut { color: #fff; }
+.nav-nhom-nut:focus-visible { outline: 2px solid #9CC2FF; outline-offset: 2px; }
+.nav-nhom .nav-item { padding-left: 20px; }
+.ux1a-nang-cao { margin-top: 20px; }
+.ux1a-nang-cao > summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
