@@ -11,11 +11,11 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [x] L3 lookup first, Xuất… menu, import msg once (e812cf3+fix1 3ba1efe; checker NO BUGS 2a226e0; admin export 4 clicks on real 120 book incl. 32 unplaced)
 - [x] L5 warnings medium + short; medal-book message + Bật chế độ huy chương; two sample books (764c85c; checker NO BUGS 576ad3f)
 - [x] L5b medal words → 60/30/10 at reading layer, FA only (4cae05b; checker NO BUGS d9605ec)
-- [ ] L8-A docs + screenshots + After table
+- [x] L8-A docs + screenshots + After table (ad569c2+fix1 326dbc6; checker NO BUGS 3d421e2)
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: L1, L2, L2b, L3, L5, L5b. In progress: L8-A (GO sent).
+- Done: all 7 lots. In progress: CI gate (§5).
 
 ## Sessions
 | Role | Session | State |
