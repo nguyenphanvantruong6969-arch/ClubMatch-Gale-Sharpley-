@@ -15,14 +15,15 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L3 results page (checker NO BUGS after fix1, head 3ba1efe)
 - [x] L5 warning severity/wording; medal book wrong-mode message + one-click enable; two sample books. Coder DONE at 764c85c, waiting for checker
 - [x] L5b medal cells accept Vàng/Bạc/Đồng -> 60/30/10 (coder DONE, waiting for checker)
-- [ ] L8-A docs + screenshots + After table
+- [x] L8-A docs + screenshots + After table (coder DONE ad569c2, waiting for checker)
 
 ## Current state (overwrite each handoff)
-- L1, L2, L2b, L3, L5 passed by checker. L5b reported as "CODER DONE L5b | base 1ec7b23 head 4cae05b" (pushed); waiting for the checker verdict.
-- Nothing half-finished. Next lot from the lead: L8-A (user guide, demo/video scripts, poster, code map for navigation/settings,
-  re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py, "After" click table for admin/homeroom/principal tasks), then CI gate (lead).
-- L5b summary: so_nhap.chuan_hoa_chu_huy_chuong (reading layer, only when fa_daa on) in api_nhap._doc_so_nhap; medal sample book dropdown + Hướng dẫn
-  wording; #btnBatHuyChuong only with an open workspace. Tests: tests/test_ux1_l5b_huy_chuong_chu.py. Regression 2727 passed, 1 skipped (pre-existing).
+- L1, L2, L2b, L3, L5, L5b passed by checker. L8-A reported as "CODER DONE L8-A | base c2c7a30 head ad569c2" (pushed); waiting for the checker.
+- All coder lots of team A are done. Remaining (lead side): CI gate, user review UX1_DANH_GIA_A.md, integration with team B (lots I1/I2 handled by
+  team A's coder in this same session when the lead sends GO).
+- L8-A: user guide, giai_trinh scripts, code map, poster data text, screenshots (docs/ke_hoach/ux/anh, poster/hinh), chup_luong_chinh.py (prints measured
+  clicks), UX1_RA_SOAT.md section 2b "After" table (admin 4, unplaced 1, homeroom <=2, student 2; slip + principal = team B).
+- Needs Truong (told lead): poster PDF/PPTX not rebuilt (poster/tao_poster.py needs python-pptx + matplotlib, not installed: new library).
 - Open: the checker's L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md was never read.
 - Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here and keep this file current. The Stop hook "hand off" nag cannot be
   silenced by me (.claude/phien_vai.json edit was denied): update this file, push, continue.
@@ -50,8 +51,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - Each shared-file edit is marked UX1A / ux1a_ keys; js/_danh_sach.txt has 17_viec_tiep_theo and 18_cai_dat before 08_khoi_dong.
 
 ## Next steps (ordered)
-1. Handle REVIEW/FIX for L5b if the lead sends them.
-2. Then L8-A; (L5b was, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
+1. Handle REVIEW/FIX for L8-A if the lead sends them, then CI-gate FIX lists; integration (I1/I2) on GO. (old: L8-A; L5b was, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
 4. Per lot: failing test -> minimal code -> related tests -> `kiem_nhanh.py --co-so origin/main --so-seed 20`
    (after git fetch origin main) -> soat-ma notes -> CHANGELOG + TIEN_DO row -> commit "UX1A-L<n>: …" -> push -> report
    "CODER DONE L<n> | base <sha> head <sha>" (GT_GIAO_THUC §7 format) with send_message to the lead.
@@ -72,3 +72,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | 2026-11-18 | Sonnet 5.5 | L5 coded, regression-fixed, pushed 764c85c, reported to lead | continues in same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L5b coded + tests; WIP pushed; regression pending | same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L5b done, pushed 4cae05b, reported | same session per lead |
+| 2026-11-18 | Sonnet 5.5 | L8-A done (docs, screenshots, After table), pushed ad569c2, reported | same session per lead |
