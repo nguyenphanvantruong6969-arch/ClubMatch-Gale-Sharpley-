@@ -91,7 +91,7 @@ def test_fa_bat_co_cau_ly_do_moi_hoc_sinh(mo):
 
 def test_hai_nut_xuat_tao_tep(mo):
     page, _, loi = mo(_fa)
-    page.wait_for_selector("#btnXuatLyDo:not([hidden])")
+    page.wait_for_selector("#btnXuatLyDo:not([hidden])", state="attached")  # UX1A-L3: nút nằm trong menu "Xuất…" đang đóng
     _bam_xuat(page, "btnXuatLyDo")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('ket_qua_ly_do.csv')")
     _bam_xuat(page, "btnXuatNhuCau")
@@ -105,7 +105,7 @@ def test_hai_nut_xuat_tao_tep(mo):
 def test_nut_goi_y_chi_tieu_ky_sau_tao_tep(mo):
     """GAP-7: nút xuất gợi ý chỉ tiêu kỳ sau (chỉ khi FA bật)."""
     page, _, loi = mo(_fa)
-    page.wait_for_selector("#btnXuatGoiY:not([hidden])")
+    page.wait_for_selector("#btnXuatGoiY:not([hidden])", state="attached")  # UX1A-L3: nút nằm trong menu "Xuất…" đang đóng
     _bam_xuat(page, "btnXuatGoiY")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('goi_y_chi_tieu.csv')")
     txt = page.locator("#xuatFeedback").inner_text()
@@ -118,7 +118,7 @@ def test_nut_goi_y_chi_tieu_ky_sau_tao_tep(mo):
 def test_nut_bien_ban_boc_tham_tao_tep_khong_co_ma_hoc_sinh(mo):
     """FA-9: nút xuất biên bản bốc thăm (chỉ khi FA bật)."""
     page, _, loi = mo(_fa)
-    page.wait_for_selector("#btnXuatBienBan:not([hidden])")
+    page.wait_for_selector("#btnXuatBienBan:not([hidden])", state="attached")  # UX1A-L3: nút nằm trong menu "Xuất…" đang đóng
     _bam_xuat(page, "btnXuatBienBan")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('bien_ban_boc_tham')")
     txt = page.locator("#xuatFeedback").inner_text()

@@ -156,7 +156,7 @@ def test_l5_co_fa_giau_dong_giai_thich_va_hien_nut(api):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.click('.nav-item[data-tab="others"]')
-        page.wait_for_selector("#btnXuatLyDo:not([hidden])")
+        page.wait_for_selector("#btnXuatLyDo:not([hidden])", state="attached")  # UX1A-L3: nút nằm trong menu "Xuất…" đang đóng
         kq = _trang_xuat(page)
         assert kq["nut"] == [True] * 4
         assert kq["goi_y"] == 0

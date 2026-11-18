@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L3: thẻ Kết quả tra cứu trước, một menu "Xuất…", thông báo nạp sổ một lần
+
+- `#gtPanel` (tra cứu một học sinh) lên ĐẦU thẻ Kết quả, trên `#kqBang`; bỏ liên kết nhảy `#gtNhay` và khoá i18n `gt_nhay`.
+- Thẻ "Chi tiết": chỉ hai nút xuất chính hiện sẵn ("Xuất kết quả (Excel)", "Xuất theo lớp"); bốn nút phụ (lý do, nhu cầu, gợi ý chỉ tiêu, biên bản bốc thăm) vào menu `#xuatMenu` "Xuất…" (chỉ có ở chế độ Huy chương). Giữ nguyên id và trình xử lý.
+- Nạp sổ: câu kết quả (số CLB, học sinh) chỉ hiện ở hàng của tệp; bỏ dòng `#feedbackImportAll` khi thành công; thông báo nổi chỉ xác nhận "Đã nạp sổ".
+- Thanh "Việc tiếp theo": trạng thái "Xuất" bấm là xuất luôn (tuỳ chọn mặc định) → luồng nạp → chạy → tải = 4 lần bấm (test `test_luong_chinh_nap_chay_tai_ket_qua_bon_lan_bam`).
+- Test mới: `tests/test_giao_dien_ux1_ket_qua.py` (4). Sửa test cũ theo vị trí: fa_ket_qua, sg11a_ve_sinh (mở menu / chờ ở trạng thái attached), gt4_man_hoc_sinh (bỏ `#gtNhay`), upload, xoa_du_lieu (kết quả nạp ở hàng tệp).
+
 ## 2026-11-18 — UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay
 
 - Mới: thẻ "Chỉ xếp thứ tự" / "Chia 100 điểm" (mặc định) / "Huy chương" (`js/18_cai_dat.js`, thành phần `ux1aTaoThe`) ánh xạ `wharton` + `fa_daa`; lưu ngay bằng MỘT lời gọi `update_workspace_config` (ghi một dòng nhật ký thao tác như mọi lần gọi khi có tài khoản), áp dụng tại chỗ, thông báo "Đã chuyển sang … · Hoàn tác" 10 giây; lỗi hiện dưới thẻ, thẻ không đổi. Một dòng "Cách xét khi đông" sinh từ Tiêu chí xếp; "Thay đổi…" mở mục Nâng cao.
