@@ -87,3 +87,27 @@ def test_loi_chay_bi_chan_chi_huong_ve_cai_dat_huy_chuong(mo_trang):  # noqa: F8
     page.locator("#btnMoTinhNangTuLoi").click()
     page.wait_for_selector("#ux1aHuyChuong", state="visible")
     assert not loi, loi
+
+
+def test_khong_co_workspace_thi_khong_hien_nut_bat_huy_chuong(api):
+    """UX1A-L5 (sửa nhỏ): chưa mở workspace thì không có đường cấu hình -> chỉ có câu nói rõ, không có nút."""
+    from playwright.sync_api import sync_playwright
+
+    import browser_host
+    from _trinh_duyet import CHROMIUM
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    url = browser_host.serve(api, GOC, "index.html", open_browser=False)
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        page = br.new_page(bypass_csp=True)
+        loi = []
+        page.on("pageerror", lambda e: loi.append(str(e)))
+        page.goto(url)
+        page.wait_for_selector("#dropZone")
+        page.locator("#fileAny").set_input_files([SO_FA])
+        page.wait_for_selector(".queue-row .so-nhap-canh-bao")
+        assert "Huy chương" in page.locator(".queue-row .so-nhap-canh-bao").inner_text()
+        assert page.locator("#btnBatHuyChuong").count() == 0
+        br.close()
+    assert not loi, loi

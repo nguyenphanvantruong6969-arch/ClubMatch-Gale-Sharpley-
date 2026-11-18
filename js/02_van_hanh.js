@@ -998,7 +998,7 @@ function veHangDoi() {
       const li = document.createElement("li");
       li.textContent = trErr(w);
       /* UX1A-L5: sổ có cột Huy chương / Loại mà chế độ huy chương tắt -> một nút bật (không bật ngầm). */
-      if (w.code === "so_nhap_canh_bao_huy_chuong_che_do_tat") {
+      if (w.code === "so_nhap_canh_bao_huy_chuong_che_do_tat" && typeof wsTrangThai !== "undefined" && wsTrangThai && wsTrangThai.enabled) {
         const nutBat = document.createElement("button");
         nutBat.type = "button";
         nutBat.id = "btnBatHuyChuong";

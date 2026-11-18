@@ -283,8 +283,13 @@ class NhapDuLieuMixin:
         try:
             if not so_nhap.la_so_nhap(wb.sheetnames, cfg):
                 return None, err("so_nhap_khong_phai_so")
-            return so_nhap.doc_so_nhap(wb, self._clb_theo_ten(), self._ma_clb_da_co(),
-                                       self._clb_cu(), cfg), None
+            du_lieu_so = so_nhap.doc_so_nhap(wb, self._clb_theo_ten(), self._ma_clb_da_co(),
+                                             self._clb_cu(), cfg)
+            # UX1A-L5b: chế độ huy chương bật -> ô huy chương nhận cả Vàng/Bạc/Đồng; đổi về 60/30/10 NGAY ở
+            # lớp đọc (giá trị lưu và mọi bước sau không đổi). Chế độ tắt: không đổi gì.
+            if dung_fa_daa((cfg or {}).get("rules") or {}):
+                so_nhap.chuan_hoa_chu_huy_chuong(du_lieu_so)
+            return du_lieu_so, None
         finally:
             wb.close()
 
