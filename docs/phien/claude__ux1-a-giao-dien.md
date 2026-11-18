@@ -15,14 +15,14 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: branch created. In progress: creating coder + checker sessions.
+- Done: branch created, coder + checker created. In progress: L1 (GO sent to coder).
 
 ## Sessions
 | Role | Session | State |
 |---|---|---|
 | lead | session_01TGThn4GicB4XGX5L6zfZ57 (Opus) | running |
-| coder | — | — |
-| checker | — | — |
+| coder | session_01TGThn7nTbkpGayZsVaCCRd (Sonnet) | running |
+| checker | session_01TGThn4gcnMUxsQjDeXhcVc (Sonnet) | running |
 
 ## Needs Truong
 1. (L6, team B) Print dialog in the packaged Windows app (WebView2) and browser fallback — manual check.
