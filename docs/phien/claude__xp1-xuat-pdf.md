@@ -4,6 +4,8 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
+Status: PLANNED (Opus 2026-11-18). Protocol: docs/phien/XP1_GIAO_THUC.md
+
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
 not in the 33-item registry). For Truong's workflow PDF is THE way data leaves the app, so the admin must be able to
@@ -18,6 +20,8 @@ export in bulk: (1) **member lists** as PDF, one file per club OR one file per c
   the UI) regular + bold, plus its OFL licence file. Add `reportlab` to `requirements.txt`; add the TTFs to
   `kiosk.spec` `datas` (already ships `assets/fonts`) and `collect_all("reportlab")` if PyInstaller misses modules.
 - Roles: Opus wrote this plan; **Sonnet codes** and ticks it; checker reviews per lot.
+- Overlap: XP1 replaces UX1 team B lot L6 (print-dialog PDF) and the club-type part of L7 (`claude/ux1-b-phieu`,
+  not started). Update `docs/phien/claude__ux1-b-phieu.md` Plan with a one-line note in L2.
 - Engine is separate from data: keep `phieu_giai_trinh.dung_phieu_html` (HTML export unchanged); build PDF from the
   SAME data (`giai_trinh.giai_trinh_mot_hoc_sinh` output), never by converting HTML.
 
@@ -95,8 +99,10 @@ Lot L5 — docs + packaging + verify
 ## Files touched
 - docs/phien/claude__xp1-xuat-pdf.md: this handoff (plan).
 - docs/ke_hoach/TIEN_DO.md: XP1 row.
+- docs/phien/XP1_GIAO_THUC.md: lead/coder/checker protocol + prompts.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-18 | Opus | Created branch from ux1 @66f9ffb; wrote Goal + Plan | Decisions: reportlab + TTF, Sonnet codes |
+| 2026-11-18 | Opus | Wrote XP1_GIAO_THUC.md (3-session protocol, prompts) | Lead prompt in §7 |
