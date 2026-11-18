@@ -14,7 +14,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L2b Settings: three cards, instant save + Undo, fix-in-place, post-run actions (checker NO BUGS)
 - [x] L3 results page (checker NO BUGS after fix1, head 3ba1efe)
 - [x] L5 warning severity/wording; medal book wrong-mode message + one-click enable; two sample books. Coder DONE at 764c85c, waiting for checker
-- [~] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) -> 60/30/10 (coded, WIP pushed, regression pending)
+- [x] L5b medal cells accept Vàng/Bạc/Đồng -> 60/30/10 (coder DONE, waiting for checker)
 - [ ] L8-A docs + screenshots + After table
 
 ## Current state (overwrite each handoff)
@@ -22,7 +22,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
   call in api_nhap._doc_so_nhap only when fa_daa is on; medal sample book: Excel dropdown "Vàng,Bạc,Đồng,60,30,10" + Hướng dẫn line
   "Vàng / Bạc / Đồng hoặc 60 / 30 / 10" (plain sample verified identical to HEAD by cell values + validations); small L5 follow-up done
   (#btnBatHuyChuong only when a workspace is open). New tests: tests/test_ux1_l5b_huy_chuong_chu.py (9), one more in tests/test_giao_dien_ux1_nhap_so.py.
-- Still to do for L5b: read the regression result (/tmp/claude-0/l5b.txt, may be gone: re-run test_so_nhap*, test_ws_so_nhap*, test_skill_sinh_du_lieu,
+- L5b regression passed (2727 passed, 1 skipped, pre-existing skip). Reported to lead. (Old note, done:) read the regression result (/tmp/claude-0/l5b.txt, may be gone: re-run test_so_nhap*, test_ws_so_nhap*, test_skill_sinh_du_lieu,
   test_fa_*, test_ux1_*, test_i18n_*, test_mau_forms_thi_clb, test_giao_dien_ux1_*, test_giao_dien_upload, test_giao_dien_fa_*, test_ws_nhan in the
   BACKGROUND with nohup + Monitor), fix reds, add CHANGELOG + TIEN_DO rows, commit "UX1A-L5b: ...", push, report
   "CODER DONE L5b | base 1ec7b23 head <sha>" to the lead (ruff clean, kiem_nhanh 7/7 were green before the regression).

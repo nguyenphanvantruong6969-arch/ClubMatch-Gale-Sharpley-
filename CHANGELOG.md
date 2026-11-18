@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L5b: ô huy chương nhận Vàng/Bạc/Đồng
+
+- Chế độ huy chương BẬT: ô huy chương của Sổ nhập nhận `Vàng/Bạc/Đồng` (không phân biệt hoa/thường, dấu; cả `vang/bac/dong`, `gold/silver/bronze`), đổi về 60/30/10 ngay ở lớp đọc (`so_nhap.chuan_hoa_chu_huy_chuong`, gọi trong `api_nhap._doc_so_nhap`); giá trị lưu (`wharton_bids`), `fa_daa.kiem_ho_so_huy_chuong` và kết quả xếp không đổi. Chữ lạ vẫn báo `fa_huy_chuong_gia_tri_sai`. Chế độ tắt: không ánh xạ (như cũ). Đường Forms đi qua sổ nhập nên được phủ cùng chỗ.
+- Sổ mẫu có huy chương: ô chọn sổ xổ xuống `Vàng,Bạc,Đồng,60,30,10`; Hướng dẫn: "Vàng / Bạc / Đồng hoặc 60 / 30 / 10". Sổ mẫu thường KHÔNG có dòng này nên giữ nguyên (đã so với bản cũ: giá trị ô và quy tắc nhập giống hệt).
+- Sửa nhỏ của L5: nút "Bật chế độ huy chương" chỉ hiện khi đang mở một workspace.
+- Test mới: `tests/test_ux1_l5b_huy_chuong_chu.py` (9: số vs chữ cho `wharton_bids` VÀ `match_results` giống hệt, hoa/thường/không dấu/tiếng Anh, chữ lạ, chế độ tắt, Hướng dẫn), thêm 1 test giao diện ở `tests/test_giao_dien_ux1_nhap_so.py`.
+
 ## 2026-11-18 — UX1A-L5: cảnh báo đúng mức và đúng lời; sổ huy chương sai chế độ; hai sổ mẫu
 
 - Ba cảnh báo "vượt chỉ tiêu" (`health_oversubscribed`, `_buoi`, `_chua_khai_buoi`) từ "info" lên "medium" (vẫn không chặn: chỉ "high" chặn; không chỗ nào chặn theo mức này) và rút còn MỘT câu + MỘT hành động (`i18n_errors.py`).
