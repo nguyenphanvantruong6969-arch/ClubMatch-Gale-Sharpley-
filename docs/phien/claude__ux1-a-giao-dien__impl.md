@@ -1,0 +1,72 @@
+# Branch handoff: claude/ux1-a-giao-dien (coder / impl)
+
+> Role: CODER for UX1 team A. Lead session: session_01TGThn4GicB4XGX5L6zfZ57. Protocol: docs/phien/UX1_GIAO_THUC.md.
+> Lots: docs/ke_hoach/ux/UX1_KE_HOACH.md. Branch file (lead): docs/phien/claude__ux1-a-giao-dien.md. English.
+
+## Feature / goal
+UX1 (direct UI, fewer steps), team A: next-step bar, 4-group navigation, Settings = one question with three cards,
+results page lookup first + one export menu, warnings/medal book (L5, L5b), docs (L8-A). UI/presentation only:
+default config stays byte-identical (invariant 1), every element id and data-tab kept.
+
+## Plan (lead ticks; coder status in brackets)
+- [x] L1 Next-step bar (checker NO BUGS)
+- [x] L2 navigation 6 -> 4 groups (checker NO BUGS)
+- [x] L2b Settings: three cards, instant save + Undo, fix-in-place, post-run actions (checker NO BUGS)
+- [~] L3 results page: lookup first, one Xuất… menu, import message once. Coder done + FIX round 1 done (head 3ba1efe); waiting for checker re-review
+- [ ] L5 warning severity/wording; medal book in non-FA mode; two sample books
+- [ ] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) -> 60/30/10
+- [ ] L8-A docs + screenshots + After table
+
+## Current state (overwrite each handoff)
+- Done so far: L1, L2, L2b passed by checker; L3 implemented at e812cf3, FIX L3 round 1 at 3ba1efe (pushed).
+- In progress: nothing half-finished. Last report sent to lead: "CODER DONE L3 fix1 | base e812cf3 head 3ba1efe".
+- Not yet read: the checker's L3 verdict file docs/phien/claude__ux1-a-giao-dien__checker.md ("1 minor bug, 1 observation").
+  The lead's FIX listed 2 items (stale #feedbackImportAll cleared in nhapTatCa(); secondary "Xuất kết quả" button
+  #viecTiepTheoNut2 in bar state xu_ly) and both are done. The checker's "observation" was not in the FIX message: read it.
+- Tests (last results): full UI sweep (test_giao_dien_* + test_ws_* + gt3_phan_quyen + i18n + ux1 backend) = 1149 passed
+  at e812cf3; after fix1: ux1_tiep_theo 8 + upload 19 passed, 74 related UI tests passed. kiem_nhanh 7/7, 60 cases identical.
+- Open problems: none known. Venv at .venv (python 3.13). Full UI sweep takes about 20 min: run it in the
+  background (nohup … > /tmp/…txt &) and wait with Monitor; foreground pytest over many UI files hits the 10 min tool limit.
+
+## Decisions and gotchas (keep short)
+- Group nav (L2): sub-items `.nav-item[data-tab]` stay visible under 4 `.nav-nhom` headings because 75 tests click
+  `[data-tab=...]` from any tab. Group visibility is attribute based (hidden / giao_vien + data-quyen). An unguarded
+  MutationObserver froze the page: only write `hidden` when it changes.
+- Settings (L2b): three cards map wharton/fa_daa (chi_xep: false/false, chia_100: true/false, huy_chuong: true/true);
+  switching away from Huy chương also turns off post-run flags in the same update_workspace_config call; Undo restores them.
+  update_workspace_config already logs an audit row (default nen_ghi policy); test added. Backend added
+  get_san_sang_huy_chuong (read) and dat_loai_clb (write, reuses fa_daa.ghi_thuoc_tinh_clb); both in phan_quyen.py.
+  "Thay đổi…" opens Quản lý > Nâng cao (no separate sheet). Old wsMoTinhNang dialog and wizard FA checkboxes removed;
+  wizard step 3 uses the same cards (ids wzChiXep/wzChia100/wzHuyChuong). Component ids: prefix + ChiXep/Chia100/HuyChuong,
+  error id prefix+"LoiThe" (a plain "wzLoi" collided with the wizard error box).
+- Post-run features are actions in #ux1aSauXep (Chi tiết tab), visible only when fa_daa; the grid skips re-render when
+  nothing changed (keeps typed complaint days).
+- L3: #gtPanel is first in view-results; #xuatMenu (details.menu-khac) holds the 4 secondary export buttons (menu closes
+  after each pick; tests wait with state="attached"); import numbers shown only in the file row, toast says "Đã nạp sổ".
+  The bar "Xuất" state exports directly with default options (4-click target); in state xu_ly a secondary export button exists.
+- Tests rewritten (not skipped/weakened) when controls moved; one old scenario (FA on + wharton off through the UI) cannot be
+  produced any more, backend rejection is covered by tests/test_fa_n3_loi_diem_quyet_tam.py.
+- Commit trailer of ebf24cd has a mistyped Claude-Session id (already pushed; do not force-push).
+- Each shared-file edit is marked UX1A / ux1a_ keys; js/_danh_sach.txt has 17_viec_tiep_theo and 18_cai_dat before 08_khoi_dong.
+
+## Next steps (ordered)
+1. Read the checker verdict for L3, handle anything not covered by FIX round 1, then wait for lead's REVIEW/FIX/GO.
+2. On GO L5: read only "L5" in docs/ke_hoach/ux/UX1_KE_HOACH.md and audit section; test first.
+3. Then L5b, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
+4. Per lot: failing test -> minimal code -> related tests -> `kiem_nhanh.py --co-so origin/main --so-seed 20`
+   (after git fetch origin main) -> soat-ma notes -> CHANGELOG + TIEN_DO row -> commit "UX1A-L<n>: …" -> push -> report
+   "CODER DONE L<n> | base <sha> head <sha>" (GT_GIAO_THUC §7 format) with send_message to the lead.
+5. Before each lot: git pull, then git fetch origin claude/gt-tich-hop && git merge --no-edit FETCH_HEAD. Never rebase/force-push.
+
+## Files touched (whole job so far)
+- js/17_viec_tiep_theo.js (new): next-step bar. js/18_cai_dat.js (new): Settings cards, fix-in-place, post-run actions.
+- js/01_khung.js: nav groups. js/02_van_hanh.js: bar hooks, import message once. js/03_ket_qua.js: bar hook, export menu, KPI action.
+- js/05_quan_ly.js, js/075_workspace.js (menu "Cài đặt…", wizard cards), js/14_giai_trinh.js (jump link removed), js/15_tieu_chi.js (wharton checkbox removed), js/08_khoi_dong.js.
+- index.html, style.css, i18n.js (ux1a_* keys), js/_danh_sach.txt, api_quan_ly.py, phan_quyen.py, CHANGELOG.md, docs/ke_hoach/TIEN_DO.md.
+- New tests: tests/test_giao_dien_ux1_tiep_theo.py, _dieu_huong.py, _cai_dat.py, _ket_qua.py, tests/test_ux1_cai_dat_backend.py.
+- Rewritten tests (placement/controls): ws_wharton_giao_dien, a13_13_kiem_nhan, fa_cai_dat, fa_gap1, fa_gap3, fg8_cau_chu, fg1_bat_tinh_nang, sg2, sg11b, gt2_tieu_chi, gt4_tieu_chi, ws_giao_dien, fa_ket_qua, sg11a_ve_sinh, gt4_man_hoc_sinh, upload, xoa_du_lieu, a14_lop, gt2_thu.
+
+## Session log (append only, newest last)
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-18 | Sonnet 5.5 | L1, L2, L2b, L3 (+fix1) coded, tested, pushed; reports sent to lead | handoff at ~400k tokens; head 3ba1efe |
