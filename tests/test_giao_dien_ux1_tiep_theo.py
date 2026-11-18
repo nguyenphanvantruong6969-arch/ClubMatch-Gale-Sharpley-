@@ -178,3 +178,23 @@ def test_luong_chinh_nap_chay_tai_ket_qua_bon_lan_bam(mo, api, monkeypatch):
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.trim() !== ''")
     assert lan == 4
     assert not loi, loi
+
+
+def test_so_that_con_hoc_sinh_chua_co_cho_van_tai_ket_qua_bon_lan_bam(mo, api):
+    """Sổ mẫu 120 học sinh THẬT (không giả lập), còn em chưa có CLB: chọn tệp, Nhập sổ, Chạy, Xuất = 4 lần bấm."""
+    page, loi = mo()
+    _trang_thai(page, "nap_so")
+    page.locator("#fileAny").set_input_files([SO_120])               # 1
+    page.wait_for_function("() => !document.getElementById('btnImportAll').hidden")
+    page.locator("#btnImportAll").click()                            # 2
+    _trang_thai(page, "chay")
+    assert page.locator("#viecTiepTheoNut2").is_hidden()
+    page.locator("#viecTiepTheoNut").click()                         # 3
+    _trang_thai(page, "xu_ly")                                       # seed mặc định: còn em chưa có CLB
+    assert page.locator("#viecTiepTheoNut").inner_text().startswith("Xử lý")
+    assert page.locator("#viecTiepTheoNut2").is_visible()
+    assert "btn-primary" in page.locator("#viecTiepTheoNut").get_attribute("class")
+    assert "btn-primary" not in page.locator("#viecTiepTheoNut2").get_attribute("class")
+    page.locator("#viecTiepTheoNut2").click()                        # 4: Xuất kết quả (nút phụ)
+    page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.trim() !== ''")
+    assert not loi, loi

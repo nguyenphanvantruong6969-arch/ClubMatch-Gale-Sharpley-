@@ -1005,6 +1005,8 @@ function nhapTatCa() {
   datKhoa("dangNhap", true);
   canhBaoNhapGanNhat = [];
   veCanhBaoNhap();
+  /* UX1A-L3 fix1: lần thử trước báo lỗi thì dòng đó còn nguyên; xoá trước khi thử lại (thành công không ghi dòng này). */
+  feedback(el("feedbackImportAll"), "", false);
 
   callApi("import_so_nhap", muc.b64)
     .then((res) => {

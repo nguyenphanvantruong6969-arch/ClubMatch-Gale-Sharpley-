@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L3 fix1
+
+- `nhapTatCa()` xoá dòng `#feedbackImportAll` cũ trước khi thử lại (lỗi lần trước không còn dính sau khi nạp thành công); test fail→thử lại→thành công trong `test_giao_dien_upload.py`.
+- Thanh "Việc tiếp theo", trạng thái "Xử lý n …": thêm nút PHỤ `#viecTiepTheoNut2` "Xuất kết quả" (cùng hành động với trạng thái "xuất") để sổ mẫu thật (còn em chưa có CLB) vẫn tải kết quả trong 4 lần bấm; test không giả lập trong `test_giao_dien_ux1_tiep_theo.py`.
+
 ## 2026-11-18 — UX1A-L3: thẻ Kết quả tra cứu trước, một menu "Xuất…", thông báo nạp sổ một lần
 
 - `#gtPanel` (tra cứu một học sinh) lên ĐẦU thẻ Kết quả, trên `#kqBang`; bỏ liên kết nhảy `#gtNhay` và khoá i18n `gt_nhay`.

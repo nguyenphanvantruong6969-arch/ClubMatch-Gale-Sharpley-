@@ -76,6 +76,9 @@ function capNhatViecTiepTheo() {
     el("viecTiepTheoCau").textContent = t("ux1a_cau_" + tt.ten, { n: tt.n });
     el("viecTiepTheoNut").textContent = t("ux1a_nut_" + tt.ten, { n: tt.n });
     viecTiepTheoHanhDong = VIEC_HANH_DONG[tt.ten];
+    /* Còn người chưa có chỗ vẫn tải được kết quả ngay (nút phụ, cùng hành động với trạng thái "xuất"). */
+    const nut2 = el("viecTiepTheoNut2");
+    if (nut2) nut2.hidden = tt.ten !== "xu_ly";
   });
 }
 
@@ -83,6 +86,8 @@ function initViecTiepTheo() {
   const nut = el("viecTiepTheoNut");
   if (!nut) return;
   nut.addEventListener("click", () => { if (viecTiepTheoHanhDong) viecTiepTheoHanhDong(); });
+  const nut2 = el("viecTiepTheoNut2");
+  if (nut2) nut2.addEventListener("click", () => VIEC_HANH_DONG.xuat());
   window.addEventListener("langchange", capNhatViecTiepTheo);
   capNhatViecTiepTheo();
 }
