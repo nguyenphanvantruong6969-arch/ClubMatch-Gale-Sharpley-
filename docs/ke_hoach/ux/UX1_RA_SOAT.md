@@ -83,3 +83,11 @@ Kết luận kỹ thuật:
   Ngoài ra có 434 cảnh báo `wharton_chua_dung_het` riêng lẻ.
 - Phiếu giải trình hiện **chưa ghi huy chương em đã đặt và loại của từng CLB** (`giai_trinh._lua_chon_fa`,
   `phieu_giai_trinh._bang`).
+
+### 6b. Bật huy chương làm mặc định? (Truong quyết 2026-11-18: KHÔNG)
+- Thử bật FA rồi nạp sổ cũ: `SO_NHAP_DQT_120HS_HOP_LE.xlsx` bị chặn (9 `fa_clb_thieu_loai`, 3 `fa_thieu_clb_tu_do`,
+  674 `fa_huy_chuong_gia_tri_sai` vì cột đó đang chứa điểm quyết tâm); `SO_NHAP_MAU_120HS_3BUOI.xlsx` bị chặn
+  (9 + 3). Script: `docs/ke_hoach/ux/thu_fa_so_cu.py`.
+- Huy chương và điểm quyết tâm là MỘT cột; bật FA thì huy chương thay điểm quyết tâm. 60/30/10 chỉ mang thứ tự
+  (khoá ưu tiên dùng `-huy chương`; ở CLB Tuyển chọn điểm thi đứng trước).
+- Quyết định: giữ mặc định; app gợi ý bật khi sổ có huy chương; ô huy chương nhận cả chữ Vàng/Bạc/Đồng (kế hoạch L5, L5b).

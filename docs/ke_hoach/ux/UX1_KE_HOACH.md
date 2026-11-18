@@ -7,6 +7,10 @@
 > user guide, demo/video scripts and poster are updated in the same item.
 > Truong 2026-11-18 (2): the slip must also show the **medal each student placed** and the **type of each club**
 > (FA mode). Findings on how the algorithm uses medals/types: audit §6.
+> Truong 2026-11-18 (3): **keep the default config** (determination points ON, FA/medals OFF — invariant 1 safe);
+> the app suggests turning medals on when a book has medal/type columns (L5); medal cells accept the words
+> Vàng/Bạc/Đồng as well as 60/30/10 (L5b). Medals and determination points stay ONE column: FA medals REPLACE
+> determination points (no parallel use — that would need a new choice function, invariant 8).
 > Branch: create `claude/ux1-giao-dien` from `claude/gt-tich-hop`; handoff file `docs/phien/claude__ux1-giao-dien.md`.
 
 ## 0. Hard rules (from CLAUDE.md — read it)
@@ -93,6 +97,22 @@
   `wharton_chua_dung_het` warnings into one line ("n em chưa đặt đủ huy chương"). Detection: the medal column header
   `so_nhap.TEN_COT_HUY_CHUONG` or a `Loại` column on the club sheet (`fa_cot_bo_qua` already fires).
   This changes messages only — no change to what is stored or how the run decides (invariant 1).
+- **One-click enable:** the import preview message above carries a button "Bật chế độ huy chương" that sets
+  `rules.fa_daa = true` for the current workspace through the existing config path (`update_workspace_config`,
+  admin only, audit row), then re-runs the preview. Never switch it on silently.
+- **Sample books:** "Tải sổ nhập mẫu" offers two choices: "Sổ mẫu thường" (today's file, byte-identical) and
+  "Sổ mẫu có huy chương" (`so_nhap` builder with `che_do_fa=True`). Its Hướng dẫn says the mode must be on.
+
+### L5b — Medal words in the book
+- When FA is on, a medal cell may hold `60/30/10` **or** `Vàng/Bạc/Đồng` (case/diacritics-insensitive, also
+  `vang/bac/dong`, `gold/silver/bronze`); map to 60/30/10 at the reading layer only (where `diem_w` is parsed in
+  `api_nhap.py`, and the same in the Forms import path if it carries medals). Stored values stay 60/30/10, so
+  `fa_daa.kiem_ho_so_huy_chuong` and the run are unchanged. Unknown words keep today's `fa_huy_chuong_gia_tri_sai`.
+  FA off: words are not mapped (the column is ignored/handled as today). Update the sample book's Hướng dẫn line
+  ("60 (vàng), 30 (bạc), 10 (đồng)" → "Vàng / Bạc / Đồng hoặc 60 / 30 / 10").
+- Done when: tests: same book with numbers vs words gives identical `wharton_bids` rows and identical
+  `match_results`; mixed-case and unaccented words map; a wrong word still errors; FA off unchanged; invariant 1 green.
+
 - Done when: tests that assert these codes/severities are updated (grep `health_oversubscribed` in `tests/`);
   invariant 1 green (severity is display-only).
 
