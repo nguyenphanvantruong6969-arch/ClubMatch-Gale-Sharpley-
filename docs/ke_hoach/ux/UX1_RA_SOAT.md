@@ -107,3 +107,8 @@ Kết luận kỹ thuật:
 
 Mặc định hiện tại đã đúng ý Truong: `wharton = true` (điểm quyết tâm BẬT), `fa_daa = false` (huy chương TẮT) —
 `cau_hinh_ws.MAC_DINH_TRUONG_HOC`. Màn mới chỉ đổi cách trình bày và lưu, không đổi mặc định (bất biến 1).
+
+### 7b. Sửa đề xuất (2026-11-18)
+Đề xuất "thanh Lưu + danh sách yêu cầu đỏ" trước đó vẫn quá rắc rối; thay bằng: một câu hỏi, ba thẻ, bấm là lưu
+(có Hoàn tác), thiếu dữ liệu thì sửa ngay tại chỗ, tính năng sau khi xếp chuyển thành nút hành động ở màn Kết quả.
+Chi tiết: kế hoạch L2b.

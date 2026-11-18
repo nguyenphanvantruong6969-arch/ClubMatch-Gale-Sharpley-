@@ -65,39 +65,56 @@
 - Done when: `tests/test_giao_dien_ux1_dieu_huong.py` checks 4 groups for admin, correct groups for `giao_vien` and
   the student lock (GT I2) still blocks every tab; all existing `test_giao_dien_*` pass unchanged or with selector-only edits.
 
-### L2b — One settings screen, live, one Save (Truong 2026-11-18 (4))
-Audit §7. Today settings live in 3 places with 2 switches for determination points; medal mode cannot be changed
-after creation in the UI (backend allows it). Build ONE screen inside the **Cài đặt** group:
-- **Section "Cách xếp"**: today's "Tiêu chí xếp" controls (priority, tier mode, score scope, tier list), minus its
-  "Xét điểm quyết tâm" checkbox (moved below).
-- **Section "Điểm quyết tâm"** — switch, **ON by default**, with two sub-options (radio, visible only when ON):
-  - "Chia 100 điểm cho các nguyện vọng" (default) → `wharton=true, fa_daa=false`;
-  - "Huy chương — Vàng 60 · Bạc 30 · Đồng 10" → `wharton=true, fa_daa=true`. Values are shown read-only (they
-    only set the order Vàng > Bạc > Đồng; `fa_daa.GIA_TRI_HUY_CHUONG`). Under it, one line per requirement with a live
-    check on current data: "Mỗi {slot_l} cần cột Loại (n còn thiếu)", "Mỗi {session_l} cần ít nhất một {slot_l} Tự
-    do (n buổi còn thiếu)", "Thử cấu hình chưa hỗ trợ huy chương" (`gt2_thu_chua_ho_tro_fa`). Missing data does not
-    block saving, but the line turns red and the "Next step" bar (L1) shows it.
-  - Switch OFF → `wharton=false, fa_daa=false` (medal option hidden).
-- **Section "Sau khi xếp"**: the 5 post-run features + complaint days. Shown enabled only with "Huy chương";
-  otherwise folded with one sentence ("Cần chọn Huy chương ở mục Điểm quyết tâm"), no grey checkbox wall.
-- **One save bar** (sticky bottom of the screen): "n thay đổi chưa lưu · Lưu · Huỷ". Save sends ALL changed keys
-  in ONE `update_workspace_config({rules})` call; on success apply live with `wsApDungCauHinh(r.data.config)`
-  and reload the tabs that depend on it (no app restart, no page reload). Leaving the screen with unsaved changes
-  asks "Lưu / Bỏ thay đổi / Ở lại". Server errors show next to the field (`errors[].params`), nothing half-saved.
-- If an official run exists, the save bar adds: "Kết quả đã xếp không đổi; lần chạy sau dùng cài đặt mới."
-  (`run_history` untouched — invariant 4).
-- Remove the duplicate switches: "Dùng điểm quyết tâm" from the ⋯ dialog (`wsMoTinhNang`) and "Xét điểm quyết tâm"
-  from Tiêu chí (`#gt2TcWharton` — keep the id on the new switch if tests use it, or update the tests). The ⋯ menu
-  item "Tính năng sau khi xếp…" becomes "Cài đặt…" and opens this screen. The creation wizard (`wsBuoc3`) uses the
-  same component so wording matches.
-- Keep GT2 rules: "Áp dụng tiêu chí" from a trial (`_luat_ap_dung`) still writes `wharton`/`fa_daa`; the screen
-  re-reads config after it. Admin only (`quan_tri`); config save already audited — check one row per save.
-- Done when: `tests/test_giao_dien_ux1_cai_dat.py`: default shows switch ON + "Chia 100 điểm" selected;
-  choosing Huy chương shows 60/30/10 and requirement lines with correct counts on `SO_NHAP_DQT_120HS_HOP_LE.xlsx`
-  (9 clubs missing type, 3 sessions missing Tự do); one Save writes `wharton`, `fa_daa` and post-run keys in one
-  call; after Save the import preview and run use the new mode without restart; unsaved-leave prompt works;
-  turning the switch OFF forces `fa_daa=false`. Backend unit test: config round-trip for the three choices.
-  Invariant 1 green (default config unchanged).
+### L2b — Settings: one question, saved instantly (Truong 2026-11-18 (5), replaces the earlier "save bar" design)
+Design rule: a setting exists only if a teacher can answer it in one sentence. Everything else is either a fact the
+app shows, or an action offered where it is needed. Audit §7 lists today's problems.
+
+**The whole settings page = one question + one sentence.**
+```
+Cài đặt · Trường THPT …
+
+Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?
+
+ ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+ │ Chỉ xếp thứ tự   │  │ ✓ Chia 100 điểm  │  │ Huy chương        │
+ │ NV1, NV2, NV3…   │  │ cho các nguyện   │  │ Vàng · Bạc · Đồng │
+ │                  │  │ vọng (mặc định)  │  │ (60 · 30 · 10)    │
+ └──────────────────┘  └──────────────────┘  └──────────────────┘
+
+Cách xét khi đông: điểm thi → điểm quyết tâm → bốc thăm.   Thay đổi…
+```
+- Three cards map 1:1 to rules: "Chỉ xếp thứ tự" → `wharton=false, fa_daa=false`; "Chia 100 điểm" (default,
+  selected) → `wharton=true, fa_daa=false`; "Huy chương" → `wharton=true, fa_daa=true`. The 60·30·10 line is
+  read-only (`fa_daa.GIA_TRI_HUY_CHUONG`; only the order matters). Card text uses vocabulary placeholders.
+- **No Save button.** Clicking a card saves at once with one `update_workspace_config({rules})` call, applies
+  live (`wsApDungCauHinh`, reload dependent tabs) and shows a toast "Đã chuyển sang Huy chương · **Hoàn tác**"
+  (10 s; Undo = the same call with the previous values). Errors: the card does not change and the message sits
+  under it. One audit row per change (verify `update_workspace_config` logs; add if not).
+- The sentence "Cách xét khi đông…" is generated from the effective rules (reuse GT2's "Thứ tự xếp hiện tại").
+  "Thay đổi…" opens today's "Tiêu chí xếp" controls in a sheet with its own "Xong" (advanced, rarely used; GT2
+  "Thử cấu hình" lives there too). Its "Xét điểm quyết tâm" checkbox is removed — the cards own `wharton`.
+- **Choosing "Huy chương" with data that is not ready → fix in place, not a red checklist.** The card opens a small
+  panel listing only what is missing, with the control to fix it right there: each club without a type gets three
+  pills "Tự do · Giới hạn · Tuyển chọn" (saves per click through the existing club update path); a session without
+  any "Tự do" club is shown as "Thứ 4 cần một CLB Tự do — chọn: [CLB…]". When nothing is missing the panel says
+  "Sẵn sàng" and closes. The run stays blocked by the backend checks until ready (unchanged), and the L1 "Next step"
+  bar points here.
+- **Post-run features are not settings.** Remove the 5 checkboxes + complaint-days field from settings. Offer each
+  as an action on the results screen at the moment it makes sense, e.g. "Mở vòng 2 cho 32 em chưa có CLB",
+  "Nhận khiếu nại trong [3] ngày", "Điểm danh 3 buổi đầu", "Mời danh sách chờ vào chỗ trống", "Thu phản hồi".
+  Pressing one sets its flag (`fa_vong_2`, `fa_khieu_nai` + `fa_khieu_nai_so_ngay`, `fa_diem_danh`,
+  `fa_vong_doi_cho`, `fa_phan_hoi`) and opens the existing panel. They require Huy chương (backend
+  `fa_tinh_nang_can_fa`): in other modes they are simply not shown.
+- **One place only.** The ⋯ menu item "Tính năng sau khi xếp…" becomes "Cài đặt…" and opens this page; the ⋯ dialog
+  `wsMoTinhNang` is deleted; the creation wizard step (`wsBuoc3`) shows the same three cards (same component).
+- If an official run exists, the toast adds one line: "Kết quả đã xếp giữ nguyên; lần chạy sau dùng cách mới."
+  (`run_history` untouched — invariant 4). Default config is unchanged (invariant 1).
+- Done when: `tests/test_giao_dien_ux1_cai_dat.py`: a new workspace shows "Chia 100 điểm" selected; one click on
+  "Huy chương" saves (config read back: `wharton=true, fa_daa=true`) with no other click; Undo restores; the fix-in-
+  place panel on `SO_NHAP_DQT_120HS_HOP_LE.xlsx` lists 9 clubs without type and 3 sessions without Tự do, and
+  setting them through the pills makes it say "Sẵn sàng"; "Chỉ xếp thứ tự" forces `fa_daa=false`; no settings view
+  contains a post-run checkbox; the results screen offers "Mở vòng 2" only in medal mode; changing mode needs no
+  restart. Selector-only updates to tests that used `#wsTnWharton` / `#gt2TcWharton`.
 
 ### L3 — Results page: lookup first, one export menu
 - Move the lookup panel `#gtPanel` to the TOP of view `results` (above the table). Remove the GT4 jump link

@@ -13,7 +13,7 @@ Targets and lot details: `docs/ke_hoach/ux/UX1_KE_HOACH.md` §1–§2.
 - [x] UX1a audit (`docs/ke_hoach/ux/UX1_RA_SOAT.md`, on claude/gt-tich-hop c21a334)
 - [ ] L1 "Next step" bar (`js/17_viec_tiep_theo.js`) — test `tests/test_giao_dien_ux1_tiep_theo.py`
 - [ ] L2 navigation 6 → 4 groups, keep every `data-tab` — test `tests/test_giao_dien_ux1_dieu_huong.py`
-- [ ] L2b one settings screen: Điểm quyết tâm switch (ON) → sub-option 100 điểm / Huy chương 60·30·10; live requirement checks; one Save bar, applied live — test `tests/test_giao_dien_ux1_cai_dat.py`
+- [ ] L2b settings = one question, 3 cards (Chỉ xếp thứ tự / Chia 100 điểm [default] / Huy chương 60·30·10), saved on click + Undo; fix-in-place panel; post-run features become actions on results — test `tests/test_giao_dien_ux1_cai_dat.py`
 - [ ] L3 lookup first on results; one "Xuất…" menu; import message once
 - [ ] L4 role pages (giao_vien) + "Báo cáo tổng hợp" (`bao_cao_tong_hop.py`, `export_bao_cao_tong_hop`, QUYEN)
 - [ ] L5 oversubscription warnings info → medium, shorter text; medal book in non-FA mode → clear message + link to FA setting
