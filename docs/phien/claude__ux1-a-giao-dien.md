@@ -10,12 +10,12 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [x] L2b settings 3 cards + Undo + fix-in-place + post-run actions (e3d0382; checker NO BUGS c2aff36; new dat_loai_clb/get_san_sang_huy_chuong; 'Thay đổi…' → Quản lý › Nâng cao)
 - [x] L3 lookup first, Xuất… menu, import msg once (e812cf3+fix1 3ba1efe; checker NO BUGS 2a226e0; admin export 4 clicks on real 120 book incl. 32 unplaced)
 - [x] L5 warnings medium + short; medal-book message + Bật chế độ huy chương; two sample books (764c85c; checker NO BUGS 576ad3f)
-- [ ] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) → 60/30/10
+- [x] L5b medal words → 60/30/10 at reading layer, FA only (4cae05b; checker NO BUGS d9605ec)
 - [ ] L8-A docs + screenshots + After table
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: L1, L2, L2b, L3, L5. In progress: L5b (GO sent).
+- Done: L1, L2, L2b, L3, L5, L5b. In progress: L8-A (GO sent).
 
 ## Sessions
 | Role | Session | State |
