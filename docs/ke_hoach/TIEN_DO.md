@@ -181,3 +181,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | I2 fix3 (trả lời phiên cũ) | xong (chờ checker) | 2026-11-17 | js/14_giai_trinh.js, js/16_tai_khoan.js, CHANGELOG.md | tests/test_giao_dien_gt3_hoc_sinh.py |
 | I3 (nhật ký thao tác GT1/GT2; tích hợp) | xong | 2026-11-17 | CHANGELOG.md | tests/test_gt_tich_hop.py |
 | I4 (ca mẫu + gói minh chứng; tích hợp) | xong (checker: 1 lỗi tên thẻ, đã sửa) | 2026-11-17 | du_lieu_test/tao_ca_mau_giai_trinh.py, docs/giai_trinh/{CA_MAU.md,tao_goi_minh_chung.py,GOI_MINH_CHUNG.docx,GOI_MINH_CHUNG.pdf,KICH_BAN_*.md,HUONG_DAN_CHAY.md,SO_DO_LUONG.md}, CHANGELOG.md | tests/test_gt_tich_hop.py, tests/test_gt3_tai_lieu.py |
+| UX1a (rà soát thao tác; mục mới UX1) | xong | 2026-11-18 | docs/ke_hoach/ux/*, CHANGELOG.md | — (chỉ tài liệu) |

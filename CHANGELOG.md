@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1a: rà soát thao tác người dùng (mục mới UX1, Truong duyệt)
+
+- Mới: `docs/ke_hoach/ux/UX1_RA_SOAT.md` (số lần bấm theo 4 nhóm người dùng, 10 vấn đề, đề xuất UX1b/UX1c), ảnh `docs/ke_hoach/ux/anh/`, script chụp `docs/ke_hoach/ux/chup_luong_chinh.py`, `chup_phieu.py` (dữ liệu MÔ PHỎNG).
+- Không đổi mã sản phẩm; không test mới.
+
 ## 2026-11-17 — I4 sửa (tích hợp): tên thẻ trong kịch bản demo/video
 
 - `docs/giai_trinh/KICH_BAN_DEMO.md` (bước 10), `KICH_BAN_VIDEO.md` (dòng 9): "thẻ Quản trị" → "thẻ Quản lý" (nhãn thật, i18n `nav_admin`); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.

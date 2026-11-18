@@ -37,6 +37,18 @@ Truong merges to main himself. No PR.
       regenerates CA_MAU.md byte-identically and every case matches app output. All data SIMULATED, labelled so.
 - [x] §6 CI gate on `claude/gt-tich-hop` (572685d; fixes: CA_MAU.md LF via .gitattributes, code-map wording) (lint + all shards + coverage ≥ 85 %).
 
+## Next feature on this branch: UX1 — direct UI, fewer steps (opened by Truong 2026-11-18, outside the 33-item registry)
+Audit (UX1a, DONE by Opus): `docs/ke_hoach/ux/UX1_RA_SOAT.md` (+ screenshots `docs/ke_hoach/ux/anh/`). UI-only; invariant 1 untouched.
+- [x] UX1a audit: click counts per role (admin teacher, homeroom teacher, student, principal), 10 issues, proposal.
+- [ ] UX1b (Sonnet): "Next step" bar with one state-driven primary button; nav 6 -> 4 tabs (Data / Run / Results & slips /
+      Settings, advanced folded); lookup at TOP of results; one "Export…" menu; role entry pages (homeroom, principal);
+      fix warning severity + triple "Xong" message. Update `tests/test_giao_dien_*` to the new layout (never skip).
+- [ ] UX1c (Sonnet): slip "Print / Save PDF" button opens print dialog directly (no new library); slip adds top summary
+      line, scores of every tested club, small own-score-vs-cutoff chart (tested clubs only, no other students),
+      next-steps block when unplaced; plain words for "Bốc thăm"/"số khoá"; same column names on screen and slip.
+      Keep `phieu_giai_trinh.py` privacy rule.
+- Open questions for Truong: §5 of the audit (cutoff on slip; renaming tabs in user guide/demo scripts/poster).
+
 ## Current state (overwrite each handoff)
 - Done: I0-I4. I4 checker bug 1 ("thẻ Quản trị" -> "thẻ Quản lý" in KICH_BAN_DEMO/VIDEO) fixed + test
   `test_gt3_tai_lieu.py::test_ten_the_trong_kich_ban_khop_nhan_giao_dien`; GOI_MINH_CHUNG.docx/.pdf rebuilt.
@@ -74,6 +86,8 @@ Truong merges to main himself. No PR.
 | 2026-11-17 | Opus (lead) | GT2 DONE verified (run 44018417803 success); branch created, GT1 merged, file written | — |
 
 | 2026-11-17 | Opus (orig. GT3 lead) | I4 fix + 2 CI fixes, CI green 572685d, Status DONE | integration sessions had stopped on spend limit |
+
+| 2026-11-18 | Opus | UX1 opened; UX1a audit written (screenshots, click counts, plan UX1b/UX1c) | waiting Truong §5 answers |
 
 ## Final summary (§10, tiếng Việt)
 - **Xong:** I0 gộp GT1+GT2+GT3; I1 bảng quyền cho hàm GT1/GT2; I2 chế độ học sinh tự tra cứu khoá ở backend; I3 nhật ký cho chạy thử / áp dụng tiêu chí / mã tra cứu / phiếu; I4 ca mẫu + gói minh chứng (`docs/giai_trinh/CA_MAU.md`, `GOI_MINH_CHUNG.docx/.pdf`). Không lô nào bỏ.
