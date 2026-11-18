@@ -91,3 +91,19 @@ Kết luận kỹ thuật:
 - Huy chương và điểm quyết tâm là MỘT cột; bật FA thì huy chương thay điểm quyết tâm. 60/30/10 chỉ mang thứ tự
   (khoá ưu tiên dùng `-huy chương`; ở CLB Tuyển chọn điểm thi đứng trước).
 - Quyết định: giữ mặc định; app gợi ý bật khi sổ có huy chương; ô huy chương nhận cả chữ Vàng/Bạc/Đồng (kế hoạch L5, L5b).
+
+## 7. Màn cài đặt workspace (kiểm 2026-11-18)
+
+Ảnh: `anh/08_tieu_chi.png`, `anh/10_ws_menu.png`, `anh/11_ws_tinh_nang.png`.
+
+| Vấn đề | Chi tiết |
+|---|---|
+| Cài đặt nằm ở **3 nơi** | (1) trình tạo workspace — chỉ lúc tạo; (2) menu ⋯ → "Tính năng sau khi xếp…" — ẩn trong menu; (3) Quản lý → "Tiêu chí xếp" |
+| **Điểm quyết tâm có 2 công tắc** | "Dùng điểm quyết tâm" ở hộp (2) và "Xét điểm quyết tâm" ở khung (3) — cùng `rules.wharton` |
+| **Huy chương không đổi được sau khi tạo** | hộp (2) ghi "Phải chọn 'Xếp theo loại CLB và huy chương' khi tạo không gian làm việc". Backend (`update_workspace_config`) thật ra cho đổi; chỉ giao diện chặn |
+| Hộp (2) trộn hai loại việc | điểm quyết tâm (luật xếp) nằm chung với 5 tính năng sau khi xếp; 5 ô đó xám, bấm không được khi chưa bật huy chương |
+| Lưu từng phần | mỗi nơi một nút Lưu riêng; hộp (2) chỉ gửi điểm quyết tâm HOẶC các tính năng sau xếp tuỳ trạng thái (`wsMoTinhNang`) |
+| Huy chương không hiện giá trị | không nơi nào ghi Vàng 60 / Bạc 30 / Đồng 10 trên màn cài đặt |
+
+Mặc định hiện tại đã đúng ý Truong: `wharton = true` (điểm quyết tâm BẬT), `fa_daa = false` (huy chương TẮT) —
+`cau_hinh_ws.MAC_DINH_TRUONG_HOC`. Màn mới chỉ đổi cách trình bày và lưu, không đổi mặc định (bất biến 1).
