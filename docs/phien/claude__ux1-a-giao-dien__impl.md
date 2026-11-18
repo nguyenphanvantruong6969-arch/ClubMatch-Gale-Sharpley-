@@ -18,14 +18,11 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [ ] L8-A docs + screenshots + After table
 
 ## Current state (overwrite each handoff)
-- L1, L2, L2b, L3, L5 passed by checker. L5b is coded (uncommitted work committed as WIP): so_nhap.chuan_hoa_chu_huy_chuong + CHU_HUY_CHUONG,
-  call in api_nhap._doc_so_nhap only when fa_daa is on; medal sample book: Excel dropdown "Vàng,Bạc,Đồng,60,30,10" + Hướng dẫn line
-  "Vàng / Bạc / Đồng hoặc 60 / 30 / 10" (plain sample verified identical to HEAD by cell values + validations); small L5 follow-up done
-  (#btnBatHuyChuong only when a workspace is open). New tests: tests/test_ux1_l5b_huy_chuong_chu.py (9), one more in tests/test_giao_dien_ux1_nhap_so.py.
-- L5b regression passed (2727 passed, 1 skipped, pre-existing skip). Reported to lead. (Old note, done:) read the regression result (/tmp/claude-0/l5b.txt, may be gone: re-run test_so_nhap*, test_ws_so_nhap*, test_skill_sinh_du_lieu,
-  test_fa_*, test_ux1_*, test_i18n_*, test_mau_forms_thi_clb, test_giao_dien_ux1_*, test_giao_dien_upload, test_giao_dien_fa_*, test_ws_nhan in the
-  BACKGROUND with nohup + Monitor), fix reds, add CHANGELOG + TIEN_DO rows, commit "UX1A-L5b: ...", push, report
-  "CODER DONE L5b | base 1ec7b23 head <sha>" to the lead (ruff clean, kiem_nhanh 7/7 were green before the regression).
+- L1, L2, L2b, L3, L5 passed by checker. L5b reported as "CODER DONE L5b | base 1ec7b23 head 4cae05b" (pushed); waiting for the checker verdict.
+- Nothing half-finished. Next lot from the lead: L8-A (user guide, demo/video scripts, poster, code map for navigation/settings,
+  re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py, "After" click table for admin/homeroom/principal tasks), then CI gate (lead).
+- L5b summary: so_nhap.chuan_hoa_chu_huy_chuong (reading layer, only when fa_daa on) in api_nhap._doc_so_nhap; medal sample book dropdown + Hướng dẫn
+  wording; #btnBatHuyChuong only with an open workspace. Tests: tests/test_ux1_l5b_huy_chuong_chu.py. Regression 2727 passed, 1 skipped (pre-existing).
 - Open: the checker's L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md was never read.
 - Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here and keep this file current. The Stop hook "hand off" nag cannot be
   silenced by me (.claude/phien_vai.json edit was denied): update this file, push, continue.
@@ -53,7 +50,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - Each shared-file edit is marked UX1A / ux1a_ keys; js/_danh_sach.txt has 17_viec_tiep_theo and 18_cai_dat before 08_khoi_dong.
 
 ## Next steps (ordered)
-1. Finish L5b (see Current state), report to lead.
+1. Handle REVIEW/FIX for L5b if the lead sends them.
 2. Then L8-A; (L5b was, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
 4. Per lot: failing test -> minimal code -> related tests -> `kiem_nhanh.py --co-so origin/main --so-seed 20`
    (after git fetch origin main) -> soat-ma notes -> CHANGELOG + TIEN_DO row -> commit "UX1A-L<n>: …" -> push -> report
@@ -74,3 +71,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | 2026-11-18 | Sonnet 5.5 | L1, L2, L2b, L3 (+fix1) coded, tested, pushed; reports sent to lead | handoff at ~400k tokens; head 3ba1efe |
 | 2026-11-18 | Sonnet 5.5 | L5 coded, regression-fixed, pushed 764c85c, reported to lead | continues in same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L5b coded + tests; WIP pushed; regression pending | same session per lead |
+| 2026-11-18 | Sonnet 5.5 | L5b done, pushed 4cae05b, reported | same session per lead |
