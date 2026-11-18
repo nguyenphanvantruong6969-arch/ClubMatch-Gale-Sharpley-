@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1210 556" width="1210" height="556" role="img" aria-label="Sơ đồ luồng dữ liệu của phần mềm xếp câu lạc bộ (dữ liệu mô phỏng)">
+<defs><marker id="mui" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#334155"/></marker></defs>
+<rect x="0" y="0" width="1210" height="556" fill="#ffffff"/>
+<text x="30" y="34" font-family="sans-serif" font-size="20" font-weight="700" fill="#0f172a">Luồng dữ liệu: từ biểu mẫu đến kết quả (dữ liệu mô phỏng)</text>
+<rect x="30" y="86" width="250" height="96" rx="10" fill="#dbeafe" stroke="#334155" stroke-width="1.5"/>
+<text x="44" y="114" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">1. Biểu mẫu</text>
+<text x="44" y="138" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Học sinh đăng ký</text>
+<text x="44" y="162" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Google / Microsoft Forms</text>
+<rect x="330" y="86" width="250" height="96" rx="10" fill="#dbeafe" stroke="#334155" stroke-width="1.5"/>
+<text x="344" y="114" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">2. Sổ nhập CLB</text>
+<text x="344" y="138" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Một tệp Excel</text>
+<text x="344" y="162" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">CLB, chỉ tiêu, nguyện vọng, điểm</text>
+<rect x="630" y="86" width="250" height="96" rx="10" fill="#fef3c7" stroke="#334155" stroke-width="1.5"/>
+<text x="644" y="114" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">3. Kiểm khi nhập</text>
+<text x="644" y="138" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Báo lỗi theo dòng</text>
+<text x="644" y="162" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Sai thì không nạp gì</text>
+<rect x="930" y="86" width="250" height="96" rx="10" fill="#dcfce7" stroke="#334155" stroke-width="1.5"/>
+<text x="944" y="114" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">4. Sao lưu</text>
+<text x="944" y="138" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Chép app.db</text>
+<text x="944" y="162" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Trước mọi lần chạy</text>
+<rect x="30" y="238" width="250" height="96" rx="10" fill="#fef3c7" stroke="#334155" stroke-width="1.5"/>
+<text x="44" y="266" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">5. Kiểm dữ liệu</text>
+<text x="44" y="290" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">validate</text>
+<text x="44" y="314" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Thiếu / mâu thuẫn thì dừng</text>
+<rect x="330" y="238" width="250" height="96" rx="10" fill="#dcfce7" stroke="#334155" stroke-width="1.5"/>
+<text x="344" y="266" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">6. Khoá bốc thăm</text>
+<text x="344" y="290" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">stb_lottery</text>
+<text x="344" y="314" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Một lần, dùng lại sau đó</text>
+<rect x="630" y="238" width="250" height="96" rx="10" fill="#dcfce7" stroke="#334155" stroke-width="1.5"/>
+<text x="644" y="266" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">7. Xếp chỗ</text>
+<text x="644" y="290" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">rbda_cascade</text>
+<text x="644" y="314" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Học sinh đề xuất + dự trữ mềm</text>
+<rect x="930" y="238" width="250" height="96" rx="10" fill="#fef3c7" stroke="#334155" stroke-width="1.5"/>
+<text x="944" y="266" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">8. Soát ổn định</text>
+<text x="944" y="290" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">verify</text>
+<text x="944" y="314" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Không có cặp phá vỡ</text>
+<rect x="30" y="390" width="250" height="96" rx="10" fill="#dcfce7" stroke="#334155" stroke-width="1.5"/>
+<text x="44" y="418" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">9. Lưu kết quả</text>
+<text x="44" y="442" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Một giao dịch</text>
+<text x="44" y="466" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Lỗi thì quay về như cũ</text>
+<rect x="330" y="390" width="250" height="96" rx="10" fill="#ede9fe" stroke="#334155" stroke-width="1.5"/>
+<text x="344" y="418" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">10. Xuất tệp</text>
+<text x="344" y="442" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Excel / CSV</text>
+<text x="344" y="466" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">match_results.csv</text>
+<rect x="630" y="390" width="250" height="96" rx="10" fill="#ede9fe" stroke="#334155" stroke-width="1.5"/>
+<text x="644" y="418" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">11. Tra cứu và khiếu nại</text>
+<text x="644" y="442" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">Quản trị / giáo viên</text>
+<text x="644" y="466" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Phiếu, khiếu nại, lý do</text>
+<rect x="930" y="390" width="250" height="96" rx="10" fill="#ede9fe" stroke="#334155" stroke-width="1.5"/>
+<text x="944" y="418" font-family="sans-serif" font-size="16" font-weight="700" fill="#0f172a">12. Lịch sử chạy</text>
+<text x="944" y="442" font-family="sans-serif" font-size="14" font-weight="400" fill="#0f172a">run_history</text>
+<text x="944" y="466" font-family="sans-serif" font-size="13" font-weight="400" fill="#0f172a">Chỉ thêm, không sửa, không xoá</text>
+<line x1="280" y1="134" x2="328" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="580" y1="134" x2="628" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="880" y1="134" x2="928" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<polyline points="1055,182 1055,210 155,210 155,236" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="280" y1="286" x2="328" y2="286" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="580" y1="286" x2="628" y2="286" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="880" y1="286" x2="928" y2="286" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<polyline points="1055,334 1055,362 155,362 155,388" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="280" y1="438" x2="328" y2="438" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="580" y1="438" x2="628" y2="438" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<line x1="880" y1="438" x2="928" y2="438" stroke="#334155" stroke-width="2" marker-end="url(#mui)"/>
+<rect x="30" y="512" width="18" height="18" rx="4" fill="#dbeafe" stroke="#334155"/>
+<text x="56" y="527" font-family="sans-serif" font-size="13" fill="#0f172a">Dữ liệu vào</text>
+<rect x="240" y="512" width="18" height="18" rx="4" fill="#fef3c7" stroke="#334155"/>
+<text x="266" y="527" font-family="sans-serif" font-size="13" fill="#0f172a">Kiểm tra</text>
+<rect x="450" y="512" width="18" height="18" rx="4" fill="#dcfce7" stroke="#334155"/>
+<text x="476" y="527" font-family="sans-serif" font-size="13" fill="#0f172a">Chạy xếp</text>
+<rect x="660" y="512" width="18" height="18" rx="4" fill="#ede9fe" stroke="#334155"/>
+<text x="686" y="527" font-family="sans-serif" font-size="13" fill="#0f172a">Kết quả và tra cứu</text>
+</svg>

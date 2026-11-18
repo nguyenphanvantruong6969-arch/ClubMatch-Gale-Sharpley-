@@ -174,6 +174,18 @@ MESSAGES = {
         "vi": "Không mở được thư mục \"{path}\". Chỉ mở được thư mục chứa tệp phần mềm vừa xuất.",
         "en": "Cannot open the folder \"{path}\". Only folders holding files this app exported can be opened.",
     },
+    "gt4_ngay_sai": {
+        "vi": "Ngày lọc phải có dạng năm-tháng-ngày, ví dụ 2026-11-17.",
+        "en": "The filter date must look like year-month-day, for example 2026-11-17.",
+    },
+    "tep_khong_hop_le": {
+        "vi": "Không mở được tệp \"{path}\". Chỉ mở được tệp báo cáo (.html, .csv, .xlsx, .pdf, .docx) mà phần mềm vừa xuất.",
+        "en": "Cannot open the file \"{path}\". Only report files (.html, .csv, .xlsx, .pdf, .docx) this app exported can be opened.",
+    },
+    "tep_khong_mo_duoc": {
+        "vi": "Máy không mở được tệp. Hãy mở thủ công theo đường dẫn hiện trên màn hình.",
+        "en": "The computer could not open the file. Open it by hand using the path shown on screen.",
+    },
     "thu_muc_khong_mo_duoc": {
         "vi": "Máy không mở được thư mục. Hãy mở thủ công theo đường dẫn hiện trên màn hình.",
         "en": "The computer could not open the folder. Open it by hand using the path shown on screen.",
@@ -1458,6 +1470,132 @@ MESSAGES = {
               "form: {chi_tiet} Rename them in the exam file, then generate the form again.",
     },
     # === end SG-C ===
+    # === GT1 ===
+    "gt1_khong_co_hoc_sinh": {
+        "vi": "Không tìm thấy học sinh này, hoặc chưa có học sinh nào được chọn.",
+        "en": "That student was not found, or no student was selected.",
+    },
+    "gt1_chua_chay": {
+        "vi": "Chưa có lần xếp nào để giải thích. Hãy chạy xếp trước.",
+        "en": "There is no allocation run to explain yet. Run the allocation first.",
+    },
+    "gt1_lan_chay_cu": {
+        "vi": "Chỉ giải thích được lần xếp mới nhất, vì kết quả các lần cũ không còn được lưu.",
+        "en": "Only the latest allocation run can be explained, because results of older runs are not stored.",
+    },
+    "gt1_khong_tim_thay_lan_chay": {
+        "vi": "Không tìm thấy lần xếp này.",
+        "en": "That allocation run was not found.",
+    },
+    "gt1_ma_sai": {
+        "vi": "Mã học sinh hoặc mã tra cứu chưa đúng. Hãy kiểm tra lại trên phiếu.",
+        "en": "The student ID or lookup code is not right. Please check the slip.",
+    },
+    "gt1_tam_khoa": {
+        "vi": "Đã nhập sai quá nhiều lần.",
+        "en": "Too many wrong tries.",
+    },
+    "gt1_chua_co_ma": {
+        "vi": "Chưa tạo mã tra cứu nào. Hãy tạo mã trước.",
+        "en": "No lookup codes have been created yet. Create the codes first.",
+    },
+    # === end GT1 ===
+    # === GT2 ===
+    "gt2_tieu_chi_khong_hop_le": {
+        "vi": "Tiêu chí thử chưa hợp lệ: {chi_tiet} Hãy chọn lại trong các lựa chọn có sẵn.",
+        "en": "The trial criteria are not valid: {chi_tiet} Pick again from the available choices.",
+    },
+    "gt2_chua_co_lan_chinh_thuc": {
+        "vi": "Chưa thể chạy thử vì chưa có lần xếp chính thức nào (hoặc số bốc thăm chưa được khoá). Hãy chạy xếp chính thức một lần trước.",
+        "en": "A trial can't run yet because there is no official allocation yet (or the draw numbers are not locked). Run the official allocation once first.",
+    },
+    "gt2_thu_chua_ho_tro_fa": {
+        "vi": "Chạy thử chưa hỗ trợ chế độ huy chương. Hãy tắt chế độ huy chương trong tiêu chí thử, hoặc dùng lần xếp chính thức.",
+        "en": "Trial runs do not support medal mode yet. Turn medal mode off in the trial criteria, or use the official allocation.",
+    },
+    "gt2_thu_stb_chua_day": {
+        "vi": "Chưa thể chạy thử vì có {n} người mới chưa có số bốc thăm. Hãy chạy xếp chính thức để bổ sung số bốc thăm rồi thử lại.",
+        "en": "A trial can't run because {n} new people have no draw number yet. Run the official allocation to add their numbers, then try again.",
+    },
+    "gt2_lan_chay_khong_co": {
+        "vi": "Không tìm thấy lần chạy số {run_id}. Hãy chọn một lần trong danh sách.",
+        "en": "Run number {run_id} was not found. Please pick one from the list.",
+    },
+    "gt2_so_sanh_lan_cu": {
+        "vi": "Lần xếp chính thức số {run_id} đã được thay bằng lần mới hơn nên không còn kết quả chi tiết để so sánh. Hãy so với lần chính thức mới nhất hoặc một lần chạy thử.",
+        "en": "Official allocation number {run_id} has been replaced by a newer one, so its detailed results are no longer available. Compare with the latest official allocation or with a trial.",
+    },
+    "gt2_ap_dung_khong_khop": {
+        "vi": "Không thể lưu tiêu chí của lần chạy thử số {run_id} thành đúng như lần đó đã dùng. Cấu hình hiện tại chưa bị đổi. Hãy chọn lại các tiêu chí ở khung phía trên rồi lưu.",
+        "en": "The criteria of trial {run_id} cannot be saved exactly as that trial used them. The current settings were not changed. Please set the criteria in the box above and save.",
+    },
+    # === end GT2 ===
+    # === GT3 (L1) ===
+    "gt3_loi_nhat_ky": {
+        "vi": "Không đọc hoặc xuất được nhật ký thao tác. Hãy thử lại.",
+        "en": "The activity log could not be read or exported. Please try again.",
+    },
+    "gt3_loi_tai_khoan": {
+        "vi": "Không xử lý được yêu cầu về tài khoản. Hãy thử lại.",
+        "en": "The account request could not be processed. Please try again.",
+    },
+    "gt3_ten_khong_hop_le": {
+        "vi": "Tên tài khoản không được để trống và dài tối đa {toi_da} ký tự.",
+        "en": "The account name must not be empty and can be at most {toi_da} characters long.",
+    },
+    "gt3_vai_khong_hop_le": {
+        "vi": "Vai trò không hợp lệ. Chọn \"quản trị\" hoặc \"giáo viên\".",
+        "en": "Invalid role. Choose \"administrator\" or \"teacher\".",
+    },
+    "gt3_mat_khau_ngan": {
+        "vi": "Mật khẩu cần có ít nhất {toi_thieu} ký tự.",
+        "en": "The password must have at least {toi_thieu} characters.",
+    },
+    "gt3_tai_khoan_dau_phai_quan_tri": {
+        "vi": "Tài khoản đầu tiên phải là tài khoản quản trị.",
+        "en": "The first account must be an administrator account.",
+    },
+    "gt3_ten_da_co": {
+        "vi": "Tên tài khoản này đã có. Hãy chọn tên khác.",
+        "en": "This account name already exists. Choose another name.",
+    },
+    "gt3_can_dang_nhap": {
+        "vi": "Cần đăng nhập để làm việc này.",
+        "en": "Sign-in is required to do this.",
+    },
+    "gt3_che_do_hoc_sinh": {
+        "vi": "Máy đang ở chế độ học sinh tự xem kết quả. Chỉ người quản trị mới thoát được.",
+        "en": "This device is in student self-lookup mode. Only an administrator can leave it.",
+    },
+    "gt3_khong_du_quyen": {
+        "vi": "Tài khoản này không có quyền làm việc này. Hãy nhờ người quản trị.",
+        "en": "This account is not allowed to do this. Ask an administrator.",
+    },
+    "gt3_chua_co_tai_khoan": {
+        "vi": "Chưa có tài khoản nào nên không cần đăng nhập.",
+        "en": "There are no accounts yet, so no sign-in is needed.",
+    },
+    "gt3_sai_thong_tin": {
+        "vi": "Tên tài khoản hoặc mật khẩu không đúng.",
+        "en": "The account name or password is not correct.",
+    },
+    "gt3_tam_khoa": {
+        "vi": "Nhập sai quá nhiều lần. Tài khoản tạm khoá, thử lại sau {giay} giây.",
+        "en": "Too many wrong attempts. The account is locked for now; try again in {giay} seconds.",
+    },
+    "gt3_khong_xoa_quan_tri_cuoi": {
+        "vi": "Không thể xoá tài khoản quản trị cuối cùng. Hãy tạo thêm một quản trị khác trước.",
+        "en": "The last administrator account cannot be deleted. Create another administrator first.",
+    },
+    "gt3_khong_thay_tai_khoan": {
+        "vi": "Không tìm thấy tài khoản này.",
+        "en": "This account was not found.",
+    },
+    "gt3_khong_xoa_duoc_tai_khoan": {
+        "vi": "Không xoá được tài khoản. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
+        "en": "The accounts could not be cleared. Check the data file and try again.",
+    },
+    # === end GT3 (L1) ===
 }
 
 

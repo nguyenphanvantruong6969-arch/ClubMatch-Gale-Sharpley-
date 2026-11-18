@@ -12,4 +12,7 @@
 11_chuan_bi
 12_chuan_bi_nap
 13_chuan_bi_bo
+14_giai_trinh
+15_tieu_chi
+16_tai_khoan
 08_khoi_dong

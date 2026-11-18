@@ -29,14 +29,14 @@
       </details>
     </div>
 
-    <button type="button" class="ws-switcher" id="btnWorkspace" hidden aria-haspopup="dialog"
+    <button type="button" class="ws-switcher" id="btnWorkspace" data-quyen="quan_tri" hidden aria-haspopup="dialog"
             data-i18n-aria-label="ws_switcher_aria">
       <span class="ws-switcher-nhan" data-i18n="ws_switcher_nhan">Không gian làm việc</span>
       <span class="ws-switcher-ten" id="wsTenHienTai"></span>
     </button>
 
     <div class="nav-group">
-      <button class="nav-item is-active" data-tab="pipeline">
+      <button class="nav-item is-active" data-tab="pipeline" data-quyen="quan_tri">
         <span data-i18n="nav_pipeline">Xếp CLB</span>
       </button>
       <button class="nav-item" data-tab="results">
@@ -48,18 +48,20 @@
       <button class="nav-item" data-tab="fallback">
         <span data-i18n="nav_fallback">Nhập nguyện vọng</span>
       </button>
-      <button class="nav-item" data-tab="admin">
+      <button class="nav-item" data-tab="admin" data-quyen="quan_tri">
         <span data-i18n="nav_admin">Quản lý</span>
       </button>
       <button class="nav-item" data-tab="scoring">
         <span data-i18n="nav_scoring">Nhập điểm</span>
       </button>
-      <button class="nav-item" data-tab="chuan_bi" hidden>
+      <button class="nav-item" data-tab="chuan_bi" data-quyen="quan_tri" hidden>
         <span data-i18n="nav_chuan_bi">Chuẩn bị đợt</span>
       </button>
     </div>
 
     <div class="sidebar-footer">
+      <!-- GT3-L1: tài khoản + đăng nhập; js/16_tai_khoan.js vẽ nội dung -->
+      <div id="tkThanhBen" class="tk-thanh-ben" hidden></div>
       <!-- T3-12: chỉ hiện khi mất kết nối; hai dòng dưới chỉ để ẩn (mốc đồng bộ cho chương trình và test). -->
       <div id="dbStatusLine" class="db-status" data-i18n="db_status_loading" hidden>Đang tải…</div>
       <div id="lastRunLine" class="db-status db-status-sub" hidden></div>
@@ -244,8 +246,9 @@
     <section class="view" id="view-results">
       <header class="view-header">
         <h1 data-i18n="kq_title">Kết quả</h1>
-        <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào. Không có điểm hay số bốc thăm.</p>
+        <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào. Bảng này không có điểm hay số bốc thăm; khung tra cứu (dành cho quản trị và giáo viên) cho xem chi tiết riêng của từng {person_l}.</p>
       </header>
+      <p class="kq-nhay"><a href="#gtPanel" id="gtNhay" class="btn btn-ghost" data-i18n="gt_nhay">Tra cứu một {person_l} ↓</a></p>
       <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
         <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
       </div>
@@ -312,6 +315,35 @@
             <button class="btn btn-primary" id="btnGuiPhanHoi" type="button" data-i18n="ph_gui">Gửi</button>
           </div>
           <div id="phKetQua" class="save-feedback" role="status"></div>
+        </div>
+      </div>
+      <!-- GT1: tra cứu một học sinh (giải thích vì sao em được/không được từng CLB); js/14_giai_trinh.js -->
+      <div class="panel gt-ui" id="gtPanel">
+        <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
+        <div class="panel-body">
+          <ol class="gt-buoc" id="gtBuocHuongDan" data-quyen="quan_tri" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
+            <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
+            <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
+            <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
+            <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
+          </ol>
+          <div class="search-row">
+            <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
+            <input type="text" id="gtTim" class="text-input" data-i18n-placeholder="gt_tim_ph" placeholder="Tìm mã hoặc tên">
+          </div>
+          <ul id="gtDs" class="gt-ds"></ul>
+          <div id="gtKetQua" role="status"></div>
+          <div class="search-row" id="gtIn" hidden>
+            <button type="button" class="btn btn-secondary" id="btnGtInMot" data-i18n="gt_in_mot">In phiếu cho {person_l} này</button>
+            <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
+          </div>
+          <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+          <div class="search-row">
+            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
+            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
+            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+          </div>
+          <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
         </div>
       </div>
     </section>
@@ -634,7 +666,7 @@
           </div>
           <div class="panel-actions">
             <select id="v2Buoi" class="text-input text-input-sm" data-i18n-aria-label="kn_buoi"></select>
-            <button class="btn btn-primary" id="btnChayVong2" type="button" data-i18n="v2_chay">Chạy vòng 2</button>
+            <button class="btn btn-primary" id="btnChayVong2" data-quyen="quan_tri" type="button" data-i18n="v2_chay">Chạy vòng 2</button>
           </div>
         </div>
         <div class="panel-body">
@@ -735,7 +767,7 @@
           <input type="text" id="studentSearchInput" class="text-input" data-i18n-placeholder="placeholder_fallback_search" placeholder="Nhập mã học sinh hoặc tên…">
           <button class="btn btn-secondary" id="btnStudentSearch" data-i18n="btn_search">Tìm</button>
         </div>
-        <div class="new-student-row">
+        <div class="new-student-row" data-quyen="quan_tri">
           <input type="text" id="newStudentId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_new_student_id" placeholder="Mã học sinh mới">
           <input type="text" id="newStudentName" class="text-input" data-i18n-placeholder="placeholder_full_name" placeholder="Họ tên">
           <select id="newStudentLop" class="text-input text-input-sm" data-i18n-aria-label="kiosk_lop_nhan" hidden></select>
@@ -758,8 +790,8 @@
               <summary class="btn btn-ghost" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn">⋯</summary>
               <div class="menu-khac-hop">
                 <button type="button" class="menu-khac-muc" id="btnXuatEmNay" data-i18n="btn_xuat_em_nay">Xuất CSV học sinh này</button>
-                <button type="button" class="menu-khac-muc" id="btnResetStudentEntry" data-giu-menu="1" data-i18n="btn_reset_entry">Xoá toàn bộ phiếu của học sinh này</button>
-                <button type="button" class="menu-khac-muc nguy-hiem" id="btnDeleteStudent" data-giu-menu="1" data-i18n="btn_delete_student">Xoá học sinh</button>
+                <button type="button" class="menu-khac-muc" id="btnResetStudentEntry" data-quyen="quan_tri" data-giu-menu="1" data-i18n="btn_reset_entry">Xoá toàn bộ phiếu của học sinh này</button>
+                <button type="button" class="menu-khac-muc nguy-hiem" id="btnDeleteStudent" data-quyen="quan_tri" data-giu-menu="1" data-i18n="btn_delete_student">Xoá học sinh</button>
               </div>
             </details>
           </div>
@@ -810,7 +842,7 @@
             <p class="hint-text" data-i18n="fallback_step3_hint">Chia đúng 100 điểm cho các CLB đã thi và đúng 100 điểm cho các CLB không thi, ở mỗi buổi. Ô để trống tính là 0 điểm.</p>
             <p class="wh-khoa-ghi-chu" id="fbWhartonKhoa" role="status" hidden data-i18n="wharton_da_khoa_kiosk">Điểm quyết tâm đang khoá vì đã chạy xếp. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần sửa.</p>
             <div id="fbWhartonBody"></div>
-            <button class="btn btn-primary" id="btnSubmitWharton" data-i18n="btn_save_wharton">Lưu điểm quyết tâm</button>
+            <button class="btn btn-primary" id="btnSubmitWharton" data-quyen="quan_tri" data-i18n="btn_save_wharton">Lưu điểm quyết tâm</button>
             <span class="chua-luu" id="chuaLuuWharton" hidden data-i18n="fallback_chua_luu">• Chưa lưu</span>
             <span class="save-feedback" role="status" aria-live="polite" id="whartonFeedback"></span>
           </div>
@@ -852,6 +884,93 @@
             <tbody id="dbBangBody"></tbody>
           </table>
           <div id="dbFeedback" class="save-feedback" role="status"></div>
+        </div>
+      </div>
+
+      <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
+      <div class="panel gt-ui" id="gt2TieuChiPanel">
+        <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tiêu chí xếp</h2></div>
+        <div class="panel-body">
+          <p class="hint-text" data-i18n="gt2_tc_mo_ta">Thứ tự dưới đây là cách phần mềm xếp những người cùng đăng ký một suất. Chỉ chọn được trong các lựa chọn có sẵn.</p>
+          <div class="gt2-luoi">
+            <section class="gt2-the gt2-the-thu-tu" aria-labelledby="gt2TcThuTuTieuDe">
+              <h3 id="gt2TcThuTuTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_thu_tu">Thứ tự xếp hiện tại</h3>
+              <div id="gt2TcDanhSach"></div>
+              <div id="gt2TcKhongDung" class="gt2-khong-dung" hidden></div>
+              <p class="hint-text" id="gt2TcGhiChu"></p>
+            </section>
+            <section class="gt2-the gt2-form" id="gt2TcDieuKhien" aria-labelledby="gt2TcFormTieuDe">
+              <h3 id="gt2TcFormTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_chon">Chọn cách xếp</h3>
+              <div class="club-field">
+                <label for="gt2TcPriority" id="gt2TcPriorityNhan"></label>
+                <select id="gt2TcPriority" class="text-input"></select>
+              </div>
+              <div class="club-field">
+                <label for="gt2TcTierMode" id="gt2TcTierModeNhan"></label>
+                <select id="gt2TcTierMode" class="text-input"></select>
+              </div>
+              <div class="club-field">
+                <label for="gt2TcScoreScope" id="gt2TcScoreScopeNhan"></label>
+                <select id="gt2TcScoreScope" class="text-input"></select>
+              </div>
+              <div class="club-field">
+                <label for="gt2TcTiers" id="gt2TcTiersNhan"></label>
+                <textarea id="gt2TcTiers" class="text-input" rows="3" aria-describedby="gt2TcTiersGoiY"></textarea>
+                <p class="hint-text gt2-goi-y" id="gt2TcTiersGoiY" data-i18n="gt2_tc_nhom_goi_y">Mỗi dòng một nhóm, nhóm đầu được ưu tiên nhất</p>
+              </div>
+              <div class="check-khoi">
+                <label class="check-row"><input type="checkbox" id="gt2TcWharton"> <span id="gt2TcWhartonNhan"></span></label>
+                <p class="hint-text check-goi-y" id="gt2TcWhartonGoiY" hidden></p>
+              </div>
+              <div class="panel-actions gt2-nut-phai">
+                <button class="btn btn-primary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
+              </div>
+              <div id="gt2TcPhanHoi" class="save-feedback" role="status"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- GT2-L3: thử cấu hình — chạy thử, so hai lần chạy (js/15_tieu_chi.js). Không đổi kết quả chính thức. -->
+      <div class="panel gt-ui" id="gt2ThuPanel">
+        <div class="panel-head"><h2 data-i18n="gt2_thu_tieu_de">Thử cấu hình</h2></div>
+        <div class="panel-body">
+          <ol class="gt-buoc gt2-buoc" id="gt2ThuBuoc" data-i18n-aria-label="gt2_thu_buoc_aria" aria-label="Các bước thử cấu hình">
+            <li data-i18n="gt2_thu_buoc_1">Chạy thử</li>
+            <li data-i18n="gt2_thu_buoc_2">Chọn hai lần để so sánh</li>
+            <li data-i18n="gt2_thu_buoc_3">So sánh, xuất tệp</li>
+          </ol>
+          <p class="hint-text" data-i18n="gt2_thu_mo_ta">Chạy thử dùng đúng các lựa chọn đang hiện ở khung Tiêu chí xếp phía trên. Kết quả thử không được công bố và không thay kết quả chính thức.</p>
+          <div id="gt2ThuCanhBao" class="canh-bao-vang gt2-canh-bao" role="status" hidden></div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="gt2ThuChay" type="button" data-i18n="gt2_thu_chay">Chạy thử</button>
+          </div>
+          <div id="gt2ThuPhanHoi" class="save-feedback" role="status"></div>
+          <p class="hint-text" id="gt2ThuChuaCo" hidden data-i18n="gt2_thu_chua_co">Chưa có lần chạy nào để so sánh. Hãy chạy xếp chính thức rồi chạy thử.</p>
+          <div class="gt2-hai-o" id="gt2ThuChon" hidden>
+            <div class="club-field">
+              <label for="gt2ThuA" data-i18n="gt2_thu_lan_a">Lần thứ nhất</label>
+              <select id="gt2ThuA" class="text-input"></select>
+            </div>
+            <div class="club-field">
+              <label for="gt2ThuB" data-i18n="gt2_thu_lan_b">Lần thứ hai</label>
+              <select id="gt2ThuB" class="text-input"></select>
+            </div>
+          </div>
+          <div class="panel-actions" id="gt2ThuNut" hidden>
+            <button class="btn btn-secondary" id="gt2ThuSoSanh" type="button" data-i18n="gt2_thu_so_sanh">So sánh</button>
+            <button class="btn btn-secondary" id="gt2ThuXuatHtml" type="button" data-i18n="gt2_thu_xuat_html">Xuất trang so sánh</button>
+            <button class="btn btn-secondary" id="gt2ThuXuatCsv" type="button" data-i18n="gt2_thu_xuat_csv">Xuất danh sách đổi chỗ (CSV)</button>
+          </div>
+          <div id="gt2ThuXuat" class="save-feedback" role="status"></div>
+          <div id="gt2ThuKetQua" class="gt2-ket-qua"></div>
+          <div id="gt2ThuApDung" class="gt2-ap-dung" hidden>
+            <h3 data-i18n="gt2_ad_tieu_de">Dùng tiêu chí của một lần chạy thử</h3>
+            <p class="hint-text" data-i18n="gt2_ad_ghi_chu">Nút dưới đây chỉ lưu tiêu chí của lần thử vào cấu hình. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.</p>
+            <ul id="gt2ThuApDungDs" class="gt2-ad-ds"></ul>
+            <div id="gt2ThuApDungXacNhan" class="run-confirm-bar" hidden></div>
+            <div id="gt2ThuApDungPhanHoi" class="save-feedback" role="status"></div>
+          </div>
         </div>
       </div>
 
@@ -1236,6 +1355,48 @@
   <div class="ws-hop" id="wsHop"></div>
 </div>
 
+<!-- GT1-L4: chế độ học sinh tự tra cứu (toàn màn hình, không có nút quản trị); js/14_giai_trinh.js -->
+<div id="gtHs" class="gt-hs gt-ui" aria-labelledby="gtHsTieuDe" hidden>
+  <div class="gt-hs-khung">
+    <div class="gt-hs-dau">
+      <p id="gtHsTruong" class="gt-hs-truong" hidden></p>
+      <button type="button" class="lang-toggle" id="btnGtHsNgonNgu" data-i18n="lang_toggle_label">EN</button>
+    </div>
+    <h1 id="gtHsTieuDe" data-i18n="gt_hs_tieu_de">Xem kết quả của mình</h1>
+    <p class="gt-hs-huong-dan" data-i18n="gt_hs_huong_dan">Nhập mã và mã tra cứu in trên phiếu.</p>
+    <form id="gtHsForm" class="gt-hs-form" autocomplete="off">
+      <div class="gt-hs-o">
+        <label for="gtHsMa" data-i18n="gt_hs_ma_nhan">Mã {person_l}</label>
+        <input type="text" id="gtHsMa" class="text-input" data-i18n-placeholder="gt_hs_ma_ph" placeholder="Mã" autocomplete="off">
+      </div>
+      <div class="gt-hs-o">
+        <label for="gtHsMaTra" data-i18n="gt_hs_ma_tra_nhan">Mã tra cứu</label>
+        <input type="password" id="gtHsMaTra" class="text-input" data-i18n-placeholder="gt_hs_ma_tra_ph" placeholder="Mã tra cứu" autocomplete="off">
+        <label class="gt-hs-hien"><input type="checkbox" id="gtHsHien"> <span data-i18n="gt_hs_hien">Hiện mã</span></label>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btnGtHsXem" data-i18n="gt_hs_xem">Xem</button>
+    </form>
+    <div id="gtHsDemNguoc" class="gt-hs-dem" role="status" aria-live="polite" hidden></div>
+    <div id="gtHsLoi" class="gt-hs-loi" role="alert"></div>
+    <div id="gtHsKetQua" role="status"></div>
+    <div class="search-row">
+      <button type="button" class="btn btn-secondary" id="btnGtHsThoat" data-i18n="gt_hs_thoat">Thoát</button>
+      <span id="gtHsXacNhan" hidden>
+        <span data-i18n="gt_hs_hoi_thoat">Thoát chế độ này?</span>
+        <button type="button" class="btn btn-primary" id="btnGtHsCo" data-i18n="gt_hs_co_thoat">Có, thoát</button>
+        <button type="button" class="btn btn-secondary" id="btnGtHsKhong" data-i18n="gt_hs_khong">Ở lại</button>
+      </span>
+    </div>
+    <!-- I2: có tài khoản thì thoát chế độ này cần đăng nhập quản trị -->
+    <form id="gtHsQuanTri" class="gt-hs-qt" autocomplete="off" hidden>
+      <p data-i18n="gt_hs_qt_huong_dan">Nhập tài khoản quản trị để thoát.</p>
+      <input type="text" id="gtHsQtTen" class="text-input" data-i18n-placeholder="tk_ten" placeholder="Tên tài khoản" autocomplete="off">
+      <input type="password" id="gtHsQtMk" class="text-input" data-i18n-placeholder="tk_mat_khau" placeholder="Mật khẩu" autocomplete="off">
+      <button type="submit" class="btn btn-primary" id="btnGtHsQtThoat" data-i18n="gt_hs_co">Thoát</button>
+      <div id="gtHsQtLoi" class="gt-hs-loi" role="alert"></div>
+    </form>
+  </div>
+</div>
 <script src="i18n_loi.js"></script>
 <script src="i18n.js"></script>
 <script src="chung.js"></script>
@@ -1253,6 +1414,9 @@
 <script src="js/11_chuan_bi.js"></script>
 <script src="js/12_chuan_bi_nap.js"></script>
 <script src="js/13_chuan_bi_bo.js"></script>
+<script src="js/14_giai_trinh.js"></script>
+<script src="js/15_tieu_chi.js"></script><!-- GT2 -->
+<script src="js/16_tai_khoan.js"></script>
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

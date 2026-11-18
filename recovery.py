@@ -194,6 +194,14 @@ class RecoveryAPI:
 
         return _fail(err("recovery_all_backups_corrupt", n_tried=len(tried)))
 
+    def xoa_tai_khoan_sau_sao_luu(self):
+        """GT3-L1: quên mật khẩu quản trị → sao lưu rồi xoá HẾT tài khoản (xem hàm cùng tên ở cuối tệp)."""
+        try:
+            n = xoa_tai_khoan_sau_sao_luu(self.db_path)
+        except Exception as e:
+            return _fail(err("gt3_khong_xoa_duoc_tai_khoan", detail=str(e)))
+        return _ok({"so_tai_khoan_da_xoa": n})
+
     def start_fresh(self):
         """Phương án cuối, MANG TÍNH PHÁ HUỶ ở mức nhẹ: đổi tên file hỏng
         sang <db>.corrupt-<timestamp> (không xoá) rồi tạo app.db mới
@@ -211,3 +219,106 @@ class RecoveryAPI:
             "db_path": self.db_path,
             "detail": err("recovery_fresh_created"),
         })
+
+
+def xoa_tai_khoan_sau_sao_luu(db_path: str) -> int:
+    """GT3-L1 — lối thoát khi quên mật khẩu quản trị: SAO LƯU `db_path`, rồi xoá mọi dòng `tai_khoan`.
+
+    Quyền ở đây là quyền trên máy (ai cầm được máy kiosk và tệp app.db thì vốn đã có toàn quyền). Xoá xong,
+    phần mềm chạy lại không cần đăng nhập cho tới khi tạo tài khoản quản trị mới. Dữ liệu phân bổ không bị
+    đụng tới; bản sao lưu (`<db>.bak-<thời gian>`) còn nguyên bảng tài khoản cũ. Trả số tài khoản đã xoá.
+    Không tự tạo CSDL nếu tệp không có. Chạy khi phần mềm ĐÃ ĐÓNG:
+
+        python recovery.py --xoa-tai-khoan <đường dẫn app.db>
+    """
+    if not os.path.isfile(db_path):
+        raise FileNotFoundError("khong co tep CSDL")
+    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    sao_luu = f"{db_path}.bak-{ts}"
+    src = sqlite3.connect(db_path)
+    try:
+        dst = sqlite3.connect(sao_luu)
+        try:
+            src.backup(dst)
+        finally:
+            dst.close()
+        co_bang = src.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='tai_khoan'").fetchone()
+        if not co_bang:
+            return 0
+        n = src.execute("SELECT COUNT(*) FROM tai_khoan").fetchone()[0]
+        src.execute("DELETE FROM tai_khoan")
+        src.commit()
+        return n
+    finally:
+        src.close()
+
+
+def chay_xoa_tai_khoan_dong_lenh(argv, thu_muc_goc, doc=input, ghi=print) -> int:
+    """GT4-L3 (D4-4) — `main.py --xoa-tai-khoan [APP_DB] [--yes]`: lối thoát khi quên mật khẩu quản trị cho bản
+    đóng gói (không có Python). Chạy TRƯỚC khi mở cửa sổ. Có đường dẫn thì chỉ xử lý tệp đó; không thì xử lý mọi
+    `app.db` của các workspace cạnh chương trình (và `app.db` cũ nếu còn). Hỏi gõ `XOA` trừ khi có `--yes`; sao lưu
+    rồi xoá HẾT tài khoản, dữ liệu phân bổ giữ nguyên. Trả mã thoát: 0 xong, 1 không xác nhận / lỗi, 2 không có tệp.
+    Không có nút nào trong ứng dụng làm việc này (xoá tài khoản bằng nút sẽ làm hỏng mục đích của đăng nhập)."""
+    import workspace
+
+    vao = [a for a in argv if a != "--xoa-tai-khoan"]
+    dong_y = "--yes" in vao
+    duong = [a for a in vao if not a.startswith("--")]
+    if duong:
+        muc_tieu = [os.path.abspath(duong[0])]
+    else:
+        muc_tieu = [w["path"] for w in workspace.danh_sach(thu_muc_goc)]
+        cu = os.path.join(thu_muc_goc, "app.db")
+        if os.path.isfile(cu):
+            muc_tieu.append(cu)
+    muc_tieu = [m for m in muc_tieu if os.path.isfile(m)]
+    if not muc_tieu:
+        ghi("Không tìm thấy tệp dữ liệu nào để khôi phục. Hãy chạy lại và ghi kèm đường dẫn tới tệp app.db.")
+        return 2
+    ghi("Sẽ XOÁ TOÀN BỘ tài khoản (quản trị và giáo viên) trong %d tệp dữ liệu:" % len(muc_tieu))
+    for m in muc_tieu:
+        ghi("  - " + m)
+    ghi("Mỗi tệp được sao lưu trước. Kết quả xếp, danh sách học sinh và câu lạc bộ giữ nguyên.")
+    if not dong_y:
+        try:
+            tra_loi = doc("Go XOA de xac nhan: ")
+        except (EOFError, OSError, RuntimeError):
+            tra_loi = ""
+        if (tra_loi or "").strip() != "XOA":
+            ghi("Chưa xác nhận nên KHÔNG xoá gì.")
+            return 1
+    tong = 0
+    for m in muc_tieu:
+        try:
+            tong += xoa_tai_khoan_sau_sao_luu(m)
+        except Exception as exc:
+            ghi("Không xoá được tài khoản trong %s: %s" % (m, exc))
+            return 1
+    ghi("Đã sao lưu và xoá %d tài khoản. Mở lại phần mềm: chưa có tài khoản nào, hãy tạo tài khoản quản trị mới "
+        "ngay trước khi đưa máy cho học sinh dùng." % tong)
+    return 0
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    # Windows (bảng mã cp1252) không in được tiếng Việt: ép UTF-8, ký tự không in được thì thay dấu hỏi.
+    for _luong in (sys.stdout, sys.stderr):
+        if hasattr(_luong, "reconfigure"):
+            _luong.reconfigure(encoding="utf-8", errors="replace")
+
+    ap = argparse.ArgumentParser(
+        description="Công cụ khôi phục (chạy khi phần mềm đã đóng).")
+    ap.add_argument(
+        "--xoa-tai-khoan", metavar="APP_DB",
+        help="Quên mật khẩu quản trị: sao lưu APP_DB rồi xoá toàn bộ tài khoản (dữ liệu phân bổ giữ nguyên).")
+    args = ap.parse_args()
+    if not args.xoa_tai_khoan:
+        ap.print_help()
+    else:
+        try:
+            print("Da sao luu va xoa %d tai khoan." % xoa_tai_khoan_sau_sao_luu(args.xoa_tai_khoan))
+        except Exception as exc:
+            raise SystemExit("Khong xoa duoc tai khoan: %s" % exc)

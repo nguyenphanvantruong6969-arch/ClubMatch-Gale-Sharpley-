@@ -48,6 +48,8 @@ MA_MOI_SAU_ANH_CHUP = {
     # === A: FA-M7 G0 ===
     "forms_duong_chua_chon", "forms_chua_co_clb", "forms_chua_co_de", "phieu_clb_tep_sai", "de_thi_tep_sai", "forms_khong_chuyen_duoc", "forms_tep_khong_nhan_ra", "forms_tep_sai_duong", "forms_tep_sau_ket_qua", "forms_can_chon_de", "forms_thieu_email", "forms_thieu_danh_sach_lop", "forms_tao_bo_loi",
     # === end A ===
+    # GT4 (mã mới: bộ lọc ngày nhật ký, mở tệp vừa xuất)
+    "gt4_ngay_sai", "tep_khong_hop_le", "tep_khong_mo_duoc",
 
     # (spacer: unchanged line between marker blocks)
 
@@ -62,11 +64,25 @@ MA_MOI_SAU_ANH_CHUP = {
 
     # (spacer: unchanged line between marker blocks)
 
+    # === GT2: add below ===
+    "gt2_chua_co_lan_chinh_thuc", "gt2_lan_chay_khong_co", "gt2_so_sanh_lan_cu", "gt2_ap_dung_khong_khop", "gt2_thu_chua_ho_tro_fa",
+    "gt2_thu_stb_chua_day", "gt2_tieu_chi_khong_hop_le",
+    # === end GT2 ===
+
+    # (spacer: unchanged line between marker blocks)
+
     # === SG-A: add below ===
     "fa_clb_tuyen_chon_chua_co_diem",
     "khieu_nai_hs_khong_co", "khieu_nai_chua_co_ket_qua",
     "stb_buoi_luu_lan_dau", "stb_buoi_ve_lai",  # FA-SC-L5
     # === end SG-A ===
+
+    # (spacer: unchanged line between marker blocks)
+
+    # === GT1 ===
+    "gt1_khong_co_hoc_sinh", "gt1_chua_chay", "gt1_lan_chay_cu", "gt1_khong_tim_thay_lan_chay",
+    "gt1_ma_sai", "gt1_tam_khoa", "gt1_chua_co_ma",
+    # === end GT1 ===
 
     # (spacer: unchanged line between marker blocks)
 
@@ -342,7 +358,7 @@ def test_moi_ma_loi_mac_dinh_giong_het_anh_chup(anh_chup):
     assert not lech, lech
     # và không thêm/bớt mã nào ngoài các mã workspace đã ghi sau ảnh chụp
     moi = set(MESSAGES) - set(anh_chup["loi"])
-    assert all(m.startswith("ws_") or m in MA_MOI_SAU_ANH_CHUP for m in moi), moi
+    assert all(m.startswith(("ws_", "gt3_")) or m in MA_MOI_SAU_ANH_CHUP for m in moi), moi  # gt3_: GT3 (tài khoản, nhật ký)
 
 
 def test_format_message_mac_dinh_khong_doi(anh_chup):

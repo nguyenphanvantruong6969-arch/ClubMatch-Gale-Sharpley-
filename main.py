@@ -7,6 +7,7 @@ làm js_api để index.html và js/*.js gọi qua window.pywebview.api.*
 Cách chạy:
     python3 main.py                    # mở một workspace trong workspaces/ cạnh main.py
     python3 main.py /duong/dan/khac.db # chỉ định DB khác (một DB, không workspace)
+    python3 main.py --xoa-tai-khoan [app.db] [--yes]   # quên mật khẩu quản trị (không mở cửa sổ)
 """
 
 import os
@@ -245,5 +246,37 @@ def main() -> None:
     )
 
 
+def _xoa_tai_khoan_dong_lenh() -> int:
+    """GT4-L3 (D4-4): `--xoa-tai-khoan` chạy ở đây, TRƯỚC khi nạp pywebview hay mở cửa sổ. Bản đóng gói không có
+    cửa sổ lệnh (console=False): kết quả còn được ghi vào QUEN_MAT_KHAU_ket_qua.txt cạnh tệp chạy để tệp .bat in ra."""
+    import recovery
+
+    for luong in (sys.stdout, sys.stderr):
+        if luong is not None and hasattr(luong, "reconfigure"):
+            luong.reconfigure(encoding="utf-8", errors="replace")
+    dong = []
+
+    def ghi(van_ban):
+        dong.append(van_ban)
+        if sys.stdout is not None:
+            print(van_ban)
+
+    def hoi(loi_nhac):
+        if sys.stdin is None:
+            raise EOFError
+        return input(loi_nhac)
+
+    ma = recovery.chay_xoa_tai_khoan_dong_lenh(sys.argv[1:], BASE_DIR, doc=hoi, ghi=ghi)
+    if getattr(sys, "frozen", False):
+        try:
+            with open(os.path.join(BASE_DIR, "QUEN_MAT_KHAU_ket_qua.txt"), "w", encoding="utf-8") as f:
+                f.write("\n".join(dong) + "\n")
+        except OSError:
+            pass
+    return ma
+
+
 if __name__ == "__main__":
+    if "--xoa-tai-khoan" in sys.argv:
+        sys.exit(_xoa_tai_khoan_dong_lenh())
     main()

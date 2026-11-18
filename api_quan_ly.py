@@ -535,13 +535,15 @@ class QuanLyMixin:
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 
-    def search_students(self, query: str):
+    def search_students(self, query: str, lop=None):
+        """`lop` (GT1-L2, mặc định None = như cũ): chỉ lấy học sinh của lớp đó."""
         try:
             with self._ket_noi_doc() as cur:
+                loc, tham = ("", ()) if not lop else (" AND class_id = ?", (lop,))
                 rows = cur.execute(
                     "SELECT student_id, name FROM students "
-                    "WHERE khop_tim(student_id, ?) OR khop_tim(name, ?) LIMIT 20",
-                    (query, query),
+                    "WHERE (khop_tim(student_id, ?) OR khop_tim(name, ?))" + loc + " LIMIT 20",
+                    (query, query) + tham,
                 ).fetchall()
             return _ok([dict(r) for r in rows])
         except Exception as e:
@@ -1666,6 +1668,7 @@ class QuanLyMixin:
                 if self._co_diem(cu_w):
                     self._ghi_nhat_ky_wharton(cur, "quan_ly", "xoa_mot_em", student_id, cu_w, None)
                 cur.execute("DELETE FROM giu_cho WHERE student_id = ?", (student_id,))
+                cur.execute("DELETE FROM ma_tra_cuu WHERE student_id = ?", (student_id,))   # GT1-L4
                 cur.execute("DELETE FROM club_test_selection WHERE student_id = ?", (student_id,))
                 cur.execute("DELETE FROM preferences WHERE student_id = ?", (student_id,))
                 cur.execute("DELETE FROM club_scores WHERE student_id = ?", (student_id,))
@@ -1691,9 +1694,9 @@ class QuanLyMixin:
 
     # Xoá theo đúng thứ tự phụ thuộc: bảng con trước, students sau cùng.
     _RESET_BANG = {
-        "hoc_sinh": ["giu_cho", "wharton_bids", "match_results", "club_scores", "preferences",
+        "hoc_sinh": ["giu_cho", "ma_tra_cuu", "wharton_bids", "match_results", "club_scores", "preferences",
                      "club_test_selection", "students"],
-        "tat_ca":   ["giu_cho", "wharton_bids", "match_results", "club_scores", "preferences",
+        "tat_ca":   ["giu_cho", "ma_tra_cuu", "wharton_bids", "match_results", "club_scores", "preferences",
                      "club_test_selection", "students", "clubs"],
     }
 
@@ -1736,6 +1739,8 @@ class QuanLyMixin:
                 # hồi y hệt trước vòng 2.
                 if not da_xoa.get("giu_cho"):
                     da_xoa.pop("giu_cho", None)      # FA-1: chỉ hiện khi có dòng bị xoá
+                if not da_xoa.get("ma_tra_cuu"):
+                    da_xoa.pop("ma_tra_cuu", None)   # GT1-L4: chỉ hiện khi có mã bị xoá
                 if not da_xoa.get("wharton_bids"):
                     da_xoa.pop("wharton_bids", None)
                 else:

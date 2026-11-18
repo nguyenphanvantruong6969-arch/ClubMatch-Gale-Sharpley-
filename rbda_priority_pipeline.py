@@ -1385,6 +1385,24 @@ def stb_theo_buoi_da_khoa(
     return ra
 
 
+def loc_chinh_thuc(cur, bang: str = "run_history") -> str:
+    """GT2: mệnh đề `loai_chay IS NULL` (lần chạy CHÍNH THỨC; chạy thử có `loai_chay = 'thu'`).
+
+    Trả chuỗi rỗng nếu bảng chưa có cột (CSDL cũ chưa di trú) — khi đó mọi dòng đều chính thức."""
+    try:
+        co = any(r[1] == "loai_chay" for r in cur.execute("PRAGMA table_info(%s)" % bang))
+    except Exception:
+        co = False
+    return "loai_chay IS NULL" if co else "1=1"
+
+
+def run_chinh_thuc_moi_nhat(cur):
+    """Dòng `run_history` CHÍNH THỨC mới nhất (run_id, seed, luat_xep...) hoặc None. Bỏ qua chạy thử."""
+    return cur.execute(
+        "SELECT * FROM run_history WHERE %s ORDER BY run_id DESC LIMIT 1" % loc_chinh_thuc(cur)
+    ).fetchone()
+
+
 def doc_stb_buoi(cur) -> dict[str, dict[str, int]]:
     """{buoi: {student_id: so}} đã lưu trong `stb_buoi` ({} nếu bảng chưa có hoặc rỗng)."""
     ra: dict[str, dict[str, int]] = {}
@@ -1950,7 +1968,9 @@ CREATE TABLE IF NOT EXISTS run_history (
     -- score_scope, tiers). NULL = luat mac dinh cua truong hoc. Luat doi duoc giua hai
     -- lan chay; khong ghi lai thi hai lan chay cung seed ra ket qua khac nhau ma
     -- khong dau vet nao giai thich.
-    luat_xep TEXT
+    luat_xep TEXT,
+    -- GT2: NULL = lan chay chinh thuc; 'thu' = chay thu (khong cong bo, khong dong vao ket qua chinh thuc).
+    loai_chay TEXT
 );
 
 -- Khoa so bac tham (STB). Chi 1 dong duy nhat. Khi da_khoa = 1, nut
@@ -2042,6 +2062,15 @@ CREATE TABLE IF NOT EXISTS giu_cho (
     club_id TEXT NOT NULL REFERENCES clubs (club_id),
     student_id TEXT NOT NULL REFERENCES students (student_id),
     PRIMARY KEY (club_id, student_id)
+);
+
+-- GT1-L4: mã tra cứu để học sinh tự xem lời giải thích của chính mình. Bảng MỚI như giu_cho: CREATE TABLE IF
+-- NOT EXISTS đã đủ cho CSDL cũ. Không khoá ngoại (xoá học sinh thì mã bị xoá trong api_quan_ly). Chỉ có dữ liệu
+-- sau khi người quản trị bấm tạo mã; mã không bao giờ đi vào thuật toán xếp.
+CREATE TABLE IF NOT EXISTS ma_tra_cuu (
+    student_id TEXT PRIMARY KEY,
+    ma TEXT NOT NULL,
+    tao_luc TEXT NOT NULL
 );
 
 -- Nhóm phòng của CLB Tự do (FA-DAA, FA-4): CHỈ GHI THÊM, như run_history (không khoá ngoại: là dấu vết
@@ -2143,6 +2172,16 @@ CREATE TABLE IF NOT EXISTS fa_phan_hoi (
     muon_doi INTEGER CHECK (muon_doi IN (0, 1))
 );
 
+-- GT2: kết quả của các lần CHẠY THỬ (run_history.loai_chay = 'thu'). Chỉ ghi thêm; không bao giờ đọc vào
+-- match_results hay xuất chính thức. rank_in_list = thứ hạng nguyện vọng của CLB được xếp (chỉ để so sánh).
+CREATE TABLE IF NOT EXISTS ket_qua_thu (
+    run_id INTEGER NOT NULL,
+    buoi TEXT,
+    student_id TEXT NOT NULL,
+    club_id TEXT,
+    rank_in_list INTEGER
+);
+
 -- Khoá điểm Wharton (A13.3): RIÊNG, không dính stb_lock. Lần chạy phân bổ thành công khi Wharton
 -- bật thì khoá; mở lại bằng mo_khoa_wharton. Chỉ có dòng khi Wharton từng bật và chạy.
 CREATE TABLE IF NOT EXISTS wharton_lock (
@@ -2151,6 +2190,32 @@ CREATE TABLE IF NOT EXISTS wharton_lock (
     locked_at TEXT,
     unlocked_at TEXT
 );
+
+-- GT3 (L1): tài khoản + vai. Bảng RỖNG = phần mềm chạy như cũ (không màn đăng nhập). `bam`/`muoi`:
+-- PBKDF2-SHA256 + muối; mật khẩu không bao giờ được lưu hay ghi nhật ký.
+CREATE TABLE IF NOT EXISTS tai_khoan (
+    ten TEXT PRIMARY KEY,
+    vai TEXT NOT NULL CHECK (vai IN ('quan_tri', 'giao_vien')),
+    bam BLOB NOT NULL,
+    muoi BLOB NOT NULL,
+    tao_luc TEXT NOT NULL
+);
+
+-- GT3 (L3): nhật ký thao tác (CHỈ THÊM). Hai trigger chặn UPDATE / DELETE. Chỉ có dòng khi đã có tài khoản.
+-- `chi_tiet`: tóm tắt tham số đã bỏ mọi thứ giống mật khẩu / mã bí mật, cắt ngắn (xem nhat_ky.py).
+CREATE TABLE IF NOT EXISTS nhat_ky_thao_tac (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    luc TEXT NOT NULL,
+    nguoi TEXT,
+    vai TEXT,
+    hanh_dong TEXT NOT NULL,
+    ket_qua TEXT NOT NULL,
+    chi_tiet TEXT
+);
+CREATE TRIGGER IF NOT EXISTS nhat_ky_thao_tac_khong_sua BEFORE UPDATE ON nhat_ky_thao_tac
+BEGIN SELECT RAISE(ABORT, 'nhat_ky_thao_tac chi duoc them dong'); END;
+CREATE TRIGGER IF NOT EXISTS nhat_ky_thao_tac_khong_xoa BEFORE DELETE ON nhat_ky_thao_tac
+BEGIN SELECT RAISE(ABORT, 'nhat_ky_thao_tac chi duoc them dong'); END;
 """
 
 # busy_timeout dai hon mac dinh (5s) — nhieu tien trinh cung mo app.db
@@ -2458,6 +2523,15 @@ def di_tru_schema(db_path: str) -> list[str]:
             sao_luu_truoc_khi_sua()
             cur.execute("ALTER TABLE run_history ADD COLUMN luat_xep TEXT")
             da_lam.append("run_history.luat_xep")
+
+        # GT2: `run_history.loai_chay` — NULL = chính thức (mọi dòng cũ), 'thu' = chạy thử. Chỉ ADD COLUMN.
+        if "run_history" in co_bang and not _co_cot(cur, "run_history", "loai_chay"):
+            sao_luu_truoc_khi_sua()
+            cur.execute("ALTER TABLE run_history ADD COLUMN loai_chay TEXT")
+            da_lam.append("run_history.loai_chay")
+        if "ket_qua_thu" not in co_bang and "run_history" in co_bang:
+            cur.execute("CREATE TABLE IF NOT EXISTS ket_qua_thu (run_id INTEGER NOT NULL, buoi TEXT, "
+                        "student_id TEXT NOT NULL, club_id TEXT, rank_in_list INTEGER)")
 
         if "match_results" in co_bang and not _co_cot(cur, "match_results", "buoi"):
             sao_luu_truoc_khi_sua()

@@ -23,7 +23,9 @@ function init() {
   initAdminHandlers();
   initScoringHandlers();
   initKetQuaHandlers();
+  khoiTaoTieuChi();  // GT2 (js/15_tieu_chi.js)
   initWorkspace();   // nút đổi workspace ở thanh bên + màn chọn (js/075_workspace.js)
+  initTaiKhoan();    // GT3: đăng nhập + tài khoản (js/16_tai_khoan.js); chưa có tài khoản = không màn đăng nhập
   loadPipelineTab(); // tab mặc định đang mở khi khởi động
 }
 
