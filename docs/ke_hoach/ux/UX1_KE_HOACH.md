@@ -5,6 +5,8 @@
 > Truong's decisions (2026-11-18): all four user groups; PDF via **Print → Save as PDF** (no new library);
 > cutoff ("mức vào được") may be printed on the slip for clubs the student tested; tab names may change and the
 > user guide, demo/video scripts and poster are updated in the same item.
+> Truong 2026-11-18 (2): the slip must also show the **medal each student placed** and the **type of each club**
+> (FA mode). Findings on how the algorithm uses medals/types: audit §6.
 > Branch: create `claude/ux1-giao-dien` from `claude/gt-tich-hop`; handoff file `docs/phien/claude__ux1-giao-dien.md`.
 
 ## 0. Hard rules (from CLAUDE.md — read it)
@@ -83,6 +85,14 @@
   `…_chua_khai_buoi`) move from `"info"` to `"medium"` (non-blocking; only `"high"` blocks — verify in the run gate).
 - Shorten their texts in `i18n_errors.py` to one sentence + one action, e.g. "{session} {buoi}: {n_seats} chỗ cho
   {n_students} {person_l} — ít nhất {n_short} em sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}." Then `tao_i18n_js.py`.
+- **Medal book in the wrong mode** (audit §6): when the imported book has medal/type columns and FA is off, the import
+  preview must say plainly "Sổ này có cột Huy chương / Loại nhưng chế độ 'Xếp theo loại CLB và huy chương' đang tắt —
+  bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng", with a button to that setting. With
+  `wharton` on, do NOT let medal values be saved as determination points silently: keep the current blocking, but the
+  run error must point to the FA setting, not to "điền đủ điểm quyết tâm". Group the per-student
+  `wharton_chua_dung_het` warnings into one line ("n em chưa đặt đủ huy chương"). Detection: the medal column header
+  `so_nhap.TEN_COT_HUY_CHUONG` or a `Loại` column on the club sheet (`fa_cot_bo_qua` already fires).
+  This changes messages only — no change to what is stored or how the run decides (invariant 1).
 - Done when: tests that assert these codes/severities are updated (grep `health_oversubscribed` in `tests/`);
   invariant 1 green (severity is display-only).
 
@@ -107,14 +117,24 @@ In `phieu_giai_trinh.py` (and the on-screen card in `js/14_giai_trinh.js`, same 
    other student's data. Pure SVG string, escaped, no external files (slip must stay self-contained).
 4. **"Em nên làm gì tiếp"** block when a session has no place: list only features that are on for this workspace
    (round 2, invitation to empty places, data-error complaint) + "hỏi giáo viên phụ trách".
-5. Plain words: drop "số khoá bốc thăm: {seed}" from the student-facing card and slip (i18n `gt_lan_chay`; keep the seed
+5. **FA mode only — medals and club types:** each table row shows the club type ("Tuyển chọn / Giới hạn / Tự do",
+   `so_nhap.NHAN_LOAI_HIEN_THI`, from `clubs.loai`) and the medal the student placed on it ("Vàng / Bạc / Đồng / —",
+   from `wharton_bids` points 60/30/10, `fa_daa.GIA_TRI_HUY_CHUONG`). Add a short legend once per slip: "Tuyển chọn: xét
+   điểm thi trước, rồi huy chương. Giới hạn: xét huy chương. Tự do: nhận mọi em còn chỗ." (verify each sentence
+   against `rbda_priority_pipeline.uu_tien_wharton` before writing it). When the stored reason is `MEDAL`, the
+   sentence names the medal ("Em đặt huy chương Bạc; các bạn đặt Vàng được xét trước"). Read data in
+   `giai_trinh.dung_du_lieu_run` / `_lua_chon_fa` (add keys `loai`, `huy_chuong` to each row); render in
+   `phieu_giai_trinh._bang` and the on-screen card. Non-FA workspaces: no new columns (slip unchanged except items 1–4, 6).
+   Privacy: only this student's own medals.
+6. Plain words: drop "số khoá bốc thăm: {seed}" from the student-facing card and slip (i18n `gt_lan_chay`; keep the seed
    in admin detail and exports); column "Mức vào được" shows a score or "Chọn ngẫu nhiên khi bằng điểm" instead of
    "Bốc thăm"; same column names on screen and slip ("Điểm thi", "Chỗ đã nhận / tối đa").
 - Gotcha: `tests/test_gt_tich_hop.py::test_i4_*` regenerates `docs/giai_trinh/CA_MAU.md` **byte-identically** from app
   sentences. After changing sentences, rerun `python du_lieu_test/tao_ca_mau_giai_trinh.py` and
   `python docs/giai_trinh/tao_goi_minh_chung.py`, commit the new files in the same lot. Also check `tests/test_gt1_*`.
-- Done when: unit tests on `dung_phieu_html` for a student placed everywhere, partly, and nowhere (summary line,
-  tested-club scores, SVG present only for tested clubs, next-steps block only when unplaced, no other student id in
+- Done when: unit tests on `dung_phieu_html` for a student placed everywhere, partly, and nowhere, plus an FA
+  workspace test (book `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx`): every row shows the right type and medal, a MEDAL-reason
+  row names the medal, a non-FA slip has no type/medal columns (summary line, tested-club scores, SVG present only for tested clubs, next-steps block only when unplaced, no other student id in
   the page); `chup_phieu.py` regenerated `anh/phieu_mau.pdf` looks right.
 
 ### L8 — Docs

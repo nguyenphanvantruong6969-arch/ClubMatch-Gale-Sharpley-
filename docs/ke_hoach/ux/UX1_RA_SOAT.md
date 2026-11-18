@@ -62,3 +62,24 @@ Không có lỗi JavaScript trong toàn bộ lượt chụp.
 ## 5. Câu hỏi còn mở cho Truong
 1. Điểm chuẩn in trên phiếu là con số tổng hợp (không lộ cá nhân). Đồng ý in cho CLB em đã thi?
 2. Gộp 6 thẻ thành 4 sẽ đổi tên thẻ trong `HUONG_DAN_SU_DUNG.md`, kịch bản demo/video và poster — chấp nhận cập nhật tài liệu cùng lúc?
+
+## 6. Thuật toán có nhận huy chương và loại CLB không? (kiểm 2026-11-18)
+
+Cùng một sổ có cột **Loại** và cột **Huy chương (60/30/10)** (`du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx`, 120 em
+MÔ PHỎNG, hạt giống 42), nạp vào ba cấu hình. Script: `docs/ke_hoach/ux/thu_huy_chuong.py`.
+
+| Cấu hình | Loại CLB | Huy chương | Chạy xếp | Có/không huy chương cho kết quả khác nhau? |
+|---|---|---|---|---|
+| **Mặc định** (điểm quyết tâm BẬT, FA TẮT) | bỏ qua, báo `fa_cot_bo_qua` | lưu nhầm thành **điểm quyết tâm** (589 ô) | **bị chặn** (`wharton_ho_so_chua_hop_le`) | không chạy được |
+| Điểm quyết tâm TẮT, FA TẮT | bỏ qua (`fa_cot_bo_qua`) | bỏ qua (`csv_wp_bo_qua`) | chạy được | **giống hệt** → huy chương KHÔNG được dùng |
+| **FA BẬT** ("Xếp theo loại CLB và huy chương") | dùng (8 CLB có loại) | dùng (589 ô) | chạy được | **khác**: 116/240 lượt (học sinh, buổi), 86 em đổi CLB |
+
+Kết luận kỹ thuật:
+- Thuật toán **chỉ dùng huy chương và loại CLB khi bật chế độ FA** (`rules.fa_daa`, mặc định TẮT; cần
+  `rules.wharton`). Không có đường nào để huy chương lọt vào kết quả khi FA tắt.
+- Huy chương chỉ đi vào khoá ưu tiên (`fa_daa.diem_huy_chuong_hieu_luc`), không đọc thứ hạng nguyện vọng (bất biến 2).
+- **Lỗ hổng trải nghiệm:** ở cấu hình mặc định, sổ có huy chương bị nạp như điểm quyết tâm rồi lần chạy bị chặn với
+  lời nhắn "hãy điền đủ điểm quyết tâm" — sai hướng; việc đúng là bật chế độ "Xếp theo loại CLB và huy chương".
+  Ngoài ra có 434 cảnh báo `wharton_chua_dung_het` riêng lẻ.
+- Phiếu giải trình hiện **chưa ghi huy chương em đã đặt và loại của từng CLB** (`giai_trinh._lua_chon_fa`,
+  `phieu_giai_trinh._bang`).

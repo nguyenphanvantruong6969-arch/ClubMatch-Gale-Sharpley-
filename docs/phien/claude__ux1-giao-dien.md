@@ -15,9 +15,9 @@ Targets and lot details: `docs/ke_hoach/ux/UX1_KE_HOACH.md` §1–§2.
 - [ ] L2 navigation 6 → 4 groups, keep every `data-tab` — test `tests/test_giao_dien_ux1_dieu_huong.py`
 - [ ] L3 lookup first on results; one "Xuất…" menu; import message once
 - [ ] L4 role pages (giao_vien) + "Báo cáo tổng hợp" (`bao_cao_tong_hop.py`, `export_bao_cao_tong_hop`, QUYEN)
-- [ ] L5 oversubscription warnings info → medium, shorter text (`api.py`, `i18n_errors.py`, `tao_i18n_js.py`)
+- [ ] L5 oversubscription warnings info → medium, shorter text; medal book in non-FA mode → clear message + link to FA setting
 - [ ] L6 slip "In / Lưu PDF" via iframe print (`get_phieu_giai_trinh_html`, QUYEN, audit row); Truong checks on Windows
-- [ ] L7 slip content: summary line, tested-club scores, SVG own-vs-cutoff, next steps, plain words; regenerate CA_MAU + pack
+- [ ] L7 slip content: summary line, tested-club scores, SVG own-vs-cutoff, next steps, FA: club type + medal per row, plain words; regenerate CA_MAU + pack
 - [ ] L8 docs (guide, demo/video scripts, poster, code map) + re-shoot screenshots + "After" table
 - [ ] L9 gate: ruff, kiem_nhanh 7/7, soat-ma, full CI green
 
@@ -29,7 +29,8 @@ Targets and lot details: `docs/ke_hoach/ux/UX1_KE_HOACH.md` §1–§2.
 
 ## Decisions and gotchas
 - Truong 2026-11-18: all four user groups; PDF via Print → Save as PDF (no new library); cutoff may be printed for
-  tested clubs only (it is already on the slip); tab renames allowed with docs updated in the same item.
+  tested clubs only (it is already on the slip); tab renames allowed with docs updated in the same item;
+  slip shows medal placed + club type in FA mode (audit §6: algorithm uses them ONLY when FA is on).
 - Keep element ids and `data-tab` values (≈97 Chromium tests select by them).
 - Slip sentence changes break `tests/test_gt_tich_hop.py::test_i4_*` until CA_MAU.md is regenerated.
 
