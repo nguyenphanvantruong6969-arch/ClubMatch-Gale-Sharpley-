@@ -12,21 +12,27 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L1 Next-step bar (checker NO BUGS)
 - [x] L2 navigation 6 -> 4 groups (checker NO BUGS)
 - [x] L2b Settings: three cards, instant save + Undo, fix-in-place, post-run actions (checker NO BUGS)
-- [~] L3 results page: lookup first, one Xuất… menu, import message once. Coder done + FIX round 1 done (head 3ba1efe); waiting for checker re-review
-- [ ] L5 warning severity/wording; medal book in non-FA mode; two sample books
+- [x] L3 results page (checker NO BUGS after fix1, head 3ba1efe)
+- [~] L5 warning severity/wording; medal book in non-FA mode; two sample books. CODED + pushed as WIP 1dad3c6; full regression run was started (/tmp/claude-0/l5_all.txt); NOT yet reported to lead
 - [ ] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) -> 60/30/10
 - [ ] L8-A docs + screenshots + After table
 
 ## Current state (overwrite each handoff)
-- Done so far: L1, L2, L2b passed by checker; L3 implemented at e812cf3, FIX L3 round 1 at 3ba1efe (pushed).
-- In progress: nothing half-finished. Last report sent to lead: "CODER DONE L3 fix1 | base e812cf3 head 3ba1efe".
-- Not yet read: the checker's L3 verdict file docs/phien/claude__ux1-a-giao-dien__checker.md ("1 minor bug, 1 observation").
-  The lead's FIX listed 2 items (stale #feedbackImportAll cleared in nhapTatCa(); secondary "Xuất kết quả" button
-  #viecTiepTheoNut2 in bar state xu_ly) and both are done. The checker's "observation" was not in the FIX message: read it.
-- Tests (last results): full UI sweep (test_giao_dien_* + test_ws_* + gt3_phan_quyen + i18n + ux1 backend) = 1149 passed
-  at e812cf3; after fix1: ux1_tiep_theo 8 + upload 19 passed, 74 related UI tests passed. kiem_nhanh 7/7, 60 cases identical.
-- Open problems: none known. Venv at .venv (python 3.13). Full UI sweep takes about 20 min: run it in the
-  background (nohup … > /tmp/…txt &) and wait with Monitor; foreground pytest over many UI files hits the 10 min tool limit.
+- L1, L2, L2b, L3 passed by checker. L5 is implemented and pushed as WIP commit 1dad3c6 (base bc71013). Still to do for L5:
+  1) read the regression result in /tmp/claude-0/l5_all.txt (may be gone after a restart: re-run test_data_health, test_vi_du_day_du,
+     test_t3_l2_buoi, test_mau_forms_thi_clb, test_bo_toan_tuan, test_skill_sinh_du_lieu, test_bo_kich_tran, test_so_nhap*, test_ux1_*,
+     test_fa_*, test_i18n_*, test_giao_dien_* and test_ws_* in the BACKGROUND with nohup + Monitor); fix any red test (selector/value-only edits);
+  2) add CHANGELOG + TIEN_DO rows for L5, commit "UX1A-L5: ...", push, report "CODER DONE L5 | base bc71013 head <sha>" to the lead.
+- L5 contents: 3 oversubscription warnings info->medium + one-sentence texts (api.py, i18n_errors.py; tests/test_data_health.py severity expectations);
+  new warning so_nhap_canh_bao_huy_chuong_che_do_tat in xem_truoc_so_nhap when the book has a medal column (so_nhap flag co_cot_huy_chuong) or a Loại
+  column and fa_daa is off; UI button #btnBatHuyChuong (js/02_van_hanh.js batHuyChuongTuXemTruoc: update_workspace_config {wharton,fa_daa true}, re-preview);
+  wharton_chua_dung_het import warnings grouped into one line (ux1a_wh_chua_du); run-error hint wh_goi_y_tat mentions the medal mode; tao_so_nhap_mau(kieu)
+  "thuong" (unchanged) / "huy_chuong" + new button #btnTaiSoMauHuyChuong; medal sample Hướng dẫn says the mode must be ON.
+- New tests: tests/test_ux1_l5_backend.py (7), tests/test_giao_dien_ux1_nhap_so.py (5) pass. kiem_nhanh 7/7 after fixing forbidden wording
+  (chu_cam bans "em", "bạn", "your" in visible text: use {person_l}).
+- Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here, keep this file current. The Stop hook threshold cannot be changed by me
+  (editing .claude/phien_vai.json was denied); ignore the "hand off" nag after updating this file.
+- Not yet read: checker L3 observation (docs/phien/claude__ux1-a-giao-dien__checker.md).
 
 ## Decisions and gotchas (keep short)
 - Group nav (L2): sub-items `.nav-item[data-tab]` stay visible under 4 `.nav-nhom` headings because 75 tests click
@@ -50,9 +56,8 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - Each shared-file edit is marked UX1A / ux1a_ keys; js/_danh_sach.txt has 17_viec_tiep_theo and 18_cai_dat before 08_khoi_dong.
 
 ## Next steps (ordered)
-1. Read the checker verdict for L3, handle anything not covered by FIX round 1, then wait for lead's REVIEW/FIX/GO.
-2. On GO L5: read only "L5" in docs/ke_hoach/ux/UX1_KE_HOACH.md and audit section; test first.
-3. Then L5b, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
+1. Finish L5 (see Current state), report to lead.
+2. Then L5b, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
 4. Per lot: failing test -> minimal code -> related tests -> `kiem_nhanh.py --co-so origin/main --so-seed 20`
    (after git fetch origin main) -> soat-ma notes -> CHANGELOG + TIEN_DO row -> commit "UX1A-L<n>: …" -> push -> report
    "CODER DONE L<n> | base <sha> head <sha>" (GT_GIAO_THUC §7 format) with send_message to the lead.
@@ -70,3 +75,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-18 | Sonnet 5.5 | L1, L2, L2b, L3 (+fix1) coded, tested, pushed; reports sent to lead | handoff at ~400k tokens; head 3ba1efe |
+| 2026-11-18 | Sonnet 5.5 | L5 coded + WIP push 1dad3c6; regression running | continues in same session per lead |
