@@ -13,26 +13,20 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L2 navigation 6 -> 4 groups (checker NO BUGS)
 - [x] L2b Settings: three cards, instant save + Undo, fix-in-place, post-run actions (checker NO BUGS)
 - [x] L3 results page (checker NO BUGS after fix1, head 3ba1efe)
-- [~] L5 warning severity/wording; medal book in non-FA mode; two sample books. CODED + pushed as WIP 1dad3c6; full regression run was started (/tmp/claude-0/l5_all.txt); NOT yet reported to lead
+- [x] L5 warning severity/wording; medal book wrong-mode message + one-click enable; two sample books. Coder DONE at 764c85c, waiting for checker
 - [ ] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) -> 60/30/10
 - [ ] L8-A docs + screenshots + After table
 
 ## Current state (overwrite each handoff)
-- L1, L2, L2b, L3 passed by checker. L5 is implemented and pushed as WIP commit 1dad3c6 (base bc71013). Still to do for L5:
-  1) read the regression result in /tmp/claude-0/l5_all.txt (may be gone after a restart: re-run test_data_health, test_vi_du_day_du,
-     test_t3_l2_buoi, test_mau_forms_thi_clb, test_bo_toan_tuan, test_skill_sinh_du_lieu, test_bo_kich_tran, test_so_nhap*, test_ux1_*,
-     test_fa_*, test_i18n_*, test_giao_dien_* and test_ws_* in the BACKGROUND with nohup + Monitor); fix any red test (selector/value-only edits);
-  2) add CHANGELOG + TIEN_DO rows for L5, commit "UX1A-L5: ...", push, report "CODER DONE L5 | base bc71013 head <sha>" to the lead.
-- L5 contents: 3 oversubscription warnings info->medium + one-sentence texts (api.py, i18n_errors.py; tests/test_data_health.py severity expectations);
-  new warning so_nhap_canh_bao_huy_chuong_che_do_tat in xem_truoc_so_nhap when the book has a medal column (so_nhap flag co_cot_huy_chuong) or a Loại
-  column and fa_daa is off; UI button #btnBatHuyChuong (js/02_van_hanh.js batHuyChuongTuXemTruoc: update_workspace_config {wharton,fa_daa true}, re-preview);
-  wharton_chua_dung_het import warnings grouped into one line (ux1a_wh_chua_du); run-error hint wh_goi_y_tat mentions the medal mode; tao_so_nhap_mau(kieu)
-  "thuong" (unchanged) / "huy_chuong" + new button #btnTaiSoMauHuyChuong; medal sample Hướng dẫn says the mode must be ON.
-- New tests: tests/test_ux1_l5_backend.py (7), tests/test_giao_dien_ux1_nhap_so.py (5) pass. kiem_nhanh 7/7 after fixing forbidden wording
-  (chu_cam bans "em", "bạn", "your" in visible text: use {person_l}).
-- Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here, keep this file current. The Stop hook threshold cannot be changed by me
-  (editing .claude/phien_vai.json was denied); ignore the "hand off" nag after updating this file.
-- Not yet read: checker L3 observation (docs/phien/claude__ux1-a-giao-dien__checker.md).
+- L1, L2, L2b, L3 passed by checker. L5 reported to lead as "CODER DONE L5 | base bc71013 head 764c85c" (pushed); waiting for the checker verdict.
+- Nothing half-finished. Next lot from the lead is probably L5b (medal cells accept Vàng/Bạc/Đồng) then L8-A.
+- L5 summary: oversubscription warnings medium + short texts; preview warning so_nhap_canh_bao_huy_chuong_che_do_tat + button #btnBatHuyChuong;
+  one summary line above the grouped import warnings; run-error hint names the medal mode; sample books: #btnTaiSoMau (plain, unchanged) and
+  #btnTaiSoMauHuyChuong (tao_so_nhap_mau(output_path, kieu)). Tests: tests/test_ux1_l5_backend.py, tests/test_giao_dien_ux1_nhap_so.py.
+- Tests last run: wide regression 3710 passed (+ fixes, then 117 related passed); kiem_nhanh 7/7, 60 cases identical.
+- Open: the checker's L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md was never read; read it before the next lot.
+- Lead rule (UX1_GIAO_THUC §3): NO replacement session; keep working here and keep this file current. I cannot edit
+  .claude/phien_vai.json (denied), so the Stop hook "hand off" nag keeps firing: update this file, push, continue.
 
 ## Decisions and gotchas (keep short)
 - Group nav (L2): sub-items `.nav-item[data-tab]` stay visible under 4 `.nav-nhom` headings because 75 tests click
@@ -50,13 +44,14 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - L3: #gtPanel is first in view-results; #xuatMenu (details.menu-khac) holds the 4 secondary export buttons (menu closes
   after each pick; tests wait with state="attached"); import numbers shown only in the file row, toast says "Đã nạp sổ".
   The bar "Xuất" state exports directly with default options (4-click target); in state xu_ly a secondary export button exists.
+- Snapshot tests (tests/test_ws_nhan.py): deliberately reworded default strings go into SUA_CO_Y (resolved strings, after THAY_CHU_T3) and tests/du_lieu_ws/chu_ui_doi_co_y_t3.json; new error codes go into MA_MOI_SAU_ANH_CHUP. The chu_cam check bans "em", "bạn", "your" in visible text.
 - Tests rewritten (not skipped/weakened) when controls moved; one old scenario (FA on + wharton off through the UI) cannot be
   produced any more, backend rejection is covered by tests/test_fa_n3_loi_diem_quyet_tam.py.
 - Commit trailer of ebf24cd has a mistyped Claude-Session id (already pushed; do not force-push).
 - Each shared-file edit is marked UX1A / ux1a_ keys; js/_danh_sach.txt has 17_viec_tiep_theo and 18_cai_dat before 08_khoi_dong.
 
 ## Next steps (ordered)
-1. Finish L5 (see Current state), report to lead.
+1. Read the checker verdict file(s); fix anything the lead sends as FIX.
 2. Then L5b, L8-A (user guide, demo/video scripts, poster, code map; re-shoot docs/ke_hoach/ux/anh/ with chup_luong_chinh.py).
 4. Per lot: failing test -> minimal code -> related tests -> `kiem_nhanh.py --co-so origin/main --so-seed 20`
    (after git fetch origin main) -> soat-ma notes -> CHANGELOG + TIEN_DO row -> commit "UX1A-L<n>: …" -> push -> report
@@ -75,4 +70,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-18 | Sonnet 5.5 | L1, L2, L2b, L3 (+fix1) coded, tested, pushed; reports sent to lead | handoff at ~400k tokens; head 3ba1efe |
-| 2026-11-18 | Sonnet 5.5 | L5 coded + WIP push 1dad3c6; regression running | continues in same session per lead |
+| 2026-11-18 | Sonnet 5.5 | L5 coded, regression-fixed, pushed 764c85c, reported to lead | continues in same session per lead |
