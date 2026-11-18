@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay
+
+- Mới: thẻ "Chỉ xếp thứ tự" / "Chia 100 điểm" (mặc định) / "Huy chương" (`js/18_cai_dat.js`, thành phần `ux1aTaoThe`) ánh xạ `wharton` + `fa_daa`; lưu ngay bằng MỘT lời gọi `update_workspace_config` (ghi một dòng nhật ký thao tác như mọi lần gọi khi có tài khoản), áp dụng tại chỗ, thông báo "Đã chuyển sang … · Hoàn tác" 10 giây; lỗi hiện dưới thẻ, thẻ không đổi. Một dòng "Cách xét khi đông" sinh từ Tiêu chí xếp; "Thay đổi…" mở mục Nâng cao.
+- Một nơi duy nhất: panel `#ux1aCaiDat` (đầu thẻ Quản lý), mục ⋯ "Cài đặt…" (thay "Tính năng sau khi xếp…", hộp `wsMoTinhNang` đã xoá), bước 3 trình tạo workspace (cùng thành phần; ô điểm quyết tâm / huy chương / 4 ô theo dõi bỏ). Ô "Xét điểm quyết tâm" của Tiêu chí xếp bỏ (chỉ tự tắt cờ khi lựa chọn làm nó vô nghĩa).
+- Huy chương mà dữ liệu chưa sẵn sàng: sửa tại chỗ (viên "Tự do · Giới hạn · Tuyển chọn" theo CLB, chọn CLB Tự do cho buổi thiếu, điểm sàn) cho tới "Sẵn sàng". Backend mới: `get_san_sang_huy_chuong` (đọc), `dat_loai_clb` (ghi, dùng lại `fa_daa.ghi_thuoc_tinh_clb`); thêm vào `phan_quyen.py`.
+- Việc sau khi xếp thành hành động ở thẻ "Chi tiết và xuất tệp" (`#ux1aSauXep`, chỉ ở chế độ Huy chương): Mở vòng 2, Nhận khiếu nại trong [n] ngày, Điểm danh, Mời danh sách chờ, Thu phản hồi.
+- Test mới: `tests/test_giao_dien_ux1_cai_dat.py` (10), `tests/test_ux1_cai_dat_backend.py` (7). Viết lại theo thẻ: ws_wharton_giao_dien, a13_13_kiem_nhan, fa_cai_dat, fa_gap1/gap3, fg8_cau_chu, fg1_bat_tinh_nang, sg2_diem_quyet_tam, sg11b, gt2_tieu_chi, gt4_tieu_chi, ws_giao_dien (một test cũ "FA bật, điểm quyết tâm tắt" nay không tạo được từ giao diện; backend vẫn từ chối, test ở test_a13_13_kiem_nhan.py).
+- L2: nhóm điều hướng ẩn theo thuộc tính (hidden / vai giáo viên), không theo getClientRects.
+
 ## 2026-11-18 — UX1A-L2: thanh bên 4 nhóm
 
 - Thanh bên: 4 nhóm "1. Nạp & xếp" (pipeline), "2. Nhập tay" (fallback, scoring), "3. Kết quả & phiếu" (results, others), "Cài đặt" (admin, chuan_bi). Nút nhóm mở thẻ đầu còn hiện; nhóm không còn thẻ hiện (vai giáo viên, thẻ ẩn) tự ẩn (`capNhatNhomDieuHuong`, `js/01_khung.js`). Mọi `.nav-item[data-tab]` và id giữ nguyên, vẫn bấm được từ nhóm khác. Giáo viên vào "Kết quả" như cũ.

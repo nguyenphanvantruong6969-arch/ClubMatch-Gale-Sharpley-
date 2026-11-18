@@ -46,9 +46,11 @@ function initTabs() {
   capNhatNhomDieuHuong();
 }
 
-/* UX1A-L2: "hiện" tính theo hiển thị thật (thuộc tính hidden, ẩn theo vai trò bằng CSS, workspace). */
+/* UX1A-L2: "hiện" tính theo thuộc tính, không theo hiển thị thật (thanh bên bị ẩn tạm thì không làm mất cả nhóm):
+   thuộc tính hidden (workspace), và phần của quản trị khi đăng nhập giáo viên (CSS: body[data-vai]). */
 function thanhDieuHuongDangHien(btn) {
-  return btn.getClientRects().length > 0;
+  if (btn.hidden) return false;
+  return !(btn.dataset.quyen === "quan_tri" && document.body.dataset.vai === "giao_vien");
 }
 
 function capNhatNhomDieuHuong() {
