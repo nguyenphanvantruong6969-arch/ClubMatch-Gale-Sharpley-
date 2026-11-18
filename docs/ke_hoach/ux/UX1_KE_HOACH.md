@@ -11,7 +11,8 @@
 > the app suggests turning medals on when a book has medal/type columns (L5); medal cells accept the words
 > Vàng/Bạc/Đồng as well as 60/30/10 (L5b). Medals and determination points stay ONE column: FA medals REPLACE
 > determination points (no parallel use — that would need a new choice function, invariant 8).
-> Branch: create `claude/ux1-giao-dien` from `claude/gt-tich-hop`; handoff file `docs/phien/claude__ux1-giao-dien.md`.
+> Execution: two teams in parallel — protocol `docs/phien/UX1_GIAO_THUC.md` (team A: L1, L2, L2b, L3, L5, L5b, L8-A;
+> team B: L4-B, L6, L7, L8-B). The §4 prompt below is superseded by the protocol.
 
 ## 0. Hard rules (from CLAUDE.md — read it)
 - **UI and presentation only.** No change to `rbda_priority_pipeline.py`, `compute_club_priority`, STB, seeds,
