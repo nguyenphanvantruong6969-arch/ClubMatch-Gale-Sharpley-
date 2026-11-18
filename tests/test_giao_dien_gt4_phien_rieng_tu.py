@@ -70,6 +70,9 @@ def test_the_nhat_ky_rong_hon_bo_loc_xep_ngang_va_the_dang_chon_thay_ro(trang):
     assert rong_nk > rong_tk + 200, (rong_tk, rong_nk)
     top = page.evaluate("[...['tkNkNguoi','tkNkHanhDong','tkNkNgay']].map(i => document.getElementById(i).getBoundingClientRect().top)")
     assert max(top) - min(top) < 6, top                              # ba ô lọc cùng một hàng
+    # nút có hiệu ứng chuyển màu 150 ms: đợi màu đổi chứ không đọc ngay (đọc ngay từng cho cùng một giá trị trên CI chậm)
+    page.wait_for_function(
+        "c => getComputedStyle(document.querySelector('#tkTabTaiKhoan')).backgroundColor !== c", arg=mau_chon)
     mau_khong_chon = page.evaluate("getComputedStyle(document.querySelector('#tkTabTaiKhoan')).backgroundColor")
     assert mau_chon != mau_khong_chon
     assert not loi, loi
