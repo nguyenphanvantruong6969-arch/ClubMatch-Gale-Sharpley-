@@ -31,6 +31,24 @@ Không có lỗi JavaScript trong toàn bộ lượt chụp.
 | Học sinh | Tự tra cứu bằng mã | Mã + Xem = **2** | 2 | Ổn |
 | Ban giám hiệu | Một trang tổng hợp để đọc/in | Không có nút riêng; phải ghép thẻ Tóm tắt + Bảng điều khiển (thẻ Quản lý) | **1** | Thiếu "Báo cáo tổng hợp" |
 
+### 2b. Sau UX1A — số lần bấm ĐO ĐƯỢC (18/11/2026, sổ mẫu 120 học sinh MÔ PHỎNG, hạt giống 42)
+
+Đo bằng `docs/ke_hoach/ux/chup_luong_chinh.py` (Chromium thật, in số lần bấm; ảnh mới ở `anh/`). "Chọn tệp" tính một lần bấm.
+Các luồng chính cũng có test: `tests/test_giao_dien_ux1_tiep_theo.py` (4 lần bấm), `tests/test_giao_dien_ux1_dieu_huong.py`.
+
+| Người dùng | Việc | Trước | **Sau (đo)** | Mục tiêu | Đạt? | Nhờ đâu |
+|---|---|---|---|---|---|---|
+| GV phụ trách | Nạp sổ → chạy → tải kết quả Excel | **5** | **4** (chọn tệp, Nhập sổ, nút "Chạy sắp xếp" của thanh, nút "Xuất kết quả") | 4 | có | Thanh "Việc tiếp theo" (L1); nút xuất của thanh xuất luôn bằng tuỳ chọn mặc định (L3) |
+| GV phụ trách | Xử lý các em chưa có CLB (sổ mẫu còn 12 em chưa có chỗ) | **4–6** | **1** sau khi chạy xong (nút "Xử lý n …" mở bảng) | 2 | có | Thanh + ô "Cần xử lý" bấm được (L1) |
+| GV chủ nhiệm | Lấy kết quả lớp mình | **3** | **≤ 2** (mở app đã ở thẻ Kết quả; "Theo lớp" → chọn lớp; 0–1 lần nếu app nhớ cách xem lần trước) | 2 | có | Giáo viên vào thẳng "Kết quả" (L2) |
+| Học sinh | Tự tra cứu bằng mã | **2** | **2** | 2 | có (không đổi) | — |
+| GV phụ trách | Phiếu PDF cho **một** em | ≈ **8** | *nhóm B, sau tích hợp* | 4 | — | L6 (nhóm B) |
+| Ban giám hiệu | Báo cáo tổng hợp | không có | *nhóm B, sau tích hợp* | 1 | — | L4-B (nhóm B) |
+
+Ghi chú: sổ mẫu 120 học sinh luôn còn một số em chưa có CLB nên sau khi chạy thanh dừng ở "Xử lý n …"; nút phụ "Xuất kết quả"
+trên thanh vẫn tải ngay (cũng 4 lần bấm). Bảng "ba thẻ" ở Cài đặt: đổi cách đặt thích = **1** lần bấm (trước: mở menu ⋯ → hộp
+→ tick → Lưu ≈ 5), có Hoàn tác.
+
 ## 3. Vấn đề phát hiện (xếp theo mức ảnh hưởng)
 
 1. **Không có "việc tiếp theo".** Chạy xong, màn hình báo "88/120 có CLB" nhưng không có nút sang Kết quả, Xuất, hay xử lý 32 em (`anh/07_sau_chay.png`).

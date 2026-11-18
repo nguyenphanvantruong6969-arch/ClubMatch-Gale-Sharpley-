@@ -1064,8 +1064,8 @@ def ghi_cai_dat_sau_ket_qua(de):
     w("2. Kiosk: thẻ \"Chi tiết và xuất tệp\" → khung \"Phản hồi của học sinh\" → nút **Nạp biểu mẫu Sau khi xem kết quả**.")
     w("3. Một lần nạp ghi cả phản hồi và khiếu nại; nếu có lỗi giữa chừng thì không ghi gì. Hạn khiếu nại tính theo giờ hoàn "
       "thành do Forms ghi (cột Completion time), nên nạp muộn vẫn công bằng; tệp không có cột đó thì tính theo lúc nạp và có cảnh báo.")
-    w("4. Bật tính năng ở kiosk: Kiosk → Không gian làm việc → ⋯ → Tính năng sau khi xếp… (tick Phản hồi và/hoặc "
-      "Khiếu nại); tắt một cái thì phần đó bị bỏ qua kèm cảnh báo.")
+    w("4. Bật tính năng ở kiosk: chọn Huy chương ở Cài đặt, rồi thẻ \"Chi tiết và xuất tệp\" → khung Sau khi xếp → "
+      "Thu phản hồi và/hoặc Nhận khiếu nại; tắt một cái thì phần đó bị bỏ qua kèm cảnh báo.")
     if bm.dang_giu_ma():
         w("5. Giữ nguyên phần `[mã]` đầu mỗi câu và phần `(mã)` cuối mỗi lựa chọn: kiosk đọc theo các mã đó "
           "để biết câu nào là câu nào; sửa các mã này thì kiosk không nạp được câu đó.")

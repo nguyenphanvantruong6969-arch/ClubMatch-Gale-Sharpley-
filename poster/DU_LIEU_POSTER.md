@@ -33,7 +33,7 @@ Mã ô ghi ngay trong khung và trong `poster_huong_dan.pdf`.
 │                │ │ H3 tên đề tài                            │ │                │
 ├────────────────┤ ├─────────────────────────┬────────────────┤ ├────────────────┤
 │ 02 Dùng thế nào│ │ [ảnh tab Kết quả]       │ S1  0          │ │ 06 Đã kiểm     │
-│ [ảnh Vận hành] │ │                         │ S2  0,14 giây  │ │    chứng       │
+│ [ảnh Xếp CLB] │ │                         │ S2  0,14 giây  │ │    chứng       │
 │ T2             │ │ G1                      │ S3  816        │ │ [2 biểu đồ] P5 │
 ├────────────────┤ ├─────────────────────────┴────────────────┤ │                │
 │ 03 Xem thử     │ │ 04 Cách hoạt động  [sơ đồ + bốc thăm]     │ ├────────────────┤
@@ -120,10 +120,10 @@ thay (sửa `stats` trong `tao_poster.py`).
 | ⚠️ | **Chưa có khảo sát → không có số hiện trạng.** Viết điều em tự quan sát, dạng định tính. Không viết "đa số", "…% học sinh". Không nhắc tên trường. |
 | Bối cảnh có trong repo | Trường có cả CLB thi tuyển lẫn CLB không thi (lý do sinh ra lớp 4 — `CO_CHE_THUAT_TOAN.md`); cách xét thay thế là xét theo thứ tự đăng ký (lớp 1) |
 
-### Ảnh tab Vận hành (đã có) + T2 · Dùng thế nào
+### Ảnh thẻ Xếp CLB (đã có) + T2 · Dùng thế nào
 | | |
 |---|---|
-| Ảnh | `hinh/giao_dien_van_hanh.png` — màn hình Vận hành thật |
+| Ảnh | `hinh/giao_dien_van_hanh.png` — màn hình Xếp CLB thật (nhóm "1. Nạp & xếp", có thanh "Việc tiếp theo") |
 | Câu hỏi gợi ý | Người vận hành làm những bước nào, theo thứ tự? Mỗi bước một dòng, bắt đầu bằng động từ. |
 | Độ dài | 3–5 dòng, mỗi dòng ≤ 10 từ |
 | Sự thật về các bước (từ giao diện) | Kéo thả tệp Excel/CSV — phần mềm tự nhận tệp nào là danh sách CLB, chọn CLB thi, nguyện vọng · **Cảnh báo dữ liệu** trước khi chạy (bộ mẫu: 0 cảnh báo) · Nhập điểm theo CLB · Bấm **Chạy sắp xếp** · Xem tab Kết quả · **Xuất CSV** tổng + từng CLB (bộ mẫu: 11 tệp) — `index.html`, `README.md`, `SO_LIEU_DA_KIEM_CHUNG.md` §2 |

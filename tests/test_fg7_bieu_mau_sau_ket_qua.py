@@ -168,7 +168,7 @@ def test_huong_dan_buoc_4_chi_duong_menu_khong_ten_khoa_cau_hinh(tmp_path):
     with open(tmp_path / tmf.TEN_CAI_DAT_SAU_KET_QUA, encoding="utf-8") as f:
         md = f.read()
     buoc4 = next(d for d in md.splitlines() if d.startswith("4. "))
-    assert "Tính năng sau khi xếp" in buoc4
+    assert "Sau khi xếp" in buoc4   # UX1A-L8: hộp "Tính năng sau khi xếp…" đã thành khung "Sau khi xếp" ở thẻ Chi tiết
     assert "fa_phan_hoi" not in buoc4 and "fa_khieu_nai" not in buoc4
 
 

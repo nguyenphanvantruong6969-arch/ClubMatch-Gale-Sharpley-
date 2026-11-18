@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L8-A: tài liệu, ảnh chụp, bảng "Sau" đo được
+
+- `HUONG_DAN_SU_DUNG.md`: bảng điều hướng thành 4 nhóm; mục mới về thanh "Việc tiếp theo", Cài đặt (ba thẻ), sổ mẫu có huy chương, Vàng/Bạc/Đồng; bỏ số thứ tự thẻ cũ (01–06). `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md`: cách bật chế độ huy chương theo giao diện mới. `docs/ke_hoach/CLAUDE_CHI_TIET.md`: bản đồ mã (`js/17`, `js/18`, `get_san_sang_huy_chuong`, `dat_loai_clb`, lớp đọc huy chương), số tệp/ca test (339 / 6.845).
+- Chữ hiển thị trỏ tới hộp "Tính năng sau khi xếp…" đã bỏ nay trỏ tới Cài đặt / khung "Sau khi xếp": `i18n_errors.py` (`so_nhap_canh_bao_wharton_trong`), `mau_forms_thi_clb/tao_mau_forms.py` (+ `tests/test_fg7_bieu_mau_sau_ket_qua.py`).
+- Poster: `poster/DU_LIEU_POSTER.md` (tên thẻ), ảnh giao diện chụp lại (`poster/hinh/giao_dien_*.png`). CHƯA dựng lại `poster_*.pdf/pptx` (cần python-pptx, matplotlib: thư viện chưa có trong môi trường) -> mục "Cần Truong".
+- `docs/ke_hoach/ux/chup_luong_chinh.py` viết lại: chụp ảnh mới VÀ in số lần bấm; ảnh trong `docs/ke_hoach/ux/anh/` thay mới (`11_ws_tinh_nang.png` bỏ, `11_cai_dat.png` thêm; `04_phieu.png`, `phieu_mau.pdf` KHÔNG đụng: nhóm B). `UX1_RA_SOAT.md` mục 2b: bảng "Sau" với số đo (nạp→chạy→tải = 4; xử lý em chưa có CLB = 1; GV chủ nhiệm ≤ 2; học sinh 2); dòng phiếu PDF và báo cáo BGH ghi "nhóm B, sau tích hợp".
+
 ## 2026-11-18 — UX1A-L5b: ô huy chương nhận Vàng/Bạc/Đồng
 
 - Chế độ huy chương BẬT: ô huy chương của Sổ nhập nhận `Vàng/Bạc/Đồng` (không phân biệt hoa/thường, dấu; cả `vang/bac/dong`, `gold/silver/bronze`), đổi về 60/30/10 ngay ở lớp đọc (`so_nhap.chuan_hoa_chu_huy_chuong`, gọi trong `api_nhap._doc_so_nhap`); giá trị lưu (`wharton_bids`), `fa_daa.kiem_ho_so_huy_chuong` và kết quả xếp không đổi. Chữ lạ vẫn báo `fa_huy_chuong_gia_tri_sai`. Chế độ tắt: không ánh xạ (như cũ). Đường Forms đi qua sổ nhập nên được phủ cùng chỗ.
