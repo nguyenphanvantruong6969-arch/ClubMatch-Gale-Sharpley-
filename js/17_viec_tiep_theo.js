@@ -37,12 +37,14 @@ const VIEC_HANH_DONG = {
   },
   chay: () => { switchTab("pipeline"); el("btnRun").click(); },
   xu_ly: viecXuLyChuaCoCho,
+  /* UX1A-L3: một lần bấm xuất luôn bằng tuỳ chọn mặc định của "Xuất kết quả (Excel)" (đạt mục tiêu 4 lần bấm);
+     muốn tuỳ chọn khác thì mở "Tuỳ chọn khác" ngay bên dưới nút đó. */
   xuat: () => {
     switchTab("others");
-    viecChoRoiLam(() => el("btnXuatTuyChon") && el("btnXuatTuyChon").offsetParent !== null, () => {
+    viecChoRoiLam(() => el("btnXuatTuyChon") && el("btnXuatTuyChon").offsetParent !== null && !el("btnXuatTuyChon").disabled, () => {
       const nut = el("btnXuatTuyChon");
       nut.scrollIntoView({ block: "center" });
-      nut.focus();
+      nut.click();
     });
   },
 };

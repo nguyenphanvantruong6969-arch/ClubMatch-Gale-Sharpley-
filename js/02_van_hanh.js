@@ -1029,9 +1029,9 @@ function nhapTatCa() {
         n_moi: d.n_students_created, n_bo: d.n_students_skipped,
       };
       canhBaoNhapGanNhat = d.warnings || [];
-      const cau = t("so_nhap_xong", muc.ketQuaSo);
-      feedback(el("feedbackImportAll"), cau, false);
-      showToast(cau, "success");
+      /* UX1A-L3: kết quả (số CLB, số học sinh) hiện MỘT lần, ở hàng của tệp; thông báo nổi chỉ xác nhận, dòng
+         phản hồi riêng bỏ (trước đây cùng một câu hiện ở ba nơi). */
+      showToast(t("so_nhap_da_nap"), "success");
     })
     .catch((e) => {
       muc.loiText = String(e);

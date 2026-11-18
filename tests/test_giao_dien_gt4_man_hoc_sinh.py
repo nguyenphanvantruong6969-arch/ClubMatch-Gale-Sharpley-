@@ -139,7 +139,9 @@ def test_bam_dong_bang_ket_qua_mo_giai_trinh_va_co_lien_ket_nhay(mo):
     page.wait_for_function("(() => { const r = document.querySelector('#gtPanel').getBoundingClientRect();"
                            " return r.top < window.innerHeight && r.bottom > 0; })()")
     page.evaluate("window.scrollTo(0, 0)")
-    page.click("#gtNhay")                                           # liên kết "Tra cứu" ở đầu thẻ
+    # UX1A-L3: khung tra cứu nằm đầu thẻ Kết quả, không còn liên kết nhảy; ô tìm kiếm bấm tới được ngay.
+    assert page.locator("#gtNhay").count() == 0
+    page.click("#gtTim")
     assert page.evaluate("document.activeElement.id") == "gtTim"
     assert not loi, loi
 

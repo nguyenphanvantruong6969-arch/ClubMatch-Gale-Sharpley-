@@ -267,7 +267,37 @@
         <h1 data-i18n="kq_title">Kết quả</h1>
         <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào. Bảng này không có điểm hay số bốc thăm; khung tra cứu (dành cho quản trị và giáo viên) cho xem chi tiết riêng của từng {person_l}.</p>
       </header>
-      <p class="kq-nhay"><a href="#gtPanel" id="gtNhay" class="btn btn-ghost" data-i18n="gt_nhay">Tra cứu một {person_l} ↓</a></p>
+      <!-- UX1A-L3: tra cứu một học sinh nằm ĐẦU thẻ Kết quả (trên bảng) -->
+      <!-- GT1: tra cứu một học sinh (giải thích vì sao em được/không được từng CLB); js/14_giai_trinh.js -->
+      <div class="panel gt-ui" id="gtPanel">
+        <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
+        <div class="panel-body">
+          <ol class="gt-buoc" id="gtBuocHuongDan" data-quyen="quan_tri" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
+            <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
+            <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
+            <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
+            <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
+          </ol>
+          <div class="search-row">
+            <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
+            <input type="text" id="gtTim" class="text-input" data-i18n-placeholder="gt_tim_ph" placeholder="Tìm mã hoặc tên">
+          </div>
+          <ul id="gtDs" class="gt-ds"></ul>
+          <div id="gtKetQua" role="status"></div>
+          <div class="search-row" id="gtIn" hidden>
+            <button type="button" class="btn btn-secondary" id="btnGtInMot" data-i18n="gt_in_mot">In phiếu cho {person_l} này</button>
+            <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
+          </div>
+          <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+          <div class="search-row">
+            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
+            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
+            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+          </div>
+          <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+        </div>
+      </div>
+
       <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
         <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
       </div>
@@ -336,35 +366,6 @@
           <div id="phKetQua" class="save-feedback" role="status"></div>
         </div>
       </div>
-      <!-- GT1: tra cứu một học sinh (giải thích vì sao em được/không được từng CLB); js/14_giai_trinh.js -->
-      <div class="panel gt-ui" id="gtPanel">
-        <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
-        <div class="panel-body">
-          <ol class="gt-buoc" id="gtBuocHuongDan" data-quyen="quan_tri" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
-            <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
-            <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
-            <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
-            <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
-          </ol>
-          <div class="search-row">
-            <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
-            <input type="text" id="gtTim" class="text-input" data-i18n-placeholder="gt_tim_ph" placeholder="Tìm mã hoặc tên">
-          </div>
-          <ul id="gtDs" class="gt-ds"></ul>
-          <div id="gtKetQua" role="status"></div>
-          <div class="search-row" id="gtIn" hidden>
-            <button type="button" class="btn btn-secondary" id="btnGtInMot" data-i18n="gt_in_mot">In phiếu cho {person_l} này</button>
-            <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
-          </div>
-          <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
-          <div class="search-row">
-            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
-            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
-            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
-          </div>
-          <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
-        </div>
-      </div>
     </section>
 
     <!-- ---------- TAB 3: DỮ LIỆU KHÁC (phần còn lại của thẻ Kết quả cũ) ---------- -->
@@ -425,10 +426,16 @@
         <div class="search-row">
           <button class="btn btn-primary" id="btnXuatTuyChon" data-i18n="btn_xuat_tuy_chon">Xuất kết quả (Excel)</button>
           <button class="btn btn-secondary" id="btnXuatTheoLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
-          <button class="btn btn-secondary" id="btnXuatLyDo" type="button" hidden data-i18n="btn_xuat_ly_do">Xuất lý do kết quả (CSV)</button>
-          <button class="btn btn-secondary" id="btnXuatNhuCau" type="button" hidden data-i18n="btn_xuat_nhu_cau">Xuất bảng nhu cầu (CSV)</button>
-          <button class="btn btn-secondary" id="btnXuatGoiY" type="button" hidden data-i18n="btn_xuat_goi_y">Xuất gợi ý chỉ tiêu kỳ sau (CSV)</button>
-          <button class="btn btn-secondary" id="btnXuatBienBan" type="button" hidden data-i18n="btn_xuat_bien_ban">Xuất biên bản bốc thăm (bản in và Excel)</button>
+          <!-- UX1A-L3: bốn nút xuất phụ (chỉ chế độ Huy chương) gộp vào một menu "Xuất…" -->
+          <details class="menu-khac" id="xuatMenu" hidden>
+            <summary class="btn btn-secondary" data-i18n="ux1a_xuat_menu">Xuất…</summary>
+            <div class="menu-khac-hop">
+              <button class="menu-khac-muc" id="btnXuatLyDo" type="button" hidden data-i18n="btn_xuat_ly_do">Xuất lý do kết quả (CSV)</button>
+              <button class="menu-khac-muc" id="btnXuatNhuCau" type="button" hidden data-i18n="btn_xuat_nhu_cau">Xuất bảng nhu cầu (CSV)</button>
+              <button class="menu-khac-muc" id="btnXuatGoiY" type="button" hidden data-i18n="btn_xuat_goi_y">Xuất gợi ý chỉ tiêu kỳ sau (CSV)</button>
+              <button class="menu-khac-muc" id="btnXuatBienBan" type="button" hidden data-i18n="btn_xuat_bien_ban">Xuất biên bản bốc thăm (bản in và Excel)</button>
+            </div>
+          </details>
         </div>
         <p class="hint-text" id="xuatFaAnGoiY" data-sg11a-xuat-fa data-i18n="xuat_fa_an_goi_y">Các nút xuất lý do kết quả, bảng nhu cầu, gợi ý chỉ tiêu và biên bản bốc thăm chỉ hiện khi bật chế độ "Xếp theo loại {slot_l} và huy chương".</p>
         <p class="hint-text" data-i18n="xuat_theo_lop_hint">Xuất theo lớp: mỗi lớp một tệp bảng tính, chỉ có kết quả xếp, không có điểm hay số bốc thăm. Gửi được cho giáo viên chủ nhiệm.</p>

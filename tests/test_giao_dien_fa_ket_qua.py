@@ -21,6 +21,12 @@ from test_fa_ly_do import _dung  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+
+def _bam_xuat(page, nut):
+    """UX1A-L3: bốn nút xuất phụ nằm trong menu "Xuất…" (đóng sau mỗi lần bấm một mục)."""
+    page.locator("#xuatMenu > summary").click()
+    page.locator("#" + nut).click()
+
 def _fa(api):
     _dung(api)
     assert api.run_pipeline(seed=9)["ok"]
@@ -86,9 +92,9 @@ def test_fa_bat_co_cau_ly_do_moi_hoc_sinh(mo):
 def test_hai_nut_xuat_tao_tep(mo):
     page, _, loi = mo(_fa)
     page.wait_for_selector("#btnXuatLyDo:not([hidden])")
-    page.locator("#btnXuatLyDo").click()
+    _bam_xuat(page, "btnXuatLyDo")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('ket_qua_ly_do.csv')")
-    page.locator("#btnXuatNhuCau").click()
+    _bam_xuat(page, "btnXuatNhuCau")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('bang_nhu_cau')")
     txt = page.locator("#xuatFeedback").inner_text()
     duong = [w for w in txt.split() if w.endswith(".csv")]
@@ -100,7 +106,7 @@ def test_nut_goi_y_chi_tieu_ky_sau_tao_tep(mo):
     """GAP-7: nút xuất gợi ý chỉ tiêu kỳ sau (chỉ khi FA bật)."""
     page, _, loi = mo(_fa)
     page.wait_for_selector("#btnXuatGoiY:not([hidden])")
-    page.locator("#btnXuatGoiY").click()
+    _bam_xuat(page, "btnXuatGoiY")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('goi_y_chi_tieu.csv')")
     txt = page.locator("#xuatFeedback").inner_text()
     duong = [w.strip(".,;") for w in txt.split() if "goi_y_chi_tieu.csv" in w]
@@ -113,7 +119,7 @@ def test_nut_bien_ban_boc_tham_tao_tep_khong_co_ma_hoc_sinh(mo):
     """FA-9: nút xuất biên bản bốc thăm (chỉ khi FA bật)."""
     page, _, loi = mo(_fa)
     page.wait_for_selector("#btnXuatBienBan:not([hidden])")
-    page.locator("#btnXuatBienBan").click()
+    _bam_xuat(page, "btnXuatBienBan")
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.includes('bien_ban_boc_tham')")
     txt = page.locator("#xuatFeedback").inner_text()
     duong = [w for w in txt.split() if w.endswith(".html")]

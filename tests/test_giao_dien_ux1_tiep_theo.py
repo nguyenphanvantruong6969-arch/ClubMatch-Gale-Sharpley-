@@ -126,7 +126,8 @@ def test_chay_xong_het_chua_co_cho_nut_xuat_ket_qua(mo, api, monkeypatch):
     assert nut.inner_text().strip() == "Xuất kết quả"
     nut.click()
     page.wait_for_selector("#view-others.is-active")
-    assert page.evaluate("document.activeElement.id") == "btnXuatTuyChon"
+    # UX1A-L3: bấm là xuất luôn (tuỳ chọn mặc định), không dừng ở việc đưa con trỏ tới nút.
+    page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.trim() !== ''")
     assert not loi, loi
 
 
@@ -145,4 +146,35 @@ def test_the_can_xu_ly_la_nut_cung_hanh_dong(mo, api, monkeypatch):
     page.wait_for_selector('.kpi-o[data-muc="chuaCoChoPanel"]')
     page.locator('.kpi-o[data-muc="chuaCoChoPanel"]').click()
     page.wait_for_selector("#chuaCoChoPanelBody", state="visible")
+    assert not loi, loi
+
+
+def test_luong_chinh_nap_chay_tai_ket_qua_bon_lan_bam(mo, api, monkeypatch):
+    """Mục tiêu UX1 §1: nạp sổ -> chạy -> tải kết quả = 4 lần bấm (chọn tệp, Nhập sổ, nút thanh, nút thanh).
+    Trường hợp mọi người đều có CLB (sổ mẫu 120 học sinh còn vài em chưa có CLB nên giả lập "không ai")."""
+    goc = api.get_em_chua_co_cho
+
+    def khong_ai():
+        kq = goc()
+        kq["data"] = dict(kq["data"], so_em=0, danh_sach=[])
+        return kq
+    monkeypatch.setattr(api, "get_em_chua_co_cho", khong_ai)
+    page, loi = mo()
+    _trang_thai(page, "nap_so")
+    lan = 0
+    page.locator("#fileAny").set_input_files([SO_120])               # 1: chọn tệp (hộp thoại chọn tệp)
+    lan += 1
+    page.wait_for_function("() => !document.getElementById('btnImportAll').hidden")
+    page.locator("#btnImportAll").click()                            # 2: Nhập sổ
+    lan += 1
+    _trang_thai(page, "chay")
+    page.locator("#viecTiepTheoNut").click()                         # 3: Chạy sắp xếp (từ thanh)
+    lan += 1
+    page.wait_for_function(
+        "() => ['xu_ly', 'xuat'].includes(document.getElementById('viecTiepTheo').dataset.trangThai)")
+    _trang_thai(page, "xuat")
+    page.locator("#viecTiepTheoNut").click()                         # 4: Xuất kết quả (từ thanh)
+    lan += 1
+    page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.trim() !== ''")
+    assert lan == 4
     assert not loi, loi

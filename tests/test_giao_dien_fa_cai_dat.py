@@ -67,7 +67,7 @@ def test_mac_dinh_tat_va_xem_lai_ghi_tat(mo_trang):  # noqa: F811 (fixture dùng
 
 def test_chon_huy_chuong_sau_chi_xep_van_luu_ca_wharton_va_fa(mo_trang):  # noqa: F811 (fixture dùng lại)
     # UX1A-L2b: tổ hợp "FA bật, điểm quyết tâm tắt" không còn tạo được từ giao diện (thẻ Huy chương
-    # luôn kèm điểm quyết tâm). Việc backend từ chối tổ hợp đó vẫn do tests/test_a13_13_kiem_nhan.py giữ.
+    # luôn kèm điểm quyết tâm). Việc backend từ chối tổ hợp đó vẫn do tests/test_fa_n3_loi_diem_quyet_tam.py giữ.
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt FA2")
     page.locator("#wzChiXep").click()

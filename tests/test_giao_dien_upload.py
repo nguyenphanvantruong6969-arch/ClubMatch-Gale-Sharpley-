@@ -180,7 +180,9 @@ def test_bo_tep_xoa_luon_phan_hoi_cua_lan_nhap_truoc(trang):
                            " && !document.getElementById('importActions').hidden")
     page.locator("#btnImportAll").click()
     page.wait_for_selector(".queue-row.is-done", timeout=20000)
-    assert page.locator("#feedbackImportAll").inner_text().strip()
+    # UX1A-L3: kết quả nạp hiện một lần ở hàng của tệp (dòng phản hồi riêng đã bỏ); bỏ tệp thì hàng biến mất.
+    assert page.locator(".queue-row .queue-detail").inner_text().strip()
+    assert page.locator("#feedbackImportAll").inner_text().strip() == ""
 
     page.locator("#btnClearQueue").click()
     page.wait_for_function(

@@ -3032,7 +3032,6 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .gt-hs-hien { font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; }
 .gt-hs-dem { color: #b45309; font-weight: 600; margin: 4px 0; }
 .gt-hs-dem[hidden] { display: none; }
-.kq-nhay { margin: 0 0 8px; }
 .gt-buoc { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 0; margin: 0 0 12px; list-style: none; counter-reset: gtb; }
 .gt-buoc li { counter-increment: gtb; display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .gt-buoc li::before { content: counter(gtb); display: inline-flex; width: 24px; height: 24px; align-items: center;

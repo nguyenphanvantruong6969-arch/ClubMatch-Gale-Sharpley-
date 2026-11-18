@@ -211,6 +211,8 @@
       ux1a_sx_ngay: "ngày",
       ux1a_sx_ngay_sai: "Số ngày nhận khiếu nại phải từ 1 đến 14.",
       ws_btn_cai_dat: "Cài đặt…",
+      ux1a_xuat_menu: "Xuất…",
+      so_nhap_da_nap: "Đã nạp sổ",
       /* UX1A-L2: nhóm điều hướng */
       ux1a_nhom_nap_xep: "1. Nạp & xếp",
       ux1a_nhom_nhap_tay: "2. Nhập tay",
@@ -889,7 +891,6 @@
       gt_hs_ma_nhan: "Mã {person_l}",
       gt_hs_ma_tra_nhan: "Mã tra cứu",
       gt_hs_dem_nguoc: "Hãy đợi {n} giây rồi nhập lại.",
-      gt_nhay: "Tra cứu một {person_l} ↓",
       gt_buoc_aria: "Các bước cho {person_l} tự tra cứu",
       gt_buoc_1: "Tạo mã tra cứu",
       gt_buoc_2: "Xuất mã, in phiếu",
@@ -1560,6 +1561,8 @@
       ux1a_sx_ngay: "days",
       ux1a_sx_ngay_sai: "The complaint period must be 1 to 14 days.",
       ws_btn_cai_dat: "Settings…",
+      ux1a_xuat_menu: "Export…",
+      so_nhap_da_nap: "Book loaded",
       /* UX1A-L2: navigation groups */
       ux1a_nhom_nap_xep: "1. Load & run",
       ux1a_nhom_nhap_tay: "2. Manual entry",
@@ -2238,7 +2241,6 @@
       gt_hs_ma_nhan: "{person_l} ID",
       gt_hs_ma_tra_nhan: "Lookup code",
       gt_hs_dem_nguoc: "Please wait {n} seconds and try again.",
-      gt_nhay: "Look up one {person_l} ↓",
       gt_buoc_aria: "Steps for {person_l} self-lookup",
       gt_buoc_1: "Create lookup codes",
       gt_buoc_2: "Export codes, print slips",
