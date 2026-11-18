@@ -200,3 +200,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1A-L5b (Vàng/Bạc/Đồng ở ô huy chương) | xong (chờ checker) | 2026-11-18 | so_nhap.py, api_nhap.py, js/02_van_hanh.js, CHANGELOG.md | tests/test_ux1_l5b_huy_chuong_chu.py, tests/test_giao_dien_ux1_nhap_so.py | |
 | UX1A-L8-A (tài liệu, ảnh, bảng "Sau" đo được) | xong (chờ checker) | 2026-11-18 | HUONG_DAN_SU_DUNG.md, docs/giai_trinh/*, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/ux/*, poster/DU_LIEU_POSTER.md, poster/hinh/*, i18n_errors.py, mau_forms_thi_clb/tao_mau_forms.py, CHANGELOG.md | tests/test_gt3_tai_lieu.py, tests/test_a13_12_tai_lieu.py (đạt) | poster PDF/PPTX chưa dựng lại (cần python-pptx) |
 
+| XP1 (xuất PDF hàng loạt: danh sách theo CLB/lớp, phiếu giải trình theo lớp có loại CLB; mục mới, Truong duyệt 2026-11-18) | đã lập kế hoạch (Opus), chờ Sonnet làm L1 | 2026-11-18 | docs/phien/claude__xp1-xuat-pdf.md | — | reportlab + font TTF (thư viện mới, đã duyệt) |
