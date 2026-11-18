@@ -1,19 +1,19 @@
 # Checker — UX1A (branch claude/ux1-a-giao-dien) — latest verdict first
 
-## L3 fix1 — REVIEW e812cf3..3ba1efe — NO BUGS (L3 now clean)
-- Tests: 32 passed (ux1_tiep_theo incl. real-book 4-click test, upload incl. fail→retry→success, ux1_ket_qua, ux1_dieu_huong, doi_ngon_ngu).
-- (1) `feedbackImportAll` cleared at start of `nhapTatCa()`; new test checks the error text AND the `is-error` class are gone after a successful retry.
-- (2) `#viecTiepTheoNut2` ("Xuất kết quả", secondary style) is `hidden` by default and set `hidden = state !== "xu_ly"` on every refresh → visible only
-  in xu_ly; hidden in nap_so/canh_bao/chay/xuat (checked chay in test; xuat uses the main button); bar itself is `data-quyen=quan_tri`, so
-  `giao_vien` never sees it. Click → `VIEC_HANH_DONG.xuat()` = same real export. Real 120-book (32 unplaced) now exports in 4 clicks, no monkeypatch.
-- Note: in xu_ly the primary stays "Xử lý n…" (btn-primary) and export is secondary — consistent with spec order.
-
-## L3 — REVIEW 275a459..e812cf3 — 1 minor bug (fixed in fix1)
-- Item 1 OK (4 export buttons already FA-only on 275a459); item 2 OK (bar export = `btnXuatTuyChon.click()`); item 4: monkeypatch hid the
-  unplaced path (32 unplaced on real book) → now covered by the real-book test. Bug: stale `feedbackImportAll` error after retry (fixed).
+## L5 — REVIEW bc71013..764c85c — NO BUGS (3 notes)
+- Tests: 129 + 136 passed (new l5_backend/ux1_nhap_so, data_health, ws_nhan, so_mau tests, i18n/bang_loi, fa_n3, L1/L3 suites); `tao_i18n_js.py` regenerates `i18n_loi.js` with no diff.
+- (1) Severity: only `n_high` gates anything (run gate, L1 bar `canh_bao`, UI sort/label); no code reads "medium" as blocking → L1 bar unaffected.
+- (2) Plain sample: `tao_so_nhap_mau(out)` cell-by-cell md5 identical to bc71013 (3 sheets); `kieu="huy_chuong"` gives the medal book whose Hướng dẫn has the "BẬT ở Cài đặt" line;
+  preview of that book with FA off returns `so_nhap_canh_bao_huy_chuong_che_do_tat`. Unknown `kieu` falls back to plain (safe).
+- (3) `#btnBatHuyChuong`: created only in the import queue (admin pipeline view); calls `update_workspace_config {wharton,fa_daa}` (QUAN_TRI → blocked for giao_vien, audited), disables while running,
+  error → toast + button re-enabled, success → `ux1aApDungSong` + re-preview of the same pending book. Never silent.
+- (4) Test edits (`test_ws_nhan` SUA_CO_Y, `test_data_health` severity, `chu_ui_doi_co_y_t3.json` import_hint): string/severity only; matching i18n.js strings; nothing weakened.
+- (5) Deviations OK: summary line sits ABOVE the grouped list (list kept); two sample buttons instead of a menu — acceptable.
+- (6) Invariant 1/2/4/6/7: only messages, one preview-only flag (`co_cot_huy_chuong`), optional `kieu` arg; stored data + run decisions untouched; error code added to catalogue + regenerated JS.
+Notes: (a) without a workspace (`ws_tat_che_do`) the "Bật chế độ huy chương" button just shows an error toast — mode cannot be enabled there; consider hiding the button then. (b) "run error points to FA setting" is done as the
+hint text `wh_goi_y_tat`, not a new run error; fine. (c) summary says "chưa đặt đủ điểm quyết tâm (huy chương)" (not exactly "huy chương" only).
 
 ## Earlier lots
-- L2b (7bb6a9b..e3d0382): NO BUGS; 198 tests; dat_loai_clb QUAN_TRI + audit, no schema change; backend FA-needs-wharton still covered by
-  test_fa_n3_loi_diem_quyet_tam.py (comment fixed in L3); note: Undo snapshot could overwrite a change made within 10 s.
-- L2 (ab1bd16..0ded385): NO BUGS; 141 tests; MutationObserver loop-safe; student lock OK; print-only hidden-sidebar edge noted.
-- L1 (016ae66..ebf24cd): NO BUGS; 4 clicks measured (was 5); notes (has_results fixed in L2; silent 3 s timeout).
+- L3 + fix1 (275a459..3ba1efe): stale import error found, fixed; real-book 4 clicks via secondary export button; Nut2 visible only in xu_ly, admin only.
+- L2b (7bb6a9b..e3d0382): NO BUGS; dat_loai_clb QUAN_TRI + audit, no schema change; note: Undo snapshot may overwrite a change made within 10 s.
+- L2 (ab1bd16..0ded385): NO BUGS; MutationObserver loop-safe; student lock OK. L1 (016ae66..ebf24cd): NO BUGS; 4 clicks measured.
