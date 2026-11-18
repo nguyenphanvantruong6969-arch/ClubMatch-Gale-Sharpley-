@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L2b fix2 (từ lượt duyệt của lead)
+
+- `get_san_sang_huy_chuong` thêm `huy_chuong_sai` (+ `huy_chuong_sai_vd`): số học sinh có ô không phải huy chương hợp lệ hoặc có huy chương ở CLB Tự do, đọc bằng `fa_daa.kiem_ho_so_huy_chuong` (chỉ đọc, không đổi dữ liệu). Còn > 0 thì `san_sang = false` và bảng sửa tại chỗ nói MỘT dòng "n học sinh có giá trị không phải huy chương … nạp lại sổ có cột Huy chương (Vàng/Bạc/Đồng)" thay vì "Sẵn sàng" (trước đây báo sẵn sàng mà lần chạy vẫn bị chặn).
+- Khung "Sau khi xếp": "Mở vòng 2" chỉ hiện khi còn em chưa có chỗ, "Mời danh sách chờ" chỉ khi còn chỗ trống (đang bật thì vẫn hiện để tắt).
+- Nút "Hoàn tác" ở thông báo nổi: chữ trắng, gạch chân, rõ trên nền xanh.
+- Test: `tests/test_ux1_cai_dat_backend.py` (sổ chế độ thường chưa sẵn sàng; sổ huy chương hợp lệ sẵn sàng VÀ chạy được), `tests/test_giao_dien_ux1_cai_dat.py` (+4).
+
 ## 2026-11-18 — UX1A-L8-A: tài liệu, ảnh chụp, bảng "Sau" đo được
 
 - `HUONG_DAN_SU_DUNG.md`: bảng điều hướng thành 4 nhóm; mục mới về thanh "Việc tiếp theo", Cài đặt (ba thẻ), sổ mẫu có huy chương, Vàng/Bạc/Đồng; bỏ số thứ tự thẻ cũ (01–06). `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md`: cách bật chế độ huy chương theo giao diện mới. `docs/ke_hoach/CLAUDE_CHI_TIET.md`: bản đồ mã (`js/17`, `js/18`, `get_san_sang_huy_chuong`, `dat_loai_clb`, lớp đọc huy chương), số tệp/ca test (339 / 6.845).

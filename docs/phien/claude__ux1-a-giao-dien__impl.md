@@ -23,7 +23,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
   san_sang is false when > 0; panel line #ux1aSsHuyChuongSai (js/18_cai_dat.js ux1aVeSanSang, i18n ux1a_ss_huy_chuong_sai); (2) #ux1aSauXep shows
   "Mở vòng 2" only when unplaced > 0 and "Mời danh sách chờ" only when empty seats > 0 (shown anyway when the flag is already on); (3) .toast .toast-hanh-dong
   CSS (white, underlined). Tests updated/added in tests/test_ux1_cai_dat_backend.py and tests/test_giao_dien_ux1_cai_dat.py (14 + backend pass).
-- Still to do: read the related regression result (/tmp/claude-0/fix2.txt, may be gone: re-run test_giao_dien_ux1_*, test_ux1_*, fg1_bat_tinh_nang,
+- (done: regression 252 passed, CHANGELOG added, reported) Old note: read the related regression result (/tmp/claude-0/fix2.txt, may be gone: re-run test_giao_dien_ux1_*, test_ux1_*, fg1_bat_tinh_nang,
   giao_dien_fa_*, sg2, sg11b, gt3_phan_quyen, i18n_*, ws_nhan in the BACKGROUND with nohup + Monitor), fix reds, add CHANGELOG line, commit, push,
   report "CODER DONE L2b fix2 | base <sha> head <sha>" to the lead.
 - Open: checker L3 "observation" in docs/phien/claude__ux1-a-giao-dien__checker.md never read.
