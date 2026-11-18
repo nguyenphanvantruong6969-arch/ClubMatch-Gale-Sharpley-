@@ -201,6 +201,7 @@ function kqVeBang(cot, hang, dem, soCotCoDinh, cotLop) {
   kqSapHang(hang, dang, cotLop, kq.sapGiam).forEach((h) => {
     const tr = document.createElement("tr");
     if (h.chuaCo) tr.className = "dong-do";
+    tr.dataset.studentId = h.student_id;                       // GT4-L5: bấm dòng -> lời giải thích của em
     tr.innerHTML = `<td class="kq-cd">${esc(h.student_id)}</td><td class="kq-cd">${esc(h.name || "")}</td>` + h.o.join("");
     manh.appendChild(tr);
   });
@@ -301,6 +302,11 @@ function initKetQuaHandlers() {
   el("kqDau").addEventListener("click", (ev) => {
     const nut = ev.target.closest(".kq-sx-cot");
     if (nut) kqBamCot(Number(nut.dataset.cot));
+  });
+  /* GT4-L5: bấm một dòng của bảng -> mở lời giải thích của em đó (khung tra cứu ở dưới, cuộn tới). */
+  el("kqThan").addEventListener("click", (ev) => {
+    const tr = ev.target.closest("tr");
+    if (tr && tr.dataset.studentId && typeof window.gtMoHocSinh === "function") window.gtMoHocSinh(tr.dataset.studentId);
   });
   el("kqChonLop").addEventListener("change", (ev) => { kq.lop = ev.target.value; luuKqXem(); veKetQua(); });
   el("kqChonClb").addEventListener("change", (ev) => { kq.clb = ev.target.value; luuKqXem(); veKetQua(); });

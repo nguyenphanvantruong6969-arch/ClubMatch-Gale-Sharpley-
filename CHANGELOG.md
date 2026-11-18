@@ -5,6 +5,92 @@
 - Mới: `docs/ke_hoach/ux/UX1_RA_SOAT.md` (số lần bấm theo 4 nhóm người dùng, 10 vấn đề, đề xuất UX1b/UX1c), ảnh `docs/ke_hoach/ux/anh/`, script chụp `docs/ke_hoach/ux/chup_luong_chinh.py`, `chup_phieu.py` (dữ liệu MÔ PHỎNG).
 - Không đổi mã sản phẩm; không test mới.
 
+## 2026-11-18 — GT4 fix 2: các ghi chú nhỏ của checker (L2, L3, L5, L6, L7) + Gate
+
+- L2: thông báo nổi sau khi xuất chỉ nói đã xuất gì (đường dẫn đầy đủ vẫn ở dòng dưới nút) nên không che bảng kết quả.
+- L2 (còn sót): nút do JS sinh (`xu_ly_khieu_nai`, `tra_loi_moi`) mang `data-quyen="quan_tri"` — giáo viên không còn thấy.
+- L3: thẻ "Bước tiếp theo" ghi "tệp hướng dẫn cài đặt đi kèm" (không còn nhắc `.md`); thẻ đang chọn của hộp Tài khoản thấy rõ; "Đổi mật khẩu" xuống cuối hộp (danh sách + "Thêm tài khoản" lên trước); `HUONG_DAN_CAI_DAT.md` nói rõ trường hợp `.exe` ở thư mục chỉ-đọc.
+- L5: nút xác nhận thoát đổi thành "Có, thoát" (không trùng tên nút "Thoát"); ô "Hiện mã" cho mã tra cứu; chỉ còn một dòng chờ khi bị khoá (dòng lỗi `gt1_tam_khoa` bỏ câu "đợi một phút", đồng hồ đếm nói số giây; đổi sang mã khác thì dòng lỗi mất); nhấn dòng kết quả cuộn tức thì tới khung; tên trường cập nhật cả khi nạp muộn sau khi tải lại trang; nút Xem thẳng hàng với ô nhập.
+- L6: hộp rộng `min(960px, 92vw)` ở thẻ nhật ký; bộ lọc xếp ngang; nhãn "Ngày" (không còn "năm-tháng-ngày" sai với ngôn ngữ trình duyệt); chi tiết hiện "Vai trò: Quản trị" thay vì `quan_tri`.
+- L7: chỉ một nút chính trong khung Thử cấu hình ("So sánh" thành nút phụ).
+- Không sửa (quyết định nội dung của Truong): câu "dành một số chỗ cho nhóm được giữ chỗ" của L4 có đúng điều nhà trường muốn nói với phụ huynh không.
+- Gate: `ruff` sạch; `kiem_nhanh` 7/7 với 20 seed (60 ca trùng khít); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.
+- Test mới: 3 ca vào `test_giao_dien_gt4_man_hoc_sinh.py`/`test_giao_dien_gt4_phien_rieng_tu.py`.
+
+## 2026-11-18 — GT4 fix: sửa các lỗi checker báo (B1–B3, OL1, OL2) và các test hỏng trên CI
+
+- B1 (L3): xoá tệp rỗng `--xoa-tai-khoan` bị commit nhầm ở thư mục gốc.
+- B2 (L5, `js/14_giai_trinh.js`): khoá tạm chỉ chặn nút "Xem" khi ô mã học sinh đang là mã bị khoá (backend khoá theo từng mã); đổi mã thì mở lại, quay lại mã cũ thì khoá lại.
+- B3 (L5, `style.css`): nút ngôn ngữ trên màn học sinh dùng chữ tối, 14 px, vùng bấm ≥ 40 px (trước: chữ trắng 75 % trên nền sáng, tương phản ~1,1:1).
+- OL1 (GT3, `js/16_tai_khoan.js` + `style.css`): lớp phủ đăng nhập/đăng xuất đục (`.tk-kin`) — không còn đọc được tên, mã, CLB học sinh phía sau; hộp "Tài khoản" giữ nền mờ.
+- OL2 (GT3, `js/00_nen.js`): mọi lỗi `gt3_can_dang_nhap` (hiện qua toast hoặc ô báo lỗi) hỏi lại phiên ngay → mở hộp đăng nhập, không đợi vòng hỏi 30 giây.
+- CI: `test_ws_nhan` thêm 3 mã lỗi GT4 vào danh sách mã mới (`gt4_ngay_sai`, `tep_khong_hop_le`, `tep_khong_mo_duoc`); `i18n.js` đổi "Xuất so sánh (HTML)" → "(trang web)" / "(web page)" và "Seed" → "Draw number" (test văn phong); hai test Chromium dễ chập chờn trên CI chậm được sửa: đo nhãn–ô trong MỘT lần đánh giá và đợi danh sách tài khoản dàn xong; đợi `inert` về false sau khi thoát chế độ học sinh (không nới điều kiện, vẫn khẳng định trạng thái cuối).
+- Test mới: `tests/test_giao_dien_gt4_phien_rieng_tu.py` (2), thêm 2 ca vào `tests/test_giao_dien_gt4_man_hoc_sinh.py`.
+- Chưa sửa (ghi nhận): `test_a13_12_browser_host.py::test_tai_lai_trang_khong_tat_may_chu` hỏng một lần trên Windows CI, qua trên Linux — cần chạy lại trên CI để biết có chập chờn không.
+
+## 2026-11-17 — GT4-L7: thiết kế lại khung Tiêu chí xếp / Thử cấu hình / so sánh (R8)
+
+- Nguyên nhân gốc: nhãn và ô chọn là các phần tử flex rời nhau trong `.admin-form-grid`, `.check-row` không có CSS, `<ol>` mặc định. Làm lại bằng mẫu `.club-field` (nhãn trên ô) và các biến màu sẵn có (`style.css`, khối "GT4-L7"); `index.html` dựng lại hai khung; không dùng kỹ năng `formal-uidesign` (không có trong môi trường).
+- Tiêu chí xếp: hai cột ≥ 1000 px (thẻ thứ tự bên trái với số thứ tự dạng huy hiệu, biểu mẫu bên phải), một cột dưới đó; nhãn trên ô, ô chọn ≤ 360 px, ô văn bản có nhãn + gợi ý một dòng, ô tích có hàng riêng và gợi ý thụt vào, nút Lưu căn phải; dòng "chưa dùng" là danh sách màu xám.
+- Thử cấu hình: dải ba bước, hai ô chọn lần cạnh nhau, nút So sánh chính + hai nút xuất phụ, khối "Dùng tiêu chí…" tách bằng đường viền có câu nói rõ chỉ lưu tiêu chí; cảnh báo vàng (không chặn) khi chỉ theo nhóm mà chưa có nhóm, hoặc "nhóm đứng trước điểm" với danh sách rỗng.
+- So sánh: `tieu_chi.tom_tat_so_sanh` (một câu chỉ có số, vi/en), `tieu_chi.chenh` (+3 / −2), `so_sanh_lan_chay` thêm `run_at`, `tang`, `tom_tat` (khoá thêm, không đổi khoá cũ); giao diện: câu tóm tắt, hai thẻ lần chạy với tiêu chí hai tầng tách riêng, bảng tiêu đề cố định + số căn phải + chênh lệch có chữ, danh sách đổi chỗ gập mặc định (nút "Hiện danh sách (n)"), cột Buổi chỉ khi nhiều buổi, không in `__mac_dinh__`. Tệp HTML xuất (`dung_html_so_sanh`) có cùng cấu trúc (thẻ, `<details>`, sticky, +/−).
+- Cùng nhịp cho khung tra cứu, hộp tài khoản, màn học sinh (lớp `.gt-ui`: nhãn trên ô, chữ ≥ 14 px, ô ≥ 36 px, tương phản ≥ 4,5:1, vòng focus 3 px).
+- Ảnh trước/sau ở 1280 px (MÔ PHỎNG): `docs/phien/anh_gt4/l7_{truoc,sau}_{tieu_chi,thu}_1280.png`.
+- Test mới: `tests/test_gt4_so_sanh.py` (7), `tests/test_giao_dien_gt4_tieu_chi.py` (13 ca Chromium: 1280/1024 px, nhãn–ô, hai cột, ô tích, thẻ so sánh, cảnh báo, tương phản/cỡ chữ/ô bấm, focus).
+
+## 2026-11-17 — GT4-L6: nhật ký thao tác đọc được (R7)
+
+- `nhat_ky.py` + `api_nhat_ky.py`: lọc phía máy chủ thêm `chi_tu_choi` (kết quả khác `ok`) và `ngay` (`YYYY-MM-DD`, sai dạng → lỗi mới `gt4_ngay_sai` ở `i18n_errors.py`); `get_nhat_ky_thao_tac` trả thêm `hanh_dong_co` (các tên hành động có mặt, cho ô chọn). CSV xuất vẫn DẠNG THÔ (tên hành động, mã kết quả nguyên văn), chỉ thêm hai tham số lọc.
+- `js/16_tai_khoan.js` + `i18n.js` (vi+en): nhật ký ra khỏi phần đầu hộp Tài khoản sang thẻ riêng "Nhật ký thao tác" (hai thẻ, thẻ đang mở được giữ khi đổi ngôn ngữ); một từ điển `nkhd_*` (87 hàm có ghi nhật ký), `nkvai_*`, `nkkq_*`, `nkkey_*` với nhãn Việt/Anh, tên lạ giữ nguyên chữ; ô lọc "Thao tác" là `<select>` điền từ `hanh_dong_co`; ô "chỉ bị từ chối hoặc lỗi"; ô ngày; giờ hiện `dd/mm/yyyy hh:mm`; `chi_tiet` hiện `khoá: giá trị`; dòng `tra_cuu_hoc_sinh` không có người → "Học sinh tự tra cứu".
+- Sửa test cũ theo L6: `tests/test_giao_dien_gt3_dang_nhap.py::test_nhat_ky_thao_tac_hien_trong_hop_tai_khoan_cua_quan_tri` (mở thẻ nhật ký, nhãn tiếng Việt, chọn hành động bằng `<select>`).
+- `docs/giai_trinh/HUONG_DAN_CHAY.md` §8 cập nhật mô tả nhật ký (gói `GOI_MINH_CHUNG` dựng lại ở lô cuối).
+- Test mới: `tests/test_gt4_nhat_ky_doc.py` (8 test + từ điển đủ khoá vi/en cho mọi hàm có ghi nhật ký), `tests/test_giao_dien_gt4_nhat_ky.py` (4 test Chromium).
+
+## 2026-11-17 — GT4-L5: màn học sinh và vị trí khung tra cứu (R9)
+
+- Màn học sinh (`index.html`, `js/14_giai_trinh.js`, `style.css`, `i18n.js` vi+en): nhãn thấy được "Mã {person_l}" / "Mã tra cứu" (theo từ vựng workspace), tên workspace nếu có (workspace chưa có trường logo nên chỉ tên), nút đổi ngôn ngữ ngay trên màn, Enter gửi, lỗi thì con trỏ về ô đầu, khoá tạm thì đếm ngược số giây còn lại và khoá nút Xem.
+- `api_xuat.tra_cuu_hoc_sinh`: lỗi `gt1_tam_khoa` kèm tham số `giay` (số giây còn lại; thông báo giữ nguyên).
+- Thẻ Kết quả: liên kết "Tra cứu một {person_l} ↓" ở đầu thẻ; bấm một dòng của bảng (`js/09_the_xem.js`) mở lời giải thích của em đó ở khung tra cứu (`window.gtMoHocSinh`); khung tra cứu có dải bốn bước (tạo mã → xuất mã/in phiếu → chế độ học sinh → thoát bằng tài khoản quản trị), chỉ quản trị thấy (`data-quyen`).
+- "Mở tệp": `api_xuat.mo_tep(path)` mới (mức giáo viên như `mo_thu_muc`, không ghi nhật ký): chỉ mở TỆP có thật trong chỗ xuất và đuôi .html/.csv/.xlsx/.pdf/.docx; lỗi mới `tep_khong_hop_le`, `tep_khong_mo_duoc` (`i18n_errors.py`, đã chạy `tao_i18n_js.py`). Nút "Mở tệp" cạnh "Mở thư mục" sau khi xuất phiếu / mã tra cứu (`chayXuat(..., kemMoTep)` ở `js/03_ket_qua.js`).
+- Test mới: `tests/test_giao_dien_gt4_man_hoc_sinh.py` (6 test Chromium, đồng hồ giả `page.clock`), `tests/test_gt4_mo_tep.py` (16 ca).
+
+## 2026-11-17 — GT4-L4: lời giải trình không bị hiểu sai (R5, R6)
+
+- `fa_ly_do.py`: `cau_ly_do_rbda(dong, ten_clb, giong="hoc_sinh")` — giọng `giao_vien` trung tính (ngôi thứ ba), mặc định giữ nguyên từng byte; hằng `CAU_GIU_CHO` (một nguồn) cho câu chú thích chỗ dành riêng. Câu chế độ FA (`cau_ly_do`) không đổi.
+- `giai_trinh.py`: hàng `RESERVED` không còn `diem_chuan` (loại `giu_cho`); mỗi buổi có thêm `chu_thich` (câu cố định khi có hàng chỗ dành riêng); `giai_trinh_mot_hoc_sinh(..., giong)`.
+- `api_xuat.py`: khung tra cứu (`get_giai_trinh_hoc_sinh`) dùng giọng `giao_vien`; phiếu in và màn học sinh (`tra_cuu_hoc_sinh`) giữ giọng "Em". `phieu_giai_trinh.py`: ô "Chỗ dành riêng" + câu chú thích dưới bảng. `js/14_giai_trinh.js`, `i18n.js` (`gt_chuan_giu_cho`; `kq_desc` vi/en nói rõ bảng không có điểm còn khung tra cứu thì có), `index.html` (phụ đề `kq_desc`).
+- Sinh lại `docs/giai_trinh/CA_MAU.md`, `GOI_MINH_CHUNG.docx/.pdf` (câu trong khung tra cứu nay ở giọng trung tính; gói cũng nhận các ghi chú L1/L3).
+- Test mới: `tests/test_gt4_cau_giai_trinh.py` (7 test: mặc định giữ từng byte, giọng giáo viên không "Em", RESERVED không số + chú thích ở khung/màn học sinh/phiếu, phụ đề), `tests/test_giao_dien_gt4_giai_trinh.py` (Chromium: ô "Chỗ dành riêng" + chú thích + giọng trung tính).
+
+## 2026-11-17 — GT4-L3: thiết lập tài khoản và lấy lại quyền (R2, R4, D4-4, D4-5)
+
+- `js/16_tai_khoan.js` + `i18n.js` (vi, en): ô nhập lại mật khẩu và ô "Hiện mật khẩu" ở form tạo tài khoản đầu tiên, "Thêm tài khoản" và "Đổi mật khẩu" (lệch → một câu báo lỗi, không gọi backend); sau khi tạo quản trị ĐẦU TIÊN hộp mở lại với thẻ "Bước tiếp theo" (tạo giáo viên / ghi nhớ mật khẩu / cách lấy lại quyền) và con trỏ ở ô tên của "Thêm tài khoản"; khi chưa có tài khoản nào hộp có dòng cảnh báo "tạo quản trị đầu tiên trước khi đưa máy cho học sinh" (D4-5: chỉ bằng lời + nhập lại mật khẩu + tài liệu, không thêm bí mật).
+- `recovery.chay_xoa_tai_khoan_dong_lenh` + `main.py` (`--xoa-tai-khoan [app.db] [--yes]`, chạy trước khi nạp pywebview): hỏi gõ `XOA`, sao lưu rồi xoá hết tài khoản; không đường dẫn thì quét mọi workspace cạnh chương trình; bản đóng gói (không console) còn ghi `QUEN_MAT_KHAU_ket_qua.txt`. Không có nút nào trong ứng dụng xoá tài khoản (D4-4).
+- Mới: `QUEN_MAT_KHAU.bat` (cạnh `.exe`; hỏi `XOA`, gọi exe với `--yes`, in kết quả), được chép bởi `build_windows.bat` và `.github/workflows/build-windows-exe.yml`. Không kiểm được trên Linux.
+- Tài liệu: `HUONG_DAN_CAI_DAT.md` (mục "Quên mật khẩu quản trị"), `docs/giai_trinh/HUONG_DAN_CHAY.md` §8.
+- Sửa test cũ theo L3: `tests/test_giao_dien_gt3_dang_nhap.py` điền thêm ô nhập lại mật khẩu.
+- Test mới: `tests/test_giao_dien_gt4_tai_khoan.py` (5 test: cảnh báo, nhập lại lệch, hiện/ẩn, thẻ bước tiếp + con trỏ, đổi mật khẩu), `tests/test_gt4_khoi_phuc.py` (5 test, subprocess `main.py --xoa-tai-khoan`: sao lưu, 0 tài khoản, kết quả xếp nguyên, xác nhận sai không xoá, quét workspace).
+
+## 2026-11-17 — GT4-L2: nút hiện ra khớp với vai (R3, D4-1)
+
+- `phan_quyen.py`: `vao_che_do_hoc_sinh` chuyển từ `_GIAO_VIEN` sang `_QUAN_TRI` (D4-1: vào = thoát = quản trị; giáo viên không còn tự khoá được kiosk).
+- `index.html`: `data-quyen="quan_tri"` trên `btnGtTaoMa`, `btnGtXuatMa`, `btnGtCheDoHs`, `btnChayVong2`, `btnSubmitWharton`, `btnResetStudentEntry`, `btnDeleteStudent` và khối `.new-student-row` (đều gọi hàm mức quản trị). Các điều khiển GT2 (tiêu chí, chạy thử) nằm trong thẻ Quản lý, đã ẩn với giáo viên. Không bao phủ: nút do JS sinh động trong danh sách (xử lý khiếu nại `xu_ly_khieu_nai`, trả lời mời `tra_loi_moi`) — còn nếu giáo viên bấm thì vẫn bị từ chối và ghi nhật ký.
+- Sửa test cũ theo D4-1: `tests/test_gt_tich_hop.py` (bảng quyền `vao_che_do_hoc_sinh` = quản trị; ba test chế độ học sinh đăng nhập bằng quản trị), `tests/test_giao_dien_gt3_hoc_sinh.py` (đăng nhập quản trị trước khi bấm "Chế độ học sinh").
+- Test mới: `tests/test_giao_dien_gt4_vai.py` (quét vai giáo viên: bấm mọi nút nhìn thấy, nhật ký không có `gt3_khong_du_quyen`, kiosk không bị khoá; không đạt trên mã cũ) và `tests/test_gt_tich_hop.py::test_giao_vien_khong_vao_duoc_che_do_hoc_sinh`.
+
+## 2026-11-17 — GT4-L1: nhật ký thao tác không giữ mã tra cứu (R1, D4-2, D4-3)
+
+- `nhat_ky.py`: `tra_cuu_hoc_sinh` chỉ giữ `student_id` (`_CHI_GIU`); tham số tên `ma` bị ẩn ở mọi hàm (`_AN`); `get_giai_trinh_hoc_sinh` được ghi (`_GHI_DU_LA_DOC`, chỉ `student_id`, `run_id`).
+- `phan_quyen._ghi_nhat_ky`: dòng `tra_cuu_hoc_sinh` ghi `nguoi = NULL, vai = NULL`; mã học sinh chỉ ghi khi là mã có thật (dán mã tra cứu vào ô mã em thì `chi_tiet = {}`).
+- `docs/giai_trinh/HUONG_DAN_CHAY.md` §8: ghi chú CSDL cũ có thể còn mã trong nhật ký cũ → tạo lại toàn bộ mã trước khi dùng thật.
+- Test mới: `tests/test_gt4_nhat_ky.py` (4 test: quét mọi cột + CSV xuất; ẩn tham số `ma`; một dòng cho lượt xem giải trình; ô mã em dán nhầm).
+
+## 2026-11-17 — GT4-L0: lời giải trình chỉ đọc lần chạy chính thức (R0)
+
+- `api_xuat._giai_trinh_dung_lai`: truy vấn `run_history` qua `loc_chinh_thuc(cur)` (bỏ lần chạy thử). Trước đó, sau một lần "Chạy thử", màn tra cứu, phiếu in và học sinh tự tra cứu hiện kết quả của lần thử thay cho `match_results` (49/120 em lệch).
+- Rà các nơi đọc `run_history`: chỉ-chính-thức = `api.get_run_history`, `api_xuat` (lý do FA mới nhất), `fa_sau_xep`, `rbda_priority_pipeline` (lần chạy mới nhất), và nay `_giai_trinh_dung_lai`. Cố ý KHÔNG lọc: `api_tieu_chi` (danh sách/đọc theo run_id/áp dụng lần thử), `api.py` `MAX(run_id)` ngay sau khi ghi (cùng giao dịch), `api_sau_xep` (đọc theo run_id của kết quả đã lưu), `rbda_priority_pipeline` `COUNT(*)` kiểm tra đã chạy chưa (mọi lần chạy đều tính).
+- Test mới: `tests/test_gt4_chay_thu_giai_trinh.py` (4 test: giải trình/tra cứu/phiếu in khớp `match_results` sau 1–2 lần thử và sau `ap_dung_tieu_chi`; không đạt trên mã cũ).
+
 ## 2026-11-17 — I4 sửa (tích hợp): tên thẻ trong kịch bản demo/video
 
 - `docs/giai_trinh/KICH_BAN_DEMO.md` (bước 10), `KICH_BAN_VIDEO.md` (dòng 9): "thẻ Quản trị" → "thẻ Quản lý" (nhãn thật, i18n `nav_admin`); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.

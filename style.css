@@ -2650,6 +2650,10 @@ tr.wh-ql-loi td + td { box-shadow: none; }
   background: rgba(28,35,33,0.62);
 }
 .ws-overlay[hidden] { display: none; }
+.ws-overlay.tk-kin { background: var(--paper); }   /* GT4 fix OL1 */
+.ws-hop [role="tab"][aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }   /* GT4: thẻ đang chọn thấy rõ */
+.nk-loc { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-start; }   /* GT4: bộ lọc nhật ký xếp ngang */
+.nk-loc-o { display: flex; flex-direction: column; flex: 1 1 160px; min-width: 160px; }
 
 .ws-hop {
   width: min(1040px, 100%);
@@ -3013,3 +3017,94 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 /* I2: đăng nhập quản trị để thoát chế độ học sinh */
 #gtHsQuanTri[hidden] { display: none; }
 .gt-hs-qt { margin-top: 12px; display: grid; gap: 8px; max-width: 360px; }
+
+/* GT4-L5: màn học sinh (nhãn trên ô, tên trường, đếm ngược) + liên kết nhảy + bốn bước */
+.gt-hs-dau { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+/* GT4 fix B3: nút ngôn ngữ trên nền sáng — chữ tối, >= 14 px, vùng bấm >= 36 px (bản .lang-toggle gốc là chữ trắng cho thanh nav tối) */
+.gt-hs-dau .lang-toggle { color: var(--ink); background: var(--paper); border: 1px solid var(--ink-soft, #555);
+  font-size: 14px; min-width: 44px; min-height: 40px; padding: 6px 12px; }
+.gt-hs-dau .lang-toggle:hover { background: var(--paper-hover, #ececea); color: var(--ink); border-color: var(--ink); }
+.gt-hs-truong { margin: 0; font-weight: 600; font-size: 1.1rem; }
+.gt-hs-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin: 12px 0; }
+.gt-hs-form .btn[type="submit"] { margin-top: 26px; }   /* nút Xem thẳng hàng với ô nhập (nhãn cao ~22 px), dù cột mã có ô "Hiện mã" */
+.gt-hs-o { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1 1 200px; }
+.gt-hs-o label { font-weight: 600; font-size: 14px; }
+.gt-hs-hien { font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; }
+.gt-hs-dem { color: #b45309; font-weight: 600; margin: 4px 0; }
+.gt-hs-dem[hidden] { display: none; }
+.kq-nhay { margin: 0 0 8px; }
+.gt-buoc { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 0; margin: 0 0 12px; list-style: none; counter-reset: gtb; }
+.gt-buoc li { counter-increment: gtb; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.gt-buoc li::before { content: counter(gtb); display: inline-flex; width: 24px; height: 24px; align-items: center;
+  justify-content: center; border-radius: 50%; background: var(--gold, #b8860b); color: #fff; font-weight: 700; font-size: 0.85rem; }
+#kqThan tr[data-student-id] { cursor: pointer; }
+#kqThan tr[data-student-id]:hover { background: var(--paper-2, #f4efe6); }
+
+/* ======================================================================================================
+   GT4-L7 — một nhịp thiết kế cho các khung GT: nhãn TRÊN ô, chữ >= 14px, ô bấm >= 36px, tương phản >= 4,5:1,
+   vòng focus thấy rõ. Dùng lại mẫu của biểu mẫu CLB (.club-field) và các biến màu sẵn có.
+   ====================================================================================================== */
+.gt-ui .hint-text { font-size: 14px; margin: 0 0 10px 0; }
+.gt-ui label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.gt-ui .btn { font-size: 14px; min-height: 36px; }
+.gt-ui .text-input { font-size: 14px; min-height: 40px; box-sizing: border-box; }
+.gt-ui .club-field { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px 0; }
+.gt-ui .club-field .text-input { width: 100%; min-width: 0; max-width: 360px; }
+.gt-ui textarea.text-input { min-height: 84px; resize: vertical; font-family: inherit; line-height: 1.4; }
+.gt-ui .btn:focus-visible, .gt-ui .text-input:focus-visible, .gt-ui a:focus-visible, .gt-ui input:focus-visible {
+  outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.gt-ui .save-feedback { font-size: 14px; }
+
+/* Hai cột: thẻ "thứ tự" bên trái, biểu mẫu bên phải (>= 1000px); dưới đó một cột. */
+.gt2-luoi { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (min-width: 1000px) { .gt2-luoi { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.gt2-the { border: 1px solid var(--hairline); border-radius: var(--radius-md); padding: 16px 18px; background: var(--paper); }
+.gt2-tieu-de-the { font-size: 16px; margin: 0 0 8px 0; }
+.gt2-the h3, .gt2-the h4, .gt2-the h5 { font-size: 15px; margin: 14px 0 6px 0; }
+.gt2-the h3.gt2-tieu-de-the { font-size: 16px; margin-top: 0; }
+.gt2-the ol { list-style: none; counter-reset: gt2o; margin: 0 0 8px 0; padding: 0; }
+.gt2-the ol li { counter-increment: gt2o; display: flex; gap: 10px; align-items: flex-start; font-size: 15px;
+  line-height: 1.4; margin: 8px 0; }
+.gt2-the ol li::before { content: counter(gt2o); flex: none; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--gold); color: var(--ink); font-weight: 700; font-size: 14px; display: inline-flex;
+  align-items: center; justify-content: center; }
+.gt2-khong-dung { color: var(--slate); font-size: 14px; margin: 8px 0; }
+.gt2-khong-dung ul { margin: 4px 0 0 0; padding-left: 20px; }
+.gt2-khong-dung li { margin: 2px 0; }
+.gt-ui .gt2-goi-y { margin: 0; }
+.check-khoi { margin: 0 0 14px 0; }
+.check-row { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.check-row input[type="checkbox"] { flex: none; width: 18px; height: 18px; margin: 2px 0 0 0; }
+.gt-ui .check-goi-y { padding-left: 26px; margin: 6px 0 0 0; }
+.gt2-nut-phai { justify-content: flex-end; margin-top: 8px; }
+.gt2-buoc { margin-bottom: 10px; }
+.gt2-buoc li:not(:last-child)::after { content: "→"; margin-left: 8px; color: var(--slate); }
+.gt2-canh-bao { font-size: 14px; padding: 10px 14px; border-left: 4px solid var(--gold); margin: 0 0 12px 0; }
+.gt2-hai-o { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 12px 0 4px 0; }
+.gt2-hai-o .club-field { flex: 1 1 240px; max-width: 360px; margin-bottom: 8px; }
+.gt2-ket-qua { margin-top: 12px; }
+.gt2-ap-dung { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--hairline); }
+.gt2-ap-dung h3 { font-size: 16px; margin: 0 0 6px 0; }
+
+/* Trang so sánh trong ứng dụng (cùng cấu trúc với tệp HTML xuất ra: tieu_chi.dung_html_so_sanh). */
+.gt2-tom-tat { font-size: 16px; font-weight: 600; margin: 4px 0 14px 0; color: var(--ink); }
+.gt2-luoi-lan { display: flex; flex-wrap: wrap; gap: 16px; margin: 0 0 16px 0; }
+.gt2-the-lan { flex: 1 1 300px; border: 1px solid var(--hairline); border-radius: var(--radius-md); padding: 12px 16px;
+  background: var(--paper); }
+.gt2-the-lan h4 { font-size: 16px; margin: 0 0 2px 0; }
+.gt2-ngay { color: var(--slate); font-size: 14px; margin: 0 0 6px 0; }
+.gt2-bang-cuon { max-height: 340px; overflow: auto; border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+  margin: 6px 0 16px 0; }
+.gt2-bang-cuon table { width: 100%; margin: 0; border-collapse: collapse; }
+.gt2-bang-cuon th { position: sticky; top: 0; background: var(--paper-hover); z-index: 1; font-size: 14px; text-align: left; }
+.gt2-ket-qua .gt2-bang-cuon th, .gt2-ket-qua .gt2-bang-cuon td { padding: 8px 12px; font-size: 14px; border-bottom: 1px solid var(--hairline); }
+.gt2-bang-cuon td.so, .gt2-bang-cuon th.so { text-align: right; font-variant-numeric: tabular-nums; }
+.gt2-delta { font-weight: 700; margin-left: 6px; }
+.gt2-delta.len { color: #0B6B3A; }
+.gt2-delta.xuong { color: var(--rust-text); }
+.gt2-ket-qua h3 { font-size: 16px; margin: 14px 0 4px 0; }
+.gt2-ad-ds { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 8px; }
+.gt2-ad-ds li { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 14px; }
+
+.gt2-ket-qua .gt2-bang-cuon table, .gt2-ket-qua .gt2-bang-cuon td, .gt2-ket-qua .gt2-bang-cuon th { font-family: inherit; text-transform: none; letter-spacing: 0; }
+.gt2-ket-qua .gt2-bang-cuon td:first-child { min-width: 140px; }

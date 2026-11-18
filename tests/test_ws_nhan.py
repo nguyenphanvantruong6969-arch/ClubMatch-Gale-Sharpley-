@@ -48,6 +48,8 @@ MA_MOI_SAU_ANH_CHUP = {
     # === A: FA-M7 G0 ===
     "forms_duong_chua_chon", "forms_chua_co_clb", "forms_chua_co_de", "phieu_clb_tep_sai", "de_thi_tep_sai", "forms_khong_chuyen_duoc", "forms_tep_khong_nhan_ra", "forms_tep_sai_duong", "forms_tep_sau_ket_qua", "forms_can_chon_de", "forms_thieu_email", "forms_thieu_danh_sach_lop", "forms_tao_bo_loi",
     # === end A ===
+    # GT4 (mã mới: bộ lọc ngày nhật ký, mở tệp vừa xuất)
+    "gt4_ngay_sai", "tep_khong_hop_le", "tep_khong_mo_duoc",
 
     # (spacer: unchanged line between marker blocks)
 

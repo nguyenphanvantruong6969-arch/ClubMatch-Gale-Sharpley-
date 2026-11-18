@@ -101,6 +101,7 @@ def test_phan_quan_tri_bi_khoa_khi_o_che_do_hoc_sinh(mo):
     assert page.evaluate("document.querySelector('#gtPanel').closest('[inert]') !== null") is True
     page.click("#btnGtHsThoat")
     page.click("#btnGtHsCo")
+    page.wait_for_function("document.querySelector('.app-shell').inert === false")   # thoát là bất đồng bộ: đợi, không đọc ngay
     assert page.evaluate("document.querySelector('.app-shell').inert") is False
     assert loi == []
 

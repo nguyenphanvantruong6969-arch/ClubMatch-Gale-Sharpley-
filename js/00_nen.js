@@ -380,12 +380,20 @@ function coLoiCsdlBan(errors) {
   return Array.isArray(errors) && errors.some((e) => e && e.code === "csdl_dang_ban");
 }
 
+/* GT4 fix OL2: phiên hết hạn do nhàn rỗi -> mọi lỗi "cần đăng nhập" đều hỏi lại phiên ngay (mở hộp đăng nhập),
+   không đợi vòng hỏi 30 giây và không chỉ chồng thông báo đỏ. */
+function nhacHoiPhienNeuCan(errors) {
+  if ((errors || []).some((x) => x && x.code === "gt3_can_dang_nhap")) window.dispatchEvent(new Event("tkLamMoi"));
+}
+
 function showErrorToast(errors, khoaMau) {
+  nhacHoiPhienNeuCan(errors);
   const cau = trErrs(errors).join(" ");
   showToast(khoaMau ? t(khoaMau, { errors: cau }) : cau, "error", errors);
 }
 
 function feedbackErrors(node, errors) {
+  nhacHoiPhienNeuCan(errors);
   feedback(node, trErrs(errors).join(" "), true);
   ganChiTietKyThuat(node, errors);
 }

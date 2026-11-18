@@ -122,6 +122,7 @@ function veMoi(ds) {
         b.type = "button";
         b.className = "btn btn-ghost moi-tra-loi";
         b.dataset.moiId = String(m.id);
+        b.dataset.quyen = "quan_tri";        // GT4: giáo viên không thấy nút (backend vốn từ chối + ghi nhật ký)
         b.dataset.ketQua = kq;
         b.textContent = t(khoa);
         li.append(" ", b);
@@ -182,6 +183,7 @@ function veKhieuNai(d) {
         b.type = "button";
         b.className = "btn btn-ghost kn-xu-ly";
         b.dataset.knId = String(k.id);
+        b.dataset.quyen = "quan_tri";        // GT4: như trên
         b.dataset.chapNhan = gt;
         b.textContent = t(khoa);
         li.append(" ", b);

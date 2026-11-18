@@ -26,6 +26,7 @@ th,td{border:1px solid #444;padding:1.5mm 2mm;text-align:left;vertical-align:top
 th{background:#eee}
 tr.duoc-xep td{background:#dcfce7;font-weight:bold}
 .ma-tra-cuu{margin-top:8mm;font-size:12pt;min-height:8mm}
+.chu-thich{margin:2mm 0 0;font-size:10pt;font-style:italic}
 .khieu-nai{margin-top:6mm;font-size:10.5pt}
 @media print{.trang{padding:0}}
 """
@@ -41,7 +42,7 @@ def _o_chuan(x):
     loai = x.get("diem_chuan_loai")
     if loai == "diem" and x.get("diem_chuan") is not None:
         return "%s điểm" % x["diem_chuan"]
-    return {"boc_tham": "Bốc thăm", "con_cho": "Còn chỗ"}.get(loai, "—")
+    return {"boc_tham": "Bốc thăm", "con_cho": "Còn chỗ", "giu_cho": "Chỗ dành riêng"}.get(loai, "—")
 
 
 def _bang(b):
@@ -82,6 +83,8 @@ def _trang(gt, hs, so_ngay, ma_tra_cuu, tieu_de):
             p.append("<p>%s</p>" % escape(b["cau_tom_tat"]))
         if b["cac_lua_chon"]:
             p.append(_bang(b))
+            if b.get("chu_thich"):
+                p.append('<p class="chu-thich">%s</p>' % escape(b["chu_thich"]))
     if not gt["buoi"]:
         p.append("<p>Chưa có thông tin xếp cho em.</p>")
     p.append('<div class="khieu-nai">%s</div>' % escape(

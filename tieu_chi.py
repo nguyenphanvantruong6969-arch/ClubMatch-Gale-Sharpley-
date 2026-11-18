@@ -303,11 +303,13 @@ def so_sanh_lan_chay(a: dict, b: dict, ctx: dict) -> dict:
             doi.append({"student_id": k[0], "ten": s.get("ten") or "", "lop": s.get("lop") or "",
                         "buoi": k[1], "tu": xa.get(k), "den": xb.get(k),
                         "tu_ten": ten_clb(xa.get(k)), "den_ten": ten_clb(xb.get(k))})
-    return {
-        "a": {"nhan": a["nhan"], "run_id": a["run_id"], "luat": luat_xep_cua(a["luat"]),
-              "mo_ta": mo_ta_tieu_chi(a["luat"], "vi"), "mo_ta_en": mo_ta_tieu_chi(a["luat"], "en")},
-        "b": {"nhan": b["nhan"], "run_id": b["run_id"], "luat": luat_xep_cua(b["luat"]),
-              "mo_ta": mo_ta_tieu_chi(b["luat"], "vi"), "mo_ta_en": mo_ta_tieu_chi(b["luat"], "en")},
+    def the_lan(x):
+        return {"nhan": x["nhan"], "run_id": x["run_id"], "run_at": x.get("run_at"), "luat": luat_xep_cua(x["luat"]),
+                "mo_ta": mo_ta_tieu_chi(x["luat"], "vi"), "mo_ta_en": mo_ta_tieu_chi(x["luat"], "en"),
+                "tang": tieu_de_tang(x["luat"])}
+
+    kq = {
+        "a": the_lan(a), "b": the_lan(b),
         "buoi_chung": chung,
         "tong": {"a": _thong_ke(ra), "b": _thong_ke(rb)},
         "clb": ds_clb,
@@ -316,6 +318,8 @@ def so_sanh_lan_chay(a: dict, b: dict, ctx: dict) -> dict:
         "doi": doi,
         "so_doi": len(doi),
     }
+    kq["tom_tat"] = {"vi": tom_tat_so_sanh(kq, "vi"), "en": tom_tat_so_sanh(kq, "en")}
+    return kq
 
 
 def _nhan_lan(x: dict) -> str:
@@ -326,54 +330,141 @@ def _so(v, hau="") -> str:
     return "—" if v is None else ("%s%s" % (str(v).replace(".", ","), hau))
 
 
+def _so_gon(v, lang: str = "vi") -> str:
+    """Số cho câu tóm tắt: bỏ ".0" thừa (60.0 -> 60), dấu thập phân theo ngôn ngữ."""
+    xau = ("%s" % v).rstrip("0").rstrip(".") if isinstance(v, float) else str(v)
+    return xau.replace(".", ",") if _lang(lang) == "vi" else xau
+
+
+def tom_tat_so_sanh(kq: dict, lang: str = "vi") -> str:
+    """MỘT câu, chỉ có số (không kết luận, không "tốt hơn"). Ví dụ: "49 học sinh đổi CLB; được nguyện vọng 1: 53,3% → 60%."
+    Số học sinh tính theo từng em (một em đổi ở hai buổi vẫn là một em)."""
+    lang = _lang(lang)
+    if not kq["so_doi"]:
+        return ("Hai lần cho cùng kết quả: không suất nào đổi chỗ." if lang == "vi"
+                else "The two runs give the same result: no place changed.")
+    n = len({d["student_id"] for d in kq["doi"]})
+    ta, tb = kq["tong"]["a"]["pct_nv1"], kq["tong"]["b"]["pct_nv1"]
+    dau = "%d học sinh đổi CLB" % n if lang == "vi" else "%d student%s changed club" % (n, "" if n == 1 else "s")
+    if ta is None or tb is None:
+        return dau + "."
+    return "%s; %s: %s%% → %s%%." % (
+        dau, "được nguyện vọng 1" if lang == "vi" else "got first choice", _so_gon(ta, lang), _so_gon(tb, lang))
+
+
+def chenh(a, b, lang: str = "vi") -> str:
+    """Chênh lệch B − A bằng CHỮ ("+3", "−2"; dấu trừ U+2212) để không chỉ dựa vào màu; rỗng nếu bằng nhau hoặc thiếu số."""
+    if isinstance(a, bool) or isinstance(b, bool) or not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        return ""
+    d = round(b - a, 2)
+    if d == 0:
+        return ""
+    gon = _so_gon(abs(d), lang)
+    return ("+" if d > 0 else "−") + gon
+
+
+def _nhan_buoi_ss(buoi, lang: str = "vi") -> str:
+    """Nhãn buổi cho trang so sánh; không bao giờ trả tên nội bộ `__mac_dinh__`."""
+    if not buoi or buoi == "__mac_dinh__":
+        return "Mặc định" if _lang(lang) == "vi" else "Default"
+    from so_nhap import NHAN_BUOI
+    return dict((m, nhan) for nhan, m in NHAN_BUOI).get(buoi, str(buoi))
+
+
+_CSS_SO_SANH = (
+    "body{font-family:system-ui,sans-serif;margin:24px;color:#1b1b1b;background:#fff;line-height:1.5}"
+    "h1{font-size:22px;margin:0 0 8px}h2{font-size:18px;margin:24px 0 8px}h3{font-size:15px;margin:12px 0 4px}"
+    ".tom-tat{font-size:17px;font-weight:600;margin:8px 0 16px}"
+    ".luoi-lan{display:flex;flex-wrap:wrap;gap:16px;margin:8px 0}"
+    ".gt2-the-lan{flex:1 1 320px;border:1px solid #bbb;border-radius:8px;padding:12px 16px;background:#fafafa}"
+    ".gt2-the-lan h2{margin:0 0 2px;font-size:17px}.gt2-the-lan .ngay{color:#4a5560;font-size:14px;margin:0 0 6px}"
+    ".gt2-the-lan ol{margin:0 0 8px;padding-left:22px}.gt2-the-lan li{margin:2px 0}"
+    "table{border-collapse:collapse;margin:8px 0 20px;min-width:60%}"
+    "th,td{border:1px solid #bbb;padding:6px 10px;text-align:left}"
+    "th{background:#eef;position:sticky;top:0}"
+    "td.so,th.so{text-align:right;font-variant-numeric:tabular-nums}"
+    ".len{color:#0b6b3a;font-weight:600;margin-left:6px}.xuong{color:#9a3a30;font-weight:600;margin-left:6px}"
+    "summary{cursor:pointer;font-weight:600;margin:8px 0}")
+
+
+def _the_lan_html(x: dict) -> str:
+    from html import escape as e
+    ngay = str(x.get("run_at") or "").replace("T", " ")[:16]
+    mo = [m for m in x["mo_ta"] if m["nhom"] != "khong_dung"]
+    phan = []
+    for tang in ("tang_1", "tang_2"):
+        dong = [m for m in mo if m["nhom"] == tang]
+        if dong:
+            phan.append("<h3>%s</h3><ol>%s</ol>" % (
+                e(x["tang"][tang]["vi"]), "".join("<li>%s</li>" % e(m["chu"]) for m in dong)))
+    return '<section class="gt2-the-lan"><h2>%s</h2>%s%s</section>' % (
+        e(_nhan_lan(x)), ('<p class="ngay">%s</p>' % e(ngay)) if ngay else "", "".join(phan))
+
+
 def dung_html_so_sanh(kq: dict) -> str:
-    """Trang HTML một tệp (chữ + CSS nội tuyến, không nạp gì từ ngoài). Mọi chữ lấy từ dữ liệu đều qua `escape`."""
+    """Trang HTML một tệp (chữ + CSS nội tuyến, không nạp gì từ ngoài). Mọi chữ lấy từ dữ liệu đều qua `escape`.
+
+    Cấu trúc (GT4-L7): câu tóm tắt chỉ có số; hai thẻ lần chạy, tiêu chí hai tầng tách riêng; các bảng có tiêu đề cố
+    định, số căn phải, chênh lệch có chữ (+/−); danh sách học sinh đổi chỗ gập mặc định; cột Buổi chỉ khi có nhiều buổi."""
     from html import escape as e
 
-    def bang(tieu, dau, dong):
-        h = "<h2>%s</h2><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (
-            e(tieu), "".join("<th>%s</th>" % e(c) for c in dau),
-            "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % e(str(c)) for c in d) for d in dong))
-        return h
+    def bang(tieu, dau, dong, so_tu=1):
+        """`so_tu`: cột từ chỉ số này trở đi là số (căn phải)."""
+        th = "".join('<th%s>%s</th>' % (' class="so"' if i >= so_tu else "", e(c)) for i, c in enumerate(dau))
+        tr = "".join("<tr>%s</tr>" % "".join(
+            "<td%s>%s</td>" % (' class="so"' if i >= so_tu else "", c if isinstance(c, _Tho) else e(str(c)))
+            for i, c in enumerate(d)) for d in dong)
+        return "<h2>%s</h2><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (e(tieu), th, tr)
+
+    def ct(a, b, hau=""):
+        """Ô giá trị của lần B kèm chênh lệch bằng chữ."""
+        c = chenh(a, b)
+        lop = "len" if c.startswith("+") else "xuong"
+        return _Tho("%s%s" % (e(_so(b, hau)), (' <span class="%s">%s</span>' % (lop, e(c + hau)) if c else "")))
 
     a, b = kq["a"], kq["b"]
     la, lb = _nhan_lan(a), _nhan_lan(b)
-    tong_dau = ["Chỉ số", la, lb]
     ta, tb = kq["tong"]["a"], kq["tong"]["b"]
-    tong = [("Số suất xét", ta["n"], tb["n"]), ("Đã có chỗ", ta["da_xep"], tb["da_xep"]),
-            ("Chưa có chỗ", ta["chua_xep"], tb["chua_xep"]),
-            ("Tỉ lệ đã có chỗ", _so(ta["pct_da_xep"], "%"), _so(tb["pct_da_xep"], "%")),
-            ("Tỉ lệ được nguyện vọng 1", _so(ta["pct_nv1"], "%"), _so(tb["pct_nv1"], "%")),
-            ("Tỉ lệ trong 3 nguyện vọng đầu", _so(ta["pct_top3"], "%"), _so(tb["pct_top3"], "%")),
-            ("Thứ hạng nguyện vọng trung bình", _so(ta["hang_tb"]), _so(tb["hang_tb"]))]
+    tong = [("Số suất xét", ta["n"], ct(ta["n"], tb["n"])), ("Đã có chỗ", ta["da_xep"], ct(ta["da_xep"], tb["da_xep"])),
+            ("Chưa có chỗ", ta["chua_xep"], ct(ta["chua_xep"], tb["chua_xep"])),
+            ("Tỉ lệ đã có chỗ", _so(ta["pct_da_xep"], "%"), ct(ta["pct_da_xep"], tb["pct_da_xep"], "%")),
+            ("Tỉ lệ được nguyện vọng 1", _so(ta["pct_nv1"], "%"), ct(ta["pct_nv1"], tb["pct_nv1"], "%")),
+            ("Tỉ lệ trong 3 nguyện vọng đầu", _so(ta["pct_top3"], "%"), ct(ta["pct_top3"], tb["pct_top3"], "%")),
+            ("Thứ hạng nguyện vọng trung bình", _so(ta["hang_tb"]), ct(ta["hang_tb"], tb["hang_tb"]))]
 
     def nhom_dong(ds):
         return [(x["khoa"] or "(không có)", x["a"]["n"], _so(x["a"]["pct_da_xep"], "%"),
-                 _so(x["a"]["pct_nv1"], "%"), _so(x["b"]["pct_da_xep"], "%"), _so(x["b"]["pct_nv1"], "%"))
-                for x in ds]
+                 ct(x["a"]["pct_da_xep"], x["b"]["pct_da_xep"], "%"), _so(x["a"]["pct_nv1"], "%"),
+                 ct(x["a"]["pct_nv1"], x["b"]["pct_nv1"], "%")) for x in ds]
 
-    dau_nhom = ["Nhóm", "Số suất", "Đã có chỗ — " + la, "NV1 — " + la, "Đã có chỗ — " + lb, "NV1 — " + lb]
-    mota = "".join("<p><b>%s</b>: %s</p>" % (
-        e(_nhan_lan(x)), e(" ".join(m["chu"] for m in x["mo_ta"] if m["nhom"] != "khong_dung")))
-        for x in (a, b))
+    dau_nhom = ["Nhóm", "Số suất", "Đã có chỗ — " + la, "Đã có chỗ — " + lb, "NV1 — " + la, "NV1 — " + lb]
+    nhieu_buoi = len(kq.get("buoi_chung") or []) > 1
+    dau_doi = ["Mã", "Họ tên", "Lớp"] + (["Buổi"] if nhieu_buoi else []) + [la, lb]
+    dong_doi = [(d["student_id"], d["ten"], d["lop"]) + ((_nhan_buoi_ss(d["buoi"]),) if nhieu_buoi else ())
+                + (d["tu_ten"] or "chưa có chỗ", d["den_ten"] or "chưa có chỗ") for d in kq["doi"]]
+    ds_doi = ("<h2>Học sinh đổi câu lạc bộ (%d)</h2><details><summary>Hiện danh sách (%d)</summary>"
+              "<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table></details>" % (
+                  kq["so_doi"], kq["so_doi"], "".join("<th>%s</th>" % e(c) for c in dau_doi),
+                  "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % e(str(c)) for c in d) for d in dong_doi)))
     return (
         "<!doctype html><html lang=\"vi\"><head><meta charset=\"utf-8\">"
         "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-        "<title>So sánh hai lần chạy</title><style>"
-        "body{font-family:system-ui,sans-serif;margin:24px;color:#1b1b1b;background:#fff}"
-        "table{border-collapse:collapse;margin:8px 0 20px}th,td{border:1px solid #bbb;padding:4px 8px;"
-        "text-align:left}th{background:#eef}</style></head><body>"
+        "<title>So sánh hai lần chạy</title><style>%s</style></head><body>"
         "<h1>So sánh hai lần chạy: %s và %s</h1>"
         "<p>Lần chạy thử không được công bố và không thay kết quả chính thức. Số liệu trong tệp này là dữ "
-        "liệu hiện có của trường.</p>%s%s%s%s%s%s</body></html>" % (
-            e(la), e(lb), mota, bang("Tổng quan", tong_dau, tong),
+        "liệu hiện có của trường.</p>"
+        "<p class=\"tom-tat\">%s</p><div class=\"luoi-lan\">%s%s</div>%s%s%s%s%s</body></html>" % (
+            _CSS_SO_SANH, e(la), e(lb), e(kq.get("tom_tat", {}).get("vi") or tom_tat_so_sanh(kq, "vi")),
+            _the_lan_html(a), _the_lan_html(b),
+            bang("Tổng quan", ["Chỉ số", la, lb], tong),
             bang("Từng câu lạc bộ", ["Câu lạc bộ", "Sức chứa", "Nhận — " + la, "Nhận — " + lb,
                                        "Điểm chuẩn — " + la, "Điểm chuẩn — " + lb],
-                 [(c["ten"], _so(c["suc_chua"]), c["a"]["da_nhan"], c["b"]["da_nhan"],
-                   _so(c["a"]["diem_chuan"]), _so(c["b"]["diem_chuan"])) for c in kq["clb"]]),
+                 [(c["ten"], _so(c["suc_chua"]), c["a"]["da_nhan"], ct(c["a"]["da_nhan"], c["b"]["da_nhan"]),
+                   _so(c["a"]["diem_chuan"]), ct(c["a"]["diem_chuan"], c["b"]["diem_chuan"])) for c in kq["clb"]]),
             bang("Theo nhóm ưu tiên", dau_nhom, nhom_dong(kq["nhom"])),
             bang("Theo lớp", ["Lớp"] + dau_nhom[1:], nhom_dong(kq["lop"])),
-            bang("Học sinh đổi câu lạc bộ (%d)" % kq["so_doi"],
-                 ["Mã", "Họ tên", "Lớp", "Buổi", la, lb],
-                 [(d["student_id"], d["ten"], d["lop"], d["buoi"], d["tu_ten"] or "chưa có chỗ",
-                   d["den_ten"] or "chưa có chỗ") for d in kq["doi"]])))
+            ds_doi))
+
+
+class _Tho(str):
+    """Chuỗi HTML đã thoát sẵn (không thoát lần nữa)."""

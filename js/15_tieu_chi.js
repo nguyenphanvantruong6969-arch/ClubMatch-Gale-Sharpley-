@@ -39,8 +39,20 @@ function gt2TcVeDanhSach() {
   });
   const kd = mo.filter((m) => m.nhom === "khong_dung");
   const hop = el("gt2TcKhongDung");
+  clear(hop);
   hop.hidden = !kd.length;
-  hop.textContent = kd.length ? t("gt2_tc_khong_dung") + " " + kd.map((m) => m.chu).join(" ") : "";
+  if (kd.length) {                       /* GT4-L7: từng dòng "chưa có tác dụng" là một mục, màu xám */
+    const tde = document.createElement("strong");
+    tde.textContent = t("gt2_tc_khong_dung");
+    const ul = document.createElement("ul");
+    kd.forEach((m) => {
+      const li = document.createElement("li");
+      li.textContent = m.chu;
+      ul.appendChild(li);
+    });
+    hop.appendChild(tde);
+    hop.appendChild(ul);
+  }
   el("gt2TcGhiChu").textContent = d.ghi_chu[lang];
 }
 
@@ -92,6 +104,17 @@ function gt2TcDongBoWharton(datLai) {
   goiY.hidden = !khong;
 }
 
+/* GT4-L7: nhắc (không chặn) khi các lựa chọn đang hiện làm cấu hình thử thành vô nghĩa. */
+function gt2CanhBao() {
+  const o = el("gt2ThuCanhBao");
+  const rong = !el("gt2TcTiers").value.split("\n").some((x) => x.trim());
+  let khoa = "";
+  if (el("gt2TcPriority").value === "tier" && rong) khoa = "gt2_canh_khong_nhom";
+  else if (el("gt2TcTierMode").value === "strict" && rong) khoa = "gt2_canh_nhom_rong";
+  o.hidden = !khoa;
+  o.textContent = khoa ? t(khoa) : "";
+}
+
 function taiTieuChi() {
   return chayTai(callApi("get_tieu_chi"), (res) => {
     if (!res.ok) {
@@ -103,6 +126,7 @@ function taiTieuChi() {
     gt2TcVeDieuKhien();
     gt2TcDatGiaTri();
     gt2TcDongBoWharton(true);
+    gt2CanhBao();
     return gt2SsTai(false);
   });
 }
@@ -239,6 +263,36 @@ function gt2SsTai(chonLai) {
   });
 }
 
+/* GT4-L7: chênh lệch B − A bằng CHỮ ("+3", "−2") kèm màu; cùng quy tắc với `tieu_chi.chenh` (tệp HTML xuất ra). */
+function gt2SsChenh(a, b) {
+  if (typeof a !== "number" || typeof b !== "number") return "";
+  const d = Math.round((b - a) * 100) / 100;
+  if (d === 0) return "";
+  const xau = String(Math.abs(d));
+  return (d > 0 ? "+" : "−") + (gt2TcLang() === "vi" ? xau.replace(".", ",") : xau);
+}
+
+function gt2SsSo(v, hau) {
+  if (v === null || v === undefined) return "—";
+  return String(v).replace(".", gt2TcLang() === "vi" ? "," : ".") + (hau || "");
+}
+
+/* Một ô số: giá trị + (tuỳ chọn) chênh lệch so với lần A. `cho` = {v, a, hau}: có `a` thì kèm chênh lệch. */
+function gt2SsO(td, cho) {
+  td.className = "so";
+  td.appendChild(document.createTextNode(gt2SsSo(cho.v, cho.hau)));
+  if (cho.a !== undefined) {
+    const c = gt2SsChenh(cho.a, cho.v);
+    if (c) {
+      const sp = document.createElement("span");
+      sp.className = "gt2-delta " + (c.charAt(0) === "+" ? "len" : "xuong");
+      sp.textContent = c + (cho.hau || "");
+      td.appendChild(sp);
+    }
+  }
+}
+
+/* `dong`: mỗi dòng là mảng ô; ô là chuỗi (chữ, căn trái) hoặc {v, a, hau} (số, căn phải, có chênh lệch nếu có `a`). */
 function gt2SsBang(tieuDe, dau, dong) {
   const h = document.createElement("h3");
   h.textContent = tieuDe;
@@ -246,9 +300,10 @@ function gt2SsBang(tieuDe, dau, dong) {
   bang.className = "data-table";
   const hd = document.createElement("thead");
   const tr = document.createElement("tr");
-  dau.forEach((c) => {
+  dau.forEach((c, i) => {
     const th = document.createElement("th");
     th.textContent = c;
+    if (i > 0 && typeof (dong[0] || [])[i] === "object") th.className = "so";
     tr.appendChild(th);
   });
   hd.appendChild(tr);
@@ -258,16 +313,57 @@ function gt2SsBang(tieuDe, dau, dong) {
     const r = document.createElement("tr");
     d.forEach((c) => {
       const td = document.createElement("td");
-      td.textContent = c === null || c === undefined ? "—" : String(c).replace(".", ",");
+      if (c !== null && typeof c === "object") gt2SsO(td, c);
+      else td.textContent = c === null || c === undefined ? "—" : String(c);
       r.appendChild(td);
     });
     tb.appendChild(r);
   });
   bang.appendChild(tb);
-  return [h, bang];
+  const cuon = document.createElement("div");
+  cuon.className = "gt2-bang-cuon";
+  cuon.appendChild(bang);
+  return [h, cuon];
 }
 
 const GT2_SS_DOI_TOI_DA = 200;
+
+/* Thẻ một lần chạy: tiêu đề, ngày, tiêu chí HAI TẦNG tách riêng (không gộp một đoạn). */
+function gt2SsTheLan(x) {
+  const lang = gt2TcLang();
+  const the = document.createElement("section");
+  the.className = "gt2-the gt2-the-lan";
+  const h = document.createElement("h4");
+  h.textContent = gt2SsNhan(x);
+  the.appendChild(h);
+  if (x.run_at) {
+    const ngay = document.createElement("p");
+    ngay.className = "gt2-ngay";
+    ngay.textContent = dinhDangGio(x.run_at);
+    the.appendChild(ngay);
+  }
+  const mo = (lang === "en" ? x.mo_ta_en : x.mo_ta).filter((m) => m.nhom !== "khong_dung");
+  ["tang_1", "tang_2"].forEach((tang) => {
+    const dong = mo.filter((m) => m.nhom === tang);
+    if (!dong.length) return;
+    const h5 = document.createElement("h5");
+    h5.textContent = x.tang[tang][lang];
+    const ol = document.createElement("ol");
+    ol.dataset.tang = tang;
+    dong.forEach((m) => {
+      const li = document.createElement("li");
+      li.textContent = m.chu;
+      ol.appendChild(li);
+    });
+    the.appendChild(h5);
+    the.appendChild(ol);
+  });
+  return the;
+}
+
+function gt2SsNhanBuoi(buoi) {
+  return !buoi || buoi === BUOI_MAC_DINH ? t("gt2_ss_buoi_mac_dinh") : nhanBuoi(buoi);
+}
 
 function gt2SsVeKetQua() {
   const kq = gt2SsKq;
@@ -278,41 +374,61 @@ function gt2SsVeKetQua() {
   const la = gt2SsNhan(kq.a);
   const lb = gt2SsNhan(kq.b);
   const them = (cap) => cap.forEach((n) => khung.appendChild(n));
-  [kq.a, kq.b].forEach((x) => {
-    const p = document.createElement("p");
-    const dam = document.createElement("b");
-    dam.textContent = gt2SsNhan(x) + ": ";
-    p.appendChild(dam);
-    p.appendChild(document.createTextNode(
-      (lang === "en" ? x.mo_ta_en : x.mo_ta).filter((m) => m.nhom !== "khong_dung").map((m) => m.chu).join(" ")));
-    khung.appendChild(p);
-  });
-  const tg = document.createElement("p");
-  tg.className = "hint-text";
+  const tg = document.createElement("p");                    /* một câu, chỉ có số (do backend dựng: tieu_chi.tom_tat_so_sanh) */
+  tg.className = "gt2-tom-tat";
   tg.id = "gt2SsKetLuan";
-  tg.textContent = kq.so_doi ? t("gt2_ss_co_doi", { n: kq.so_doi }) : t("gt2_ss_khong_doi");
+  tg.textContent = kq.tom_tat[lang];
   khung.appendChild(tg);
+  const luoi = document.createElement("div");
+  luoi.className = "gt2-luoi-lan";
+  luoi.appendChild(gt2SsTheLan(kq.a));
+  luoi.appendChild(gt2SsTheLan(kq.b));
+  khung.appendChild(luoi);
   const ta = kq.tong.a;
   const tb = kq.tong.b;
   const dong = [
-    ["gt2_ss_n", ta.n, tb.n], ["gt2_ss_da_xep", ta.da_xep, tb.da_xep], ["gt2_ss_chua_xep", ta.chua_xep, tb.chua_xep],
-    ["gt2_ss_pct_da_xep", ta.pct_da_xep, tb.pct_da_xep], ["gt2_ss_pct_nv1", ta.pct_nv1, tb.pct_nv1],
-    ["gt2_ss_pct_top3", ta.pct_top3, tb.pct_top3], ["gt2_ss_hang_tb", ta.hang_tb, tb.hang_tb],
-  ].map(([k, a, b]) => [t(k), a, b]);
+    ["gt2_ss_n", "n", ""], ["gt2_ss_da_xep", "da_xep", ""], ["gt2_ss_chua_xep", "chua_xep", ""],
+    ["gt2_ss_pct_da_xep", "pct_da_xep", "%"], ["gt2_ss_pct_nv1", "pct_nv1", "%"], ["gt2_ss_pct_top3", "pct_top3", "%"],
+    ["gt2_ss_hang_tb", "hang_tb", ""],
+  ].map(([k, f, hau]) => [t(k), { v: ta[f], hau: hau }, { v: tb[f], a: ta[f], hau: hau }]);
   them(gt2SsBang(t("gt2_ss_tong"), [t("gt2_ss_chi_so"), la, lb], dong));
   them(gt2SsBang(t("gt2_ss_clb"),
     [t("gt2_ss_ten_clb"), t("gt2_ss_suc_chua"), t("gt2_ss_nhan") + " — " + la, t("gt2_ss_nhan") + " — " + lb,
       t("gt2_ss_chuan") + " — " + la, t("gt2_ss_chuan") + " — " + lb],
-    kq.clb.map((c) => [c.ten, c.suc_chua, c.a.da_nhan, c.b.da_nhan, c.a.diem_chuan, c.b.diem_chuan])));
+    kq.clb.map((c) => [c.ten, { v: c.suc_chua }, { v: c.a.da_nhan }, { v: c.b.da_nhan, a: c.a.da_nhan },
+      { v: c.a.diem_chuan }, { v: c.b.diem_chuan, a: c.a.diem_chuan }])));
   const dauNhom = (ten) => [ten, t("gt2_ss_n"), t("gt2_ss_pct_da_xep") + " — " + la, t("gt2_ss_pct_da_xep") + " — " + lb,
     t("gt2_ss_pct_nv1") + " — " + la, t("gt2_ss_pct_nv1") + " — " + lb];
-  const dongNhom = (ds, trong) => ds.map((x) => [x.khoa || t(trong), x.a.n, x.a.pct_da_xep, x.b.pct_da_xep, x.a.pct_nv1, x.b.pct_nv1]);
+  const dongNhom = (ds, trong) => ds.map((x) => [x.khoa || t(trong), { v: x.a.n },
+    { v: x.a.pct_da_xep, hau: "%" }, { v: x.b.pct_da_xep, a: x.a.pct_da_xep, hau: "%" },
+    { v: x.a.pct_nv1, hau: "%" }, { v: x.b.pct_nv1, a: x.a.pct_nv1, hau: "%" }]);
   them(gt2SsBang(t("gt2_ss_nhom_tieu_de"), dauNhom(t("gt2_ss_nhom")), dongNhom(kq.nhom, "gt2_ss_khong_nhom")));
   them(gt2SsBang(t("gt2_ss_lop_tieu_de"), dauNhom(t("gt2_ss_lop")), dongNhom(kq.lop, "gt2_ss_khong_lop")));
+  /* Danh sách học sinh đổi chỗ: gập mặc định, nút hiện số dòng; cột Buổi chỉ khi có nhiều buổi. */
   const chua = t("gt2_ss_chua_co_cho");
-  them(gt2SsBang(t("gt2_ss_doi_tieu_de", { n: kq.so_doi }),
-    [t("gt2_ss_ma"), t("gt2_ss_ho_ten"), t("gt2_ss_lop"), t("gt2_ss_buoi"), la, lb],
-    kq.doi.slice(0, GT2_SS_DOI_TOI_DA).map((d) => [d.student_id, d.ten, d.lop, d.buoi, d.tu_ten || chua, d.den_ten || chua])));
+  const nhieuBuoi = (kq.buoi_chung || []).length > 1;
+  const dauDoi = [t("gt2_ss_ma"), t("gt2_ss_ho_ten"), t("gt2_ss_lop")].concat(nhieuBuoi ? [t("gt2_ss_buoi")] : []).concat([la, lb]);
+  const dongDoi = kq.doi.slice(0, GT2_SS_DOI_TOI_DA).map((d) => [d.student_id, d.ten, d.lop]
+    .concat(nhieuBuoi ? [gt2SsNhanBuoi(d.buoi)] : []).concat([d.tu_ten || chua, d.den_ten || chua]));
+  const [hDoi, bangDoi] = gt2SsBang(t("gt2_ss_doi_tieu_de", { n: kq.so_doi }), dauDoi, dongDoi);
+  bangDoi.id = "gt2SsDoiBang";
+  bangDoi.hidden = true;
+  const nut = document.createElement("button");
+  nut.type = "button";
+  nut.id = "gt2SsDoiNut";
+  nut.className = "btn btn-secondary";
+  nut.setAttribute("aria-expanded", "false");
+  nut.setAttribute("aria-controls", "gt2SsDoiBang");
+  const veNut = () => { nut.textContent = t(bangDoi.hidden ? "gt2_ss_hien_ds" : "gt2_ss_an_ds", { n: kq.so_doi }); };
+  veNut();
+  nut.addEventListener("click", () => {
+    bangDoi.hidden = !bangDoi.hidden;
+    nut.setAttribute("aria-expanded", bangDoi.hidden ? "false" : "true");
+    veNut();
+  });
+  khung.appendChild(hDoi);
+  khung.appendChild(nut);
+  khung.appendChild(bangDoi);
   if (kq.doi.length > GT2_SS_DOI_TOI_DA) {
     const p = document.createElement("p");
     p.className = "hint-text";
@@ -373,9 +489,12 @@ function khoiTaoTieuChi() {
   khoiTaoThuCauHinh();
   el("gt2TcLuu").addEventListener("click", gt2TcLuu);
   ["gt2TcPriority", "gt2TcScoreScope"].forEach((id) => el(id).addEventListener("change", () => gt2TcDongBoWharton()));
+  ["gt2TcPriority", "gt2TcTierMode"].forEach((id) => el(id).addEventListener("change", gt2CanhBao));
+  el("gt2TcTiers").addEventListener("input", gt2CanhBao);
   window.addEventListener("langchange", () => {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
     if (gt2TcDuLieu) { gt2TcDatGiaTri(); gt2TcDongBoWharton(); }
+    gt2CanhBao();
   });
 }

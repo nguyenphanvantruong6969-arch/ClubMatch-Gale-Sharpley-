@@ -45,11 +45,11 @@ get_thoi_khoa_bieu get_trang_thai_ket_qua get_vong_2 get_vong_doi_cho get_wharto
 get_wharton_nhat_ky get_workspace_config get_workspace_state gui_khieu_nai gui_phan_hoi
 kiem_chi_tieu_ky_sau lay_so_nhap_nap
 list_classes list_clubs list_clubs_admin list_reserve_groups_in_use list_students_admin list_templates
-list_wharton_admin list_wharton_canh_bao list_workspaces luu_diem_danh mo_thu_muc nhan_dien_tep_forms
+list_wharton_admin list_wharton_canh_bao list_workspaces luu_diem_danh mo_tep mo_thu_muc nhan_dien_tep_forms
 preview_import_csv search_students submit_club_scores submit_huy_chuong submit_person_scores
 submit_preferences submit_test_selection tai_mau_de_thi tao_so_nhap_mau xem_truoc_so_nhap xlsx_to_csv_text
 xuat_ket_qua_list
-get_giai_trinh_hoc_sinh export_phieu_giai_trinh vao_che_do_hoc_sinh
+get_giai_trinh_hoc_sinh export_phieu_giai_trinh
 """.split()  # I1: GT1 tra cứu / phiếu
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.
@@ -63,8 +63,9 @@ nhap_phan_hoi_forms nhap_sau_ket_qua_forms open_workspace phong_wharton_hang_loa
 reset_data reset_student_entry run_pipeline save_as_template set_student_class set_student_reserve_group
 submit_wharton tao_bo_bieu_mau_api tra_loi_moi update_workspace_config xoa_tai_khoan xu_ly_khieu_nai
 tao_ma_tra_cuu tao_lai_ma_tra_cuu export_ma_tra_cuu_csv
+vao_che_do_hoc_sinh
 get_tieu_chi run_thu list_lan_chay so_sanh_lan_chay export_so_sanh_html export_so_sanh_csv ap_dung_tieu_chi
-""".split()  # I1: GT1 mã, GT2 tiêu chí
+""".split()  # I1: GT1 mã, GT2 tiêu chí; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát)
 
 QUYEN = {}
 for _ten in _CONG_KHAI:
@@ -109,6 +110,18 @@ def _ghi_nhat_ky(api, ten, ham, args, kwargs, phien, ket_qua, ket_qua_goi=None, 
     nguoi = phien["ten"] if phien else None
     vai = phien["vai"] if phien else None
     chi_tiet = nk.tom_tat_tham_so(ham, ten, args, kwargs)
+    if ten == "tra_cuu_hoc_sinh":
+        # GT4-L1 (D4-3): học sinh tự tra cứu bằng phiên dùng chung của chế độ học sinh -> không ghi tên người
+        # đang đăng nhập; mã học sinh chỉ được ghi khi là mã CÓ THẬT (người gõ có thể dán mã tra cứu vào ô mã em).
+        nguoi = vai = None
+        try:
+            with api._ket_noi_doc() as cur:
+                co_that = cur.execute("SELECT 1 FROM students WHERE student_id = ?",
+                                      (str(args[0] if args else kwargs.get("student_id", "")),)).fetchone()
+        except Exception:
+            co_that = None
+        if not co_that:
+            chi_tiet = "{}"
     if ten == "dang_nhap":
         if isinstance(ket_qua_goi, dict) and ket_qua_goi.get("ok"):
             nguoi, vai = ket_qua_goi["data"]["ten"], ket_qua_goi["data"]["vai"]

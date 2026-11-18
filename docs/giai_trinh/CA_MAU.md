@@ -17,8 +17,8 @@ Kết quả: **CLB Tin học**
 | 1 | CLB Tin học | 6.7 | 12 / 12 | 6.2 | có |
 | 2 | CLB Bóng rổ | 6.0 | 13 / 18 | — | không |
 
-- (hạng 1) Em được xếp vào CLB Tin học – nguyện vọng 1 của em.
-- (hạng 2) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Bóng rổ không cần xét.
+- (hạng 1) Học sinh được xếp vào CLB Tin học – nguyện vọng 1.
+- (hạng 2) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Bóng rổ không cần xét.
 
 ### Ca 2 — Lý Thành Hải (HS004)
 
@@ -32,11 +32,11 @@ Kết quả: **CLB Bóng đá**
 | 4 | CLB Tin học | 5.6 | 12 / 12 | 6.2 | không |
 | 5 | CLB Bóng rổ | 7.5 | 13 / 18 | — | không |
 
-- (hạng 1) Em được xếp vào CLB Bóng đá – nguyện vọng 1 của em.
-- (hạng 2) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Mỹ thuật không cần xét.
-- (hạng 3) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Tiếng Anh không cần xét.
-- (hạng 4) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Tin học không cần xét.
-- (hạng 5) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Bóng rổ không cần xét.
+- (hạng 1) Học sinh được xếp vào CLB Bóng đá – nguyện vọng 1.
+- (hạng 2) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Mỹ thuật không cần xét.
+- (hạng 3) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Tiếng Anh không cần xét.
+- (hạng 4) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Tin học không cần xét.
+- (hạng 5) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Bóng rổ không cần xét.
 
 ### Ca 3 — Đỗ Kim Thảo (HS005)
 
@@ -48,9 +48,9 @@ Kết quả: **CLB Mỹ thuật**
 | 2 | CLB Tiếng Anh | 7.2 | 16 / 16 | 5.3 | không |
 | 3 | CLB Bóng đá | 6.9 | 20 / 20 | 5.9 | không |
 
-- (hạng 1) Em được xếp vào CLB Mỹ thuật – nguyện vọng 1 của em.
-- (hạng 2) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Tiếng Anh không cần xét.
-- (hạng 3) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Bóng đá không cần xét.
+- (hạng 1) Học sinh được xếp vào CLB Mỹ thuật – nguyện vọng 1.
+- (hạng 2) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Tiếng Anh không cần xét.
+- (hạng 3) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Bóng đá không cần xét.
 
 ## 2. Ba em không được nguyện vọng 1
 
@@ -60,12 +60,12 @@ Kết quả: **chưa có chỗ**
 
 | Hạng | CLB | Điểm của em | Đã nhận / Sức chứa | Điểm chuẩn | Được xếp |
 |---|---|---|---|---|---|
-| 1 | CLB Tin học | 7.9 | 12 / 12 | 6.2 | không |
-| 2 | CLB Mỹ thuật | 7.0 | 12 / 12 | 6.9 | không |
+| 1 | CLB Tin học | 7.9 | 12 / 12 | — | không |
+| 2 | CLB Mỹ thuật | 7.0 | 12 / 12 | — | không |
 
-- (tóm tắt) Em chưa có chỗ ở buổi này: các CLB em chọn đều đã đủ chỗ.
-- (hạng 1) CLB Tin học dành một số chỗ cho nhóm được giữ chỗ nên em chưa vào được.
-- (hạng 2) CLB Mỹ thuật dành một số chỗ cho nhóm được giữ chỗ nên em chưa vào được.
+- (tóm tắt) Học sinh chưa có chỗ ở buổi này: các CLB đã chọn đều đã đủ chỗ.
+- (hạng 1) CLB Tin học dành một số chỗ cho nhóm được giữ chỗ nên học sinh chưa vào được.
+- (hạng 2) CLB Mỹ thuật dành một số chỗ cho nhóm được giữ chỗ nên học sinh chưa vào được.
 
 ### Ca 5 — Lý Diệu Lan (HS002)
 
@@ -78,10 +78,10 @@ Kết quả: **CLB Âm nhạc**
 | 3 | CLB Tiếng Anh | 4.5 | 16 / 16 | 5.3 | không |
 | 4 | CLB Âm nhạc | 4.5 | 13 / 14 | — | có |
 
-- (hạng 1) CLB Bóng đá đã đủ chỗ với các bạn có điểm thử thách cao hơn (điểm chuẩn 5.9, em 5.8).
-- (hạng 2) CLB Tin học đã đủ chỗ với các bạn có điểm thử thách cao hơn (điểm chuẩn 6.2, em 5.2).
-- (hạng 3) CLB Tiếng Anh đã đủ chỗ với các bạn có điểm thử thách cao hơn (điểm chuẩn 5.3, em 4.5).
-- (hạng 4) Em được xếp vào CLB Âm nhạc – nguyện vọng 4 của em.
+- (hạng 1) CLB Bóng đá đã đủ chỗ với các học sinh có điểm thử thách cao hơn (điểm chuẩn 5.9, học sinh 5.8).
+- (hạng 2) CLB Tin học đã đủ chỗ với các học sinh có điểm thử thách cao hơn (điểm chuẩn 6.2, học sinh 5.2).
+- (hạng 3) CLB Tiếng Anh đã đủ chỗ với các học sinh có điểm thử thách cao hơn (điểm chuẩn 5.3, học sinh 4.5).
+- (hạng 4) Học sinh được xếp vào CLB Âm nhạc – nguyện vọng 4.
 
 ### Ca 6 — Lê Quang Long (HS006)
 
@@ -89,13 +89,13 @@ Kết quả: **CLB Tiếng Anh**
 
 | Hạng | CLB | Điểm của em | Đã nhận / Sức chứa | Điểm chuẩn | Được xếp |
 |---|---|---|---|---|---|
-| 1 | CLB Tin học | 6.6 | 12 / 12 | 6.2 | không |
+| 1 | CLB Tin học | 6.6 | 12 / 12 | — | không |
 | 2 | CLB Tiếng Anh | 8.6 | 16 / 16 | 5.3 | có |
 | 3 | CLB Mỹ thuật | 8.9 | 12 / 12 | 6.9 | không |
 
-- (hạng 1) CLB Tin học dành một số chỗ cho nhóm được giữ chỗ nên em chưa vào được.
-- (hạng 2) Em được xếp vào CLB Tiếng Anh – nguyện vọng 2 của em.
-- (hạng 3) Em đã được xếp vào một CLB em xếp cao hơn nên CLB Mỹ thuật không cần xét.
+- (hạng 1) CLB Tin học dành một số chỗ cho nhóm được giữ chỗ nên học sinh chưa vào được.
+- (hạng 2) Học sinh được xếp vào CLB Tiếng Anh – nguyện vọng 2.
+- (hạng 3) Học sinh đã được xếp vào một CLB xếp cao hơn nên CLB Mỹ thuật không cần xét.
 
 ## 3. Chạy xếp bị chặn vì thiếu dữ liệu
 

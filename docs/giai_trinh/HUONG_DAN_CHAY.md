@@ -94,7 +94,7 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
   `quan_tri`; người tạo được đăng nhập luôn. Từ lúc đó mọi thao tác cần đăng nhập.
 - **Hai vai:** `quan_tri` (làm mọi việc, kể cả chạy xếp, đổi cấu hình, quản lý tài khoản, xem nhật ký) và `giao_vien` (nhập dữ liệu,
   xem kết quả; không làm việc dành riêng cho quản trị). Thao tác bị từ chối trả `gt3_khong_du_quyen` và vẫn được ghi nhật ký.
-- **Nhật ký thao tác:** hộp *Tài khoản*, mục *Nhật ký thao tác* (chỉ quản trị): mới nhất trước, lọc theo người và hành động, xuất
+- **Nhật ký thao tác:** hộp *Tài khoản*, thẻ *Nhật ký thao tác* (chỉ quản trị): mới nhất trước, hiện bằng chữ dễ đọc (tên thao tác, vai, kết quả, giờ địa phương), lọc theo người, thao tác, ngày, hoặc chỉ các dòng bị từ chối; xuất
   CSV `nhat_ky_thao_tac.csv` (`export_nhat_ky_thao_tac_csv`). Bảng chỉ thêm; không sửa, không xoá được. Mật khẩu và nội dung tệp không
   bao giờ vào nhật ký. Ví dụ hai dòng đầu của một lần thử (dữ liệu mô phỏng):
 
@@ -111,6 +111,15 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
 
   Windows: `.venv\Scripts\python recovery.py --xoa-tai-khoan <đường dẫn app.db>`. Lệnh sao lưu `app.db` rồi xoá **toàn bộ** tài khoản
   (dữ liệu phân bổ giữ nguyên); đã chạy thật, in `Da sao luu va xoa 1 tai khoan.`. Sau đó phần mềm trở về trạng thái chưa có tài khoản.
+- **Mã tra cứu và nhật ký:** lượt học sinh tự tra cứu chỉ ghi mã học sinh (không ghi mã tra cứu, không ghi tên người đang đăng
+  nhập); xem lời giải trình của một em được ghi một dòng (người xem + mã học sinh). Cơ sở dữ liệu đã dùng **trước bản này** có thể còn mã
+  tra cứu trong các dòng nhật ký cũ (bảng chỉ thêm, không xoá được): hãy **tạo lại toàn bộ mã** (`tao_ma_tra_cuu(chi_hs_chua_co=False)`)
+  trước khi dùng thật.
+- **Quên mật khẩu với bản `.exe` (không có Python):** đóng phần mềm, bấm đúp `QUEN_MAT_KHAU.bat` cạnh `PhanBoCauLacBo.exe`, gõ `XOA`
+  (hoặc dòng lệnh `PhanBoCauLacBo.exe --xoa-tai-khoan [app.db] [--yes]`; chạy từ mã nguồn: `python main.py --xoa-tai-khoan <app.db> --yes`).
+  Sao lưu trước, xoá toàn bộ tài khoản, dữ liệu phân bổ giữ nguyên.
+- **Tạo quản trị đầu tiên trước khi đưa máy cho học sinh dùng:** khi chưa có tài khoản nào, ai mở hộp *Tài khoản* trước sẽ tạo được tài khoản
+  quản trị đầu tiên. Hộp tạo tài khoản có ô nhập lại mật khẩu để tránh gõ nhầm.
 - Đăng nhập sai nhiều lần thì tài khoản tạm khoá (`gt3_tam_khoa`); phiên đăng nhập hết hạn khi không hoạt động.
 
 ## 9. Kiểm "trùng khít" (tuỳ chọn)

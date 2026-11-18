@@ -35,7 +35,7 @@ def mo(api):
                 assert api.tao_tai_khoan("quantri", MK, "quan_tri")["ok"]
                 assert api.tao_tai_khoan("gv1", MK, "giao_vien")["ok"]
                 api.dang_xuat()
-                assert api.dang_nhap("gv1", MK)["ok"]
+                assert api.dang_nhap("quantri", MK)["ok"]   # GT4 D4-1: chỉ quản trị vào chế độ học sinh
             page.goto(url)
             page.wait_for_selector("#gtPanel", state="attached")
             page.wait_for_function("document.body.dataset.vai !== undefined")

@@ -127,15 +127,18 @@ def _lua_chon_rbda(sid, buoi, b):
                 x["ma"] = None
             else:
                 x["ma"], x["sau_nguoi_nhan_cuoi"] = _ma_tu_choi(sid, cid, b, cuoi)
+                if x["ma"] == RESERVED:
+                    # GT4-L4: chỗ dành riêng — số của người nhận cuối KHÔNG phải ngưỡng của em này, nên không đưa ra.
+                    x["diem_chuan"], x["diem_chuan_loai"] = None, "giu_cho"
         ra.append(x)
     return ra
 
 
-def _them_cau(x):
+def _them_cau(x, giong=fa_ly_do.GIONG_HOC_SINH):
     if x.get("ma"):
         x["cau"] = fa_ly_do.cau_ly_do_rbda(
             {"ma": x["ma"], "rank_in_list": x["hang"], "cut_score": x.get("diem_chuan"),
-             "diem_em": x.get("diem_em")}, x["ten_clb"])
+             "diem_em": x.get("diem_em")}, x["ten_clb"], giong)
     else:
         x["cau"] = ""
 
@@ -182,14 +185,16 @@ def _lua_chon_fa(sid, buoi, b):
     return ra
 
 
-def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str) -> dict:
+def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str, giong: str = fa_ly_do.GIONG_HOC_SINH) -> dict:
     """Giải trình của MỘT học sinh. `du_lieu_run`:
 
         {"fa_bat": bool, "du_lieu_da_doi": bool, "run": {...}, "ds_buoi": [buoi...],
          "buoi": {buoi: {"clubs", "prefs", "scores", "stb", "assign", "base_rank", ... "fa_rows"}}}
 
     Trả {"student_id", "fa_bat", "du_lieu_da_doi", "run", "buoi": [{"buoi", "ket_qua", "ten_clb",
-    "ma_tom_tat", "cau_tom_tat", "cac_lua_chon": [...]}]}. Hàm thuần: không CSDL, không ghi.
+    "ma_tom_tat", "cau_tom_tat", "chu_thich", "cac_lua_chon": [...]}]}. Hàm thuần: không CSDL, không ghi.
+    `giong`: giọng các câu RB-DA ("hoc_sinh" mặc định, hoặc "giao_vien" trung tính cho khung tra cứu; xem
+    `fa_ly_do.cau_ly_do_rbda`). `chu_thich`: câu cố định khi buổi có hàng chỗ dành riêng, nếu không thì chuỗi rỗng.
     """
     fa = bool(du_lieu_run.get("fa_bat"))
     ra_buoi = []
@@ -200,14 +205,15 @@ def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str) -> dict:
         ds = _lua_chon_fa(student_id, buoi, b) if fa else _lua_chon_rbda(student_id, buoi, b)
         if not fa:
             for x in ds:
-                _them_cau(x)
+                _them_cau(x, giong)
         ket = b["assign"].get(student_id)
         ma_tt = ACCEPTED if ket else (UNASSIGNED if ds else NO_CHOICES)
         ten = (b["clubs"].get(ket) or {}).get("ten") if ket else None
         ra_buoi.append({
             "buoi": buoi, "ket_qua": ket, "ten_clb": ten,
             "ma_tom_tat": ma_tt,
-            "cau_tom_tat": (fa_ly_do.cau_ly_do_rbda({"ma": ma_tt}, "") if not ket else ""),
+            "cau_tom_tat": (fa_ly_do.cau_ly_do_rbda({"ma": ma_tt}, "", giong) if not ket else ""),
+            "chu_thich": (fa_ly_do.CAU_GIU_CHO if (not fa and any(x.get("ma") == RESERVED for x in ds)) else ""),
             "cac_lua_chon": ds})
     return {"student_id": student_id, "fa_bat": fa,
             "du_lieu_da_doi": bool(du_lieu_run.get("du_lieu_da_doi")),
