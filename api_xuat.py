@@ -1392,20 +1392,25 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
-    def tao_so_nhap_mau(self, output_path: str = ""):
+    def tao_so_nhap_mau(self, output_path: str = "", kieu: str = "thuong"):
         """Tạo Sổ nhập CLB để điền, đặt vào thư mục Tải xuống.
 
         Phần mềm đã có CLB thì sheet "1. CLB" điền sẵn chúng: người vận
         hành chỉ còn điền học sinh. Chưa có thì sổ trống.
+
+        UX1A-L5: `kieu` = "thuong" (như cũ: có cột Huy chương chỉ khi chế độ huy chương đang bật) hoặc
+        "huy_chuong" (luôn là sổ mẫu có cột Loại và Huy chương; dùng khi chế độ đó bật).
         """
         try:
+            if kieu not in ("thuong", "huy_chuong"):
+                kieu = "thuong"
             path = self._duong_xuat(output_path, "SO_NHAP_CLB.xlsx")
             with self._ket_noi_doc() as cur:
                 clubs, _, _, n_ten_doi = self._du_lieu_so_nhap(cur)
             so_nhap.ghi_so_nhap(path, clubs, [], cfg=self._cfg_ws(nghiem=True),
                                  luon_co_cot_w=True,       # sổ mẫu luôn có cột Điểm quyết tâm (A13.7)
                                  co_lop=True,              # và cột Lớp (A14, đã duyệt)
-                                 che_do_fa=dung_fa_daa(self._luat_nghiem()))   # FG-2 (D3)
+                                 che_do_fa=(kieu == "huy_chuong" or dung_fa_daa(self._luat_nghiem())))   # FG-2 (D3); UX1A-L5: kieu
             return _ok({"path": path, "dir": os.path.dirname(path),
                         "n_clubs": len(clubs), "n_ten_doi": n_ten_doi})
         except LoiDuongXuat as e:

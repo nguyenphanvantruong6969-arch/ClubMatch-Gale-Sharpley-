@@ -647,6 +647,10 @@ MESSAGES = {
         "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} CLB có cột loại / điểm sàn / tối thiểu / sức chứa phòng đã được bỏ qua phần đó, không lưu.",
         "en": "This workspace doesn't use FA-DAA yet: the type / pass mark / minimum / room capacity columns of {n} club(s) were skipped and not saved.",
     },
+    "so_nhap_canh_bao_huy_chuong_che_do_tat": {
+        "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt — bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
+        "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off — turn it on in Settings, or the medals will not be used.",
+    },
     "fa_giu_cho_bo_qua": {
         "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} dòng giữ chỗ trong sổ đã được bỏ qua, không lưu.",
         "en": "This workspace doesn't use FA-DAA yet: {n} reserved-seat row(s) in the file were skipped and not saved.",
@@ -1074,16 +1078,16 @@ MESSAGES = {
         "en": "{slot} {club_id}: {n} {score_l}(s) are far from the rest (the {slot_l}'s middle {score_l} is {trung_vi}). For example: {sample}. A {score_l} may be mistyped, such as 70 instead of 7.0. Check them on the Scoring tab.",
     },
     "health_oversubscribed": {
-        "vi": "Tổng số chỗ là {n_seats} nhưng có {n_students} {person_l} đã nộp nguyện vọng. Ít nhất {n_short} {person_l} sẽ không có chỗ.",
-        "en": "There are {n_seats} seats in total but {n_students} {person_pl} submitted preferences. At least {n_short} {person_l}(s) won't get a seat.",
+        "vi": "{n_seats} chỗ cho {n_students} {person_l}: ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
+        "en": "{n_seats} seats for {n_students} {person_pl}: at least {n_short} won't get one. Raise capacity or add {slot_la}.",
     },
     "health_oversubscribed_chua_khai_buoi": {
-        "vi": "Các {slot_l} chưa khai {session_l} có tổng {n_seats} chỗ, trong khi {n_students} {person_l} xếp nguyện vọng vào các {slot_l} này. Ít nhất {n_short} {person_l} chắc chắn không có chỗ ở nhóm này. Các {slot_l} chưa khai {session_l} được xếp chung như một {session_l} riêng. Hãy khai {session_l} cho chúng ở màn Quản lý {slot_sl}, tăng sức chứa, hoặc chấp nhận.",
-        "en": "{slot_p} with no {session_l} set have {n_seats} seats in total, but {n_students} {person_l}(s) ranked these {slot_pl}. At least {n_short} {person_l}(s) will certainly get no seat among them. {slot_p} with no {session_l} set are matched together as one separate {session_l}. Set their {session_l} in Manage {slot_pl}, raise capacity, or accept it.",
+        "vi": "{slot_p} chưa khai {session_l}: {n_seats} chỗ cho {n_students} {person_l}, ít nhất {n_short} {person_l} sẽ không có chỗ. Khai {session_l} cho chúng hoặc tăng chỉ tiêu.",
+        "en": "{slot_p} with no {session_l} set: {n_seats} seats for {n_students} {person_pl}, at least {n_short} won't get one. Set their {session_l} or raise capacity.",
     },
     "health_oversubscribed_buoi": {
-        "vi": "{session} {buoi} có tổng {n_seats} chỗ, trong khi {n_students} {person_l} xếp nguyện vọng ở {session_l} này. Ít nhất {n_short} {person_l} chắc chắn không có {slot_l} nào trong {session_l} {buoi}. Chỗ trống ở {session_l} khác không bù được. Hãy tăng sức chứa, thêm {slot_l} cho {session_l} này, hoặc chấp nhận.",
-        "en": "{session} {buoi} has {n_seats} seats in total, but {n_students} {person_l}(s) ranked {slot_pl} in this {session_l}. At least {n_short} {person_l}(s) will certainly get no {slot_l} on {buoi}. Free seats in other {session_pl} cannot make up for it. Raise capacity, add {slot_la} to this {session_l}, or accept it.",
+        "vi": "{session} {buoi}: {n_seats} chỗ cho {n_students} {person_l} — ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
+        "en": "{session} {buoi}: {n_seats} seats for {n_students} {person_pl} — at least {n_short} won't get one. Raise capacity or add {slot_la}.",
     },
 
     # --- recovery.py / recovery.html — màn hình phục hồi khi app.db

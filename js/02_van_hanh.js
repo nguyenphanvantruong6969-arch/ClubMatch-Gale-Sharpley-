@@ -367,6 +367,7 @@ function capNhatKhoaVanHanh() {
   el("btnImportAll").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnClearQueue").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnTaiSoMau").disabled = khoa.dangChay || khoa.dangNhap;
+  el("btnTaiSoMauHuyChuong").disabled = khoa.dangChay || khoa.dangNhap; /* UX1A-L5 */
   if (el("btnXuatTuyChon")) el("btnXuatTuyChon").disabled = khoa.dangChay || khoa.dangXuat;
   if (typeof capNhatNutXuatTheoLop === "function") capNhatNutXuatTheoLop();
 
@@ -780,7 +781,8 @@ function initCsvImportHandlers() {
 
   el("btnImportAll").addEventListener("click", nhapTatCa);
   el("btnClearQueue").addEventListener("click", boHangDoiNhap);
-  el("btnTaiSoMau").addEventListener("click", taiSoNhapMau);
+  el("btnTaiSoMau").addEventListener("click", () => taiSoNhapMau("thuong"));
+  el("btnTaiSoMauHuyChuong").addEventListener("click", () => taiSoNhapMau("huy_chuong")); /* UX1A-L5 */
 }
 
 function boHangDoiNhap() {
@@ -834,10 +836,10 @@ function laFileExcel(ten) {
 
 /* "Tai so nhap mau": phan mem tao so (co san cac CLB dang co) trong thu
    muc Tai xuong roi mo thu muc do — giao vien khong phai tu di tim. */
-function taiSoNhapMau() {
-  const nut = el("btnTaiSoMau");
+function taiSoNhapMau(kieu) {
+  const nut = el(kieu === "huy_chuong" ? "btnTaiSoMauHuyChuong" : "btnTaiSoMau");
   nut.disabled = true;
-  callApi("tao_so_nhap_mau", "").then((res) => {
+  callApi("tao_so_nhap_mau", "", kieu || "thuong").then((res) => {
     nut.disabled = false;
     if (!res.ok) {
       feedbackErrors(el("feedbackImportAll"), res.errors);
@@ -906,7 +908,12 @@ function veCanhBaoNhap() {
   clear(box);
   box.hidden = canhBaoNhapGanNhat.length === 0;
   /* SG-7 (M1): cung luat voi buoc 4 — gom theo ma, dem, 5 vi du, "va N truong hop nua" (veCanhBaoGom o 00_nen.js). */
-  veCanhBaoGom(box, canhBaoNhapGanNhat.map((w) => ({ ma: w.code, chu: trErr(w) })));
+  /* UX1A-L5: hàng trăm cảnh báo "chưa dùng hết điểm" của từng em gộp thành MỘT dòng. */
+  const chuaDu = canhBaoNhapGanNhat.filter((w) => w.code === "wharton_chua_dung_het");
+  const muc = canhBaoNhapGanNhat.filter((w) => w.code !== "wharton_chua_dung_het")
+    .map((w) => ({ ma: w.code, chu: trErr(w) }));
+  if (chuaDu.length) muc.push({ ma: "wharton_chua_dung_het", chu: t("ux1a_wh_chua_du", { n: chuaDu.length }) });
+  veCanhBaoGom(box, muc);
 }
 
 /* So loi hien toi da bay nhieu dong; con lai gom thanh "va N loi khac". */
@@ -985,6 +992,16 @@ function veHangDoi() {
     canhBao.forEach((w) => {
       const li = document.createElement("li");
       li.textContent = trErr(w);
+      /* UX1A-L5: sổ có cột Huy chương / Loại mà chế độ huy chương tắt -> một nút bật (không bật ngầm). */
+      if (w.code === "so_nhap_canh_bao_huy_chuong_che_do_tat") {
+        const nutBat = document.createElement("button");
+        nutBat.type = "button";
+        nutBat.id = "btnBatHuyChuong";
+        nutBat.className = "btn btn-secondary btn-nho";
+        nutBat.textContent = t("ux1a_btn_bat_huy_chuong");
+        nutBat.addEventListener("click", () => batHuyChuongTuXemTruoc(muc, nutBat));
+        li.append(" ", nutBat);
+      }
       ds.appendChild(li);
     });
     trai.appendChild(ds);
@@ -994,6 +1011,23 @@ function veHangDoi() {
 
   /* Chi nhap duoc so DA DOC, KHONG loi, CHUA nhap. */
   el("btnImportAll").hidden = !(muc.b64 && !muc.xong);
+}
+
+/* UX1A-L5: bật chế độ huy chương cho workspace đang mở bằng đường cấu hình sẵn có (quản trị, có dòng nhật ký),
+   rồi đọc thử lại CHÍNH sổ đang chờ. Không bao giờ bật ngầm. */
+function batHuyChuongTuXemTruoc(muc, nut) {
+  nut.disabled = true;
+  callApi("update_workspace_config", { rules: { wharton: true, fa_daa: true } }).then((r) => {
+    if (!r.ok) { nut.disabled = false; showErrorToast(r.errors); return; }
+    if (typeof ux1aApDungSong === "function") ux1aApDungSong(r.data.config);
+    callApi("xem_truoc_so_nhap", muc.b64).then((res) => {
+      if (res.ok && importQueue[0] === muc) {
+        muc.tomTat = res.data;
+        if (res.data.loi.length) { muc.loiRaw = res.data.loi; muc.b64 = ""; }
+      }
+      veHangDoi();
+    });
+  });
 }
 
 function nhapTatCa() {

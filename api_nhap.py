@@ -462,6 +462,12 @@ class NhapDuLieuMixin:
                 kq["canh_bao"] += self._canh_bao_fa_xem_truoc(du_lieu)
             if not du_lieu["loi"]:
                 kq["canh_bao"] += self._canh_bao_wharton_trong_xem_truoc(du_lieu)
+            # UX1A-L5: sổ có cột Huy chương / Loại mà chế độ huy chương đang TẮT: nói rõ trước khi bấm Nhập
+            # (chỉ thông điệp; không đổi gì được lưu hay cách chạy).
+            if not du_lieu["loi"] and not dung_fa_daa(self._luat_nghiem()):
+                co_loai = any("loai" in c for c in du_lieu["clubs"])
+                if du_lieu.get("co_cot_huy_chuong") or co_loai:
+                    kq["canh_bao"].append(err("so_nhap_canh_bao_huy_chuong_che_do_tat"))
             # Workspace chưa bật điểm Wharton mà sổ có cột "Điểm W k": nói trước khi bấm Nhập
             # rằng các ô đó sẽ bị bỏ qua (lúc nhập thật, bước nạp CSV cũng báo đúng câu này).
             if not du_lieu["loi"] and not dung_wharton(self._luat_nghiem()):
