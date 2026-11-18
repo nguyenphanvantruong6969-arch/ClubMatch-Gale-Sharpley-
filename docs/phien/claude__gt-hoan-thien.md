@@ -59,3 +59,4 @@ the allocation core. Base: `origin/claude/admiring-fermat-yf077m` (= `claude/gt-
 |---|---|---|---|
 | 2026-11-17 | Sonnet (reviewer) | review of gt-tich-hop; plan + prompts written | files: GT4_RA_SOAT.md, GT4_HOAN_THIEN.md, GT4_PROMPT_*.md |
 | 2026-11-17 | Sonnet (writer) | L0-L7 implemented, tested, pushed; waiting for checker; handoff at ~400k context | branch claude/gt-hoan-thien |
+| 2026-11-18 | Sonnet (fix session, branch fix-gt4 from 2d6eecf) | B1-B3, OL1, OL2 fixed test-first; CI failures of 0325e70 fixed (test_ws_nhan codes, van_phong i18n wording, 2 flaky Chromium tests); CHANGELOG + TIEN_DO updated | L5 needs checker re-check of B2/B3; Windows browser_host F5 test failed once, unexplained; gate (kiem_nhanh, soat-ma, CI) pending |

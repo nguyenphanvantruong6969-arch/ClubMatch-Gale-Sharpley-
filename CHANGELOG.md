@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-18 — GT4 fix: sửa các lỗi checker báo (B1–B3, OL1, OL2) và các test hỏng trên CI
+
+- B1 (L3): xoá tệp rỗng `--xoa-tai-khoan` bị commit nhầm ở thư mục gốc.
+- B2 (L5, `js/14_giai_trinh.js`): khoá tạm chỉ chặn nút "Xem" khi ô mã học sinh đang là mã bị khoá (backend khoá theo từng mã); đổi mã thì mở lại, quay lại mã cũ thì khoá lại.
+- B3 (L5, `style.css`): nút ngôn ngữ trên màn học sinh dùng chữ tối, 14 px, vùng bấm ≥ 40 px (trước: chữ trắng 75 % trên nền sáng, tương phản ~1,1:1).
+- OL1 (GT3, `js/16_tai_khoan.js` + `style.css`): lớp phủ đăng nhập/đăng xuất đục (`.tk-kin`) — không còn đọc được tên, mã, CLB học sinh phía sau; hộp "Tài khoản" giữ nền mờ.
+- OL2 (GT3, `js/00_nen.js`): mọi lỗi `gt3_can_dang_nhap` (hiện qua toast hoặc ô báo lỗi) hỏi lại phiên ngay → mở hộp đăng nhập, không đợi vòng hỏi 30 giây.
+- CI: `test_ws_nhan` thêm 3 mã lỗi GT4 vào danh sách mã mới (`gt4_ngay_sai`, `tep_khong_hop_le`, `tep_khong_mo_duoc`); `i18n.js` đổi "Xuất so sánh (HTML)" → "(trang web)" / "(web page)" và "Seed" → "Draw number" (test văn phong); hai test Chromium dễ chập chờn trên CI chậm được sửa: đo nhãn–ô trong MỘT lần đánh giá và đợi danh sách tài khoản dàn xong; đợi `inert` về false sau khi thoát chế độ học sinh (không nới điều kiện, vẫn khẳng định trạng thái cuối).
+- Test mới: `tests/test_giao_dien_gt4_phien_rieng_tu.py` (2), thêm 2 ca vào `tests/test_giao_dien_gt4_man_hoc_sinh.py`.
+- Chưa sửa (ghi nhận): `test_a13_12_browser_host.py::test_tai_lai_trang_khong_tat_may_chu` hỏng một lần trên Windows CI, qua trên Linux — cần chạy lại trên CI để biết có chập chờn không.
+
 ## 2026-11-17 — GT4-L7: thiết kế lại khung Tiêu chí xếp / Thử cấu hình / so sánh (R8)
 
 - Nguyên nhân gốc: nhãn và ô chọn là các phần tử flex rời nhau trong `.admin-form-grid`, `.check-row` không có CSS, `<ol>` mặc định. Làm lại bằng mẫu `.club-field` (nhãn trên ô) và các biến màu sẵn có (`style.css`, khối "GT4-L7"); `index.html` dựng lại hai khung; không dùng kỹ năng `formal-uidesign` (không có trong môi trường).

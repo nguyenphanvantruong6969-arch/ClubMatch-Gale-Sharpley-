@@ -2650,6 +2650,7 @@ tr.wh-ql-loi td + td { box-shadow: none; }
   background: rgba(28,35,33,0.62);
 }
 .ws-overlay[hidden] { display: none; }
+.ws-overlay.tk-kin { background: var(--paper); }   /* GT4 fix OL1 */
 
 .ws-hop {
   width: min(1040px, 100%);
@@ -3016,6 +3017,10 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 
 /* GT4-L5: màn học sinh (nhãn trên ô, tên trường, đếm ngược) + liên kết nhảy + bốn bước */
 .gt-hs-dau { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+/* GT4 fix B3: nút ngôn ngữ trên nền sáng — chữ tối, >= 14 px, vùng bấm >= 36 px (bản .lang-toggle gốc là chữ trắng cho thanh nav tối) */
+.gt-hs-dau .lang-toggle { color: var(--ink); background: var(--paper); border: 1px solid var(--ink-soft, #555);
+  font-size: 14px; min-width: 44px; min-height: 40px; padding: 6px 12px; }
+.gt-hs-dau .lang-toggle:hover { background: var(--paper-hover, #ececea); color: var(--ink); border-color: var(--ink); }
 .gt-hs-truong { margin: 0; font-weight: 600; font-size: 1.1rem; }
 .gt-hs-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 12px 0; }
 .gt-hs-o { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1 1 200px; }

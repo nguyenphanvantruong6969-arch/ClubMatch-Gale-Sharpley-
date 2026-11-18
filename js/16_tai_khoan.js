@@ -65,6 +65,7 @@
     const o = lopPhu();
     o.hidden = true;
     o.textContent = "";
+    o.classList.remove("tk-kin");
     dangMoHop = false;
   }
 
@@ -73,6 +74,7 @@
     const o = lopPhu();
     o.textContent = "";
     o.hidden = false;
+    o.classList.add("tk-kin");      // GT4 fix OL1: đăng nhập/đăng xuất thì che kín màn phía sau (tên, mã, CLB học sinh)
     dangMoHop = false;
     const tieuDe = mot("h2", { class: "ws-tieu-de", id: "tkTieuDe", tabindex: "-1", text: t("tk_dang_nhap_tieu_de") });
     const ten = oNhap("tkTen", t("tk_ten"), "text", "username");
@@ -107,6 +109,7 @@
     const o = lopPhu();
     o.textContent = "";
     o.hidden = false;
+    o.classList.remove("tk-kin");
     dangMoHop = true;
     const hop = mot("div", { class: "ws-hop", role: "dialog", "aria-modal": "true", "aria-labelledby": "tkTieuDe", style: "max-width:560px" });
     hop.appendChild(mot("h2", { class: "ws-tieu-de", id: "tkTieuDe", tabindex: "-1", text: t("tk_tieu_de_quan_ly") }));

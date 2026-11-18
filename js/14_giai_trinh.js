@@ -212,22 +212,31 @@
     el("gtHsMa").value = "";
     el("gtHsMaTra").value = "";
     el("gtHsQtMk").value = "";
+    if (henDem !== null) capNhatKhoa();
   }
 
   /* GT4-L5: khoá tạm do nhập sai nhiều lần -> đếm ngược số giây còn lại (backend gửi `giay`), khoá nút Xem. */
   let henDem = null;
+  let idKhoa = null;   // GT4 fix B2: backend khoá theo TỪNG mã học sinh, nên chỉ mã này phải đợi
+  const dangKhoa = () => henDem !== null && el("gtHsMa").value.trim() === idKhoa;
+  function capNhatKhoa() {
+    const khoa = dangKhoa();
+    el("gtHsDemNguoc").hidden = !khoa;
+    el("btnGtHsXem").disabled = khoa;
+  }
   function dungDem() {
     clearInterval(henDem);
     henDem = null;
+    idKhoa = null;
     el("gtHsDemNguoc").hidden = true;
     el("btnGtHsXem").disabled = false;
   }
   function batDem(giay) {
+    const id = el("gtHsMa").value.trim();
     dungDem();
+    idKhoa = id;
     let con = Math.max(1, Math.floor(giay) || 60);
     const ve = () => { el("gtHsDemNguoc").textContent = t("gt_hs_dem_nguoc", { n: con }); };
-    el("gtHsDemNguoc").hidden = false;
-    el("btnGtHsXem").disabled = true;
     ve();
     henDem = setInterval(() => {
       con -= 1;
@@ -235,6 +244,7 @@
       ve();
     }, 1000);
     window.gtHsDem = () => con;
+    capNhatKhoa();        // sau khi henDem đã có giá trị
   }
 
   function datHenGio() {
@@ -342,7 +352,7 @@
   ["input", "click", "keydown", "pointerdown"].forEach((ev) => el("gtHs").addEventListener(ev, datHenGio));
   el("gtHsForm").addEventListener("submit", (e) => {
     e.preventDefault();
-    if (henDem !== null) return;                  // đang đếm ngược khoá tạm: Enter cũng không gửi
+    if (dangKhoa()) return;                       // mã này đang bị khoá tạm: Enter cũng không gửi
     const ma = el("gtHsMa").value;
     const maTra = el("gtHsMaTra").value;
     el("gtHsKetQua").textContent = "";
@@ -361,6 +371,7 @@
       ve(res.data, el("gtHsKetQua"), false);
     });
   });
+  el("gtHsMa").addEventListener("input", () => { if (henDem !== null) capNhatKhoa(); });
   window.addEventListener("langchange", () => {
     if (hsDangMo && el("gtHsKetQua").childElementCount) el("gtHsKetQua").textContent = "";
     if (henDem !== null && window.gtHsDem) el("gtHsDemNguoc").textContent = t("gt_hs_dem_nguoc", { n: window.gtHsDem() });

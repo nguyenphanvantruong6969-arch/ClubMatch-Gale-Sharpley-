@@ -84,8 +84,12 @@ def mo(tmp_path):
 
 def _khong_nhan_chung_hang(page, khung):
     """Không nhãn nào cùng dòng với ô nhập của một trường KHÁC (nhãn luôn nằm trên ô của chính nó)."""
-    nhan = page.evaluate(JS_HOP, khung + " label[for]")
-    o = {x["id"]: x for x in page.evaluate(JS_HOP, khung + " select, " + khung + " textarea, " + khung + " input")}
+    # MỘT lần đo cho cả nhãn và ô: hai lần đo rời nhau có thể rơi vào hai lần dàn trang khác nhau (danh sách tài khoản
+    # nạp xong giữa chừng làm cả khối dịch xuống), CI chậm từng báo "nhãn cùng dòng" oan.
+    nhan, cac_o = page.evaluate(
+        "([f, hop]) => { const m = eval(hop); return [m(f + ' label[for]'), m(f + ' select, ' + f + ' textarea, ' + f + ' input')]; }",
+        [khung, JS_HOP])
+    o = {x["id"]: x for x in cac_o}
     assert nhan
     for n in nhan:
         if n["boc"]:
@@ -267,6 +271,8 @@ def test_hop_tai_khoan_va_khung_tra_cuu_nhan_tren_o_khong_chung_dong(mo):
     page = trang(1024)
     page.click("#tkNutMoHop")
     page.wait_for_selector("#tkFormDoiMk")
+    page.wait_for_selector("#tkNutTao")                         # đợi danh sách tài khoản và form "Thêm" dàn xong
+    page.wait_for_load_state("networkidle")
     _khong_nhan_chung_hang(page, "#tkKhungTaiKhoan")
     assert not loi, loi
 

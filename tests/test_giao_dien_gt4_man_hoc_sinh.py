@@ -175,3 +175,48 @@ def test_sau_khi_xuat_co_mo_thu_muc_va_mo_tep(mo):
     page.wait_for_function("true")
     assert len(goi) == 1 and goi[0].endswith(".csv")
     assert not loi, loi
+
+
+def test_khoa_chi_chan_dung_ma_bi_khoa_khong_chan_em_khac(mo):
+    """GT4 fix B2: khoá tạm tính theo từng mã học sinh; em khác vẫn bấm Xem được trong lúc em kia bị khoá."""
+    api, ds, ma, vao, loi, page = mo
+    vao(dong_ho=True)
+    _mo_man_hoc_sinh(page)
+    for _ in range(6):
+        page.fill("#gtHsMa", ds[0])
+        page.fill("#gtHsMaTra", "SAIMA999")
+        page.click("#btnGtHsXem")
+        page.wait_for_function("document.querySelector('#gtHsLoi').innerText.length > 0")
+        page.fill("#gtHsMaTra", "")
+    page.locator("#gtHsDemNguoc").wait_for(state="visible")
+    assert page.locator("#btnGtHsXem").is_disabled()
+    page.fill("#gtHsMa", ds[1])                                     # em khác
+    assert page.locator("#btnGtHsXem").is_enabled()
+    page.fill("#gtHsMaTra", ma[ds[1]])
+    page.press("#gtHsMaTra", "Enter")
+    page.wait_for_selector("#gtHsKetQua .gt-ten")
+    assert ds[1] in page.inner_text("#gtHsKetQua .gt-ten")
+    page.fill("#gtHsMa", ds[0])                                     # quay lại em bị khoá: vẫn khoá
+    assert page.locator("#btnGtHsXem").is_disabled()
+    assert not loi, loi
+
+
+def test_nut_ngon_ngu_man_hoc_sinh_doc_duoc(mo):
+    """GT4 fix B3: nút EN phải thấy rõ (tương phản >= 4,5:1, chữ >= 14 px, cao >= 36 px)."""
+    api, ds, ma, vao, loi, page = mo
+    vao()
+    _mo_man_hoc_sinh(page)
+    r = page.evaluate("""() => {
+      const b = document.querySelector('#btnGtHsNgonNgu'), s = getComputedStyle(b), k = b.getBoundingClientRect();
+      const bg = (el) => { for (let e = el; e; e = e.parentElement) { const c = getComputedStyle(e).backgroundColor;
+        const m = c.match(/[\\d.]+/g).map(Number); if (m.length < 4 || m[3] > 0) return m; } return [255,255,255,1]; };
+      const lum = (c) => { const f = c.slice(0,3).map(v => { v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
+        return 0.2126*f[0] + 0.7152*f[1] + 0.0722*f[2]; };
+      const fg = s.color.match(/[\\d.]+/g).map(Number);
+      const a = fg.length > 3 ? fg[3] : 1, back = bg(b);
+      const mix = [0,1,2].map(i => fg[i]*a + back[i]*(1-a));
+      const l1 = lum(mix), l2 = lum(back), hi = Math.max(l1,l2), lo = Math.min(l1,l2);
+      return {ratio: (hi+0.05)/(lo+0.05), px: parseFloat(s.fontSize), h: k.height, w: k.width};
+    }""")
+    assert r["ratio"] >= 4.5 and r["px"] >= 14 and r["h"] >= 36 and r["w"] >= 36, r
+    assert not loi, loi
