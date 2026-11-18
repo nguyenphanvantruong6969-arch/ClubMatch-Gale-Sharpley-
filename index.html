@@ -399,6 +399,12 @@
         <button class="btn btn-secondary" id="btnDiToiChay" type="button" data-i18n="btn_di_toi_chay">Đi tới Xếp CLB</button>
       </div>
 
+      <!-- UX1A-L2b: việc SAU khi xếp là hành động tại đây, không phải cài đặt; chỉ hiện ở chế độ Huy chương -->
+      <div class="panel" id="ux1aSauXep" data-quyen="quan_tri" hidden>
+        <div class="panel-head"><h2 data-i18n="ux1a_sx_tieu_de">Sau khi xếp</h2></div>
+        <div class="panel-body" id="ux1aSauXepLuoi"></div>
+      </div>
+
       <div class="panel" id="xuatPanel">
         <div class="panel-head"><h2 data-i18n="xuat_title">Xuất dữ liệu</h2></div>
         <p class="canh-bao-vang" id="xuatKetQuaKhoa" role="status" hidden data-i18n="xuat_khoa_dong">Chưa có kết quả xếp. Chạy xếp trước.</p>
@@ -886,6 +892,12 @@
         <p class="view-desc" data-i18n="admin_desc">Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.</p>
       </header>
 
+      <!-- UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay (js/18_cai_dat.js); chỉ có nghĩa khi có workspace -->
+      <div class="panel" id="ux1aCaiDat" data-quyen="quan_tri" hidden>
+        <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
+        <div class="panel-body" id="ux1aCaiDatThan"></div>
+      </div>
+
       <!-- GAP-8 (V§11): bảng điều khiển quản trị, chỉ đọc; chỉ hiện khi FA-DAA bật (js/10_theo_doi.js taiDashboard). -->
       <div class="panel" id="dashboardPanel" hidden>
         <div class="panel-head">
@@ -1216,8 +1228,6 @@
                 <p class="hint-text gt2-goi-y" id="gt2TcTiersGoiY" data-i18n="gt2_tc_nhom_goi_y">Mỗi dòng một nhóm, nhóm đầu được ưu tiên nhất</p>
               </div>
               <div class="check-khoi">
-                <label class="check-row"><input type="checkbox" id="gt2TcWharton"> <span id="gt2TcWhartonNhan"></span></label>
-                <p class="hint-text check-goi-y" id="gt2TcWhartonGoiY" hidden></p>
               </div>
               <div class="panel-actions gt2-nut-phai">
                 <button class="btn btn-primary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
@@ -1440,6 +1450,7 @@
 <script src="js/15_tieu_chi.js"></script><!-- GT2 -->
 <script src="js/16_tai_khoan.js"></script>
 <script src="js/17_viec_tiep_theo.js"></script><!-- UX1A -->
+<script src="js/18_cai_dat.js"></script><!-- UX1A -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

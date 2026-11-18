@@ -3131,3 +3131,30 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .nav-nhom .nav-item { padding-left: 20px; }
 .ux1a-nang-cao { margin-top: 20px; }
 .ux1a-nang-cao > summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+
+/* UX1A-L2b: trang Cài đặt (ba thẻ) và hành động sau khi xếp */
+.ux1a-cau-hoi { font-size: 16px; margin: 0 0 12px; }
+.ux1a-the-luoi { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.ux1a-the {
+  display: flex; flex-direction: column; gap: 4px; text-align: left; cursor: pointer;
+  padding: 14px 16px; border: 2px solid var(--slate); border-radius: 10px; background: transparent; color: inherit;
+  font: inherit;
+}
+.ux1a-the:hover:not(:disabled) { border-color: var(--chart-general); }
+.ux1a-the:focus-visible { outline: 2px solid var(--chart-general); outline-offset: 2px; }
+.ux1a-the:disabled { opacity: 0.5; cursor: not-allowed; }
+.ux1a-the.is-chon { border-color: var(--chart-general); box-shadow: inset 0 0 0 1px var(--chart-general); }
+.ux1a-the.is-chon .ux1a-the-tt::before { content: "✓ "; }
+.ux1a-the-tt { font-weight: 700; }
+.ux1a-loi { color: #B42318; margin: 8px 0 0; }
+.ux1a-san-sang { margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--slate); border-radius: 8px; }
+.ux1a-ss-dau { font-weight: 600; margin: 0 0 8px; }
+.ux1a-ss-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
+.ux1a-ss-ten { min-width: 160px; }
+.ux1a-vien-nhom { display: inline-flex; gap: 6px; }
+.ux1a-vien { border: 1px solid var(--slate); border-radius: 999px; padding: 3px 12px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.ux1a-vien:hover { border-color: var(--chart-general); }
+.ux1a-so { width: 72px; }
+.ux1a-san-sang-xong { margin: 0; font-weight: 600; }
+.ux1a-cach-xet { margin: 14px 0 0; }
+.ux1a-sx-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }

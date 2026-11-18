@@ -14,6 +14,7 @@
 
 function loadResultsTab() {
   loadTomTatKetQua();
+  if (typeof ux1aVeSauXep === "function") ux1aVeSauXep(); /* UX1A-L2b */
   veXuatPanel();
   loadClubFillStats();
   loadMatchResults(el("resultsSearch") ? el("resultsSearch").value : "");
