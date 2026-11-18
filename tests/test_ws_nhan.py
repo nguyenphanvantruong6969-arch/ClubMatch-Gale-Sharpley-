@@ -224,9 +224,9 @@ SUA_CO_Y = {
     ],
     ("loi", 'health_oversubscribed_buoi'): [
         ('Buổi {buoi} có tổng {n_seats} chỗ, trong khi {n_students} học sinh xếp nguyện vọng ở buổi này. Ít nhất {n_short} học sinh chắc chắn không có câu lạc bộ nào trong buổi {buoi}. Chỗ trống ở buổi khác không bù được. Hãy tăng sức chứa, thêm câu lạc bộ cho buổi này, hoặc chấp nhận.',
-         'Buổi {buoi}: {n_seats} chỗ cho {n_students} học sinh — ít nhất {n_short} học sinh sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm câu lạc bộ.'),
+         'Buổi {buoi}: {n_seats} chỗ cho {n_students} học sinh, nên ít nhất {n_short} học sinh sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm câu lạc bộ.'),
         ('Session {buoi} has {n_seats} seats in total, but {n_students} student(s) ranked clubs in this session. At least {n_short} student(s) will certainly get no club on {buoi}. Free seats in other sessions cannot make up for it. Raise capacity, add a club to this session, or accept it.',
-         "Session {buoi}: {n_seats} seats for {n_students} students — at least {n_short} won't get one. Raise capacity or add a club."),
+         "Session {buoi}: {n_seats} seats for {n_students} students, so at least {n_short} won't get one. Raise capacity or add a club."),
     ],
     ("loi", 'health_oversubscribed_chua_khai_buoi'): [
         ('Các câu lạc bộ chưa khai buổi có tổng {n_seats} chỗ, trong khi {n_students} học sinh xếp nguyện vọng vào các câu lạc bộ này. Ít nhất {n_short} học sinh chắc chắn không có chỗ ở nhóm này. Các câu lạc bộ chưa khai buổi được xếp chung như một buổi riêng. Hãy khai buổi cho chúng ở màn Quản lý CLB, tăng sức chứa, hoặc chấp nhận.',

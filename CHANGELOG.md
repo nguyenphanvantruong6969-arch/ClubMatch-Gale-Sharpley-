@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
+
+- `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).
+- `tests/test_ws_nhan.py`: `SUA_CO_Y` của `health_oversubscribed_buoi` khớp câu mới (bỏ gạch ngang ở fix3).
+
 ## 2026-11-18 — UX1A-L2b fix3: sửa CI #1013 đỏ
 
 - `js/18_cai_dat.js` (`ux1aVeSauXep`, `ux1aTaiCaiDat`): đọc `(data.config || {}).rules`, hết lỗi JS `Cannot read … 'rules'` khi backend trả `data: {}`.

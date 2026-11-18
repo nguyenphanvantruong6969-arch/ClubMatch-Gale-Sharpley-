@@ -58,8 +58,11 @@ function loadPipelineTab() {
    voi o Canh bao du lieu thay vi hoi phan loi hai lan. */
 function loadHealthReport() {
   const hoi = callApi("get_data_health_report");
+  /* Lần hỏi đang bay: thanh "Việc tiếp theo" dùng chung thay vì hỏi lại backend. */
+  window.healthDangHoi = hoi;
+  hoi.then(() => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; }, () => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; });
   hoi.then((res) => {
-    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(res); /* UX1A-L1: dùng luôn kết quả vừa có */
     const summary = el("healthSummary");
     const list = el("healthList");
     clear(list);

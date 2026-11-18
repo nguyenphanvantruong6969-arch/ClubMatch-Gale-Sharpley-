@@ -58,13 +58,16 @@ function viecTinhTrangThai(dash, suc, cho) {
   return n > 0 ? { ten: "xu_ly", n } : { ten: "xuat" };
 }
 
-function capNhatViecTiepTheo() {
+function capNhatViecTiepTheo(sucCoSan) {
   const khung = el("viecTiepTheo");
   if (!khung) return;
   const lan = ++viecTiepTheoLanGoi;
+  /* Kết quả sức khoẻ: lấy cái vừa có (loadHealthReport truyền vào), hoặc lần hỏi đang bay, chỉ hỏi mới khi không có.
+     Tránh gọi get_data_health_report nhiều lần lúc khởi động. Sự kiện langchange truyền Event: không phải kết quả. */
+  const coSan = sucCoSan && typeof sucCoSan === "object" && "ok" in sucCoSan;
   Promise.all([
     callApi("get_dashboard_status"),
-    callApi("get_data_health_report"),
+    coSan ? Promise.resolve(sucCoSan) : (window.healthDangHoi || callApi("get_data_health_report")),
     callApi("get_em_chua_co_cho"),
   ]).then(([dash, suc, cho]) => {
     if (lan !== viecTiepTheoLanGoi) return; /* có lần gọi mới hơn: bỏ kết quả cũ */
@@ -88,6 +91,7 @@ function initViecTiepTheo() {
   nut.addEventListener("click", () => { if (viecTiepTheoHanhDong) viecTiepTheoHanhDong(); });
   const nut2 = el("viecTiepTheoNut2");
   if (nut2) nut2.addEventListener("click", () => VIEC_HANH_DONG.xuat());
-  window.addEventListener("langchange", capNhatViecTiepTheo);
-  capNhatViecTiepTheo();
+  window.addEventListener("langchange", () => capNhatViecTiepTheo());
+  /* Không tự vẽ ở đây: init() gọi loadPipelineTab ngay sau, loadHealthReport sẽ vẽ bằng kết quả nó vừa có
+     (một lần gọi get_data_health_report lúc khởi động). */
 }
