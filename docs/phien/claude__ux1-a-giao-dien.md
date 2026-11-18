@@ -7,7 +7,7 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 ## Plan (lead ticks)
 - [x] L1 Next-step bar (ebf24cd; checker NO BUGS 02f0a62; admin export = 4 clicks once L3 menu lands)
 - [x] L2 navigation 6 → 4 groups (0ded385; checker NO BUGS 89efe2a)
-- [ ] L2b settings: one question, 3 cards, saved on click + Undo, fix-in-place, post-run features as actions
+- [x] L2b settings 3 cards + Undo + fix-in-place + post-run actions (e3d0382; checker NO BUGS c2aff36; new dat_loai_clb/get_san_sang_huy_chuong; 'Thay đổi…' → Quản lý › Nâng cao)
 - [ ] L3 lookup first on results, one Xuất… menu, import message once
 - [ ] L5 warning severity/wording; medal book in non-FA mode → clear message + one-click enable; two sample books
 - [ ] L5b medal cells accept Vàng/Bạc/Đồng (+ unaccented/English) → 60/30/10
@@ -15,7 +15,7 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: L1, L2. In progress: L2b (GO sent).
+- Done: L1, L2, L2b. In progress: L3 (GO sent).
 
 ## Sessions
 | Role | Session | State |
