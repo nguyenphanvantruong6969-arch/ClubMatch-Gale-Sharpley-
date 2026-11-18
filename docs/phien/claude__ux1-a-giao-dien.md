@@ -5,7 +5,7 @@
 Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 407e62c)
 
 ## Plan (lead ticks)
-- [ ] L1 Next-step bar
+- [x] L1 Next-step bar (ebf24cd; checker NO BUGS 02f0a62; admin export = 4 clicks once L3 menu lands)
 - [ ] L2 navigation 6 → 4 groups (+ giao_vien lands on Kết quả & phiếu)
 - [ ] L2b settings: one question, 3 cards, saved on click + Undo, fix-in-place, post-run features as actions
 - [ ] L3 lookup first on results, one Xuất… menu, import message once
@@ -15,7 +15,7 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: branch created, coder + checker created. In progress: L1 (GO sent to coder).
+- Done: L1. In progress: L2 (GO sent). Non-blocking L1 notes: has-run uses n_matched>0; viecChoRoiLam silent timeout.
 
 ## Sessions
 | Role | Session | State |
