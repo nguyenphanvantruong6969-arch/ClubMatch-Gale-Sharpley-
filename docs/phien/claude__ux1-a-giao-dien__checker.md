@@ -1,22 +1,21 @@
 # Checker — UX1A (branch claude/ux1-a-giao-dien) — latest verdict first
 
-## L2b — REVIEW 7bb6a9b..e3d0382 — NO BUGS (3 notes)
-- Tests: 198 passed (new ux1_cai_dat + ux1_cai_dat_backend, all 12 rewritten old tests, fa_n3, a13_13, ws_*, gt3_phan_quyen, ux1 L1/L2); ruff clean.
-- Backend: `get_san_sang_huy_chuong` = read-only, tier GIAO_VIEN; `dat_loai_clb` = tier QUAN_TRI, reuses `ghi_thuoc_tinh_clb` (UPDATE clubs only),
-  `loai`/`diem_san` validated (bad loai, unknown club, diem_san 99, None → ok:False, nothing written); anonymous call blocked; every call (ok or
-  rejected) gets an audit row (probe: 4 rows); `run_history` unchanged (test_dat_loai_khong_dong_toi_ket_qua_da_xep). No schema change.
-- Invariants 1,2,4,6,7: no algorithm/CSV/schema change; default = Chia 100 điểm (wharton on, fa off) shown for a new workspace.
-- Undo: `luatCu()` snapshots rules + post-run flags + complaint days; undo = same `update_workspace_config` call; error path leaves
-  card unchanged and shows message under it (`datCach` only on success). Toast adds "kết quả giữ nguyên" when a run exists.
-- Rewritten old tests (diffed all 12): only selectors/UI-structure changes; removed assertions all concerned controls that no longer exist
-  (`#wzWharton`, `#gt2TcWharton`, 5 wizard ticks, ⋯ dialog). Behaviours kept or re-asserted via config read-back (fa_gap1/gap3 now assert
-  the flag after the action button; fg1 keeps the "14" range error and unchanged config).
-- Deviation (3): old UI test "FA on + wharton off rejected" replaced — backend rejection `fa_can_diem_quyet_tam` IS still covered, but by
-  `tests/test_fa_n3_loi_diem_quyet_tam.py` (passes), NOT `test_a13_13_kiem_nhan.py` as the test comment says → fix the comment.
-- Deviation (4): "Thay đổi…" → Quản lý › Nâng cao (opens `<details>`, scrolls to GT2 panel): reachable, obvious, acceptable.
-- Notes: (1) wrong file named in the comment above; (2) Undo uses the snapshot from the click, so an Undo pressed after another change
-  within 10 s would overwrite it (low risk); (3) fix-in-place panel only lists clubs with NULL loai — consistent with spec.
+## L3 — REVIEW 275a459..e812cf3 — 1 BUG (minor) + 1 observation → FIX L3
+- Tests: 165 passed (new ux1_ket_qua, ux1_tiep_theo, fa_ket_qua, upload, xoa_du_lieu, sg11a, gt4, gt1/gt3, xuat*, chay, …).
+- Item 1 OK: on 275a459 the 4 buttons were `hidden` in HTML and toggled `hidden = !fa` in `loadMatchResults` → FA-only before; `#xuatMenu`
+  follows the same flag. Default mode shows exactly 2 export buttons. No regression.
+- Item 2 OK: bar "Xuất" = `btnXuatTuyChon.click()` → the real handler (same options, toast/feedback/error path, audit); guarded by `!disabled`.
+- Item 3 BUG: success path no longer writes `#feedbackImportAll`, so a stale error survives a successful retry. Repro (probe): first
+  `import_so_nhap` fails with a non-`so_nhap_*` error (DB locked) → red message, file kept → press "Nhập sổ" again → done row appears but
+  "Không lưu được câu lạc bộ…" is still shown (before L3 the success line overwrote it). Fix: clear `feedbackImportAll` at the start of
+  `nhapTatCa()`; add a fail→retry→success test.
+- Item 4 observation: the monkeypatch only zeroes `so_em`; the export step is real → no hidden path difference there. BUT on the real sample
+  book (120 students, seed 42) 32 are unplaced (88 matched) → bar state = "Xử lý 32…", never "Xuất", so 4 clicks holds only when everyone is
+  placed; real task on that book takes more (bar → unplaced panel, then Others → Xuất). Lead: report honestly in §6; not a code bug.
+- Invariants 1,2,4,6,7: UI only, untouched. Privacy: nothing new shown.
 
 ## Earlier lots
-- L1 (016ae66..ebf24cd): NO BUGS; 4 clicks measured (was 5); minor notes (has_results, silent timeout) — first fixed later.
-- L2 (ab1bd16..0ded385): NO BUGS; 141 tests passed; MutationObserver loop-safe; student lock OK; notes: print-only hidden sidebar edge.
+- L2b (7bb6a9b..e3d0382): NO BUGS; 198 tests; dat_loai_clb QUAN_TRI + audit, no schema change; backend FA-needs-wharton still covered by
+  test_fa_n3_loi_diem_quyet_tam.py (comment fixed in L3); note: Undo snapshot could overwrite a change made within 10 s.
+- L2 (ab1bd16..0ded385): NO BUGS; 141 tests; MutationObserver loop-safe; student lock OK; print-only hidden-sidebar edge noted.
+- L1 (016ae66..ebf24cd): NO BUGS; 4 clicks measured (was 5); notes (has_results fixed in L2; silent 3 s timeout).
