@@ -54,3 +54,22 @@ def test_het_phien_mo_ngay_hop_dang_nhap_khi_bam_viec_can_quyen(trang):
     page.evaluate("window.RBDA.callApi('liet_ke_tai_khoan').then(r => showErrorToast(r.errors))")
     page.wait_for_selector("#tkNutDangNhap", timeout=3000)          # không đợi vòng hỏi 30 giây
     assert not loi, loi
+
+
+def test_the_nhat_ky_rong_hon_bo_loc_xep_ngang_va_the_dang_chon_thay_ro(trang):
+    """GT4 ghi chú checker: hộp rộng hơn ở thẻ nhật ký, bộ lọc xếp ngang, thẻ đang chọn khác thẻ kia."""
+    page, api, loi = trang
+    page.set_viewport_size({"width": 1280, "height": 900})
+    page.click("#tkNutMoHop")
+    page.wait_for_selector("#tkTabNhatKy")
+    rong_tk = page.evaluate("document.querySelector('#tkOverlay .ws-hop').getBoundingClientRect().width")
+    mau_chon = page.evaluate("getComputedStyle(document.querySelector('#tkTabTaiKhoan')).backgroundColor")
+    page.click("#tkTabNhatKy")
+    page.wait_for_selector("#tkNkNguoi")
+    rong_nk = page.evaluate("document.querySelector('#tkOverlay .ws-hop').getBoundingClientRect().width")
+    assert rong_nk > rong_tk + 200, (rong_tk, rong_nk)
+    top = page.evaluate("[...['tkNkNguoi','tkNkHanhDong','tkNkNgay']].map(i => document.getElementById(i).getBoundingClientRect().top)")
+    assert max(top) - min(top) < 6, top                              # ba ô lọc cùng một hàng
+    mau_khong_chon = page.evaluate("getComputedStyle(document.querySelector('#tkTabTaiKhoan')).backgroundColor")
+    assert mau_chon != mau_khong_chon
+    assert not loi, loi

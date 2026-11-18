@@ -194,6 +194,8 @@ Chỉ cần khi trường đã bật tài khoản và không ai nhớ mật kh�
    Kết quả xếp, danh sách học sinh và câu lạc bộ giữ nguyên.
 4. Mở lại phần mềm, bấm **Tài khoản** và tạo tài khoản quản trị mới.
 
+Lưu ý: nếu tệp `.exe` nằm trong thư mục chỉ-đọc (ví dụ *Program Files*), cửa sổ có thể báo "không thấy kết quả" dù tài khoản đã bị xoá. Khi đó hãy mở lại phần mềm để kiểm tra, hoặc chép thư mục phần mềm ra nơi ghi được (ví dụ Màn hình nền) rồi làm lại.
+
 Cách khác (dòng lệnh): `PhanBoCauLacBo.exe --xoa-tai-khoan` (thêm đường dẫn `app.db` nếu chỉ muốn xử lý một tệp, thêm `--yes` để bỏ bước hỏi).
 
 **Lưu ý khi bật tài khoản lần đầu:** hãy tạo tài khoản quản trị **trước khi** đưa máy cho học sinh dùng. Khi chưa có tài khoản nào,

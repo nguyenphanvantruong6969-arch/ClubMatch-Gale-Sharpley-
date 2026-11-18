@@ -2651,6 +2651,9 @@ tr.wh-ql-loi td + td { box-shadow: none; }
 }
 .ws-overlay[hidden] { display: none; }
 .ws-overlay.tk-kin { background: var(--paper); }   /* GT4 fix OL1 */
+.ws-hop [role="tab"][aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }   /* GT4: thẻ đang chọn thấy rõ */
+.nk-loc { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: flex-start; }   /* GT4: bộ lọc nhật ký xếp ngang */
+.nk-loc-o { display: flex; flex-direction: column; flex: 1 1 160px; min-width: 160px; }
 
 .ws-hop {
   width: min(1040px, 100%);
@@ -3022,9 +3025,11 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
   font-size: 14px; min-width: 44px; min-height: 40px; padding: 6px 12px; }
 .gt-hs-dau .lang-toggle:hover { background: var(--paper-hover, #ececea); color: var(--ink); border-color: var(--ink); }
 .gt-hs-truong { margin: 0; font-weight: 600; font-size: 1.1rem; }
-.gt-hs-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin: 12px 0; }
+.gt-hs-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin: 12px 0; }
+.gt-hs-form .btn[type="submit"] { margin-top: 26px; }   /* nút Xem thẳng hàng với ô nhập (nhãn cao ~22 px), dù cột mã có ô "Hiện mã" */
 .gt-hs-o { display: flex; flex-direction: column; gap: 4px; min-width: 200px; flex: 1 1 200px; }
 .gt-hs-o label { font-weight: 600; font-size: 14px; }
+.gt-hs-hien { font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; }
 .gt-hs-dem { color: #b45309; font-weight: 600; margin: 4px 0; }
 .gt-hs-dem[hidden] { display: none; }
 .kq-nhay { margin: 0 0 8px; }

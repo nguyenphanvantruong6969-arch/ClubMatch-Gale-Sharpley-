@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2026-11-18 — GT4 fix 2: các ghi chú nhỏ của checker (L2, L3, L5, L6, L7) + Gate
+
+- L2: thông báo nổi sau khi xuất chỉ nói đã xuất gì (đường dẫn đầy đủ vẫn ở dòng dưới nút) nên không che bảng kết quả.
+- L2 (còn sót): nút do JS sinh (`xu_ly_khieu_nai`, `tra_loi_moi`) mang `data-quyen="quan_tri"` — giáo viên không còn thấy.
+- L3: thẻ "Bước tiếp theo" ghi "tệp hướng dẫn cài đặt đi kèm" (không còn nhắc `.md`); thẻ đang chọn của hộp Tài khoản thấy rõ; "Đổi mật khẩu" xuống cuối hộp (danh sách + "Thêm tài khoản" lên trước); `HUONG_DAN_CAI_DAT.md` nói rõ trường hợp `.exe` ở thư mục chỉ-đọc.
+- L5: nút xác nhận thoát đổi thành "Có, thoát" (không trùng tên nút "Thoát"); ô "Hiện mã" cho mã tra cứu; chỉ còn một dòng chờ khi bị khoá (dòng lỗi `gt1_tam_khoa` bỏ câu "đợi một phút", đồng hồ đếm nói số giây; đổi sang mã khác thì dòng lỗi mất); nhấn dòng kết quả cuộn tức thì tới khung; tên trường cập nhật cả khi nạp muộn sau khi tải lại trang; nút Xem thẳng hàng với ô nhập.
+- L6: hộp rộng `min(960px, 92vw)` ở thẻ nhật ký; bộ lọc xếp ngang; nhãn "Ngày" (không còn "năm-tháng-ngày" sai với ngôn ngữ trình duyệt); chi tiết hiện "Vai trò: Quản trị" thay vì `quan_tri`.
+- L7: chỉ một nút chính trong khung Thử cấu hình ("So sánh" thành nút phụ).
+- Không sửa (quyết định nội dung của Truong): câu "dành một số chỗ cho nhóm được giữ chỗ" của L4 có đúng điều nhà trường muốn nói với phụ huynh không.
+- Gate: `ruff` sạch; `kiem_nhanh` 7/7 với 20 seed (60 ca trùng khít); dựng lại `GOI_MINH_CHUNG.docx/.pdf`.
+- Test mới: 3 ca vào `test_giao_dien_gt4_man_hoc_sinh.py`/`test_giao_dien_gt4_phien_rieng_tu.py`.
+
 ## 2026-11-18 — GT4 fix: sửa các lỗi checker báo (B1–B3, OL1, OL2) và các test hỏng trên CI
 
 - B1 (L3): xoá tệp rỗng `--xoa-tai-khoan` bị commit nhầm ở thư mục gốc.

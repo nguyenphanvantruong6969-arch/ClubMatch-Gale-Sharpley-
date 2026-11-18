@@ -172,7 +172,7 @@
   }
   /* GT4-L5: bấm một dòng của bảng kết quả -> mở lời giải thích của em đó ở khung này (cuộn tới khung). */
   window.gtMoHocSinh = (sid) => {
-    el("gtPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    el("gtPanel").scrollIntoView({ behavior: "auto", block: "start" });   // GT4: tức thì (cuộn mượt dừng giữa chừng, kết quả nằm dưới mép màn)
     xem(sid);
   };
   el("gtNhay").addEventListener("click", (ev) => {
@@ -205,6 +205,17 @@
   let moBoiHoiPhien = false;   // lớp phủ do tkPhien mở lại (không phải do học sinh bấm)
   let luotHs = 0;      // mỗi lần gửi, xoá thẻ, mở hay thoát là bỏ mọi phản hồi đang bay (không để thẻ em này hiện cho em khác)
 
+  /* GT4-L5: tên trường nếu có; cập nhật cả khi tên nạp muộn (tải lại trang ở chế độ học sinh). */
+  function capNhatTenTruong() {
+    const truong = (el("wsTenHienTai") && el("wsTenHienTai").textContent || "").trim();
+    el("gtHsTruong").textContent = truong;
+    el("gtHsTruong").hidden = !truong;
+  }
+  if (el("wsTenHienTai") && window.MutationObserver) {
+    new MutationObserver(() => { if (hsDangMo) capNhatTenTruong(); })
+      .observe(el("wsTenHienTai"), { childList: true, characterData: true, subtree: true });
+  }
+
   function xoaThe() {
     luotHs += 1;
     el("gtHsKetQua").textContent = "";
@@ -212,6 +223,8 @@
     el("gtHsMa").value = "";
     el("gtHsMaTra").value = "";
     el("gtHsQtMk").value = "";
+    el("gtHsHien").checked = false;
+    el("gtHsMaTra").type = "password";
     if (henDem !== null) capNhatKhoa();
   }
 
@@ -286,9 +299,7 @@
     el("gtHs").setAttribute("role", "dialog");
     el("gtHs").setAttribute("aria-modal", "true");
     el("gtHsQuanTri").hidden = true;
-    const truong = (el("wsTenHienTai") && el("wsTenHienTai").textContent || "").trim();   // GT4-L5: tên trường nếu có
-    el("gtHsTruong").textContent = truong;
-    el("gtHsTruong").hidden = !truong;
+    capNhatTenTruong();
     el("gtHs").hidden = false;
     el("gtHsMa").focus();
     datHenGio();
@@ -371,7 +382,12 @@
       ve(res.data, el("gtHsKetQua"), false);
     });
   });
-  el("gtHsMa").addEventListener("input", () => { if (henDem !== null) capNhatKhoa(); });
+  el("gtHsHien").addEventListener("change", () => { el("gtHsMaTra").type = el("gtHsHien").checked ? "text" : "password"; });
+  el("gtHsMa").addEventListener("input", () => {
+    if (henDem === null) return;
+    capNhatKhoa();
+    if (!dangKhoa()) el("gtHsLoi").textContent = "";   // đổi sang mã khác: bỏ dòng "sai quá nhiều lần" của mã trước
+  });
   window.addEventListener("langchange", () => {
     if (hsDangMo && el("gtHsKetQua").childElementCount) el("gtHsKetQua").textContent = "";
     if (henDem !== null && window.gtHsDem) el("gtHsDemNguoc").textContent = t("gt_hs_dem_nguoc", { n: window.gtHsDem() });

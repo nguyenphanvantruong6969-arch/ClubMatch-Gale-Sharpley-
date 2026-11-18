@@ -220,3 +220,37 @@ def test_nut_ngon_ngu_man_hoc_sinh_doc_duoc(mo):
     }""")
     assert r["ratio"] >= 4.5 and r["px"] >= 14 and r["h"] >= 36 and r["w"] >= 36, r
     assert not loi, loi
+
+
+def test_xac_nhan_thoat_hai_nut_khong_trung_ten_va_hien_ma_tra_cuu(mo):
+    """GT4 ghi chú checker: hai nút cùng tên "Thoát" -> nút xác nhận đổi tên; mã tra cứu có ô "Hiện mã"."""
+    api, ds, ma, vao, loi, page = mo
+    vao()
+    _mo_man_hoc_sinh(page)
+    page.click("#btnGtHsThoat")
+    page.wait_for_selector("#btnGtHsCo", state="visible")
+    assert page.inner_text("#btnGtHsCo").strip() != page.inner_text("#btnGtHsThoat").strip()
+    page.click("#btnGtHsKhong")
+    assert page.get_attribute("#gtHsMaTra", "type") == "password"
+    page.check("#gtHsHien")
+    assert page.get_attribute("#gtHsMaTra", "type") == "text"
+    page.uncheck("#gtHsHien")
+    assert page.get_attribute("#gtHsMaTra", "type") == "password"
+    assert not loi, loi
+
+
+def test_khoa_chi_con_mot_dong_cho_doi_la_dong_dem_nguoc(mo):
+    """GT4 ghi chú checker: dòng lỗi không lặp lại "đợi một phút" (đồng hồ đếm đã nói số giây)."""
+    api, ds, ma, vao, loi, page = mo
+    vao(dong_ho=True)
+    _mo_man_hoc_sinh(page)
+    for _ in range(6):
+        page.fill("#gtHsMa", ds[0])
+        page.fill("#gtHsMaTra", "SAIMA999")
+        page.click("#btnGtHsXem")
+        page.wait_for_function("document.querySelector('#gtHsLoi').innerText.length > 0")
+        page.fill("#gtHsMaTra", "")
+    assert "phút" not in page.inner_text("#gtHsLoi")
+    page.fill("#gtHsMa", ds[1])                                     # sang mã khác: dòng lỗi của mã trước biến mất
+    assert page.inner_text("#gtHsLoi").strip() == ""
+    assert not loi, loi

@@ -129,6 +129,7 @@
         const chon = (nhat) => {
           theHienTai = nhat ? "nk" : "tk";
           khungTk.hidden = nhat; khungNk.hidden = !nhat;
+          hop.style.maxWidth = nhat ? "min(960px, 92vw)" : "560px";     // GT4: bảng nhật ký cần rộng hơn
           nutTk.setAttribute("aria-selected", nhat ? "false" : "true");
           nutNk.setAttribute("aria-selected", nhat ? "true" : "false");
           if (nhat && !daVeNk) { daVeNk = true; veNhatKy(khungNk); }
@@ -137,8 +138,8 @@
         nutNk.addEventListener("click", () => chon(true));
         hop.appendChild(mot("div", { role: "tablist", style: "display:flex;gap:8px;margin:8px 0 12px" }, nutTk, nutNk));
         if (vuaTaoQuanTriDau) khungTk.appendChild(veBuocTiep());
+        veDanhSach(khungTk);      // GT4: danh sách + "Thêm tài khoản" lên trước, "Đổi mật khẩu" xuống cuối (hộp bớt dài)
         veDoiMatKhau(khungTk);
-        veDanhSach(khungTk);
         hop.append(khungTk, khungNk);
         if (theHienTai === "nk" && !vuaTaoQuanTriDau) chon(true);
       } else {
@@ -266,7 +267,7 @@
     return Object.keys(o).map((k) => {
       const v = o[k];
       const chu = v !== null && typeof v === "object" ? JSON.stringify(v) : String(v);
-      return nhanNk("nkkey_", k) + ": " + chu;
+      return nhanNk("nkkey_", k) + ": " + (k === "vai" ? nhanNk("nkvai_", v) : chu);   // GT4: "Quản trị", không "quan_tri"
     }).join("; ");
   }
 
@@ -287,7 +288,10 @@
     const nutTruoc = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkTruoc", text: t("tk_nk_truoc") });
     const nutSau = mot("button", { type: "button", class: "btn btn-secondary", id: "tkNkSau", text: t("tk_nk_sau") });
     const nhan = mot("span", { id: "tkNkTrang", class: "hint-text", style: "margin:0 8px" });
-    khung.append(locNguoi.nhom, locNguoi.o, nhanHd, chonHd, locNgay.nhom, locNgay.o, nhanTuChoi,
+    khung.append(mot("div", { class: "nk-loc" },
+      mot("div", { class: "nk-loc-o" }, locNguoi.nhom, locNguoi.o),
+      mot("div", { class: "nk-loc-o" }, nhanHd, chonHd),
+      mot("div", { class: "nk-loc-o" }, locNgay.nhom, locNgay.o)), nhanTuChoi,
       mot("div", { style: "margin:8px 0" }, nutLoc, " ", nutXuat), bang,
       mot("div", { style: "margin-top:8px" }, nutTruoc, nhan, nutSau));
     hop.appendChild(khung);

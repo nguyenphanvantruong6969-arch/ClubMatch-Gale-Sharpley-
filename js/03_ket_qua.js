@@ -1174,7 +1174,8 @@ function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
       datKhoa("dangXuat", false);
       if (cu) dong.push(t("xuat_kq_cu"));
       veKetQuaXuat(o, dong, coLoi, duongMo, kemMoTep);
-      showToast(dong[0] || "", coLoi ? "error" : "success");
+      /* GT4: thông báo nổi chỉ nói đã xuất gì (bỏ phần "→ đường dẫn" — đường dẫn đầy đủ nằm ngay dưới nút), cho khỏi che bảng. */
+      showToast(coLoi ? (dong[0] || "") : String(dong[0] || "").split(" → ")[0], coLoi ? "error" : "success");
       if (currentTabName() === "others") veXuatPanel();
     });
 }
