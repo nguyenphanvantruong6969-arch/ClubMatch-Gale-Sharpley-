@@ -648,8 +648,8 @@ MESSAGES = {
         "en": "This workspace doesn't use FA-DAA yet: the type / pass mark / minimum / room capacity columns of {n} club(s) were skipped and not saved.",
     },
     "so_nhap_canh_bao_huy_chuong_che_do_tat": {
-        "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt — bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
-        "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off — turn it on in Settings, or the medals will not be used.",
+        "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
+        "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off. Turn it on in Settings, or the medals will not be used.",
     },
     "fa_giu_cho_bo_qua": {
         "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} dòng giữ chỗ trong sổ đã được bỏ qua, không lưu.",
@@ -1086,8 +1086,8 @@ MESSAGES = {
         "en": "{slot_p} with no {session_l} set: {n_seats} seats for {n_students} {person_pl}, at least {n_short} won't get one. Set their {session_l} or raise capacity.",
     },
     "health_oversubscribed_buoi": {
-        "vi": "{session} {buoi}: {n_seats} chỗ cho {n_students} {person_l} — ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
-        "en": "{session} {buoi}: {n_seats} seats for {n_students} {person_pl} — at least {n_short} won't get one. Raise capacity or add {slot_la}.",
+        "vi": "{session} {buoi}: {n_seats} chỗ cho {n_students} {person_l}, nên ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
+        "en": "{session} {buoi}: {n_seats} seats for {n_students} {person_pl}, so at least {n_short} won't get one. Raise capacity or add {slot_la}.",
     },
 
     # --- recovery.py / recovery.html — màn hình phục hồi khi app.db
@@ -1390,7 +1390,7 @@ MESSAGES = {
 
     # === SG-B: add below ===
     "so_nhap_canh_bao_wharton_trong": {
-        "vi": "{n} {person_l} (ví dụ {vd}) có từ hai {slot_l} trong cùng một buổi mà chưa điền điểm quyết tâm nào, nên lần chạy xếp sẽ bị chặn. Cách sửa: điền đủ 100 điểm cho mỗi nhóm trong sổ rồi nhập lại, hoặc chọn «Chỉ xếp thứ tự» ở Cài đặt (nếu sổ dùng cột Huy chương thì bật chế độ huy chương ở Cài đặt).",
+        "vi": "{n} {person_l} (ví dụ {vd}) có từ hai {slot_l} trong cùng một buổi mà chưa điền điểm quyết tâm nào, nên lần chạy xếp sẽ bị chặn. Cách sửa: điền đủ 100 điểm cho mỗi nhóm trong sổ rồi nhập lại, hoặc tắt điểm quyết tâm bằng cách chọn «Chỉ xếp thứ tự» ở Cài đặt (nếu sổ dùng cột Huy chương thì bật chế độ huy chương ở Cài đặt).",
         "en": "{n} {person_l}(s) (for example {vd}) have two or more {slot_l}s in the same session with no commitment points filled in, so the allocation run will be blocked. To fix it: fill in 100 points for each group in the workbook and import again, or choose \"Ranking only\" in Settings (if the book uses a Medal column, turn on medal mode in Settings).",
     },
     "phieu_nd_phieu_thieu_cau_2": {

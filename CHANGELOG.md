@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L2b fix3: sửa CI #1013 đỏ
+
+- `js/18_cai_dat.js` (`ux1aVeSauXep`, `ux1aTaiCaiDat`): đọc `(data.config || {}).rules`, hết lỗi JS `Cannot read … 'rules'` khi backend trả `data: {}`.
+- `i18n.js`: thêm nhãn nhật ký `nkhd_dat_loai_clb` (vi/en); bỏ gạch ngang nối câu ở `ux1a_ss_huy_chuong_sai`, `ux1a_ss_thieu_tu_do`.
+- `i18n_errors.py` (+ `i18n_loi.js` sinh lại): bỏ gạch ngang nối câu ở `so_nhap_canh_bao_huy_chuong_che_do_tat`, `health_oversubscribed_buoi`; `so_nhap_canh_bao_wharton_trong` (vi) lại nói "tắt điểm quyết tâm".
+- `index.html`: chữ dự phòng `import_hint` khớp catalog.
+- Không thêm test mới; sửa để các test sẵn có qua lại.
+
 ## 2026-11-18 — UX1A-L2b fix2 (từ lượt duyệt của lead)
 
 - `get_san_sang_huy_chuong` thêm `huy_chuong_sai` (+ `huy_chuong_sai_vd`): số học sinh có ô không phải huy chương hợp lệ hoặc có huy chương ở CLB Tự do, đọc bằng `fa_daa.kiem_ho_so_huy_chuong` (chỉ đọc, không đổi dữ liệu). Còn > 0 thì `san_sang = false` và bảng sửa tại chỗ nói MỘT dòng "n học sinh có giá trị không phải huy chương … nạp lại sổ có cột Huy chương (Vàng/Bạc/Đồng)" thay vì "Sẵn sàng" (trước đây báo sẵn sàng mà lần chạy vẫn bị chặn).

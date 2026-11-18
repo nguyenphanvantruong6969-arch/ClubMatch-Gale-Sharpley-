@@ -231,7 +231,7 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
 
   return callApi("get_workspace_config", slug).then((res) => {
     if (!res.ok) { showErrorToast(res.errors); return; }
-    luat = res.data.config.rules || {};
+    luat = (res.data.config || {}).rules || {};
     ve();
   });
 }
@@ -284,7 +284,7 @@ function ux1aVeSauXep() {
   const hop = el("ux1aSauXep");
   if (!hop) return Promise.resolve();
   return Promise.all([callApi("get_workspace_config"), callApi("get_em_chua_co_cho"), callApi("get_club_fill_stats")]).then(([cfg, cho, lap]) => {
-    const luat = cfg.ok ? (cfg.data.config.rules || {}) : {};
+    const luat = cfg.ok ? ((cfg.data.config || {}).rules || {}) : {};
     /* Chỉ ở chế độ Huy chương (backend: fa_tinh_nang_can_fa). Chế độ khác: không hiện gì. */
     hop.hidden = !(cfg.ok && luat.fa_daa === true);
     if (hop.hidden) return;
