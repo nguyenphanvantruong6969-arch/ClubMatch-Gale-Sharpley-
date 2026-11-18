@@ -1,5 +1,16 @@
 # Checker — UX1A (branch claude/ux1-a-giao-dien) — latest verdict first
 
+## L5b (+L5 follow-up) — REVIEW 1ec7b23..4cae05b — NO BUGS (3 notes)
+- Tests: 94 passed (new l5b 10+, ux1_nhap_so incl. no-workspace button test, l5_backend, so_mau tests, fa_m3_huy_chuong_b, upload). Plain sample (FA off) cell md5 still fab19c2c… = identical to bc71013.
+- Mapping only when `dung_fa_daa(cfg.rules)` and only in `api_nhap._doc_so_nhap` via `so_nhap.chuan_hoa_chu_huy_chuong` (preview + import both go through it). FA off: strings untouched, same path as before (test).
+- Probe of 25 inputs: "Vàng " / NFC / NFD "Vàng", "ĐỒNG", "Đồng", "dong", "DONG", "Gold", "SILVER", "bạc", "bronze" → 60/30/10; ambiguous/odd "vang 60", "", "  ", "0", "60", "6O", "vàng/bạc", "đồng đỏ" unchanged
+  (unknown words keep `fa_huy_chuong_gia_tri_sai`; test uses "Kim cương"). Numeric cells (ints) never touched. Stored `wharton_bids` = 60/30/10; `fa_daa.kiem_ho_so_huy_chuong` untouched.
+- Numbers-vs-words test compares `wharton_bids` AND `match_results` (>100 rows each, seed 42, two FA workspaces) → real equality, not a monkeypatch. 4 spelling variants parametrised.
+- Forms path: offline converters call `so_nhap.doc_so_nhap` directly but only emit numeric 60/30/10 books; any book imported into the app goes through `_doc_so_nhap` → claim holds.
+- Sample book: Hướng dẫn says "Vàng / Bạc / Đồng hoặc 60 / 30 / 10"; FA book dropdown accepts both; plain book has no such line/validation.
+- L5 follow-up OK: `#btnBatHuyChuong` only when `wsTrangThai.enabled`; no workspace → sentence only (test).
+- Notes: (a) `bo_dau` also strips punctuation/accent typos, so "Vàng." and "dóng" map (harmless, lenient). (b) FA-off test's 2nd assertion is a tautology (`{60,30,10} - {60,30,10}`); first assertion carries it. (c) invariant 1/2/4/6/7 untouched (reading layer only).
+
 ## L5 — REVIEW bc71013..764c85c — NO BUGS (3 notes)
 - Tests: 129 + 136 passed (new l5_backend/ux1_nhap_so, data_health, ws_nhan, so_mau tests, i18n/bang_loi, fa_n3, L1/L3 suites); `tao_i18n_js.py` regenerates `i18n_loi.js` with no diff.
 - (1) Severity: only `n_high` gates anything (run gate, L1 bar `canh_bao`, UI sort/label); no code reads "medium" as blocking → L1 bar unaffected.
