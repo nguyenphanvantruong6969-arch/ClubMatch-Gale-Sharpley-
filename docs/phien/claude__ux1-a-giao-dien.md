@@ -26,6 +26,7 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 
 ## Needs Truong
 1. (L6, team B) Print dialog in the packaged Windows app (WebView2) and browser fallback — manual check.
+2. (L8-A, team A) Poster PDF/PPTX not rebuilt: `poster/tao_poster.py` needs python-pptx + matplotlib (new libraries, not in the venv). After installing run `python poster/tao_hinh.py && python poster/tao_poster.py`; new screenshots are already in `poster/hinh/`.
 
 ## Decisions (Truong 2026-11-18)
 - Default config unchanged (determination points ON, medals OFF). Medal values 60/30/10, order only.
