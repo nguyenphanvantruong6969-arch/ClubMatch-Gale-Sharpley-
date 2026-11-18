@@ -62,3 +62,12 @@ Current state: L0-L7 reviewed at the ledger shas (round 1). Open bugs: B1 [nhỏ
 Next steps: (1) wake (send_later trig_012pJQQRxjyNJzxodbULUMe1 fires 02:21Z; re-arm every 15 min); (2) git fetch origin claude/gt-hoan-thien; for lots set to READY at a newer sha: re-check B1-B3 with the SAME repro (scratch scripts were in the old scratchpad: pC.py student screen; check `git ls-files | grep -- '^--'`), then regressions; (3) when all lots CHECKED/BLOCKED and writer says GATE running/done: FINAL (scenarios A-E on a fresh DB, kiem_nhanh --so-seed 20, tests/test_gt* + test_giao_dien_gt*, UX report, backlog, Vietnamese message <=25 lines).
 Decisions: no per-lot checkout for UI walk-through (done at head, attributed to lots); out-of-lot findings kept separate from lot verdicts.
 Files touched: only this file.
+
+## STOPPED WAITING | 2026-11-18 09:57Z (8h without writer activity since 01:48Z; no writer commit after my first fetch)
+State of every lot as I know it (all at round 1, ledger still says READY at the original shas):
+- L0 9546761 NO BUGS | L1 5605535 NO BUGS | L2 8316d81 NO BUGS | L4 bceb2f5 NO BUGS | L6 f59862a NO BUGS (3 cosmetic notes) | L7 cc7aa23 NO BUGS (design judged good).
+- L3 d824937: B1 [nhỏ] stray empty SQLite file `--xoa-tai-khoan` committed in repo root (`git rm`).
+- L5 6ecf9cb: B2 [nên sửa] lock countdown disables "Xem" for every student (lock is per id); B3 [nên sửa] student-screen "EN" button contrast ~1.1:1, 11 px, 24 px high.
+- Out of lot (GT3): OL1 content readable behind the scrim after logout; OL2 no login box after idle expiry.
+- L8 and the Gate were never started by the writer; FINAL (scenarios A-E on a fresh DB, kiem_nhanh --so-seed 20, UX report, backlog) NOT done.
+To resume: a new checker session fetches the branch; if the writer has pushed fixes, re-check B1-B3 with the same repros, then do FINAL.
