@@ -74,6 +74,12 @@
 
     <div class="toast-stack" id="toastStack" role="status" aria-live="polite"></div>
 
+    <!-- UX1A: thanh "Việc tiếp theo" (js/17_viec_tiep_theo.js) -->
+    <div class="viec-tiep-theo" id="viecTiepTheo" data-quyen="quan_tri" hidden>
+      <span class="viec-tiep-theo-cau" id="viecTiepTheoCau" role="status" aria-live="polite"></span>
+      <button class="btn btn-primary" type="button" id="viecTiepTheoNut"></button>
+    </div>
+
     <!-- ---------- TAB 1: PIPELINE ---------- -->
     <section class="view is-active" id="view-pipeline">
       <header class="view-header">
@@ -1417,6 +1423,7 @@
 <script src="js/14_giai_trinh.js"></script>
 <script src="js/15_tieu_chi.js"></script><!-- GT2 -->
 <script src="js/16_tai_khoan.js"></script>
+<script src="js/17_viec_tiep_theo.js"></script><!-- UX1A -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

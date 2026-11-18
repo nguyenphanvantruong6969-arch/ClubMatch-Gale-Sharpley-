@@ -59,6 +59,7 @@ function loadPipelineTab() {
 function loadHealthReport() {
   const hoi = callApi("get_data_health_report");
   hoi.then((res) => {
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
     const summary = el("healthSummary");
     const list = el("healthList");
     clear(list);
@@ -140,6 +141,7 @@ function refreshDashboardStats() {
     el("statClubs").textContent = res.data.n_clubs;
     el("statMatched").textContent = res.data.n_matched;
     datTrangThaiVanHanh(res.data);
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
     /* T3-01 (B2): chưa có học sinh hoặc chưa có CLB thì khoá nút Chạy kèm lý do (backend cũng chặn
        bằng `chua_co_du_lieu_de_chay`, nên đây chỉ là báo sớm cho người vận hành). */
     const trong = !res.data.n_students || !res.data.n_clubs;

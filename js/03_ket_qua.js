@@ -313,7 +313,9 @@ function loadTomTatKetQua() {
       nut.title = t("kpi_bam_de_xem");
       nut.addEventListener("click", () => {
         if (k.sapXep) datCachSapXep(k.sapXep);
-        moMucVaCuon(k.muc);
+        /* UX1A-L1: cùng hành động với nút ở thanh "Việc tiếp theo". */
+        if (k.muc === "chuaCoChoPanel" && typeof viecXuLyChuaCoCho === "function") viecXuLyChuaCoCho();
+        else moMucVaCuon(k.muc);
       });
       luoi.appendChild(nut);
     });
@@ -770,6 +772,7 @@ function loadEmChuaCoCho() {
       body.appendChild(tr);
     });
     veDemMuc("chuaCoChoPanel", "dem_hoc_sinh", d.so_em);
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
   });
 }
 

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L1: thanh "Việc tiếp theo"
+
+- Mới: `#viecTiepTheo` ở đầu `<main>` (chỉ quản trị) — một nút chính theo trạng thái: nạp sổ → xem cảnh báo chặn → chạy → xử lý n {person_l} chưa có {slot_l} → xuất. Ô "Cần xử lý" ở thẻ "Chi tiết" dùng chung hành động. Mã: `js/17_viec_tiep_theo.js` (mới), móc ở `js/02_van_hanh.js`, `js/03_ket_qua.js`, `js/08_khoi_dong.js`; khoá i18n `ux1a_*`.
+- Test mới: `tests/test_giao_dien_ux1_tiep_theo.py` (6). Không đổi backend/thuật toán; invariant 1 trùng khít (60 ca).
+
 ## 2026-11-18 — UX1a: rà soát thao tác người dùng (mục mới UX1, Truong duyệt)
 
 - Mới: `docs/ke_hoach/ux/UX1_RA_SOAT.md` (số lần bấm theo 4 nhóm người dùng, 10 vấn đề, đề xuất UX1b/UX1c), ảnh `docs/ke_hoach/ux/anh/`, script chụp `docs/ke_hoach/ux/chup_luong_chinh.py`, `chup_phieu.py` (dữ liệu MÔ PHỎNG).
