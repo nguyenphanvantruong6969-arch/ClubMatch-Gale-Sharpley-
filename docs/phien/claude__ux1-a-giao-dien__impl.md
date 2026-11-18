@@ -18,7 +18,7 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 - [x] L8-A docs + screenshots + After table (coder DONE ad569c2, waiting for checker)
 
 ## Current state (overwrite each handoff)
-- L1, L2, L2b, L3, L5, L5b passed by checker. L8-A reported as "CODER DONE L8-A | base c2c7a30 head ad569c2" (pushed); waiting for the checker.
+- L1, L2, L2b, L3, L5, L5b passed by checker. L8-A reported (ad569c2) and FIX round 1 reported as "CODER DONE L8-A fix1 | base ad569c2 head 326dbc6" (pushed; the sample book has 32 unplaced students, not 12); waiting for the checker.
 - All coder lots of team A are done. Remaining (lead side): CI gate, user review UX1_DANH_GIA_A.md, integration with team B (lots I1/I2 handled by
   team A's coder in this same session when the lead sends GO).
 - L8-A: user guide, giai_trinh scripts, code map, poster data text, screenshots (docs/ke_hoach/ux/anh, poster/hinh), chup_luong_chinh.py (prints measured
@@ -73,3 +73,4 @@ default config stays byte-identical (invariant 1), every element id and data-tab
 | 2026-11-18 | Sonnet 5.5 | L5b coded + tests; WIP pushed; regression pending | same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L5b done, pushed 4cae05b, reported | same session per lead |
 | 2026-11-18 | Sonnet 5.5 | L8-A done (docs, screenshots, After table), pushed ad569c2, reported | same session per lead |
+| 2026-11-18 | Sonnet 5.5 | L8-A fix1 (32 unplaced, poster line in lead file) pushed 326dbc6, reported | same session per lead |
