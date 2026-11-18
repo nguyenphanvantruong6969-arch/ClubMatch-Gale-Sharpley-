@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-18 — UX1A-L5: cảnh báo đúng mức và đúng lời; sổ huy chương sai chế độ; hai sổ mẫu
+
+- Ba cảnh báo "vượt chỉ tiêu" (`health_oversubscribed`, `_buoi`, `_chua_khai_buoi`) từ "info" lên "medium" (vẫn không chặn: chỉ "high" chặn; không chỗ nào chặn theo mức này) và rút còn MỘT câu + MỘT hành động (`i18n_errors.py`).
+- Xem trước sổ (`xem_truoc_so_nhap`): sổ có cột Huy chương (`so_nhap.TEN_COT_HUY_CHUONG`, cờ `co_cot_huy_chuong` của `doc_so_nhap`) hoặc cột Loại mà chế độ huy chương TẮT → cảnh báo mới `so_nhap_canh_bao_huy_chuong_che_do_tat` kèm nút "Bật chế độ huy chương" (`#btnBatHuyChuong`: `update_workspace_config {wharton, fa_daa}` rồi đọc thử lại sổ đang chờ; quản trị, có dòng nhật ký; không bật ngầm). Chỉ đổi thông điệp: cái được lưu và cách chạy không đổi (60 ca trùng khít).
+- Nạp sổ huy chương khi chế độ tắt: thêm một dòng tóm tắt "n … chưa đặt đủ điểm quyết tâm (huy chương)" trên danh sách gom (5 ví dụ + "và N nữa" giữ nguyên); gợi ý ở khung lỗi chạy nói tới chế độ huy chương.
+- "Tải sổ nhập mẫu": giữ nguyên (sổ mẫu thường) + nút mới "Tải sổ mẫu có huy chương" (`tao_so_nhap_mau(output_path, kieu)`, kiểu "huy_chuong" → `che_do_fa=True`; Hướng dẫn nói chế độ phải bật).
+- Test mới: `tests/test_ux1_l5_backend.py` (7), `tests/test_giao_dien_ux1_nhap_so.py` (5). Cập nhật theo chủ ý đổi chữ: `tests/test_data_health.py` (mức "medium"), `tests/test_ws_nhan.py` (`SUA_CO_Y` + mã mới), `tests/du_lieu_ws/chu_ui_doi_co_y_t3.json` (`import_hint`).
+
 ## 2026-11-18 — UX1A-L3 fix1
 
 - `nhapTatCa()` xoá dòng `#feedbackImportAll` cũ trước khi thử lại (lỗi lần trước không còn dính sau khi nạp thành công); test fail→thử lại→thành công trong `test_giao_dien_upload.py`.

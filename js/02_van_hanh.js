@@ -908,11 +908,16 @@ function veCanhBaoNhap() {
   clear(box);
   box.hidden = canhBaoNhapGanNhat.length === 0;
   /* SG-7 (M1): cung luat voi buoc 4 — gom theo ma, dem, 5 vi du, "va N truong hop nua" (veCanhBaoGom o 00_nen.js). */
-  /* UX1A-L5: hàng trăm cảnh báo "chưa dùng hết điểm" của từng em gộp thành MỘT dòng. */
-  const chuaDu = canhBaoNhapGanNhat.filter((w) => w.code === "wharton_chua_dung_het");
-  const muc = canhBaoNhapGanNhat.filter((w) => w.code !== "wharton_chua_dung_het")
-    .map((w) => ({ ma: w.code, chu: trErr(w) }));
-  if (chuaDu.length) muc.push({ ma: "wharton_chua_dung_het", chu: t("ux1a_wh_chua_du", { n: chuaDu.length }) });
+  const muc = canhBaoNhapGanNhat.map((w) => ({ ma: w.code, chu: trErr(w) }));
+  /* UX1A-L5: hàng trăm cảnh báo "chưa dùng hết điểm" của từng người: thêm MỘT dòng tóm tắt lên đầu (danh sách gom
+     5 ví dụ + "và N nữa" bên dưới giữ nguyên). */
+  const chuaDu = canhBaoNhapGanNhat.filter((w) => w.code === "wharton_chua_dung_het").length;
+  if (chuaDu > CANH_BAO_VD_TOI_DA) {
+    const tomTat = document.createElement("div");
+    tomTat.className = "canh-bao-tom-tat";
+    tomTat.textContent = t("ux1a_wh_chua_du", { n: chuaDu });
+    box.appendChild(tomTat);
+  }
   veCanhBaoGom(box, muc);
 }
 

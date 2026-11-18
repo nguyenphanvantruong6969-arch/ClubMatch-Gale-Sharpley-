@@ -53,9 +53,10 @@ def test_nap_so_huy_chuong_che_do_tat_canh_bao_diem_gop_mot_dong(mo_trang):  # n
     page.locator("#btnImportAll").click()
     page.wait_for_selector(".queue-row.is-done")
     page.wait_for_selector("#importWarnings:not([hidden])")
-    dong = page.locator("#importWarnings .canh-bao-dong", has_text="chưa đặt đủ điểm quyết tâm")
-    assert dong.count() == 1 and "434" in dong.inner_text()
-    assert page.locator("#importWarnings .canh-bao-dong", has_text="còn thiếu").count() == 0   # không liệt kê từng em
+    dong = page.locator("#importWarnings .canh-bao-tom-tat")
+    assert dong.count() == 1 and "434" in dong.inner_text() and "chưa đặt đủ điểm quyết tâm" in dong.inner_text()
+    # danh sách gom bên dưới chỉ còn vài ví dụ (không liệt kê 434 em)
+    assert page.locator("#importWarnings .canh-bao-dong", has_text="còn thiếu").count() <= 5
     assert not loi, loi
 
 
