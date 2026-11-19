@@ -15,7 +15,7 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: all 7 lots. In progress: CI gate (§5).
+- Done: all 7 lots; L2b fix2 (lead walk-through) NO BUGS; fix3/fix4 (CI fixes, other session) under checker review; CI green on 66f9ffb. Review UX1_DANH_GIA_A.md written. In progress: CI on head, then §7.
 
 ## Sessions
 | Role | Session | State |
