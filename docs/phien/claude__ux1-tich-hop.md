@@ -11,7 +11,7 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: I1, I2. B is DONE (eac69df CI green, branch c618629) → I3 merge running.
+- Done: I1, I2. I3 merged by coder (944b111 + wiring 5f27391); checker 1 low bug (__mac_dinh__ in report Buổi column) → FIX I3 round 1.
 
 ## Sessions
 | Role | Session | State |
@@ -24,3 +24,5 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 1. Team B (claude/ux1-b-phieu) has no lead yet; I3 cannot run until it is DONE.
 2. XP1 open questions (combined PDF with contents; pypdf dev-only) are on XP1's own list.
 3. XP1: Windows exe build was NOT run on its branch (XP1 Needs Truong); I4 runs it on the integrated branch.
+4. Roles: giao_vien is NOT class-scoped (2-role model); any teacher can print every class's slips (with lookup codes) as PDF, same reach as the existing HTML slips. Decide if class scoping is wanted (new item).
+5. pypdf not in requirements-dev.txt → pypdf-based PDF tests skip on CI (XP1 open question). Decide: add as dev-only dependency?
