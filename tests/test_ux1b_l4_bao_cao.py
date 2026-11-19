@@ -106,3 +106,14 @@ def test_nhan_workspace_duoc_dien_vao_tieu_de(api, tmp_path):
     _chay(api)
     _, html = _html(api, tmp_path)
     assert "{person_l}" not in html and "{slot_l}" not in html and "{cohort_l}" not in html
+
+
+def test_bao_cao_noi_ket_qua_da_cu_khi_du_lieu_doi_sau_lan_xep(api, tmp_path):
+    _chay(api)
+    _, html = _html(api, tmp_path)
+    assert "có thể đã cũ" not in html
+    assert api.create_student_if_missing("moi1", "Em Mới")["ok"]          # sửa dữ liệu sau lần xếp
+    r = api.export_bao_cao_tong_hop(str(tmp_path / "cu.html"))
+    assert r["ok"] and r["data"]["ket_qua_cu"] is True
+    with open(r["data"]["path"], encoding="utf-8") as f:
+        assert "có thể đã cũ" in f.read()

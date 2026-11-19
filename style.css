@@ -3163,3 +3163,11 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .toast .toast-hanh-dong:hover { background: rgba(255,255,255,0.18); }
 .toast .toast-hanh-dong:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .ux1a-ss-hc-sai { margin: 6px 0; color: #B42318; font-weight: 600; }
+
+/* UX1B-L7: thẻ giải trình — dòng tóm tắt, thanh điểm, "Em nên làm gì tiếp" */
+.gt-tom-tat-dong { font-weight: 600; margin: 8px 0; }
+.gt-tiep-theo { border: 1px solid var(--border, #d1d5db); border-radius: 6px; padding: 8px 12px; margin: 12px 0; }
+.gt-tiep-theo h4 { margin: 0 0 4px; }
+.gt-tiep-theo ul { margin: 0; padding-left: 18px; }
+.gt-diem-thi-tieu-de { margin: 12px 0 4px; }
+svg.thanh-diem { display: block; }

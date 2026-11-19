@@ -15,6 +15,8 @@ Dữ liệu trong test là dữ liệu MÔ PHỎNG.
 from __future__ import annotations
 
 import fa_ly_do
+from fa_daa import GIA_TRI_HUY_CHUONG
+from so_nhap import NHAN_BUOI
 
 # Mã kết cục (hằng số ở đây; câu chữ chỉ ở fa_ly_do.py)
 ACCEPTED = "ACCEPTED"
@@ -27,6 +29,57 @@ RESERVED = "RESERVED"
 NOT_TESTED = "NOT_TESTED"
 UNASSIGNED = "UNASSIGNED"
 NO_CHOICES = "NO_CHOICES"          # em chưa đăng ký nguyện vọng nào ở buổi này
+
+
+# UX1B-L7: chữ đời thường dùng chung cho màn hình và phiếu in (MỘT nơi giữ câu).
+NHAN_HUY_CHUONG = dict(zip(GIA_TRI_HUY_CHUONG, ("Vàng", "Bạc", "Đồng")))
+_NHAN_BUOI = {ma: nhan for nhan, ma in NHAN_BUOI}
+_BUOI_MAC_DINH = "__mac_dinh__"
+# Khớp khoá ưu tiên FA (`fa_daa.ly_do_ket_qua`): giữ chỗ, điểm thi (CLB Tuyển chọn), huy chương cao hơn trước (Vàng 60 >
+# Bạc 30 > Đồng 10 > chưa đặt 0), rồi bốc thăm.
+CHU_THICH_HUY_CHUONG = ("Huy chương: khi các bạn bằng nhau ở các bước trước, bạn đặt huy chương cao hơn "
+                        "(Vàng, rồi Bạc, rồi Đồng) được xét trước; chưa đặt huy chương thì xét sau; "
+                        "vẫn bằng nhau thì bốc thăm.")
+
+
+def _nhan_buoi(buoi):
+    return "" if not buoi or buoi == _BUOI_MAC_DINH else _NHAN_BUOI.get(buoi, str(buoi))
+
+
+def tom_tat_dong(ra_buoi: list, giong: str = fa_ly_do.GIONG_HOC_SINH) -> str:
+    """Dòng tóm tắt dưới tên em: "Em có 2/3 buổi: CLB A (Thứ 4), CLB B (Thứ 6)." hay "Em chưa có CLB ở buổi nào".
+    `giong` "giao_vien": cùng câu nhưng nói "Học sinh" (khung tra cứu của giáo viên / quản trị)."""
+    if not ra_buoi:
+        return ""
+    em = "Học sinh" if giong == fa_ly_do.GIONG_GIAO_VIEN else "Em"
+    co = [b for b in ra_buoi if b["ket_qua"]]
+    if len(ra_buoi) == 1 and not _nhan_buoi(ra_buoi[0]["buoi"]):
+        return ("%s được xếp vào %s." % (em, co[0].get("ten_clb") or co[0]["ket_qua"])) if co else \
+            "%s chưa có CLB nào." % em
+    if not co:
+        return "%s chưa có CLB ở buổi nào." % em
+    return "%s có %d/%d buổi: %s." % (em, len(co), len(ra_buoi), ", ".join(
+        "%s (%s)" % (b.get("ten_clb") or b["ket_qua"], _nhan_buoi(b["buoi"]) or b["buoi"]) for b in co))
+
+
+def cac_buoc_tiep(tinh_nang: dict | None, giong: str = fa_ly_do.GIONG_HOC_SINH) -> list:
+    """"Em nên làm gì tiếp": chỉ nêu tính năng ĐANG BẬT của workspace, luôn kèm "hỏi giáo viên phụ trách".
+    `giong` "giao_vien": cùng ý, ngôi thứ ba."""
+    t = tinh_nang or {}
+    gv = giong == fa_ly_do.GIONG_GIAO_VIEN
+    ra = []
+    if t.get("vong_2"):
+        ra.append("Nhà trường có vòng 2 cho các học sinh chưa có CLB: học sinh theo dõi thông báo và đăng ký lại."
+                  if gv else "Nhà trường có vòng 2 cho các em chưa có CLB: em theo dõi thông báo và đăng ký lại.")
+    if t.get("moi_cho_trong"):
+        ra.append("Nếu CLB còn chỗ trống, nhà trường có thể mời học sinh từ danh sách chờ."
+                  if gv else "Nếu CLB còn chỗ trống, nhà trường có thể mời em từ danh sách chờ: em nhớ trả lời lời mời.")
+    if t.get("khieu_nai"):
+        so = t.get("so_ngay") or 3
+        ra.append("Nếu học sinh thấy dữ liệu bị sai (điểm, nguyện vọng), có thể khiếu nại trong %s ngày." % so if gv else
+                  "Nếu em thấy dữ liệu của em bị sai (điểm, nguyện vọng), em có thể khiếu nại trong %s ngày." % so)
+    ra.append("Học sinh hỏi giáo viên phụ trách để biết thêm." if gv else "Em hỏi giáo viên phụ trách để biết thêm.")
+    return ra
 
 
 def dung_du_lieu_run(students, clubs, tested_scores, applicants, preferences, reserve_fn,
@@ -143,8 +196,20 @@ def _them_cau(x, giong=fa_ly_do.GIONG_HOC_SINH):
         x["cau"] = ""
 
 
-def _lua_chon_fa(sid, buoi, b):
-    """FA bật: dùng LẠI dòng `fa_ly_do` đã lưu (b["fa_rows"][sid]) — không tính lại."""
+def _cau_huy_chuong(r, cua_em):
+    """Câu nối thêm cho dòng lý do MEDAL: nêu huy chương CỦA EM và của người nhận cuối (con số của CLB, không tên ai)."""
+    cut = r.get("cut_medal")
+    if not cut:
+        return ""
+    own = NHAN_HUY_CHUONG.get(cua_em)
+    dau = ("Em đặt huy chương %s" % own) if own else "Em chưa đặt huy chương ở CLB này"
+    return "%s; các bạn đặt %s được xét trước." % (dau, NHAN_HUY_CHUONG.get(cut, str(cut)))
+
+
+def _lua_chon_fa(sid, buoi, b, huy=None):
+    """FA bật: dùng LẠI dòng `fa_ly_do` đã lưu (b["fa_rows"][sid]) — không tính lại.
+    `huy` = {club_id: 60|30|10} của CHÍNH em (UX1B-L7): thêm khoá `huy_chuong` ("Vàng"/"Bạc"/"Đồng"/None) vào mỗi dòng."""
+    huy = huy or {}
     ket = b["assign"].get(sid)
     dong = {r["club_id"]: r for r in b.get("fa_rows", {}).get(sid, [])}
     ds = b["prefs"].get(sid, [])
@@ -160,13 +225,18 @@ def _lua_chon_fa(sid, buoi, b):
              "diem_em": (r or {}).get("diem_em"), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
              "da_nhan": n, "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket,
              "diem_chuan": (r or {}).get("cut_score"), "diem_chuan_loai": None,
-             "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": (r or {}).get("waitlist_pos")}
+             "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": (r or {}).get("waitlist_pos"),
+             "huy_chuong": NHAN_HUY_CHUONG.get(huy.get(cid))}
         if r is not None:
             thay.add(cid)
             x["ma"] = r["reason"]            # ACCEPTED hoặc lý do đã lưu (SCORE, MEDAL, LOTTERY, ...)
             x["diem_chuan_loai"] = ("diem" if r.get("cut_score") is not None
                                     else "boc_tham" if r["reason"] == "LOTTERY" else None)
             x["cau"] = fa_ly_do.cau_ly_do(r, c["ten"])
+            if r["reason"] == "MEDAL":
+                them = _cau_huy_chuong(r, huy.get(cid, 0))
+                if them:
+                    x["cau"] += " " + them
         else:
             x["ma"] = HIGHER_CHOICE_ACCEPTED if (hang_xep is not None and i > hang_xep) else None
             x["cau"] = (fa_ly_do.cau_ly_do_rbda({"ma": x["ma"]}, c["ten"]) if x["ma"] else "")
@@ -181,7 +251,36 @@ def _lua_chon_fa(sid, buoi, b):
                    "da_nhan": sum(1 for s, k in b["assign"].items() if k == cid),
                    "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket, "diem_chuan": None,
                    "diem_chuan_loai": None, "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": None,
+                   "huy_chuong": NHAN_HUY_CHUONG.get(huy.get(cid)),
                    "ma": r["reason"], "cau": fa_ly_do.cau_ly_do(r, c["ten"])})
+    return ra
+
+
+def _diem_da_thi(sid, b, ds, fa):
+    """UX1B-L7: điểm của MỌI CLB em đã thi trong buổi (kể cả CLB ngoài nguyện vọng), kèm mức vào được của CLB đó.
+    Chỉ CLB em có điểm; mức vào được là con số của CLB (như cột "Mức vào được"), không tên hay điểm em khác."""
+    theo = {x["club_id"]: x for x in ds}
+    ket = b["assign"].get(sid)
+    ra = []
+    for cid, diem_clb in b["scores"].items():
+        c = b["clubs"].get(cid)
+        if sid not in diem_clb or c is None:
+            continue
+        x = theo.get(cid)
+        if x is not None:
+            chuan, loai = x["diem_chuan"], x["diem_chuan_loai"]
+        elif not fa and cid in b.get("base_rank", {}):
+            cuoi, n = _nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])
+            if n >= c["capacity"] and cuoi is not None:
+                chuan, loai = (diem_clb[cuoi], "diem") if cuoi in diem_clb else (None, "boc_tham")
+            else:
+                chuan, loai = None, "con_cho"
+        else:
+            chuan, loai = None, None
+        ra.append({"club_id": cid, "ten_clb": c["ten"], "diem_em": diem_clb[sid], "diem_chuan": chuan,
+                   "diem_chuan_loai": loai, "trong_nv": x is not None, "duoc_xep": cid == ket})
+    thu_tu = {x["club_id"]: i for i, x in enumerate(ds)}
+    ra.sort(key=lambda d: (thu_tu.get(d["club_id"], len(thu_tu)), d["ten_clb"]))
     return ra
 
 
@@ -202,7 +301,8 @@ def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str, giong: str = fa_
         b = du_lieu_run["buoi"][buoi]
         if student_id not in b["assign"] and student_id not in b["prefs"]:
             continue
-        ds = _lua_chon_fa(student_id, buoi, b) if fa else _lua_chon_rbda(student_id, buoi, b)
+        huy = (du_lieu_run.get("huy_chuong") or {}).get(student_id) or {}   # CHỈ của chính em
+        ds = _lua_chon_fa(student_id, buoi, b, huy) if fa else _lua_chon_rbda(student_id, buoi, b)
         if not fa:
             for x in ds:
                 _them_cau(x, giong)
@@ -214,7 +314,12 @@ def giai_trinh_mot_hoc_sinh(du_lieu_run: dict, student_id: str, giong: str = fa_
             "ma_tom_tat": ma_tt,
             "cau_tom_tat": (fa_ly_do.cau_ly_do_rbda({"ma": ma_tt}, "", giong) if not ket else ""),
             "chu_thich": (fa_ly_do.CAU_GIU_CHO if (not fa and any(x.get("ma") == RESERVED for x in ds)) else ""),
+            "diem_da_thi": _diem_da_thi(student_id, b, ds, fa),
             "cac_lua_chon": ds})
+    co_buoi_trong = any(not b["ket_qua"] for b in ra_buoi)
     return {"student_id": student_id, "fa_bat": fa,
             "du_lieu_da_doi": bool(du_lieu_run.get("du_lieu_da_doi")),
-            "run": du_lieu_run.get("run") or {}, "buoi": ra_buoi}
+            "run": du_lieu_run.get("run") or {}, "buoi": ra_buoi,
+            "tom_tat_dong": tom_tat_dong(ra_buoi, giong),
+            "buoc_tiep": cac_buoc_tiep(du_lieu_run.get("tinh_nang"), giong) if co_buoi_trong else [],
+            "chu_thich_huy_chuong": CHU_THICH_HUY_CHUONG if fa else ""}

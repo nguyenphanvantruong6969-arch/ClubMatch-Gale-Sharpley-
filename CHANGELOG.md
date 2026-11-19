@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L7: nội dung phiếu giải trình (không gồm loại CLB — XP1)
+
+- `giai_trinh.py`: `tom_tat_dong`, `cac_buoc_tiep`, `_diem_da_thi`, `NHAN_HUY_CHUONG`, `CHU_THICH_HUY_CHUONG`; `giai_trinh_mot_hoc_sinh` trả thêm `tom_tat_dong`, `buoc_tiep` (chỉ khi có buổi chưa có chỗ), `chu_thich_huy_chuong` (FA), `diem_da_thi` mỗi buổi; FA: mỗi dòng có `huy_chuong` (chỉ của chính em), dòng lý do MEDAL nối câu "Em đặt huy chương X; các bạn đặt Y được xét trước."
+- `api_xuat._giai_trinh_dung_lai`: đọc `wharton_bids` (FA) và cờ `fa_vong_2` / `fa_diem_danh` / `fa_khieu_nai` thành `tinh_nang`.
+- `phieu_giai_trinh.py`: dòng tóm tắt, bảng điểm CLB đã thi + thanh SVG (chỉ số, đã thoát, không tệp ngoài), khối "Em nên làm gì tiếp", cột "Huy chương" ngay sau cột CLB (chỉ FA) + chú giải; cột "Điểm thi", "Chỗ đã nhận / tối đa"; "Mức vào được" = "Chọn ngẫu nhiên khi bằng điểm" thay cho "Bốc thăm".
+- `js/14_giai_trinh.js`, `i18n.js` (`ux1b_gt_*`, đổi `gt_th_diem`, `gt_th_cho`, `gt_chuan_boc_tham`), `style.css`: thẻ trên màn hình cùng nội dung; thẻ học sinh bỏ "số khoá bốc thăm" (quản trị / giáo viên vẫn thấy).
+- `bao_cao_tong_hop.py`: thêm dòng "dữ liệu đã sửa sau lần xếp" khi kết quả cũ (gợi ý của checker L4-B).
+- `docs/giai_trinh/CA_MAU.md` sinh lại (không đổi byte), `GOI_MINH_CHUNG.docx/.pdf` sinh lại.
+- Test mới: `tests/test_ux1b_l7_phieu.py` (10), `tests/test_giao_dien_ux1b_phieu.py` (3, Chromium), thêm 1 test ở `tests/test_ux1b_l4_bao_cao.py`.
+
 ## 2026-11-19 — UX1B-L4-B: "Báo cáo tổng hợp" + khối chọn lớp ở thẻ Kết quả
 
 - `bao_cao_tong_hop.py` (mới): `gom_du_lieu` (số liệu từ `get_dashboard_status`, `get_do_phu`, `get_club_fill_stats`, `get_phan_bo_nguyen_vong` + số em chưa có chỗ theo lớp; danh sách trắng khoá, không mã/tên/điểm/số bốc thăm) và `dung_html` (thuần, `html.escape`, một tệp tự đủ).

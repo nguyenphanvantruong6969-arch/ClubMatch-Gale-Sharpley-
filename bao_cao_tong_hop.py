@@ -47,6 +47,7 @@ def gom_du_lieu(api) -> dict:
     n_chua = phu["so_em_trang_tay"]
     tong = phu["tong_hoc_sinh"]
     return {
+        "ket_qua_cu": bool(api._ket_qua_cu()),
         "the": {
             "n_students": dash["n_students"], "n_clubs": dash["n_clubs"], "n_matched": dash["n_matched"],
             "n_chua_xep": n_chua,
@@ -77,6 +78,8 @@ def dung_html(du: dict, nhan: dict | None = None) -> str:
          % (_e(d("Báo cáo tổng hợp")), _CSS),
          "<h1>%s</h1>" % _e(d("Báo cáo tổng hợp")),
          '<p class="phu">%s</p>' % _e(d("Chỉ số gộp, không có tên, mã, điểm hay số bốc thăm của từng {person_l}.")),
+         ('<p class="phu"><b>%s</b></p>' % _e(d("Dữ liệu đã được sửa sau lần xếp gần nhất, nên số liệu có thể đã cũ. Hãy xếp lại trước khi công bố."))
+          if du.get("ket_qua_cu") else ""),
          '<div class="the">' + "".join('<div class="o">%s<b>%s</b></div>' % (_e(d(a)), _e(b)) for a, b in o) + "</div>",
          "<h2>%s</h2>" % _e(d("Mức lấp đầy từng {slot_l}")),
          "<table><tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>" % tuple(

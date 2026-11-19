@@ -2022,8 +2022,10 @@ class XuatKetQuaMixin:
                     "SELECT student_id, buoi, club_id FROM match_results"):
                 luu_kq.setdefault(buoi, {})[sid] = cid
             stb_buoi = doc_stb_buoi(cur) or None
-            fa_dong, wharton = {}, None
+            fa_dong, wharton, huy_chuong = {}, None, {}
             if fa_bat:
+                for sid_h, cid_h, diem_h in cur.execute("SELECT student_id, club_id, points FROM wharton_bids"):
+                    huy_chuong.setdefault(sid_h, {})[cid_h] = diem_h      # UX1B-L7: giai_trinh chỉ đọc phần của chính em
                 _, dong, _ = self._doc_ly_do_moi_nhat(cur)
                 for r in dong:
                     fa_dong.setdefault(r[1], {}).setdefault(r[0], []).append({
@@ -2068,8 +2070,14 @@ class XuatKetQuaMixin:
                 luu_b = {s: c for s, c in luu_kq.get(buoi, {}).items() if c is not None}
                 if lai != luu_b:
                     da_doi = True
+        luat_hien = self._luat_nghiem()
+        fa_hien = dung_fa_daa(luat_hien)
+        tinh_nang = {"vong_2": fa_hien and luat_hien.get("fa_vong_2") is True,
+                     "moi_cho_trong": fa_hien and luat_hien.get("fa_diem_danh") is True,
+                     "khieu_nai": fa_hien and luat_hien.get("fa_khieu_nai") is True,
+                     "so_ngay": luat_hien.get("fa_khieu_nai_so_ngay")}
         du_lieu = {"fa_bat": fa_bat, "du_lieu_da_doi": da_doi, "run": thong_tin,
-                   "ds_buoi": ds_buoi, "buoi": theo_buoi}
+                   "ds_buoi": ds_buoi, "buoi": theo_buoi, "huy_chuong": huy_chuong, "tinh_nang": tinh_nang}
         return du_lieu, thong_tin_hs
 
     def _export_ly_do_da_khoa(self, output_path: str = ""):

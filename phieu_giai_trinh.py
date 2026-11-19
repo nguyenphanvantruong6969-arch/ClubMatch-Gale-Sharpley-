@@ -28,6 +28,11 @@ tr.duoc-xep td{background:#dcfce7;font-weight:bold}
 .ma-tra-cuu{margin-top:8mm;font-size:12pt;min-height:8mm}
 .chu-thich{margin:2mm 0 0;font-size:10pt;font-style:italic}
 .khieu-nai{margin-top:6mm;font-size:10.5pt}
+.tom-tat{font-size:12pt;margin:2mm 0 3mm}
+.tiep-theo{border:1px solid #444;padding:2mm 4mm;margin:5mm 0;font-size:10.5pt}
+.tiep-theo ul{margin:1mm 0 0;padding-left:5mm}
+table.diem-thi td.thanh{width:48mm}
+svg.thanh-diem{display:block}
 @media print{.trang{padding:0}}
 """
 
@@ -42,25 +47,63 @@ def _o_chuan(x):
     loai = x.get("diem_chuan_loai")
     if loai == "diem" and x.get("diem_chuan") is not None:
         return "%s điểm" % x["diem_chuan"]
-    return {"boc_tham": "Bốc thăm", "con_cho": "Còn chỗ", "giu_cho": "Chỗ dành riêng"}.get(loai, "—")
+    return {"boc_tham": "Chọn ngẫu nhiên khi bằng điểm", "con_cho": "Còn chỗ",
+            "giu_cho": "Chỗ dành riêng"}.get(loai, "—")
 
 
-def _bang(b):
+def _so(x):
+    f = float(x)
+    return str(int(f)) if f.is_integer() else str(round(f, 2))
+
+
+def _svg_diem(diem, chuan):
+    """Thanh SVG nhỏ: điểm của em (thanh) và mức vào được của CLB (vạch đứng), cùng một thang. Chỉ số, đã thoát;
+    không tệp hay địa chỉ ngoài."""
+    cao = max(float(diem), float(chuan) if chuan is not None else 0.0, 1.0)
+    rong, w = 180.0, float(diem) / cao * 180.0
+    mo_ta = "Điểm của em %s" % _so(diem) + ("; mức vào được %s" % _so(chuan) if chuan is not None else "")
+    kq = ['<svg class="thanh-diem" width="%d" height="16" viewBox="0 0 %d 16" '
+          'role="img" aria-label="%s"><title>%s</title>' % (rong + 4, rong + 4, escape(mo_ta), escape(mo_ta)),
+          '<rect x="0" y="3" width="%d" height="10" fill="#e5e7eb"/>' % rong,
+          '<rect x="0" y="3" width="%.1f" height="10" fill="#2563eb"/>' % w]
+    if chuan is not None:
+        x = float(chuan) / cao * rong
+        kq.append('<line x1="%.1f" y1="0" x2="%.1f" y2="16" stroke="#b91c1c" stroke-width="2"/>' % (x, x))
+    kq.append("</svg>")
+    return "".join(kq)
+
+
+def _bang_diem_thi(b):
+    """Điểm của MỌI CLB em đã thi (kể cả ngoài nguyện vọng), mỗi CLB một thanh SVG. Rỗng nếu em không thi CLB nào."""
+    thi = b.get("diem_da_thi") or []
+    if not thi:
+        return ""
+    dong = ['<tr><td>%s</td><td>%s</td><td>%s</td><td class="thanh">%s</td></tr>' % (
+        escape(str(x["ten_clb"])), escape(_so(x["diem_em"])), escape(_o_chuan(x)),
+        _svg_diem(x["diem_em"], x["diem_chuan"] if x.get("diem_chuan_loai") == "diem" else None)) for x in thi]
+    return ('<h3>Điểm các CLB em đã thi</h3><table class="diem-thi"><thead><tr><th>CLB</th><th>Điểm thi</th>'
+            '<th>Mức vào được</th><th>Em so với mức vào được (vạch đỏ)</th></tr></thead><tbody>%s</tbody></table>'
+            % "".join(dong))
+
+
+def _bang(b, fa=False):
     dong = []
     for x in b["cac_lua_chon"]:
         cau = x.get("cau") or ""
         if x.get("vi_tri_cho"):
             cau = (cau + " " if cau else "") + "Hàng chờ: %s." % x["vi_tri_cho"]
         diem = x.get("diem_em") if x.get("chon_loc") else None
+        o_huy = ("<td>%s</td>" % escape(x.get("huy_chuong") or "—")) if fa else ""     # UX1B-L7: chỉ chế độ huy chương
         dong.append(
-            '<tr%s><td>%s</td><td>%s</td><td>%s</td><td>%s / %s</td><td>%s</td><td>%s</td></tr>' % (
+            '<tr%s><td>%s</td><td>%s</td>%s<td>%s</td><td>%s / %s</td><td>%s</td><td>%s</td></tr>' % (
                 ' class="duoc-xep"' if x.get("duoc_xep") else "",
                 "ngoài nguyện vọng" if x.get("hang") is None else escape(str(x["hang"])),
-                escape(str(x["ten_clb"])), "—" if diem is None else escape(str(diem)),
+                escape(str(x["ten_clb"])), o_huy, "—" if diem is None else escape(str(diem)),
                 escape(str(x.get("da_nhan", "?"))), "—" if x.get("suc_chua") is None else escape(str(x["suc_chua"])),
                 escape(_o_chuan(x)), escape(cau)))
-    return ("<table><thead><tr><th>Nguyện vọng</th><th>CLB</th><th>Điểm của em</th><th>Chỗ (đã nhận / tối đa)</th>"
-            "<th>Mức vào được</th><th>Vì sao</th></tr></thead><tbody>%s</tbody></table>" % "".join(dong))
+    return ("<table><thead><tr><th>Nguyện vọng</th><th>CLB</th>%s<th>Điểm thi</th><th>Chỗ đã nhận / tối đa</th>"
+            "<th>Mức vào được</th><th>Vì sao</th></tr></thead><tbody>%s</tbody></table>"
+            % ("<th>Huy chương</th>" if fa else "", "".join(dong)))
 
 
 def _trang(gt, hs, so_ngay, ma_tra_cuu, tieu_de):
@@ -73,6 +116,9 @@ def _trang(gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         p.append('<p class="thong-tin">Lần xếp lúc: %s</p>' % escape(str(run["run_at"]).replace("T", " ")[:16]))
     if gt.get("du_lieu_da_doi"):
         p.append('<p class="canh-bao" role="alert">%s</p>' % escape(CANH_BAO_DA_DOI))
+    if gt.get("tom_tat_dong"):
+        p.append('<p class="tom-tat"><b>%s</b></p>' % escape(gt["tom_tat_dong"]))
+    fa = bool(gt.get("fa_bat"))
     for b in gt["buoi"]:
         nhan = _nhan_buoi(b["buoi"])
         if nhan:
@@ -82,9 +128,15 @@ def _trang(gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         if b.get("cau_tom_tat"):
             p.append("<p>%s</p>" % escape(b["cau_tom_tat"]))
         if b["cac_lua_chon"]:
-            p.append(_bang(b))
+            p.append(_bang(b, fa))
             if b.get("chu_thich"):
                 p.append('<p class="chu-thich">%s</p>' % escape(b["chu_thich"]))
+        p.append(_bang_diem_thi(b))
+    if fa and gt["buoi"] and gt.get("chu_thich_huy_chuong"):
+        p.append('<p class="chu-thich">%s</p>' % escape(gt["chu_thich_huy_chuong"]))
+    if gt.get("buoc_tiep"):
+        p.append('<div class="tiep-theo"><b>Em nên làm gì tiếp</b><ul>%s</ul></div>' % "".join(
+            "<li>%s</li>" % escape(c) for c in gt["buoc_tiep"]))
     if not gt["buoi"]:
         p.append("<p>Chưa có thông tin xếp cho em.</p>")
     p.append('<div class="khieu-nai">%s</div>' % escape(
