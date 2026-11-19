@@ -15,11 +15,9 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - [ ] CI gate, user review (lead)
 
 ## Current state
-- Done: L4-B, L7 (+fix1, fix2), L5c (+fix1), L8-B (b960b60). All pushed on origin/claude/ux1-b-phieu.
-- In progress: nothing. Waiting for lead: REVIEW L8-B / REVIEW L5c fix1 / FIX, then CI gate + review by lead.
-- Tests last green: gt3_tai_lieu, gt_tich_hop, a13_12_tai_lieu (344 test files pinned in CLAUDE_CHI_TIET.md), gt1_phieu, ux1*/ux1b* UI;
-  kiem_nhanh 7/7 (60 cases byte-identical vs origin/main).
-- Open: slip click target (4) NOT met until XP1 PDF button at integration I3 (documented in UX1_RA_SOAT.md After table).
+- UX1B is DONE: CI green on eac69df, lead's branch file at b510dbf. All coder lots (L4-B, L7, L5c, L8-B) and fixes
+  (L7 fix1-2, L5c fix1, CI-1, R1 + fix2) are pushed and accepted by the checker.
+- In progress: nothing. Coder is idle; Team A lead drives integration (I1-I3, branch claude/ux1-tich-hop).
 
 ## Decisions and gotchas
 - Never rebase/force-push (protocol §2); merge origin/claude/ux1-b-phieu and origin/claude/ux1-a-giao-dien before each lot.
@@ -35,9 +33,9 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - Default export has sheets Điểm chuẩn + Dấu vết (seed, lottery numbers): privacy red line must stay visible by default.
 
 ## Next steps
-1. Wait for lead: FIX (checker findings) or CI-gate failures; fix test-first, run related tests, kiem_nhanh, push, CODER DONE <lot> fix<k>.
-2. If a test count changes, update the "344 tệp" figure in docs/ke_hoach/CLAUDE_CHI_TIET.md (test_a13_12_tai_lieu pins it).
-3. Never rebase; merge origin/claude/ux1-b-phieu and origin/claude/ux1-a-giao-dien before work.
+1. Stay idle. Only act if the Team A lead / integration coder messages with a question about team B code.
+2. Reminders for integration: XP1 inserts "Loại CLB" right after the CLB column of the slip (medal column follows it);
+   "In phiếu cả lớp" and the slip PDF button are wired at I3; slip click target (4) only becomes true then.
 
 ## Files touched (whole branch so far)
 - bao_cao_tong_hop.py, api_xuat.py, phan_quyen.py: summary report + slip data (huy_chuong, tinh_nang)
@@ -61,3 +59,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 | 2026-11-19 | Sonnet | CI-1: index.html fallback text of group label synced with i18n.js (test_t3_l1_chu_du_phong green) | note: fallback texts in index.html must equal i18n.js vi |
 | 2026-11-19 | Sonnet | R1 (lead review): FA cutoff column, single MEDAL sentence, report label/case/unit fixes | pushed once |
 | 2026-11-19 | Sonnet | R1 fix2: FA cutoff from stored REJECTED rows (reserve-safe), 3 tests | pushed once |
+| 2026-11-19 | Sonnet | Final: UX1B DONE (CI green eac69df); impl file finalised | idle |
