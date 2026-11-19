@@ -2,7 +2,7 @@
 
 > Protocol: docs/phien/UX1_TICH_HOP_GIAO_THUC.md. English. ≤ 60 lines.
 
-Status: NOT STARTED (planned by Opus 2026-11-19; branch from origin/claude/gt-tich-hop @ 396509b)
+Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-hop @ 396509b)
 
 ## Plan (lead ticks)
 - [ ] I1 merge claude/ux1-a-giao-dien (DONE, CI green 9fbdfdf)
@@ -11,12 +11,12 @@ Status: NOT STARTED (planned by Opus 2026-11-19; branch from origin/claude/gt-ti
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: none. Waiting on: XP1 (L4 in review at planning time), B (not started).
+- Done: stand-down sent to Team A lead (session not found → ignored). Next: create coder/checker, run I1.
 
 ## Sessions
 | Role | Session | State |
 |---|---|---|
-| lead | — | — |
+| lead | session_01YVAyu2FhPzwKmmTgfwCCGj | active |
 | coder | — | — |
 | checker | — | — |
 
