@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: PLANNED (Opus 2026-11-18). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: IN PROGRESS (lead started 2026-11-19; L1 next). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -85,6 +85,17 @@ Lot L5 — docs + packaging + verify
 - Slip text is Vietnamese-only today (`phieu_giai_trinh.py` hard-codes it); keep that unless Truong asks for en.
 - Role check: teacher role must not reach these exports (backend `phan_quyen`, not just hidden buttons).
 - Push only after CI of the previous lot finishes (two cancelled runs hid a bug on the UX1A branch).
+
+## Sessions
+| Role | Model | Session id | State |
+|---|---|---|---|
+| lead | claude-opus-5-5 | session_01VfPzNtmP5QGfFfaGiBWkze | running |
+| coder | claude-sonnet-5-5 | (creating) | — |
+| checker | claude-sonnet-5-5 | (creating) | — |
+
+## Needs Truong (1 line each + recommendation)
+- L3 optional combined PDF with table of contents: not built unless Truong asks. Rec: folder output is enough for v1.
+- L5 manual check: launch the built Windows exe once and export PDFs offline. Rec: do it after CI is green.
 
 ## Current state (overwrite each handoff)
 - Done so far: plan only (this file) + `TIEN_DO.md` row. No code.
