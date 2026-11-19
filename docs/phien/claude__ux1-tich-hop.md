@@ -11,7 +11,7 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: stand-down sent to Team A lead (session not found → ignored). Next: create coder/checker, run I1.
+- Done: I1 merge of A pushed (5f9767a, no conflicts); coder running I1 checks. XP1 at L5 review; B in progress.
 
 ## Sessions
 | Role | Session | State |
