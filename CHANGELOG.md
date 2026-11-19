@@ -4,9 +4,9 @@
 
 - `xuat_pdf.py` (mới): `dung_pdf`, `tieu_de`, `dong_khoa_gia_tri`, `bang` (lặp tiêu đề cột, ô tự xuống dòng, thoát ký tự markup), `ngat_trang`; A4 dọc, chân trang "Trang x/y", ghi qua tệp tạm rồi đổi tên, không ghi đè (`duong_dan_khong_de`); thiếu reportlab/phông thì `ThieuThuVienPdf`.
 - `assets/fonts/BeVietnamPro-Regular.ttf`, `BeVietnamPro-Bold.ttf`, `OFL-BeVietnamPro.txt` (SIL OFL; `assets/fonts` đã nằm trong `kiosk.spec` datas).
-- `requirements.txt`: `reportlab==5.1.0` (thư viện mới, Truong duyệt 2026-11-18); `requirements-dev.txt`: `pypdf` (chỉ để test đọc lại PDF).
+- `requirements.txt`: `reportlab==5.1.0` (thư viện mới, Truong duyệt 2026-11-18). `pypdf` KHÔNG thêm vào requirements: test đọc chữ tự bỏ qua khi thiếu nó.
 - `kiosk.spec`: `collect_all("reportlab")`.
-- Test mới: `tests/test_xp1_pdf_loi.py` (10 ca). Không đụng thuật toán/DB; `kiem_nhanh.py` 7/7.
+- Test mới: `tests/test_xp1_pdf_loi.py` (13 ca: 8 ca mức byte luôn chạy, 5 ca đọc chữ cần pypdf tuỳ chọn). Không đụng thuật toán/DB; `kiem_nhanh.py` 7/7.
 
 ## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
 

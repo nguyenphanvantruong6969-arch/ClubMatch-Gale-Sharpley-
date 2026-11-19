@@ -4,9 +4,22 @@ import os
 import pytest
 
 pytest.importorskip("reportlab")
-pypdf = pytest.importorskip("pypdf")
-
 import xuat_pdf  # noqa: E402
+
+try:  # chỉ để đọc lại chữ; thiếu thì các ca đọc chữ tự bỏ qua, ca mức byte vẫn chạy
+    import pypdf
+except ImportError:
+    pypdf = None
+
+can_pypdf = pytest.mark.skipif(pypdf is None, reason="cần pypdf để đọc lại chữ trong PDF")
+
+
+def _n_trang(duong):
+    """Số trang đọc thẳng từ byte (không cần pypdf): nút gốc cây trang `/Count n`."""
+    with open(duong, "rb") as f:
+        b = f.read()
+    import re
+    return max(int(m) for m in re.findall(rb"/Count (\d+)", b))
 
 
 def _tep(thu_muc):
@@ -35,6 +48,13 @@ def _trang_ba(ten):
     ]
 
 
+def test_ba_trang_dem_theo_byte(tmp_path):
+    ra = str(tmp_path / "a.pdf")
+    xuat_pdf.dung_pdf(ra, _trang_ba("x"))
+    assert _n_trang(ra) == 3
+
+
+@can_pypdf
 def test_ba_trang_va_chu_viet_doc_lai_duoc(tmp_path):
     ra = str(tmp_path / "a.pdf")
     xuat_pdf.dung_pdf(ra, _trang_ba("x"))
@@ -51,6 +71,7 @@ def test_phong_duoc_nhung(tmp_path):
     assert b"BeVietnamPro" in b and b"/FontFile2" in b
 
 
+@can_pypdf
 def test_chan_trang_trang_x_tren_y(tmp_path):
     ra = str(tmp_path / "a.pdf")
     xuat_pdf.dung_pdf(ra, _trang_ba("x"))
@@ -58,6 +79,7 @@ def test_chan_trang_trang_x_tren_y(tmp_path):
     assert "Trang 1/3" in p[0].extract_text() and "Trang 3/3" in p[2].extract_text()
 
 
+@can_pypdf
 def test_bang_dai_ngat_trang_va_lap_tieu_de_cot(tmp_path):
     ra = str(tmp_path / "a.pdf")
     hang = [[f"Em {i}", "10A1"] for i in range(150)]
@@ -68,6 +90,7 @@ def test_bang_dai_ngat_trang_va_lap_tieu_de_cot(tmp_path):
     assert "Em 149" in p[-1].extract_text()
 
 
+@can_pypdf
 def test_o_bang_dai_tu_xuong_dong(tmp_path):
     ra = str(tmp_path / "a.pdf")
     dai = "Câu lạc bộ " + "rất dài " * 60
@@ -75,6 +98,7 @@ def test_o_bang_dai_tu_xuong_dong(tmp_path):
     assert "rất dài" in _chu(ra)
 
 
+@can_pypdf
 def test_ky_tu_dac_biet_khong_vo_markup(tmp_path):
     ra = str(tmp_path / "a.pdf")
     xuat_pdf.dung_pdf(ra, [xuat_pdf.tieu_de("A <b>& B</b> <x>"),
@@ -107,3 +131,17 @@ def test_thieu_phong_bao_loi_ro(tmp_path, monkeypatch):
     monkeypatch.setattr(xuat_pdf, "_da_dang_ky", False)
     with pytest.raises(xuat_pdf.ThieuThuVienPdf):
         xuat_pdf.dung_pdf(str(tmp_path / "a.pdf"), [xuat_pdf.tieu_de("x")])
+
+
+def test_bang_dai_ngat_trang_theo_byte(tmp_path):
+    ra = str(tmp_path / "a.pdf")
+    hang = [[f"Em {i}", "10A1"] for i in range(150)]
+    xuat_pdf.dung_pdf(ra, [xuat_pdf.bang(["Họ tên", "Lớp"], hang)])
+    assert _n_trang(ra) >= 3
+
+
+def test_ky_tu_dac_biet_khong_gay_loi_theo_byte(tmp_path):
+    ra = str(tmp_path / "a.pdf")
+    xuat_pdf.dung_pdf(ra, [xuat_pdf.tieu_de("A <b>& B</b> <x>"),
+                           xuat_pdf.bang(["c"], [["1 < 2 & 3 > 2"]])])
+    assert _n_trang(ra) == 1

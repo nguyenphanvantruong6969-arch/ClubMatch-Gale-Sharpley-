@@ -16,5 +16,3 @@ pillow>=10.0,<13
 # Chi dung cho mau_forms_thi_clb/tao_mau_forms.py de ghi tep Quick Import
 # .docx. Thieu goi nay thi bo qua rieng tep .docx, cac tep khac van sinh.
 python-docx>=1.1,<2
-# Chỉ dùng cho tests/test_xp1_*.py: đọc lại chữ trong PDF vừa xuất. Thiếu thì các test đó tự bỏ qua.
-pypdf>=4,<8
