@@ -17,7 +17,7 @@ import browser_host  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _fa import dung_fa_clb  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 from _wharton import tat_wharton  # noqa: E402
 
 HS = {"s1": "Nguyễn Văn Ánh", "s2": "Trần Thị Bé"}
@@ -62,6 +62,7 @@ def _vao(page, sid, ma):
 def test_ma_dung_chi_hien_the_cua_chinh_em(mo):
     page, loi, api = mo
     ma = _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     assert page.locator("#gtHs").is_visible()
     _vao(page, "s1", ma["s1"].lower())
@@ -81,6 +82,7 @@ def test_ma_dung_chi_hien_the_cua_chinh_em(mo):
 def test_ma_sai_khong_co_the_va_khoa_tam(mo):
     page, loi, api = mo
     ma = _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     for _ in range(5):
         _vao(page, "s1", "AAAAAAAA")
@@ -96,6 +98,7 @@ def test_ma_sai_khong_co_the_va_khoa_tam(mo):
 def test_phan_quan_tri_bi_khoa_khi_o_che_do_hoc_sinh(mo):
     page, loi, api = mo
     _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     assert page.evaluate("document.querySelector('.app-shell').inert") is True
     assert page.evaluate("document.querySelector('#gtPanel').closest('[inert]') !== null") is True
@@ -109,6 +112,7 @@ def test_phan_quan_tri_bi_khoa_khi_o_che_do_hoc_sinh(mo):
 def test_60_giay_khong_thao_tac_thi_xoa_the(mo):
     page, loi, api = mo
     ma = _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     _vao(page, "s2", ma["s2"])
     page.wait_for_selector("#gtHsKetQua .gt-ten")
@@ -125,6 +129,7 @@ def test_60_giay_khong_thao_tac_thi_xoa_the(mo):
 def test_thao_tac_giua_chung_keo_dai_thoi_gian(mo):
     page, loi, api = mo
     ma = _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     _vao(page, "s1", ma["s1"])
     page.wait_for_selector("#gtHsKetQua .gt-ten")
@@ -139,6 +144,7 @@ def test_thao_tac_giua_chung_keo_dai_thoi_gian(mo):
 def test_thoat_co_hoi_lai_va_xoa_the(mo):
     page, loi, api = mo
     ma = _dung(api)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     _vao(page, "s1", ma["s1"])
     page.wait_for_selector("#gtHsKetQua .gt-ten")
@@ -150,6 +156,7 @@ def test_thoat_co_hoi_lai_va_xoa_the(mo):
     page.click("#btnGtHsCo")
     assert not page.locator("#gtHs").is_visible()
     assert page.locator("#gtHsKetQua").inner_text() == ""
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")                         # mở lại: không còn thẻ cũ
     assert page.locator("#gtHsKetQua").inner_text() == ""
     assert loi == []
@@ -161,11 +168,13 @@ def test_nut_tao_ma_o_man_hinh_quan_tri_khong_hien_ma(mo):
     dung_fa_clb(api, A=(1, None, None, None, None, "thu_2"))
     for sid, ten in HS.items():
         assert api.create_student_if_missing(sid, ten)["ok"]
+    mo_gap_ma(page)
     page.click("#btnGtTaoMa")
     page.wait_for_function("document.querySelector('#gtMaPhanHoi').innerText.includes('Đã tạo 2 mã')")
     with api._ket_noi_doc() as cur:
         ma = [r[0] for r in cur.execute("SELECT ma FROM ma_tra_cuu")]
     assert len(ma) == 2 and not any(m in page.locator("#gtPanel").inner_text() for m in ma)
+    mo_gap_ma(page)
     page.click("#btnGtTaoMa")                           # bấm lại: không đổi mã đã có
     page.wait_for_function("document.querySelector('#gtMaPhanHoi').innerText.includes('Đã tạo 0 mã')")
     with api._ket_noi_doc() as cur:
@@ -203,6 +212,7 @@ def test_phan_hoi_ve_muon_khong_hien_the_em_truoc_cho_em_sau(mo):
     page, loi, api = mo
     ma = _dung(api)
     giu, tha = _giu_yeu_cau_cua(page, "s1")
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     _vao(page, "s1", ma["s1"])
     _cho_giu(page, giu)                                   # phản hồi của s1 bị giữ lại
@@ -220,6 +230,7 @@ def test_phan_hoi_ve_sau_khi_xoa_vi_het_gio_hay_thoat_bi_bo(mo):
     page, loi, api = mo
     ma = _dung(api)
     giu, tha = _giu_yeu_cau_cua(page, "s1")
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     _vao(page, "s1", ma["s1"])
     _cho_giu(page, giu)
@@ -233,6 +244,7 @@ def test_phan_hoi_ve_sau_khi_xoa_vi_het_gio_hay_thoat_bi_bo(mo):
     page.click("#btnGtHsCo")
     tha()
     page.wait_for_timeout(500)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     assert page.locator("#gtHsKetQua").inner_text() == ""
     assert loi == []

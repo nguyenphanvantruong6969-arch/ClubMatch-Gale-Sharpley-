@@ -1501,5 +1501,9 @@ window.I18N_ERROR_MESSAGES = {
   "gt3_khong_xoa_duoc_tai_khoan": {
     "vi": "Không xoá được tài khoản. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
     "en": "The accounts could not be cleared. Check the data file and try again."
+  },
+  "ux1b_huy_chuong_gop": {
+    "vi": "{n} {person_l} chưa có huy chương hợp lệ (ví dụ ở: {clb}). Sổ đang nạp mang điểm quyết tâm hoặc huy chương đặt sai chỗ, không phải lỗi của từng {person_l}. Hãy nạp lại sổ có cột Huy chương, hoặc quay lại Chia 100 điểm ở Cài đặt.",
+    "en": "{n} {person_pl} have no valid medals (for example at: {clb}). The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings."
   }
 };

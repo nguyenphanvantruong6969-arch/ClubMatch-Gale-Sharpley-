@@ -204,12 +204,14 @@ class QuanLyMixin:
             # Hồ sơ huy chương (đọc CSDL, chỉ ĐỌC): học sinh có ô không phải huy chương hợp lệ (vd. điểm quyết tâm
             # 0-100 nạp từ sổ cũ) hoặc huy chương đặt ở CLB Tự do. Không tự đổi dữ liệu.
             with self._ket_noi_doc() as cur:
+                n_hs = cur.execute("SELECT COUNT(DISTINCT student_id) FROM preferences").fetchone()[0]
                 clubs_fa, _, prefs = fa_daa.doc_clubs_va_nguyen_vong(cur)
                 _, _, huy = fa_daa.doc_du_lieu_fa(cur)
             loi_hc = fa_daa.chi_loi_chan(fa_daa.kiem_ho_so_huy_chuong(prefs, huy, clubs_fa))
             hs_sai = sorted({e["params"].get("student_id") for e in loi_hc
                              if e["params"].get("student_id") is not None}, key=str)
             return _ok({"clubs": clubs, "thieu_loai": thieu_loai, "buoi_thieu_tu_do": thieu_buoi,
+                        "n_hoc_sinh": n_hs,
                         "thieu_diem_san": thieu_diem,
                         "huy_chuong_sai": len(hs_sai), "huy_chuong_sai_vd": str(hs_sai[0]) if hs_sai else "",
                         "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem or hs_sai)})

@@ -221,7 +221,7 @@
       ux1a_nhom_nap_xep: "1. Nạp & xếp",
       ux1a_nhom_nhap_tay: "2. Nhập tay",
       ux1a_nhom_ket_qua: "3. Kết quả & phiếu",
-      ux1a_nhom_cai_dat: "Cài đặt",
+      ux1a_nhom_cai_dat: "Cài đặt và quản lý",
       ux1a_nang_cao: "Nâng cao: tiêu chí xếp, thử cấu hình",
       /* UX1A-L1: thanh "Việc tiếp theo" */
       ux1a_cau_nap_so: "Chưa có dữ liệu. Nạp sổ nhập để bắt đầu.",
@@ -855,7 +855,7 @@
       gt_tieu_de: "Tra cứu một {person_l}",
       gt_lop_aria: "Lọc theo {cohort_l}",
       gt_tat_ca_lop: "Mọi {cohort_l}",
-      gt_tim_ph: "Tìm mã hoặc tên",
+      gt_tim_ph: "Gõ tên hoặc mã {person_l} để xem vì sao",
       gt_khong_thay: "Không tìm thấy {person_l} nào.",
       gt_the_ten: "{ten} ({ma}), {cohort_l} {lop}",
       gt_the_ten_khong_lop: "{ten} ({ma})",
@@ -1384,6 +1384,19 @@
       ux1b_gt_diem_thi: "Điểm các {slot_sl} đã thi",
       ux1b_gt_th_thanh: "So với mức vào được (vạch đỏ)",
       ux1b_gt_tiep_theo: "Việc tiếp theo",
+      /* UX1B (L5c) */
+      ux1b_cau_huy_chuong_sai: "Sổ này chưa có huy chương hợp lệ cho {n} {person_l}.",
+      ux1b_nut_huy_chuong_sai: "Mở Cài đặt",
+      ux1b_ss_nap_lai_ca_so: "Gần như cả sổ chưa có huy chương hợp lệ ({n}/{tong} {person_l}). Hãy tải sổ mẫu có huy chương, điền xong rồi nạp lại; hoặc quay lại Chia 100 điểm.",
+      ux1b_ss_quay_lai: "Quay lại Chia 100 điểm",
+      ux1b_sx_khieu_nai_ngay: "Nhận khiếu nại trong {n} ngày",
+      ux1b_sx_he_vong_2: "{person} chưa có chỗ chọn lại trong các {slot_l} còn chỗ.",
+      ux1b_sx_he_khieu_nai: "{person} gửi khiếu nại qua mã tra cứu trong hạn này.",
+      ux1b_sx_he_diem_danh: "Điểm danh 3 buổi đầu; chỗ bỏ trống được mời từ danh sách chờ.",
+      ux1b_sx_he_doi_cho: "Chỉ đo xem có đổi chỗ có lợi hay không; không đổi kết quả đã xếp.",
+      ux1b_sx_he_phan_hoi: "Thu phản hồi ngắn của {person_l} sau khi xếp.",
+      ux1b_ma_tra_cuu: "Mã tra cứu…",
+      /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === end GT3 (L3) === */
     },
@@ -1590,7 +1603,7 @@
       ux1a_nhom_nap_xep: "1. Load & run",
       ux1a_nhom_nhap_tay: "2. Manual entry",
       ux1a_nhom_ket_qua: "3. Results & slips",
-      ux1a_nhom_cai_dat: "Settings",
+      ux1a_nhom_cai_dat: "Settings and management",
       ux1a_nang_cao: "Advanced: ranking criteria, trial configuration",
       /* UX1A-L1: "Next step" bar */
       ux1a_cau_nap_so: "No data yet. Load the input book to start.",
@@ -2224,7 +2237,7 @@
       gt_tieu_de: "Look up one {person_l}",
       gt_lop_aria: "Filter by {cohort_l}",
       gt_tat_ca_lop: "All {cohort_l}",
-      gt_tim_ph: "Search by ID or name",
+      gt_tim_ph: "Type a name or ID to see why",
       gt_khong_thay: "No {person_l} found.",
       gt_the_ten: "{ten} ({ma}), {cohort_l} {lop}",
       gt_the_ten_khong_lop: "{ten} ({ma})",
@@ -2753,6 +2766,19 @@
       ux1b_gt_diem_thi: "Scores of the {slot_pl} tested",
       ux1b_gt_th_thanh: "Compared with the cut-off (red line)",
       ux1b_gt_tiep_theo: "What to do next",
+      /* UX1B (L5c) */
+      ux1b_cau_huy_chuong_sai: "The book has no valid medals for {n} {person_pl}.",
+      ux1b_nut_huy_chuong_sai: "Open Settings",
+      ux1b_ss_nap_lai_ca_so: "Almost the whole book has no valid medals ({n}/{tong} {person_pl}). Download the medal workbook, fill it in and load it again; or go back to Divide 100 points.",
+      ux1b_ss_quay_lai: "Back to Divide 100 points",
+      ux1b_sx_khieu_nai_ngay: "Accepting complaints for {n} days",
+      ux1b_sx_he_vong_2: "{person_p} without a {slot_l} can choose again among {slot_pl} with places left.",
+      ux1b_sx_he_khieu_nai: "{person_p} send complaints with their lookup code within this period.",
+      ux1b_sx_he_diem_danh: "Attendance for the first 3 sessions; empty places are offered to the waiting list.",
+      ux1b_sx_he_doi_cho: "Only measures whether a beneficial swap exists; the placements do not change.",
+      ux1b_sx_he_phan_hoi: "Collects a short feedback from {person_pl} after the allocation.",
+      ux1b_ma_tra_cuu: "Lookup codes…",
+      /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === end GT3 (L3) === */
     },

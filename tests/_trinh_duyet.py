@@ -50,3 +50,8 @@ def _tim(goc: str = _GOC_MAC_DINH) -> "str | None":
 
 
 CHROMIUM = _tim()
+
+
+def mo_gap_ma(page):
+    """UX1B-L5c: các nút về mã tra cứu nằm trong gập "Mã tra cứu…" (#gtMaFold); mở ra trước khi bấm."""
+    page.evaluate("() => { const d = document.getElementById('gtMaFold'); if (d) d.open = true; }")

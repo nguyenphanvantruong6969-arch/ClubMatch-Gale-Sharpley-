@@ -99,9 +99,28 @@ def test_co_ket_qua_roi_thong_bao_them_dong_giu_nguyen_ket_qua(mo_trang):  # noq
     assert not loi, loi
 
 
+def test_huy_chuong_cua_ca_so_sai_chi_hien_nap_lai_khong_hien_nut_loai(mo_trang):  # noqa: F811
+    """UX1B-L5c (đề xuất 2): sổ điểm quyết tâm (cả sổ sai huy chương) -> chỉ câu "nạp lại sổ" + hai nút làm việc đó;
+    các nút loại CLB ẩn (đặt loại xong vẫn không chạy được). Lần chạy vẫn bị chặn như bảng báo."""
+    page, api, goc, loi = mo_trang()
+    _nap_120(api)
+    _vao_cai_dat(page)
+    page.locator("#ux1aHuyChuong").click()
+    page.wait_for_selector("#ux1aSsHuyChuongSai")
+    assert "Gần như cả sổ" in page.locator("#ux1aSsHuyChuongSai").inner_text()
+    assert page.locator("#ux1bSsTaiSoMau").is_visible() and page.locator("#ux1bSsQuayLai").is_visible()
+    assert page.locator("#ux1aSanSang .ux1a-ss-dong").count() == 0 and page.locator("#ux1aSanSang .ux1a-vien").count() == 0
+    assert page.locator("#ux1aSanSangXong").count() == 0
+    assert api.get_san_sang_huy_chuong()["data"]["san_sang"] is False
+    assert api.run_pipeline(42)["ok"] is False                   # đúng như bảng báo: lần chạy vẫn bị chặn
+    assert not loi, loi
+
+
 def test_huy_chuong_du_lieu_chua_san_sang_sua_tai_cho_den_khi_san_sang(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _nap_120(api)
+    with api._ket_noi_ghi() as cur:                              # như nạp lại sổ KHÔNG có ô huy chương
+        cur.execute("DELETE FROM wharton_bids")
     _vao_cai_dat(page)
     page.locator("#ux1aHuyChuong").click()
     page.wait_for_selector("#ux1aSanSang .ux1a-ss-dong")
@@ -119,12 +138,7 @@ def test_huy_chuong_du_lieu_chua_san_sang_sua_tai_cho_den_khi_san_sang(mo_trang)
         page.wait_for_function(
             "n => document.querySelectorAll('#ux1aSanSang .ux1a-vien[data-loai=\"GIOI_HAN\"]').length < n"
             " || !!document.getElementById('ux1aSanSangXong')", arg=n)
-    # loại CLB đã đủ, nhưng sổ này nạp ở chế độ thường (ô huy chương là điểm quyết tâm): KHÔNG được nói "Sẵn sàng"
-    page.wait_for_selector("#ux1aSsHuyChuongSai")
-    assert "không phải huy chương" in page.locator("#ux1aSsHuyChuongSai").inner_text()
-    assert page.locator("#ux1aSanSangXong").count() == 0
-    assert api.get_san_sang_huy_chuong()["data"]["san_sang"] is False
-    assert api.run_pipeline(42)["ok"] is False                   # đúng như bảng báo: lần chạy vẫn bị chặn
+    page.wait_for_selector("#ux1aSanSangXong")
     assert not loi, loi
 
 

@@ -9,7 +9,7 @@ pytest.importorskip("playwright", reason="chưa cài playwright")
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 import browser_host  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 from test_ux1b_l7_phieu import _dung_fa, _dung_thuong  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,6 +82,7 @@ def test_the_hoc_sinh_khong_co_so_khoa_boc_tham(mo):
     page.goto(url)
     page.wait_for_selector("#gtPanel", state="attached")
     page.click('button.nav-item[data-tab="results"]')
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
     page.fill("#gtHsMa", "s1")

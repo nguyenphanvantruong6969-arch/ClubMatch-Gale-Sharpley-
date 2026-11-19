@@ -9,7 +9,7 @@ pytest.importorskip("playwright", reason="chưa cài playwright")
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 import browser_host  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MK = "matkhau-gia-1"
@@ -102,6 +102,7 @@ def test_man_hoc_sinh_phu_kin_ca_bon_nhom(mo):
     page, api, mo_trang, loi = mo
     mo_trang()
     page.click('.nav-item[data-tab="results"]')
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
     bi_che = page.evaluate("""() => Array.from(document.querySelectorAll('.nav-nhom-nut, .nav-item'))

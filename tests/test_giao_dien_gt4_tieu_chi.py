@@ -16,7 +16,7 @@ import api as api_mod  # noqa: E402
 import browser_host  # noqa: E402
 import cau_hinh_ws  # noqa: E402
 import workspace as ws  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(GOC, "du_lieu_test"))
@@ -243,6 +243,7 @@ def test_cac_khung_gt_chu_14px_o_bam_36px_tuong_phan_45(mo, rong):
             assert x["cao"] >= 36 - 0.5, ("ô bấm thấp", x)
     # khung tra cứu (thẻ Kết quả) và hộp tài khoản cùng nhịp
     page.click('button.nav-item[data-tab="results"]')
+    mo_gap_ma(page)
     for x in page.evaluate(JS_TUONG_PHAN, ["#gtPanel .btn", "#gtPanel input", "#gtPanel .hint-text", "#gtBuocHuongDan li"]):
         assert x["ti"] >= 4.5, ("tương phản", x)
         assert x["co"] >= 14 - 0.01, ("cỡ chữ", x)

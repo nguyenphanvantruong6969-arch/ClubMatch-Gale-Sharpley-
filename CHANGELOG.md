@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L5c: năm đề xuất của UX1_DANH_GIA_A §4 (chỉ thông điệp / bố cục)
+
+- Đề xuất 1: `api.get_data_health_report` trả thêm `gop_huy_chuong` {n_em, n_clb, clb (tên, tối đa 3)} (danh sách `warnings` và `n_high` GIỮ NGUYÊN); `js/02_van_hanh.js` gộp các dòng `fa_huy_chuong_*` thành MỘT dòng `ux1b_huy_chuong_gop` (mã mới trong `i18n_errors.py`) có số em và tên CLB, kèm nút "Mở Cài đặt"; thanh "Việc tiếp theo" (`js/17_viec_tiep_theo.js`) có trạng thái `huy_chuong_sai` trỏ khung Cài đặt (`ux1bMoCaiDat`, `js/19_ux1b_gv.js`); nút "Quay lại Chia 100 điểm" cạnh câu "nạp lại sổ" (`js/18_cai_dat.js`).
+- Đề xuất 2: `get_san_sang_huy_chuong` thêm `n_hoc_sinh`; khi có ô huy chương sai, khung sửa tại chỗ chỉ còn câu "nạp lại sổ" + "Tải sổ mẫu có huy chương" + "Quay lại Chia 100 điểm", ẩn nút loại CLB. `tests/test_giao_dien_ux1_cai_dat.py`: tách bài "chưa sẵn sàng" thành hai (cả sổ sai: không nút loại; sổ không có huy chương: sửa loại tại chỗ đến "Sẵn sàng").
+- Đề xuất 3: "Sau khi xếp": mỗi hành động có một dòng hệ quả, nút/ô số/chữ "ngày" cùng một hàng; đang bật thì nút nói trọn câu ("Nhận khiếu nại trong 3 ngày"). Nhãn nút khi tắt giữ nguyên.
+- Đề xuất 4: khung tra cứu: ô tìm to ở đầu, chữ gợi ý khác ô lọc bảng; dải 4 bước + ba nút mã tra cứu gập vào "Mã tra cứu…" (`#gtMaFold`, chỉ quản trị). Test cũ mở gập bằng `mo_gap_ma` (`tests/_trinh_duyet.py`); chỉ đổi cách chọn, không bỏ test.
+- Đề xuất 5: nhóm "Cài đặt" đổi tên "Cài đặt và quản lý" (khớp trang Quản lý); dòng đỏ quyền riêng tư của khung Xuất chuyển vào "Tuỳ chọn khác".
+- `tests/test_ws_nhan.py`: thêm mã `ux1b_huy_chuong_gop` vào `MA_MOI_SAU_ANH_CHUP`.
+- Test mới: `tests/test_giao_dien_ux1b_l5c.py` (5, mỗi đề xuất một test).
+
 ## 2026-11-19 — UX1B-L7 fix2 (từ checker)
 
 - `tests/test_giao_dien_gt1_tra_cuu.py`, `tests/test_gt4_cau_giai_trinh.py`: chọn ô "Vì sao" / "Mức vào được" theo vị trí cuối (không theo chỉ số cố định), để cột Huy chương (và cột Loại CLB của XP1 sau này) không làm lệch. Chỉ sửa bộ chọn, không bỏ test.

@@ -35,3 +35,12 @@ el("btnUx1bBaoCao").addEventListener("click", () => {
 });
 document.querySelector('.nav-item[data-tab="results"]').addEventListener("click", ux1bNapLop);
 ux1bNapLop();
+
+/* UX1B-L5c: lối thẳng tới khung Cài đặt (thẻ Quản lý, nơi có nút "Quay lại Chia 100 điểm"). Dùng ở thanh "Việc tiếp theo"
+   và dòng gộp cảnh báo huy chương. Giáo viên không có thẻ này nên nút chỉ hiện cho quản trị (backend vẫn kiểm quyền). */
+function ux1bMoCaiDat() {
+  switchTab("admin");
+  viecChoRoiLam(() => { const p = el("ux1aCaiDat"); return p && !p.hidden; }, () => {
+    el("ux1aCaiDat").scrollIntoView({ block: "start" });
+  });
+}
