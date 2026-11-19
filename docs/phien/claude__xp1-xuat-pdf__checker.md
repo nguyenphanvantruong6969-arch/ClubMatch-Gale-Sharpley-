@@ -10,3 +10,7 @@
    Fix: import pypdf with try/except; keep a bytes-level fallback (`/Count 3`, `/FontFile2`, `BeVietnamPro`, no leftover tmp) running always.
 2. Note (needs lead/Truong decision): `pypdf` in requirements-dev.txt is a 2nd new library (dev-only). §0 allows only reportlab.
    If kept, label it dev-only; preferred: drop it and rely on the bytes-level asserts.
+
+## L1 fix1 — reviewed 446c362..d56c913: NO BUGS
+- Without pypdf: 8 passed, 5 skipped (only the text-extraction tests); bytes-level page count (`/Count`), `/FontFile2`, no-overwrite, tmp cleanup, mid-build error, missing font all run. With pypdf: 13 passed. ruff clean.
+- `pypdf` removed from requirements-dev.txt; requirements.txt unchanged (reportlab only). Bug 1 and note 2 resolved.
