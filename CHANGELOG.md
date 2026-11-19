@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L4-B: "Báo cáo tổng hợp" + khối chọn lớp ở thẻ Kết quả
+
+- `bao_cao_tong_hop.py` (mới): `gom_du_lieu` (số liệu từ `get_dashboard_status`, `get_do_phu`, `get_club_fill_stats`, `get_phan_bo_nguyen_vong` + số em chưa có chỗ theo lớp; danh sách trắng khoá, không mã/tên/điểm/số bốc thăm) và `dung_html` (thuần, `html.escape`, một tệp tự đủ).
+- `api_xuat.py`: `export_bao_cao_tong_hop` (HTML, không ghi đè, từ chối khi chưa có kết quả); `phan_quyen.py`: `giao_vien`; nhật ký thao tác: một dòng tự động, nhãn `nkhd_export_bao_cao_tong_hop` (vi/en).
+- Giao diện: khối `<!-- UX1B -->` (`#ux1bPanel`) ngay sau `#gtPanel` ở thẻ Kết quả: chọn lớp (mở bảng Theo lớp), "Xuất theo {cohort_l}", "Báo cáo tổng hợp"; `js/19_ux1b_gv.js`, khoá i18n `ux1b_*`. KHÔNG có nút "In phiếu cả lớp" (XP1, nối ở bước tích hợp I3).
+- Test mới: `tests/test_ux1b_l4_bao_cao.py` (7), `tests/test_giao_dien_ux1b_vai_gv.py` (3, Chromium).
+
 ## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
 
 - `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).

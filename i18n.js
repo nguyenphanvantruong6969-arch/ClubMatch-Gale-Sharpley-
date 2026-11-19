@@ -1371,6 +1371,15 @@
       nkkey_name: "Tên",
       nkkey_seed: "Hạt giống",
       nkkey_lop: "Lớp",
+      /* === UX1B (L4-B) === */
+      ux1b_tieu_de: "Theo {cohort_l} và báo cáo",
+      ux1b_chon_lop: "Chọn {cohort_l}",
+      ux1b_bao_cao: "Báo cáo tổng hợp",
+      ux1b_bao_cao_hint: "Báo cáo tổng hợp chỉ có số liệu gộp (lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}); không có tên, mã hay điểm.",
+      ux1b_xuat_muc_bao_cao: "Báo cáo tổng hợp",
+      ux1b_xuat_kq_bao_cao: "Đã xuất báo cáo tổng hợp → {path}",
+      nkhd_export_bao_cao_tong_hop: "Xuất báo cáo tổng hợp",
+      /* === end UX1B (L4-B) === */
       /* === end GT3 (L3) === */
     },
 
@@ -2726,6 +2735,15 @@
       nkkey_name: "Name",
       nkkey_seed: "Draw number",
       nkkey_lop: "Class",
+      /* === UX1B (L4-B) === */
+      ux1b_tieu_de: "By {cohort_l} and report",
+      ux1b_chon_lop: "Choose {cohort_l}",
+      ux1b_bao_cao: "Summary report",
+      ux1b_bao_cao_hint: "The summary report has combined numbers only (fill per {slot_l}, preference satisfaction, {person_pl} without a {slot_l} per {cohort_l}); no names, codes or scores.",
+      ux1b_xuat_muc_bao_cao: "Summary report",
+      ux1b_xuat_kq_bao_cao: "Summary report exported → {path}",
+      nkhd_export_bao_cao_tong_hop: "Export summary report",
+      /* === end UX1B (L4-B) === */
       /* === end GT3 (L3) === */
     },
   };

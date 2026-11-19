@@ -300,6 +300,22 @@
         </div>
       </div>
 
+      <!-- UX1B: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). Không có nút in phiếu cả lớp: XP1 nối ở bước tích hợp -->
+      <div class="panel" id="ux1bPanel">
+        <div class="panel-head"><h2 data-i18n="ux1b_tieu_de">Theo {cohort_l} và báo cáo</h2></div>
+        <div class="panel-body">
+          <div class="search-row">
+            <label class="lop-nhan" for="ux1bLop" data-i18n="ux1b_chon_lop">Chọn {cohort_l}</label>
+            <select id="ux1bLop" class="text-input text-input-sm"></select>
+            <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
+            <button class="btn btn-secondary" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
+          </div>
+          <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp (lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}); không có tên, mã hay điểm.</p>
+          <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
+        </div>
+      </div>
+      <!-- /UX1B -->
+
       <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
         <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
       </div>
@@ -1460,6 +1476,7 @@
 <script src="js/16_tai_khoan.js"></script>
 <script src="js/17_viec_tiep_theo.js"></script><!-- UX1A -->
 <script src="js/18_cai_dat.js"></script><!-- UX1A -->
+<script src="js/19_ux1b_gv.js"></script><!-- UX1B -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

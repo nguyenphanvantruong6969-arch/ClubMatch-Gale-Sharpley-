@@ -1834,6 +1834,30 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
+    def export_bao_cao_tong_hop(self, output_path: str = ""):
+        """UX1B-L4-B: "Báo cáo tổng hợp" cho hiệu trưởng: MỘT tệp HTML tự đủ chỉ có chỉ số gộp (thẻ tổng, lấp đầy
+        từng CLB, mức hài lòng nguyện vọng, số em chưa có chỗ theo lớp). KHÔNG mã, tên, điểm hay số bốc thăm.
+        Chỗ đặt như mọi lần xuất (`_duong_xuat`, không ghi đè). Chưa có kết quả: `xuat_chua_co_ket_qua`.
+        Trả {path, ket_qua_cu}."""
+        return self._khoa_xuat(self._export_bao_cao_tong_hop_da_khoa, output_path)
+
+    def _export_bao_cao_tong_hop_da_khoa(self, output_path):
+        import bao_cao_tong_hop
+        try:
+            if self._chua_co_ket_qua():
+                return _fail(err("xuat_chua_co_ket_qua"))
+            duong = self._duong_xuat(output_path, "bao_cao_tong_hop.html")
+            html = bao_cao_tong_hop.dung_html(bao_cao_tong_hop.gom_du_lieu(self), self._nhan_xuat())
+            with open(duong, "w", encoding="utf-8") as f:
+                f.write(html)
+            return _ok({"path": duong, "ket_qua_cu": self._ket_qua_cu()})
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
     # ===== GT1-L4: mã tra cứu + em tự tra cứu =====
     # Đồng hồ cho khoá tạm: bài kiểm thay `self._gt1_dong_ho` để khỏi phải chờ thật.
     _gt1_dong_ho = staticmethod(time.monotonic)
