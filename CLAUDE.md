@@ -40,6 +40,7 @@
 9. **Branch handoff**: `docs/phien/<branch, "/"→"__">.md` (from `docs/phien/_TEMPLATE.md`, English, ≤150 lines). Past ~400k tokens of context, finish the current turn, write state there, stop (Stop hook `.claude/hooks/handoff_khi_day_ngu_canh.py` reminds).
 10. **No subagents / Agent tool** unless Truong says so explicitly; use Read/Grep/Bash directly.
 11. **Model roles** (one session each, bridged by the handoff file): Opus plans (Plan section; first Opus session of a new branch creates the handoff file with Goal + Plan), Sonnet codes and ticks the Plan, Haiku only reads/searches/summarises, never edits. Fable researches (Truong, 2026-11-12): reads code and docs, runs simulations in `du_lieu_test/` or a scratch folder, writes memos under `docs/fable/`; never edits production code (brief: `docs/fable/02_FABLE_BRIEF.md`).
+12. **Implementation strategy (Truong, 2026-11-19):** every feature/item = Opus plans it (new branch + branch file `docs/phien/<branch>.md` + protocol `docs/phien/<ITEM>_GIAO_THUC.md` with lead/coder/checker prompts, modelled on `XP1_GIAO_THUC.md`), then a lead (Opus) runs a coder (Sonnet) + checker (Sonnet) to build it. The planning Opus never codes the feature. Every planning reply to Truong ENDS with the branch name (own code block) and the lead prompt (own code block).
 
 ## Academic integrity (student project)
 - All verification numbers are SIMULATED data; never present them as a real survey.
