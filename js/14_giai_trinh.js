@@ -175,11 +175,6 @@
     el("gtPanel").scrollIntoView({ behavior: "auto", block: "start" });   // GT4: tức thì (cuộn mượt dừng giữa chừng, kết quả nằm dưới mép màn)
     xem(sid);
   };
-  el("gtNhay").addEventListener("click", (ev) => {
-    ev.preventDefault();
-    el("gtPanel").scrollIntoView({ behavior: "smooth", block: "start" });
-    el("gtTim").focus();
-  });
   el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
   el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
 

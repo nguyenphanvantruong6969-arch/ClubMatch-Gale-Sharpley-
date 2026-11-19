@@ -94,16 +94,23 @@ vàng thì xem [mục 11](#11-sự-cố-hay-gặp).
 Bên trái là **thanh bên**, luôn hiện. Nó cho biết cơ sở dữ liệu đang kết nối,
 lần chạy gần nhất là khi nào, và phần mềm đang vẽ cửa sổ bằng đường nào.
 
-Trên cùng là **năm thẻ**:
+Bên trái là **bốn nhóm** (mỗi nhóm bấm một lần để vào thẻ đầu của nhóm; các thẻ con nằm ngay dưới tên nhóm):
 
-| Thẻ | Dùng để |
-|---|---|
-| **01 · Xếp CLB** | Nạp tệp, xem cảnh báo, chạy sắp xếp, xuất kết quả |
-| **02 · Kết quả** | Xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã học sinh. Không có điểm hay số bốc thăm |
-| **03 · Chi tiết và xuất tệp** | Tóm tắt, xuất tệp, mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ |
-| **04 · Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
-| **05 · Quản lý CLB** | Thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu |
-| **06 · Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
+| Nhóm | Thẻ | Dùng để |
+|---|---|---|
+| **1. Nạp & xếp** | **Xếp CLB** | Nạp tệp, xem cảnh báo, chạy sắp xếp, xuất kết quả |
+| **2. Nhập tay** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
+| | **Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
+| **3. Kết quả & phiếu** | **Kết quả** | Tra cứu một em ở đầu trang, rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Không có điểm hay số bốc thăm |
+| | **Chi tiết và xuất tệp** | Tóm tắt, xuất tệp (hai nút chính + menu **Xuất…**), mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ, khung **Sau khi xếp** (chế độ huy chương) |
+| **Cài đặt** | **Quản lý** | **Cài đặt** (một câu hỏi, ba thẻ: Chỉ xếp thứ tự / Chia 100 điểm / Huy chương), thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu; mục **Nâng cao** gập: tiêu chí xếp, thử cấu hình |
+| | **Chuẩn bị đợt** | Chỉ hiện khi bật (chuẩn bị biểu mẫu) |
+
+Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự biến mất (giáo viên chỉ thấy nhóm 2 và 3 và vào thẳng **Kết quả**).
+
+**Thanh "Việc tiếp theo"** ở đầu trang (chỉ quản trị) luôn chỉ MỘT việc nên làm: *Nạp sổ* → *Xem cảnh báo* (khi có mục nghiêm trọng) → *Chạy sắp xếp* → *Xử lý n học sinh chưa có CLB* → *Xuất kết quả*. Còn em chưa có CLB thì có thêm nút phụ **Xuất kết quả**.
+
+**Cài đặt là một câu hỏi:** "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?" Bấm một thẻ là lưu ngay (có **Hoàn tác** 10 giây; lần xếp đã có giữ nguyên, lần chạy sau dùng cách mới). **Huy chương** cần dữ liệu CLB sẵn sàng: thiếu loại CLB hay thiếu CLB Tự do ở một buổi thì thẻ liệt kê đúng chỗ thiếu để sửa tại chỗ. Sổ có cột Huy chương mà đang ở cách khác thì phần xem trước nói rõ và có nút **Bật chế độ huy chương**; ô huy chương của sổ nhận cả Vàng / Bạc / Đồng lẫn 60 / 30 / 10. **Tải sổ nhập mẫu** có hai bản: sổ thường và sổ có huy chương.
 
 **"Chấm điểm mù" nghĩa là gì:** màn hình chấm điểm **chỉ hiện mã và họ tên**. Nó
 không hiện số bốc thăm, cũng không hiện em đó xếp CLB này là nguyện vọng thứ
@@ -114,7 +121,7 @@ mấy. Người chấm không biết cho điểm này thì ai được lợi.
 ## 5. Sổ nhập CLB — từng cột nghĩa là gì
 
 Mọi dữ liệu nằm trong **một tệp Excel**: Sổ nhập CLB. Lấy sổ bằng nút **Tải sổ
-nhập mẫu** ở thẻ **01 · Xếp CLB** — phần mềm đã có CLB thì sổ điền sẵn
+nhập mẫu** ở thẻ **Xếp CLB** — phần mềm đã có CLB thì sổ điền sẵn
 danh sách CLB. Sổ có hai trang để điền và một trang **Hướng dẫn**. Hướng dẫn
 một trang đầy đủ: `mau_csv/HUONG_DAN_SO_NHAP.md`.
 
@@ -342,7 +349,7 @@ biểu tuần (dán bảng được). Ai cần thêm mỗi buổi một tệp `.
 
 ### Bước 1 — Nạp Sổ nhập CLB
 
-Thẻ **01 · Xếp CLB**. Kéo sổ thả vào ô kéo-thả, hoặc bấm vào ô đó để
+Thẻ **Xếp CLB**. Kéo sổ thả vào ô kéo-thả, hoặc bấm vào ô đó để
 chọn tệp.
 
 Phần mềm **đọc thử, chưa ghi gì**, rồi hiện một dòng tóm tắt — với bộ ví dụ:
@@ -368,7 +375,7 @@ Với bộ ví dụ, chỗ này phải ghi **0 cảnh báo**. Nếu có, tra [m�
 
 ### Bước 3 — Chấm điểm *(bỏ qua nếu tệp đã có điểm)*
 
-Thẻ **06 · Nhập điểm**. Chọn CLB, nhập điểm cho từng em, bấm lưu.
+Thẻ **Nhập điểm**. Chọn CLB, nhập điểm cho từng em, bấm lưu.
 
 > Ô điểm nhận **cả hai cách viết**: `8,5` (kiểu Việt) và `8.5` đều lưu thành
 > cùng một giá trị. Lưu xong màn hình hiện lại `8.5` — đó là cùng con số, không
@@ -378,7 +385,7 @@ Bộ ví dụ đã có sẵn điểm trong tệp 2, nên bước này bỏ qua.
 
 ### Bước 4 — Chạy sắp xếp
 
-Quay lại thẻ **01**. Bấm **Chạy sắp xếp**.
+Quay lại thẻ **Xếp CLB**. Bấm **Chạy sắp xếp**.
 
 Phần mềm hỏi lại một lần trước khi chạy — vì chạy lần hai sẽ **ghi đè** kết quả
 lần trước. Bấm xác nhận.
@@ -398,7 +405,7 @@ thuật toán → ghi kết quả.
 
 ### Bước 5 — Xuất kết quả
 
-Ở thẻ **03 · Chi tiết và xuất tệp**, mục **Xuất dữ liệu** ở đầu trang: để nguyên ô *Kết quả
+Ở thẻ **Chi tiết và xuất tệp**, mục **Xuất dữ liệu** ở đầu trang: để nguyên ô *Kết quả
 sắp xếp* đã đánh dấu và bấm **Xuất kết quả (Excel)**. Phần mềm ghi vào **thư mục
 Tải xuống** (`Downloads`) của máy — đúng chỗ trình duyệt để tệp tải về, ai cũng
 biết tìm. Đường dẫn đầy đủ của từng tệp hiện ngay dưới nút, **không tự tắt**, kèm nút
@@ -499,7 +506,7 @@ Cùng mục **Xuất dữ liệu**, đánh dấu thêm ô nào thì xuất thêm
 Mỗi dòng trong tệp là một CLB em có dính tới: đã đăng ký thi chưa, điểm, nguyện vọng
 thứ mấy, số bốc thăm, và kết quả.
 
-- Ở thẻ 03, **tập đã chọn giữ nguyên khi đổi ô tìm**: tìm "An" đánh dấu một em, tìm
+- Ở thẻ Chi tiết và xuất tệp, **tập đã chọn giữ nguyên khi đổi ô tìm**: tìm "An" đánh dấu một em, tìm
   "Bình" đánh dấu thêm một em, bấm xuất là ra cả hai.
 - Ô đánh dấu ở dòng tiêu đề chọn **các em đang hiện** (sau khi lọc), không phải cả
   trường.
@@ -511,10 +518,10 @@ thứ mấy, số bốc thăm, và kết quả.
 
 Mỗi học sinh có thể có một **Lớp** (ví dụ `10H1A`). Lớp chỉ để xem, lọc, sắp và xuất; **không ảnh hưởng tới kết quả xếp**.
 
-- **Gán lớp:** thẻ **05 → Học sinh**, gõ lớp vào ô ở cột *Lớp* rồi rời ô (để trống là xoá lớp). Cùng thẻ có ô **lọc theo lớp** (*Tất cả*, từng lớp, *Chưa có lớp*) và ô **sắp theo lớp**. Thẻ **03 · Chi tiết và xuất tệp**, mục *Danh sách xếp CLB*, cũng có cột Lớp, ô lọc và ô sắp. Thẻ **02 · Kết quả** có cột Lớp ở cách xem *Theo mã học sinh* và có riêng cách xem *Theo lớp*.
+- **Gán lớp:** thẻ **Quản lý → Học sinh**, gõ lớp vào ô ở cột *Lớp* rồi rời ô (để trống là xoá lớp). Cùng thẻ có ô **lọc theo lớp** (*Tất cả*, từng lớp, *Chưa có lớp*) và ô **sắp theo lớp**. Thẻ **Chi tiết và xuất tệp**, mục *Danh sách xếp CLB*, cũng có cột Lớp, ô lọc và ô sắp. Thẻ **Kết quả** có cột Lớp ở cách xem *Theo mã học sinh* và có riêng cách xem *Theo lớp*.
 - **Thẻ 04 (nhập tại chỗ):** khi trường đã có ít nhất một lớp, mỗi em phải **chọn lớp** từ danh sách trước khi bấm Lưu (ô hiện sẵn lớp hiện tại của em). Trường chưa có lớp nào thì ô này ẩn.
-- **Gửi giáo viên chủ nhiệm:** ở thẻ **03**, bấm **Xuất theo lớp** (khoá khi chưa có kết quả). Ra một thư mục, mỗi lớp một tệp Excel; em chưa có lớp nằm trong `_chua_co_lop.xlsx`; dòng tô đỏ là em chưa có chỗ. Trong Sổ kết quả cũng có trang **Theo lớp** với nội dung tương tự.
-- **Xem ngay trên màn hình, không cần xuất tệp:** thẻ **02 · Kết quả** chỉ để xem. Một hàng nút chọn cách xem: *Theo lớp* (chọn một lớp để thấy từng em học CLB nào, cho giáo viên chủ nhiệm), *Theo CLB* (chọn một CLB để thấy ai học, cho người phụ trách CLB), *Theo mã học sinh* (tìm một em hoặc xem cả danh sách, mỗi buổi một cột theo thứ tự ngày trong tuần). Nút *Theo lớp* chỉ có khi đã nhập lớp; chưa có lớp nào thì thẻ mở sẵn *Theo mã học sinh*. Muốn sắp xếp, bấm vào tiêu đề của cột (bấm lần nữa để đảo chiều); mặc định sắp theo mã học sinh. Nút **Tải bảng này (Excel)** tải đúng bảng đang xem (một lớp, một CLB hoặc danh sách theo mã, kèm ô tìm nếu có), chỉ có kết quả xếp, không điểm hay số bốc thăm. Phần mềm nhớ cách xem, lớp và CLB đã chọn của lần trước. Dòng tô đỏ là em chưa có CLB nào, ô trống là buổi đó chưa có CLB. Thẻ này không có điểm hay số bốc thăm, và hiện *chưa có kết quả* khi chưa chạy sắp xếp.
+- **Gửi giáo viên chủ nhiệm:** ở thẻ **Chi tiết và xuất tệp**, bấm **Xuất theo lớp** (khoá khi chưa có kết quả). Ra một thư mục, mỗi lớp một tệp Excel; em chưa có lớp nằm trong `_chua_co_lop.xlsx`; dòng tô đỏ là em chưa có chỗ. Trong Sổ kết quả cũng có trang **Theo lớp** với nội dung tương tự.
+- **Xem ngay trên màn hình, không cần xuất tệp:** thẻ **Kết quả** chỉ để xem. Một hàng nút chọn cách xem: *Theo lớp* (chọn một lớp để thấy từng em học CLB nào, cho giáo viên chủ nhiệm), *Theo CLB* (chọn một CLB để thấy ai học, cho người phụ trách CLB), *Theo mã học sinh* (tìm một em hoặc xem cả danh sách, mỗi buổi một cột theo thứ tự ngày trong tuần). Nút *Theo lớp* chỉ có khi đã nhập lớp; chưa có lớp nào thì thẻ mở sẵn *Theo mã học sinh*. Muốn sắp xếp, bấm vào tiêu đề của cột (bấm lần nữa để đảo chiều); mặc định sắp theo mã học sinh. Nút **Tải bảng này (Excel)** tải đúng bảng đang xem (một lớp, một CLB hoặc danh sách theo mã, kèm ô tìm nếu có), chỉ có kết quả xếp, không điểm hay số bốc thăm. Phần mềm nhớ cách xem, lớp và CLB đã chọn của lần trước. Dòng tô đỏ là em chưa có CLB nào, ô trống là buổi đó chưa có CLB. Thẻ này không có điểm hay số bốc thăm, và hiện *chưa có kết quả* khi chưa chạy sắp xếp.
 - Các tệp **theo lớp không có điểm, điểm quyết tâm hay số bốc thăm**, nên gửi được cho giáo viên chủ nhiệm. Các tệp khác vẫn theo cảnh báo bên dưới.
 
 > ⚠️ **Tệp dữ liệu đầu vào và tệp hồ sơ học sinh có ĐIỂM CHẤM và SỐ BỐC THĂM.**
@@ -525,7 +532,7 @@ Mỗi học sinh có thể có một **Lớp** (ví dụ `10H1A`). Lớp chỉ �
 
 ## 7. Đọc bảng kết quả
 
-Thẻ **02 · Kết quả** hoặc **03 · Chi tiết và xuất tệp**, hoặc mở tệp vừa xuất.
+Thẻ **Kết quả** hoặc **Chi tiết và xuất tệp**, hoặc mở tệp vừa xuất.
 
 ### Đóng bớt những mục chưa cần nhìn
 
@@ -561,7 +568,7 @@ lấy được bằng cách bấm Xuất rồi mở từng tệp trong thư mụ
 > khai ba câu lạc bộ thì được đếm ở cả ba dòng, trong khi em ấy chỉ lấy được
 > **một** chỗ. Cộng cả cột rồi chia cho tổng chỉ tiêu sẽ ra một tỉ lệ chọi
 > phồng lên vô nghĩa. Muốn tỉ lệ chọi **theo buổi** thì đọc bảng *Tải từng
-> buổi* ở thẻ **05 · Quản lý CLB**.
+> buổi* ở thẻ **Quản lý**.
 
 #### Suất ưu tiên dùng tới đâu
 
@@ -623,7 +630,7 @@ Chạy với `seed = 42`:
 
 Sức chứa: Bóng rổ **3/3** · Mỹ thuật **2/2** · Tin học **2/2** · Nấu ăn **2/3**
 
-Ở thẻ **03 · Chi tiết và xuất tệp** còn có biểu đồ *Tỉ lệ lấp đầy theo CLB*. Mỗi thanh đọc
+Ở thẻ **Chi tiết và xuất tệp** còn có biểu đồ *Tỉ lệ lấp đầy theo CLB*. Mỗi thanh đọc
 như sau: phần **vàng** là số em vào **bằng suất ưu tiên**, phần **xanh** là số em
 vào ở chỉ tiêu chung, phần **trắng còn lại** là chỗ chưa lấp đầy. Hai phần màu
 cộng lại đúng bằng con số in bên phải thanh.
@@ -658,7 +665,7 @@ không chọn** — nếu có, nó đã tự quyết thay các em.
 
 Dùng khi học sinh không nộp được qua biểu mẫu.
 
-Thẻ **04 · Nhập nguyện vọng**. Ba bước tách biệt, không ảnh hưởng lẫn nhau:
+Thẻ **Nhập nguyện vọng**. Ba bước tách biệt, không ảnh hưởng lẫn nhau:
 
 1. **Tìm hoặc tạo học sinh** — gõ mã hoặc tên. Gõ có dấu hay không dấu, hoa hay
    thường đều được: `binh`, `BÌNH`, `Bình` cùng ra "Lê Thị Bình". Chưa có thì bấm
@@ -666,7 +673,7 @@ Thẻ **04 · Nhập nguyện vọng**. Ba bước tách biệt, không ảnh h�
 2. **Chọn CLB muốn thi** — đánh dấu các CLB em muốn thi.
    **Bỏ đánh dấu một CLB đã được chấm điểm là em rút khỏi bài thi đó:** bấm *Lưu*
    thì điểm của CLB ấy bị xoá theo, và màn hình báo *"đã xoá N điểm của CLB bỏ
-   chọn"*. Đánh dấu lại thì em quay về thẻ 06 với ô điểm **trống**, phải chấm lại.
+   chọn"*. Đánh dấu lại thì em quay về thẻ Nhập điểm với ô điểm **trống**, phải chấm lại.
 3. **Xếp hạng nguyện vọng** — chọn theo thứ tự, nguyện vọng 1 là mong muốn nhất.
 
 Đánh dấu hay xếp nguyện vọng **chưa vào máy cho tới khi bấm Lưu**. Còn thay đổi chưa
@@ -713,7 +720,7 @@ Không xoá thì học sinh của lần trước vẫn chiếm suất và làm l
 
 ### Cách xoá
 
-Thẻ **05 · Quản lý CLB**, kéo xuống cuối trang, khối **Vùng nguy hiểm**:
+Thẻ **Quản lý**, kéo xuống cuối trang, khối **Vùng nguy hiểm**:
 
 | Nút | Xoá gì |
 |---|---|
@@ -749,7 +756,7 @@ Bảy quy tắc rà soát. Mỗi cảnh báo nói một điều **vẫn để ph
 | **CLB … chưa chấm điểm ai** | Có em đăng ký thi nhưng chưa ai được chấm. Cả CLB rơi sang nhóm xét điểm quyết tâm, vòng thi coi như không có tác dụng | Thẻ 06 · Nhập điểm |
 | **CLB … mới chấm x/y** | Em chưa có điểm bị xếp **dưới tất cả** em đã có điểm, kể cả em thấp nhất | Thẻ 06 · Nhập điểm |
 | **n lượt thi bỏ phí** | Em đăng ký thi một CLB nhưng không xếp CLB đó vào nguyện vọng. Điểm cao mấy cũng không vào được | Sửa tệp 3, nạp lại |
-| **n em chưa xếp nguyện vọng nào** | Những em này chắc chắn không được xếp vào đâu | Sửa tệp 3, hoặc thẻ 04 |
+| **n em chưa xếp nguyện vọng nào** | Những em này chắc chắn không được xếp vào đâu | Sửa tệp 3, hoặc thẻ Nhập nguyện vọng |
 | **Nhóm ưu tiên "…" không CLB nào dùng** | Gõ sai chính tả nhãn. Em mang nhãn đó **mất quyền ưu tiên ở mọi nơi**. Cảnh báo có kèm mã học sinh | Thẻ 05: tìm mã em, đánh dấu, để trống ô nhãn, bấm *Gán* |
 | **CLB … có suất ưu tiên nhưng chưa đặt nhãn** | Các suất đó âm thầm thành suất phổ thông | Thẻ 05: sửa CLB |
 | **CLB … dành suất cho nhãn chưa em nào mang** | Suất ưu tiên sẽ không dùng đến | Kiểm tra lại cột `reserve_group` ở tệp 2 hoặc 3 |
@@ -1072,7 +1079,7 @@ Khi đã bật điểm quyết tâm và đã chạy xếp, quản trị xem đư
   theo đúng diện mà học sinh đã được nhận. **Xét điểm quyết tâm** (CLB không thi): điểm quyết tâm thấp nhất trong số em đã được nhận.
   **Xét điểm thi** (CLB có thi): điểm thi thấp nhất trong số em đã được nhận, kèm điểm quỹ 1 của chính em đó, ví dụ
   "8,25 điểm thi · 40 điểm quyết tâm". CLB còn chỗ thì ghi **0 (còn N chỗ)**. Ô "—": chưa có em nào ở nhóm và mức đó.
-- **Chỉ ở thẻ Quản lý.** Điểm chuẩn chỉ xem ở thẻ **05 · Quản lý CLB**, tab **Điểm chuẩn**; thẻ 03 và thẻ 02 không còn mục này.
+- **Chỉ ở thẻ Quản lý.** Điểm chuẩn chỉ xem ở thẻ **Quản lý**, tab **Điểm chuẩn**; thẻ Chi tiết và xuất tệp và thẻ 02 không còn mục này.
 - **Bảng tổng quan.** MỘT bảng bằng số: mỗi CLB một dòng với hai cột điểm chuẩn riêng (**Xét điểm thi** và **Xét điểm quyết tâm**, mỗi ô là điểm thấp nhất đã được nhận), cột **Đơn và chỗ** ghi rõ đơn vị ("62 đơn · 16 chỗ") và nút **Xem chi tiết**. Ô "—": CLB chưa có ai ở cách xét đó.
 - **Xem chi tiết một CLB.** Bấm **Xem chi tiết** ở dòng CLB để mở bảng hai cách xét x hai mức và **một biểu đồ
   dải chấm**: mỗi em xin vào CLB đó là một chấm đặt theo điểm quyết tâm (đặc xanh là được nhận, rỗng xám là không được

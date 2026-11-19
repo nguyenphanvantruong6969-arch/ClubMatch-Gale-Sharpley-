@@ -206,7 +206,7 @@ def test_flags_oversubscription(api):
 
     res = api.get_data_health_report()
     w = _by_code(res, "health_oversubscribed")
-    assert w["severity"] == "info"
+    assert w["severity"] == "medium"  # UX1A-L5: không chặn, nhưng không còn là mục "thông tin"
     assert w["params"] == {"n_seats": 2, "n_students": 5, "n_short": 3}
 
 
@@ -236,7 +236,7 @@ def test_flags_oversubscription_per_session_even_when_week_total_is_enough(api):
     assert "health_oversubscribed" not in codes
     assert codes.count("health_oversubscribed_buoi") == 1
     w = _by_code(res, "health_oversubscribed_buoi")
-    assert w["severity"] == "info"
+    assert w["severity"] == "medium"  # UX1A-L5: không chặn, nhưng không còn là mục "thông tin"
     assert w["params"] == {"buoi": "thu_2", "n_seats": 30,
                            "n_students": 50, "n_short": 20}
 
@@ -270,7 +270,7 @@ def test_mixed_school_names_unlabelled_clubs_not_whole_school(api):
     assert "health_oversubscribed" not in codes
     assert "health_oversubscribed_buoi" not in codes
     w = _by_code(res, "health_oversubscribed_chua_khai_buoi")
-    assert w["severity"] == "info"
+    assert w["severity"] == "medium"  # UX1A-L5: không chặn, nhưng không còn là mục "thông tin"
     assert w["params"] == {"n_seats": 1, "n_students": 3, "n_short": 2}
 
 

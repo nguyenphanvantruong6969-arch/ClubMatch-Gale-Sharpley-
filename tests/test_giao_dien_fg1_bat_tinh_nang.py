@@ -1,11 +1,6 @@
-"""FG-1 (STEP0, spec §3), phần giao diện (Playwright + Chromium): menu "Tính năng sau khi xếp…" ở dòng không gian làm
-việc mở hộp thoại 5 ô + số ngày; lưu qua `update_workspace_config`. Dữ liệu MÔ PHỎNG.
-
-Giao ước cho người làm FG-1: hộp thoại có `role="dialog"`; nhãn ô dùng lại các chuỗi sẵn có của trình hướng dẫn
-(`ws_r_fa_phan_hoi`, …); nút lưu tên "Lưu".
-"""
-import re
-
+"""FG-1 (STEP0, spec §3) -> UX1A-L2b, phần giao diện (Playwright + Chromium): bật/tắt tính năng sau khi xếp.
+Trước đây là hộp thoại 5 ô ở menu ⋯; nay mỗi tính năng là MỘT HÀNH ĐỘNG ở thẻ "Chi tiết và xuất tệp", chỉ hiện ở chế
+độ Huy chương, ghi qua `update_workspace_config` một phần. Dữ liệu MÔ PHỎNG."""
 import pytest
 
 pytest.importorskip("playwright", reason="chưa cài playwright")
@@ -13,51 +8,47 @@ pytest.importorskip("playwright", reason="chưa cài playwright")
 import cau_hinh_ws as ch  # noqa: E402
 from test_ws_giao_dien import mo_trang  # noqa: E402,F401 (fixture)
 
-NHAN_PHAN_HOI = "Phản hồi 3 câu và khảo sát tuần 3"
+NHAN_PHAN_HOI = "Thu phản hồi"
 
 
-def _mo_hop_thoai(page):
-    page.locator("#btnWorkspace").click()
-    page.locator('tr[data-slug="truong-hoc"] .menu-khac > summary').click()
-    page.locator('tr[data-slug="truong-hoc"]').get_by_text(re.compile("Tính năng sau khi xếp")).click()
-    hop = page.get_by_role("dialog")
-    hop.wait_for()
-    return hop
+def _luat(api):
+    return api.get_workspace_config()["data"]["config"]["rules"]
 
 
-def test_khong_fa_thi_cac_o_bi_khoa_va_co_mot_dong_giai_thich(mo_trang):  # noqa: F811
+def _mo_the_chi_tiet(page):
+    page.locator('[data-tab="others"]').click()
+    page.wait_for_selector("#xuatPanel")
+
+
+def test_khong_fa_thi_khong_co_hanh_dong_sau_khi_xep(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
-    hop = _mo_hop_thoai(page)
-    o = hop.get_by_role("checkbox")
-    assert o.count() == len(ch.CO_SAU_XEP)
-    assert all(o.nth(i).is_disabled() for i in range(o.count()))
-    assert "loại CLB" in hop.inner_text()                      # nói phải chọn FA khi TẠO không gian làm việc
+    _mo_the_chi_tiet(page)
+    assert page.locator("#ux1aSauXep").is_hidden()                # backend: cờ sau khi xếp cần fa_daa
+    assert page.locator("#ux1aSauXepLuoi button").count() == 0
+    assert all(_luat(api)[k] is False for k in ch.CO_SAU_XEP)
     assert not loi, loi
 
 
 def test_bat_phan_hoi_roi_khung_hien_o_the_chi_tiet(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
-    hop = _mo_hop_thoai(page)
-    hop.get_by_label(NHAN_PHAN_HOI).check()
-    hop.get_by_role("button", name="Lưu").click()
-    page.wait_for_function("() => !document.querySelector('[role=dialog]')")
-    assert api.get_workspace_config()["data"]["config"]["rules"]["fa_phan_hoi"] is True
-    if page.locator("#wsBtnDong").count() and page.locator("#wsBtnDong").is_visible():
-        page.locator("#wsBtnDong").click()
-    page.locator('[data-tab="others"]').click()
+    _mo_the_chi_tiet(page)
+    page.locator("#ux1aSauXep").wait_for(state="visible")
+    assert page.locator("#ux1aSx_fa_phan_hoi").inner_text().strip() == NHAN_PHAN_HOI
+    page.locator("#ux1aSx_fa_phan_hoi").click()
     page.wait_for_selector("#phanHoiTongPanel:not([hidden])")      # không cần khởi động lại
+    assert _luat(api)["fa_phan_hoi"] is True
     assert not loi, loi
 
 
-def test_so_ngay_ngoai_khoang_giu_hop_thoai_va_hien_loi(mo_trang):  # noqa: F811
+def test_so_ngay_ngoai_khoang_giu_nguyen_va_hien_loi(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
-    hop = _mo_hop_thoai(page)
-    hop.get_by_role("spinbutton").fill("30")
-    hop.get_by_role("button", name="Lưu").click()
-    page.wait_for_timeout(400)
-    assert page.get_by_role("dialog").count() == 1              # còn mở
-    assert hop.get_by_role("alert").count() >= 1 or "14" in hop.inner_text()
-    assert api.get_workspace_config()["data"]["config"]["rules"]["fa_khieu_nai_so_ngay"] == 3
+    _mo_the_chi_tiet(page)
+    page.locator("#ux1aSxNgay").wait_for()
+    page.locator("#ux1aSxNgay").fill("30")
+    page.locator("#ux1aSx_fa_khieu_nai").click()
+    page.wait_for_selector(".toast.is-error")
+    assert "14" in page.locator(".toast.is-error").first.inner_text()
+    assert _luat(api)["fa_khieu_nai_so_ngay"] == 3 and _luat(api)["fa_khieu_nai"] is False
     assert not loi, loi

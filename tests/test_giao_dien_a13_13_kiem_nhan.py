@@ -21,25 +21,26 @@ def _toi_buoc_luat(page):
     page.fill("#wzTen", "Kiểm nhận")
     page.locator("#wzTuyChinh").click()                 # -> bước 2 (nhãn)
     page.locator("#wzTiep").click()                     # -> bước 3 (luật)
-    page.wait_for_selector("#wzWharton")
+    page.wait_for_selector("#wzChia100")
 
 
 def test_G1_wizard_mau_truong_hoc_tick_san_va_theo_priority(mo_trang):  # noqa: F811
+    # UX1A-L2b: ô điểm quyết tâm nay là thẻ "Chia 100 điểm" (aria-checked thay cho is_checked).
     page, api, goc, loi = mo_trang()
     _toi_buoc_luat(page)
-    o = page.locator("#wzWharton")
-    assert o.is_checked() and o.is_enabled()                  # tick sẵn (mẫu dựng sẵn bật)
+    o = page.locator("#wzChia100")
+    assert o.get_attribute("aria-checked") == "true" and o.is_enabled()      # chọn sẵn (mẫu dựng sẵn bật)
     page.select_option("#wzPriority", "tier")
-    assert o.is_disabled() and not o.is_checked()             # không thể bật
+    assert o.is_disabled() and o.get_attribute("aria-checked") == "false"    # không thể bật
     page.locator("#wzTiep").click()                           # -> bước xem lại
     page.wait_for_selector("#rvWharton")
     assert page.locator("#rvWharton").inner_text().strip() in ("Tắt", "Off")
     page.locator("#wzLui").click()                            # về bước luật
-    page.wait_for_selector("#wzWharton")
+    page.wait_for_selector("#wzChia100")
     page.select_option("#wzPriority", "score")
-    assert page.locator("#wzWharton").is_enabled()            # bật lại được
-    page.locator("#wzWharton").check()
-    assert page.locator("#wzWharton").is_checked()
+    assert page.locator("#wzChia100").is_enabled()            # bật lại được
+    page.locator("#wzChia100").click()
+    assert page.locator("#wzChia100").get_attribute("aria-checked") == "true"
     assert not loi, loi
 
 

@@ -86,19 +86,22 @@ def test_vang_khong_phep_hai_buoi_thi_hien_da_giai_phong(mo):
 
 
 def test_wizard_co_o_diem_danh_tat_san_va_luu_khi_bat(mo_trang):  # noqa: F811 (fixture dùng lại)
+    # UX1A-L2b: không còn ô tick ở bước luật; điểm danh là hành động ở thẻ Chi tiết, chỉ khi chọn Huy chương.
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt theo dõi")
-    assert not page.locator("#wzFaDiemDanh").is_checked()
-    page.locator("#wzFaDaa").check()
-    page.locator("#wzFaDiemDanh").check()
+    assert page.locator("#wzFaDiemDanh").count() == 0
+    page.locator("#wzHuyChuong").click()
     page.locator("#wzTiep").click()
-    assert page.locator("#rvFaDiemDanh").inner_text() == "Bật"
     page.locator("#wzTao").click()
     _cho_ten(page, "Đợt theo dõi")
+    assert api.get_workspace_config()["data"]["config"]["rules"]["fa_diem_danh"] is False
+    page.locator('.nav-item[data-tab="others"]').click()
+    page.wait_for_selector("#ux1aSx_fa_diem_danh", state="visible")
+    page.locator("#ux1aSx_fa_diem_danh").click()
+    page.wait_for_function("document.getElementById('ux1aSx_fa_diem_danh').getAttribute('aria-pressed') === 'true'")
     rules = api.get_workspace_config()["data"]["config"]["rules"]
     assert rules["fa_diem_danh"] is True and rules["fa_daa"] is True
     assert not loi, loi
-
 
 def test_giai_phong_thi_hien_loi_moi_va_bam_nhan(mo):
     """GAP-2: chỗ được giải phóng -> khung `#moiPanel` có một lời mời đang chờ; bấm "Nhận" -> trạng thái NHAN."""

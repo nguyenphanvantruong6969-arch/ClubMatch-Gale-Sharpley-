@@ -14,6 +14,7 @@
 
 function loadResultsTab() {
   loadTomTatKetQua();
+  if (typeof ux1aVeSauXep === "function") ux1aVeSauXep(); /* UX1A-L2b */
   veXuatPanel();
   loadClubFillStats();
   loadMatchResults(el("resultsSearch") ? el("resultsSearch").value : "");
@@ -313,7 +314,9 @@ function loadTomTatKetQua() {
       nut.title = t("kpi_bam_de_xem");
       nut.addEventListener("click", () => {
         if (k.sapXep) datCachSapXep(k.sapXep);
-        moMucVaCuon(k.muc);
+        /* UX1A-L1: cùng hành động với nút ở thanh "Việc tiếp theo". */
+        if (k.muc === "chuaCoChoPanel" && typeof viecXuLyChuaCoCho === "function") viecXuLyChuaCoCho();
+        else moMucVaCuon(k.muc);
       });
       luoi.appendChild(nut);
     });
@@ -770,6 +773,7 @@ function loadEmChuaCoCho() {
       body.appendChild(tr);
     });
     veDemMuc("chuaCoChoPanel", "dem_hoc_sinh", d.so_em);
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
   });
 }
 
@@ -846,6 +850,7 @@ function loadMatchResults(search) {
     el("btnXuatNhuCau").hidden = !fa;
     el("btnXuatGoiY").hidden = !fa; /* GAP-7 */
     el("btnXuatBienBan").hidden = !fa;
+    el("xuatMenu").hidden = !fa; /* UX1A-L3: menu "Xuất…" chỉ có nghĩa khi có nút bên trong */
     el("xuatFaAnGoiY").hidden = !!fa; /* SG-11a L5: nút chỉ-FA bị ẩn thì nói vì sao (một dòng) */
     veCotLyDo(!!cauLyDo);
     taiDiemDanh(); /* GAP-1: khung điểm danh (js/10_theo_doi.js) — tự ẩn khi cờ tắt */

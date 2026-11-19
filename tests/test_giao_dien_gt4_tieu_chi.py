@@ -72,6 +72,7 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#gt2TieuChiPanel", state="attached")
         page.click('button.nav-item[data-tab="admin"]')
+        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
         page.wait_for_selector("#gt2TcDanhSach li")
         return page
 
@@ -129,16 +130,10 @@ def test_hai_cot_o_1280_mot_cot_o_800(mo):
 
 
 def test_o_tich_va_chu_goi_y_khong_de_nhau_va_nut_luu_nam_ben_phai(mo):
+    # UX1A-L2b: ô tích điểm quyết tâm đã bỏ khỏi bảng này (thẻ ở trang Cài đặt giữ cờ); còn lại: nút lưu căn phải.
     trang, api, loi = mo
     page = trang(1280)
-    page.select_option("#gt2TcPriority", "tier")                                         # ô tích bị tắt, hiện chữ gợi ý
-    page.wait_for_selector("#gt2TcWhartonGoiY", state="visible")
-    o, nhan, goi_y = (page.locator(s).bounding_box() for s in ("#gt2TcWharton", "#gt2TcWhartonNhan", "#gt2TcWhartonGoiY"))
-    for x in (o, nhan):
-        assert x["y"] + x["height"] <= goi_y["y"] + 1, ("ô tích / nhãn đè chữ gợi ý", x, goi_y)
-    thut = page.locator("#gt2TcWhartonGoiY").evaluate("e => parseFloat(getComputedStyle(e).paddingLeft)")
-    assert abs(goi_y["x"] + thut - nhan["x"]) <= 3                                        # chữ gợi ý thụt vào thẳng dưới nhãn
-    assert o["x"] < nhan["x"]                                                             # nhãn ở bên phải ô tích
+    assert page.locator("#gt2TcWharton").count() == 0 and page.locator("#gt2TcWhartonGoiY").count() == 0
     luu = page.locator("#gt2TcLuu").bounding_box()
     form = page.locator("#gt2TcDieuKhien").bounding_box()
     assert luu["x"] + luu["width"] >= form["x"] + form["width"] - 40                      # nút lưu căn phải

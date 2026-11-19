@@ -58,7 +58,11 @@ function loadPipelineTab() {
    voi o Canh bao du lieu thay vi hoi phan loi hai lan. */
 function loadHealthReport() {
   const hoi = callApi("get_data_health_report");
+  /* Lần hỏi đang bay: thanh "Việc tiếp theo" dùng chung thay vì hỏi lại backend. */
+  window.healthDangHoi = hoi;
+  hoi.then(() => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; }, () => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; });
   hoi.then((res) => {
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(res); /* UX1A-L1: dùng luôn kết quả vừa có */
     const summary = el("healthSummary");
     const list = el("healthList");
     clear(list);
@@ -140,6 +144,7 @@ function refreshDashboardStats() {
     el("statClubs").textContent = res.data.n_clubs;
     el("statMatched").textContent = res.data.n_matched;
     datTrangThaiVanHanh(res.data);
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
     /* T3-01 (B2): chưa có học sinh hoặc chưa có CLB thì khoá nút Chạy kèm lý do (backend cũng chặn
        bằng `chua_co_du_lieu_de_chay`, nên đây chỉ là báo sớm cho người vận hành). */
     const trong = !res.data.n_students || !res.data.n_clubs;
@@ -365,6 +370,7 @@ function capNhatKhoaVanHanh() {
   el("btnImportAll").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnClearQueue").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnTaiSoMau").disabled = khoa.dangChay || khoa.dangNhap;
+  el("btnTaiSoMauHuyChuong").disabled = khoa.dangChay || khoa.dangNhap; /* UX1A-L5 */
   if (el("btnXuatTuyChon")) el("btnXuatTuyChon").disabled = khoa.dangChay || khoa.dangXuat;
   if (typeof capNhatNutXuatTheoLop === "function") capNhatNutXuatTheoLop();
 
@@ -778,7 +784,8 @@ function initCsvImportHandlers() {
 
   el("btnImportAll").addEventListener("click", nhapTatCa);
   el("btnClearQueue").addEventListener("click", boHangDoiNhap);
-  el("btnTaiSoMau").addEventListener("click", taiSoNhapMau);
+  el("btnTaiSoMau").addEventListener("click", () => taiSoNhapMau("thuong"));
+  el("btnTaiSoMauHuyChuong").addEventListener("click", () => taiSoNhapMau("huy_chuong")); /* UX1A-L5 */
 }
 
 function boHangDoiNhap() {
@@ -832,10 +839,10 @@ function laFileExcel(ten) {
 
 /* "Tai so nhap mau": phan mem tao so (co san cac CLB dang co) trong thu
    muc Tai xuong roi mo thu muc do — giao vien khong phai tu di tim. */
-function taiSoNhapMau() {
-  const nut = el("btnTaiSoMau");
+function taiSoNhapMau(kieu) {
+  const nut = el(kieu === "huy_chuong" ? "btnTaiSoMauHuyChuong" : "btnTaiSoMau");
   nut.disabled = true;
-  callApi("tao_so_nhap_mau", "").then((res) => {
+  callApi("tao_so_nhap_mau", "", kieu || "thuong").then((res) => {
     nut.disabled = false;
     if (!res.ok) {
       feedbackErrors(el("feedbackImportAll"), res.errors);
@@ -904,7 +911,17 @@ function veCanhBaoNhap() {
   clear(box);
   box.hidden = canhBaoNhapGanNhat.length === 0;
   /* SG-7 (M1): cung luat voi buoc 4 — gom theo ma, dem, 5 vi du, "va N truong hop nua" (veCanhBaoGom o 00_nen.js). */
-  veCanhBaoGom(box, canhBaoNhapGanNhat.map((w) => ({ ma: w.code, chu: trErr(w) })));
+  const muc = canhBaoNhapGanNhat.map((w) => ({ ma: w.code, chu: trErr(w) }));
+  /* UX1A-L5: hàng trăm cảnh báo "chưa dùng hết điểm" của từng người: thêm MỘT dòng tóm tắt lên đầu (danh sách gom
+     5 ví dụ + "và N nữa" bên dưới giữ nguyên). */
+  const chuaDu = canhBaoNhapGanNhat.filter((w) => w.code === "wharton_chua_dung_het").length;
+  if (chuaDu > CANH_BAO_VD_TOI_DA) {
+    const tomTat = document.createElement("div");
+    tomTat.className = "canh-bao-tom-tat";
+    tomTat.textContent = t("ux1a_wh_chua_du", { n: chuaDu });
+    box.appendChild(tomTat);
+  }
+  veCanhBaoGom(box, muc);
 }
 
 /* So loi hien toi da bay nhieu dong; con lai gom thanh "va N loi khac". */
@@ -983,6 +1000,16 @@ function veHangDoi() {
     canhBao.forEach((w) => {
       const li = document.createElement("li");
       li.textContent = trErr(w);
+      /* UX1A-L5: sổ có cột Huy chương / Loại mà chế độ huy chương tắt -> một nút bật (không bật ngầm). */
+      if (w.code === "so_nhap_canh_bao_huy_chuong_che_do_tat" && typeof wsTrangThai !== "undefined" && wsTrangThai && wsTrangThai.enabled) {
+        const nutBat = document.createElement("button");
+        nutBat.type = "button";
+        nutBat.id = "btnBatHuyChuong";
+        nutBat.className = "btn btn-secondary btn-nho";
+        nutBat.textContent = t("ux1a_btn_bat_huy_chuong");
+        nutBat.addEventListener("click", () => batHuyChuongTuXemTruoc(muc, nutBat));
+        li.append(" ", nutBat);
+      }
       ds.appendChild(li);
     });
     trai.appendChild(ds);
@@ -994,6 +1021,23 @@ function veHangDoi() {
   el("btnImportAll").hidden = !(muc.b64 && !muc.xong);
 }
 
+/* UX1A-L5: bật chế độ huy chương cho workspace đang mở bằng đường cấu hình sẵn có (quản trị, có dòng nhật ký),
+   rồi đọc thử lại CHÍNH sổ đang chờ. Không bao giờ bật ngầm. */
+function batHuyChuongTuXemTruoc(muc, nut) {
+  nut.disabled = true;
+  callApi("update_workspace_config", { rules: { wharton: true, fa_daa: true } }).then((r) => {
+    if (!r.ok) { nut.disabled = false; showErrorToast(r.errors); return; }
+    if (typeof ux1aApDungSong === "function") ux1aApDungSong(r.data.config);
+    callApi("xem_truoc_so_nhap", muc.b64).then((res) => {
+      if (res.ok && importQueue[0] === muc) {
+        muc.tomTat = res.data;
+        if (res.data.loi.length) { muc.loiRaw = res.data.loi; muc.b64 = ""; }
+      }
+      veHangDoi();
+    });
+  });
+}
+
 function nhapTatCa() {
   const muc = importQueue[0];
   if (!muc || !muc.b64 || muc.xong) {
@@ -1003,6 +1047,8 @@ function nhapTatCa() {
   datKhoa("dangNhap", true);
   canhBaoNhapGanNhat = [];
   veCanhBaoNhap();
+  /* UX1A-L3 fix1: lần thử trước báo lỗi thì dòng đó còn nguyên; xoá trước khi thử lại (thành công không ghi dòng này). */
+  feedback(el("feedbackImportAll"), "", false);
 
   callApi("import_so_nhap", muc.b64)
     .then((res) => {
@@ -1027,9 +1073,9 @@ function nhapTatCa() {
         n_moi: d.n_students_created, n_bo: d.n_students_skipped,
       };
       canhBaoNhapGanNhat = d.warnings || [];
-      const cau = t("so_nhap_xong", muc.ketQuaSo);
-      feedback(el("feedbackImportAll"), cau, false);
-      showToast(cau, "success");
+      /* UX1A-L3: kết quả (số CLB, số học sinh) hiện MỘT lần, ở hàng của tệp; thông báo nổi chỉ xác nhận, dòng
+         phản hồi riêng bỏ (trước đây cùng một câu hiện ở ba nơi). */
+      showToast(t("so_nhap_da_nap"), "success");
     })
     .catch((e) => {
       muc.loiText = String(e);

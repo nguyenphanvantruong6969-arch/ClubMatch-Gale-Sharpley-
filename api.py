@@ -552,15 +552,15 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                     #     Nói "toàn hệ thống" ở đây là sai số liệu, nên dùng
                     #     câu riêng gọi đúng tên nhóm đó.
                     if buoi == BUOI_MAC_DINH and len(cho_theo_buoi) > 1:
-                        warn("info", "health_oversubscribed_chua_khai_buoi",
+                        warn("medium", "health_oversubscribed_chua_khai_buoi",
                              n_seats=n_seats, n_students=n_with_prefs,
                              n_short=n_with_prefs - n_seats)
                     elif buoi == BUOI_MAC_DINH:
-                        warn("info", "health_oversubscribed",
+                        warn("medium", "health_oversubscribed",
                              n_seats=n_seats, n_students=n_with_prefs,
                              n_short=n_with_prefs - n_seats)
                     else:
-                        warn("info", "health_oversubscribed_buoi",
+                        warn("medium", "health_oversubscribed_buoi",
                              buoi=buoi, n_seats=n_seats,
                              n_students=n_with_prefs,
                              n_short=n_with_prefs - n_seats)

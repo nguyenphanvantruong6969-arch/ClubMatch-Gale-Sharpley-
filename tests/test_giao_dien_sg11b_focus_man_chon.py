@@ -104,20 +104,20 @@ def _mo_tinh_nang(page, mo_man=True):
     if mo_man:
         _mo(page)
     page.locator('tr[data-slug="truong-hoc"] .menu-khac > summary').click()
-    page.locator('button[data-slug="truong-hoc"][data-hanh-dong="tinh_nang"]').click()
-    page.wait_for_selector("#wsTnTieuDe")
+    page.locator('button[data-slug="truong-hoc"][data-hanh-dong="cai_dat"]').click()   # UX1A-L2b: mục "Cài đặt…"
+    page.wait_for_selector("#ux1aWsTieuDe")
 
 
 def test_dong_hop_tinh_nang_tra_focus_vao_man_chon(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _mo_tinh_nang(page)
     page.keyboard.press("Escape")
-    page.wait_for_selector("#wsTnTieuDe", state="detached")
+    page.wait_for_selector("#ux1aWsTieuDe", state="detached")
     assert _tat_ca_trong(page)
     assert not page.evaluate("document.getElementById('wsOverlay').hidden")   # chỉ đóng hộp con
     _mo_tinh_nang(page, mo_man=False)
-    page.get_by_role("button", name="Huỷ").click()
-    page.wait_for_selector("#wsTnTieuDe", state="detached")
+    page.get_by_role("button", name="Xong").click()
+    page.wait_for_selector("#ux1aWsTieuDe", state="detached")
     assert _tat_ca_trong(page)
     assert not loi, loi
 

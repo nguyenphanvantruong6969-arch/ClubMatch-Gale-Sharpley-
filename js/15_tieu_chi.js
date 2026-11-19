@@ -75,33 +75,11 @@ function gt2TcVeDieuKhien() {
       el(id + "Nhan").textContent = lc.tieu_de[lang];
     });
   el("gt2TcTiersNhan").textContent = d.lua_chon.tiers.tieu_de[lang];
-  el("gt2TcWhartonNhan").textContent = d.lua_chon.wharton.tieu_de[lang];
 }
 
 function gt2TcDatGiaTri() {
   const d = gt2TcDuLieu;
   el("gt2TcTiers").value = (d.luat.tiers || []).join("\n");
-  el("gt2TcWharton").checked = d.luat.wharton === true;
-}
-
-/* Điểm quyết tâm chỉ dùng được khi xếp theo điểm và tính điểm theo từng suất; ngoài ra tự tắt. */
-let gt2TcWhartonTruoc = null; /* giá trị ô trước khi bị tắt tự động, để trả lại khi chọn lại */
-function gt2TcDongBoWharton(datLai) {
-  const o = el("gt2TcWharton");
-  if (datLai === true) gt2TcWhartonTruoc = null;
-  const khong = el("gt2TcPriority").value === "tier" || el("gt2TcScoreScope").value === "per_person";
-  if (khong && !o.disabled) gt2TcWhartonTruoc = o.checked;
-  if (khong) o.checked = false;
-  else if (o.disabled) {
-    const daLuu = !!(gt2TcDuLieu && gt2TcDuLieu.luat && gt2TcDuLieu.luat.wharton === true);
-    o.checked = gt2TcWhartonTruoc === null ? daLuu : gt2TcWhartonTruoc;
-    gt2TcWhartonTruoc = null;
-  }
-  o.disabled = khong;
-  const goiY = el("gt2TcWhartonGoiY");
-  const fa = !!(gt2TcDuLieu && gt2TcDuLieu.luat && gt2TcDuLieu.luat.fa_daa);
-  goiY.textContent = khong ? t(fa ? "gt2_tc_wharton_tat_fa" : "gt2_tc_wharton_tat") : "";
-  goiY.hidden = !khong;
 }
 
 /* GT4-L7: nhắc (không chặn) khi các lựa chọn đang hiện làm cấu hình thử thành vô nghĩa. */
@@ -125,7 +103,6 @@ function taiTieuChi() {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
     gt2TcDatGiaTri();
-    gt2TcDongBoWharton(true);
     gt2CanhBao();
     return gt2SsTai(false);
   });
@@ -139,7 +116,10 @@ function gt2TcLuatDangChon() {
     tier_mode: el("gt2TcTierMode").value,
     score_scope: el("gt2TcScoreScope").value,
     tiers: nhom,
-    wharton: el("gt2TcWharton").checked,
+    /* UX1A-L2b: cờ điểm quyết tâm do thẻ ở trang Cài đặt giữ. Ở đây chỉ tự tắt khi lựa chọn đang
+       hiện làm nó không dùng được (xếp chỉ theo nhóm / tính điểm theo từng người). */
+    ...(el("gt2TcPriority").value === "tier" || el("gt2TcScoreScope").value === "per_person"
+      ? { wharton: false } : {}),
   };
 }
 
@@ -488,13 +468,12 @@ function khoiTaoThuCauHinh() {
 function khoiTaoTieuChi() {
   khoiTaoThuCauHinh();
   el("gt2TcLuu").addEventListener("click", gt2TcLuu);
-  ["gt2TcPriority", "gt2TcScoreScope"].forEach((id) => el(id).addEventListener("change", () => gt2TcDongBoWharton()));
   ["gt2TcPriority", "gt2TcTierMode"].forEach((id) => el(id).addEventListener("change", gt2CanhBao));
   el("gt2TcTiers").addEventListener("input", gt2CanhBao);
   window.addEventListener("langchange", () => {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
-    if (gt2TcDuLieu) { gt2TcDatGiaTri(); gt2TcDongBoWharton(); }
+    if (gt2TcDuLieu) gt2TcDatGiaTri();
     gt2CanhBao();
   });
 }

@@ -244,10 +244,7 @@ def test_the_van_hanh_sach_het_sau_khi_xoa_toan_bo(trang, tmp_path):
     page.set_input_files("#fileAny", tep)
     page.wait_for_function(CHO_SAN_SANG, timeout=10000)
     page.locator("#btnImportAll").click()
-    page.wait_for_function(
-        "document.querySelector('#feedbackImportAll').textContent.trim() !== ''",
-        timeout=10000,
-    )
+    page.wait_for_selector(".queue-row.is-done", timeout=10000)   # UX1A-L3: kết quả ở hàng của tệp, không còn dòng phản hồi riêng
 
     # Chạy sắp xếp với số khởi tạo khác mặc định -> stepper ghi "Xong",
     # bốc thăm bị khoá và ô số khởi tạo bị khoá theo.
