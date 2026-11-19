@@ -42,3 +42,16 @@ Status: DONE 9fbdfdf CI green 2026-11-19 (run https://github.com/nguyenphanvantr
 - Tích hợp A+B+XP1 do nhóm tích hợp riêng làm trên claude/ux1-tich-hop (UX1_TICH_HOP_GIAO_THUC.md), không chạy ở đây.
 - Truong thử tay: (1) nạp SO_NHAP_DQT_120HS_HOP_LE.xlsx, bấm theo thanh "Việc tiếp theo" tới khi tải Excel;
   (2) Cài đặt → bấm "Huy chương" rồi "Hoàn tác"; (3) nạp SO_NHAP_FA_MAU_120HS.xlsx ở chế độ mặc định → "Bật chế độ huy chương" → chạy.
+
+## Next steps
+- None for team A. Integration lives on claude/ux1-tich-hop (separate lead). No new coordinator: UX1_GIAO_THUC §3
+  forbids extra sessions and all work is done; both children archived.
+
+## Files touched (team A, main)
+- js/17_viec_tiep_theo.js, js/18_cai_dat.js, js/01_khung.js, js/02_van_hanh.js, js/075_workspace.js, index.html,
+  style.css, i18n.js, i18n_errors.py/i18n_loi.js, api.py, api_nhap.py, so_nhap.py, phan_quyen.py, docs + tests ux1_*.
+
+## Session log
+| Date | Session | Note |
+|---|---|---|
+| 2026-11-18/19 | lead session_01TGThn4GicB4XGX5L6zfZ57 | L1–L8-A, CI green 9fbdfdf, review A; integration superseded; stopped |
