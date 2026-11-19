@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — UX1F-L1: pypdf là phụ thuộc DEV
+
+- `requirements-dev.txt`: thêm `pypdf>=4,<6` (CHỈ tệp dev; không đụng `requirements.txt`, `kiosk.spec`). CI (`tests.yml`) cài `requirements-dev.txt` nên các test đọc PDF nay chạy thật thay vì tự bỏ qua.
+- Kiểm cục bộ: `tests/test_xp1_phieu_pdf.py`, `test_xp1_danh_sach_pdf.py`, `test_xp1_pdf_loi.py`, `test_ux1i_i3_phieu_bao_cao.py` → 70 qua, 0 bỏ qua. Không có test mới (chỉ bật test sẵn có).
+
 ## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.
