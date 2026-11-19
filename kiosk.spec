@@ -64,6 +64,12 @@ datas += pkg_datas
 binaries += pkg_binaries
 hiddenimports += pkg_hiddenimports
 
+# XP1: reportlab nạp một số mô-đun/tệp dữ liệu động (phông, bảng mã), gom đủ như openpyxl ở trên.
+pkg_datas, pkg_binaries, pkg_hiddenimports = collect_all("reportlab")
+datas += pkg_datas
+binaries += pkg_binaries
+hiddenimports += pkg_hiddenimports
+
 # pywebview chọn backend GUI khác nhau theo hệ điều hành. Khai báo rõ để
 # PyInstaller không bỏ sót khi phân tích tĩnh (static analysis đôi khi
 # không thấy import động bên trong thư viện webview).

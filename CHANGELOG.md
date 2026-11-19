@@ -5,6 +5,64 @@
 - Lead gộp `origin/claude/ux1-a-giao-dien` (`--no-ff`, không xung đột). Không đổi mã sản phẩm; `python tao_i18n_js.py` sinh lại `i18n_loi.js` không đổi byte nào.
 - Kiểm: 150 test của bộ I1 qua (`test_giao_dien_ux1_*`, `test_ux1_*`, `test_khoi_dong_backend`, `test_ws_nhan`, `test_van_phong_tu_nhien`, `test_gt4_nhat_ky_doc`, `test_gt_tich_hop`); `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7 (60 ca trùng khít).
 
+## 2026-11-19 — XP1-L5 fix3: danh sách PDF (từ lượt xem của lead trên sổ mẫu 3 buổi)
+
+- `xuat_pdf.py` (`bang`): tham số `cot_dau_mm` (cột đầu rộng cố định). `danh_sach_pdf.py`: cột STT rộng 13 mm (đủ "STT" in đậm và số 4 chữ số; trước đó 0,5/(0,5 + 2 x số cột) nên "STT" bị cắt dọc thành S/T/T và số 2 chữ số xuống dòng ở bảng nhiều buổi), `hoa_dau` viết hoa chữ cái đầu mọi tiêu đề và nhãn đứng đầu dòng (trước: "học sinh chưa có câu lạc bộ").
+- `api_xuat.py`: `_chua_duoc_xep.pdf` nhiều buổi đếm EM khác nhau ("Số học sinh: 112", trước 222 là số lượt em x buổi) và thêm dòng "Số lượt chưa có chỗ: 222" khi hai số khác nhau.
+- Test mới trong `tests/test_xp1_danh_sach_pdf.py` (+5 ca, 24 ca): độ rộng cột STT (luôn chạy), "STT" không bị cắt (pypdf), đếm em / lượt, tiêu đề viết hoa, `hoa_dau`. Xem ảnh trang trên sổ `SO_NHAP_MAU_120HS_3BUOI.xlsx` seed 3.
+
+## 2026-11-19 — XP1-L5: tài liệu, đóng gói, hiệu năng
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Xuất PDF hàng loạt" (ba mục menu, ô chọn lớp, phiếu một em, ghi chú: CLB không có em nào được xếp thì không có tệp danh sách). `CLAUDE_CHI_TIET.md`: bản đồ mã (`xuat_pdf.py`, `danh_sach_pdf.py`, hai hàm API), số tệp test 346.
+- `.github/workflows/build-windows-exe.yml`: bước soát bản đóng gói kiểm thêm hai phông `.ttf` và tệp giấy phép OFL (reportlab không đọc `.woff2`). `kiosk.spec` đã có `assets/fonts` và `collect_all("reportlab")` từ L1.
+- `xuat_pdf.py`: kiểu đoạn tạo một lần (không tạo lại cho từng ô). Không đổi kết quả đầu ra.
+- Hiệu năng, sổ mô phỏng `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (800 em, 27 lớp, seed 3, Linux). Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên CI Linux.
+
+  | Xuất | Không đo độ phủ | Có `--cov` |
+  |---|---|---|
+  | Phiếu theo lớp (28 tệp, 1.519 trang) | 12,6 giây | 21,6 giây |
+  | Phiếu một tệp | 15,8 giây | 23,3 giây |
+  | Danh sách theo CLB (21 tệp) | 2,7 giây | 4,1 giây |
+  | Danh sách theo lớp (28 tệp) | 0,8 giây | 1,2 giây |
+
+  Số đo thật trên CI (lần chạy 44551113280, ngưỡng cũ 30 giây): bước chạy KHÔNG đo độ phủ, các ca hiệu năng đạt; bước CÓ đo độ phủ, phiếu theo lớp 30,08 giây và phiếu một tệp 30,04 giây nên đỏ (đo độ phủ làm chậm thêm khoảng 50 %); Windows (không đo độ phủ) đạt. Vì vậy test tạm dừng đo độ phủ (`coverage.Coverage.current().stop()`, bật lại sau) CHỈ trong đoạn bấm giờ; sau sửa, máy phát triển có `--cov`: phiếu theo lớp 12,8 giây, một tệp 14,3 giây (không `--cov`: 13,2 và 14,5 giây). Mục tiêu 30 giây trên CI Linux giữ nguyên.
+
+  Ngưỡng test: 30 giây trên Linux (mục tiêu của kế hoạch), 90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows), đổi được bằng biến môi trường `XP1_NGUONG_GIAY`; luôn in số giây đo được, không bỏ qua test.
+- Test mới: `tests/test_xp1_hieu_nang.py` (4 ca, ngưỡng 30 giây), `tests/test_xp1_dong_goi.py` (5 ca: phông, giấy phép, spec, ghim phiên bản, workflow). `kiem_nhanh.py` 7/7.
+
+## 2026-11-19 — XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu
+
+- `index.html`, `js/03_ket_qua.js`: menu riêng `#xuatPdfMenu` (chỉ quản trị, `data-quyen="quan_tri"`) với "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)", ô chọn lớp `#pdfLop` (dùng lại `napOLocLop`, không có mục "chưa có lớp") và "Phiếu giải trình theo lớp (PDF)": "Tất cả lớp" ra thư mục mỗi lớp một tệp, chọn một lớp ra MỘT tệp. Ba nút khoá khi chưa có kết quả / đang chạy / đang xuất (như "Xuất theo lớp"); bấm xong menu tự đóng. Menu riêng vì "Xuất…" cũ chỉ hiện ở chế độ Huy chương và `test_giao_dien_ux1_ket_qua.py` khoá điều đó.
+- `i18n.js`: khoá `xp1_menu`, `xp1_pdf_ds_clb`, `xp1_pdf_ds_lop`, `xp1_pdf_phieu_lop`, `xp1_pdf_lop_aria`, `xp1_kq_thu_muc`, `xp1_kq_mot_tep` (vi/en). Quyền backend và nhãn nhật ký đã có từ L2/L3.
+- Sửa có chủ ý `tests/test_giao_dien_ux1_ket_qua.py`: "nút đang hiện" không đếm nút nằm trong menu `<details>` đang đóng (menu PDF mới có nút trong đó).
+- Test mới: `tests/test_giao_dien_xp1_xuat_pdf.py` (7 ca Chromium: menu, khoá khi chưa có kết quả, gọi đúng hàm, một lớp / mọi lớp, giáo viên không thấy menu). Số tệp test trong `CLAUDE_CHI_TIET.md`: 344.
+
+## 2026-11-19 — XP1-L3: danh sách thành viên PDF (theo CLB, theo lớp)
+
+- `api_xuat.py`: `export_danh_sach_pdf(output_path, theo)` ("clb" hoặc "lop") ra một THƯ MỤC PDF; cùng nguồn `_du_lieu_xuat` với `export_theo_lop`, không điểm / số bốc thăm / diện trúng tuyển. Theo CLB: mỗi CLB (nhiều buổi: mỗi CLB mỗi buổi) một tệp có mã, loại CLB, giờ, địa điểm; CLB không ai được xếp không có tệp (như CSV); `_chua_duoc_xep.pdf` cho em chưa có chỗ. Theo lớp: mỗi lớp một tệp, em chưa có chỗ ở mục riêng, `_chua_co_lop.pdf`. Thêm `_loai_clb_theo_ma`.
+- `danh_sach_pdf.py` (mới): bố cục hai kiểu tệp. `i18n_errors.py`: `xp1_kieu_xuat_la`. `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn `nkhd_export_danh_sach_pdf`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp test 343, bản đồ mã.
+- Test mới: `tests/test_xp1_danh_sach_pdf.py` (19 ca, gồm sổ mẫu 3 buổi 120 HS).
+
+## 2026-11-19 — XP1-L2: phiếu giải trình PDF theo lớp, có loại CLB
+
+- `giai_trinh.py` (`dung_du_lieu_run`, `_lua_chon_rbda`, `_lua_chon_fa`): mỗi `cac_lua_chon` có thêm khoá `loai_clb` (mã `TU_DO`/`GIOI_HAN`/`TUYEN_CHON` hoặc None); chỉ thêm khoá, thuật toán xếp không đọc nó.
+- `phieu_giai_trinh.py`: cột "Loại CLB" ở phiếu HTML; `dung_phieu_pdf` (cùng dữ liệu, mỗi học sinh một trang mới).
+- `api_xuat.py`: `export_phieu_giai_trinh_pdf(output_path, lop, theo_lop)` (một tệp, hoặc thư mục `phieu_giai_trinh_theo_lop` mỗi lớp một PDF + `_chua_co_lop.pdf`); tách `_phieu_chuan_bi`, `_phieu_cac_em` dùng chung với phiếu HTML và `_thu_muc_xuat_moi` dùng chung với `export_theo_lop`. `_giai_trinh_dung_lai` đọc thêm `clubs.loai`.
+- `xuat_pdf.py`: `dem_trang`, `san_sang`. `i18n_errors.py`: mã lỗi `xp1_thieu_thu_vien_pdf` (+ `i18n_loi.js` sinh lại). `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn nhật ký `nkhd_export_phieu_giai_trinh_pdf` (vi/en).
+- Phiếu MỘT em: `export_phieu_giai_trinh_pdf(..., student_ids=[mã])` ra một tệp `phieu_giai_trinh_<mã>.pdf`; nút "Lưu PDF" (`#btnGtPdfMot`, chỉ quản trị) ở khung tra cứu thẻ Kết quả (`index.html`, `js/14_giai_trinh.js`, khoá i18n `xp1_luu_pdf`, `xp1_pdf_mot_xong`): tìm → chọn → Lưu PDF = 3 bước.
+- Test: `tests/test_xp1_phieu_pdf.py` (22 ca), `tests/test_giao_dien_xp1_luu_pdf_mot_em.py` (Chromium). Sửa có chủ ý: `test_gt4_cau_giai_trinh.py` (cột "Mức vào được" dời từ 4 sang 5 vì thêm cột), `test_van_phong_tu_nhien.py` (thêm "PDF" vào viết tắt cho phép), `test_ws_nhan.py` (cho phép tiền tố mã lỗi `xp1_`).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp test sửa thành 342 (đếm thật; CI #44514194103 đỏ vì còn 339), thêm hàng `xuat_pdf.py` vào bản đồ mã.
+- `docs/phien/claude__ux1-b-phieu.md`: ghi chú L6/L7 đã được XP1 thay/làm. `kiem_nhanh.py` 7/7.
+
+## 2026-11-19 — XP1-L1: lõi xuất PDF (chưa có giao diện)
+
+- `xuat_pdf.py` (mới): `dung_pdf`, `tieu_de`, `dong_khoa_gia_tri`, `bang` (lặp tiêu đề cột, ô tự xuống dòng, thoát ký tự markup), `ngat_trang`; A4 dọc, chân trang "Trang x/y", ghi qua tệp tạm rồi đổi tên, không ghi đè (`duong_dan_khong_de`); thiếu reportlab/phông thì `ThieuThuVienPdf`.
+- `assets/fonts/BeVietnamPro-Regular.ttf`, `BeVietnamPro-Bold.ttf`, `OFL-BeVietnamPro.txt` (SIL OFL; `assets/fonts` đã nằm trong `kiosk.spec` datas).
+- `requirements.txt`: `reportlab==5.1.0` (thư viện mới, Truong duyệt 2026-11-18). `pypdf` KHÔNG thêm vào requirements: test đọc chữ tự bỏ qua khi thiếu nó.
+- `kiosk.spec`: `collect_all("reportlab")`.
+- Test mới: `tests/test_xp1_pdf_loi.py` (13 ca: 8 ca mức byte luôn chạy, 5 ca đọc chữ cần pypdf tuỳ chọn). Không đụng thuật toán/DB; `kiem_nhanh.py` 7/7.
+
 ## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
 
 - `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).

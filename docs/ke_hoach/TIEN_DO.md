@@ -201,3 +201,9 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1A-L8-A (tài liệu, ảnh, bảng "Sau" đo được) | xong (chờ checker) | 2026-11-18 | HUONG_DAN_SU_DUNG.md, docs/giai_trinh/*, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/ux/*, poster/DU_LIEU_POSTER.md, poster/hinh/*, i18n_errors.py, mau_forms_thi_clb/tao_mau_forms.py, CHANGELOG.md | tests/test_gt3_tai_lieu.py, tests/test_a13_12_tai_lieu.py (đạt) | poster PDF/PPTX chưa dựng lại (cần python-pptx) |
 | UX1I-I1 (gộp nhánh A `claude/ux1-a-giao-dien` vào nhánh tích hợp) | xong (chờ checker) | 2026-11-19 | CHANGELOG.md, docs/ke_hoach/TIEN_DO.md (gộp không xung đột; `tao_i18n_js.py` không đổi gì) | — (chạy bộ test của A: 150 ca qua) | `kiem_nhanh.py` 7/7, 60 ca trùng khít với origin/main |
 
+| XP1 (xuất PDF hàng loạt: danh sách theo CLB/lớp, phiếu giải trình theo lớp có loại CLB; mục mới, Truong duyệt 2026-11-18) | đã lập kế hoạch (Opus), chờ Sonnet làm L1 | 2026-11-18 | docs/phien/claude__xp1-xuat-pdf.md | — | reportlab + font TTF (thư viện mới, đã duyệt) |
+| XP1-L1 (lõi PDF: xuat_pdf.py, phông Be Vietnam Pro TTF, reportlab) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_pdf_loi.py | — |
+| XP1-L2 (phiếu giải trình PDF theo lớp + loại CLB) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_phieu_pdf.py | — |
+| XP1-L3 (danh sách thành viên PDF theo CLB / lớp) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_danh_sach_pdf.py | — |
+| XP1-L4 (menu Xuất PDF…, ô chọn lớp, giao diện + quyền) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_giao_dien_xp1_xuat_pdf.py | — |
+| XP1-L5 (hướng dẫn, đóng gói phông, hiệu năng 800 em) | đã làm, chờ checker; còn kiểm tay exe Windows (Truong) | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_hieu_nang.py, tests/test_xp1_dong_goi.py | — |

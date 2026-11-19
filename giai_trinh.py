@@ -54,7 +54,7 @@ def dung_du_lieu_run(students, clubs, tested_scores, applicants, preferences, re
             "clubs": {cid: {"ten": c.get("ten") or c.get("name") or cid,
                             "capacity": c["capacity"],
                             "reserve_capacity": 0 if bo_qua_du_tru else c["reserve_capacity"],
-                            "chon_loc": bool(scores_b.get(cid))}
+                            "chon_loc": bool(scores_b.get(cid)), "loai": c.get("loai")}
                       for cid, c in clubs_b.items()},
             "prefs": prefs_b,
             "scores": scores_b,
@@ -108,7 +108,7 @@ def _lua_chon_rbda(sid, buoi, b):
         cuoi, n = _nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])
         diem_clb = b["scores"].get(cid, {})
         x = {"hang": i + 1, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
-             "diem_em": diem_clb.get(sid), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
+             "loai_clb": c.get("loai"), "diem_em": diem_clb.get(sid), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
              "da_nhan": n, "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket,
              "diem_chuan": None, "diem_chuan_loai": None, "sau_nguoi_nhan_cuoi": None}
         if n >= c["capacity"] and cuoi is not None:
@@ -157,7 +157,7 @@ def _lua_chon_fa(sid, buoi, b):
         r = dong.get(cid)
         n = sum(1 for s, k in b["assign"].items() if k == cid)
         x = {"hang": i + 1, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
-             "diem_em": (r or {}).get("diem_em"), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
+             "loai_clb": c.get("loai"), "diem_em": (r or {}).get("diem_em"), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
              "da_nhan": n, "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket,
              "diem_chuan": (r or {}).get("cut_score"), "diem_chuan_loai": None,
              "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": (r or {}).get("waitlist_pos")}
@@ -177,7 +177,7 @@ def _lua_chon_fa(sid, buoi, b):
         c = b["clubs"].get(cid) or {"ten": cid, "capacity": None, "reserve_capacity": 0,
                                     "chon_loc": False}
         ra.append({"hang": None, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
-                   "diem_em": None, "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
+                   "loai_clb": c.get("loai"), "diem_em": None, "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
                    "da_nhan": sum(1 for s, k in b["assign"].items() if k == cid),
                    "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket, "diem_chuan": None,
                    "diem_chuan_loai": None, "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": None,

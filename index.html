@@ -289,6 +289,7 @@
           <div class="search-row" id="gtIn" hidden>
             <button type="button" class="btn btn-secondary" id="btnGtInMot" data-i18n="gt_in_mot">In phiếu cho {person_l} này</button>
             <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
+            <button type="button" class="btn btn-secondary" id="btnGtPdfMot" data-quyen="quan_tri" data-i18n="xp1_luu_pdf">Lưu PDF</button>
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
           <div class="search-row">
@@ -436,6 +437,16 @@
               <button class="menu-khac-muc" id="btnXuatNhuCau" type="button" hidden data-i18n="btn_xuat_nhu_cau">Xuất bảng nhu cầu (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatGoiY" type="button" hidden data-i18n="btn_xuat_goi_y">Xuất gợi ý chỉ tiêu kỳ sau (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatBienBan" type="button" hidden data-i18n="btn_xuat_bien_ban">Xuất biên bản bốc thăm (bản in và Excel)</button>
+            </div>
+          </details>
+          <!-- XP1-L4: xuất PDF hàng loạt (chỉ quản trị); menu riêng vì "Xuất…" ở trên chỉ hiện ở chế độ Huy chương -->
+          <details class="menu-khac" id="xuatPdfMenu" data-quyen="quan_tri">
+            <summary class="btn btn-secondary" data-i18n="xp1_menu">Xuất PDF…</summary>
+            <div class="menu-khac-hop">
+              <button class="menu-khac-muc" id="btnPdfDsClb" type="button" data-i18n="xp1_pdf_ds_clb">Danh sách theo {slot_l} (PDF)</button>
+              <button class="menu-khac-muc" id="btnPdfDsLop" type="button" data-i18n="xp1_pdf_ds_lop">Danh sách theo {cohort_l} (PDF)</button>
+              <select id="pdfLop" class="text-input text-input-sm" data-i18n-aria-label="xp1_pdf_lop_aria"></select>
+              <button class="menu-khac-muc" id="btnPdfPhieuLop" type="button" data-i18n="xp1_pdf_phieu_lop">Phiếu giải trình theo {cohort_l} (PDF)</button>
             </div>
           </details>
         </div>

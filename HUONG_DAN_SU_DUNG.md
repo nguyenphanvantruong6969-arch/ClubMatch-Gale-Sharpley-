@@ -528,6 +528,23 @@ Mỗi học sinh có thể có một **Lớp** (ví dụ `10H1A`). Lớp chỉ �
 > Không gửi cho giáo viên chấm điểm — chấm mù chỉ còn ý nghĩa khi người chấm không
 > thấy những con số đó.
 
+#### Xuất PDF hàng loạt
+
+Dùng khi cần **in hoặc gửi PDF** thay vì bảng tính. Ở thẻ **Chi tiết và xuất tệp**, mục *Xuất dữ liệu*, bấm **Xuất PDF…** (chỉ tài khoản quản trị thấy; ba mục khoá khi chưa có kết quả xếp). Mỗi lần bấm là một lần xuất, tệp rơi vào thư mục Tải xuống, không ghi đè tệp cũ (trùng tên thì thành `x (2)`), đường dẫn hiện ngay bên dưới nút.
+
+| Mục | Ra gì | Gửi cho ai |
+|---|---|---|
+| **Danh sách theo câu lạc bộ (PDF)** | Một thư mục, mỗi CLB một tệp PDF: tên, mã, loại CLB, giờ, địa điểm, bảng STT / mã / họ tên / lớp. Trường nhiều buổi: mỗi CLB mỗi buổi một tệp. Em chưa có chỗ nằm trong `_chua_duoc_xep.pdf` | Người phụ trách từng CLB |
+| **Danh sách theo lớp (PDF)** | Một thư mục, mỗi lớp một tệp PDF; em chưa có chỗ ở mục riêng "Chưa có câu lạc bộ" trong cùng tệp; em chưa có lớp nằm trong `_chua_co_lop.pdf` | Giáo viên chủ nhiệm |
+| **Phiếu giải trình theo lớp (PDF)** | Ô chọn lớp bên cạnh: **Tất cả lớp** ra một thư mục, mỗi lớp một tệp, mỗi em một trang; chọn **một lớp** thì ra MỘT tệp của lớp đó. Mỗi dòng nguyện vọng ghi **loại CLB** (Tự do, Giới hạn, Tuyển chọn; chưa đặt loại thì ghi dấu gạch) | Giáo viên chủ nhiệm, hoặc in phát cho học sinh |
+
+- **Phiếu của MỘT em:** ở khung *Tra cứu một học sinh* (thẻ Kết quả), tìm em, chọn em, bấm **Lưu PDF**: ba thao tác, ra một tệp `phieu_giai_trinh_<mã>.pdf` chỉ có dữ liệu của em đó.
+- Danh sách theo CLB và theo lớp **không có điểm, số bốc thăm, diện trúng tuyển hay nhóm dự trữ**, nên gửi được như tệp "theo lớp" ở trên. Mỗi trang phiếu giải trình chỉ có dữ liệu của chính em đó.
+- **CLB không có em nào được xếp thì không có tệp danh sách** (giống bộ CSV theo CLB). Muốn biết CLB đó còn trống bao nhiêu chỗ, xem bảng *Theo từng câu lạc bộ*.
+- Dữ liệu đã sửa sau lần chạy gần nhất thì mỗi tệp danh sách có thêm một dòng "Chú ý" nói kết quả có thể đã cũ; hãy chạy lại rồi xuất lại.
+- Xuất PDF chỉ **đọc** dữ liệu, không đổi kết quả xếp hay lịch sử chạy. Phiếu giải trình PDF vẫn viết bằng tiếng Việt, cùng nội dung với phiếu HTML (nút *In phiếu cho học sinh này*).
+- Gặp thông báo "thiếu thư viện hoặc phông chữ PDF": cài lại bản phần mềm đầy đủ (phông chữ đi kèm trong thư mục `assets/fonts`).
+
 ---
 
 ## 7. Đọc bảng kết quả

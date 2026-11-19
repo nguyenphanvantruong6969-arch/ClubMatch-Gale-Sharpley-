@@ -63,7 +63,7 @@ def test_mac_dinh_chi_hai_nut_xuat_hien_va_menu_chi_co_o_huy_chuong(mo, api):
     page.locator('.nav-item[data-tab="others"]').click()
     page.wait_for_selector("#btnXuatTuyChon", state="visible")
     hien = page.evaluate("""() => Array.from(document.querySelectorAll('#xuatPanel .search-row button'))
-        .filter(b => b.getClientRects().length).map(b => b.id)""")
+        .filter(b => b.getClientRects().length && !b.closest('details:not([open])')).map(b => b.id)   // nút trong menu đóng không hiện""")
     assert hien == ["btnXuatTuyChon", "btnXuatTheoLop"], hien
     assert page.locator("#xuatMenu").is_hidden()
     assert not loi, loi

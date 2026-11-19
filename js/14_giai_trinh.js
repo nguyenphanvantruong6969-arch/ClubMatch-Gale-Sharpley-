@@ -175,6 +175,12 @@
     el("gtPanel").scrollIntoView({ behavior: "auto", block: "start" });   // GT4: tức thì (cuộn mượt dừng giữa chừng, kết quả nằm dưới mép màn)
     xem(sid);
   };
+  /* XP1-L2: phiếu của MỘT em dạng PDF (export_phieu_giai_trinh_pdf, student_ids = [mã]); tệp rơi vào Tải xuống. */
+  el("btnGtPdfMot").addEventListener("click", () => {
+    if (!dangXem) return;
+    chayXuat([["gt_in_muc", "export_phieu_giai_trinh_pdf", ["", null, false, [dangXem.student_id]],
+      (d) => t("xp1_pdf_mot_xong", { path: d.path })]], el("gtXuatPhanHoi"), true);
+  });
   el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
   el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
 
