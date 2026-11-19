@@ -5,13 +5,13 @@
 Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-hop @ 396509b)
 
 ## Plan (lead ticks)
-- [ ] I1 merge claude/ux1-a-giao-dien (DONE, CI green 9fbdfdf)
+- [x] I1 merge claude/ux1-a-giao-dien @0bc2026 — passed (head dac41dd, checker NO BUGS 6d16bb6; I4 review: health_oversubscribed* severity info->medium; dat_loai_clb after run does not mark results stale)
 - [ ] I2 merge claude/xp1-xuat-pdf after its Status: DONE (wait with send_later)
 - [ ] I3 merge claude/ux1-b-phieu after its Status: DONE (or leave for later, protocol §3)
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: I1 merge of A pushed (5f9767a, no conflicts); coder running I1 checks. XP1 at L5 review; B in progress.
+- Done: I1. Waiting: XP1 Status: DONE (L5 in review, checked 15:47 UTC; send_later 60 min); B in progress.
 
 ## Sessions
 | Role | Session | State |
