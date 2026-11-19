@@ -15,14 +15,14 @@ Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/cl
 - ~~L6 slip In / Lưu PDF via iframe print~~ DROPPED (XP1)
 
 ## Current state (overwrite)
-- Done: none. In progress: creating coder + checker, then GO L4-B.
+- Done: none. In progress: L4-B (GO sent to coder).
 
 ## Sessions
 | Role | Session | State |
 |---|---|---|
 | lead | session_01YVAytyWhTzeYjV1fcHGdde (Opus) | running |
-| coder | — | — |
-| checker | — | — |
+| coder | session_01YVAyu2zZMBG9biCXj6dH9h (Sonnet) | running |
+| checker | session_01YVAyu1k1DkBJUtG9sVekSz (Sonnet) | running |
 
 ## Needs Truong
 1. Merge order at integration: A → B → XP1 (protocol §10); XP1 must be DONE first or it waits.
