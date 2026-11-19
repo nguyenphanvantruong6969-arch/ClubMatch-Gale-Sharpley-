@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead started 2026-11-19; L1 next). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: IN PROGRESS (L1 passed d56c913; L2 next). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -27,13 +27,13 @@ export in bulk: (1) **member lists** as PDF, one file per club OR one file per c
 
 ## Plan (written by Opus; ticked by Sonnet)
 Lot L1 — PDF core (no UI)
-- [ ] Failing test first: `tests/test_xp1_pdf_loi.py` — a 3-page PDF with Vietnamese text ("Nguyễn Văn Ánh, Lê Đức
+- [x] Failing test first: `tests/test_xp1_pdf_loi.py` — a 3-page PDF with Vietnamese text ("Nguyễn Văn Ánh, Lê Đức
       Cường") round-trips: page count correct, text extractable (use `pypdf` ONLY if already installed in dev; else
       assert font embedded + `/Count n` in bytes). Skip cleanly if reportlab missing (like playwright tests).
-- [ ] New module `xuat_pdf.py`: font registration (once, path via the same resource lookup the app uses for
+- [x] New module `xuat_pdf.py`: font registration (once, path via the same resource lookup the app uses for
       `assets/`), `dung_pdf(path, trang)` with simple building blocks (title, key/value line, table with header
       repeat on page break, footer "Trang x/y"). A4 portrait; tables wrap long text (Paragraph cells).
-- [ ] No file overwrite: reuse `_duong_xuat` / `duong_dan_khong_de` rules. Write to temp then rename.
+- [x] No file overwrite: reuse `_duong_xuat` / `duong_dan_khong_de` rules. Write to temp then rename.
 
 Lot L2 — explanation slips as PDF, by class, with club type
 - [ ] Test: `tests/test_xp1_phieu_pdf.py` — n slips = n pages minimum (each student starts a new page; long slip may
