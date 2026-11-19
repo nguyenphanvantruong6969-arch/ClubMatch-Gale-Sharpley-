@@ -10,3 +10,6 @@ clr_loader==0.3.1 ; sys_platform == "win32"
 # Doc thang file .xlsx (Microsoft Forms xuat ra dinh dang nay).
 # Python thuan, khong can .NET — khong keo theo rui ro dong goi nhu pythonnet.
 openpyxl==3.1.5
+# XP1: xuất PDF hàng loạt (danh sách, phiếu giải trình). Python thuần + phông TTF Be Vietnam Pro
+# đóng gói trong assets/fonts. Là thư viện chạy mới duy nhất của XP1 (Truong duyệt 2026-11-18).
+reportlab==5.1.0

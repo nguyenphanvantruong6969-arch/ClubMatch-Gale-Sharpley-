@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-19 — XP1-L1: lõi xuất PDF (chưa có giao diện)
+
+- `xuat_pdf.py` (mới): `dung_pdf`, `tieu_de`, `dong_khoa_gia_tri`, `bang` (lặp tiêu đề cột, ô tự xuống dòng, thoát ký tự markup), `ngat_trang`; A4 dọc, chân trang "Trang x/y", ghi qua tệp tạm rồi đổi tên, không ghi đè (`duong_dan_khong_de`); thiếu reportlab/phông thì `ThieuThuVienPdf`.
+- `assets/fonts/BeVietnamPro-Regular.ttf`, `BeVietnamPro-Bold.ttf`, `OFL-BeVietnamPro.txt` (SIL OFL; `assets/fonts` đã nằm trong `kiosk.spec` datas).
+- `requirements.txt`: `reportlab==5.1.0` (thư viện mới, Truong duyệt 2026-11-18); `requirements-dev.txt`: `pypdf` (chỉ để test đọc lại PDF).
+- `kiosk.spec`: `collect_all("reportlab")`.
+- Test mới: `tests/test_xp1_pdf_loi.py` (10 ca). Không đụng thuật toán/DB; `kiem_nhanh.py` 7/7.
+
 ## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
 
 - `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).
