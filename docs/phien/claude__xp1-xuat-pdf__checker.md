@@ -23,3 +23,9 @@
 - Privacy: slip page has only own id/name (test + temp). Team B medal column untouched (no diff in medal code).
 - Not covered by me: multi-session slip layout beyond code reading; Windows font rendering visually.
 - Verdict file committed locally only (lead: push when CI says so).
+
+## L3 — reviewed b5987b6..a5b610e (code 7217c8c): NO BUGS, 1 note
+- Tests: xp1_danh_sach_pdf + gt4_nhat_ky_doc + gt3_phan_quyen + xp1_phieu_pdf + van_phong_tu_nhien + ws_nhan = 130 passed.
+- Own temp tests (deleted): teacher → `gt3_khong_du_quyen` for theo=clb/lop, no folder; 3-session sample (120HS 3BUOI): rows counted FROM the PDFs by student id = 360 = match_results; by class 120 students; no "điểm/bốc thăm/stb/hạng/tier/score/ưu tiên" in any PDF text; error injected on 2nd file → folder removed, retry works, 2nd export → "x (2)"; data changed after run → stale warning (`ket_qua_cu` True).
+- Code: only student_id, ho_ten, lop, buoi, gio, dia_diem, club type reach the PDF; QUYEN=QUAN_TRI; nkhd vi/en; new error code at end of i18n_errors.
+- Note: a club with 0 matched students gets no file (groups come from result rows). Acceptable for v1 (nothing to list); a homeroom/club teacher of an empty club finds no file — mention in HUONG_DAN.

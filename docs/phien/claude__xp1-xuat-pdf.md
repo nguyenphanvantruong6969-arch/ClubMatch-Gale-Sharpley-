@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (L1, L2 passed; CI green b5987b6 run 44525331384; L3 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: IN PROGRESS (L1-L3 passed; CI green a5b610e run 44533627421; L4 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -53,13 +53,13 @@ Lot L2 — explanation slips as PDF, by class, with club type
       {path|thu_muc, n_tep, n_trang}.
 
 Lot L3 — member lists as PDF
-- [ ] Test: `tests/test_xp1_danh_sach_pdf.py` — `theo="clb"`: one PDF per club (+ per session if multi-session),
+- [x] Test: `tests/test_xp1_danh_sach_pdf.py` — `theo="clb"`: one PDF per club (+ per session if multi-session),
       rows = matched students (id, name, class), count = `match_results` count; `theo="lop"`: one PDF per class,
       rows = student, club, session; NO scores, NO lottery numbers (same rule as `export_theo_lop`); unassigned
       students listed in a separate section "Chưa có CLB".
-- [ ] API: `export_danh_sach_pdf(output_path="", theo="clb")` — data from `_du_lieu_xuat()` (same source as
+- [x] API: `export_danh_sach_pdf(output_path="", theo="clb")` — data from `_du_lieu_xuat()` (same source as
       `export_theo_lop`); folder output; `xuat_chua_co_ket_qua` when no results. Club title line shows club type.
-- [ ] Optional (ask Truong): one combined PDF with a cover table of contents in addition to the folder.
+- [ ] (skipped, on Needs Truong) Optional (ask Truong): one combined PDF with a cover table of contents in addition to the folder.
 
 Lot L4 — UI + permissions + i18n
 - [ ] "Xuất…" menu (`#xuatMenu`, thẻ Kết quả): "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)",
