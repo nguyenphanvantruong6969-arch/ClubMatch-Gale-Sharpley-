@@ -182,6 +182,7 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
     if gt.get("tom_tat_dong"):
         k.append(xp.dong_khoa_gia_tri("Tóm tắt", gt["tom_tat_dong"]))
     fa = bool(gt.get("fa_bat"))                           # UX1B-L7: cột Huy chương chỉ ở chế độ huy chương
+    i_cuoi = None                                         # UX1F-L2: bảng cuối + chú thích + chân phiếu đi liền nhau
     for b in gt["buoi"]:
         nhan = _nhan_buoi(b["buoi"])
         if nhan:
@@ -192,6 +193,7 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         if b.get("cau_tom_tat"):
             k.append(xp.dong_khoa_gia_tri("Giải thích", b["cau_tom_tat"]))
         if b["cac_lua_chon"]:
+            i_cuoi = len(k)
             hang = []
             for x in b["cac_lua_chon"]:
                 diem = x.get("diem_em") if x.get("chon_loc") else None
@@ -207,6 +209,7 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
             if b.get("chu_thich"):
                 k.append(xp.dong_khoa_gia_tri("Ghi chú", b["chu_thich"]))
         if b.get("diem_da_thi"):                          # UX1B-L7: điểm mọi CLB em đã thi (bản PDF: bảng chữ, không thanh)
+            i_cuoi = len(k)
             k.append(xp.tieu_de("Điểm các CLB em đã thi"))
             k.append(xp.bang(["CLB", "Điểm thi", "Mức vào được"], [
                 [x["ten_clb"], _so(x["diem_em"]), _o_chuan(x)] for x in b["diem_da_thi"]], [2, 1, 1]))
@@ -221,6 +224,8 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         (" trong %s ngày." % so_ngay if so_ngay else ".")))
     if ma_tra_cuu:
         k.append(xp.dong_khoa_gia_tri("Mã tra cứu", ma_tra_cuu))
+    if i_cuoi is not None:
+        k[i_cuoi:] = [xp.giu_cung(k[i_cuoi:])]
     return k
 
 

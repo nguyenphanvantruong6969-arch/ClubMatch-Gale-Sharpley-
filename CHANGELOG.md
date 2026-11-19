@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-20 — UX1F-L2: bố cục phiếu giải trình PDF (một trang, tiêu đề cột không gãy từ)
+
+- `xuat_pdf.py`: lề 12 mm (trước 18/18/16/18), chữ bảng 8,5 pt (trước 9), đoạn và đệm ô chặt hơn; `bang` tính độ rộng tối thiểu từng cột từ TỪ DÀI NHẤT của tiêu đề (`_rong_toi_thieu`, `_chia_cot`) nên tiêu đề chỉ xuống dòng ở dấu cách ("Huy chương", "Mức vào được" không còn gãy "Huy ch/ương"); thêm `giu_cung` (KeepTogether).
+- `phieu_giai_trinh.py` (`_khoi_pdf`): bảng cuối + ghi chú + khiếu nại + mã tra cứu đi liền nhau (`giu_cung`), không để chú thích/chân phiếu rơi một mình sang trang sau. Nội dung phiếu không đổi, chỉ bố cục.
+- `.github/workflows/tests.yml`: job test-windows cài thêm `pypdf>=4,<6` (chỉ CI; không đụng `requirements.txt`, `kiosk.spec`).
+- Số trang (dữ liệu MÔ PHỎNG, seed 3): 40 em của `SO_NHAP_FA_MAU_120HS.xlsx` 74 → 40 trang (đo lại trước khi sửa: 74, kế hoạch ghi 75; mỗi em một trang, trang ngắn nhất 1577 ký tự); toàn bộ 120 em 225 trang trước đó; 800 em `SO_NHAP_DQT_800HS_HOP_LE.xlsx`: 1519 → 1278 trang (phiếu quá 3 buổi vẫn cần 2 trang; trang 2 luôn có bảng cuối + chú thích, không chỉ chân trang).
+- Test mới: `tests/test_ux1f_l2_phieu_pdf_bo_cuc.py` (3 ca: ≤ 44 trang, mỗi trang ≥ 200 ký tự, tiêu đề không gãy giữa từ). Bản đồ mã: 353 → 354 tệp test.
+
 ## 2026-11-20 — UX1F-L1: pypdf là phụ thuộc DEV
 
 - `requirements-dev.txt`: thêm `pypdf>=4,<6` (CHỈ tệp dev; không đụng `requirements.txt`, `kiosk.spec`). CI (`tests.yml`) cài `requirements-dev.txt` nên các test đọc PDF nay chạy thật thay vì tự bỏ qua.
