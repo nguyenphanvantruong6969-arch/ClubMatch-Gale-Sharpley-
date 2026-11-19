@@ -89,3 +89,16 @@ verdict: NO BUGS (bug 1 fixed)
 - Not over-blanked: `giai_trinh.nhan_buoi` blanks only empty/None/`__mac_dinh__`; thu_2/thu_6 -> "Thứ 2"/"Thứ 6"; a custom
   session label ("Chiều tự đặt") is kept. Checked in HTML and PDF with a mixed multi-session report.
 - Tests (B + I1 + I2 sets, Chromium, pypdf): 269 passed, 0 skipped; kiem_nhanh 7/7.
+
+## CHECKER REPORT I4 fix1 | reviewed 147fdbb..b0b357c
+verdict: NO BUGS
+- Only CHANGELOG.md and docs/ke_hoach/CLAUDE_CHI_TIET.md changed; no product or test code touched.
+- Count: `ls tests/test_*.py | wc -l` = 353, matches the map; tests/test_a13_12_tai_lieu.py 8 passed.
+- Map rows accurate: bao_cao_tong_hop.py lists `dung_pdf` + `export_bao_cao_tong_hop_pdf` (both exist, QUYEN giao_vien); the
+  xuat_pdf.py / danh_sach_pdf.py row (pre-existing XP1 row) matches the code (dung_pdf, dung_pdf_clb/dung_pdf_lop).
+Review doc UX1_DANH_GIA_TICH_HOP.md vs code (all confirmed): #btnGtPdfMot has data-quyen="quan_tri" while
+export_phieu_giai_trinh_pdf is giao_vien; "In phiếu cả lớp" = select class + 1 click (2 total); giao_vien lands on Results
+(js/16_tai_khoan.js ganVai) so "1 click" for class results holds; two class selects #ux1bLop and #kqChonLop on the teacher
+page; stale comment index.html:308 ("Không có nút in phiếu cả lớp…") is indeed wrong after I3; Needs Truong items 4 and 5
+match the branch file; the reference to UX1_DANH_GIA_B.md problem 2 matches. Not re-measured: page counts (75/78 pages) and
+the admin 4-click flow (taken from the lead's script).
