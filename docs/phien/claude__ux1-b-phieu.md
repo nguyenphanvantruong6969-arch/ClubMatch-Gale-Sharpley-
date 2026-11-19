@@ -2,7 +2,7 @@
 
 > Protocol: docs/phien/UX1_GIAO_THUC.md (**§10 wins**). Lots: docs/ke_hoach/ux/UX1_KE_HOACH.md. English. ≤ 60 lines.
 
-Status: NOT STARTED (re-scoped by Opus 2026-11-19; branch created from origin/claude/ux1-a-giao-dien @ dd43bdc)
+Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/claude/ux1-a-giao-dien @ dd43bdc)
 
 ## Plan (lead ticks) — order from protocol §10
 - [ ] L4-B Báo cáo tổng hợp (bao_cao_tong_hop.py, export_bao_cao_tong_hop HTML, QUYEN giao_vien) + homeroom landing
@@ -15,12 +15,12 @@ Status: NOT STARTED (re-scoped by Opus 2026-11-19; branch created from origin/cl
 - ~~L6 slip In / Lưu PDF via iframe print~~ DROPPED (XP1)
 
 ## Current state (overwrite)
-- Done: none. In progress: none.
+- Done: none. In progress: creating coder + checker, then GO L4-B.
 
 ## Sessions
 | Role | Session | State |
 |---|---|---|
-| lead | — | — |
+| lead | session_01YVAytyWhTzeYjV1fcHGdde (Opus) | running |
 | coder | — | — |
 | checker | — | — |
 
