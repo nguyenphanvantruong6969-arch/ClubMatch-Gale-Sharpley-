@@ -1,5 +1,12 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT L7 fix2 | reviewed 79c8e45..fc5e9fc
+verdict: NO BUGS
+- Selector-only, not weakened: gt1_tra_cuu `td.nth(5)` -> `td.last` = the "Vì sao" cell in both modes (non-FA 6 cols, FA 7 cols), same >10-char assertion;
+  gt4_cau_giai_trinh `o[4]` -> `o[-2]` = "Mức vào được" in both modes (non-FA index 4, FA index 5), same equality "Chỗ dành riêng". No assertion removed or loosened.
+- Ran 88 tests (gt1_tra_cuu FA on+off, gt4_cau_giai_trinh, ux1b_l7_phieu, giao_dien_ux1b_phieu, gt1_hoc_sinh, gt4_giai_trinh, gt1_phieu, gt1_giai_trinh, gt_tich_hop) -> 88 passed.
+- Other `td.nth(` users in tests/ (diem_chuan, a14_lop) do not touch the giải trình table; both files 34 passed.
+
 CHECKER REPORT L7 fix1 | reviewed 823e560..79c8e45
 verdict: 1 BUG (stale test selector, regression of L7 itself)
 1. tests/test_giao_dien_gt1_tra_cuu.py::test_the_hien_dung_cho_em_duoc_xep_va_em_bi_tu_choi[True] (FA on), line ~91
