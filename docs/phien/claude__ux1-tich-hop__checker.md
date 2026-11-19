@@ -58,3 +58,26 @@ Privacy: member-list PDFs (clb and lop) contain no "điểm / bốc thăm / stb 
 Own edge cases (all ok): unknown or empty student_ids -> gt1_khong_co_hoc_sinh; bad `theo` -> xp1_kieu_xuat_la; no run yet ->
 xuat_chua_co_ket_qua / gt1_chua_chay; data edited after the run -> stale warning in the PDF ("Lưu ý") and ket_qua_cu=True.
 Observation (not a bug): per-class slip PDFs print each student's lookup code (same as the existing HTML slip, GT1-L4).
+
+## CHECKER REPORT I3 | reviewed 91d5f1a..5f27391
+verdict: 1 BUG (low, cosmetic)
+1. bao_cao_tong_hop.py:dung_html (line ~92) and dung_pdf (line ~132) | repro: single-session workspace, run, export Báo cáo
+   tổng hợp (HTML or PDF) | actual: "Buổi" column prints the internal code `__mac_dinh__` (fallback `nhan_buoi(..) or c.get("buoi")`)
+   | expected: empty / no session label for the default session. Originates in B's HTML; the new PDF copies it.
+
+Done when (§2 I3): 353 passed, 0 skipped (B + I1 + I2 sets + gt1/gt3/gt4 UI; pypdf, reportlab, RBDA_TEST_CHROMIUM); kiem_nhanh 7/7.
+(a) Merge diff vs both parents (api_xuat, phieu_giai_trinh, i18n_errors, test_gt4_cau_giai_trinh): i18n_errors 0 lines
+    lost from either side; lines absent in merge are only the old versions XP1/B each rewrote (e.g. B's inline
+    `_export_phieu_giai_trinh_da_khoa` body -> XP1's `_phieu_chuan_bi`; the old 7-col HTML table -> merged table).
+    `tao_i18n_js.py` leaves i18n_loi.js unchanged. gt4 test o[5] -> o[-2] still means "Mức vào được" (robust to the medal column).
+(b) Role model has NO class scoping (two roles only; giao_vien already reads every result and the HTML slip for any ids /
+    any class / whole school). Now giao_vien may also call export_phieu_giai_trinh_pdf (any student_ids, lop, theo_lop=True =
+    whole-school folder, one file for all) and export_bao_cao_tong_hop_pdf: same reach as the existing HTML. Verified:
+    export_danh_sach_pdf -> gt3_khong_du_quyen for giao_vien. Note: slips print each student's lookup code, so a teacher can
+    now obtain all codes via PDF as before via HTML (not new). Recommend Truong knows teachers are not class-scoped.
+(c) Privacy: single-student PDF and HTML slip for s1 contain no s2/s3/s4 id; Báo cáo PDF has no student name/id/score/draw text.
+(d) Column order Loại CLB then Huy chương then Điểm thi: asserted in HTML + PDF; no Huy chương column when medals off.
+    giao_vien: "In phiếu cả lớp" = select class + 1 click after entering Results (test says 1 click); report PDF 1 click.
+(e) "In phiếu cả lớp" as ONE PDF for the chosen class: acceptable, no defect (empty class value = no call; unknown class
+    -> gt1_khong_co_hoc_sinh).
+Invariants 1,2,4,6,7 ok (no schema/CSV change; kiem_nhanh 7/7). Edge: empty workspace -> xuat_chua_co_ket_qua; non-FA report ok.
