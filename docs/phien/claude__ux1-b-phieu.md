@@ -16,7 +16,7 @@ Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/cl
 - ~~L6 slip In / Lưu PDF via iframe print~~ DROPPED (XP1)
 
 ## Current state (overwrite)
-- Done: L4-B (0f73c43), L7 (fc5e9fc, 2 fix rounds), checker NO BUGS. L5c (f3ff065, 1 fix round). L8-B (b960b60). In progress: CI gate.
+- Done: L4-B (0f73c43), L7 (fc5e9fc, 2 fix rounds), checker NO BUGS. L5c (f3ff065, 1 fix round). L8-B (b960b60), CI-1 fix (775f669), lead review fixes R1 (f58df43: FA cutoff, MEDAL sentence, report labels). In progress: CI gate on head.
 
 ## Sessions
 | Role | Session | State |
