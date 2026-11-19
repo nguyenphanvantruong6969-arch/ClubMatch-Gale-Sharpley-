@@ -14,3 +14,12 @@
 ## L1 fix1 — reviewed 446c362..d56c913: NO BUGS
 - Without pypdf: 8 passed, 5 skipped (only the text-extraction tests); bytes-level page count (`/Count`), `/FontFile2`, no-overwrite, tmp cleanup, mid-build error, missing font all run. With pypdf: 13 passed. ruff clean.
 - `pypdf` removed from requirements-dev.txt; requirements.txt unchanged (reportlab only). Bug 1 and note 2 resolved.
+
+## L2 — reviewed 2524332..b5987b6: NO BUGS
+- Tests: xp1_pdf_loi, xp1_phieu_pdf, giao_dien_xp1_luu_pdf_mot_em, gt4_cau_giai_trinh, van_phong_tu_nhien, ws_nhan, gt4_nhat_ky_doc = 108 passed. `kiem_nhanh.py` 7/7 (trung_khit 15 cases identical vs origin/main).
+- 3 edited old tests are NOT weakened: gt4 index 4→5 = new "Loại CLB" column shifts the cell; "PDF" added to abbreviation set; `xp1_` added to new-i18n-prefix allowance. Assertions otherwise intact.
+- QUYEN `export_phieu_giai_trinh_pdf` = QUAN_TRI; nkhd label vi+en present; button has data-quyen="quan_tri".
+- Own temp tests (deleted, not committed): teacher login → all 3 call shapes `gt3_khong_du_quyen`, nothing created; FA on shows "Giới hạn"/"Tự do"; student without class → `_chua_co_lop.pdf` holds only that student; empty class → `gt1_khong_co_hoc_sinh`; not run → `gt1_chua_chay`; match_results/run_history/stb_lock unchanged after exports; class "10/A é" → file `10_A é.pdf`.
+- Privacy: slip page has only own id/name (test + temp). Team B medal column untouched (no diff in medal code).
+- Not covered by me: multi-session slip layout beyond code reading; Windows font rendering visually.
+- Verdict file committed locally only (lead: push when CI says so).
