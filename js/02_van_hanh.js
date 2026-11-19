@@ -93,8 +93,11 @@ function loadHealthReport() {
     if (gop) {
       const la = (w) => /^fa_huy_chuong_/.test(w.code) && !/_nhom$/.test(w.code);
       const bo = dsHien.filter(la);
-      dsHien = [{ code: "ux1b_huy_chuong_gop", severity: "high",
-        params: { n: gop.n_em, clb: gop.clb.join(", ") + (gop.n_clb > gop.clb.length ? "…" : "") } },
+      /* Không in "ví dụ ở: " rỗng: không có tên CLB (vd. cùng huy chương hai lần) thì dùng câu không có vế ví dụ. */
+      dsHien = [gop.clb.length
+        ? { code: "ux1b_huy_chuong_gop", severity: "high",
+            params: { n: gop.n_em, clb: gop.clb.join(", ") + (gop.n_clb > gop.clb.length ? "…" : "") } }
+        : { code: "ux1b_huy_chuong_gop_khong_clb", severity: "high", params: { n: gop.n_em } },
         ...dsHien.filter((w) => !la(w))];
       nHien += 1 - bo.length;
       nCao += 1 - bo.filter((w) => w.severity === "high").length;
@@ -133,7 +136,7 @@ function loadHealthReport() {
           di.addEventListener("click", moDanhSachCanXuLy);
           row.appendChild(di);
         }
-        if (w.code === "ux1b_huy_chuong_gop") {   /* UX1B-L5c: lối về khung Cài đặt (nơi có nút Quay lại Chia 100 điểm) */
+        if (w.code === "ux1b_huy_chuong_gop" || w.code === "ux1b_huy_chuong_gop_khong_clb") {   /* UX1B-L5c: lối về khung Cài đặt (nơi có nút Quay lại Chia 100 điểm) */
           const di = document.createElement("button");
           di.type = "button";
           di.className = "btn btn-secondary btn-nho health-di-toi";

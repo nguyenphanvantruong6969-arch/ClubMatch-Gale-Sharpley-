@@ -55,6 +55,53 @@ def test_r1_canh_bao_huy_chuong_gop_mot_dong_co_ten_clb_va_ve_cai_dat(mo_trang):
     assert not loi, loi
 
 
+# ---- fix1: chỉ gộp khi CẢ SỔ sai; ít em sai giữ từng dòng, thanh Việc tiếp theo không nhảy sang Cài đặt
+def _so_fa_mot_em_sai(api):
+    assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    _nap(api, SO_FA)
+    with api._ket_noi_ghi() as cur:
+        sid = cur.execute("SELECT student_id FROM wharton_bids ORDER BY student_id LIMIT 1").fetchone()[0]
+        cid = cur.execute("SELECT club_id FROM wharton_bids WHERE student_id = ? LIMIT 1", (sid,)).fetchone()[0]
+        cur.execute("UPDATE wharton_bids SET points = 55 WHERE student_id = ? AND club_id = ?", (sid, cid))
+        ma_clb = cur.execute("SELECT club_id FROM clubs ORDER BY club_id LIMIT 1").fetchone()[0]
+        cur.execute("UPDATE clubs SET loai = NULL WHERE club_id = ?", (ma_clb,))
+    return sid
+
+
+def test_r1b_it_em_sai_giu_tung_dong_va_thanh_khong_nhay_sang_cai_dat(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    sid = _so_fa_mot_em_sai(api)
+    assert api.get_data_health_report()["data"]["gop_huy_chuong"] is None
+    page.reload()
+    page.wait_for_selector("#healthList .health-item")
+    chu = [page.locator("#healthList .health-item").nth(i).inner_text()
+           for i in range(page.locator("#healthList .health-item").count())]
+    assert any(sid in c for c in chu), chu                            # còn dòng riêng của em có mã
+    assert not any("chưa có huy chương hợp lệ" in c for c in chu), chu
+    assert page.locator("#viecTiepTheo").get_attribute("data-trang-thai") != "huy_chuong_sai"
+    page.locator('.nav-item[data-tab="admin"]').click()               # khung Cài đặt: câu "một phần" + nút, VẪN đặt loại được
+    page.wait_for_selector("#ux1aSsHuyChuongSai")
+    assert "Gần như cả sổ" not in page.locator("#ux1aSsHuyChuongSai").inner_text()
+    assert page.locator("#ux1bSsQuayLai").is_visible()
+    assert page.locator("#ux1aSanSang .ux1a-vien").count() >= 1
+    assert not loi, loi
+
+
+def test_r1c_khong_ten_clb_thi_khong_in_vi_du_o_rong(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    assert api.update_workspace_config({"rules": {"fa_daa": True}})["ok"]
+    _nap(api, SO_FA)
+    with api._ket_noi_ghi() as cur:                                   # mọi em dùng cùng một huy chương hai lần trong buổi:
+        cur.execute("UPDATE wharton_bids SET points = 60")            # lỗi "trùng giá trị" không có mã CLB
+    gop = api.get_data_health_report()["data"]["gop_huy_chuong"]
+    assert gop and gop["clb"] == []
+    page.reload()
+    page.wait_for_selector("#healthList .health-item")
+    chu = page.locator("#healthList").inner_text()
+    assert "chưa có huy chương hợp lệ" in chu and "ví dụ ở" not in chu
+    assert not loi, loi
+
+
 # ------------------------------------------------------------------ 2. cả sổ sai: chỉ nạp lại, ẩn nút loại CLB
 def test_r2_ca_so_sai_chi_hien_tai_so_mau_va_quay_lai_an_nut_loai(mo_trang):  # noqa: F811
     page, api, loi = _huy_chuong_tren_so_dqt(mo_trang)
@@ -111,16 +158,15 @@ def test_r4_khung_tra_cuu_o_tim_to_o_dau_va_ma_tra_cuu_gap(mo_trang):  # noqa: F
     assert not loi, loi
 
 
-# ------------------------------------------------------------------ 5. tên nhóm khớp trang + dòng đỏ chỉ khi mở "Tuỳ chọn khác"
-def test_r5_ten_nhom_khop_trang_va_dong_do_rieng_tu_chi_o_tuy_chon_khac(mo_trang):  # noqa: F811
+# ------------------------------------------------------------------ 5. tên nhóm khớp trang; dòng đỏ riêng tư GIỮ hiện sẵn
+def test_r5_ten_nhom_khop_trang_va_dong_do_rieng_tu_van_hien_san(mo_trang):  # noqa: F811
+    """Tệp xuất MẶC ĐỊNH (sheet Điểm chuẩn, Dấu vết) có điểm và số bốc thăm, nên dòng đỏ không được giấu vào "Tuỳ chọn khác"."""
     page, api, goc, loi = mo_trang()
     _nap(api, SO_120)
     assert api.run_pipeline(42)["ok"]
     assert page.locator('.nav-nhom[data-nhom="cai_dat"] .nav-nhom-nut').inner_text().strip() == "Cài đặt và quản lý"
     page.locator('.nav-item[data-tab="others"]').click()
     page.wait_for_selector("#xuatPanel")
-    assert page.locator("#xuatPanel .xuat-canh-bao").is_hidden()                 # không hiện khi chưa mở gì
-    page.locator("#xuatNangCao > summary").click()
     assert page.locator("#xuatPanel .xuat-canh-bao").is_visible()
     assert "số bốc thăm" in page.locator("#xuatPanel .xuat-canh-bao").inner_text()
     assert not loi, loi

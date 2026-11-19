@@ -624,7 +624,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                             cid = e["params"].get("club_id")
                             if cid is not None and ten_clb.get(cid, cid) not in hc_clb:
                                 hc_clb.append(ten_clb.get(cid, cid))
-                    if hc_em:
+                    n_hs_nv = cur.execute("SELECT COUNT(DISTINCT student_id) FROM preferences").fetchone()[0]
+                    if self._huy_chuong_ca_so_sai(len(hc_em), n_hs_nv):   # chỉ khi CẢ SỔ sai; ít em sai thì giữ từng dòng
                         gop_huy_chuong = {"n_em": len(hc_em), "n_clb": len(hc_clb), "clb": hc_clb[:3]}
                 elif bat_wharton:
                     # MỘT hàm dùng chung với thẻ Quản lý (`list_wharton_canh_bao`): cùng em, cùng số.

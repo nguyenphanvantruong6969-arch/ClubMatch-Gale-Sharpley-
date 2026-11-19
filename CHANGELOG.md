@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L5c fix1 (từ checker)
+
+- `api_quan_ly._huy_chuong_ca_so_sai`: MỘT nơi giữ ngưỡng "cả sổ sai" (từ một nửa số học sinh có nguyện vọng); `get_data_health_report` chỉ trả `gop_huy_chuong` khi qua ngưỡng, `get_san_sang_huy_chuong` thêm `huy_chuong_ca_so`. Ít em sai: giữ từng dòng có mã, thanh "Việc tiếp theo" không nhảy sang Cài đặt, khung Cài đặt vẫn cho đặt loại CLB (kèm nút Quay lại).
+- Không in "ví dụ ở: " rỗng: mã lỗi mới `ux1b_huy_chuong_gop_khong_clb`.
+- Dòng đỏ quyền riêng tư của khung Xuất trở lại hiện sẵn: tệp xuất mặc định có sheet "Điểm chuẩn" và "Dấu vết" (hạt giống, bộ số bốc thăm).
+- Test: `tests/test_giao_dien_ux1b_l5c.py` thêm r1b (ít em sai), r1c (không có tên CLB), r5 đổi (dòng đỏ vẫn hiện).
+
 ## 2026-11-19 — UX1B-L5c: năm đề xuất của UX1_DANH_GIA_A §4 (chỉ thông điệp / bố cục)
 
 - Đề xuất 1: `api.get_data_health_report` trả thêm `gop_huy_chuong` {n_em, n_clb, clb (tên, tối đa 3)} (danh sách `warnings` và `n_high` GIỮ NGUYÊN); `js/02_van_hanh.js` gộp các dòng `fa_huy_chuong_*` thành MỘT dòng `ux1b_huy_chuong_gop` (mã mới trong `i18n_errors.py`) có số em và tên CLB, kèm nút "Mở Cài đặt"; thanh "Việc tiếp theo" (`js/17_viec_tiep_theo.js`) có trạng thái `huy_chuong_sai` trỏ khung Cài đặt (`ux1bMoCaiDat`, `js/19_ux1b_gv.js`); nút "Quay lại Chia 100 điểm" cạnh câu "nạp lại sổ" (`js/18_cai_dat.js`).

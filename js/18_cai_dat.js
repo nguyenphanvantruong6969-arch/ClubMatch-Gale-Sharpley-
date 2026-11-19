@@ -85,7 +85,7 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
      không tự đổi dữ liệu; cách sửa là nạp lại sổ có cột Huy chương. UX1B-L5c: kèm hai nút làm việc đó (tải sổ mẫu,
      quay lại Chia 100 điểm) và ẩn các nút loại CLB cho tới khi dữ liệu học sinh hợp lệ (đặt loại xong vẫn không chạy được). */
   if (d.huy_chuong_sai > 0) {
-    const ca = d.n_hoc_sinh > 0 && d.huy_chuong_sai * 2 >= d.n_hoc_sinh;
+    const ca = d.huy_chuong_ca_so === true;      /* ngưỡng "cả sổ" do backend giữ (cùng nguồn với cảnh báo sức khoẻ) */
     hop.append(ux1aEl("p", { class: "ux1a-ss-hc-sai", id: "ux1aSsHuyChuongSai",
       text: ca ? t("ux1b_ss_nap_lai_ca_so", { n: d.huy_chuong_sai, tong: d.n_hoc_sinh })
                : t("ux1a_ss_huy_chuong_sai", { n: d.huy_chuong_sai, vd: d.huy_chuong_sai_vd }) }));
@@ -99,7 +99,7 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
         text: t("ux1b_ss_quay_lai"), onclick: quayLai }));
     }
     hop.append(hang);
-    return;
+    if (ca) return;      /* ít em sai (dưới một nửa): vẫn cho đặt loại CLB tại chỗ bên dưới */
   }
   const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }

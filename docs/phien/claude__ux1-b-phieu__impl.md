@@ -54,3 +54,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 |---|---|---|---|
 | 2026-11-19 | Sonnet | L4-B, L7 (+2 fixes), L5c; handoff at ~400k context | lead id above |
 | 2026-11-19 | Sonnet | Hook re-fired; no new work since 903bffa; lead said stay available (no replacement session) | waiting FIX L5c / GO L8-B |
+- L5c fix1 coded; pushing, then CODER DONE L5c fix1.
