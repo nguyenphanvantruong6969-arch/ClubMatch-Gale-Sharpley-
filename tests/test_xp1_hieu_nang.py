@@ -3,7 +3,8 @@
 Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên máy chạy CI Linux. Ngưỡng: 30 giây trên Linux,
 90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows và máy chạy Windows chậm hơn; số 90 là dư địa chứ
 không phải cam kết). Đặt biến môi trường `XP1_NGUONG_GIAY` để đổi ngưỡng trên một máy cụ thể. Mỗi ca luôn in số
-giây đo được (`pytest -s`); test không bao giờ bị bỏ qua.
+giây đo được (`pytest -s`) và có tạm dừng đo độ phủ hay không; test không bao giờ bị bỏ qua. Đo độ phủ bị tạm dừng
+chỉ trong đoạn bấm giờ (CI Linux: có độ phủ 30,08 / 30,04 giây, không có 12 đến 16 giây).
 """
 import base64
 import os
@@ -39,12 +40,31 @@ def api800(tmp_path_factory):
     return a
 
 
+def _tam_dung_do_phu():
+    """Tắt đo độ phủ trong lúc bấm giờ (theo dõi từng dòng lệnh làm chậm thêm ~50 %; số đo CI: 30,0 giây so với
+    12 đến 16 giây khi không đo). Trả bộ đo đang chạy để bật lại, hoặc None khi không có / không dùng được."""
+    try:
+        import coverage
+    except ImportError:
+        return None
+    cov = coverage.Coverage.current()
+    if cov is None:
+        return None
+    cov.stop()
+    return cov
+
+
 def _do(ham, *args, **kw):
+    cov = _tam_dung_do_phu()
     t0 = time.perf_counter()
-    r = ham(*args, **kw)
-    giay = time.perf_counter() - t0
+    try:
+        r = ham(*args, **kw)
+    finally:
+        giay = time.perf_counter() - t0
+        if cov is not None:
+            cov.start()
     assert r["ok"], r
-    print("XP1 hieu nang: %.1f s (nguong %.0f s)" % (giay, NGUONG_GIAY))
+    print("XP1 hieu nang: %.1f s (nguong %.0f s, do phu %s)" % (giay, NGUONG_GIAY, "tam dung" if cov else "khong chay"))
     return r["data"], giay
 
 

@@ -14,6 +14,8 @@
   | Danh sách theo CLB (21 tệp) | 2,7 giây | 4,1 giây |
   | Danh sách theo lớp (28 tệp) | 0,8 giây | 1,2 giây |
 
+  Số đo thật trên CI (lần chạy 44551113280, ngưỡng cũ 30 giây): bước chạy KHÔNG đo độ phủ, các ca hiệu năng đạt; bước CÓ đo độ phủ, phiếu theo lớp 30,08 giây và phiếu một tệp 30,04 giây nên đỏ (đo độ phủ làm chậm thêm khoảng 50 %); Windows (không đo độ phủ) đạt. Vì vậy test tạm dừng đo độ phủ (`coverage.Coverage.current().stop()`, bật lại sau) CHỈ trong đoạn bấm giờ; sau sửa, máy phát triển có `--cov`: phiếu theo lớp 12,8 giây, một tệp 14,3 giây (không `--cov`: 13,2 và 14,5 giây). Mục tiêu 30 giây trên CI Linux giữ nguyên.
+
   Ngưỡng test: 30 giây trên Linux (mục tiêu của kế hoạch), 90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows), đổi được bằng biến môi trường `XP1_NGUONG_GIAY`; luôn in số giây đo được, không bỏ qua test.
 - Test mới: `tests/test_xp1_hieu_nang.py` (4 ca, ngưỡng 30 giây), `tests/test_xp1_dong_goi.py` (5 ca: phông, giấy phép, spec, ghim phiên bản, workflow). `kiem_nhanh.py` 7/7.
 
