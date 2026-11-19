@@ -51,7 +51,7 @@ submit_preferences submit_test_selection tai_mau_de_thi tao_so_nhap_mau xem_truo
 xuat_ket_qua_list
 get_san_sang_huy_chuong
 get_giai_trinh_hoc_sinh export_phieu_giai_trinh
-export_bao_cao_tong_hop
+export_bao_cao_tong_hop export_phieu_giai_trinh_pdf export_bao_cao_tong_hop_pdf
 """.split()  # I1: GT1 tra cứu / phiếu
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.
@@ -67,7 +67,7 @@ submit_wharton tao_bo_bieu_mau_api tra_loi_moi update_workspace_config xoa_tai_k
 tao_ma_tra_cuu tao_lai_ma_tra_cuu export_ma_tra_cuu_csv
 vao_che_do_hoc_sinh
 dat_loai_clb get_tieu_chi run_thu list_lan_chay so_sanh_lan_chay export_so_sanh_html export_so_sanh_csv ap_dung_tieu_chi
-export_phieu_giai_trinh_pdf export_danh_sach_pdf
+export_danh_sach_pdf
 """.split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát)
 
 QUYEN = {}

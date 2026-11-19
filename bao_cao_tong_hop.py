@@ -108,3 +108,37 @@ def dung_html(du: dict, nhan: dict | None = None) -> str:
             _e(x["lop"] if x["lop"] is not None else d("Chưa có {cohort_l}")), _e(x["n"]), _e(x["chua_xep"])))
     p.append("</table></body></html>")
     return "".join(p)
+
+
+def dung_pdf(du: dict, duong: str, nhan: dict | None = None) -> str:
+    """UX1I-I3: cùng số liệu gộp như `dung_html` nhưng ra PDF (A4 dọc, qua `xuat_pdf`). Trả đường dẫn thật đã ghi."""
+    import xuat_pdf
+
+    def d(mau):
+        ra = dien_nhan(mau, nhan)
+        return ra[:1].upper() + ra[1:]
+    the = du["the"]
+    k = [xuat_pdf.tieu_de(d("Báo cáo tổng hợp")),
+         xuat_pdf.dong_khoa_gia_tri("Lưu ý", d("Chỉ số gộp, không có tên, mã, điểm hay số bốc thăm của từng {person_l}."))]
+    if du.get("ket_qua_cu"):
+        k.append(xuat_pdf.dong_khoa_gia_tri("Cảnh báo", d(
+            "Dữ liệu đã được sửa sau lần xếp gần nhất, nên số liệu có thể đã cũ. Hãy xếp lại trước khi công bố.")))
+    for a, b in (("Số {person_l}", the["n_students"]), ("Số {slot_l}", the["n_clubs"]),
+                 ("Đã có {slot_l}", the["n_matched"]), ("Chưa có {slot_l}", the["n_chua_xep"]),
+                 ("Tỉ lệ có {slot_l}", "%s%%" % the["ti_le_xep"])):
+        k.append(xuat_pdf.dong_khoa_gia_tri(d(a), b))
+    k.append(xuat_pdf.tieu_de(d("Mức lấp đầy từng {slot_l}")))
+    k.append(xuat_pdf.bang([d(x) for x in ("{slot}", "{session}", "Chỉ tiêu", "Đã nhận", "Số đăng ký")], [
+        [c["name"], nhan_buoi(c.get("buoi")) or c.get("buoi") or "",
+         "—" if c["tu_do"] or c["capacity"] is None else c["capacity"], c["matched"], c["so_dang_ky"]]
+        for c in du["clb"]], [3, 2, 1, 1, 1]))
+    k.append(xuat_pdf.tieu_de(d("Mức hài lòng về nguyện vọng")))
+    hang = [[("%s%s" % (x["hang"], "+" if x["gop"] else "")), x["so_em"]] for x in du["nguyen_vong"]["phan_bo"]]
+    if du["nguyen_vong"]["ngoai_danh_sach"]:
+        hang.append([d("Ngoài danh sách nguyện vọng"), du["nguyen_vong"]["ngoai_danh_sach"]])
+    k.append(xuat_pdf.bang([d("Được nguyện vọng"), d("Số lượt xếp ({person_l} × {session_l})")], hang, [2, 2]))
+    k.append(xuat_pdf.tieu_de(d("{person_l} chưa có {slot_l} theo {cohort_l}")))
+    k.append(xuat_pdf.bang([d("{cohort}"), d("Số {person_l}"), d("Chưa có {slot_l}")], [
+        [x["lop"] if x["lop"] is not None else d("Chưa có {cohort_l}"), x["n"], x["chua_xep"]] for x in du["lop"]],
+        [2, 1, 1]))
+    return xuat_pdf.dung_pdf(duong, k)

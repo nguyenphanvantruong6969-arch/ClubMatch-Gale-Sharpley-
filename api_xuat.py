@@ -2043,6 +2043,30 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
+    def export_bao_cao_tong_hop_pdf(self, output_path: str = ""):
+        """UX1I-I3: "Báo cáo tổng hợp" dạng PDF (cùng số liệu gộp như bản HTML, `bao_cao_tong_hop.dung_pdf`): KHÔNG mã,
+        tên, điểm hay số bốc thăm. Lỗi: `xuat_chua_co_ket_qua`, `xp1_thieu_thu_vien_pdf`. Trả {path, n_trang, ket_qua_cu}."""
+        return self._khoa_xuat(self._export_bao_cao_tong_hop_pdf_da_khoa, output_path)
+
+    def _export_bao_cao_tong_hop_pdf_da_khoa(self, output_path):
+        import bao_cao_tong_hop
+        import xuat_pdf
+        try:
+            xuat_pdf.san_sang()
+            if self._chua_co_ket_qua():
+                return _fail(err("xuat_chua_co_ket_qua"))
+            duong = self._duong_xuat(output_path, "bao_cao_tong_hop.pdf")
+            duong = bao_cao_tong_hop.dung_pdf(bao_cao_tong_hop.gom_du_lieu(self), duong, self._nhan_xuat())
+            return _ok({"path": duong, "n_trang": xuat_pdf.dem_trang(duong), "ket_qua_cu": self._ket_qua_cu()})
+        except xuat_pdf.ThieuThuVienPdf:
+            return _fail(err("xp1_thieu_thu_vien_pdf"))
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
     # ===== GT1-L4: mã tra cứu + em tự tra cứu =====
     # Đồng hồ cho khoá tạm: bài kiểm thay `self._gt1_dong_ho` để khỏi phải chờ thật.
     _gt1_dong_ho = staticmethod(time.monotonic)

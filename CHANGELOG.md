@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I3: gộp nhánh B (phiếu, vai giáo viên) với XP1 (PDF)
+
+- Gộp `origin/claude/ux1-b-phieu` (xung đột ở `phieu_giai_trinh.py`, `api_xuat.py`, `i18n_errors.py`, tài liệu): bảng phiếu có cột "Loại CLB" (XP1) rồi "Huy chương" (B, chỉ khi bật huy chương); `i18n_loi.js` sinh lại bằng `tao_i18n_js.py`.
+- `phieu_giai_trinh.py` (`_khoi_pdf`): bản PDF của phiếu có thêm dòng tóm tắt, cột Huy chương, bảng điểm các CLB đã thi, ghi chú huy chương và "Em nên làm gì tiếp", như bản HTML.
+- `bao_cao_tong_hop.py` (`dung_pdf`), `api_xuat.py` (`export_bao_cao_tong_hop_pdf`): "Báo cáo tổng hợp" dạng PDF qua `xuat_pdf.py`, cùng số liệu gộp (không tên, mã, điểm).
+- `phan_quyen.py`: giáo viên được gọi `export_phieu_giai_trinh_pdf` và `export_bao_cao_tong_hop_pdf`; `export_danh_sach_pdf` vẫn chỉ quản trị.
+- `index.html`, `js/19_ux1b_gv.js`, `i18n.js`: khối "Theo lớp và báo cáo" thêm "In phiếu cả {cohort_l}" (MỘT tệp PDF của lớp đang chọn) và "Báo cáo tổng hợp (PDF)"; giáo viên cần 1 lần bấm sau khi vào thẻ Kết quả.
+- Test: thêm `tests/test_ux1i_i3_phieu_bao_cao.py`; sửa `tests/test_ux1b_l7_phieu.py` (nay có cả hai cột) và `tests/test_xp1_phieu_pdf.py` (quyền). `docs/giai_trinh/CA_MAU.md` sinh lại: không đổi.
+
 ## 2026-11-19 — UX1I-I2: XP1 gộp vào menu "Xuất…" của A
 
 - `index.html`, `js/03_ket_qua.js`: bỏ menu riêng `#xuatPdfMenu`; ba mục PDF (`btnPdfDsClb`, `btnPdfDsLop`, ô `pdfLop`, `btnPdfPhieuLop`) nằm trong `#xuatMenu`, menu này nay luôn hiện cho quản trị (`data-quyen="quan_tri"`), bốn nút chỉ-huy-chương vẫn ẩn khi tắt chế độ. Bỏ khoá `xp1_menu` ở `i18n.js` (không còn dùng).

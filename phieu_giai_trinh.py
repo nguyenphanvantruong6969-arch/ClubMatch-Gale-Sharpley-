@@ -179,6 +179,9 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         k.append(xp.dong_khoa_gia_tri("Lần xếp lúc", str(run["run_at"]).replace("T", " ")[:16]))
     if gt.get("du_lieu_da_doi"):
         k.append(xp.dong_khoa_gia_tri("Lưu ý", CANH_BAO_DA_DOI))
+    if gt.get("tom_tat_dong"):
+        k.append(xp.dong_khoa_gia_tri("Tóm tắt", gt["tom_tat_dong"]))
+    fa = bool(gt.get("fa_bat"))                           # UX1B-L7: cột Huy chương chỉ ở chế độ huy chương
     for b in gt["buoi"]:
         nhan = _nhan_buoi(b["buoi"])
         if nhan:
@@ -194,13 +197,23 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
                 diem = x.get("diem_em") if x.get("chon_loc") else None
                 hang.append([
                     "ngoài nguyện vọng" if x.get("hang") is None else x["hang"], x["ten_clb"], _nhan_loai(x),
+                    *([x.get("huy_chuong") or "—"] if fa else []),
                     "—" if diem is None else diem, "%s / %s" % (x.get("da_nhan", "?"),
                                                                  "—" if x.get("suc_chua") is None else x["suc_chua"]),
                     _o_chuan(x), _cau_cua_dong(x) + (" (đã được xếp)" if x.get("duoc_xep") else "")])
-            k.append(xp.bang(["Nguyện vọng", "CLB", "Loại CLB", "Điểm của em", "Chỗ (đã nhận / tối đa)",
-                              "Mức vào được", "Vì sao"], hang, [1.1, 1.6, 1.1, 0.9, 1.1, 1.1, 2.6]))
+            k.append(xp.bang(["Nguyện vọng", "CLB", "Loại CLB"] + (["Huy chương"] if fa else []) +
+                             ["Điểm thi", "Chỗ đã nhận / tối đa", "Mức vào được", "Vì sao"], hang,
+                             [1.1, 1.6, 1.1] + ([0.9] if fa else []) + [0.9, 1.1, 1.1, 2.6 - (0.0 if not fa else 0.3)]))
             if b.get("chu_thich"):
                 k.append(xp.dong_khoa_gia_tri("Ghi chú", b["chu_thich"]))
+        if b.get("diem_da_thi"):                          # UX1B-L7: điểm mọi CLB em đã thi (bản PDF: bảng chữ, không thanh)
+            k.append(xp.tieu_de("Điểm các CLB em đã thi"))
+            k.append(xp.bang(["CLB", "Điểm thi", "Mức vào được"], [
+                [x["ten_clb"], _so(x["diem_em"]), _o_chuan(x)] for x in b["diem_da_thi"]], [2, 1, 1]))
+    if fa and gt["buoi"] and gt.get("chu_thich_huy_chuong"):
+        k.append(xp.dong_khoa_gia_tri("Ghi chú", gt["chu_thich_huy_chuong"]))
+    if gt.get("buoc_tiep"):
+        k.append(xp.dong_khoa_gia_tri("Em nên làm gì tiếp", " ".join("(%d) %s" % (i, c) for i, c in enumerate(gt["buoc_tiep"], 1))))
     if not gt["buoi"]:
         k.append(xp.dong_khoa_gia_tri("Lưu ý", "Chưa có thông tin xếp cho em."))
     k.append(xp.dong_khoa_gia_tri(

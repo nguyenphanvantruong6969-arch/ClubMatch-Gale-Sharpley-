@@ -174,9 +174,11 @@ def test_thieu_thu_vien_pdf_bao_loi_co_ten(api, tmp_path, monkeypatch):
     assert not r["ok"] and r["errors"][0]["code"] == "xp1_thieu_thu_vien_pdf"
 
 
-def test_xuat_pdf_chi_quan_tri():
+def test_phieu_pdf_giao_vien_duoc_in_danh_sach_pdf_chi_quan_tri():
+    # UX1I-I3: phiếu PDF cùng mức với phiếu HTML (giáo viên chủ nhiệm in phiếu lớp); danh sách có tên vẫn chỉ quản trị
     import phan_quyen
-    assert phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"] == phan_quyen.QUAN_TRI
+    assert phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"] == phan_quyen.GIAO_VIEN
+    assert phan_quyen.QUYEN["export_danh_sach_pdf"] == phan_quyen.QUAN_TRI
 
 
 def test_mot_hoc_sinh_mot_tep_mot_trang(api, tmp_path):
