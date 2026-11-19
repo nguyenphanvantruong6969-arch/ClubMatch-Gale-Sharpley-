@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (L1 passed d56c913; L2 next). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: IN PROGRESS (L1, L2 passed; CI green b5987b6 run 44525331384; L3 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -37,16 +37,16 @@ Lot L1 — PDF core (no UI)
 - [x] No file overwrite: reuse `_duong_xuat` / `duong_dan_khong_de` rules. Write to temp then rename.
 
 Lot L2 — explanation slips as PDF, by class, with club type
-- [ ] Test: `tests/test_xp1_phieu_pdf.py` — n slips = n pages minimum (each student starts a new page; long slip may
+- [x] Test: `tests/test_xp1_phieu_pdf.py` — n slips = n pages minimum (each student starts a new page; long slip may
       span 2); filter by `lop`; bulk = folder with one PDF per class + `_chua_co_lop.pdf`; every row shows club
       type label; a student's slip has ONLY their own data (no other student id/name in their page text).
-- [ ] `giai_trinh.giai_trinh_mot_hoc_sinh`: add `loai_clb` to each `cac_lua_chon` item (read `clubs.loai` via
+- [x] `giai_trinh.giai_trinh_mot_hoc_sinh`: add `loai_clb` to each `cac_lua_chon` item (read `clubs.loai` via
       `dung_du_lieu_run` data; None in plain RB-DA mode when column is NULL → label "—"). Additive key only.
-- [ ] ONE student's slip as PDF (replaces dropped UX1B-L6): `student_ids=[sid]` → one PDF; button "Lưu PDF" on the
+- [x] ONE student's slip as PDF (replaces dropped UX1B-L6): `student_ids=[sid]` → one PDF; button "Lưu PDF" on the
       lookup card (`js/14_giai_trinh.js`), target ≤ 4 clicks (search → pick → Lưu PDF → save). Test it.
-- [ ] Also show the type in the HTML slip (`phieu_giai_trinh._bang`: new column "Loại CLB"); update affected
+- [x] Also show the type in the HTML slip (`phieu_giai_trinh._bang`: new column "Loại CLB"); update affected
       snapshot tests deliberately (`SUA_CO_Y` pattern if needed).
-- [ ] API (`api_xuat.py`): `export_phieu_giai_trinh_pdf(output_path="", lop=None, theo_lop=False, student_ids=None)` →
+- [x] API (`api_xuat.py`): `export_phieu_giai_trinh_pdf(output_path="", lop=None, theo_lop=False, student_ids=None)` →
       `theo_lop=True`: folder `phieu_giai_trinh_theo_lop/` one PDF per class; else one PDF (all or one class).
       Reuse `_export_phieu_giai_trinh_da_khoa` selection logic (extract a helper, do not copy). Same errors
       (`gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`). Wrap in `_khoa_xuat`. Returns
