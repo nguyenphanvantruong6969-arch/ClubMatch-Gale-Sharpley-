@@ -1,5 +1,16 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT L8-B | reviewed 90ee9aa..b960b60
+verdict: NO BUGS (3 minor notes)
+- Tests: test_gt3_tai_lieu + test_gt_tich_hop (incl. test_i4_* byte test) + test_a13_12_tai_lieu -> 44 passed. Docs diff is text/tables/PNG/PDF only (no product code).
+- Docs match the real UI: block "Theo lớp và báo cáo", buttons "Xuất theo lớp" / "Báo cáo tổng hợp", fold "Mã tra cứu…" (quản trị), group "Cài đặt và quản lý" in
+  HUONG_DAN_SU_DUNG.md, HUONG_DAN_CHAY.md, KICH_BAN_DEMO.md; no stale "nhóm Cài đặt" left in the md files I grepped. Code-map rows added (bao_cao_tong_hop.py, js/19_ux1b_gv.js, _huy_chuong_ca_so_sai).
+- anh/phieu_mau.pdf (4 pages, 2 slips: HS001, HS004) + anh/04_phieu.png: each slip carries only its own student's data (id appears once per slip, no other id); no seed / "số khoá";
+  no "Huy chương" column or legend (non-FA sample); summary line, "Điểm các CLB em đã thi" with SVG bar only for tested clubs, "Em nên làm gì tiếp" box present; reason sentences say "bốc thăm" in words only.
+- After table honest: slip = 5 clicks, target 4 marked "chưa" (needs XP1 PDF button at I3); Báo cáo tổng hợp 1 click (HTML, PDF at I3), labelled "đo", data marked MÔ PHỎNG, hạt giống 42; no figure presented as a real survey.
+Notes: (a) anh/03_tra_cuu_HS004.png is the STAFF card (shows "số khoá bốc thăm: 42" and "Học sinh" voice) — correct for staff but it is not referenced by any md, so keep it out of student-facing docs;
+ (b) on screen the next-steps box title is "Việc tiếp theo" while the slip says "Em nên làm gì tiếp" (L7 item 4 / "same wording"); (c) a missing score shows "Không có" on screen but "—" on the slip. None blocks.
+
 CHECKER REPORT L5c fix1 | reviewed 276616b..f3ff065
 verdict: NO BUGS
 - Bug 1 fixed: (a) a book where no club name is available (fa_huy_chuong_trung_gia_tri) now uses `ux1b_huy_chuong_gop_khong_clb` (vi+en, no "ví dụ ở: "); test r1c green.
