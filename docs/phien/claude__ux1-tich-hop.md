@@ -11,7 +11,7 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: I1. Waiting: XP1 Status: DONE (L5 in review, checked 15:47 UTC; send_later 60 min); B in progress.
+- Done: I1. I2 merge of XP1 pushed (66766a9; CHANGELOG conflict only); coder wiring I2. B in progress (§6 review pushed 17:46).
 
 ## Sessions
 | Role | Session | State |
@@ -23,3 +23,4 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 ## Needs Truong
 1. Team B (claude/ux1-b-phieu) has no lead yet; I3 cannot run until it is DONE.
 2. XP1 open questions (combined PDF with contents; pypdf dev-only) are on XP1's own list.
+3. XP1: Windows exe build was NOT run on its branch (XP1 Needs Truong); I4 runs it on the integrated branch.
