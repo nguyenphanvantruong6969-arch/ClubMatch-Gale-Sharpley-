@@ -7,7 +7,7 @@ Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/cl
 ## Plan (lead ticks) — order from protocol §10
 - [x] L4-B Báo cáo tổng hợp (bao_cao_tong_hop.py, export_bao_cao_tong_hop HTML, QUYEN giao_vien) + homeroom landing
       (class picker, "Xuất theo {cohort_l}"); NO "In phiếu cả lớp" button (XP1, wired at integration I3)
-- [ ] L7 slip content: summary, tested-club scores, SVG own-vs-cutoff, next steps, FA medal column + medal legend,
+- [x] L7 slip content: summary, tested-club scores, SVG own-vs-cutoff, next steps, FA medal column + medal legend,
       plain words. NOT the club type (XP1 owns `loai`)
 - [ ] L5c the 5 recommendations of docs/ke_hoach/ux/UX1_DANH_GIA_A.md §4
 - [ ] L8-B slip docs, regenerate CA_MAU.md + evidence pack + phieu_mau.pdf, After row
@@ -15,7 +15,7 @@ Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/cl
 - ~~L6 slip In / Lưu PDF via iframe print~~ DROPPED (XP1)
 
 ## Current state (overwrite)
-- Done: L4-B (0f73c43, checker NO BUGS). In progress: L7 (GO sent).
+- Done: L4-B (0f73c43), L7 (fc5e9fc, 2 fix rounds), checker NO BUGS. In progress: L5c (GO sent).
 
 ## Sessions
 | Role | Session | State |
