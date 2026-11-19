@@ -81,3 +81,11 @@ Done when (§2 I3): 353 passed, 0 skipped (B + I1 + I2 sets + gt1/gt3/gt4 UI; py
 (e) "In phiếu cả lớp" as ONE PDF for the chosen class: acceptable, no defect (empty class value = no call; unknown class
     -> gt1_khong_co_hoc_sinh).
 Invariants 1,2,4,6,7 ok (no schema/CSV change; kiem_nhanh 7/7). Edge: empty workspace -> xuat_chua_co_ket_qua; non-FA report ok.
+
+## CHECKER REPORT I3 fix1 | reviewed 5f27391..b2f7f8b
+verdict: NO BUGS (bug 1 fixed)
+- Diff touches only the two `Buổi` cells (dung_html, dung_pdf) + 2 new tests; nothing else changed.
+- Single-session workspace: `__mac_dinh__` no longer in HTML or PDF (new tests + my own check).
+- Not over-blanked: `giai_trinh.nhan_buoi` blanks only empty/None/`__mac_dinh__`; thu_2/thu_6 -> "Thứ 2"/"Thứ 6"; a custom
+  session label ("Chiều tự đặt") is kept. Checked in HTML and PDF with a mixed multi-session report.
+- Tests (B + I1 + I2 sets, Chromium, pypdf): 269 passed, 0 skipped; kiem_nhanh 7/7.
