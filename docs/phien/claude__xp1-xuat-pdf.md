@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (L1-L3 passed; CI green a5b610e run 44533627421; L4 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: IN PROGRESS (L1-L4 passed; CI green 56e55ff run 44542205370; L5 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -62,13 +62,13 @@ Lot L3 — member lists as PDF
 - [ ] (skipped, on Needs Truong) Optional (ask Truong): one combined PDF with a cover table of contents in addition to the folder.
 
 Lot L4 — UI + permissions + i18n
-- [ ] "Xuất…" menu (`#xuatMenu`, thẻ Kết quả): "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)",
+- [x] separate "Xuất PDF…" menu (`#xuatPdfMenu`, panel "Xuất dữ liệu"; `#xuatMenu` stays medal-only): "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)",
       "Phiếu giải trình theo lớp (PDF)" + class picker reusing the existing class selector of the HTML slip export.
-- [ ] `phan_quyen.QUYEN`: the 2 new functions = QUAN_TRI; `nhat_ky` labels `nkhd_export_*_pdf` (vi+en) —
+- [x] `phan_quyen.QUYEN`: the 2 new functions = QUAN_TRI; `nhat_ky` labels `nkhd_export_*_pdf` (vi+en) —
       `test_gt4_nhat_ky_doc.py` enforces this (that is what broke CI #1013).
-- [ ] New error codes (e.g. `xp1_thieu_thu_vien_pdf` when reportlab/font missing) in `i18n_errors.py` →
+- [x] New error codes (e.g. `xp1_thieu_thu_vien_pdf` when reportlab/font missing) in `i18n_errors.py` →
       `python tao_i18n_js.py`. No "—" joining sentences (`test_van_phong_tu_nhien.py`).
-- [ ] UI test: `tests/test_giao_dien_xp1_xuat_pdf.py` (menu items visible for admin only, call right API).
+- [x] UI test: `tests/test_giao_dien_xp1_xuat_pdf.py` (menu items visible for admin only, call right API).
 
 Lot L5 — docs + packaging + verify
 - [ ] `HUONG_DAN_SU_DUNG.md` section "Xuất PDF hàng loạt"; `CLAUDE_CHI_TIET.md` code map (`xuat_pdf.py`).
