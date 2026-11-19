@@ -95,6 +95,7 @@ Lot L5 — docs + packaging + verify
 
 ## Needs Truong (1 line each + recommendation)
 - L3 optional combined PDF with table of contents: not built unless Truong asks. Rec: folder output is enough for v1.
+- pypdf as a dev-only test dependency (reads PDF text to prove diacritics in CI): removed per §0 (one new library). Rec: allow it in requirements-dev.txt; it never ships in the exe.
 - L5 manual check: launch the built Windows exe once and export PDFs offline. Rec: do it after CI is green.
 
 ## Current state (overwrite each handoff)
