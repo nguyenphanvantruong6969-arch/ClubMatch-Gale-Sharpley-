@@ -17,8 +17,8 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 | Role | Session | State |
 |---|---|---|
 | lead | session_01YVAyu2FhPzwKmmTgfwCCGj | active |
-| coder | — | — |
-| checker | — | — |
+| coder | session_01YVAytyZ759wgqn178zVkKz | active (Sonnet) |
+| checker | session_01YVAytyhGhZ8LRTwtD3Z9GW | active (Sonnet) |
 
 ## Needs Truong
 1. Team B (claude/ux1-b-phieu) has no lead yet; I3 cannot run until it is DONE.
