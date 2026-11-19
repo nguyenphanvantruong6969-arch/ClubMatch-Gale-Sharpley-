@@ -1,4 +1,21 @@
-# Checker (UX1B) — verdicts
+# Checker (UX1B) — verdicts (newest first)
+
+CHECKER REPORT L7 | reviewed 11b6ce4..823e560
+verdict: 1 BUG (minor wording) + 3 notes
+1. fa_ly_do.py:cau_ly_do (MEDAL) + giai_trinh.py:_cau_huy_chuong | repro: FA on; clubs T (TUYEN_CHON, tested), U (GIOI_HAN, no test), F (TU_DO);
+   s3/s4 prefs [T,U,F], s1 Vàng on U -> s3's U row reads "Em và các bạn bằng điểm; các bạn có huy chương cao hơn ở CLB U được xét trước.
+   Em chưa đặt huy chương ở CLB này; các bạn đặt Vàng được xét trước." | expected: no "bằng điểm" where the club has no test / the student
+   is tier 2 (khoa_uu_tien_wharton: tier2 key = (1, -medal, stb), no score step). Fix: when the row has no score (diem_em None / club not chon_loc),
+   use "Các bạn đặt huy chương cao hơn được xét trước." (+ the new sentence). Legend itself is TRUE for tested and untested clubs
+   ("khi bằng nhau ở các bước trước … chưa đặt thì xét sau … vẫn bằng thì bốc thăm") because it does not name the score step.
+   The coder's chain "giữ chỗ > điểm > huy chương > bốc thăm" holds only for tested clubs (tier 1); at an untested club it is giữ chỗ > huy chương > bốc thăm.
+Checked OK: tests 84 passed (test_ux1b_l7_phieu, l4_bao_cao, giao_dien_ux1b_phieu, gt_tich_hop incl. CA_MAU byte test, gt1_giai_trinh, gt3_phan_quyen).
+ - Medal col only when fa_bat; own medals only (huy_chuong read per student; my 4-student FA run: no other id/medal in the card data).
+ - SVG only for clubs the student tested (s3/s4 no test -> none, s1/s2 one each); slip has no seed text; "Chọn ngẫu nhiên khi bằng điểm" used.
+ - Non-FA slip: no medal column/legend (tests). MEDAL sentence uses club's last-accepted medal (cut_medal), no names. L4-B stale line present (test_ux1b_l4_bao_cao).
+Notes: (a) API JSON of get_giai_trinh_hoc_sinh still carries run.seed; only display hidden for students — fine if student path (tra_cuu_hoc_sinh) also
+ omits it (not re-verified). (b) `tinh_nang` reads CURRENT rules, not rules at run time; harmless. (c) unplaced-everywhere + features on: only via unit tests
+ (my scenario placed the student in a TU_DO club).
 
 CHECKER REPORT L4-B | reviewed 0100cd7..0f73c43
 verdict: NO BUGS (2 notes, not blocking)
