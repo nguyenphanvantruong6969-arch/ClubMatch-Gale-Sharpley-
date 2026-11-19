@@ -90,8 +90,8 @@ Lot L5 — docs + packaging + verify
 | Role | Model | Session id | State |
 |---|---|---|---|
 | lead | claude-opus-5-5 | session_01VfPzNtmP5QGfFfaGiBWkze | running |
-| coder | claude-sonnet-5-5 | (creating) | — |
-| checker | claude-sonnet-5-5 | (creating) | — |
+| coder | claude-sonnet-5-5 | session_01VfPzNrcErSweid4dXBTk72 | setup |
+| checker | claude-sonnet-5-5 | session_01VfPzNunsu6WPaVRox9FJYc | setup |
 
 ## Needs Truong (1 line each + recommendation)
 - L3 optional combined PDF with table of contents: not built unless Truong asks. Rec: folder output is enough for v1.
