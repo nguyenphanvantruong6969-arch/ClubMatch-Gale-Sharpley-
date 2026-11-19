@@ -505,9 +505,12 @@ class XuatKetQuaMixin:
                         hang = [[i, r["student_id"], r["ho_ten"] or "", r["lop"] or ""]
                                 + ([nhan_buoi(r["buoi"])] if du["nhieu_buoi"] else [])
                                 for i, r in enumerate(ds, 1)]
+                        n_em = len({r["student_id"] for r in ds})     # đếm EM, không đếm lượt (em x buổi)
                         duong = danh_sach_pdf.dung_pdf_clb(
                             os.path.join(thu_muc, ten + ".pdf"), n("{person_l} chưa có {slot_l}"),
-                            [(n("Số {person_l}"), len(ds))], cot_nay, hang, canh_bao)
+                            [(n("Số {person_l}"), n_em),
+                             ("Số lượt chưa có chỗ", len(ds) if len(ds) != n_em else None)],
+                            cot_nay, hang, canh_bao)
                     else:
                         ten = self._ten_chua_dung(self._cat_ten_tep(self._ten_file_an_toan(
                             club_id + ("_" + buoi if buoi else ""), "clb")), da_dung)

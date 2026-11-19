@@ -236,3 +236,56 @@ def test_so_that_ba_buoi_dong_bang_ket_qua_va_khong_lo_so_lieu(api, tmp_path):
     assert d["n_dong"] == _so_dong_ket_qua(api) and d["n_tep"] == len(_tep(d["thu_muc"])) > 3
     d2 = api.export_danh_sach_pdf(str(tmp_path / "rb"), theo="lop")["data"]
     assert d2["n_dong"] == d["n_dong"]
+
+
+# ------------------------------------------------------------------ vòng sửa 3: cột STT, đếm em, chữ hoa đầu tiêu đề
+
+def test_cot_stt_du_rong_cho_chu_stt_va_so_ba_chu_so():
+    """Luôn chạy (không cần pypdf): cột STT phải chứa tiêu đề "STT" và số tới 4 chữ số trên một dòng."""
+    import danh_sach_pdf
+    from reportlab.pdfbase import pdfmetrics
+    xuat_pdf.san_sang()
+    for so_cot in (4, 5, 8):
+        b = danh_sach_pdf.bang_danh_sach(["STT"] + ["Cột %d" % i for i in range(so_cot - 1)],
+                                         [[1] + ["x"] * (so_cot - 1)])
+        can = max(pdfmetrics.stringWidth("STT", "BeVietnamPro-Bold", 9),
+                  pdfmetrics.stringWidth("0000", "BeVietnamPro", 9)) + 12      # 12 = đệm trái + phải của ô
+        assert b._colWidths[0] >= can, (so_cot, b._colWidths[0], can)
+
+
+@can_pypdf
+def test_stt_khong_bi_cat_chu_trong_tep_nhieu_buoi(api, tmp_path):
+    _nap(api, buoi=True)
+    for theo in ("lop", "clb"):
+        d = api.export_danh_sach_pdf(str(tmp_path / theo), theo=theo)["data"]
+        ten = "10A2.pdf" if theo == "lop" else "_chua_duoc_xep.pdf"
+        dong = _chu(os.path.join(d["thu_muc"], ten)).split("\n")
+        assert "STT" in dong and "S" not in dong and "T" not in dong, (theo, dong[:12])
+
+
+@can_pypdf
+def test_chua_duoc_xep_nhieu_buoi_dem_so_em_khong_dem_luot(api, tmp_path):
+    _nap(api, buoi=True)
+    with api._ket_noi_doc() as cur:
+        luot = cur.execute("SELECT COUNT(*) FROM match_results WHERE club_id IS NULL").fetchone()[0]
+        em = cur.execute("SELECT COUNT(DISTINCT student_id) FROM match_results WHERE club_id IS NULL").fetchone()[0]
+    assert luot > em > 0                      # dữ liệu thử có em chưa có chỗ ở cả hai buổi
+    d = api.export_danh_sach_pdf(str(tmp_path / "ra"), theo="clb")["data"]
+    chu = _chu(os.path.join(d["thu_muc"], "_chua_duoc_xep.pdf"))
+    assert "Số học sinh: %d\n" % em in chu + "\n" and "Số học sinh: %d\n" % luot not in chu + "\n"
+    assert "Số lượt chưa có chỗ: %d" % luot in chu
+
+
+@can_pypdf
+def test_tieu_de_viet_hoa_chu_dau(api, tmp_path):
+    _nap(api)
+    d = api.export_danh_sach_pdf(str(tmp_path / "ra"), theo="clb")["data"]
+    dong = _chu(os.path.join(d["thu_muc"], "_chua_duoc_xep.pdf")).split("\n")
+    assert dong[0] == "Học sinh chưa có câu lạc bộ", dong[0]
+
+
+def test_hoa_dau_giu_nguyen_phan_con_lai():
+    import danh_sach_pdf
+    assert danh_sach_pdf.hoa_dau("học sinh chưa có CLB") == "Học sinh chưa có CLB"
+    assert danh_sach_pdf.hoa_dau("Đã đủ") == "Đã đủ" and danh_sach_pdf.hoa_dau("đã đủ") == "Đã đủ"
+    assert danh_sach_pdf.hoa_dau("") == ""

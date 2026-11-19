@@ -99,8 +99,10 @@ def ngat_trang():
     return PageBreak()
 
 
-def bang(tieu_de_cot, hang, do_rong=None):
-    """Bảng có tiêu đề cột lặp lại ở mỗi trang; `do_rong` (tuỳ chọn) là tỉ lệ các cột."""
+def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
+    """Bảng có tiêu đề cột lặp lại ở mỗi trang; `do_rong` (tuỳ chọn) là tỉ lệ các cột.
+    `cot_dau_mm`: cột đầu (số thứ tự) rộng CỐ ĐỊNH tính bằng mm; các cột còn lại chia phần còn lại theo tỉ lệ
+    (tỉ lệ cột đầu trong `do_rong` bị bỏ qua). Cố định để chữ "STT" và số nhiều chữ số không bị cắt dọc."""
     _dang_ky_phong()
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4
@@ -109,7 +111,11 @@ def bang(tieu_de_cot, hang, do_rong=None):
     rong = A4[0] - 36 * mm
     n = len(tieu_de_cot)
     ti_le = do_rong or [1] * n
-    cot = [rong * t / sum(ti_le) for t in ti_le]
+    if cot_dau_mm is not None and n > 1:
+        con_lai = rong - cot_dau_mm * mm
+        cot = [cot_dau_mm * mm] + [con_lai * t / sum(ti_le[1:]) for t in ti_le[1:]]
+    else:
+        cot = [rong * t / sum(ti_le) for t in ti_le]
     du_lieu = [[_p(c, "o_dau") for c in tieu_de_cot]] + [[_p(o, "o") for o in h] for h in hang]
     b = Table(du_lieu, colWidths=cot, repeatRows=1)
     b.setStyle(TableStyle([
