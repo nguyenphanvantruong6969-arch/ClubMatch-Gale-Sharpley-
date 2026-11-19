@@ -2,7 +2,7 @@
 
 > Protocol: docs/phien/UX1_GIAO_THUC.md. Lots: docs/ke_hoach/ux/UX1_KE_HOACH.md. English. ≤ 60 lines.
 
-Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 407e62c)
+Status: DONE 9fbdfdf CI green 2026-11-19 (run https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44428497242); integration §7 pending team B
 
 ## Plan (lead ticks)
 - [x] L1 Next-step bar (ebf24cd; checker NO BUGS 02f0a62; admin export = 4 clicks once L3 menu lands)
@@ -12,10 +12,10 @@ Status: IN PROGRESS (branch created 2026-11-18 from origin/claude/gt-tich-hop 40
 - [x] L5 warnings medium + short; medal-book message + Bật chế độ huy chương; two sample books (764c85c; checker NO BUGS 576ad3f)
 - [x] L5b medal words → 60/30/10 at reading layer, FA only (4cae05b; checker NO BUGS d9605ec)
 - [x] L8-A docs + screenshots + After table (ad569c2+fix1 326dbc6; checker NO BUGS 3d421e2)
-- [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
+- [x] CI gate (§5)   - [x] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: all 7 lots. In progress: CI gate (§5).
+- Done: 7 lots, L2b fix2–4, CI green 9fbdfdf, review UX1_DANH_GIA_A.md. Waiting: team B branch claude/ux1-b-phieu does not exist yet (checked 2026-11-19 01:02 UTC); polling hourly, 48 h limit per §7.
 
 ## Sessions
 | Role | Session | State |
