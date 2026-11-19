@@ -33,3 +33,28 @@ Observations (not bugs):
 - health_oversubscribed* severity changed info -> medium and texts shortened; tests updated by A. Teachers will now see
   it as a stronger warning. Worth a look in I4 review.
 - dat_loai_clb after a run does not mark results stale (same as other club edits before); affects next run only.
+
+## CHECKER REPORT I2 | reviewed 8f37d9d..9a4faca
+verdict: NO BUGS
+
+Done when (§2 I2): XP1 + I1 sets, pypdf + reportlab installed, RBDA_TEST_CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome:
+246 passed, 0 skipped, 0 failed (tests/test_xp1_*, test_giao_dien_xp1_*, test_ux1i_*, I1 set, test_gt4_cau_giai_trinh).
+`kiem_nhanh.py --co-so origin/main --so-seed 20` = 7/7 (60 cases identical).
+
+Lead's points:
+(a) Edited tests: test_giao_dien_xp1_xuat_pdf.py = pure retarget #xuatPdfMenu -> #xuatMenu, label "Xuất PDF…" -> "Xuất…";
+    all assertions kept (3 items, select, close-after-click, giao_vien hidden). test_giao_dien_ux1_ket_qua.py: old
+    `#xuatMenu is_hidden` (medals off) replaced by "menu visible" + the 4 medal-only items still hidden when opened -> same
+    intent kept, nothing dropped; new test_ux1i_i2_xp1_trong_menu.py covers the medals-on side. Other test edits are
+    benign: gt4 column index o[4]->o[5] (new Loại CLB column), "PDF" added to acronym allow-list, "xp1_" i18n prefix.
+(b) "Lưu PDF": search -> choose -> Lưu PDF = 3 clicks from Results tab (test asserts <= 3; I2 test <= 4). My own run:
+    single-student PDF has that student's id/name only (no other id as a token, no other name), 1 page, has "Loại CLB".
+(c) phan_quyen: export_phieu_giai_trinh_pdf + export_danh_sach_pdf = QUAN_TRI; giao_vien gets gt3_khong_du_quyen (tested).
+    #xuatMenu and #btnGtPdfMot carry data-quyen=quan_tri (hidden for giao_vien). Medal-only items stay hidden when off.
+(d) Slip PDF and HTML both show "Loại CLB" (— when the club has no type).
+Invariants: 1 ok; 2 ok (loai only displayed, algorithm does not read it); 4 ok; 6 ok (xp1_thieu_thu_vien_pdf,
+xp1_kieu_xuat_la in i18n; ma_loi_js DAT); 7 ok (no schema/CSV change; fonts + reportlab only in requirements).
+Privacy: member-list PDFs (clb and lop) contain no "điểm / bốc thăm / stb / score" text.
+Own edge cases (all ok): unknown or empty student_ids -> gt1_khong_co_hoc_sinh; bad `theo` -> xp1_kieu_xuat_la; no run yet ->
+xuat_chua_co_ket_qua / gt1_chua_chay; data edited after the run -> stale warning in the PDF ("Lưu ý") and ket_qua_cu=True.
+Observation (not a bug): per-class slip PDFs print each student's lookup code (same as the existing HTML slip, GT1-L4).
