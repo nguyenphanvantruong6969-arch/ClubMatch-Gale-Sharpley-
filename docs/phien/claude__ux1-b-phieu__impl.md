@@ -59,3 +59,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 | 2026-11-19 | Sonnet | Hook re-fired; no new work since 903bffa; lead said stay available (no replacement session) | waiting FIX L5c / GO L8-B |
 - L5c fix1 coded; pushing, then CODER DONE L5c fix1.
 | 2026-11-19 | Sonnet | L5c fix1 (f3ff065); hook re-fired at >400k; lead says no replacement session | stay available |
+- L8-B done and pushed; waiting for review.

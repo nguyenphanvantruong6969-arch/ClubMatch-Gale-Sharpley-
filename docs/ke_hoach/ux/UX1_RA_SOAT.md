@@ -42,8 +42,8 @@ Các luồng chính cũng có test: `tests/test_giao_dien_ux1_tiep_theo.py` (4 l
 | GV phụ trách | Xử lý các em chưa có CLB (sổ mẫu 120 học sinh, hạt giống 42: 88 em có chỗ, 32 em chưa có chỗ) | **4–6** | **1** sau khi chạy xong (nút "Xử lý n …" mở bảng) | 2 | có | Thanh + ô "Cần xử lý" bấm được (L1) |
 | GV chủ nhiệm | Lấy kết quả lớp mình | **3** | **≤ 2** (mở app đã ở thẻ Kết quả; "Theo lớp" → chọn lớp; 0–1 lần nếu app nhớ cách xem lần trước) | 2 | có | Giáo viên vào thẳng "Kết quả" (L2) |
 | Học sinh | Tự tra cứu bằng mã | **2** | **2** | 2 | có (không đổi) | — |
-| GV phụ trách | Phiếu PDF cho **một** em | ≈ **8** | *nhóm B, sau tích hợp* | 4 | — | L6 (nhóm B) |
-| Ban giám hiệu | Báo cáo tổng hợp | không có | *nhóm B, sau tích hợp* | 1 | — | L4-B (nhóm B) |
+| GV phụ trách | Phiếu giải trình cho **một** em (đo 19/11, nhóm B, trước XP1) | ≈ **8** | **5** (ô tìm + chọn em, "In phiếu cho học sinh này", "Mở tệp", Ctrl+P, Lưu PDF); vẫn phải tự in thành PDF | 4 | **chưa** | L7 đã sửa nội dung phiếu; mục tiêu 4 cần nút PDF của XP1 (tích hợp I3), chưa tính là đạt |
+| Ban giám hiệu | Báo cáo tổng hợp (đo 19/11, nhóm B) | không có | **1** (nút "Báo cáo tổng hợp" ở khối "Theo lớp và báo cáo" thẻ Kết quả; ghi tệp HTML, `test_giao_dien_ux1b_vai_gv.py`) | 1 | có (HTML; bản PDF ở tích hợp I3) | L4-B |
 
 Ghi chú: sổ mẫu 120 học sinh luôn còn một số em chưa có CLB nên sau khi chạy thanh dừng ở "Xử lý n …"; nút phụ "Xuất kết quả"
 trên thanh vẫn tải ngay (cũng 4 lần bấm). Bảng "ba thẻ" ở Cài đặt: đổi cách đặt thích = **1** lần bấm (trước: mở menu ⋯ → hộp

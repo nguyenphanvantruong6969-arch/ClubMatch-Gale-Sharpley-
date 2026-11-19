@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L8-B: tài liệu phiếu, ảnh, bảng "Sau"
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Phiếu giải trình và Báo cáo tổng hợp" (nội dung phiếu mới, khối "Theo lớp và báo cáo", thẻ học sinh không số khoá); hàng Kết quả; nhóm "Cài đặt và quản lý". `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: tên nhóm mới.
+- `docs/ke_hoach/ux/anh/04_phieu.png`, `phieu_mau.pdf`, `03_tra_cuu_HS004.png` chụp lại bằng `chup_phieu.py` (Chromium, dữ liệu MÔ PHỎNG, hạt giống 42).
+- `UX1_RA_SOAT.md` bảng "Sau": phiếu một em đo 5 lần bấm, CHƯA đạt mục tiêu 4 (cần nút PDF của XP1, tích hợp I3); báo cáo tổng hợp 1 lần bấm (HTML).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: hai hàng bản đồ mã (`bao_cao_tong_hop.py`, `js/19_ux1b_gv.js`, `_huy_chuong_ca_so_sai`).
+- `CA_MAU.md` và gói minh chứng: câu chữ không đổi từ L7, test sinh lại giống từng byte vẫn qua.
+
 ## 2026-11-19 — UX1B-L5c fix1 (từ checker)
 
 - `api_quan_ly._huy_chuong_ca_so_sai`: MỘT nơi giữ ngưỡng "cả sổ sai" (từ một nửa số học sinh có nguyện vọng); `get_data_health_report` chỉ trả `gop_huy_chuong` khi qua ngưỡng, `get_san_sang_huy_chuong` thêm `huy_chuong_ca_so`. Ít em sai: giữ từng dòng có mã, thanh "Việc tiếp theo" không nhảy sang Cài đặt, khung Cài đặt vẫn cho đặt loại CLB (kèm nút Quay lại).
