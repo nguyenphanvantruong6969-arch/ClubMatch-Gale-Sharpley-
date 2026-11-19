@@ -20,7 +20,8 @@ export in bulk: (1) **member lists** as PDF, one file per club OR one file per c
   the UI) regular + bold, plus its OFL licence file. Add `reportlab` to `requirements.txt`; add the TTFs to
   `kiosk.spec` `datas` (already ships `assets/fonts`) and `collect_all("reportlab")` if PyInstaller misses modules.
 - Roles: Opus wrote this plan; **Sonnet codes** and ticks it; checker reviews per lot.
-- Overlap: XP1 replaces UX1 team B lot L6 (print-dialog PDF) and the club-type part of L7 (`claude/ux1-b-phieu`,
+- Overlap (confirmed 2026-11-19, see `UX1_GIAO_THUC.md` §10 on `claude/ux1-b-phieu`): team B keeps the medal
+  column; XP1 owns `loai` + "Loại CLB". Integration order A → B → XP1. XP1 replaces UX1 team B lot L6 (print-dialog PDF) and the club-type part of L7 (`claude/ux1-b-phieu`,
   not started). Update `docs/phien/claude__ux1-b-phieu.md` Plan with a one-line note in L2.
 - Engine is separate from data: keep `phieu_giai_trinh.dung_phieu_html` (HTML export unchanged); build PDF from the
   SAME data (`giai_trinh.giai_trinh_mot_hoc_sinh` output), never by converting HTML.
@@ -41,9 +42,11 @@ Lot L2 — explanation slips as PDF, by class, with club type
       type label; a student's slip has ONLY their own data (no other student id/name in their page text).
 - [ ] `giai_trinh.giai_trinh_mot_hoc_sinh`: add `loai_clb` to each `cac_lua_chon` item (read `clubs.loai` via
       `dung_du_lieu_run` data; None in plain RB-DA mode when column is NULL → label "—"). Additive key only.
+- [ ] ONE student's slip as PDF (replaces dropped UX1B-L6): `student_ids=[sid]` → one PDF; button "Lưu PDF" on the
+      lookup card (`js/14_giai_trinh.js`), target ≤ 4 clicks (search → pick → Lưu PDF → save). Test it.
 - [ ] Also show the type in the HTML slip (`phieu_giai_trinh._bang`: new column "Loại CLB"); update affected
       snapshot tests deliberately (`SUA_CO_Y` pattern if needed).
-- [ ] API (`api_xuat.py`): `export_phieu_giai_trinh_pdf(output_path="", lop=None, theo_lop=False)` →
+- [ ] API (`api_xuat.py`): `export_phieu_giai_trinh_pdf(output_path="", lop=None, theo_lop=False, student_ids=None)` →
       `theo_lop=True`: folder `phieu_giai_trinh_theo_lop/` one PDF per class; else one PDF (all or one class).
       Reuse `_export_phieu_giai_trinh_da_khoa` selection logic (extract a helper, do not copy). Same errors
       (`gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`). Wrap in `_khoa_xuat`. Returns
