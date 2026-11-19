@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-19 — XP1-L5: tài liệu, đóng gói, hiệu năng
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Xuất PDF hàng loạt" (ba mục menu, ô chọn lớp, phiếu một em, ghi chú: CLB không có em nào được xếp thì không có tệp danh sách). `CLAUDE_CHI_TIET.md`: bản đồ mã (`xuat_pdf.py`, `danh_sach_pdf.py`, hai hàm API), số tệp test 346.
+- `.github/workflows/build-windows-exe.yml`: bước soát bản đóng gói kiểm thêm hai phông `.ttf` và tệp giấy phép OFL (reportlab không đọc `.woff2`). `kiosk.spec` đã có `assets/fonts` và `collect_all("reportlab")` từ L1.
+- `xuat_pdf.py`: kiểu đoạn tạo một lần (không tạo lại cho từng ô). Không đổi kết quả đầu ra.
+- Hiệu năng, sổ mô phỏng `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (800 em, 27 lớp, seed 3, máy phát triển Linux): phiếu giải trình cả trường theo lớp 13,1 giây (28 tệp, 1.519 trang), phiếu một tệp 14,7 giây, danh sách theo CLB 2,6 giây (21 tệp), danh sách theo lớp 0,8 giây. Mục tiêu < 30 giây; chờ số đo trên CI.
+- Test mới: `tests/test_xp1_hieu_nang.py` (4 ca, ngưỡng 30 giây), `tests/test_xp1_dong_goi.py` (5 ca: phông, giấy phép, spec, ghim phiên bản, workflow). `kiem_nhanh.py` 7/7.
+
 ## 2026-11-19 — XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu
 
 - `index.html`, `js/03_ket_qua.js`: menu riêng `#xuatPdfMenu` (chỉ quản trị, `data-quyen="quan_tri"`) với "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)", ô chọn lớp `#pdfLop` (dùng lại `napOLocLop`, không có mục "chưa có lớp") và "Phiếu giải trình theo lớp (PDF)": "Tất cả lớp" ra thư mục mỗi lớp một tệp, chọn một lớp ra MỘT tệp. Ba nút khoá khi chưa có kết quả / đang chạy / đang xuất (như "Xuất theo lớp"); bấm xong menu tự đóng. Menu riêng vì "Xuất…" cũ chỉ hiện ở chế độ Huy chương và `test_giao_dien_ux1_ket_qua.py` khoá điều đó.

@@ -56,7 +56,17 @@ def san_sang():
     _dang_ky_phong()
 
 
+_KIEU: dict = {}
+
+
 def _kieu(ten):
+    """Kiểu đoạn dùng chung (tạo MỘT lần mỗi tên: bảng 800 phiếu có hàng chục nghìn ô)."""
+    if ten not in _KIEU:
+        _KIEU[ten] = _tao_kieu(ten)
+    return _KIEU[ten]
+
+
+def _tao_kieu(ten):
     from reportlab.lib.styles import ParagraphStyle
     mau = {
         "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=15, leading=20, spaceAfter=8),
