@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B R1 fix2 (từ checker)
+
+- `giai_trinh._chuan_clb_fa`: mức vào được của CLB có thi (FA) lấy từ các dòng REJECTED đã lưu của CLB (cùng nguồn với câu "Vì sao"): có dòng RESERVED -> "Chỗ dành riêng" (không số), ngược lại `cut_score`; chưa ai bị từ chối -> "Còn chỗ". Không còn lấy điểm thấp nhất của người nhận (kể cả người giữ chỗ). Cột, thanh SVG và câu cùng một mức.
+- `phieu_giai_trinh._o_chuan`: số điểm in như câu ("8" thay "8.0").
+- Test: 3 ca mới trong `tests/test_ux1b_l7_phieu.py` (giữ chỗ 3 điểm + t 8 + x 7; người nhận cuối giữ chỗ; chưa ai bị từ chối).
+
 ## 2026-11-19 — UX1B R1 (từ lượt duyệt của lead)
 
 - `giai_trinh._chuan_clb_fa`: chế độ FA, CLB có thi giờ có "Mức vào được" (điểm thấp nhất trong số người đã nhận khi CLB đầy, hay "Còn chỗ"), kể cả dòng ACCEPTED; thanh SVG có vạch đỏ. CLB không thi, dòng MEDAL: ghi huy chương của người nhận cuối ("Huy chương Vàng", `ux1b_gt_chuan_huy_chuong`). Chỉ con số của CLB.

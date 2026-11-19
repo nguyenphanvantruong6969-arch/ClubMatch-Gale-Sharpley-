@@ -46,7 +46,7 @@ def _nhan_buoi(buoi):
 def _o_chuan(x):
     loai = x.get("diem_chuan_loai")
     if loai == "diem" and x.get("diem_chuan") is not None:
-        return "%s điểm" % x["diem_chuan"]
+        return "%s điểm" % _so(x["diem_chuan"])
     if loai == "huy_chuong" and x.get("diem_chuan"):
         return "Huy chương %s" % x["diem_chuan"]
     return {"boc_tham": "Chọn ngẫu nhiên khi bằng điểm", "con_cho": "Còn chỗ",

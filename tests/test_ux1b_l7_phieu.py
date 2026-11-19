@@ -204,3 +204,52 @@ def test_r1_fa_clb_co_thi_day_hien_muc_vao_duoc_va_thanh_svg_co_vach_do(api, tmp
     assert co_vach > 0, "sổ mẫu có CLB Tuyển chọn đã đầy: phải có ít nhất một mức vào được bằng số"
     p = _phieu(api, tmp_path, "FA001")
     assert "<svg" in p and 'stroke="#b91c1c"' in p                                     # có vạch đỏ mức vào được
+
+
+# ---------------------------------------------------------------- R1 fix2: cột, thanh SVG và câu "Vì sao" cùng một mức
+def _clb_thi_co_giu_cho(api, cho, diem, giu):
+    from _fa import giu_cho
+    bat_fa(api)
+    dung_fa_clb(api, T=(cho, "TUYEN_CHON", 0), U=(9, "TU_DO"))
+    dung_hs_fa(api, *diem, nv={s: ["T", "U"] for s in diem})
+    for sid, d in diem.items():
+        assert api.submit_test_selection(sid, ["T"])["ok"]
+    assert api.submit_club_scores("T", [{"student_id": s, "score": d} for s, d in diem.items()])["ok"]
+    giu_cho(api, *[("T", s) for s in giu])
+    assert api.run_pipeline(seed=3)["ok"]
+
+
+def _dong_t(api, sid):
+    gt = api.get_giai_trinh_hoc_sinh(sid)["data"]
+    return next(x for x in gt["buoi"][0]["cac_lua_chon"] if x["club_id"] == "T")
+
+
+def test_r1_fix2_giu_cho_khong_keo_muc_vao_duoc_xuong_thap(api, tmp_path):
+    """T Tuyển chọn 2 chỗ: r giữ chỗ (3 điểm), t 8, x 7. x bị từ chối ở mức 8 (không phải 3)."""
+    _clb_thi_co_giu_cho(api, 2, {"r": 3, "t": 8, "x": 7}, ["r"])
+    for sid in ("x", "t", "r"):
+        d = _dong_t(api, sid)
+        assert (d["diem_chuan"], d["diem_chuan_loai"]) == (8.0, "diem"), (sid, d)      # MỘT mức cho mọi dòng của CLB
+    x = _dong_t(api, "x")
+    assert "8" in x["cau"] and x["ma"] == "SCORE"
+    p = _phieu(api, tmp_path, "x")
+    assert "8 điểm" in p and "3 điểm" not in p
+    thi = api.get_giai_trinh_hoc_sinh("x")["data"]["buoi"][0]["diem_da_thi"]
+    assert thi[0]["diem_chuan"] == 8.0 and thi[0]["diem_em"] == 7        # thanh SVG: em (7) dưới vạch đỏ (8)
+
+
+def test_r1_fix2_nguoi_nhan_cuoi_giu_cho_thi_ghi_cho_danh_rieng_khong_ghi_so(api, tmp_path):
+    """T chỉ 1 chỗ và người nhận là r (giữ chỗ): không có mức điểm nào ai đã đạt."""
+    _clb_thi_co_giu_cho(api, 1, {"r": 3, "x": 7}, ["r"])
+    for sid in ("x", "r"):
+        d = _dong_t(api, sid)
+        assert (d["diem_chuan"], d["diem_chuan_loai"]) == (None, "giu_cho"), (sid, d)
+    p = _phieu(api, tmp_path, "x")
+    assert "Chỗ dành riêng" in p and "3 điểm" not in p
+
+
+def test_r1_fix2_chua_ai_bi_tu_choi_thi_con_cho_khong_co_so(api):
+    _clb_thi_co_giu_cho(api, 5, {"r": 3, "x": 7}, [])
+    for sid in ("x", "r"):
+        d = _dong_t(api, sid)
+        assert (d["diem_chuan"], d["diem_chuan_loai"]) == (None, "con_cho")

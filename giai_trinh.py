@@ -213,17 +213,25 @@ def _cau_huy_chuong(r, cua_em, ten_clb):
 
 
 def _chuan_clb_fa(cid, b):
-    """UX1B-R1: mức vào được của CLB có thi ở chế độ FA — điểm thấp nhất trong số người đã nhận khi CLB đầy ("diem"), hay
-    "con_cho". Khoá FA xét điểm TRƯỚC huy chương nên người nhận cuối là người có điểm thấp nhất. CLB không thi: (None, None).
-    Chỉ là con số của CLB, không tên hay điểm của người cụ thể."""
+    """UX1B-R1: mức vào được của CLB có thi ở chế độ FA, MỘT quy tắc cho cột, thanh SVG và câu "Vì sao": lấy từ các dòng bị
+    từ chối đã lưu của CLB (`fa_ly_do`: mọi dòng REJECTED của một CLB cùng so với MỘT người nhận cuối, người có khoá xấu
+    nhất theo (giữ chỗ, điểm, huy chương, bốc thăm)). Có dòng RESERVED -> người nhận cuối giữ chỗ riêng, không có mức điểm
+    ("giu_cho"); ngược lại `cut_score` ("diem"). Chưa ai bị từ chối: còn chỗ -> "con_cho", đầy vừa đủ -> không ghi.
+    Chỉ là con số / mã của CLB, không tên hay điểm của người cụ thể. CLB không thi: (None, None)."""
     c = b["clubs"][cid]
     if not c["chon_loc"]:
         return None, None
-    diem_clb = b["scores"].get(cid, {})
-    nhan = [diem_clb[s] for s, k in b["assign"].items() if k == cid and s in diem_clb]
-    if c["capacity"] is not None and sum(1 for k in b["assign"].values() if k == cid) >= c["capacity"]:
-        return (min(nhan), "diem") if nhan else (None, None)
-    return None, "con_cho"
+    tu_choi = [r for dong in (b.get("fa_rows") or {}).values() for r in dong
+               if r.get("club_id") == cid and r.get("outcome") == "REJECTED"]
+    if tu_choi:
+        if any(r.get("reason") == "RESERVED" for r in tu_choi):
+            return None, "giu_cho"
+        cat = [r["cut_score"] for r in tu_choi if r.get("cut_score") is not None]
+        return (cat[0], "diem") if cat else (None, None)
+    so_nhan = sum(1 for k in b["assign"].values() if k == cid)
+    if c["capacity"] is None or so_nhan < c["capacity"]:
+        return None, "con_cho"
+    return None, None
 
 
 def _lua_chon_fa(sid, buoi, b, huy=None):
