@@ -10,12 +10,13 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 ## Plan
 - [x] L4-B summary report + homeroom block (CODER DONE head 0f73c43)
 - [x] L7 slip content (done; fix1 79c8e45, fix2 fc5e9fc)
-- [x] L5c five recommendations of UX1_DANH_GIA_A §4 (CODER DONE head 276616b; checker not yet run)
+- [x] L5c five recommendations of UX1_DANH_GIA_A §4 (CODER DONE 276616b; fix1 f3ff065 sent; checker re-review pending)
 - [ ] L8-B slip docs, regenerate CA_MAU.md + evidence pack + anh/04_phieu.png + anh/phieu_mau.pdf, "After" row
 - [ ] CI gate, user review (lead)
 
 ## Current state
-- Done: L4-B, L7 (+fix1, fix2), L5c. All pushed on origin/claude/ux1-b-phieu. Waiting for lead: REVIEW L5c or GO L8-B.
+- Done: L4-B, L7 (+fix1, fix2), L5c (+fix1 f3ff065: group health warnings only when whole book wrong, no empty example, privacy red line kept visible).
+  All pushed on origin/claude/ux1-b-phieu. Waiting for lead: REVIEW L5c fix1 or GO L8-B.
 - In progress: nothing half-finished.
 - Tests last run green: test_giao_dien_ux1b_l5c (5), ux1_*/ux1b_*, gt1/gt3/gt4 UI, ws_nhan, van_phong_tu_nhien,
   gt4_nhat_ky_doc, fa_huy_chuong (241 + 75 passed); kiem_nhanh 7/7 (60 cases byte-identical vs origin/main).
@@ -30,10 +31,12 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
   XP1 inserts "Loại CLB" right after CLB. Tests select the last/second-last td, not fixed indexes.
 - Health report keeps `warnings`/`n_high`; grouping of fa_huy_chuong_* is display-only (`gop_huy_chuong` field).
 - Lookup code buttons are inside <details id="gtMaFold">; UI tests open it with tests/_trinh_duyet.mo_gap_ma(page).
-- New error code ux1b_huy_chuong_gop is in tests/test_ws_nhan.py MA_MOI_SAU_ANH_CHUP.
+- New error codes ux1b_huy_chuong_gop(+_khong_clb) are in tests/test_ws_nhan.py MA_MOI_SAU_ANH_CHUP.
+- "Whole book wrong" threshold lives only in api_quan_ly._huy_chuong_ca_so_sai (n_sai*2 >= n_hoc_sinh).
+- Default export has sheets Điểm chuẩn + Dấu vết (seed, lottery numbers): privacy red line must stay visible by default.
 
 ## Next steps
-1. Wait for lead: FIX L5c (if checker finds bugs) or GO L8-B.
+1. Wait for lead: FIX L5c (if checker finds more) or GO L8-B.
 2. L8-B: update slip docs (CHANGELOG/TIEN_DO rows), regenerate docs/giai_trinh/CA_MAU.md
    (du_lieu_test/tao_ca_mau_giai_trinh.py), docs/giai_trinh/tao_goi_minh_chung.py, anh/04_phieu.png + anh/phieu_mau.pdf
    (docs/ke_hoach/ux/chup_phieu.py), "After" row of the slip task in UX1 docs.
@@ -55,3 +58,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 | 2026-11-19 | Sonnet | L4-B, L7 (+2 fixes), L5c; handoff at ~400k context | lead id above |
 | 2026-11-19 | Sonnet | Hook re-fired; no new work since 903bffa; lead said stay available (no replacement session) | waiting FIX L5c / GO L8-B |
 - L5c fix1 coded; pushing, then CODER DONE L5c fix1.
+| 2026-11-19 | Sonnet | L5c fix1 (f3ff065); hook re-fired at >400k; lead says no replacement session | stay available |
