@@ -95,3 +95,35 @@ diff against the lot's "Done when" in docs/ke_hoach/ux/UX1_KE_HOACH.md, invarian
 edge cases of your own (empty data, diacritics, FA on/off, no run yet). Never edit product code or tests; only
 docs/phien/claude__<branch tail>__checker.md. Report in GT_GIAO_THUC §7 format.
 ```
+
+## 10. Team B re-scope (Truong, 2026-11-19) — WINS over §1, §2, §7 for team B
+- **Base changed:** `claude/ux1-b-phieu` already exists, created from `origin/claude/ux1-a-giao-dien` @ `dd43bdc`
+  (team A DONE, CI green). Do NOT recreate it from `gt-tich-hop`. Stay current with
+  `git fetch origin claude/ux1-a-giao-dien && git merge --no-edit FETCH_HEAD` before each lot (A may get fixes).
+  Team A's blocks are now in the tree: edit them only in lot L5c below.
+- **Dropped: L6** (print-dialog PDF) and the **club type** part of **L7** item 5. Both move to item **XP1**
+  (`claude/xp1-xuat-pdf`, protocol `docs/phien/XP1_GIAO_THUC.md`, PDF engine `reportlab`). XP1 owns the `loai` key
+  on each slip row and the "Loại CLB" column; team B adds only `huy_chuong` (and the legend sentence for medals).
+  Put the medal column right AFTER where XP1's type column will go; whoever merges second resolves the conflict.
+- **L4-B changes:** "Báo cáo tổng hợp" = builder + HTML export only (no print flow: L6 is gone). "In phiếu cả lớp" is
+  NOT built by B: the class picker and "Xuất theo {cohort_l}" stay; the bulk slip button is wired to XP1's
+  `export_phieu_giai_trinh_pdf(theo_lop=...)` at integration (lot I3 below). Keep the ≤ 2 clicks test for
+  "Báo cáo tổng hợp" and "Xuất theo {cohort_l}".
+- **New lot L5c (after L7, before L8-B): the 5 recommendations of `docs/ke_hoach/ux/UX1_DANH_GIA_A.md` §4**, in
+  that order. Done when: one Chromium test per recommendation + `test_van_phong_tu_nhien.py`, `test_ws_nhan.py`,
+  `test_gt4_nhat_ky_doc.py` green; invariant 1 7/7.
+- **Lot order for B:** L4-B → L7 (minus type) → L5c → L8-B → CI gate (§5) → review (§6, `UX1_DANH_GIA_B.md`).
+- **Integration (§7) adds XP1:** after B is DONE, merge into `claude/ux1-tich-hop` in this order: A (already in B),
+  B, then `claude/xp1-xuat-pdf` if its branch file says `Status: DONE` (else list it under "Needs Truong" and stop
+  after B). Extra lot **I3**: "In phiếu cả {cohort_l}" (homeroom page) calls XP1's slip PDF for the chosen class;
+  "Báo cáo tổng hợp" also offered as PDF through `xuat_pdf.py`; reachable in ≤ 2 clicks by a `giao_vien`.
+- **Lead prompt for team B (Truong's collaborator pastes it into a new Opus session):**
+```
+You are LEAD for UX1B on branch claude/ux1-b-phieu (it already exists; do not recreate it). Read CLAUDE.md, then
+docs/phien/UX1_GIAO_THUC.md (§10 wins over earlier sections), docs/phien/claude__ux1-b-phieu.md and team B's lots in
+docs/ke_hoach/ux/UX1_KE_HOACH.md, all on origin/claude/ux1-b-phieu, and follow them exactly. Fill the Sessions
+table and push, then create the CODER and CHECKER sessions with the §9 prompts (<T> = B, <BRANCH> =
+claude/ux1-b-phieu; repo https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV, source_revision
+claude/ux1-b-phieu, models from §3, permission_mode auto) and run §4 for the §10 lot order, then §5 until CI is
+green, then §6. Never wait for Truong; anything that needs him goes on the list.
+```

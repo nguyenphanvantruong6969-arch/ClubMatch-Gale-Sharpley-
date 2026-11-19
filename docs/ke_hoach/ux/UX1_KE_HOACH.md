@@ -13,6 +13,8 @@
 > determination points (no parallel use — that would need a new choice function, invariant 8).
 > Execution: two teams in parallel — protocol `docs/phien/UX1_GIAO_THUC.md` (team A: L1, L2, L2b, L3, L5, L5b, L8-A;
 > team B: L4-B, L6, L7, L8-B). The §4 prompt below is superseded by the protocol.
+> **Re-scope 2026-11-19 (Truong): team B = L4-B (changed) → L7 without club type → L5c → L8-B; L6 dropped. Club type
+> and all PDF output move to item XP1 (`docs/phien/XP1_GIAO_THUC.md`). Details: `docs/phien/UX1_GIAO_THUC.md` §10.**
 
 ## 0. Hard rules (from CLAUDE.md — read it)
 - **UI and presentation only.** No change to `rbda_priority_pipeline.py`, `compute_club_priority`, STB, seeds,
@@ -168,7 +170,7 @@ Cách xét khi đông: điểm thi → điểm quyết tâm → bốc thăm.   T
 - Done when: tests that assert these codes/severities are updated (grep `health_oversubscribed` in `tests/`);
   invariant 1 green (severity is display-only).
 
-### L6 — Slip: "In / Lưu PDF" directly
+### L6 — Slip: "In / Lưu PDF" directly — DROPPED 2026-11-19 (replaced by XP1 PDF export; see protocol §10)
 - New method `get_phieu_giai_trinh_html(student_ids=None, lop=None)` in `api_xuat.py` returning the HTML string from
   `phieu_giai_trinh.dung_phieu_html` (same data path as `export_phieu_giai_trinh`); `QUYEN` = `giao_vien`; one audit row.
 - In `js/14_giai_trinh.js`: button "In / Lưu PDF" loads the HTML into a hidden `<iframe srcdoc>` and calls
