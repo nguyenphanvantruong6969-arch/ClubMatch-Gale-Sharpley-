@@ -15,7 +15,7 @@ Status: DONE 9fbdfdf CI green 2026-11-19 (run https://github.com/nguyenphanvantr
 - [x] CI gate (§5)   - [x] user review UX1_DANH_GIA_A.md (§6)   - [ ] integration (§7)
 
 ## Current state (overwrite)
-- Done: 7 lots, L2b fix2–4, CI green 9fbdfdf, review UX1_DANH_GIA_A.md. Waiting: team B branch claude/ux1-b-phieu does not exist yet (checked 2026-11-19 01:02 UTC); polling hourly, 48 h limit per §7.
+- Done: 7 lots, L2b fix2–4, CI green 9fbdfdf/dd43bdc, review UX1_DANH_GIA_A.md. Waiting: team B re-scoped by Truong (protocol §10, 2026-11-19): branch claude/ux1-b-phieu exists from dd43bdc, Status NOT STARTED at 12:19 UTC; B now also does the 5 recommendations of UX1_DANH_GIA_A §4 (lot L5c). Integration per §10: A (in B) → B → XP1 if DONE; extra lot I3. Polling hourly.
 
 ## Sessions
 | Role | Session | State |
