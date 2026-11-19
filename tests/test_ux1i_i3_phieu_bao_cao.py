@@ -93,3 +93,27 @@ def test_giao_vien_khong_goi_duoc_danh_sach_pdf_cua_quan_tri(mo, tmp_path):  # n
     r = page.evaluate("() => callApi('export_danh_sach_pdf', '', 'clb')")
     assert not r["ok"]
     assert not any(t.endswith(".pdf") for t in os.listdir(api.thu_muc_xuat) if os.path.isfile(os.path.join(api.thu_muc_xuat, t)))
+
+
+# ---------------------------------------------------------------- fix1: cột Buổi không lộ mã nội bộ
+def _dung_mot_buoi(api):
+    from _fa import dung_fa_clb, dung_hs_fa
+    from _wharton import tat_wharton
+    tat_wharton(api)
+    dung_fa_clb(api, A=(2, None), B=(2, None))                          # không đặt buổi: workspace một buổi mặc định
+    dung_hs_fa(api, "s1", "s2", nv={"s1": ["A", "B"], "s2": ["A", "B"]})
+    assert api.run_pipeline(seed=3)["ok"]
+
+
+def test_bao_cao_html_khong_lo_ma_buoi_mac_dinh(api, tmp_path):
+    _dung_mot_buoi(api)
+    r = api.export_bao_cao_tong_hop(str(tmp_path / "bc.html"))
+    assert r["ok"], r
+    assert "__mac_dinh__" not in open(r["data"]["path"], encoding="utf-8").read()
+
+
+def test_bao_cao_pdf_khong_lo_ma_buoi_mac_dinh(api, tmp_path):
+    _dung_mot_buoi(api)
+    r = api.export_bao_cao_tong_hop_pdf(str(tmp_path / "bc.pdf"))
+    assert r["ok"], r
+    assert "__mac_dinh__" not in _chu(r["data"]["path"])

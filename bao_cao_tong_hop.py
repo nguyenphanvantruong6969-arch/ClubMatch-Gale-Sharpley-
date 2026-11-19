@@ -89,7 +89,7 @@ def dung_html(du: dict, nhan: dict | None = None) -> str:
     for c in du["clb"]:
         ct = "—" if c["tu_do"] or c["capacity"] is None else c["capacity"]
         p.append('<tr><td>%s</td><td>%s</td><td class="so">%s</td><td class="so">%s</td><td class="so">%s</td></tr>'
-                 % (_e(c["name"]), _e(nhan_buoi(c.get("buoi")) or c.get("buoi") or ""), _e(ct), _e(c["matched"]), _e(c["so_dang_ky"])))
+                 % (_e(c["name"]), _e(nhan_buoi(c.get("buoi"))), _e(ct), _e(c["matched"]), _e(c["so_dang_ky"])))
     p.append("</table>")
     p.append("<h2>%s</h2><table><tr><th>%s</th><th>%s</th></tr>" % (
         _e(d("Mức hài lòng về nguyện vọng")), _e(d("Được nguyện vọng")),
@@ -129,7 +129,7 @@ def dung_pdf(du: dict, duong: str, nhan: dict | None = None) -> str:
         k.append(xuat_pdf.dong_khoa_gia_tri(d(a), b))
     k.append(xuat_pdf.tieu_de(d("Mức lấp đầy từng {slot_l}")))
     k.append(xuat_pdf.bang([d(x) for x in ("{slot}", "{session}", "Chỉ tiêu", "Đã nhận", "Số đăng ký")], [
-        [c["name"], nhan_buoi(c.get("buoi")) or c.get("buoi") or "",
+        [c["name"], nhan_buoi(c.get("buoi")),
          "—" if c["tu_do"] or c["capacity"] is None else c["capacity"], c["matched"], c["so_dang_ky"]]
         for c in du["clb"]], [3, 2, 1, 1, 1]))
     k.append(xuat_pdf.tieu_de(d("Mức hài lòng về nguyện vọng")))

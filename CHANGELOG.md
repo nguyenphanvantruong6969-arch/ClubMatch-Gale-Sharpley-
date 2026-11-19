@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I3 fix1: cột Buổi của Báo cáo tổng hợp không lộ mã nội bộ
+
+- `bao_cao_tong_hop.py` (`dung_html`, `dung_pdf`): cột Buổi dùng thẳng `giai_trinh.nhan_buoi` (rỗng cho buổi mặc định), bỏ phần dự phòng in mã `__mac_dinh__`.
+- Test: 2 ca mới trong `tests/test_ux1i_i3_phieu_bao_cao.py` (workspace một buổi, HTML và PDF).
+
 ## 2026-11-19 — UX1I-I3: gộp nhánh B (phiếu, vai giáo viên) với XP1 (PDF)
 
 - Gộp `origin/claude/ux1-b-phieu` (xung đột ở `phieu_giai_trinh.py`, `api_xuat.py`, `i18n_errors.py`, tài liệu): bảng phiếu có cột "Loại CLB" (XP1) rồi "Huy chương" (B, chỉ khi bật huy chương); `i18n_loi.js` sinh lại bằng `tao_i18n_js.py`.
