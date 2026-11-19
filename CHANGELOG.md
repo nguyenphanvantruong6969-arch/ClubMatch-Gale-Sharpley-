@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I1: gộp nhánh A vào nhánh tích hợp
+
+- Lead gộp `origin/claude/ux1-a-giao-dien` (`--no-ff`, không xung đột). Không đổi mã sản phẩm; `python tao_i18n_js.py` sinh lại `i18n_loi.js` không đổi byte nào.
+- Kiểm: 150 test của bộ I1 qua (`test_giao_dien_ux1_*`, `test_ux1_*`, `test_khoi_dong_backend`, `test_ws_nhan`, `test_van_phong_tu_nhien`, `test_gt4_nhat_ky_doc`, `test_gt_tich_hop`); `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7 (60 ca trùng khít).
+
 ## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
 
 - `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).
