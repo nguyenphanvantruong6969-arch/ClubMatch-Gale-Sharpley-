@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-19 — XP1-L3: danh sách thành viên PDF (theo CLB, theo lớp)
+
+- `api_xuat.py`: `export_danh_sach_pdf(output_path, theo)` ("clb" hoặc "lop") ra một THƯ MỤC PDF; cùng nguồn `_du_lieu_xuat` với `export_theo_lop`, không điểm / số bốc thăm / diện trúng tuyển. Theo CLB: mỗi CLB (nhiều buổi: mỗi CLB mỗi buổi) một tệp có mã, loại CLB, giờ, địa điểm; CLB không ai được xếp không có tệp (như CSV); `_chua_duoc_xep.pdf` cho em chưa có chỗ. Theo lớp: mỗi lớp một tệp, em chưa có chỗ ở mục riêng, `_chua_co_lop.pdf`. Thêm `_loai_clb_theo_ma`.
+- `danh_sach_pdf.py` (mới): bố cục hai kiểu tệp. `i18n_errors.py`: `xp1_kieu_xuat_la`. `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn `nkhd_export_danh_sach_pdf`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp test 343, bản đồ mã.
+- Test mới: `tests/test_xp1_danh_sach_pdf.py` (19 ca, gồm sổ mẫu 3 buổi 120 HS).
+
 ## 2026-11-19 — XP1-L2: phiếu giải trình PDF theo lớp, có loại CLB
 
 - `giai_trinh.py` (`dung_du_lieu_run`, `_lua_chon_rbda`, `_lua_chon_fa`): mỗi `cac_lua_chon` có thêm khoá `loai_clb` (mã `TU_DO`/`GIOI_HAN`/`TUYEN_CHON` hoặc None); chỉ thêm khoá, thuật toán xếp không đọc nó.

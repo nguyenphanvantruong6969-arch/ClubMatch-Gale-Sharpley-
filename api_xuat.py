@@ -449,6 +449,115 @@ class XuatKetQuaMixin:
         Chưa có kết quả thì từ chối `xuat_chua_co_ket_qua`, không tạo gì. Trả về {thu_muc, n_tep}."""
         return self._khoa_xuat(self._export_theo_lop_da_khoa, output_path)
 
+    def export_danh_sach_pdf(self, output_path: str = "", theo: str = "clb"):
+        """XP1-L3: danh sách thành viên dạng PDF, MỘT THƯ MỤC (A4 dọc). Cùng nguồn dữ liệu với `export_theo_lop`
+        (`_du_lieu_xuat`); không điểm, không số bốc thăm, không diện trúng tuyển.
+
+        `theo="clb"`: mỗi CLB một tệp (nhiều buổi: mỗi CLB mỗi buổi một tệp; có tiêu đề, loại CLB, giờ, địa điểm)
+        + `_chua_duoc_xep.pdf` nếu có em chưa có chỗ. `theo="lop"`: mỗi lớp một tệp (em chưa có chỗ ở mục riêng)
+        + `_chua_co_lop.pdf`. Chỗ đặt theo `_duong_xuat` (không ghi đè: trùng thì "x (2)"). Chỉ ĐỌC dữ liệu.
+        Lỗi: `xuat_chua_co_ket_qua`, `xp1_kieu_xuat_la`, `xp1_thieu_thu_vien_pdf`.
+        Trả {thu_muc, n_tep, n_trang, n_dong (số dòng kết quả đã xuất), ket_qua_cu}."""
+        return self._khoa_xuat(self._export_danh_sach_pdf_da_khoa, output_path, theo)
+
+    def _loai_clb_theo_ma(self) -> dict:
+        """{club_id: mã loại|None} đọc từ `clubs.loai` (chỉ để HIỂN THỊ); cột chưa có thì rỗng."""
+        with self._ket_noi_doc() as cur:
+            if not any(r[1] == "loai" for r in cur.execute("PRAGMA table_info(clubs)")):
+                return {}
+            return dict(cur.execute("SELECT club_id, loai FROM clubs"))
+
+    def _export_danh_sach_pdf_da_khoa(self, output_path, theo):
+        import danh_sach_pdf
+        import phieu_giai_trinh
+        import xuat_pdf
+        from so_nhap import NHAN_LOAI_HIEN_THI
+        thu_muc, da_tao = None, False
+        try:
+            if theo not in ("clb", "lop"):
+                return _fail(err("xp1_kieu_xuat_la"))
+            xuat_pdf.san_sang()
+            if self._chua_co_ket_qua():
+                return _fail(err("xuat_chua_co_ket_qua"))
+            thu_muc = self._thu_muc_xuat_moi(output_path, "danh_sach_theo_" + theo)
+            du = self._du_lieu_xuat()
+            nhan = du.get("nhan")
+            n = lambda chu: dien_nhan(chu, nhan)  # noqa: E731
+            canh_bao = ("Dữ liệu đã sửa sau lần chạy này, kết quả có thể đã cũ. Hãy chạy lại rồi xuất lại."
+                        if self._ket_qua_cu() else None)
+            nhan_buoi = phieu_giai_trinh._nhan_buoi
+            os.makedirs(thu_muc)
+            da_tao = True                         # từ đây thư mục là CỦA lần xuất này
+            n_tep = n_trang = 0
+            if theo == "clb":
+                loai = self._loai_clb_theo_ma()
+                nhom: dict = {}
+                for r in du["rows"]:
+                    khoa = (r["club_id"], r["buoi"] if du["nhieu_buoi"] and r["club_id"] else None) \
+                        if r["club_id"] else (None, None)
+                    nhom.setdefault(khoa, []).append(r)
+                da_dung: set = {"_chua_duoc_xep"}     # giữ chỗ trước: CLB tên "_chua_duoc_xep" không đè
+                cot = ["STT", n("Mã {person_l}"), "Họ tên", n("{cohort}")]
+                for (club_id, buoi), ds in sorted(nhom.items(), key=lambda kv: (kv[0][0] is None, str(kv[0]))):
+                    if club_id is None:
+                        ten = "_chua_duoc_xep"
+                        cot_nay = cot + ([n("{session}")] if du["nhieu_buoi"] else [])
+                        hang = [[i, r["student_id"], r["ho_ten"] or "", r["lop"] or ""]
+                                + ([nhan_buoi(r["buoi"])] if du["nhieu_buoi"] else [])
+                                for i, r in enumerate(ds, 1)]
+                        duong = danh_sach_pdf.dung_pdf_clb(
+                            os.path.join(thu_muc, ten + ".pdf"), n("{person_l} chưa có {slot_l}"),
+                            [(n("Số {person_l}"), len(ds))], cot_nay, hang, canh_bao)
+                    else:
+                        ten = self._ten_chua_dung(self._cat_ten_tep(self._ten_file_an_toan(
+                            club_id + ("_" + buoi if buoi else ""), "clb")), da_dung)
+                        r0 = ds[0]
+                        hang = [[i, r["student_id"], r["ho_ten"] or "", r["lop"] or ""]
+                                for i, r in enumerate(ds, 1)]
+                        duong = danh_sach_pdf.dung_pdf_clb(
+                            os.path.join(thu_muc, ten + ".pdf"), r0["ten_club"] or club_id,
+                            [(n("Mã {slot_sl}"), club_id),
+                             (n("Loại {slot_l}"), NHAN_LOAI_HIEN_THI.get(loai.get(club_id)) or None),
+                             (n("{session}"), nhan_buoi(buoi) if buoi else None),
+                             ("Giờ", r0["gio"]), ("Địa điểm", r0["dia_diem"]),
+                             (n("Số {person_l}"), len(ds))], cot, hang, canh_bao)
+                    n_tep += 1
+                    n_trang += xuat_pdf.dem_trang(duong)
+            else:
+                tl = du["theo_lop"]
+                da_dung = {"_chua_co_lop"}            # giữ chỗ trước: lớp tên "_chua_co_lop" không đè
+                cot = [n(c) for c in tl["cot"]]
+                cot_chua = cot[:3]
+                for lop, dong in tl["nhom"]:
+                    ten = "_chua_co_lop" if lop is None else self._ten_chua_dung(
+                        self._cat_ten_tep(self._ten_file_an_toan(str(lop), "lop")), da_dung)
+                    co = [d for d in dong if any(d[2:])]
+                    chua = [d for d in dong if not any(d[2:])]
+                    if du["nhieu_buoi"]:
+                        cot_nay = cot[:3] + [nhan_buoi(b) for b in du["ds_buoi"]]
+                    else:
+                        cot_nay = cot
+                    duong = danh_sach_pdf.dung_pdf_lop(
+                        os.path.join(thu_muc, ten + ".pdf"),
+                        n("Chưa có {cohort_l}") if lop is None else n("DANH SÁCH {cohort_u} ") + str(lop).upper(),
+                        [(n("Số {person_l}"), len(dong))], cot_nay,
+                        [[i] + d for i, d in enumerate(co, 1)],
+                        n("Chưa có {slot_l}"), cot_chua, [[i] + d[:2] for i, d in enumerate(chua, 1)], canh_bao)
+                    n_tep += 1
+                    n_trang += xuat_pdf.dem_trang(duong)
+            return _ok({"thu_muc": thu_muc, "n_tep": n_tep, "n_trang": n_trang, "n_dong": len(du["rows"]),
+                        "ket_qua_cu": bool(canh_bao)})
+        except xuat_pdf.ThieuThuVienPdf:
+            if da_tao and thu_muc:
+                shutil.rmtree(thu_muc, ignore_errors=True)
+            return _fail(err("xp1_thieu_thu_vien_pdf"))
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except Exception as e:
+            if da_tao and thu_muc:                # không để lại thư mục thiếu tệp trông như đã xuất đủ
+                shutil.rmtree(thu_muc, ignore_errors=True)
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
     def _thu_muc_xuat_moi(self, output_path: str, ten_mac_dinh: str) -> str:
         """Chỗ đặt MỘT THƯ MỤC xuất mới (chưa tạo). Đường tuyệt đối đã có thì thành "x (2)" (không ghi đè);
         `_duong_xuat` sẽ từ chối vì nó coi thư mục có sẵn là nhầm với tệp."""

@@ -1605,6 +1605,10 @@ MESSAGES = {
         "vi": "Chưa xuất được PDF vì phần mềm thiếu thư viện hoặc phông chữ PDF. Hãy cài lại bản phần mềm đầy đủ.",
         "en": "PDF export is unavailable because the PDF library or font is missing. Reinstall the full application.",
     },
+    "xp1_kieu_xuat_la": {
+        "vi": "Không rõ cách chia danh sách. Hãy chọn theo câu lạc bộ hoặc theo lớp.",
+        "en": "Unknown way to split the lists. Choose by club or by class.",
+    },
 }
 
 
