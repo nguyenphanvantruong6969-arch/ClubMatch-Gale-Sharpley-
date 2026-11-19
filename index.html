@@ -429,20 +429,14 @@
         <div class="search-row">
           <button class="btn btn-primary" id="btnXuatTuyChon" data-i18n="btn_xuat_tuy_chon">Xuất kết quả (Excel)</button>
           <button class="btn btn-secondary" id="btnXuatTheoLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
-          <!-- UX1A-L3: bốn nút xuất phụ (chỉ chế độ Huy chương) gộp vào một menu "Xuất…" -->
-          <details class="menu-khac" id="xuatMenu" hidden>
+          <!-- UX1A-L3 + UX1I-I2: MỘT menu "Xuất…" (quản trị): bốn nút chỉ-huy-chương (ẩn khi tắt) và ba mục PDF của XP1-L4 -->
+          <details class="menu-khac" id="xuatMenu" data-quyen="quan_tri">
             <summary class="btn btn-secondary" data-i18n="ux1a_xuat_menu">Xuất…</summary>
             <div class="menu-khac-hop">
               <button class="menu-khac-muc" id="btnXuatLyDo" type="button" hidden data-i18n="btn_xuat_ly_do">Xuất lý do kết quả (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatNhuCau" type="button" hidden data-i18n="btn_xuat_nhu_cau">Xuất bảng nhu cầu (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatGoiY" type="button" hidden data-i18n="btn_xuat_goi_y">Xuất gợi ý chỉ tiêu kỳ sau (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatBienBan" type="button" hidden data-i18n="btn_xuat_bien_ban">Xuất biên bản bốc thăm (bản in và Excel)</button>
-            </div>
-          </details>
-          <!-- XP1-L4: xuất PDF hàng loạt (chỉ quản trị); menu riêng vì "Xuất…" ở trên chỉ hiện ở chế độ Huy chương -->
-          <details class="menu-khac" id="xuatPdfMenu" data-quyen="quan_tri">
-            <summary class="btn btn-secondary" data-i18n="xp1_menu">Xuất PDF…</summary>
-            <div class="menu-khac-hop">
               <button class="menu-khac-muc" id="btnPdfDsClb" type="button" data-i18n="xp1_pdf_ds_clb">Danh sách theo {slot_l} (PDF)</button>
               <button class="menu-khac-muc" id="btnPdfDsLop" type="button" data-i18n="xp1_pdf_ds_lop">Danh sách theo {cohort_l} (PDF)</button>
               <select id="pdfLop" class="text-input text-input-sm" data-i18n-aria-label="xp1_pdf_lop_aria"></select>

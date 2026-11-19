@@ -1,4 +1,4 @@
-"""XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu: ba mục + ô chọn lớp, chỉ quản trị, gọi đúng hàm. Chromium. Dữ liệu MÔ PHỎNG."""
+"""XP1-L4: menu "Xuất…" ở thẻ Xuất dữ liệu: ba mục + ô chọn lớp, chỉ quản trị, gọi đúng hàm. Chromium. Dữ liệu MÔ PHỎNG."""
 
 import os
 
@@ -48,8 +48,8 @@ def mo(api):
 
 
 def _mo_menu(page):
-    page.wait_for_selector("#xuatPdfMenu", state="visible")
-    page.locator("#xuatPdfMenu > summary").click()
+    page.wait_for_selector("#xuatMenu", state="visible")
+    page.locator("#xuatMenu > summary").click()
 
 
 def _tep_pdf(thu_muc):
@@ -59,7 +59,7 @@ def _tep_pdf(thu_muc):
 def test_menu_co_ba_muc_va_o_chon_lop(mo, api):
     _nap(api)
     page, loi = mo()
-    assert page.locator("#xuatPdfMenu > summary").inner_text().strip() == "Xuất PDF…"
+    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất…"
     assert all(page.locator("#" + i).is_hidden() for i in MUC)          # menu đóng
     _mo_menu(page)
     assert all(page.locator("#" + i).is_visible() for i in MUC)
@@ -85,7 +85,7 @@ def test_danh_sach_theo_clb_goi_dung_ham_va_menu_dong_lai(mo, api):
     page.locator("#btnPdfDsClb").click()
     page.wait_for_function("document.getElementById('xuatFeedback').textContent.includes('danh_sach_theo_clb')")
     assert _tep_pdf(os.path.join(api.thu_muc_xuat, "danh_sach_theo_clb"))
-    assert page.evaluate("!document.getElementById('xuatPdfMenu').open")
+    assert page.evaluate("!document.getElementById('xuatMenu').open")
     assert not loi, loi
 
 
@@ -126,7 +126,7 @@ def test_phieu_mot_lop_ra_mot_tep(mo, api):
 def test_giao_vien_khong_thay_menu(mo, api):
     _nap(api)
     page, loi = mo()
-    page.wait_for_selector("#xuatPdfMenu", state="visible")
+    page.wait_for_selector("#xuatMenu", state="visible")
     page.evaluate("document.body.dataset.vai = 'giao_vien'")
-    assert page.locator("#xuatPdfMenu").is_hidden()
+    assert page.locator("#xuatMenu").is_hidden()
     assert not loi, loi

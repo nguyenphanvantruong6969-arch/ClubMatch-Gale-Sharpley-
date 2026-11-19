@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I2: XP1 gộp vào menu "Xuất…" của A
+
+- `index.html`, `js/03_ket_qua.js`: bỏ menu riêng `#xuatPdfMenu`; ba mục PDF (`btnPdfDsClb`, `btnPdfDsLop`, ô `pdfLop`, `btnPdfPhieuLop`) nằm trong `#xuatMenu`, menu này nay luôn hiện cho quản trị (`data-quyen="quan_tri"`), bốn nút chỉ-huy-chương vẫn ẩn khi tắt chế độ. Bỏ khoá `xp1_menu` ở `i18n.js` (không còn dùng).
+- Test: thêm `tests/test_ux1i_i2_xp1_trong_menu.py` (một menu, giáo viên không thấy, "Lưu PDF" một em ≤ 4 lần bấm từ thẻ Kết quả, loại CLB đặt bằng `dat_loai_clb` vào phiếu); sửa `test_giao_dien_xp1_xuat_pdf.py` và `test_giao_dien_ux1_ket_qua.py` theo menu gộp.
 ## 2026-11-19 — UX1I-I1: gộp nhánh A vào nhánh tích hợp
 
 - Lead gộp `origin/claude/ux1-a-giao-dien` (`--no-ff`, không xung đột). Không đổi mã sản phẩm; `python tao_i18n_js.py` sinh lại `i18n_loi.js` không đổi byte nào.

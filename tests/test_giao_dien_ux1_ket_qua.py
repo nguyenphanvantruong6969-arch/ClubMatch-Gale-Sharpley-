@@ -65,7 +65,9 @@ def test_mac_dinh_chi_hai_nut_xuat_hien_va_menu_chi_co_o_huy_chuong(mo, api):
     hien = page.evaluate("""() => Array.from(document.querySelectorAll('#xuatPanel .search-row button'))
         .filter(b => b.getClientRects().length && !b.closest('details:not([open])')).map(b => b.id)   // nút trong menu đóng không hiện""")
     assert hien == ["btnXuatTuyChon", "btnXuatTheoLop"], hien
-    assert page.locator("#xuatMenu").is_hidden()
+    assert page.locator("#xuatMenu").is_visible()          # UX1I-I2: menu "Xuất…" luôn có (ba mục PDF của XP1) cho quản trị
+    page.locator("#xuatMenu > summary").click()
+    assert all(page.locator("#" + i).is_hidden() for i in ("btnXuatLyDo", "btnXuatNhuCau", "btnXuatGoiY", "btnXuatBienBan"))
     assert not loi, loi
 
 

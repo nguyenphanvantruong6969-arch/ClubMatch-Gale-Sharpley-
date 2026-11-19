@@ -850,7 +850,6 @@ function loadMatchResults(search) {
     el("btnXuatNhuCau").hidden = !fa;
     el("btnXuatGoiY").hidden = !fa; /* GAP-7 */
     el("btnXuatBienBan").hidden = !fa;
-    el("xuatMenu").hidden = !fa; /* UX1A-L3: menu "Xuất…" chỉ có nghĩa khi có nút bên trong */
     el("xuatFaAnGoiY").hidden = !!fa; /* SG-11a L5: nút chỉ-FA bị ẩn thì nói vì sao (một dòng) */
     veCotLyDo(!!cauLyDo);
     taiDiemDanh(); /* GAP-1: khung điểm danh (js/10_theo_doi.js) — tự ẩn khi cờ tắt */
@@ -1071,7 +1070,7 @@ function initResultsHandlers() {
   /* XP1-L4: xuất PDF hàng loạt. Danh sách: mỗi CLB / mỗi lớp một tệp trong một thư mục. Phiếu giải trình: "Tất cả"
      thì mỗi lớp một tệp, chọn một lớp thì MỘT tệp của lớp đó. Bấm xong thì đóng menu. */
   const chayXuatPdf = (khoaMuc, ham, doiSo, noi) => {
-    el("xuatPdfMenu").open = false;
+    el("xuatMenu").open = false;
     chayXuat([[khoaMuc, ham, doiSo, noi]]);
   };
   const noiThuMuc = (d) => t("xp1_kq_thu_muc", { n: d.n_tep, path: d.thu_muc });
