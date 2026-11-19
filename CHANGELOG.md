@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.
+- Chạy cả bộ Linux một lượt (Chromium + pypdf): 6977 qua, 4 bỏ qua (numpy ×2, người dùng POSIX, ưu tiên bù hoãn kỳ 2).
+
 ## 2026-11-19 — UX1I-I3 fix1: cột Buổi của Báo cáo tổng hợp không lộ mã nội bộ
 
 - `bao_cao_tong_hop.py` (`dung_html`, `dung_pdf`): cột Buổi dùng thẳng `giai_trinh.nhan_buoi` (rỗng cho buổi mặc định), bỏ phần dự phòng in mã `__mac_dinh__`.
