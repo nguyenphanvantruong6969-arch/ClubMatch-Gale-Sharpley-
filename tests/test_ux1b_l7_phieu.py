@@ -141,3 +141,36 @@ def test_chu_doi_thuong_khong_so_khoa_va_cot_moi(api, tmp_path):
     assert "Bốc thăm" not in p and "số khoá" not in p.lower()
     gt = api.get_giai_trinh_hoc_sinh("s2")["data"]
     assert "huy_chuong" not in gt["buoi"][0]["cac_lua_chon"][0]
+
+
+# ---------------------------------------------------------------- fix1: CLB không có điểm thi không nói "bằng điểm"
+def test_fa_clb_khong_thi_ly_do_medal_khong_noi_bang_diem(api, tmp_path):
+    _dung_fa(api)                                    # G = Giới hạn, không điểm thi
+    for sid in ("s3", "s4"):
+        p = _phieu(api, tmp_path, sid)
+        assert "bằng điểm" not in p
+        assert "Các bạn đặt huy chương cao hơn ở CLB G được xét trước." in p
+    gt = api.get_giai_trinh_hoc_sinh("s3")["data"]
+    g = next(x for x in gt["buoi"][0]["cac_lua_chon"] if x["club_id"] == "G")
+    assert g["cau"].startswith("Các bạn đặt huy chương cao hơn") and g["cau"].endswith("Bạc được xét trước.")
+
+
+def test_fa_clb_co_thi_van_noi_bang_diem():
+    import fa_ly_do
+    assert "bằng điểm" in fa_ly_do.cau_ly_do({"reason": "MEDAL", "diem_em": 7.0, "outcome": "REJECTED"}, "CLB S")
+    assert "bằng điểm" not in fa_ly_do.cau_ly_do({"reason": "MEDAL", "diem_em": None, "outcome": "REJECTED"}, "CLB G")
+
+
+# ---------------------------------------------------------------- fix1: học sinh tự tra cứu không nhận số khoá bốc thăm
+def test_phan_hoi_hoc_sinh_khong_co_seed_nhung_nhan_vien_van_co(api):
+    _dung_thuong(api)
+    assert api.tao_ma_tra_cuu()["ok"]
+    with api._ket_noi_doc() as cur:
+        ma = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))
+    hs = api.tra_cuu_hoc_sinh("s1", ma["s1"])
+    assert hs["ok"], hs
+    assert "seed" not in hs["data"]["run"]
+    assert all("stb_em" not in x for b in hs["data"]["buoi"] for x in b["cac_lua_chon"])
+    nv = api.get_giai_trinh_hoc_sinh("s1")["data"]
+    assert nv["run"]["seed"] == 3
+    assert any("stb_em" in x for b in nv["buoi"] for x in b["cac_lua_chon"])

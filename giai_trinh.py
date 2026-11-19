@@ -35,7 +35,7 @@ NO_CHOICES = "NO_CHOICES"          # em chưa đăng ký nguyện vọng nào �
 NHAN_HUY_CHUONG = dict(zip(GIA_TRI_HUY_CHUONG, ("Vàng", "Bạc", "Đồng")))
 _NHAN_BUOI = {ma: nhan for nhan, ma in NHAN_BUOI}
 _BUOI_MAC_DINH = "__mac_dinh__"
-# Khớp khoá ưu tiên FA (`fa_daa.ly_do_ket_qua`): giữ chỗ, điểm thi (CLB Tuyển chọn), huy chương cao hơn trước (Vàng 60 >
+# Khớp khoá ưu tiên FA (`fa_daa.ly_do_ket_qua`): giữ chỗ, điểm thi (chỉ CLB có thi), huy chương cao hơn trước (Vàng 60 >
 # Bạc 30 > Đồng 10 > chưa đặt 0), rồi bốc thăm.
 CHU_THICH_HUY_CHUONG = ("Huy chương: khi các bạn bằng nhau ở các bước trước, bạn đặt huy chương cao hơn "
                         "(Vàng, rồi Bạc, rồi Đồng) được xét trước; chưa đặt huy chương thì xét sau; "

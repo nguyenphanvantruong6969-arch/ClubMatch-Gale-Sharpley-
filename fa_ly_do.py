@@ -27,6 +27,8 @@ def cau_ly_do(dong: dict, ten_clb: str) -> str:
         return ("%s đủ chỗ với các bạn có điểm thử thách cao hơn (điểm chuẩn %s, em %s)."
                 % (ten_clb, _so(dong.get("cut_score")), _so(dong.get("diem_em"))))
     if ma == "MEDAL":
+        if dong.get("diem_em") is None:        # CLB không có điểm thi (xét huy chương ngay): không nói "bằng điểm"
+            return "Các bạn đặt huy chương cao hơn ở %s được xét trước." % ten_clb
         return ("Em và các bạn bằng điểm; các bạn có huy chương cao hơn ở %s được xét trước."
                 % ten_clb)
     if ma == "RESERVED":

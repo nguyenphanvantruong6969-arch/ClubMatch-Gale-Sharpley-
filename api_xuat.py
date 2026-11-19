@@ -1962,7 +1962,14 @@ class XuatKetQuaMixin:
                     self._gt1_luot_sai = {k: v for k, v in self._gt1_luot_sai.items() if v[1] > bay_gio}
                 return _fail(err("gt1_ma_sai"))
             thu[0], thu[1] = 0, 0.0
-            return self._giai_trinh_hoc_sinh(sid, None)
+            r = self._giai_trinh_hoc_sinh(sid, None)
+            if r.get("ok"):      # UX1B-L7 fix1: phản hồi cho HỌC SINH không mang số khoá bốc thăm (đường quản trị giữ nguyên)
+                d = r["data"]
+                d["run"] = {k: v for k, v in (d.get("run") or {}).items() if k != "seed"}
+                for b in d.get("buoi", []):
+                    for x in b.get("cac_lua_chon", []):
+                        x.pop("stb_em", None)
+            return r
         except CauHinhHong as e:
             return _fail(loi_cau_hinh(e))
         except Exception as e:

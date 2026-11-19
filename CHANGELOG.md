@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L7 fix1 (từ checker)
+
+- `fa_ly_do.cau_ly_do` (MEDAL): CLB không có điểm thi (`diem_em` rỗng) nói "Các bạn đặt huy chương cao hơn ở {CLB} được xét trước." thay vì "bằng điểm"; `docs/giai_trinh/HUONG_DAN_CHAY.md` sửa ví dụ cho khớp.
+- `api_xuat.tra_cuu_hoc_sinh`: phản hồi cho học sinh bỏ `run.seed` và `stb_em` từng dòng (đường quản trị / giáo viên giữ nguyên).
+- Test thêm trong `tests/test_ux1b_l7_phieu.py` (3).
+
 ## 2026-11-19 — UX1B-L7: nội dung phiếu giải trình (không gồm loại CLB — XP1)
 
 - `giai_trinh.py`: `tom_tat_dong`, `cac_buoc_tiep`, `_diem_da_thi`, `NHAN_HUY_CHUONG`, `CHU_THICH_HUY_CHUONG`; `giai_trinh_mot_hoc_sinh` trả thêm `tom_tat_dong`, `buoc_tiep` (chỉ khi có buổi chưa có chỗ), `chu_thich_huy_chuong` (FA), `diem_da_thi` mỗi buổi; FA: mỗi dòng có `huy_chuong` (chỉ của chính em), dòng lý do MEDAL nối câu "Em đặt huy chương X; các bạn đặt Y được xét trước."

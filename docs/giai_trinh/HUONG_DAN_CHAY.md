@@ -77,7 +77,7 @@ Thẻ Kết quả, ô tìm kiếm: gõ `FA001` (tên "Học sinh mô phỏng 001
 Học sinh `FA002` cùng hạt giống: `thu_2` nhận `THU_2_1` (hạng 3), `thu_5` nhận `THU_5_1` (hạng 4).
 
 Ở chế độ huy chương, phần giải thích bằng câu cho từng học sinh **đã có sẵn**: `get_ly_do_ket_qua` trả `fa_bat: true` cùng các câu
-cho từng buổi, ví dụ FA001 buổi Thứ 2: "Em và các bạn bằng điểm; các bạn có huy chương cao hơn ở CLB Cờ vua (Giới hạn A) được xét
+cho từng buổi, ví dụ FA001 buổi Thứ 2: "Các bạn đặt huy chương cao hơn ở CLB Cờ vua (Giới hạn A) được xét
 trước." rồi "Em được xếp vào CLB Robot (Tuyển chọn) – nguyện vọng 2 của em." Phiếu in và tra cứu bằng mã tại kiosk, tiêu chí thử và so sánh: xem `KICH_BAN_DEMO.md` bước 8–10; số liệu ca mẫu: `CA_MAU.md`.
 
 ## 7. Xuất
