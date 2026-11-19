@@ -1,5 +1,24 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT R1 | reviewed 775f669..0185d9d
+verdict: 1 BUG
+1. giai_trinh.py:_chuan_clb_fa (used by _lua_chon_fa and _diem_da_thi) | repro (fake data, FA on): club T "Tuyển chọn" cap 2, diem_san 0; students r (score 3,
+   holds a reserved seat via giu_cho), t (8), x (7), all rank T first, medal 60; run seed 3 -> r, t accepted, x rejected (reason SCORE).
+   x's row: "Mức vào được 3 điểm" + SVG with x's 7 ABOVE the red line, but the same row's sentence says "điểm chuẩn 8, em 7" (fa_ly_do cut_score) | expected: 8.
+   Cause: `min(accepted scores)` includes the reserved student. The FA key is (-giữ chỗ, -điểm, -huy chương, stb) (fa_daa.py ~l.545), so reserved members rank
+   first and the real cut is the score of the worst-KEY member (= fa_daa cut_score = 8). Also misleading when untested (tier-2, diem 0) members are accepted:
+   min over tested members then shows a cut no tested student faced. Fix: for a REJECTED row with r["cut_score"] use it (same number as the sentence); for ACCEPTED/untested
+   rows take min only over accepted members WITHOUT a reserved seat (b has the reserve info as `reserve_fn` in fa_daa; pass or precompute it), and if all accepted are
+   reserved / any accepted is untested show "Còn chỗ"/"Chỗ dành riêng" instead of a number. Compare the non-FA slip: `_diem_da_thi` uses `_nguoi_nhan_cuoi` (last by rank), not min.
+   The R1 test uses the sample book where no reserve exists, so it does not catch this; add the case above.
+Checked OK:
+ - Item 2: MEDAL "Vì sao" is ONE sentence naming the club and own medal; 3 edited tests are tightened, not weakened (exact equality of the sentence, club name added,
+   new assert on diem_chuan_loai "huy_chuong" = "Bạc"; "bằng điểm" still absent at untested clubs, still present at tested). "Huy chương X" as mức vào được on untested clubs = last accepted's medal
+   (club-level, no name/id) -> true under key (1, -medal, stb).
+ - Item 3: report shows "Thứ 2" (no "thu_"), capitalised headings ("Học sinh chưa có câu lạc bộ theo lớp"), column "Số lượt xếp (học sinh × buổi)"; numbers = summary API
+   (120HS book: 87+40+11+... = tong_da_xep 138 > 120 students because 3 sessions each; test asserts sum ≤ tong_da_xep).
+ - Privacy: only club-level numbers; 84 tests passed (l7, l4_bao_cao, ux1b_phieu/vai_gv, gt_tich_hop, gt1_giai_trinh, gt4_cau_giai_trinh, gt1_phieu); ruff clean.
+
 CHECKER REPORT L8-B | reviewed 90ee9aa..b960b60
 verdict: NO BUGS (3 minor notes)
 - Tests: test_gt3_tai_lieu + test_gt_tich_hop (incl. test_i4_* byte test) + test_a13_12_tai_lieu -> 44 passed. Docs diff is text/tables/PNG/PDF only (no product code).
