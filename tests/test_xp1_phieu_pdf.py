@@ -177,3 +177,39 @@ def test_thieu_thu_vien_pdf_bao_loi_co_ten(api, tmp_path, monkeypatch):
 def test_xuat_pdf_chi_quan_tri():
     import phan_quyen
     assert phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"] == phan_quyen.QUAN_TRI
+
+
+def test_mot_hoc_sinh_mot_tep_mot_trang(api, tmp_path):
+    _dung(api)
+    r = api.export_phieu_giai_trinh_pdf(str(tmp_path / "mot.pdf"), student_ids=["s2"])
+    assert r["ok"], r
+    assert r["data"]["n_trang"] == _n_trang(r["data"]["path"]) == 1
+
+
+@can_pypdf
+def test_mot_hoc_sinh_chi_co_du_lieu_cua_em_do(api, tmp_path):
+    _dung(api)
+    d = api.export_phieu_giai_trinh_pdf(str(tmp_path / "mot.pdf"), student_ids=["s2"])["data"]
+    chu = "\n".join(_trang_pdf(d["path"]))
+    assert "Trần Thị Bé" in chu and "Nguyễn Văn Ánh" not in chu and "Lê Đức" not in chu
+
+
+def test_mot_hoc_sinh_ten_tep_mac_dinh_theo_ma(api, tmp_path):
+    _dung(api)
+    api.thu_muc_xuat = str(tmp_path)
+    d = api.export_phieu_giai_trinh_pdf("", student_ids=["s2"])["data"]
+    assert os.path.basename(d["path"]) == "phieu_giai_trinh_s2.pdf"
+
+
+def test_ma_hoc_sinh_la_hoac_rong_bi_tu_choi(api, tmp_path):
+    _dung(api)
+    for ids in (["khong_co"], []):
+        r = api.export_phieu_giai_trinh_pdf(str(tmp_path / "x.pdf"), student_ids=ids)
+        assert not r["ok"] and r["errors"][0]["code"] == "gt1_khong_co_hoc_sinh"
+    assert _tep(tmp_path) == []
+
+
+def test_chon_nhieu_hoc_sinh_va_theo_lop(api, tmp_path):
+    _dung(api)
+    d = api.export_phieu_giai_trinh_pdf(str(tmp_path / "tm"), student_ids=["s1", "s3"], theo_lop=True)["data"]
+    assert _tep(d["thu_muc"]) == ["10A1.pdf"] and d["n_trang"] == 2

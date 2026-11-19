@@ -1848,27 +1848,33 @@ class XuatKetQuaMixin:
         except Exception as e:
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
-    def export_phieu_giai_trinh_pdf(self, output_path: str = "", lop=None, theo_lop: bool = False):
+    def export_phieu_giai_trinh_pdf(self, output_path: str = "", lop=None, theo_lop: bool = False,
+                                    student_ids=None):
         """XP1-L2: phiếu giải trình dạng PDF (A4 dọc, mỗi học sinh bắt đầu một trang; mỗi dòng nguyện vọng có
         loại CLB). `theo_lop=False`: MỘT tệp (mọi em, hoặc chỉ `lop`). `theo_lop=True`: MỘT THƯ MỤC
         `phieu_giai_trinh_theo_lop`, mỗi lớp một tệp PDF + `_chua_co_lop.pdf` (có `lop` thì chỉ lớp đó).
+        `student_ids` (danh sách mã): chỉ các em đó (MỘT mã = một tệp `phieu_giai_trinh_<mã>.pdf` cho khung tra cứu).
         Cùng dữ liệu với phiếu HTML; chỗ đặt như mọi lần xuất (`_duong_xuat`, không ghi đè); chỉ ĐỌC dữ liệu.
         Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`, `xp1_thieu_thu_vien_pdf`.
         Trả {path, n_trang} hoặc {thu_muc, n_tep, n_trang}."""
-        return self._khoa_xuat(self._export_phieu_giai_trinh_pdf_da_khoa, output_path, lop, theo_lop)
+        return self._khoa_xuat(self._export_phieu_giai_trinh_pdf_da_khoa, output_path, lop, theo_lop, student_ids)
 
-    def _export_phieu_giai_trinh_pdf_da_khoa(self, output_path, lop, theo_lop):
+    def _export_phieu_giai_trinh_pdf_da_khoa(self, output_path, lop, theo_lop, student_ids=None):
         import phieu_giai_trinh
         import xuat_pdf
         thu_muc, da_tao = None, False
         try:
             xuat_pdf.san_sang()
-            r = self._phieu_chuan_bi(None, lop)
+            r = self._phieu_chuan_bi(student_ids, lop)
             if isinstance(r, dict):
                 return r
             du_lieu, thong_tin_hs, chon, so_ngay, ma_cua = r
             if not theo_lop:
-                duong = self._duong_xuat(output_path, "phieu_giai_trinh.pdf")
+                ten_mac_dinh = "phieu_giai_trinh.pdf"
+                if student_ids is not None and len(chon) == 1:
+                    ten_mac_dinh = "phieu_giai_trinh_%s.pdf" % self._cat_ten_tep(
+                        self._ten_file_an_toan(chon[0], "hs"), 60)
+                duong = self._duong_xuat(output_path, ten_mac_dinh)
                 duong = phieu_giai_trinh.dung_phieu_pdf(
                     self._phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua), duong, so_ngay)
                 return _ok({"path": duong, "n_trang": xuat_pdf.dem_trang(duong)})

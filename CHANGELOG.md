@@ -6,7 +6,8 @@
 - `phieu_giai_trinh.py`: cột "Loại CLB" ở phiếu HTML; `dung_phieu_pdf` (cùng dữ liệu, mỗi học sinh một trang mới).
 - `api_xuat.py`: `export_phieu_giai_trinh_pdf(output_path, lop, theo_lop)` (một tệp, hoặc thư mục `phieu_giai_trinh_theo_lop` mỗi lớp một PDF + `_chua_co_lop.pdf`); tách `_phieu_chuan_bi`, `_phieu_cac_em` dùng chung với phiếu HTML và `_thu_muc_xuat_moi` dùng chung với `export_theo_lop`. `_giai_trinh_dung_lai` đọc thêm `clubs.loai`.
 - `xuat_pdf.py`: `dem_trang`, `san_sang`. `i18n_errors.py`: mã lỗi `xp1_thieu_thu_vien_pdf` (+ `i18n_loi.js` sinh lại). `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn nhật ký `nkhd_export_phieu_giai_trinh_pdf` (vi/en).
-- Test: `tests/test_xp1_phieu_pdf.py` (17 ca). Sửa có chủ ý: `test_gt4_cau_giai_trinh.py` (cột "Mức vào được" dời từ 4 sang 5 vì thêm cột), `test_van_phong_tu_nhien.py` (thêm "PDF" vào viết tắt cho phép), `test_ws_nhan.py` (cho phép tiền tố mã lỗi `xp1_`).
+- Phiếu MỘT em: `export_phieu_giai_trinh_pdf(..., student_ids=[mã])` ra một tệp `phieu_giai_trinh_<mã>.pdf`; nút "Lưu PDF" (`#btnGtPdfMot`, chỉ quản trị) ở khung tra cứu thẻ Kết quả (`index.html`, `js/14_giai_trinh.js`, khoá i18n `xp1_luu_pdf`, `xp1_pdf_mot_xong`): tìm → chọn → Lưu PDF = 3 bước.
+- Test: `tests/test_xp1_phieu_pdf.py` (22 ca), `tests/test_giao_dien_xp1_luu_pdf_mot_em.py` (Chromium). Sửa có chủ ý: `test_gt4_cau_giai_trinh.py` (cột "Mức vào được" dời từ 4 sang 5 vì thêm cột), `test_van_phong_tu_nhien.py` (thêm "PDF" vào viết tắt cho phép), `test_ws_nhan.py` (cho phép tiền tố mã lỗi `xp1_`).
 - `docs/phien/claude__ux1-b-phieu.md`: ghi chú L6/L7 đã được XP1 thay/làm. `kiem_nhanh.py` 7/7.
 
 ## 2026-11-19 — XP1-L1: lõi xuất PDF (chưa có giao diện)
