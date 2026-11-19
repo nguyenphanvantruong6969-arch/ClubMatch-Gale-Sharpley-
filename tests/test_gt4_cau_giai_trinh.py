@@ -128,7 +128,7 @@ def test_phieu_in_o_cho_danh_rieng_va_co_chu_thich(ws_sach, tmp_path):
     for hang in re.findall(r"<tr[^>]*>.*?</tr>", html):
         if "dành một số chỗ cho nhóm được giữ chỗ" in hang:
             o = re.findall(r"<td>(.*?)</td>", hang)
-            assert o[5] == "Chỗ dành riêng", o
+            assert o[-2] == "Chỗ dành riêng", o
     assert html.count("Em ") > 0                                    # phiếu in giữ giọng "Em"
 
 

@@ -304,6 +304,7 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
             co_du_tru = not tham_so_luat(luat, {})["bo_qua_du_tru"]
             with self._ket_noi_doc() as cur:
                 warnings = []
+                gop_huy_chuong = None
 
                 def warn(severity, code, **params):
                     entry = err(code, **params)
@@ -613,9 +614,19 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 if bat_fa:
                     # FA-DAA: cùng hàm kiểm mà lần chạy xếp dùng. Lỗi chặn là "high", cảnh báo
                     # (giữ chỗ không dùng được) là "medium".
+                    ten_clb = {r[0]: (r[1] or r[0]) for r in cur.execute("SELECT club_id, name FROM clubs")}
+                    hc_em, hc_clb = set(), []
                     for e in fa_daa.kiem_fa_tu_csdl(cur):
                         warn("medium" if e["code"] in fa_daa.MA_CANH_BAO else "high",
                              e["code"], **e["params"])
+                        if e["code"].startswith("fa_huy_chuong_") and not e["code"].endswith("_nhom"):
+                            hc_em.add(str(e["params"].get("student_id")))     # UX1B-L5c: chỉ để gộp khi HIỂN THỊ
+                            cid = e["params"].get("club_id")
+                            if cid is not None and ten_clb.get(cid, cid) not in hc_clb:
+                                hc_clb.append(ten_clb.get(cid, cid))
+                    n_hs_nv = cur.execute("SELECT COUNT(DISTINCT student_id) FROM preferences").fetchone()[0]
+                    if self._huy_chuong_ca_so_sai(len(hc_em), n_hs_nv):   # chỉ khi CẢ SỔ sai; ít em sai thì giữ từng dòng
+                        gop_huy_chuong = {"n_em": len(hc_em), "n_clb": len(hc_clb), "clb": hc_clb[:3]}
                 elif bat_wharton:
                     # MỘT hàm dùng chung với thẻ Quản lý (`list_wharton_canh_bao`): cùng em, cùng số.
                     ho_so = self._ho_so_wharton_tat_ca(cur, luat)
@@ -630,6 +641,7 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 "warnings": warnings,
                 "n_warnings": len(warnings),
                 "n_high": sum(1 for w in warnings if w["severity"] == "high"),
+                "gop_huy_chuong": gop_huy_chuong,    # UX1B-L5c: số em + tên CLB, để giao diện gộp các dòng fa_huy_chuong_*
             })
         except Exception as e:
             return _fail(err("error_checking_integrity", detail=str(e)))

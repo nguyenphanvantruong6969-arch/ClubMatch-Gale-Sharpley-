@@ -7,7 +7,7 @@ Chuẩn bị: làm theo `HUONG_DAN_CHAY.md` mục 1; thư mục làm việc tr�
 
 1. **Mở phần mềm** (`main.py`). Màn hình: thẻ Xếp, vùng thả tệp trống; thanh **Việc tiếp theo** ở đầu trang đang gợi ý "Nạp sổ". Nói: phần mềm chạy ngoại tuyến, không có mô hình AI (`VAI_TRO_AI.md` mục 1).
 2. **Nạp sổ nhập có lỗi** `du_lieu_test/SO_NHAP_CO_LOI_CO_Y.xlsx`. Màn hình: bảng năm lỗi kèm sheet, dòng, mã học sinh; "không nạp gì". Chỉ một lỗi, đọc thông báo.
-3. **Tạo không gian làm việc bật chế độ huy chương** (chuẩn bị trước buổi trình diễn): màn chọn không gian → **Tạo mới** → ở bước 3 chọn lựa chọn **Huy chương** (hoặc mở không gian rồi chọn nó ở nhóm **Cài đặt**; bấm là lưu ngay, có Hoàn tác). Làm việc này **trước** khi nạp sổ; sổ mẫu là sổ huy chương và không chạy được ở không gian mặc định.
+3. **Tạo không gian làm việc bật chế độ huy chương** (chuẩn bị trước buổi trình diễn): màn chọn không gian → **Tạo mới** → ở bước 3 chọn lựa chọn **Huy chương** (hoặc mở không gian rồi chọn nó ở nhóm **Cài đặt và quản lý**; bấm là lưu ngay, có Hoàn tác). Làm việc này **trước** khi nạp sổ; sổ mẫu là sổ huy chương và không chạy được ở không gian mặc định.
 4. **Nạp sổ đúng** `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` (nếu nạp sổ huy chương khi chế độ còn tắt, phần xem trước nói rõ và có nút **Bật chế độ huy chương**). Màn hình: "Sẵn sàng nhập: 8 CLB · 2 buổi · 120 học sinh · 829 nguyện vọng · 194 lượt thi", không lỗi chặn.
 5. **Bấm chạy xếp** (hạt giống 42). Màn hình: các bước `backup → validate → stb_lottery → rbda_cascade → write_results → export` đều xong, 120/120 học sinh có chỗ; không bị chặn, không cần "phóng" điểm.
 6. **Xem kết quả.** Mở thẻ Kết quả; nói: phần mềm dừng và nói rõ khi hồ sơ sai (đã thấy ở bước 2), còn sổ đúng thì chạy thẳng.

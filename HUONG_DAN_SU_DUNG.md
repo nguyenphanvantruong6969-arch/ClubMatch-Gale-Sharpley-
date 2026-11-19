@@ -101,14 +101,16 @@ Bên trái là **bốn nhóm** (mỗi nhóm bấm một lần để vào thẻ �
 | **1. Nạp & xếp** | **Xếp CLB** | Nạp tệp, xem cảnh báo, chạy sắp xếp, xuất kết quả |
 | **2. Nhập tay** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
 | | **Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
-| **3. Kết quả & phiếu** | **Kết quả** | Tra cứu một em ở đầu trang, rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Không có điểm hay số bốc thăm |
+| **3. Kết quả & phiếu** | **Kết quả** | Ô tìm to ở đầu trang để tra cứu một em (các việc về mã tra cứu gập vào **Mã tra cứu…**, chỉ quản trị), khối **Theo lớp và báo cáo** (chọn lớp, **Xuất theo lớp**, **Báo cáo tổng hợp**), rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Bảng không có điểm hay số bốc thăm |
 | | **Chi tiết và xuất tệp** | Tóm tắt, xuất tệp (hai nút chính + menu **Xuất…**), mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ, khung **Sau khi xếp** (chế độ huy chương) |
-| **Cài đặt** | **Quản lý** | **Cài đặt** (một câu hỏi, ba thẻ: Chỉ xếp thứ tự / Chia 100 điểm / Huy chương), thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu; mục **Nâng cao** gập: tiêu chí xếp, thử cấu hình |
+| **Cài đặt và quản lý** | **Quản lý** | **Cài đặt** (một câu hỏi, ba thẻ: Chỉ xếp thứ tự / Chia 100 điểm / Huy chương), thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu; mục **Nâng cao** gập: tiêu chí xếp, thử cấu hình |
 | | **Chuẩn bị đợt** | Chỉ hiện khi bật (chuẩn bị biểu mẫu) |
 
 Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự biến mất (giáo viên chỉ thấy nhóm 2 và 3 và vào thẳng **Kết quả**).
 
 **Thanh "Việc tiếp theo"** ở đầu trang (chỉ quản trị) luôn chỉ MỘT việc nên làm: *Nạp sổ* → *Xem cảnh báo* (khi có mục nghiêm trọng) → *Chạy sắp xếp* → *Xử lý n học sinh chưa có CLB* → *Xuất kết quả*. Còn em chưa có CLB thì có thêm nút phụ **Xuất kết quả**.
+
+**Phiếu giải trình và Báo cáo tổng hợp.** Phiếu in của một em (và thẻ tra cứu trên màn hình, cùng chữ) có: dòng tóm tắt ("Em có 2/3 buổi: CLB A (Thứ 4), CLB B (Thứ 6)." hoặc "Em chưa có CLB ở buổi nào."), bảng nguyện vọng với cột **Điểm thi**, **Chỗ đã nhận / tối đa**, **Mức vào được** (một số điểm, hoặc "Chọn ngẫu nhiên khi bằng điểm"), bảng **Điểm các CLB em đã thi** có thanh so với mức vào được (chỉ CLB em đã thi), và khối **Em nên làm gì tiếp** khi một buổi chưa có chỗ (chỉ nêu tính năng đang bật, luôn kèm "hỏi giáo viên phụ trách"). Ở chế độ huy chương có thêm cột **Huy chương** (huy chương em đã đặt cho từng CLB) và một câu chú giải. Thẻ của học sinh không hiện số khoá bốc thăm. **Báo cáo tổng hợp** (nút ở khối **Theo lớp và báo cáo**, giáo viên cũng dùng được) ghi một tệp HTML cho ban giám hiệu: số học sinh, mức lấp đầy từng CLB, mức hài lòng về nguyện vọng, số học sinh chưa có chỗ theo lớp; không có tên, mã, điểm hay số bốc thăm; nếu dữ liệu sửa sau lần xếp, báo cáo nói kết quả có thể đã cũ. Nút in phiếu cả lớp và phiếu PDF nằm ở mục xuất PDF riêng.
 
 **Cài đặt là một câu hỏi:** "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?" Bấm một thẻ là lưu ngay (có **Hoàn tác** 10 giây; lần xếp đã có giữ nguyên, lần chạy sau dùng cách mới). **Huy chương** cần dữ liệu CLB sẵn sàng: thiếu loại CLB hay thiếu CLB Tự do ở một buổi thì thẻ liệt kê đúng chỗ thiếu để sửa tại chỗ. Sổ có cột Huy chương mà đang ở cách khác thì phần xem trước nói rõ và có nút **Bật chế độ huy chương**; ô huy chương của sổ nhận cả Vàng / Bạc / Đồng lẫn 60 / 30 / 10. **Tải sổ nhập mẫu** có hai bản: sổ thường và sổ có huy chương.
 

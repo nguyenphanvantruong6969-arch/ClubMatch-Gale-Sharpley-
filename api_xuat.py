@@ -2019,6 +2019,30 @@ class XuatKetQuaMixin:
                 shutil.rmtree(thu_muc, ignore_errors=True)
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
+    def export_bao_cao_tong_hop(self, output_path: str = ""):
+        """UX1B-L4-B: "Báo cáo tổng hợp" cho hiệu trưởng: MỘT tệp HTML tự đủ chỉ có chỉ số gộp (thẻ tổng, lấp đầy
+        từng CLB, mức hài lòng nguyện vọng, số em chưa có chỗ theo lớp). KHÔNG mã, tên, điểm hay số bốc thăm.
+        Chỗ đặt như mọi lần xuất (`_duong_xuat`, không ghi đè). Chưa có kết quả: `xuat_chua_co_ket_qua`.
+        Trả {path, ket_qua_cu}."""
+        return self._khoa_xuat(self._export_bao_cao_tong_hop_da_khoa, output_path)
+
+    def _export_bao_cao_tong_hop_da_khoa(self, output_path):
+        import bao_cao_tong_hop
+        try:
+            if self._chua_co_ket_qua():
+                return _fail(err("xuat_chua_co_ket_qua"))
+            duong = self._duong_xuat(output_path, "bao_cao_tong_hop.html")
+            html = bao_cao_tong_hop.dung_html(bao_cao_tong_hop.gom_du_lieu(self), self._nhan_xuat())
+            with open(duong, "w", encoding="utf-8") as f:
+                f.write(html)
+            return _ok({"path": duong, "ket_qua_cu": self._ket_qua_cu()})
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
     # ===== GT1-L4: mã tra cứu + em tự tra cứu =====
     # Đồng hồ cho khoá tạm: bài kiểm thay `self._gt1_dong_ho` để khỏi phải chờ thật.
     _gt1_dong_ho = staticmethod(time.monotonic)
@@ -2123,7 +2147,14 @@ class XuatKetQuaMixin:
                     self._gt1_luot_sai = {k: v for k, v in self._gt1_luot_sai.items() if v[1] > bay_gio}
                 return _fail(err("gt1_ma_sai"))
             thu[0], thu[1] = 0, 0.0
-            return self._giai_trinh_hoc_sinh(sid, None)
+            r = self._giai_trinh_hoc_sinh(sid, None)
+            if r.get("ok"):      # UX1B-L7 fix1: phản hồi cho HỌC SINH không mang số khoá bốc thăm (đường quản trị giữ nguyên)
+                d = r["data"]
+                d["run"] = {k: v for k, v in (d.get("run") or {}).items() if k != "seed"}
+                for b in d.get("buoi", []):
+                    for x in b.get("cac_lua_chon", []):
+                        x.pop("stb_em", None)
+            return r
         except CauHinhHong as e:
             return _fail(loi_cau_hinh(e))
         except Exception as e:
@@ -2187,8 +2218,10 @@ class XuatKetQuaMixin:
                     "SELECT student_id, buoi, club_id FROM match_results"):
                 luu_kq.setdefault(buoi, {})[sid] = cid
             stb_buoi = doc_stb_buoi(cur) or None
-            fa_dong, wharton = {}, None
+            fa_dong, wharton, huy_chuong = {}, None, {}
             if fa_bat:
+                for sid_h, cid_h, diem_h in cur.execute("SELECT student_id, club_id, points FROM wharton_bids"):
+                    huy_chuong.setdefault(sid_h, {})[cid_h] = diem_h      # UX1B-L7: giai_trinh chỉ đọc phần của chính em
                 _, dong, _ = self._doc_ly_do_moi_nhat(cur)
                 for r in dong:
                     fa_dong.setdefault(r[1], {}).setdefault(r[0], []).append({
@@ -2233,8 +2266,14 @@ class XuatKetQuaMixin:
                 luu_b = {s: c for s, c in luu_kq.get(buoi, {}).items() if c is not None}
                 if lai != luu_b:
                     da_doi = True
+        luat_hien = self._luat_nghiem()
+        fa_hien = dung_fa_daa(luat_hien)
+        tinh_nang = {"vong_2": fa_hien and luat_hien.get("fa_vong_2") is True,
+                     "moi_cho_trong": fa_hien and luat_hien.get("fa_diem_danh") is True,
+                     "khieu_nai": fa_hien and luat_hien.get("fa_khieu_nai") is True,
+                     "so_ngay": luat_hien.get("fa_khieu_nai_so_ngay")}
         du_lieu = {"fa_bat": fa_bat, "du_lieu_da_doi": da_doi, "run": thong_tin,
-                   "ds_buoi": ds_buoi, "buoi": theo_buoi}
+                   "ds_buoi": ds_buoi, "buoi": theo_buoi, "huy_chuong": huy_chuong, "tinh_nang": tinh_nang}
         return du_lieu, thong_tin_hs
 
     def _export_ly_do_da_khoa(self, output_path: str = ""):

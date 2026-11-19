@@ -44,7 +44,7 @@ không kèm mã thì bị từ chối `403`. **Chưa kiểm:** cửa sổ pywebv
 
 **Bật chế độ huy chương trước khi nạp.** Sổ `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` dành cho không gian làm việc xếp theo loại CLB và
 huy chương (các cột 60/30/10 là huy chương, không phải điểm quyết tâm). Không gian mặc định không có chế độ này và sẽ chặn lần chạy
-(`wharton_ho_so_chua_hop_le`). Cách làm (chế độ "Xếp theo loại CLB và huy chương"): vào nhóm **Cài đặt** (thẻ **Quản lý**), ở đầu trang chọn thẻ **Huy chương** (câu hỏi "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?"); bấm là lưu ngay, có nút **Hoàn tác** trong 10 giây. Cũng chọn được ở bước 3 khi tạo không gian làm việc mới, hoặc ở menu **⋯ → Cài đặt…**. Nếu quên và kéo sổ vào trước, phần xem trước sẽ nói sổ có cột Huy chương mà chế độ đang tắt, kèm nút **Bật chế độ huy chương**. Dữ liệu CLB chưa đủ (loại CLB, mỗi buổi một CLB Tự do) thì thẻ Huy chương mở bảng "còn thiếu" để sửa tại chỗ cho tới khi hiện *Sẵn sàng*; các tính năng sau khi xếp (mở vòng 2, khiếu nại, điểm danh, danh sách chờ, phản hồi) là các nút ở khung **Sau khi xếp** của thẻ **Chi tiết và xuất tệp**, chỉ hiện ở chế độ này. Trong mã, cấu hình tương đương là `rules.fa_daa = true`. Ô huy chương của sổ nhận cả **Vàng / Bạc / Đồng** lẫn 60 / 30 / 10.
+(`wharton_ho_so_chua_hop_le`). Cách làm (chế độ "Xếp theo loại CLB và huy chương"): vào nhóm **Cài đặt và quản lý** (thẻ **Quản lý**), ở đầu trang chọn thẻ **Huy chương** (câu hỏi "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?"); bấm là lưu ngay, có nút **Hoàn tác** trong 10 giây. Cũng chọn được ở bước 3 khi tạo không gian làm việc mới, hoặc ở menu **⋯ → Cài đặt…**. Nếu quên và kéo sổ vào trước, phần xem trước sẽ nói sổ có cột Huy chương mà chế độ đang tắt, kèm nút **Bật chế độ huy chương**. Dữ liệu CLB chưa đủ (loại CLB, mỗi buổi một CLB Tự do) thì thẻ Huy chương mở bảng "còn thiếu" để sửa tại chỗ cho tới khi hiện *Sẵn sàng*; các tính năng sau khi xếp (mở vòng 2, khiếu nại, điểm danh, danh sách chờ, phản hồi) là các nút ở khung **Sau khi xếp** của thẻ **Chi tiết và xuất tệp**, chỉ hiện ở chế độ này. Trong mã, cấu hình tương đương là `rules.fa_daa = true`. Ô huy chương của sổ nhận cả **Vàng / Bạc / Đồng** lẫn 60 / 30 / 10.
 Không dùng nút "Phóng cho đủ 100": nút đó dành cho điểm quyết tâm và sẽ biến huy chương thành điểm tự đặt.
 
 Rồi trong thẻ **Xếp**: kéo tệp `du_lieu_test/SO_NHAP_FA_MAU_120HS.xlsx` vào vùng thả tệp. Việc tương đương qua API:
@@ -77,7 +77,7 @@ Thẻ Kết quả, ô tìm kiếm: gõ `FA001` (tên "Học sinh mô phỏng 001
 Học sinh `FA002` cùng hạt giống: `thu_2` nhận `THU_2_1` (hạng 3), `thu_5` nhận `THU_5_1` (hạng 4).
 
 Ở chế độ huy chương, phần giải thích bằng câu cho từng học sinh **đã có sẵn**: `get_ly_do_ket_qua` trả `fa_bat: true` cùng các câu
-cho từng buổi, ví dụ FA001 buổi Thứ 2: "Em và các bạn bằng điểm; các bạn có huy chương cao hơn ở CLB Cờ vua (Giới hạn A) được xét
+cho từng buổi, ví dụ FA001 buổi Thứ 2: "Các bạn đặt huy chương cao hơn ở CLB Cờ vua (Giới hạn A) được xét
 trước." rồi "Em được xếp vào CLB Robot (Tuyển chọn) – nguyện vọng 2 của em." Phiếu in và tra cứu bằng mã tại kiosk, tiêu chí thử và so sánh: xem `KICH_BAN_DEMO.md` bước 8–10; số liệu ca mẫu: `CA_MAU.md`.
 
 ## 7. Xuất

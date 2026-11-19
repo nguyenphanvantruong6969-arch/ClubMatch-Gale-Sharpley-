@@ -62,7 +62,7 @@
         </button>
       </div>
       <div class="nav-nhom" data-nhom="cai_dat">
-        <button type="button" class="nav-nhom-nut" data-nhom-nut="cai_dat" data-i18n="ux1a_nhom_cai_dat">Cài đặt</button>
+        <button type="button" class="nav-nhom-nut" data-nhom-nut="cai_dat" data-i18n="ux1a_nhom_cai_dat">Cài đặt và quản lý</button>
         <button class="nav-item" data-tab="admin" data-quyen="quan_tri">
           <span data-i18n="nav_admin">Quản lý</span>
         </button>
@@ -274,15 +274,10 @@
       <div class="panel gt-ui" id="gtPanel">
         <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
         <div class="panel-body">
-          <ol class="gt-buoc" id="gtBuocHuongDan" data-quyen="quan_tri" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
-            <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
-            <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
-            <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
-            <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
-          </ol>
-          <div class="search-row">
+          <!-- UX1B-L5c: ô tìm to ở đầu; các việc về mã tra cứu gập vào "Mã tra cứu…" (chỉ quản trị) -->
+          <div class="search-row gt-tim-hang">
             <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
-            <input type="text" id="gtTim" class="text-input" data-i18n-placeholder="gt_tim_ph" placeholder="Tìm mã hoặc tên">
+            <input type="text" id="gtTim" class="text-input gt-tim-to" data-i18n-placeholder="gt_tim_ph" placeholder="Gõ tên hoặc mã {person_l} để xem vì sao">
           </div>
           <ul id="gtDs" class="gt-ds"></ul>
           <div id="gtKetQua" role="status"></div>
@@ -292,14 +287,39 @@
             <button type="button" class="btn btn-secondary" id="btnGtPdfMot" data-quyen="quan_tri" data-i18n="xp1_luu_pdf">Lưu PDF</button>
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
-          <div class="search-row">
-            <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
-            <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
-            <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
-          </div>
-          <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+          <details class="menu-khac gt-ma-gap" id="gtMaFold" data-quyen="quan_tri">
+            <summary class="btn btn-ghost" data-i18n="ux1b_ma_tra_cuu">Mã tra cứu…</summary>
+            <ol class="gt-buoc" id="gtBuocHuongDan" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
+              <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
+              <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
+              <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
+              <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
+            </ol>
+            <div class="search-row">
+              <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
+              <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
+              <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+            </div>
+            <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+          </details>
         </div>
       </div>
+
+      <!-- UX1B: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). Không có nút in phiếu cả lớp: XP1 nối ở bước tích hợp -->
+      <div class="panel" id="ux1bPanel">
+        <div class="panel-head"><h2 data-i18n="ux1b_tieu_de">Theo {cohort_l} và báo cáo</h2></div>
+        <div class="panel-body">
+          <div class="search-row">
+            <label class="lop-nhan" for="ux1bLop" data-i18n="ux1b_chon_lop">Chọn {cohort_l}</label>
+            <select id="ux1bLop" class="text-input text-input-sm"></select>
+            <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
+            <button class="btn btn-secondary" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
+          </div>
+          <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp (lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}); không có tên, mã hay điểm.</p>
+          <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
+        </div>
+      </div>
+      <!-- /UX1B -->
 
       <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
         <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
@@ -447,6 +467,7 @@
         <p class="hint-text" id="xuatFaAnGoiY" data-sg11a-xuat-fa data-i18n="xuat_fa_an_goi_y">Các nút xuất lý do kết quả, bảng nhu cầu, gợi ý chỉ tiêu và biên bản bốc thăm chỉ hiện khi bật chế độ "Xếp theo loại {slot_l} và huy chương".</p>
         <p class="hint-text" data-i18n="xuat_theo_lop_hint">Xuất theo lớp: mỗi lớp một tệp bảng tính, chỉ có kết quả xếp, không có điểm hay số bốc thăm. Gửi được cho giáo viên chủ nhiệm.</p>
         <div class="save-feedback xuat-ket-qua" id="xuatFeedback"></div>
+        <!-- UX1B-L5c fix1: giữ dòng đỏ hiện sẵn: tệp xuất MẶC ĐỊNH (sheet Điểm chuẩn, Dấu vết) có điểm và số bốc thăm -->
         <p class="hint-text xuat-canh-bao" data-i18n="xuat_canh_bao_diem">Tệp xuất có điểm chấm và số bốc thăm. Không gửi các tệp này cho giáo viên chấm điểm.</p>
       </div>
 
@@ -1465,6 +1486,7 @@
 <script src="js/16_tai_khoan.js"></script>
 <script src="js/17_viec_tiep_theo.js"></script><!-- UX1A -->
 <script src="js/18_cai_dat.js"></script><!-- UX1A -->
+<script src="js/19_ux1b_gv.js"></script><!-- UX1B -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

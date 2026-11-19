@@ -3163,3 +3163,23 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .toast .toast-hanh-dong:hover { background: rgba(255,255,255,0.18); }
 .toast .toast-hanh-dong:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .ux1a-ss-hc-sai { margin: 6px 0; color: #B42318; font-weight: 600; }
+
+/* UX1B-L7: thẻ giải trình — dòng tóm tắt, thanh điểm, "Em nên làm gì tiếp" */
+.gt-tom-tat-dong { font-weight: 600; margin: 8px 0; }
+.gt-tiep-theo { border: 1px solid var(--border, #d1d5db); border-radius: 6px; padding: 8px 12px; margin: 12px 0; }
+.gt-tiep-theo h4 { margin: 0 0 4px; }
+.gt-tiep-theo ul { margin: 0; padding-left: 18px; }
+.gt-diem-thi-tieu-de { margin: 12px 0 4px; }
+svg.thanh-diem { display: block; }
+
+/* UX1B-L5c: ô tìm to, gập "Mã tra cứu…", hành động "Sau khi xếp" nói trọn câu, cảnh báo huy chương gộp */
+.gt-tim-hang { margin-bottom: 8px; }
+.gt-tim-to { flex: 1 1 320px; font-size: 1.05rem; padding: 12px 14px; min-height: 46px; }
+.gt-ma-gap { margin: 10px 0 0; }
+.gt-ma-gap > summary { cursor: pointer; }
+.ux1b-sx-hang { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ux1b-sx-hang .ux1a-so { height: 36px; text-align: center; font-variant-numeric: tabular-nums; }
+.ux1b-sx-ngay { line-height: 36px; }
+.ux1b-sx-he-qua { margin: 2px 0 0; }
+.ux1a-sx-dong { display: block; padding: 6px 0; }
+.ux1b-ss-nut { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }

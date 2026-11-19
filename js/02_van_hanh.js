@@ -85,9 +85,27 @@ function loadHealthReport() {
       return;
     }
 
+    /* UX1B-L5c: sổ mang điểm quyết tâm / huy chương sai chỗ -> MỘT dòng có số em và tên CLB, không từng dòng một. */
+    let dsHien = d.warnings;
+    let nHien = d.n_warnings;
+    let nCao = d.n_high;
+    const gop = d.gop_huy_chuong;
+    if (gop) {
+      const la = (w) => /^fa_huy_chuong_/.test(w.code) && !/_nhom$/.test(w.code);
+      const bo = dsHien.filter(la);
+      /* Không in "ví dụ ở: " rỗng: không có tên CLB (vd. cùng huy chương hai lần) thì dùng câu không có vế ví dụ. */
+      dsHien = [gop.clb.length
+        ? { code: "ux1b_huy_chuong_gop", severity: "high",
+            params: { n: gop.n_em, clb: gop.clb.join(", ") + (gop.n_clb > gop.clb.length ? "…" : "") } }
+        : { code: "ux1b_huy_chuong_gop_khong_clb", severity: "high", params: { n: gop.n_em } },
+        ...dsHien.filter((w) => !la(w))];
+      nHien += 1 - bo.length;
+      nCao += 1 - bo.filter((w) => w.severity === "high").length;
+    }
+
     /* Đỏ chỉ khi có mục NGHIÊM TRỌNG (mục đó chặn việc chạy); còn lại để trung tính. */
-    summary.className = d.n_high > 0 ? "health-summary is-warn" : "health-summary";
-    summary.textContent = t("health_summary", { n: d.n_warnings, n_high: d.n_high });
+    summary.className = nCao > 0 ? "health-summary is-warn" : "health-summary";
+    summary.textContent = t("health_summary", { n: nHien, n_high: nCao });
 
     const SEV_LABEL = {
       high: "health_sev_high",
@@ -96,7 +114,7 @@ function loadHealthReport() {
     };
     // nghiêm trọng lên trước — người vận hành đọc từ trên xuống
     const order = { high: 0, medium: 1, info: 2 };
-    d.warnings
+    dsHien
       .slice()
       .sort((a, b) => (order[a.severity] ?? 9) - (order[b.severity] ?? 9))
       .forEach((w) => {
@@ -116,6 +134,15 @@ function loadHealthReport() {
           di.className = "btn btn-secondary btn-nho health-di-toi";
           di.textContent = t("health_mo_diem_quyet_tam");
           di.addEventListener("click", moDanhSachCanXuLy);
+          row.appendChild(di);
+        }
+        if (w.code === "ux1b_huy_chuong_gop" || w.code === "ux1b_huy_chuong_gop_khong_clb") {   /* UX1B-L5c: lối về khung Cài đặt (nơi có nút Quay lại Chia 100 điểm) */
+          const di = document.createElement("button");
+          di.type = "button";
+          di.className = "btn btn-secondary btn-nho health-di-toi";
+          di.id = "btnUx1bHealthCaiDat";
+          di.textContent = t("ux1b_nut_huy_chuong_sai");
+          di.addEventListener("click", () => ux1bMoCaiDat());
           row.appendChild(di);
         }
         list.appendChild(row);

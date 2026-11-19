@@ -181,6 +181,12 @@ class QuanLyMixin:
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 
+    @staticmethod
+    def _huy_chuong_ca_so_sai(n_sai: int, n_hoc_sinh: int) -> bool:
+        """UX1B-L5c: \"cả sổ sai huy chương\" = từ một nửa số học sinh có nguyện vọng trở lên có huy chương sai. MỘT nơi giữ
+        ngưỡng này (cảnh báo sức khoẻ, thanh \"Việc tiếp theo\" và khung Cài đặt cùng dùng)."""
+        return n_sai > 0 and n_hoc_sinh > 0 and n_sai * 2 >= n_hoc_sinh
+
     # UX1A-L2b: trang Cài đặt — "Huy chương" cần dữ liệu CLB sẵn sàng; sửa tại chỗ từng CLB.
     def get_san_sang_huy_chuong(self):
         """Những gì còn thiếu để chạy ở chế độ Huy chương (chỉ ĐỌC, không phụ thuộc luật đang bật).
@@ -204,12 +210,14 @@ class QuanLyMixin:
             # Hồ sơ huy chương (đọc CSDL, chỉ ĐỌC): học sinh có ô không phải huy chương hợp lệ (vd. điểm quyết tâm
             # 0-100 nạp từ sổ cũ) hoặc huy chương đặt ở CLB Tự do. Không tự đổi dữ liệu.
             with self._ket_noi_doc() as cur:
+                n_hs = cur.execute("SELECT COUNT(DISTINCT student_id) FROM preferences").fetchone()[0]
                 clubs_fa, _, prefs = fa_daa.doc_clubs_va_nguyen_vong(cur)
                 _, _, huy = fa_daa.doc_du_lieu_fa(cur)
             loi_hc = fa_daa.chi_loi_chan(fa_daa.kiem_ho_so_huy_chuong(prefs, huy, clubs_fa))
             hs_sai = sorted({e["params"].get("student_id") for e in loi_hc
                              if e["params"].get("student_id") is not None}, key=str)
             return _ok({"clubs": clubs, "thieu_loai": thieu_loai, "buoi_thieu_tu_do": thieu_buoi,
+                        "n_hoc_sinh": n_hs, "huy_chuong_ca_so": self._huy_chuong_ca_so_sai(len(hs_sai), n_hs),
                         "thieu_diem_san": thieu_diem,
                         "huy_chuong_sai": len(hs_sai), "huy_chuong_sai_vd": str(hs_sai[0]) if hs_sai else "",
                         "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem or hs_sai)})

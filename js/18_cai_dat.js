@@ -73,7 +73,7 @@ function ux1aTaoThe(tienTo, khiChon) {
 
 /* ---- Sửa tại chỗ: Huy chương cần dữ liệu CLB sẵn sàng ------------------------------------ */
 
-function ux1aVeSanSang(hop, d, taiLai) {
+function ux1aVeSanSang(hop, d, taiLai, quayLai) {
   hop.textContent = "";
   hop.hidden = false;
   if (d.san_sang) {
@@ -82,10 +82,24 @@ function ux1aVeSanSang(hop, d, taiLai) {
   }
   hop.append(ux1aEl("p", { class: "ux1a-ss-dau", text: t("ux1a_ss_con_thieu") }));
   /* Dữ liệu huy chương đã nạp không phải huy chương (vd. điểm quyết tâm của sổ cũ) hoặc đặt ở CLB Tự do: nói MỘT dòng,
-     không tự đổi dữ liệu; cách sửa là nạp lại sổ có cột Huy chương. */
+     không tự đổi dữ liệu; cách sửa là nạp lại sổ có cột Huy chương. UX1B-L5c: kèm hai nút làm việc đó (tải sổ mẫu,
+     quay lại Chia 100 điểm) và ẩn các nút loại CLB cho tới khi dữ liệu học sinh hợp lệ (đặt loại xong vẫn không chạy được). */
   if (d.huy_chuong_sai > 0) {
+    const ca = d.huy_chuong_ca_so === true;      /* ngưỡng "cả sổ" do backend giữ (cùng nguồn với cảnh báo sức khoẻ) */
     hop.append(ux1aEl("p", { class: "ux1a-ss-hc-sai", id: "ux1aSsHuyChuongSai",
-      text: t("ux1a_ss_huy_chuong_sai", { n: d.huy_chuong_sai, vd: d.huy_chuong_sai_vd }) }));
+      text: ca ? t("ux1b_ss_nap_lai_ca_so", { n: d.huy_chuong_sai, tong: d.n_hoc_sinh })
+               : t("ux1a_ss_huy_chuong_sai", { n: d.huy_chuong_sai, vd: d.huy_chuong_sai_vd }) }));
+    const hang = ux1aEl("div", { class: "ux1b-ss-nut" });
+    if (typeof taiSoNhapMau === "function") {
+      hang.append(ux1aEl("button", { type: "button", class: "btn btn-secondary", id: "ux1bSsTaiSoMau",
+        text: t("ux1a_btn_so_mau_huy_chuong"), onclick: () => taiSoNhapMau("huy_chuong") }));
+    }
+    if (quayLai) {
+      hang.append(ux1aEl("button", { type: "button", class: "btn btn-primary", id: "ux1bSsQuayLai",
+        text: t("ux1b_ss_quay_lai"), onclick: quayLai }));
+    }
+    hop.append(hang);
+    if (ca) return;      /* ít em sai (dưới một nửa): vẫn cho đặt loại CLB tại chỗ bên dưới */
   }
   const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }
@@ -132,10 +146,10 @@ function ux1aVeSanSang(hop, d, taiLai) {
   });
 }
 
-function ux1aKiemSanSang(the) {
+function ux1aKiemSanSang(the, quayLai) {
   const lam = () => callApi("get_san_sang_huy_chuong").then((r) => {
     if (!r.ok) { the.sanSang.hidden = true; return; }
-    ux1aVeSanSang(the.sanSang, r.data, lam);
+    ux1aVeSanSang(the.sanSang, r.data, lam, quayLai);
   });
   return lam();
 }
@@ -189,7 +203,7 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
   const ve = () => {
     the.datCach(ux1aCachTuLuat(luat));
     the.sanSang.hidden = true;
-    if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the);
+    if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the, () => doi("chia_100"));
     ux1aVeCachXet(cachXet);
   };
   const dat = (rules) => callApi("update_workspace_config", { rules }, slug);
@@ -273,11 +287,11 @@ function ux1aMoCaiDatWs(w) {
 /* ---- Tính năng sau khi xếp: hành động ở thẻ "Chi tiết và xuất tệp" ---------------------------- */
 
 const UX1A_SAU_XEP = [
-  { co: "fa_vong_2", nut: "ux1a_sx_vong_2", bang: ["vong2Panel"] },
-  { co: "fa_khieu_nai", nut: "ux1a_sx_khieu_nai", bang: ["khieuNaiPanel"], ngay: true },
-  { co: "fa_diem_danh", nut: "ux1a_sx_diem_danh", bang: ["diemDanhPanel"] },
-  { co: "fa_vong_doi_cho", nut: "ux1a_sx_doi_cho", bang: ["moiPanel", "vong2Panel"] },
-  { co: "fa_phan_hoi", nut: "ux1a_sx_phan_hoi", bang: ["phanHoiTongPanel", "phanHoiPanel"] },
+  { co: "fa_vong_2", nut: "ux1a_sx_vong_2", he_qua: "ux1b_sx_he_vong_2", bang: ["vong2Panel"] },
+  { co: "fa_khieu_nai", nut: "ux1a_sx_khieu_nai", he_qua: "ux1b_sx_he_khieu_nai", bang: ["khieuNaiPanel"], ngay: true },
+  { co: "fa_diem_danh", nut: "ux1a_sx_diem_danh", he_qua: "ux1b_sx_he_diem_danh", bang: ["diemDanhPanel"] },
+  { co: "fa_vong_doi_cho", nut: "ux1a_sx_doi_cho", he_qua: "ux1b_sx_he_doi_cho", bang: ["moiPanel", "vong2Panel"] },
+  { co: "fa_phan_hoi", nut: "ux1a_sx_phan_hoi", he_qua: "ux1b_sx_he_phan_hoi", bang: ["phanHoiTongPanel", "phanHoiPanel"] },
 ];
 
 function ux1aVeSauXep() {
@@ -306,9 +320,12 @@ function ux1aVeSauXep() {
       if (!bat && m.co === "fa_vong_2" && so <= 0) return;
       if (!bat && m.co === "fa_vong_doi_cho" && trong <= 0) return;
       const dong = ux1aEl("div", { class: "ux1a-sx-dong", "data-co": m.co });
-      const nhan = m.co === "fa_vong_2" ? t(m.nut, { n: so }) : t(m.nut);
+      const hang = ux1aEl("div", { class: "ux1b-sx-hang" });
+      let nhan = m.co === "fa_vong_2" ? t(m.nut, { n: so }) : t(m.nut);
+      /* UX1B-L5c: đang bật thì nút nói trọn câu (kèm số ngày), không còn "…: Nhận khiếu nại trong" cụt. */
+      if (m.ngay && bat) nhan = t("ux1b_sx_khieu_nai_ngay", { n: Number.isInteger(luat.fa_khieu_nai_so_ngay) ? luat.fa_khieu_nai_so_ngay : 3 });
       let oNgay = null;
-      if (m.ngay) {
+      if (m.ngay && !bat) {
         oNgay = ux1aEl("input", { type: "number", class: "text-input ux1a-so", min: "1", max: "14", step: "1",
           value: bat || ngayDangGo === null ? String(Number.isInteger(luat.fa_khieu_nai_so_ngay) ? luat.fa_khieu_nai_so_ngay : 3)
             : ngayDangGo,
@@ -338,8 +355,9 @@ function ux1aVeSauXep() {
           }
         });
       });
-      dong.append(b);
-      if (oNgay) dong.append(oNgay, ux1aEl("span", { class: "hint-text", text: t("ux1a_sx_ngay") }));
+      hang.append(b);
+      if (oNgay) hang.append(oNgay, ux1aEl("span", { class: "ux1b-sx-ngay", text: t("ux1a_sx_ngay") }));
+      dong.append(hang, ux1aEl("p", { class: "hint-text ux1b-sx-he-qua", text: t(m.he_qua) }));   /* UX1B-L5c: hệ quả */
       luoi.append(dong);
     });
   });

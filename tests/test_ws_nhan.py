@@ -50,6 +50,8 @@ MA_MOI_SAU_ANH_CHUP = {
     # === end A ===
     # GT4 (mã mới: bộ lọc ngày nhật ký, mở tệp vừa xuất)
     "gt4_ngay_sai", "tep_khong_hop_le", "tep_khong_mo_duoc",
+    # UX1B-L5c (cảnh báo huy chương gộp một dòng)
+    "ux1b_huy_chuong_gop", "ux1b_huy_chuong_gop_khong_clb",
 
     # (spacer: unchanged line between marker blocks)
 
