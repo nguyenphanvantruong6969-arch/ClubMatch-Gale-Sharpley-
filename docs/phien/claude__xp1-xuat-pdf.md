@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (L1-L4 passed; CI green 56e55ff run 44542205370; L5 in review). Protocol: docs/phien/XP1_GIAO_THUC.md
+Status: DONE aec7351 CI green 2026-11-19 (Tests run 44572025208: lint, 4 Linux + 2 Windows shards, coverage gate). Windows exe build NOT run (Needs Truong). Protocol: docs/phien/XP1_GIAO_THUC.md
 
 ## Feature / goal
 New item **XP1 — bulk PDF export** (approved by Truong 2026-11-18; new item like UX1, tracked in `TIEN_DO.md`,
@@ -71,11 +71,11 @@ Lot L4 — UI + permissions + i18n
 - [x] UI test: `tests/test_giao_dien_xp1_xuat_pdf.py` (menu items visible for admin only, call right API).
 
 Lot L5 — docs + packaging + verify
-- [ ] `HUONG_DAN_SU_DUNG.md` section "Xuất PDF hàng loạt"; `CLAUDE_CHI_TIET.md` code map (`xuat_pdf.py`).
-- [ ] Windows build workflow green; launch the built exe once and export (manual check by Truong).
-- [ ] Invariant 1: `kiem_nhanh.py` 7/7 (`trung_khit`): exports must not change `match_results`.
-- [ ] Performance: 800 students bulk slips < 30 s on CI Linux; record the number in CHANGELOG.
-- [ ] `CHANGELOG.md`, `TIEN_DO.md` rows per lot.
+- [x] `HUONG_DAN_SU_DUNG.md` section "Xuất PDF hàng loạt"; `CLAUDE_CHI_TIET.md` code map (`xuat_pdf.py`).
+- [ ] (Needs Truong) Windows build workflow green; launch the built exe once and export (manual check by Truong).
+- [x] Invariant 1: `kiem_nhanh.py` 7/7 (`trung_khit`): exports must not change `match_results`.
+- [x] Performance: 800 students bulk slips < 30 s on CI Linux; record the number in CHANGELOG.
+- [x] `CHANGELOG.md`, `TIEN_DO.md` rows per lot.
 
 ## Acceptance (kiem_nhan)
 - Admin exports, in one click each: member lists per club, per class, and slips per class, all as PDF.
@@ -92,33 +92,36 @@ Lot L5 — docs + packaging + verify
 ## Sessions
 | Role | Model | Session id | State |
 |---|---|---|---|
-| lead | claude-opus-5-5 | session_01VfPzNtmP5QGfFfaGiBWkze | running |
-| coder | claude-sonnet-5-5 | session_01VfPzNrcErSweid4dXBTk72 | setup |
-| checker | claude-sonnet-5-5 | session_01VfPzNunsu6WPaVRox9FJYc | setup |
+| lead | claude-opus-5-5 | session_01VfPzNtmP5QGfFfaGiBWkze | done |
+| coder | claude-sonnet-5-5 | session_01VfPzNrcErSweid4dXBTk72 | done (idle) |
+| checker | claude-sonnet-5-5 | session_01VfPzNunsu6WPaVRox9FJYc | done (idle) |
 
 ## Needs Truong (1 line each + recommendation)
 - L3 optional combined PDF with table of contents: not built unless Truong asks. Rec: folder output is enough for v1.
 - pypdf as a dev-only test dependency (reads PDF text to prove diacritics in CI): removed per §0 (one new library). Rec: allow it in requirements-dev.txt; it never ships in the exe.
 - Windows build (`build-windows-exe.yml`) is manual-only and its last step OVERWRITES the public release `ban-moi-nhat`; lead did NOT trigger it from this unmerged branch. Rec: run it after merging to main (or add a no-publish input). Windows tests already run in tests.yml.
 - L5 manual check: launch the built Windows exe once and export PDFs offline. Rec: do it after CI is green.
+- Sample workbooks in du_lieu_test/ have no class and no club type, so class exports and "Loại CLB" look empty in a demo. Rec: add simulated classes + types (see XP1_DANH_GIA.md).
+- Slips are ~1.9 pages per student (1519 pages for 800). Rec: decide whether a compact print layout is wanted.
 
 ## Current state (overwrite each handoff)
-- Done so far: plan only (this file) + `TIEN_DO.md` row. No code.
-- In progress: —
-- Tests: —
-- Open problems: depends on `claude/ux1-a-giao-dien` CI being green (fix4 `66f9ffb` pending at handoff time).
+- Done: L1-L5 + 3 review fixes; checker NO BUGS on every lot; final review `docs/ke_hoach/xp/XP1_DANH_GIA.md`.
+- CI: see Status line. Not done: Windows exe build/manual check (Needs Truong).
+- Verdicts: `docs/phien/claude__xp1-xuat-pdf__checker.md`.
 
-## Next steps (ordered)
-1. Sonnet session: Lot L1 (font + `xuat_pdf.py` + test), push, wait for CI.
-2. Lots L2 → L5 in order, one push per lot.
-
-## Files touched
-- docs/phien/claude__xp1-xuat-pdf.md: this handoff (plan).
-- docs/ke_hoach/TIEN_DO.md: XP1 row.
-- docs/phien/XP1_GIAO_THUC.md: lead/coder/checker protocol + prompts.
+## Final summary (tiếng Việt)
+- Xong L1-L5: lõi PDF (reportlab + phông Be Vietnam Pro TTF), phiếu giải trình PDF theo lớp / một lớp / một em
+  (nút "Lưu PDF"), cột "Loại CLB" trên phiếu (cả HTML), danh sách PDF theo CLB (từng buổi) và theo lớp, menu
+  "Xuất PDF…" chỉ quản trị (backend chặn giáo viên), hướng dẫn sử dụng, đo 800 em: 15-17 s (mục tiêu < 30 s).
+- Bỏ qua: PDF gộp có mục lục; build .exe Windows (workflow ghi đè bản phát hành công khai). Xem "Needs Truong".
+- CI xanh: https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44572025208 Đánh giá người dùng: `docs/ke_hoach/xp/XP1_DANH_GIA.md`.
+- Thầy thử tay: (1) nạp `SO_NHAP_MAU_120HS_3BUOI.xlsx`, gán vài lớp, chạy seed 3; (2) thẻ Chi tiết và xuất tệp >
+  Xuất dữ liệu > "Xuất PDF…", bấm cả ba mục, mở PDF đọc như GVCN; (3) sau khi gộp main: chạy build Windows,
+  mở .exe trên máy không mạng, xuất một PDF.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-18 | Opus | Created branch from ux1 @66f9ffb; wrote Goal + Plan | Decisions: reportlab + TTF, Sonnet codes |
 | 2026-11-18 | Opus | Wrote XP1_GIAO_THUC.md (3-session protocol, prompts) | Lead prompt in §7 |
+| 2026-11-19 | Opus (lead) | Ran XP1 L1-L5 with coder+checker, CI gate, final review | 3 sessions |
