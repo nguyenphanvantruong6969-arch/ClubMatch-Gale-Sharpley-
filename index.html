@@ -439,6 +439,16 @@
               <button class="menu-khac-muc" id="btnXuatBienBan" type="button" hidden data-i18n="btn_xuat_bien_ban">Xuất biên bản bốc thăm (bản in và Excel)</button>
             </div>
           </details>
+          <!-- XP1-L4: xuất PDF hàng loạt (chỉ quản trị); menu riêng vì "Xuất…" ở trên chỉ hiện ở chế độ Huy chương -->
+          <details class="menu-khac" id="xuatPdfMenu" data-quyen="quan_tri">
+            <summary class="btn btn-secondary" data-i18n="xp1_menu">Xuất PDF…</summary>
+            <div class="menu-khac-hop">
+              <button class="menu-khac-muc" id="btnPdfDsClb" type="button" data-i18n="xp1_pdf_ds_clb">Danh sách theo {slot_l} (PDF)</button>
+              <button class="menu-khac-muc" id="btnPdfDsLop" type="button" data-i18n="xp1_pdf_ds_lop">Danh sách theo {cohort_l} (PDF)</button>
+              <select id="pdfLop" class="text-input text-input-sm" data-i18n-aria-label="xp1_pdf_lop_aria"></select>
+              <button class="menu-khac-muc" id="btnPdfPhieuLop" type="button" data-i18n="xp1_pdf_phieu_lop">Phiếu giải trình theo {cohort_l} (PDF)</button>
+            </div>
+          </details>
         </div>
         <p class="hint-text" id="xuatFaAnGoiY" data-sg11a-xuat-fa data-i18n="xuat_fa_an_goi_y">Các nút xuất lý do kết quả, bảng nhu cầu, gợi ý chỉ tiêu và biên bản bốc thăm chỉ hiện khi bật chế độ "Xếp theo loại {slot_l} và huy chương".</p>
         <p class="hint-text" data-i18n="xuat_theo_lop_hint">Xuất theo lớp: mỗi lớp một tệp bảng tính, chỉ có kết quả xếp, không có điểm hay số bốc thăm. Gửi được cho giáo viên chủ nhiệm.</p>

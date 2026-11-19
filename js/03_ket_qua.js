@@ -861,6 +861,8 @@ function loadMatchResults(search) {
       ? trErr({ code: "fa_ly_do_thieu_buoi", params: { buoi: thieu } }) : "";
     tbThieu.hidden = !thieu.length;
     napOLocLop(el("resultsLopLoc"), dsLop);
+    /* XP1-L4: ô chọn lớp của phiếu PDF; không có mục "chưa có lớp" (các em đó nằm trong tệp _chua_co_lop). */
+    napOLocLop(el("pdfLop"), { classes: dsLop.classes, n_khong_lop: 0 });
     const body = el("resultsTableBody");
     const empty = el("resultsEmptyState");
     const badge = el("unmatchedBadge");
@@ -1066,6 +1068,25 @@ function initResultsHandlers() {
       (d) => t("xuat_kq_theo_lop", { n: d.n_tep, path: d.thu_muc })]]);
   });
 
+  /* XP1-L4: xuất PDF hàng loạt. Danh sách: mỗi CLB / mỗi lớp một tệp trong một thư mục. Phiếu giải trình: "Tất cả"
+     thì mỗi lớp một tệp, chọn một lớp thì MỘT tệp của lớp đó. Bấm xong thì đóng menu. */
+  const chayXuatPdf = (khoaMuc, ham, doiSo, noi) => {
+    el("xuatPdfMenu").open = false;
+    chayXuat([[khoaMuc, ham, doiSo, noi]]);
+  };
+  const noiThuMuc = (d) => t("xp1_kq_thu_muc", { n: d.n_tep, path: d.thu_muc });
+  el("btnPdfDsClb").addEventListener("click", () => chayXuatPdf("xp1_pdf_ds_clb", "export_danh_sach_pdf", ["", "clb"], noiThuMuc));
+  el("btnPdfDsLop").addEventListener("click", () => chayXuatPdf("xp1_pdf_ds_lop", "export_danh_sach_pdf", ["", "lop"], noiThuMuc));
+  el("btnPdfPhieuLop").addEventListener("click", () => {
+    const lop = lopLocThamSo(el("pdfLop"));
+    if (lop) {
+      chayXuatPdf("xp1_pdf_phieu_lop", "export_phieu_giai_trinh_pdf", ["", lop, false],
+        (d) => t("xp1_kq_mot_tep", { n: d.n_trang, path: d.path }));
+    } else {
+      chayXuatPdf("xp1_pdf_phieu_lop", "export_phieu_giai_trinh_pdf", ["", null, true], noiThuMuc);
+    }
+  });
+
   el("btnBoChonHs").addEventListener("click", () => {
     hsDaChon.clear();
     document.querySelectorAll("#resultsTableBody .chon-hs").forEach((cb) => { cb.checked = false; });
@@ -1260,8 +1281,11 @@ function khoaXuatKetQua(khoa) {
 
 /* Nút "Xuất theo lớp": khoá khi chưa có kết quả (như mục xuất kết quả) và khi đang chạy / đang xuất. */
 function capNhatNutXuatTheoLop() {
-  const n = el("btnXuatTheoLop");
-  if (n) n.disabled = xuatKetQuaDangKhoa || khoa.dangChay || khoa.dangXuat;
+  const khoaNut = xuatKetQuaDangKhoa || khoa.dangChay || khoa.dangXuat;
+  ["btnXuatTheoLop", "btnPdfDsClb", "btnPdfDsLop", "btnPdfPhieuLop"].forEach((id) => {
+    const n = el(id);
+    if (n) n.disabled = khoaNut;
+  });
 }
 
 /* Dai "ket qua co the da cu" + so dong thay doi canh o tick tuong ung. */

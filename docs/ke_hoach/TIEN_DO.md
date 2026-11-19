@@ -204,3 +204,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | XP1-L1 (lõi PDF: xuat_pdf.py, phông Be Vietnam Pro TTF, reportlab) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_pdf_loi.py | — |
 | XP1-L2 (phiếu giải trình PDF theo lớp + loại CLB) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_phieu_pdf.py | — |
 | XP1-L3 (danh sách thành viên PDF theo CLB / lớp) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_danh_sach_pdf.py | — |
+| XP1-L4 (menu Xuất PDF…, ô chọn lớp, giao diện + quyền) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_giao_dien_xp1_xuat_pdf.py | — |

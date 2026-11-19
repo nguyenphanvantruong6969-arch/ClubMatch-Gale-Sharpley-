@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-19 — XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu
+
+- `index.html`, `js/03_ket_qua.js`: menu riêng `#xuatPdfMenu` (chỉ quản trị, `data-quyen="quan_tri"`) với "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)", ô chọn lớp `#pdfLop` (dùng lại `napOLocLop`, không có mục "chưa có lớp") và "Phiếu giải trình theo lớp (PDF)": "Tất cả lớp" ra thư mục mỗi lớp một tệp, chọn một lớp ra MỘT tệp. Ba nút khoá khi chưa có kết quả / đang chạy / đang xuất (như "Xuất theo lớp"); bấm xong menu tự đóng. Menu riêng vì "Xuất…" cũ chỉ hiện ở chế độ Huy chương và `test_giao_dien_ux1_ket_qua.py` khoá điều đó.
+- `i18n.js`: khoá `xp1_menu`, `xp1_pdf_ds_clb`, `xp1_pdf_ds_lop`, `xp1_pdf_phieu_lop`, `xp1_pdf_lop_aria`, `xp1_kq_thu_muc`, `xp1_kq_mot_tep` (vi/en). Quyền backend và nhãn nhật ký đã có từ L2/L3.
+- Sửa có chủ ý `tests/test_giao_dien_ux1_ket_qua.py`: "nút đang hiện" không đếm nút nằm trong menu `<details>` đang đóng (menu PDF mới có nút trong đó).
+- Test mới: `tests/test_giao_dien_xp1_xuat_pdf.py` (7 ca Chromium: menu, khoá khi chưa có kết quả, gọi đúng hàm, một lớp / mọi lớp, giáo viên không thấy menu). Số tệp test trong `CLAUDE_CHI_TIET.md`: 344.
+
 ## 2026-11-19 — XP1-L3: danh sách thành viên PDF (theo CLB, theo lớp)
 
 - `api_xuat.py`: `export_danh_sach_pdf(output_path, theo)` ("clb" hoặc "lop") ra một THƯ MỤC PDF; cùng nguồn `_du_lieu_xuat` với `export_theo_lop`, không điểm / số bốc thăm / diện trúng tuyển. Theo CLB: mỗi CLB (nhiều buổi: mỗi CLB mỗi buổi) một tệp có mã, loại CLB, giờ, địa điểm; CLB không ai được xếp không có tệp (như CSV); `_chua_duoc_xep.pdf` cho em chưa có chỗ. Theo lớp: mỗi lớp một tệp, em chưa có chỗ ở mục riêng, `_chua_co_lop.pdf`. Thêm `_loai_clb_theo_ma`.
