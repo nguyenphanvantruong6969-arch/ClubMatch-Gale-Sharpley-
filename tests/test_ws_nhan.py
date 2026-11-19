@@ -379,7 +379,7 @@ def test_moi_ma_loi_mac_dinh_giong_het_anh_chup(anh_chup):
     assert not lech, lech
     # và không thêm/bớt mã nào ngoài các mã workspace đã ghi sau ảnh chụp
     moi = set(MESSAGES) - set(anh_chup["loi"])
-    assert all(m.startswith(("ws_", "gt3_")) or m in MA_MOI_SAU_ANH_CHUP for m in moi), moi  # gt3_: GT3 (tài khoản, nhật ký)
+    assert all(m.startswith(("ws_", "gt3_", "xp1_")) or m in MA_MOI_SAU_ANH_CHUP for m in moi), moi  # gt3_: GT3 (tài khoản, nhật ký); xp1_: XP1 (xuất PDF)
 
 
 def test_format_message_mac_dinh_khong_doi(anh_chup):

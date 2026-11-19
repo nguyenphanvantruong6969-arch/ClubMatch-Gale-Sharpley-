@@ -6,8 +6,8 @@ Status: NOT STARTED (planned by Opus 2026-11-18; branch to be created from origi
 
 ## Plan (lead ticks)
 - [ ] L4-B Báo cáo tổng hợp (bao_cao_tong_hop.py, export_bao_cao_tong_hop, QUYEN giao_vien) + In phiếu cả lớp
-- [ ] L6 slip In / Lưu PDF via iframe print (get_phieu_giai_trinh_html, QUYEN, audit row)
-- [ ] L7 slip content: summary, tested-club scores, SVG own-vs-cutoff, next steps, FA: club type + medal, plain words
+- [ ] L6 (REPLACED by XP1: real PDF via reportlab, `export_phieu_giai_trinh_pdf`; do not build the print-dialog version) slip In / Lưu PDF via iframe print (get_phieu_giai_trinh_html, QUYEN, audit row)
+- [ ] L7 (club type DONE in XP1-L2: `loai_clb` in `giai_trinh`, "Loại CLB" column in slip HTML/PDF) slip content: summary, tested-club scores, SVG own-vs-cutoff, next steps, FA: club type + medal, plain words
 - [ ] L8-B slip docs, regenerate CA_MAU.md + evidence pack + phieu_mau.pdf, After row
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_B.md (§6)
 

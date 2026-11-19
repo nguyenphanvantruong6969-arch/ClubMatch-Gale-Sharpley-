@@ -1600,6 +1600,11 @@ MESSAGES = {
         "en": "The accounts could not be cleared. Check the data file and try again.",
     },
     # === end GT3 (L1) ===
+    # === XP1 ===
+    "xp1_thieu_thu_vien_pdf": {
+        "vi": "Chưa xuất được PDF vì phần mềm thiếu thư viện hoặc phông chữ PDF. Hãy cài lại bản phần mềm đầy đủ.",
+        "en": "PDF export is unavailable because the PDF library or font is missing. Reinstall the full application.",
+    },
 }
 
 

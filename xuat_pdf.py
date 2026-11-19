@@ -51,6 +51,11 @@ def _dang_ky_phong():
     _da_dang_ky = True
 
 
+def san_sang():
+    """Kiểm reportlab và phông có dùng được không; không thì ném `ThieuThuVienPdf` (gọi TRƯỚC khi tạo thư mục/tệp)."""
+    _dang_ky_phong()
+
+
 def _kieu(ten):
     from reportlab.lib.styles import ParagraphStyle
     mau = {
@@ -129,6 +134,13 @@ def _canvas_so_trang():
                 super().showPage()
             super().save()
     return _C
+
+
+def dem_trang(duong):
+    """Số trang của một PDF do `dung_pdf` ghi (đọc `/Count` ở nút gốc cây trang; không cần thư viện đọc PDF)."""
+    import re
+    with open(duong, "rb") as f:
+        return max(int(m) for m in re.findall(rb"/Count (\d+)", f.read()))
 
 
 def dung_pdf(duong, khoi):

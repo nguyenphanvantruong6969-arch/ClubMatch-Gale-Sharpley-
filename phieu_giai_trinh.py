@@ -7,7 +7,7 @@ không tên hay điểm em khác. Chữ chỉ dành cho người đọc (tiếng
 
 from html import escape
 
-from so_nhap import NHAN_BUOI
+from so_nhap import NHAN_BUOI, NHAN_LOAI_HIEN_THI
 
 _NHAN_BUOI = {ma: nhan for nhan, ma in NHAN_BUOI}
 CANH_BAO_DA_DOI = ("Dữ liệu đã thay đổi sau lần xếp này, nên lời giải thích dưới đây có thể không còn khớp kết quả "
@@ -45,21 +45,32 @@ def _o_chuan(x):
     return {"boc_tham": "Bốc thăm", "con_cho": "Còn chỗ", "giu_cho": "Chỗ dành riêng"}.get(loai, "—")
 
 
+def _nhan_loai(x):
+    """Loại CLB (Tự do / Giới hạn / Tuyển chọn); "—" khi CLB chưa có loại."""
+    return NHAN_LOAI_HIEN_THI.get(x.get("loai_clb")) or "—"
+
+
+def _cau_cua_dong(x):
+    cau = x.get("cau") or ""
+    if x.get("vi_tri_cho"):
+        cau = (cau + " " if cau else "") + "Hàng chờ: %s." % x["vi_tri_cho"]
+    return cau
+
+
 def _bang(b):
     dong = []
     for x in b["cac_lua_chon"]:
-        cau = x.get("cau") or ""
-        if x.get("vi_tri_cho"):
-            cau = (cau + " " if cau else "") + "Hàng chờ: %s." % x["vi_tri_cho"]
+        cau = _cau_cua_dong(x)
         diem = x.get("diem_em") if x.get("chon_loc") else None
         dong.append(
-            '<tr%s><td>%s</td><td>%s</td><td>%s</td><td>%s / %s</td><td>%s</td><td>%s</td></tr>' % (
+            '<tr%s><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s / %s</td><td>%s</td><td>%s</td></tr>' % (
                 ' class="duoc-xep"' if x.get("duoc_xep") else "",
                 "ngoài nguyện vọng" if x.get("hang") is None else escape(str(x["hang"])),
-                escape(str(x["ten_clb"])), "—" if diem is None else escape(str(diem)),
+                escape(str(x["ten_clb"])), escape(_nhan_loai(x)),
+                "—" if diem is None else escape(str(diem)),
                 escape(str(x.get("da_nhan", "?"))), "—" if x.get("suc_chua") is None else escape(str(x["suc_chua"])),
                 escape(_o_chuan(x)), escape(cau)))
-    return ("<table><thead><tr><th>Nguyện vọng</th><th>CLB</th><th>Điểm của em</th><th>Chỗ (đã nhận / tối đa)</th>"
+    return ("<table><thead><tr><th>Nguyện vọng</th><th>CLB</th><th>Loại CLB</th><th>Điểm của em</th><th>Chỗ (đã nhận / tối đa)</th>"
             "<th>Mức vào được</th><th>Vì sao</th></tr></thead><tbody>%s</tbody></table>" % "".join(dong))
 
 
@@ -102,3 +113,57 @@ def dung_phieu_html(cac_em, so_ngay=None, tieu_de="Phiếu giải trình kết q
     return ('<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"><title>%s</title>'
             '<meta name="viewport" content="width=device-width, initial-scale=1"><style>%s</style></head>'
             '<body>%s</body></html>' % (escape(tieu_de), _CSS, than))
+
+
+def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
+    """Các khối PDF của MỘT học sinh (cùng nội dung và thứ tự với `_trang`)."""
+    sid, ten, lop = hs
+    k = [xp.tieu_de(tieu_de), xp.dong_khoa_gia_tri("Mã", sid), xp.dong_khoa_gia_tri("Họ tên", ten or "")]
+    if lop:
+        k.append(xp.dong_khoa_gia_tri("Lớp", lop))
+    run = gt.get("run") or {}
+    if run.get("run_at"):
+        k.append(xp.dong_khoa_gia_tri("Lần xếp lúc", str(run["run_at"]).replace("T", " ")[:16]))
+    if gt.get("du_lieu_da_doi"):
+        k.append(xp.dong_khoa_gia_tri("Lưu ý", CANH_BAO_DA_DOI))
+    for b in gt["buoi"]:
+        nhan = _nhan_buoi(b["buoi"])
+        if nhan:
+            k.append(xp.tieu_de(nhan))
+        k.append(xp.dong_khoa_gia_tri(
+            "Kết quả", ("%s." % (b.get("ten_clb") or b["ket_qua"])) if b["ket_qua"]
+            else "chưa được xếp CLB nào."))
+        if b.get("cau_tom_tat"):
+            k.append(xp.dong_khoa_gia_tri("Giải thích", b["cau_tom_tat"]))
+        if b["cac_lua_chon"]:
+            hang = []
+            for x in b["cac_lua_chon"]:
+                diem = x.get("diem_em") if x.get("chon_loc") else None
+                hang.append([
+                    "ngoài nguyện vọng" if x.get("hang") is None else x["hang"], x["ten_clb"], _nhan_loai(x),
+                    "—" if diem is None else diem, "%s / %s" % (x.get("da_nhan", "?"),
+                                                                 "—" if x.get("suc_chua") is None else x["suc_chua"]),
+                    _o_chuan(x), _cau_cua_dong(x) + (" (đã được xếp)" if x.get("duoc_xep") else "")])
+            k.append(xp.bang(["Nguyện vọng", "CLB", "Loại CLB", "Điểm của em", "Chỗ (đã nhận / tối đa)",
+                              "Mức vào được", "Vì sao"], hang, [1.1, 1.6, 1.1, 0.9, 1.1, 1.1, 2.6]))
+            if b.get("chu_thich"):
+                k.append(xp.dong_khoa_gia_tri("Ghi chú", b["chu_thich"]))
+    if not gt["buoi"]:
+        k.append(xp.dong_khoa_gia_tri("Lưu ý", "Chưa có thông tin xếp cho em."))
+    k.append(xp.dong_khoa_gia_tri(
+        "Khiếu nại", "Nếu thấy kết quả chưa đúng, hãy liên hệ giáo viên phụ trách" +
+        (" trong %s ngày." % so_ngay if so_ngay else ".")))
+    if ma_tra_cuu:
+        k.append(xp.dong_khoa_gia_tri("Mã tra cứu", ma_tra_cuu))
+    return k
+
+
+def dung_phieu_pdf(cac_em, duong, so_ngay=None, tieu_de="Phiếu giải trình kết quả xếp CLB") -> str:
+    """Như `dung_phieu_html` nhưng ra PDF (A4 dọc, mỗi học sinh bắt đầu một trang mới). Trả đường dẫn thật đã ghi."""
+    import xuat_pdf
+    khoi = []
+    for gt, hs, ma in cac_em:
+        if khoi:
+            khoi.append(xuat_pdf.ngat_trang())
+        khoi.extend(_khoi_pdf(xuat_pdf, gt, hs, so_ngay, ma, tieu_de))
+    return xuat_pdf.dung_pdf(duong, khoi)

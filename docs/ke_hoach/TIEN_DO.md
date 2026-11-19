@@ -202,3 +202,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | XP1 (xuất PDF hàng loạt: danh sách theo CLB/lớp, phiếu giải trình theo lớp có loại CLB; mục mới, Truong duyệt 2026-11-18) | đã lập kế hoạch (Opus), chờ Sonnet làm L1 | 2026-11-18 | docs/phien/claude__xp1-xuat-pdf.md | — | reportlab + font TTF (thư viện mới, đã duyệt) |
 | XP1-L1 (lõi PDF: xuat_pdf.py, phông Be Vietnam Pro TTF, reportlab) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_pdf_loi.py | — |
+| XP1-L2 (phiếu giải trình PDF theo lớp + loại CLB) | đã làm, chờ checker | 2026-11-19 | docs/phien/claude__xp1-xuat-pdf.md | tests/test_xp1_phieu_pdf.py | — |

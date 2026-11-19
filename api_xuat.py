@@ -449,17 +449,19 @@ class XuatKetQuaMixin:
         Chưa có kết quả thì từ chối `xuat_chua_co_ket_qua`, không tạo gì. Trả về {thu_muc, n_tep}."""
         return self._khoa_xuat(self._export_theo_lop_da_khoa, output_path)
 
+    def _thu_muc_xuat_moi(self, output_path: str, ten_mac_dinh: str) -> str:
+        """Chỗ đặt MỘT THƯ MỤC xuất mới (chưa tạo). Đường tuyệt đối đã có thì thành "x (2)" (không ghi đè);
+        `_duong_xuat` sẽ từ chối vì nó coi thư mục có sẵn là nhầm với tệp."""
+        if os.path.isabs((output_path or "").strip()):
+            return duong_dan_khong_de(output_path.strip().rstrip("/\\"))
+        return self._duong_xuat(output_path, ten_mac_dinh)
+
     def _export_theo_lop_da_khoa(self, output_path: str):
         thu_muc, da_tao = None, False
         try:
             if self._chua_co_ket_qua():
                 return _fail(err("xuat_chua_co_ket_qua"))
-            if os.path.isabs((output_path or "").strip()):
-                # Thư mục đích là cái MỚI: đường tuyệt đối đã có thì thành "x (2)" (không ghi đè);
-                # `_duong_xuat` sẽ từ chối vì nó coi thư mục có sẵn là nhầm với tệp.
-                thu_muc = duong_dan_khong_de(output_path.strip().rstrip("/\\"))
-            else:
-                thu_muc = self._duong_xuat(output_path, "ket_qua_theo_lop")
+            thu_muc = self._thu_muc_xuat_moi(output_path, "ket_qua_theo_lop")
             du = self._du_lieu_xuat()
             du["ket_qua_cu"] = self._ket_qua_cu()
             os.makedirs(thu_muc)
@@ -1798,31 +1800,43 @@ class XuatKetQuaMixin:
         Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh` (không em nào khớp), `gt1_lan_chay_cu`. Trả {path, n_trang}."""
         return self._khoa_xuat(self._export_phieu_giai_trinh_da_khoa, output_path, student_ids, lop)
 
-    def _export_phieu_giai_trinh_da_khoa(self, output_path, student_ids, lop):
+    def _phieu_chuan_bi(self, student_ids, lop):
+        """Chọn các em cần phiếu (HTML hoặc PDF dùng chung): trả `(du_lieu, thong_tin_hs, chon, so_ngay, ma_cua)`
+        hoặc một phản hồi lỗi `_fail(...)` (kiểu dict). Chỉ ĐỌC."""
+        r = self._giai_trinh_dung_lai(None)
+        if isinstance(r, dict):
+            return r
+        du_lieu, thong_tin_hs = r
+        if student_ids is not None:
+            chon = [sid for sid in dict.fromkeys(str(x) for x in student_ids) if sid in thong_tin_hs]
+        else:
+            chon = list(thong_tin_hs)
+        if lop is not None and str(lop).strip():
+            lop_chuan = chuan_hoa_lop(lop)
+            chon = [sid for sid in chon if (thong_tin_hs[sid][1] or None) == lop_chuan]
+        chon.sort(key=lambda sid: (self._khoa_lop_tu_nhien(thong_tin_hs[sid][1]), sid))
+        if not chon:
+            return _fail(err("gt1_khong_co_hoc_sinh"))
+        bat_kn, so_ngay_kn = self._co_khieu_nai()      # luật của workspace; chỉ in số ngày khi khiếu nại BẬT
+        so_ngay = so_ngay_kn if bat_kn else None
+        with self._ket_noi_doc() as cur:
+            ma_cua = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))   # GT1-L4: mã của CHÍNH em
+        return du_lieu, thong_tin_hs, chon, so_ngay, ma_cua
+
+    @staticmethod
+    def _phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua):
         import giai_trinh
+        return [(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, sid),
+                 (sid, thong_tin_hs[sid][0], thong_tin_hs[sid][1]), ma_cua.get(sid)) for sid in chon]
+
+    def _export_phieu_giai_trinh_da_khoa(self, output_path, student_ids, lop):
         import phieu_giai_trinh
         try:
-            r = self._giai_trinh_dung_lai(None)
+            r = self._phieu_chuan_bi(student_ids, lop)
             if isinstance(r, dict):
                 return r
-            du_lieu, thong_tin_hs = r
-            if student_ids is not None:
-                chon = [sid for sid in dict.fromkeys(str(x) for x in student_ids) if sid in thong_tin_hs]
-            else:
-                chon = list(thong_tin_hs)
-            if lop is not None and str(lop).strip():
-                lop_chuan = chuan_hoa_lop(lop)
-                chon = [sid for sid in chon if (thong_tin_hs[sid][1] or None) == lop_chuan]
-            chon.sort(key=lambda sid: (self._khoa_lop_tu_nhien(thong_tin_hs[sid][1]), sid))
-            if not chon:
-                return _fail(err("gt1_khong_co_hoc_sinh"))
-            bat_kn, so_ngay_kn = self._co_khieu_nai()      # luật của workspace; chỉ in số ngày khi khiếu nại BẬT
-            so_ngay = so_ngay_kn if bat_kn else None
-            with self._ket_noi_doc() as cur:
-                ma_cua = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))   # GT1-L4: mã của CHÍNH em
-            cac_em = [(giai_trinh.giai_trinh_mot_hoc_sinh(du_lieu, sid),
-                       (sid, thong_tin_hs[sid][0], thong_tin_hs[sid][1]), ma_cua.get(sid)) for sid in chon]
-            html = phieu_giai_trinh.dung_phieu_html(cac_em, so_ngay)
+            du_lieu, thong_tin_hs, chon, so_ngay, ma_cua = r
+            html = phieu_giai_trinh.dung_phieu_html(self._phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua), so_ngay)
             duong = self._duong_xuat(output_path, "phieu_giai_trinh.html")
             with open(duong, "w", encoding="utf-8") as f:
                 f.write(html)
@@ -1832,6 +1846,59 @@ class XuatKetQuaMixin:
         except CauHinhHong as e:
             return _fail(loi_cau_hinh(e))
         except Exception as e:
+            return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
+
+    def export_phieu_giai_trinh_pdf(self, output_path: str = "", lop=None, theo_lop: bool = False):
+        """XP1-L2: phiếu giải trình dạng PDF (A4 dọc, mỗi học sinh bắt đầu một trang; mỗi dòng nguyện vọng có
+        loại CLB). `theo_lop=False`: MỘT tệp (mọi em, hoặc chỉ `lop`). `theo_lop=True`: MỘT THƯ MỤC
+        `phieu_giai_trinh_theo_lop`, mỗi lớp một tệp PDF + `_chua_co_lop.pdf` (có `lop` thì chỉ lớp đó).
+        Cùng dữ liệu với phiếu HTML; chỗ đặt như mọi lần xuất (`_duong_xuat`, không ghi đè); chỉ ĐỌC dữ liệu.
+        Lỗi: `gt1_chua_chay`, `gt1_khong_co_hoc_sinh`, `gt1_lan_chay_cu`, `xp1_thieu_thu_vien_pdf`.
+        Trả {path, n_trang} hoặc {thu_muc, n_tep, n_trang}."""
+        return self._khoa_xuat(self._export_phieu_giai_trinh_pdf_da_khoa, output_path, lop, theo_lop)
+
+    def _export_phieu_giai_trinh_pdf_da_khoa(self, output_path, lop, theo_lop):
+        import phieu_giai_trinh
+        import xuat_pdf
+        thu_muc, da_tao = None, False
+        try:
+            xuat_pdf.san_sang()
+            r = self._phieu_chuan_bi(None, lop)
+            if isinstance(r, dict):
+                return r
+            du_lieu, thong_tin_hs, chon, so_ngay, ma_cua = r
+            if not theo_lop:
+                duong = self._duong_xuat(output_path, "phieu_giai_trinh.pdf")
+                duong = phieu_giai_trinh.dung_phieu_pdf(
+                    self._phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua), duong, so_ngay)
+                return _ok({"path": duong, "n_trang": xuat_pdf.dem_trang(duong)})
+            nhom: dict = {}
+            for sid in chon:                      # `chon` đã xếp theo lớp tự nhiên
+                nhom.setdefault(thong_tin_hs[sid][1] or None, []).append(sid)
+            thu_muc = self._thu_muc_xuat_moi(output_path, "phieu_giai_trinh_theo_lop")
+            os.makedirs(thu_muc)
+            da_tao = True                         # từ đây thư mục là CỦA lần xuất này
+            da_dung: set = {"_chua_co_lop"}       # giữ chỗ trước: lớp tên "_chua_co_lop" không đè
+            n_trang = 0
+            for lop_nay, cac_sid in nhom.items():
+                ten = "_chua_co_lop" if lop_nay is None else self._ten_chua_dung(
+                    self._cat_ten_tep(self._ten_file_an_toan(str(lop_nay), "lop")), da_dung)
+                duong = phieu_giai_trinh.dung_phieu_pdf(
+                    self._phieu_cac_em(du_lieu, thong_tin_hs, cac_sid, ma_cua),
+                    os.path.join(thu_muc, ten + ".pdf"), so_ngay)
+                n_trang += xuat_pdf.dem_trang(duong)
+            return _ok({"thu_muc": thu_muc, "n_tep": len(nhom), "n_trang": n_trang})
+        except xuat_pdf.ThieuThuVienPdf:
+            if da_tao and thu_muc:
+                shutil.rmtree(thu_muc, ignore_errors=True)
+            return _fail(err("xp1_thieu_thu_vien_pdf"))
+        except LoiDuongXuat as e:
+            return _fail(e.loi)
+        except CauHinhHong as e:
+            return _fail(loi_cau_hinh(e))
+        except Exception as e:
+            if da_tao and thu_muc:                # không để lại thư mục thiếu lớp trông như đã xuất đủ
+                shutil.rmtree(thu_muc, ignore_errors=True)
             return _fail(err("error_exporting_csv", detail=self._chi_tiet_loi_xuat(e)))
 
     # ===== GT1-L4: mã tra cứu + em tự tra cứu =====
@@ -1989,7 +2056,11 @@ class XuatKetQuaMixin:
             fa_bat = bool(luat and luat.get("fa_daa"))
             students, clubs, scores, applicants, prefs, stb_goc = _doc_du_lieu(cur, luat)
             ten_clb = {r[0]: (r[1] or r[0]) for r in cur.execute("SELECT club_id, name FROM clubs")}
-            clubs = {cid: dict(c, ten=ten_clb.get(cid, cid)) for cid, c in clubs.items()}
+            # XP1-L2: loại CLB (`clubs.loai`) chỉ để HIỂN THỊ trên phiếu; thuật toán xếp không đọc khoá này.
+            co_loai = any(r[1] == "loai" for r in cur.execute("PRAGMA table_info(clubs)"))
+            loai_clb = dict(cur.execute("SELECT club_id, loai FROM clubs")) if co_loai else {}
+            clubs = {cid: dict(c, ten=ten_clb.get(cid, cid), loai=loai_clb.get(cid))
+                     for cid, c in clubs.items()}
             luu = cur.execute("SELECT dau_van_tay FROM dau_van_tay_chay WHERE id = 1").fetchone()
             hien_tai = dau_van_tay_du_lieu(cur, luat)
             da_doi = luu is None or luu[0] != hien_tai
@@ -2022,7 +2093,7 @@ class XuatKetQuaMixin:
                 theo_buoi[buoi] = {
                     "clubs": {cid: {"ten": c["ten"], "capacity": c["capacity"],
                                     "reserve_capacity": c["reserve_capacity"],
-                                    "chon_loc": bool(scores_b.get(cid))}
+                                    "chon_loc": bool(scores_b.get(cid)), "loai": c.get("loai")}
                               for cid, c in clubs_b.items()},
                     "prefs": prefs_b, "scores": scores_b, "stb": stb_b,
                     "assign": {sid: cid for sid, cid in luu_kq.get(buoi, {}).items()},
