@@ -11,16 +11,15 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - [x] L4-B summary report + homeroom block (CODER DONE head 0f73c43)
 - [x] L7 slip content (done; fix1 79c8e45, fix2 fc5e9fc)
 - [x] L5c five recommendations of UX1_DANH_GIA_A §4 (CODER DONE 276616b; fix1 f3ff065 sent; checker re-review pending)
-- [ ] L8-B slip docs, regenerate CA_MAU.md + evidence pack + anh/04_phieu.png + anh/phieu_mau.pdf, "After" row
+- [x] L8-B slip docs, images (04_phieu.png, phieu_mau.pdf, 03_tra_cuu_HS004.png), "After" rows, code map (CODER DONE head b960b60)
 - [ ] CI gate, user review (lead)
 
 ## Current state
-- Done: L4-B, L7 (+fix1, fix2), L5c (+fix1 f3ff065: group health warnings only when whole book wrong, no empty example, privacy red line kept visible).
-  All pushed on origin/claude/ux1-b-phieu. Waiting for lead: REVIEW L5c fix1 or GO L8-B.
-- In progress: nothing half-finished.
-- Tests last run green: test_giao_dien_ux1b_l5c (5), ux1_*/ux1b_*, gt1/gt3/gt4 UI, ws_nhan, van_phong_tu_nhien,
-  gt4_nhat_ky_doc, fa_huy_chuong (241 + 75 passed); kiem_nhanh 7/7 (60 cases byte-identical vs origin/main).
-- Open problems: none known. Commit trailers from L4-B had a wrong Claude-Session id (cosmetic).
+- Done: L4-B, L7 (+fix1, fix2), L5c (+fix1), L8-B (b960b60). All pushed on origin/claude/ux1-b-phieu.
+- In progress: nothing. Waiting for lead: REVIEW L8-B / REVIEW L5c fix1 / FIX, then CI gate + review by lead.
+- Tests last green: gt3_tai_lieu, gt_tich_hop, a13_12_tai_lieu (344 test files pinned in CLAUDE_CHI_TIET.md), gt1_phieu, ux1*/ux1b* UI;
+  kiem_nhanh 7/7 (60 cases byte-identical vs origin/main).
+- Open: slip click target (4) NOT met until XP1 PDF button at integration I3 (documented in UX1_RA_SOAT.md After table).
 
 ## Decisions and gotchas
 - Never rebase/force-push (protocol §2); merge origin/claude/ux1-b-phieu and origin/claude/ux1-a-giao-dien before each lot.
@@ -36,12 +35,9 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - Default export has sheets Điểm chuẩn + Dấu vết (seed, lottery numbers): privacy red line must stay visible by default.
 
 ## Next steps
-1. Wait for lead: FIX L5c (if checker finds more) or GO L8-B.
-2. L8-B: update slip docs (CHANGELOG/TIEN_DO rows), regenerate docs/giai_trinh/CA_MAU.md
-   (du_lieu_test/tao_ca_mau_giai_trinh.py), docs/giai_trinh/tao_goi_minh_chung.py, anh/04_phieu.png + anh/phieu_mau.pdf
-   (docs/ke_hoach/ux/chup_phieu.py), "After" row of the slip task in UX1 docs.
-3. After each lot: invariant-1 check (`kiem_nhanh.py --co-so origin/main --so-seed 20` after `git fetch origin main`),
-   soat-ma, CHANGELOG + TIEN_DO, commit "UX1B-L<n>: ...", push, send CODER DONE.
+1. Wait for lead: FIX (checker findings) or CI-gate failures; fix test-first, run related tests, kiem_nhanh, push, CODER DONE <lot> fix<k>.
+2. If a test count changes, update the "344 tệp" figure in docs/ke_hoach/CLAUDE_CHI_TIET.md (test_a13_12_tai_lieu pins it).
+3. Never rebase; merge origin/claude/ux1-b-phieu and origin/claude/ux1-a-giao-dien before work.
 
 ## Files touched (whole branch so far)
 - bao_cao_tong_hop.py, api_xuat.py, phan_quyen.py: summary report + slip data (huy_chuong, tinh_nang)
@@ -49,6 +45,7 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - api.py, api_quan_ly.py, i18n_errors.py (+ i18n_loi.js): L5c health grouping, san_sang n_hoc_sinh
 - index.html, style.css, i18n.js, js/02_van_hanh.js, js/14_giai_trinh.js, js/17_viec_tiep_theo.js, js/18_cai_dat.js,
   js/19_ux1b_gv.js, js/_danh_sach.txt: UI
+- docs: HUONG_DAN_SU_DUNG.md, docs/giai_trinh/{HUONG_DAN_CHAY,KICH_BAN_DEMO}.md, docs/ke_hoach/ux/UX1_RA_SOAT.md, CLAUDE_CHI_TIET.md, anh/*
 - tests: test_ux1b_l4_bao_cao, test_ux1b_l7_phieu, test_giao_dien_ux1b_{vai_gv,phieu,l5c}; edits in ux1_cai_dat, gt1/gt3/gt4 UI,
   gt1_tra_cuu, gt4_cau_giai_trinh, ws_nhan, _trinh_duyet
 
@@ -60,3 +57,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 - L5c fix1 coded; pushing, then CODER DONE L5c fix1.
 | 2026-11-19 | Sonnet | L5c fix1 (f3ff065); hook re-fired at >400k; lead says no replacement session | stay available |
 - L8-B done and pushed; waiting for review.
+| 2026-11-19 | Sonnet | L8-B (b960b60); hook re-fired at >400k; staying available per lead | handoff refreshed |
