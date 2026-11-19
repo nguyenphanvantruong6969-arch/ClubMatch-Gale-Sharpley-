@@ -49,3 +49,9 @@
 - Coverage restart: `cov.start()` is in `finally`; verified by script — exception inside `_do` re-raised AND `Coverage.current()` still running afterwards. Without coverage/import error → returns None, test still runs.
 - Side effect (accepted): the timed export lines are not counted for coverage in that file; they are covered by the L2/L3 tests.
 - HUONG_DAN label now "Danh sách theo câu lạc bộ (PDF)" = UI.
+
+## L5 fix3 — reviewed 2f5f18b..aec7351 (code 81f26e9): NO BUGS
+- Tests: xp1_danh_sach_pdf, pdf_loi, phieu_pdf, dong_goi, van_phong_tu_nhien = 74 passed (with pypdf); `kiem_nhanh.py` 7/7.
+- Rendered pages (pdftoppm, 3-session sample): `_chua_duoc_xep.pdf` shows "Học sinh chưa có câu lạc bộ / Số học sinh: 5 / Số lượt chưa có chỗ: 10", STT column holds "STT" and numbers on one line; per-class file "DANH SÁCH LỚP 10A2" with section "Chưa có câu lạc bộ", diacritics fine. Student count = distinct students (5), not rows (10).
+- Cột STT fixed 13 mm tested without pypdf (string width), count-students test, capitalised titles test.
+- `docs/ke_hoach/xp/XP1_DANH_GIA.md` numbers agree with mine: 1519 pages (800 HS), slips 15.3/17.1 s vs my 13–16 s, lists 2.8/0.9 s vs my 2.5–2.8/0.7 s, 28/21 files, 132/55 pages. Claims of 3 clicks and 3-step "Lưu PDF" match the UI tests. Report text contains no academic conclusions.
