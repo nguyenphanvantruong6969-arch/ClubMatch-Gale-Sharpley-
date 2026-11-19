@@ -534,7 +534,7 @@ Dùng khi cần **in hoặc gửi PDF** thay vì bảng tính. Ở thẻ **Chi t
 
 | Mục | Ra gì | Gửi cho ai |
 |---|---|---|
-| **Danh sách theo CLB (PDF)** | Một thư mục, mỗi CLB một tệp PDF: tên, mã, loại CLB, giờ, địa điểm, bảng STT / mã / họ tên / lớp. Trường nhiều buổi: mỗi CLB mỗi buổi một tệp. Em chưa có chỗ nằm trong `_chua_duoc_xep.pdf` | Người phụ trách từng CLB |
+| **Danh sách theo câu lạc bộ (PDF)** | Một thư mục, mỗi CLB một tệp PDF: tên, mã, loại CLB, giờ, địa điểm, bảng STT / mã / họ tên / lớp. Trường nhiều buổi: mỗi CLB mỗi buổi một tệp. Em chưa có chỗ nằm trong `_chua_duoc_xep.pdf` | Người phụ trách từng CLB |
 | **Danh sách theo lớp (PDF)** | Một thư mục, mỗi lớp một tệp PDF; em chưa có chỗ ở mục riêng "Chưa có câu lạc bộ" trong cùng tệp; em chưa có lớp nằm trong `_chua_co_lop.pdf` | Giáo viên chủ nhiệm |
 | **Phiếu giải trình theo lớp (PDF)** | Ô chọn lớp bên cạnh: **Tất cả lớp** ra một thư mục, mỗi lớp một tệp, mỗi em một trang; chọn **một lớp** thì ra MỘT tệp của lớp đó. Mỗi dòng nguyện vọng ghi **loại CLB** (Tự do, Giới hạn, Tuyển chọn; chưa đặt loại thì ghi dấu gạch) | Giáo viên chủ nhiệm, hoặc in phát cho học sinh |
 

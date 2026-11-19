@@ -1,10 +1,13 @@
 """XP1-L5 — hiệu năng xuất PDF hàng loạt với 800 học sinh (sổ mô phỏng, seed 3).
 
-Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên máy chạy CI (Linux). Con số đo được in ra
-(`pytest -s`) và ghi vào CHANGELOG; ngưỡng ở đây rộng hơn một chút cho máy chậm, không để test chập chờn.
+Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên máy chạy CI Linux. Ngưỡng: 30 giây trên Linux,
+90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows và máy chạy Windows chậm hơn; số 90 là dư địa chứ
+không phải cam kết). Đặt biến môi trường `XP1_NGUONG_GIAY` để đổi ngưỡng trên một máy cụ thể. Mỗi ca luôn in số
+giây đo được (`pytest -s`); test không bao giờ bị bỏ qua.
 """
 import base64
 import os
+import sys
 import time
 
 import pytest
@@ -14,7 +17,7 @@ pytest.importorskip("reportlab")
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SO_800 = os.path.join(GOC, "du_lieu_test", "SO_NHAP_DQT_800HS_HOP_LE.xlsx")
-NGUONG_GIAY = 30
+NGUONG_GIAY = float(os.environ.get("XP1_NGUONG_GIAY") or (90 if sys.platform == "win32" else 30))
 
 
 @pytest.fixture(scope="module")
@@ -41,23 +44,24 @@ def _do(ham, *args, **kw):
     r = ham(*args, **kw)
     giay = time.perf_counter() - t0
     assert r["ok"], r
+    print("XP1 hieu nang: %.1f s (nguong %.0f s)" % (giay, NGUONG_GIAY))
     return r["data"], giay
 
 
-def test_phieu_ca_truong_theo_lop_duoi_30_giay(api800):
+def test_phieu_ca_truong_theo_lop_trong_nguong(api800):
     d, giay = _do(api800.export_phieu_giai_trinh_pdf, "", None, True)
     print("XP1 hieu nang: phieu theo lop, %d tep, %d trang: %.1f s" % (d["n_tep"], d["n_trang"], giay))
     assert d["n_trang"] >= 800 and giay < NGUONG_GIAY
 
 
-def test_phieu_ca_truong_mot_tep_duoi_30_giay(api800):
+def test_phieu_ca_truong_mot_tep_trong_nguong(api800):
     d, giay = _do(api800.export_phieu_giai_trinh_pdf, "")
     print("XP1 hieu nang: phieu mot tep, %d trang: %.1f s" % (d["n_trang"], giay))
     assert d["n_trang"] >= 800 and giay < NGUONG_GIAY
 
 
 @pytest.mark.parametrize("theo", ["clb", "lop"])
-def test_danh_sach_ca_truong_duoi_30_giay(api800, theo):
+def test_danh_sach_ca_truong_trong_nguong(api800, theo):
     d, giay = _do(api800.export_danh_sach_pdf, "", theo)
     print("XP1 hieu nang: danh sach theo %s, %d tep, %d trang: %.1f s" % (theo, d["n_tep"], d["n_trang"], giay))
     assert giay < NGUONG_GIAY
