@@ -2,7 +2,7 @@
 
 > Protocol: docs/phien/UX1F_GIAO_THUC.md. English. ≤ 60 lines.
 
-Status: NOT STARTED (planned by Opus 2026-11-20; branch from origin/claude/ux1-tich-hop @ 2d1a547, PR #21 open)
+Status: IN PROGRESS (lead started 2026-11-19). Was: NOT STARTED (planned by Opus 2026-11-20; branch from origin/claude/ux1-tich-hop @ 2d1a547, PR #21 open)
 
 ## Plan (lead ticks)
 - [ ] L1 pypdf dev-only; pypdf tests run (not skip) on CI
@@ -17,9 +17,9 @@ Status: NOT STARTED (planned by Opus 2026-11-20; branch from origin/claude/ux1-t
 ## Sessions
 | Role | Session | State |
 |---|---|---|
-| lead | — | — |
-| coder | — | — |
-| checker | — | — |
+| lead | session_01YVAyu14eN1iunrtd4gEvz4 | running |
+| coder | session_01YVAytzdPaKNfd55P1azpLB | created, venv setup |
+| checker | session_01YVAytz5p2qHMPQ93QrvuXy | created, venv setup |
 
 ## Needs Truong
 - (none yet) Answers already given: 1 keep teacher scope, 6 release overwrite resolved.
