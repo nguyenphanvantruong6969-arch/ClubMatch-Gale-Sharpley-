@@ -1,5 +1,31 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT L5c | reviewed 78e3bff..276616b
+verdict: 1 BUG (+3 notes)
+1. api.py:get_data_health_report (gop_huy_chuong) + i18n_errors.py:ux1b_huy_chuong_gop + js/02_van_hanh.js:loadHealthReport |
+   repro: FA on, 2 students, clubs G,H (Giới hạn); insert wharton_bids s1 G=60,H=60 (same value twice; only reachable through a book
+   import, submit_huy_chuong refuses it) -> report shows ONE merged line "1 học sinh chưa có huy chương hợp lệ (ví dụ ở: ). Sổ đang nạp
+   mang điểm quyết tâm hoặc huy chương đặt sai chỗ, không phải lỗi của từng học sinh ... quay lại Chia 100 điểm" + button "Mở Cài đặt",
+   and the "Việc tiếp theo" bar jumps to Settings | expected: (a) no empty "ví dụ ở: " — `fa_huy_chuong_trung_gia_tri` has no club_id, so
+   `gop.clb` is [] and `n_clb` 0; (b) the merge must not claim "not each student's fault" when only a few students are affected; the
+   original per-student lines (with student_id) are the only way to find them. Fix: merge only when the problem is book-wide (same rule the
+   code already uses in ux1aVeSanSang: n_em*2 >= n_students) and keep the individual lines otherwise; skip the "ví dụ ở" part when clb is empty.
+   (Verified on 120HS book with FA on: 120 students, 9 clubs, API n_high stays 686, merge correct there.)
+Checked OK:
+ - Tests: 195 passed (ux1b_l5c, ux1_cai_dat, ux1_dieu_huong, van_phong_tu_nhien, ws_nhan, gt4_nhat_ky_doc, gt3_tai_lieu, the 4 hoc_sinh/tieu_chi UI files,
+   ux1b_phieu/vai_gv/tiep_theo, gt1_tra_cuu, gt3_phan_quyen). kiem_nhanh --co-so origin/main --so-seed 20 -> 7/7 (60 ca trùng khít).
+ - Test edits legit: the cai_dat test was SPLIT, not weakened — old end assertions (wrong medals: "không phải huy chương" text, no "Sẵn sàng",
+   run blocked) moved to the new whole-book test (text "Gần như cả sổ", no type buttons, run still blocked); the old test now deletes wharton_bids
+   to simulate a clean book and ends on "Sẵn sàng". mo_gap_ma() only opens #gtMaFold before clicking (same buttons, same assertions).
+   ws_nhan: only adds the new error code to the list.
+ - No element id/data-tab renamed (all old ids kept; #gtBuocHuongDan moved inside the fold). #gtMaFold is data-quyen="quan_tri", but every
+   button inside already was quan_tri-only, so giao_vien loses nothing (vai_gv tests green).
+ - New texts use {person_l}/{person_pl}/{slot_l}; vi + en present (kiem_nhanh i18n 7/7). Health API n_high / n_warnings unchanged; only the display count is merged.
+ - Group rename "Cài đặt và quản lý": gt3_tai_lieu green.
+Notes: (a) the minority-wrong path (message "không phải huy chương" for < half the book) lost its Chromium assertion in the split; consider keeping one test.
+ (b) the red privacy line "Tệp xuất có điểm chấm..." now only shows inside "Tuỳ chọn khác"; fine if the default Excel export carries no scores/lottery — please confirm.
+ (c) "Điểm danh 3 buổi đầu" matches fa_sau_xep (3 buổi đầu).
+
 CHECKER REPORT L7 fix2 | reviewed 79c8e45..fc5e9fc
 verdict: NO BUGS
 - Selector-only, not weakened: gt1_tra_cuu `td.nth(5)` -> `td.last` = the "Vì sao" cell in both modes (non-FA 6 cols, FA 7 cols), same >10-char assertion;
