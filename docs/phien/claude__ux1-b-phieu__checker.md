@@ -1,5 +1,15 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT R1 fix2 | reviewed 0185d9d..f58df43
+verdict: NO BUGS (1 note)
+- My repro (T cap 2, r reserved 3 pts, t 8, x 7): all three rows now show 8 điểm; x's SVG has 7 below the red line; sentence says "điểm chuẩn 8, em 7" -> column, SVG and sentence agree.
+  Rule is the stored REJECTED fa_ly_do rows of the club (one worst-key member): RESERVED -> "Chỗ dành riêng", else cut_score, nobody rejected -> "Còn chỗ" (not full) or no value (exactly full).
+- Coder's tier-2 claim is TRUE for Tuyển chọn: fa_daa.py (step 2) removes every student with no score (NOT_ATTEMPTED) or score < diem_san (BELOW_PASS) from the list BEFORE the DA run, also when diem_san is set,
+  so a Tuyển chọn club has no untested/below-san members. Verified on a 4-student run (diem_san 5): a(9) accepted, b(6) SCORE rejected with 9, c(2) BELOW_PASS, e(untested) NOT_ATTEMPTED; no member without a score.
+- 91 tests passed (l7_phieu incl. 3 new fix2 tests: reserved lowers nothing, all-reserved -> giu_cho, nobody rejected -> con_cho; l4_bao_cao, ux1b_phieu, gt_tich_hop, gt1_giai_trinh, gt4_cau_giai_trinh, gt1_phieu, gt1_tra_cuu); ruff clean.
+Note: a Giới hạn club that still holds leftover test scores (warning fa_diem_bo_qua) counts as `chon_loc`, so "Điểm các CLB em đã thi" lists that score with a bar and no cut-off although FA ignores it for that club
+ (and the lottery row reads "Chọn ngẫu nhiên khi bằng điểm"). No wrong number is shown; consider hiding scores of Giới hạn clubs on the slip (pre-existing since L7).
+
 CHECKER REPORT R1 | reviewed 775f669..0185d9d
 verdict: 1 BUG
 1. giai_trinh.py:_chuan_clb_fa (used by _lua_chon_fa and _diem_da_thi) | repro (fake data, FA on): club T "Tuyển chọn" cap 2, diem_san 0; students r (score 3,
