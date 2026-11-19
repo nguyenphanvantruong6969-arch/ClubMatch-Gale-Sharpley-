@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B R1 (từ lượt duyệt của lead)
+
+- `giai_trinh._chuan_clb_fa`: chế độ FA, CLB có thi giờ có "Mức vào được" (điểm thấp nhất trong số người đã nhận khi CLB đầy, hay "Còn chỗ"), kể cả dòng ACCEPTED; thanh SVG có vạch đỏ. CLB không thi, dòng MEDAL: ghi huy chương của người nhận cuối ("Huy chương Vàng", `ux1b_gt_chuan_huy_chuong`). Chỉ con số của CLB.
+- Lý do MEDAL chỉ còn MỘT câu: "Em đặt huy chương Bạc; các bạn đặt Vàng ở {CLB} được xét trước." (hoặc "Em chưa đặt huy chương ở {CLB}; …"); `CA_MAU.md` không đổi.
+- `bao_cao_tong_hop.py`: buổi hiện "Thứ 2" (`giai_trinh.nhan_buoi`), mọi tiêu đề viết hoa chữ đầu sau khi điền nhãn, bảng nguyện vọng ghi "Số lượt xếp ({person_l} × {session_l})" (đếm lượt, không phải người).
+- Test: `tests/test_ux1b_l7_phieu.py` (+1 trên sổ FA mẫu, sửa 2 câu cũ), `tests/test_ux1b_l4_bao_cao.py` (+1), `tests/test_giao_dien_ux1b_phieu.py` (sửa câu).
+
 ## 2026-11-19 — UX1B CI-1
 
 - `index.html`: chữ dự phòng của nhóm `ux1a_nhom_cai_dat` đổi thành "Cài đặt và quản lý" cho khớp `i18n.js` (`tests/test_t3_l1_chu_du_phong.py`). Không đổi test.

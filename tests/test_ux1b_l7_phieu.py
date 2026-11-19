@@ -121,9 +121,9 @@ def test_fa_moi_dong_co_huy_chuong_dung_va_chu_giai(api, tmp_path):
 def test_fa_dong_ly_do_medal_goi_ten_huy_chuong(api, tmp_path):
     _dung_fa(api)
     p3 = _phieu(api, tmp_path, "s3")
-    assert "Em đặt huy chương Đồng; các bạn đặt Bạc được xét trước." in p3
+    assert "Em đặt huy chương Đồng; các bạn đặt Bạc ở CLB G được xét trước." in p3
     p4 = _phieu(api, tmp_path, "s4")
-    assert "Em chưa đặt huy chương ở CLB này; các bạn đặt Bạc được xét trước." in p4
+    assert "Em chưa đặt huy chương ở CLB G; các bạn đặt Bạc được xét trước." in p4
     assert "Em s1" not in p3 and "Em s2" not in p3                     # không dữ liệu em khác
 
 
@@ -149,10 +149,11 @@ def test_fa_clb_khong_thi_ly_do_medal_khong_noi_bang_diem(api, tmp_path):
     for sid in ("s3", "s4"):
         p = _phieu(api, tmp_path, sid)
         assert "bằng điểm" not in p
-        assert "Các bạn đặt huy chương cao hơn ở CLB G được xét trước." in p
+        assert "các bạn đặt Bạc" in p and "Các bạn đặt huy chương cao hơn" not in p      # MỘT câu, không lặp ý
     gt = api.get_giai_trinh_hoc_sinh("s3")["data"]
     g = next(x for x in gt["buoi"][0]["cac_lua_chon"] if x["club_id"] == "G")
-    assert g["cau"].startswith("Các bạn đặt huy chương cao hơn") and g["cau"].endswith("Bạc được xét trước.")
+    assert g["cau"] == "Em đặt huy chương Đồng; các bạn đặt Bạc ở CLB G được xét trước."
+    assert g["diem_chuan_loai"] == "huy_chuong" and g["diem_chuan"] == "Bạc"      # CLB không thi: mức vào được là huy chương
 
 
 def test_fa_clb_co_thi_van_noi_bang_diem():
@@ -174,3 +175,32 @@ def test_phan_hoi_hoc_sinh_khong_co_seed_nhung_nhan_vien_van_co(api):
     nv = api.get_giai_trinh_hoc_sinh("s1")["data"]
     assert nv["run"]["seed"] == 3
     assert any("stb_em" in x for b in nv["buoi"] for x in b["cac_lua_chon"])
+
+
+# ---------------------------------------------------------------- R1: mức vào được ở chế độ FA (sổ mẫu thật)
+def test_r1_fa_clb_co_thi_day_hien_muc_vao_duoc_va_thanh_svg_co_vach_do(api, tmp_path):
+    import base64
+    import os
+    bat_fa(api)
+    goc = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(goc, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"), "rb") as f:
+        assert api.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    assert api.run_pipeline(42)["ok"], "sổ FA mẫu phải chạy được"
+    with api._ket_noi_doc() as cur:
+        ds = [r[0] for r in cur.execute("SELECT student_id FROM students ORDER BY student_id")]
+    co_vach = 0
+    for sid in ds:
+        gt = api.get_giai_trinh_hoc_sinh(sid)["data"]
+        for b in gt["buoi"]:
+            for x in b["cac_lua_chon"]:
+                if x["chon_loc"]:
+                    assert x["diem_chuan_loai"] in ("diem", "con_cho"), (sid, x)      # không còn "—" ở CLB có thi
+                    co_vach += x["diem_chuan_loai"] == "diem"
+                    if x["diem_chuan_loai"] == "diem":
+                        assert x["da_nhan"] >= x["suc_chua"]
+            for t in b["diem_da_thi"]:
+                if t["diem_chuan_loai"] == "diem":
+                    assert t["diem_chuan"] is not None
+    assert co_vach > 0, "sổ mẫu có CLB Tuyển chọn đã đầy: phải có ít nhất một mức vào được bằng số"
+    p = _phieu(api, tmp_path, "FA001")
+    assert "<svg" in p and 'stroke="#b91c1c"' in p                                     # có vạch đỏ mức vào được

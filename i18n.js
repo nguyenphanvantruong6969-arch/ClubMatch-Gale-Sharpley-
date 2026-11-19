@@ -1384,6 +1384,7 @@
       ux1b_gt_diem_thi: "Điểm các {slot_sl} đã thi",
       ux1b_gt_th_thanh: "So với mức vào được (vạch đỏ)",
       ux1b_gt_tiep_theo: "Việc tiếp theo",
+      ux1b_gt_chuan_huy_chuong: "Huy chương {n}",
       /* UX1B (L5c) */
       ux1b_cau_huy_chuong_sai: "Sổ này chưa có huy chương hợp lệ cho {n} {person_l}.",
       ux1b_nut_huy_chuong_sai: "Mở Cài đặt",
@@ -2766,6 +2767,7 @@
       ux1b_gt_diem_thi: "Scores of the {slot_pl} tested",
       ux1b_gt_th_thanh: "Compared with the cut-off (red line)",
       ux1b_gt_tiep_theo: "What to do next",
+      ux1b_gt_chuan_huy_chuong: "{n} medal",
       /* UX1B (L5c) */
       ux1b_cau_huy_chuong_sai: "The book has no valid medals for {n} {person_pl}.",
       ux1b_nut_huy_chuong_sai: "Open Settings",

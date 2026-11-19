@@ -8,6 +8,7 @@ mọi giá trị qua `html.escape`; không tệp hay địa chỉ ngoài. Chỉ 
 
 from html import escape
 
+from giai_trinh import nhan_buoi
 from nhan_ws import dien as dien_nhan
 
 _CSS = """
@@ -69,7 +70,8 @@ def _e(v):
 def dung_html(du: dict, nhan: dict | None = None) -> str:
     """HTML một tệp từ `gom_du_lieu`. `nhan` = nhãn workspace (điền {person_l}, {slot_l}, {cohort_l}…)."""
     def d(mau):
-        return dien_nhan(mau, nhan)
+        ra = dien_nhan(mau, nhan)
+        return ra[:1].upper() + ra[1:]      # chữ đầu luôn viết hoa, kể cả khi mẫu bắt đầu bằng chỗ giữ viết thường
     the = du["the"]
     o = [("Số {person_l}", the["n_students"]), ("Số {slot_l}", the["n_clubs"]),
          ("Đã có {slot_l}", the["n_matched"]), ("Chưa có {slot_l}", the["n_chua_xep"]),
@@ -87,10 +89,11 @@ def dung_html(du: dict, nhan: dict | None = None) -> str:
     for c in du["clb"]:
         ct = "—" if c["tu_do"] or c["capacity"] is None else c["capacity"]
         p.append('<tr><td>%s</td><td>%s</td><td class="so">%s</td><td class="so">%s</td><td class="so">%s</td></tr>'
-                 % (_e(c["name"]), _e(c.get("buoi") or ""), _e(ct), _e(c["matched"]), _e(c["so_dang_ky"])))
+                 % (_e(c["name"]), _e(nhan_buoi(c.get("buoi")) or c.get("buoi") or ""), _e(ct), _e(c["matched"]), _e(c["so_dang_ky"])))
     p.append("</table>")
     p.append("<h2>%s</h2><table><tr><th>%s</th><th>%s</th></tr>" % (
-        _e(d("Mức hài lòng về nguyện vọng")), _e(d("Được nguyện vọng")), _e(d("Số {person_l}"))))
+        _e(d("Mức hài lòng về nguyện vọng")), _e(d("Được nguyện vọng")),
+        _e(d("Số lượt xếp ({person_l} × {session_l})"))))   # mỗi {person_l} có thể có nhiều {session_l}: đếm lượt, không đếm người
     for x in du["nguyen_vong"]["phan_bo"]:
         p.append('<tr><td>%s%s</td><td class="so">%s</td></tr>' % (_e(x["hang"]), "+" if x["gop"] else "", _e(x["so_em"])))
     if du["nguyen_vong"]["ngoai_danh_sach"]:

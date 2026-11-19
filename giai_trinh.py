@@ -46,6 +46,9 @@ def _nhan_buoi(buoi):
     return "" if not buoi or buoi == _BUOI_MAC_DINH else _NHAN_BUOI.get(buoi, str(buoi))
 
 
+nhan_buoi = _nhan_buoi          # tên công khai cho các nơi khác (phiếu, báo cáo tổng hợp): "thu_2" -> "Thứ 2"
+
+
 def tom_tat_dong(ra_buoi: list, giong: str = fa_ly_do.GIONG_HOC_SINH) -> str:
     """Dòng tóm tắt dưới tên em: "Em có 2/3 buổi: CLB A (Thứ 4), CLB B (Thứ 6)." hay "Em chưa có CLB ở buổi nào".
     `giong` "giao_vien": cùng câu nhưng nói "Học sinh" (khung tra cứu của giáo viên / quản trị)."""
@@ -196,14 +199,31 @@ def _them_cau(x, giong=fa_ly_do.GIONG_HOC_SINH):
         x["cau"] = ""
 
 
-def _cau_huy_chuong(r, cua_em):
-    """Câu nối thêm cho dòng lý do MEDAL: nêu huy chương CỦA EM và của người nhận cuối (con số của CLB, không tên ai)."""
+def _cau_huy_chuong(r, cua_em, ten_clb):
+    """MỘT câu thay cho câu chung của dòng lý do MEDAL: nêu huy chương CỦA EM và huy chương của người nhận cuối (con số
+    của CLB, không tên ai). Rỗng nếu không có `cut_medal` (giữ câu chung)."""
     cut = r.get("cut_medal")
     if not cut:
         return ""
     own = NHAN_HUY_CHUONG.get(cua_em)
-    dau = ("Em đặt huy chương %s" % own) if own else "Em chưa đặt huy chương ở CLB này"
-    return "%s; các bạn đặt %s được xét trước." % (dau, NHAN_HUY_CHUONG.get(cut, str(cut)))
+    khac = NHAN_HUY_CHUONG.get(cut, str(cut))
+    if own:
+        return "Em đặt huy chương %s; các bạn đặt %s ở %s được xét trước." % (own, khac, ten_clb)
+    return "Em chưa đặt huy chương ở %s; các bạn đặt %s được xét trước." % (ten_clb, khac)
+
+
+def _chuan_clb_fa(cid, b):
+    """UX1B-R1: mức vào được của CLB có thi ở chế độ FA — điểm thấp nhất trong số người đã nhận khi CLB đầy ("diem"), hay
+    "con_cho". Khoá FA xét điểm TRƯỚC huy chương nên người nhận cuối là người có điểm thấp nhất. CLB không thi: (None, None).
+    Chỉ là con số của CLB, không tên hay điểm của người cụ thể."""
+    c = b["clubs"][cid]
+    if not c["chon_loc"]:
+        return None, None
+    diem_clb = b["scores"].get(cid, {})
+    nhan = [diem_clb[s] for s, k in b["assign"].items() if k == cid and s in diem_clb]
+    if c["capacity"] is not None and sum(1 for k in b["assign"].values() if k == cid) >= c["capacity"]:
+        return (min(nhan), "diem") if nhan else (None, None)
+    return None, "con_cho"
 
 
 def _lua_chon_fa(sid, buoi, b, huy=None):
@@ -234,12 +254,17 @@ def _lua_chon_fa(sid, buoi, b, huy=None):
                                     else "boc_tham" if r["reason"] == "LOTTERY" else None)
             x["cau"] = fa_ly_do.cau_ly_do(r, c["ten"])
             if r["reason"] == "MEDAL":
-                them = _cau_huy_chuong(r, huy.get(cid, 0))
-                if them:
-                    x["cau"] += " " + them
+                cau_moi = _cau_huy_chuong(r, huy.get(cid, 0), c["ten"])
+                if cau_moi:
+                    x["cau"] = cau_moi
         else:
             x["ma"] = HIGHER_CHOICE_ACCEPTED if (hang_xep is not None and i > hang_xep) else None
             x["cau"] = (fa_ly_do.cau_ly_do_rbda({"ma": x["ma"]}, c["ten"]) if x["ma"] else "")
+        chuan, loai = _chuan_clb_fa(cid, b)           # UX1B-R1: mức vào được của CLB, kể cả dòng ACCEPTED (không có cut_score)
+        if loai:
+            x["diem_chuan"], x["diem_chuan_loai"] = chuan, loai
+        elif r is not None and r["reason"] == "MEDAL" and r.get("cut_medal"):
+            x["diem_chuan"], x["diem_chuan_loai"] = NHAN_HUY_CHUONG.get(r["cut_medal"], str(r["cut_medal"])), "huy_chuong"
         ra.append(x)
     for cid, r in dong.items():                # CLB dự phòng / Tự do ngoài danh sách nguyện vọng
         if cid in thay or cid in ds:
@@ -275,6 +300,8 @@ def _diem_da_thi(sid, b, ds, fa):
                 chuan, loai = (diem_clb[cuoi], "diem") if cuoi in diem_clb else (None, "boc_tham")
             else:
                 chuan, loai = None, "con_cho"
+        elif fa:
+            chuan, loai = _chuan_clb_fa(cid, b)
         else:
             chuan, loai = None, None
         ra.append({"club_id": cid, "ten_clb": c["ten"], "diem_em": diem_clb[sid], "diem_chuan": chuan,

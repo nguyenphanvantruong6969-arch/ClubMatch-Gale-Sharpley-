@@ -26,6 +26,7 @@
     if (x.diem_chuan_loai === "diem" && x.diem_chuan !== null && x.diem_chuan !== undefined) {
       return t("gt_chuan_diem", { n: x.diem_chuan });
     }
+    if (x.diem_chuan_loai === "huy_chuong" && x.diem_chuan) return t("ux1b_gt_chuan_huy_chuong", { n: x.diem_chuan });
     if (x.diem_chuan_loai === "boc_tham") return t("gt_chuan_boc_tham");
     if (x.diem_chuan_loai === "con_cho") return t("gt_chuan_con_cho");
     if (x.diem_chuan_loai === "giu_cho") return t("gt_chuan_giu_cho");   // GT4-L4: chỗ dành riêng, không hiện số

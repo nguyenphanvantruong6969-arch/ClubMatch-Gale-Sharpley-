@@ -68,7 +68,7 @@ def test_che_do_huy_chuong_co_cot_va_chu_giai(mo):
     heads = page.evaluate(
         "() => Array.from(document.querySelectorAll('#gtKetQua table.gt-bang th')).map(e => e.textContent)")
     assert heads[:3] == ["Nguyện vọng", "CLB", "Huy chương"]
-    assert "Em đặt huy chương Đồng; các bạn đặt Bạc được xét trước." in page.inner_text("#gtKetQua")
+    assert "Em đặt huy chương Đồng; các bạn đặt Bạc ở CLB G được xét trước." in page.inner_text("#gtKetQua")
     assert "Vàng, rồi Bạc, rồi Đồng" in page.inner_text("#gtKetQua")
     assert not loi, loi
 

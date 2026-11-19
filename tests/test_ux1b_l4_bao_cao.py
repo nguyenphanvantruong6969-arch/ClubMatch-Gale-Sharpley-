@@ -117,3 +117,14 @@ def test_bao_cao_noi_ket_qua_da_cu_khi_du_lieu_doi_sau_lan_xep(api, tmp_path):
     assert r["ok"] and r["data"]["ket_qua_cu"] is True
     with open(r["data"]["path"], encoding="utf-8") as f:
         assert "có thể đã cũ" in f.read()
+
+
+def test_bao_cao_buoi_co_nhan_chu_hoa_dau_va_don_vi_luot_xep(api, tmp_path):
+    """Buổi hiện "Thứ 2" (không phải thu_2); tiêu đề viết hoa chữ đầu; bảng nguyện vọng ghi đúng đơn vị (lượt = người × buổi)."""
+    _chay(api)
+    _, html = _html(api, tmp_path)
+    assert "thu_" not in html and "Thứ 2" in html
+    assert "<h2>Học sinh chưa có câu lạc bộ theo lớp</h2>" in html
+    assert "Số lượt xếp (học sinh × buổi)" in html
+    nv = api.get_phan_bo_nguyen_vong()["data"]
+    assert sum(x["so_em"] for x in nv["phan_bo"]) + nv["ngoai_danh_sach"] <= nv["tong_da_xep"]
