@@ -1,5 +1,17 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT L7 fix1 | reviewed 823e560..79c8e45
+verdict: 1 BUG (stale test selector, regression of L7 itself)
+1. tests/test_giao_dien_gt1_tra_cuu.py::test_the_hien_dung_cho_em_duoc_xep_va_em_bi_tu_choi[True] (FA on), line ~91
+   `hang.locator("td").nth(5)` | repro: run that test -> AssertionError: 'Không có' (8 chars) > 10 | cause: L7 adds the "Huy chương" column
+   after "CLB" in FA mode, so "Vì sao" moved from td 5 to td 6; td 5 is now "Mức vào được" | expected: green; fix = change the selector
+   (e.g. last `td`, or `nth(6 if fa else 5)`), never skip. Not caught earlier: file is not in the L7 related list; grep tests/ for
+   `locator("td").nth(` / `gt-duoc-xep td` over FA-mode student-card tests for other index users (the 8 other files I ran pass).
+Bug 1 of the previous round: FIXED (U row now "Các bạn đặt huy chương cao hơn ở CLB U được xét trước. Em chưa đặt ..."; tested-club row still says "bằng điểm").
+seed/stb: student response (tra_cuu_hoc_sinh) has no "seed"/"stb" anywhere; js/14_giai_trinh.js never reads r.seed for a student (uses
+ ux1b_gt_lan_chay_hs) and never reads stb_em -> no "undefined" text, no JS error (gt1_hoc_sinh / gt1_tra_cuu / gt4 Chromium tests green except the one above).
+ Staff path keeps seed + stb_em (new test). Ran 92 tests: 91 passed, 1 failed (above).
+
 CHECKER REPORT L7 | reviewed 11b6ce4..823e560
 verdict: 1 BUG (minor wording) + 3 notes
 1. fa_ly_do.py:cau_ly_do (MEDAL) + giai_trinh.py:_cau_huy_chuong | repro: FA on; clubs T (TUYEN_CHON, tested), U (GIOI_HAN, no test), F (TU_DO);
