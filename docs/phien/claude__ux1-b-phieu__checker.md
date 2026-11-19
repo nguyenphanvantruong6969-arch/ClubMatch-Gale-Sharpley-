@@ -1,5 +1,20 @@
 # Checker (UX1B) — verdicts (newest first)
 
+CHECKER REPORT L5c fix1 | reviewed 276616b..f3ff065
+verdict: NO BUGS
+- Bug 1 fixed: (a) a book where no club name is available (fa_huy_chuong_trung_gia_tri) now uses `ux1b_huy_chuong_gop_khong_clb` (vi+en, no "ví dụ ở: "); test r1c green.
+  (b) merge only when whole book wrong, via the single `QuanLyMixin._huy_chuong_ca_so_sai(n_sai, n_hs)` = n_sai > 0 and n_hs > 0 and n_sai*2 >= n_hs,
+  used by get_data_health_report AND get_san_sang_huy_chuong (`huy_chuong_ca_so`) -> JS no longer recomputes. Boundary checked by hand:
+  (0,10) F, (1,10) F, (4,10) F, (5,10) T (exactly half), (6,10) T, (1,2) T, (1,3) F, (0,0) F, (3,0) F. 4 students: 1 wrong -> per-line, no merge (both APIs agree);
+  2 wrong (half) -> merge (both agree); 3 wrong -> merge. Health and Cài đặt always agree. Few-wrong path: per-student line with id kept, Việc tiếp theo does not jump
+  to Cài đặt, type buttons still usable (test r1b).
+- n_high / n_warnings unchanged in the API (4-student runs: n_high = n_warnings = number of wrong students whether merged or not; only the on-screen count merges).
+- Rec 5 decision accepted: default Excel export carries "Điểm chuẩn" and "Dấu vết (kỹ thuật)" (seed + lottery numbers, api_xuat.py), so the red privacy line
+  must stay visible; moved back below the export block; group rename kept (test r5 updated to assert visible, not weakened in the opposite direction).
+- Tests: 165 passed (l5c, cai_dat, dieu_huong, tiep_theo, ws_nhan incl. new code, van_phong_tu_nhien, gt4_nhat_ky_doc, gt3_tai_lieu, ux_xuat, xuat_du_lieu, gt3_phan_quyen);
+  ruff clean; kiem_nhanh --co-so origin/main --so-seed 20 -> 7/7.
+- Note (not a bug): at exactly half the text says "Gần như cả sổ"; acceptable.
+
 CHECKER REPORT L5c | reviewed 78e3bff..276616b
 verdict: 1 BUG (+3 notes)
 1. api.py:get_data_health_report (gop_huy_chuong) + i18n_errors.py:ux1b_huy_chuong_gop + js/02_van_hanh.js:loadHealthReport |
