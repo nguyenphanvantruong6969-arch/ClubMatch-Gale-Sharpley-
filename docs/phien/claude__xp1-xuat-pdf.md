@@ -99,6 +99,7 @@ Lot L5 — docs + packaging + verify
 ## Needs Truong (1 line each + recommendation)
 - L3 optional combined PDF with table of contents: not built unless Truong asks. Rec: folder output is enough for v1.
 - pypdf as a dev-only test dependency (reads PDF text to prove diacritics in CI): removed per §0 (one new library). Rec: allow it in requirements-dev.txt; it never ships in the exe.
+- Windows build (`build-windows-exe.yml`) is manual-only and its last step OVERWRITES the public release `ban-moi-nhat`; lead did NOT trigger it from this unmerged branch. Rec: run it after merging to main (or add a no-publish input). Windows tests already run in tests.yml.
 - L5 manual check: launch the built Windows exe once and export PDFs offline. Rec: do it after CI is green.
 
 ## Current state (overwrite each handoff)

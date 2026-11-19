@@ -5,7 +5,18 @@
 - `HUONG_DAN_SU_DUNG.md`: mục "Xuất PDF hàng loạt" (ba mục menu, ô chọn lớp, phiếu một em, ghi chú: CLB không có em nào được xếp thì không có tệp danh sách). `CLAUDE_CHI_TIET.md`: bản đồ mã (`xuat_pdf.py`, `danh_sach_pdf.py`, hai hàm API), số tệp test 346.
 - `.github/workflows/build-windows-exe.yml`: bước soát bản đóng gói kiểm thêm hai phông `.ttf` và tệp giấy phép OFL (reportlab không đọc `.woff2`). `kiosk.spec` đã có `assets/fonts` và `collect_all("reportlab")` từ L1.
 - `xuat_pdf.py`: kiểu đoạn tạo một lần (không tạo lại cho từng ô). Không đổi kết quả đầu ra.
-- Hiệu năng, sổ mô phỏng `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (800 em, 27 lớp, seed 3, máy phát triển Linux): phiếu giải trình cả trường theo lớp 13,1 giây (28 tệp, 1.519 trang), phiếu một tệp 14,7 giây, danh sách theo CLB 2,6 giây (21 tệp), danh sách theo lớp 0,8 giây. Mục tiêu < 30 giây; chờ số đo trên CI.
+- Hiệu năng, sổ mô phỏng `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (800 em, 27 lớp, seed 3, Linux). Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên CI Linux.
+
+  | Xuất | Không đo độ phủ | Có `--cov` |
+  |---|---|---|
+  | Phiếu theo lớp (28 tệp, 1.519 trang) | 12,6 giây | 21,6 giây |
+  | Phiếu một tệp | 15,8 giây | 23,3 giây |
+  | Danh sách theo CLB (21 tệp) | 2,7 giây | 4,1 giây |
+  | Danh sách theo lớp (28 tệp) | 0,8 giây | 1,2 giây |
+
+  Số đo thật trên CI (lần chạy 44551113280, ngưỡng cũ 30 giây): bước chạy KHÔNG đo độ phủ, các ca hiệu năng đạt; bước CÓ đo độ phủ, phiếu theo lớp 30,08 giây và phiếu một tệp 30,04 giây nên đỏ (đo độ phủ làm chậm thêm khoảng 50 %); Windows (không đo độ phủ) đạt. Vì vậy test tạm dừng đo độ phủ (`coverage.Coverage.current().stop()`, bật lại sau) CHỈ trong đoạn bấm giờ; sau sửa, máy phát triển có `--cov`: phiếu theo lớp 12,8 giây, một tệp 14,3 giây (không `--cov`: 13,2 và 14,5 giây). Mục tiêu 30 giây trên CI Linux giữ nguyên.
+
+  Ngưỡng test: 30 giây trên Linux (mục tiêu của kế hoạch), 90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows), đổi được bằng biến môi trường `XP1_NGUONG_GIAY`; luôn in số giây đo được, không bỏ qua test.
 - Test mới: `tests/test_xp1_hieu_nang.py` (4 ca, ngưỡng 30 giây), `tests/test_xp1_dong_goi.py` (5 ca: phông, giấy phép, spec, ghim phiên bản, workflow). `kiem_nhanh.py` 7/7.
 
 ## 2026-11-19 — XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu
