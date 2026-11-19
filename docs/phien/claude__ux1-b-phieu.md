@@ -11,12 +11,12 @@ Status: IN PROGRESS (re-scoped by Opus 2026-11-19; branch created from origin/cl
       plain words. NOT the club type (XP1 owns `loai`)
 - [x] L5c the 5 recommendations of docs/ke_hoach/ux/UX1_DANH_GIA_A.md §4 (rec 5: privacy red line kept
       visible by default — default export has cutoff + lottery sheet; rename done)
-- [ ] L8-B slip docs, regenerate CA_MAU.md + evidence pack + phieu_mau.pdf, After row
+- [x] L8-B slip docs, regenerate CA_MAU.md + evidence pack + phieu_mau.pdf, After row
 - [ ] CI gate (§5)   - [ ] user review UX1_DANH_GIA_B.md (§6)
 - ~~L6 slip In / Lưu PDF via iframe print~~ DROPPED (XP1)
 
 ## Current state (overwrite)
-- Done: L4-B (0f73c43), L7 (fc5e9fc, 2 fix rounds), checker NO BUGS. L5c (f3ff065, 1 fix round). In progress: L8-B (GO sent).
+- Done: L4-B (0f73c43), L7 (fc5e9fc, 2 fix rounds), checker NO BUGS. L5c (f3ff065, 1 fix round). L8-B (b960b60). In progress: CI gate.
 
 ## Sessions
 | Role | Session | State |
