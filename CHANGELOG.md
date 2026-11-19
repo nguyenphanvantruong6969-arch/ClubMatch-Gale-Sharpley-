@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B-L7 fix2 (từ checker)
+
+- `tests/test_giao_dien_gt1_tra_cuu.py`, `tests/test_gt4_cau_giai_trinh.py`: chọn ô "Vì sao" / "Mức vào được" theo vị trí cuối (không theo chỉ số cố định), để cột Huy chương (và cột Loại CLB của XP1 sau này) không làm lệch. Chỉ sửa bộ chọn, không bỏ test.
+
 ## 2026-11-19 — UX1B-L7 fix1 (từ checker)
 
 - `fa_ly_do.cau_ly_do` (MEDAL): CLB không có điểm thi (`diem_em` rỗng) nói "Các bạn đặt huy chương cao hơn ở {CLB} được xét trước." thay vì "bằng điểm"; `docs/giai_trinh/HUONG_DAN_CHAY.md` sửa ví dụ cho khớp.
