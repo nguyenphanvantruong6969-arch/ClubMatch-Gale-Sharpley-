@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-19 — XP1-L5 fix3: danh sách PDF (từ lượt xem của lead trên sổ mẫu 3 buổi)
+
+- `xuat_pdf.py` (`bang`): tham số `cot_dau_mm` (cột đầu rộng cố định). `danh_sach_pdf.py`: cột STT rộng 13 mm (đủ "STT" in đậm và số 4 chữ số; trước đó 0,5/(0,5 + 2 x số cột) nên "STT" bị cắt dọc thành S/T/T và số 2 chữ số xuống dòng ở bảng nhiều buổi), `hoa_dau` viết hoa chữ cái đầu mọi tiêu đề và nhãn đứng đầu dòng (trước: "học sinh chưa có câu lạc bộ").
+- `api_xuat.py`: `_chua_duoc_xep.pdf` nhiều buổi đếm EM khác nhau ("Số học sinh: 112", trước 222 là số lượt em x buổi) và thêm dòng "Số lượt chưa có chỗ: 222" khi hai số khác nhau.
+- Test mới trong `tests/test_xp1_danh_sach_pdf.py` (+5 ca, 24 ca): độ rộng cột STT (luôn chạy), "STT" không bị cắt (pypdf), đếm em / lượt, tiêu đề viết hoa, `hoa_dau`. Xem ảnh trang trên sổ `SO_NHAP_MAU_120HS_3BUOI.xlsx` seed 3.
+
 ## 2026-11-19 — XP1-L5: tài liệu, đóng gói, hiệu năng
 
 - `HUONG_DAN_SU_DUNG.md`: mục "Xuất PDF hàng loạt" (ba mục menu, ô chọn lớp, phiếu một em, ghi chú: CLB không có em nào được xếp thì không có tệp danh sách). `CLAUDE_CHI_TIET.md`: bản đồ mã (`xuat_pdf.py`, `danh_sach_pdf.py`, hai hàm API), số tệp test 346.
