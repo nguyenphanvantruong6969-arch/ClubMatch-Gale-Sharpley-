@@ -58,3 +58,4 @@ No product-logic change; invariant 1 (byte-identical match_results) must stay 7/
 | 2026-11-19 | Sonnet | L5c fix1 (f3ff065); hook re-fired at >400k; lead says no replacement session | stay available |
 - L8-B done and pushed; waiting for review.
 | 2026-11-19 | Sonnet | L8-B (b960b60); hook re-fired at >400k; staying available per lead | handoff refreshed |
+| 2026-11-19 | Sonnet | CI-1: index.html fallback text of group label synced with i18n.js (test_t3_l1_chu_du_phong green) | note: fallback texts in index.html must equal i18n.js vi |

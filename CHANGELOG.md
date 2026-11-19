@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1B CI-1
+
+- `index.html`: chữ dự phòng của nhóm `ux1a_nhom_cai_dat` đổi thành "Cài đặt và quản lý" cho khớp `i18n.js` (`tests/test_t3_l1_chu_du_phong.py`). Không đổi test.
+
 ## 2026-11-19 — UX1B-L8-B: tài liệu phiếu, ảnh, bảng "Sau"
 
 - `HUONG_DAN_SU_DUNG.md`: mục "Phiếu giải trình và Báo cáo tổng hợp" (nội dung phiếu mới, khối "Theo lớp và báo cáo", thẻ học sinh không số khoá); hàng Kết quả; nhóm "Cài đặt và quản lý". `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: tên nhóm mới.
