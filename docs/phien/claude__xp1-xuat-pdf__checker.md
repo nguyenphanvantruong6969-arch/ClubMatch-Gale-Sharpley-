@@ -42,3 +42,10 @@
 - HUONG_DAN section matches the real UI: thẻ "Chi tiết và xuất tệp" › "Xuất dữ liệu" › "Xuất PDF…", "Tất cả lớp" picker, "Tra cứu một học sinh" + "Lưu PDF", "In phiếu cho học sinh này", "Theo từng câu lạc bộ" all exist.
 1. BUG (flaky risk) `tests/test_xp1_hieu_nang.py` NGUONG_GIAY = 30 s as a hard assert. Measured here (4 cores, 800 HS, 1519 pages): theo lớp 14.1 s, một tệp 16.2 s; WITH `--cov` (as tests.yml shard run) 21.6 s / 23.6 s → margin only ~1.3x. The Windows job (`windows-latest`, installs requirements.txt so reportlab present) also runs this test; Windows runners are typically slower. Expected: assert a looser CI bound (e.g. 90 s, or env `XP1_NGUONG_GIAY`) and keep 30 s as the printed target recorded in CHANGELOG. Never skip/weaken-by-disable; a looser number is fine.
 2. Nit: HUONG_DAN table says "Danh sách theo CLB (PDF)"; UI label is "Danh sách theo câu lạc bộ (PDF)" (from {slot_l}). Align the wording.
+
+## L5 fix — reviewed 7125881..c68076a: NO BUGS
+- Perf test: with `--cov` 12.6 / 15.0 / 2.6 / 0.7 s (coverage "tam dung" printed), plain 13.1 / 14.9 / 2.8 / 0.7 s; 4 passed, none skipped.
+- Honest, not a weakening: the 30 s Linux target is unchanged and still asserted; only the coverage tracer (a measuring tool, ~+50 %) is paused around the timed call, and each case prints seconds + whether coverage was paused. Windows 90 s is looser but the plan sets no Windows target (CI Windows passed anyway). `XP1_NGUONG_GIAY` override documented.
+- Coverage restart: `cov.start()` is in `finally`; verified by script — exception inside `_do` re-raised AND `Coverage.current()` still running afterwards. Without coverage/import error → returns None, test still runs.
+- Side effect (accepted): the timed export lines are not counted for coverage in that file; they are covered by the L2/L3 tests.
+- HUONG_DAN label now "Danh sách theo câu lạc bộ (PDF)" = UI.
