@@ -7,11 +7,11 @@ Status: IN PROGRESS (lead started 2026-11-19; branch from origin/claude/gt-tich-
 ## Plan (lead ticks)
 - [x] I1 merge claude/ux1-a-giao-dien @0bc2026 — passed (head dac41dd, checker NO BUGS 6d16bb6; I4 review: health_oversubscribed* severity info->medium; dat_loai_clb after run does not mark results stale)
 - [x] I2 merge claude/xp1-xuat-pdf @f7f1db6 — passed (head 9a4faca, checker NO BUGS c9b9c89; single "Xuất…" menu; Lưu PDF 3 clicks)
-- [ ] I3 merge claude/ux1-b-phieu after its Status: DONE (or leave for later, protocol §3)
+- [x] I3 merge claude/ux1-b-phieu @c618629 — passed (merge 944b111, wiring 5f27391, fix1 b2f7f8b; checker NO BUGS)
 - [ ] I4 CI gate + user review UX1_DANH_GIA_TICH_HOP.md
 
 ## Current state (overwrite)
-- Done: I1, I2. I3 merged by coder (944b111 + wiring 5f27391); checker 1 low bug (__mac_dinh__ in report Buổi column) → FIX I3 round 1.
+- Done: I1, I2, I3. I4: CI gate running on the integrated head, then Windows build + user review.
 
 ## Sessions
 | Role | Session | State |
