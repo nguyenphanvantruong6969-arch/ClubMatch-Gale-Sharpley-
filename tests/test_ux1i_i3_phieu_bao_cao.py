@@ -66,7 +66,7 @@ def test_giao_vien_in_phieu_lop_pdf_mot_lan_bam_sau_khi_vao(mo, tmp_path):  # no
     api.thu_muc_xuat = str(tmp_path / "tai_xuong")
     os.makedirs(api.thu_muc_xuat)
     assert page.locator("#btnUx1bPhieuLop").is_visible()              # đã ở thẻ Kết quả: lần bấm 0
-    page.locator("#ux1bLop").select_option(index=1)
+    page.locator("#kqChonLop").select_option(index=1)
     page.locator("#btnUx1bPhieuLop").click()                          # lần bấm 1
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.includes('.pdf')")
     tep = [t for t in os.listdir(api.thu_muc_xuat) if t.endswith(".pdf")]

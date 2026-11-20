@@ -305,13 +305,15 @@
         </div>
       </div>
 
-      <!-- UX1B: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). Không có nút in phiếu cả lớp: XP1 nối ở bước tích hợp -->
+      <!-- UX1B/UX1F-L4: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). MỘT ô "Chọn lớp" (#kqChonLop) cho cả bảng kết quả bên dưới và "In phiếu cả lớp" -->
       <div class="panel" id="ux1bPanel">
         <div class="panel-head"><h2 data-i18n="ux1b_tieu_de">Theo {cohort_l} và báo cáo</h2></div>
         <div class="panel-body">
           <div class="search-row">
-            <label class="lop-nhan" for="ux1bLop" data-i18n="ux1b_chon_lop">Chọn {cohort_l}</label>
-            <select id="ux1bLop" class="text-input text-input-sm"></select>
+            <span class="kq-chon-lop-goi" id="kqChonLopHang" hidden>
+              <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
+              <select id="kqChonLop" class="text-input text-input-sm"></select>
+            </span>
             <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
             <button class="btn btn-secondary" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
             <button class="btn btn-secondary" id="btnUx1bPhieuLop" type="button" data-i18n="gt_in_lop">In phiếu cả {cohort_l}</button>
@@ -336,10 +338,6 @@
           <button type="button" class="btn btn-secondary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
         </div>
         <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
-        <div class="search-row kq-chon-hang-phu" id="kqChonLopHang" hidden>
-          <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
-          <select id="kqChonLop" class="text-input text-input-sm"></select>
-        </div>
         <div class="search-row kq-chon-hang-phu" id="kqChonClbHang" hidden>
           <label class="lop-nhan" for="kqChonClb" data-i18n="kq_chon_clb">Chọn {slot_l}</label>
           <select id="kqChonClb" class="text-input"></select>

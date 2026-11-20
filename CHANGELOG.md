@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — UX1F-L4: một ô "Chọn lớp" ở thẻ Kết quả
+
+- `index.html`, `js/09_the_xem.js`, `js/19_ux1b_gv.js`, `style.css`: bỏ `#ux1bLop`; ô `#kqChonLop` (bọc trong `#kqChonLopHang`) chuyển lên khối "Theo lớp và báo cáo" và hiện ở mọi tầng khi có lớp. Chọn lớp ở tầng khác tự mở "Theo lớp" (như `#ux1bLop` trước đây); "In phiếu cả lớp" dùng đúng giá trị này và tắt khi chọn "Chưa có lớp". "Xuất theo lớp" và "Báo cáo tổng hợp" vốn là việc cả trường nên không nhận lớp (không đổi hành vi). Bỏ chú thích cũ trên `#ux1bPanel`. Khoá i18n `ux1b_chon_lop` không còn dùng trong HTML (để lại, không hại).
+- Test: `tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py` (4 ca; quản trị và giáo viên đúng MỘT ô, chọn lớp lọc bảng và quyết định phiếu cả lớp: PDF đúng các em của lớp đó; đỏ trước khi sửa); đổi selector `#ux1bLop` → `#kqChonLop` trong `test_giao_dien_ux1b_vai_gv.py`, `test_ux1i_i3_phieu_bao_cao.py`, `docs/ke_hoach/ux/chup_tich_hop.py`; `test_giao_dien_t2_ket_qua.py::test_tang1_ba_nut…` nay mong ô chọn lớp hiện ở mọi tầng. Bản đồ mã: 355 → 356 tệp test.
+
 ## 2026-11-20 — UX1F-L3: giáo viên lưu PDF phiếu của MỘT học sinh
 
 - `index.html`: `#btnGtPdfMot` bỏ `data-quyen="quan_tri"`, giáo viên thấy nút "Lưu PDF" ở khung tra cứu. Backend không đổi: `phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"]` vốn đã là giáo viên; chế độ học sinh vẫn bị chặn (`gt3_che_do_hoc_sinh`), chưa đăng nhập bị chặn (`gt3_can_dang_nhap`).
