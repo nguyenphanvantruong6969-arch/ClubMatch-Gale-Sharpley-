@@ -42,7 +42,8 @@ def test_workspace_moi_chon_san_chia_100_diem(mo_trang):  # noqa: F811
     assert page.locator("#ux1aCauHoi").inner_text().strip() == "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?"
     assert "mặc định" in page.locator("#ux1aChia100").inner_text()
     assert "60 · 30 · 10" in page.locator("#ux1aHuyChuong").inner_text()
-    assert "→" in page.locator("#ux1aCachXet").inner_text()        # câu "Cách xét khi đông" sinh từ Tiêu chí xếp
+    page.wait_for_selector("#ux1aMtNangLuc")                        # MT1: câu hỏi thứ hai thay dòng "Cách xét khi đông"
+    assert page.locator("#ux1aCachXet").count() == 0
     assert not loi, loi
 
 

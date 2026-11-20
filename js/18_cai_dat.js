@@ -38,13 +38,17 @@ function ux1aEl(tag, thuocTinh, ...con) {
 
 /* ---- Ba thẻ (dùng chung) -------------------------------------------------------------- */
 
-/* khiChon(ma) được gọi khi bấm một thẻ chưa chọn. Trả về {hop, datCach, khoa, loi, sanSang}. */
-function ux1aTaoThe(tienTo, khiChon) {
-  const cauHoi = ux1aEl("h2", { id: tienTo + "CauHoi", class: "ux1a-cau-hoi", "data-i18n": "ux1a_cd_cau_hoi",
-    text: t("ux1a_cd_cau_hoi") });
-  const luoi = ux1aEl("div", { class: "ux1a-the-luoi", role: "radiogroup", "aria-labelledby": tienTo + "CauHoi" });
+/* khiChon(ma) được gọi khi bấm một thẻ chưa chọn. Trả về {hop, datCach, khoa, loi, sanSang}.
+   MT1: `bo` (mặc định ba thẻ cách xét), `khoaCauHoi`, `moiTheTab` cho phép cùng thành phần vẽ câu hỏi thứ hai (mục tiêu). */
+function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
+  bo = bo || UX1A_CACH;
+  khoaCauHoi = khoaCauHoi || "ux1a_cd_cau_hoi";
+  const cauHoi = ux1aEl("h2", { id: tienTo + "CauHoi", class: "ux1a-cau-hoi", "data-i18n": khoaCauHoi,
+    text: t(khoaCauHoi) });
+  const luoi = ux1aEl("div", { class: "ux1a-the-luoi", id: tienTo + "Luoi", role: "radiogroup",
+    "aria-labelledby": tienTo + "CauHoi" });
   const nut = {};
-  UX1A_CACH.forEach((c) => {
+  bo.forEach((c) => {
     const b = ux1aEl("button", { type: "button", role: "radio", class: "ux1a-the", id: tienTo + c.id,
       "data-cach": c.ma, "aria-checked": "false" },
       ux1aEl("span", { class: "ux1a-the-tt", "data-i18n": c.tt, text: t(c.tt) }),
@@ -59,11 +63,13 @@ function ux1aTaoThe(tienTo, khiChon) {
   return {
     hop, sanSang,
     datCach(ma) {
-      UX1A_CACH.forEach((c) => {
+      const coThe = bo.some((c) => c.ma === ma);
+      bo.forEach((c, i) => {
         const chon = c.ma === ma;
         nut[c.ma].setAttribute("aria-checked", chon ? "true" : "false");
         nut[c.ma].classList.toggle("is-chon", chon);
-        nut[c.ma].tabIndex = chon ? 0 : -1;
+        /* Mặc định chỉ thẻ đang chọn nhận Tab; `moiTheTab` (MT1): Tab tới MỌI thẻ, Enter chọn. Không thẻ nào chọn: vẫn Tab vào được. */
+        nut[c.ma].tabIndex = moiTheTab || chon || (!coThe && i === 0) ? 0 : -1;
       });
     },
     khoa(ma, dongKhoa) { nut[ma].disabled = !!dongKhoa; },
@@ -158,19 +164,6 @@ function ux1aKiemSanSang(the, quayLai) {
 
 function ux1aTenCach(ma) { return t(UX1A_CACH.find((c) => c.ma === ma).tt); }
 
-/* Thứ tự xét khi đông, lấy từ "Tiêu chí xếp" (GT2): cùng nguồn với bảng Nâng cao. */
-function ux1aVeCachXet(hop) {
-  return callApi("get_tieu_chi").then((r) => {
-    if (!r.ok) { hop.hidden = true; return; }
-    const lang = window.I18N.getLang();
-    const mo = (lang === "en" ? r.data.mo_ta_en : r.data.mo_ta).filter((m) => m.nhom === "tang_1");
-    const ngan = (s) => s.split(/\s[(–-]/)[0].trim();
-    hop.hidden = !mo.length;
-    hop.querySelector(".ux1a-cach-xet-chu").textContent =
-      t("ux1a_cd_cach_xet") + " " + mo.map((m) => ngan(m.chu)).join(" → ");
-  });
-}
-
 function ux1aMoNangCao() {
   switchTab("admin");
   const d = el("ux1aNangCao");
@@ -192,19 +185,16 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
   let luat = {};
   const dangMo = () => wsTrangThai && wsTrangThai.enabled && wsTrangThai.slug === slug;
   const the = ux1aTaoThe(tienTo, (ma) => doi(ma));
-  const cachXet = ux1aEl("p", { class: "ux1a-cach-xet", id: tienTo + "CachXet", hidden: true },
-    ux1aEl("span", { class: "ux1a-cach-xet-chu" }),
-    " ",
-    ux1aEl("button", { type: "button", class: "btn btn-ghost btn-nho", id: tienTo + "ThayDoi",
-      "data-i18n": "ux1a_cd_thay_doi", text: t("ux1a_cd_thay_doi"), onclick: ux1aMoNangCao }));
+  const mt = typeof mt1TaoCauHoi === "function" && dangMo() ? mt1TaoCauHoi(tienTo) : null;
   host.textContent = "";
-  host.append(the.hop, cachXet);
+  host.append(the.hop);
+  if (mt) host.append(mt.hop);
 
   const ve = () => {
     the.datCach(ux1aCachTuLuat(luat));
     the.sanSang.hidden = true;
     if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the, () => doi("chia_100"));
-    ux1aVeCachXet(cachXet);
+    if (mt) mt.lamMoi();
   };
   const dat = (rules) => callApi("update_workspace_config", { rules }, slug);
   const luatCu = () => {

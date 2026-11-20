@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L4: giao diện ba thẻ mục tiêu
+
+- Mới: `js/19_muc_tieu.js` (`mt1TaoCauHoi`, `mt1VeKetQua`, `mt1NhanNhom`; nạp trong `index.html`, `js/_danh_sach.txt`, `initMucTieu` ở `js/08_khoi_dong.js`). Câu hỏi thứ hai ở Cài đặt, "Khi một CLB đông người, trường ưu tiên điều gì?", đặt ngay dưới câu hỏi đầu, vẽ bằng CÙNG thành phần `ux1aTaoThe` (thêm tham số `bo`, `khoaCauHoi`, `moiTheTab`; lưới thẻ có `id`); thay dòng "Cách xét khi đông" (`ux1aVeCachXet` bỏ), "Thay đổi…" nằm dưới câu hỏi mới. 1 lần bấm (`nang_luc`, `co_hoi`, `danh_cho` một nhóm), 2 lần (nhiều nhóm: bấm thẻ hiện nút nhóm đọc được "khối 10", bấm nhóm mới lưu). Lưu ngay, thông báo "Đã chuyển sang …" + Hoàn tác 10 giây (luật VÀ chỗ giữ từng CLB), ghi chú "Điểm chia không được dùng với mục tiêu này." khi `co_hoi` tắt điểm chia. Một dòng tác động (lời trước lần xếp đầu; "Ước tính so với lần xếp gần nhất…" sau đó; "dưới 5" từ `{n: null, duoi_5: true}`), `<details>` "Xem từng CLB", cảnh báo vàng mỗi loại một dòng, lý do khoá một dòng (huy chương / không có cột nhóm), dòng xám "Đang dùng cài đặt riêng · Về mục tiêu mẫu".
+- Dòng kết quả `#mt1KetQua` ở thẻ "Chi tiết và xuất tệp" (`index.html`, gọi từ `loadTomTatKetQua` ở `js/03_ket_qua.js`): một dòng + `<details>`; không có số được giúp / nhường chỗ khi backend không so được; ẩn khi lần xếp không theo thẻ hiện tại. Giáo viên không thấy (`data-quyen`, và JS không gọi).
+- `js/075_workspace.js` (bước 3 trình tạo workspace): cùng câu hỏi, cùng thành phần; hai thẻ đặt ô "Thứ tự ưu tiên", "Dành chỗ" khoá (chưa có danh sách học sinh).
+- `i18n.js`: khoá `mt1_*` (vi + en, qua nhãn `{person_l}`, `{slot_s}`; không "dự trữ", "STB", "Wharton", "tier"); `style.css`: lớp `.mt1-*` (chữ ≥ 14px, nút ≥ 36px, vòng tiêu điểm 3px) chỉ thêm, không đổi lớp cũ.
+- Test: `tests/test_giao_dien_mt1.py` (22 ca, Chromium); `tests/test_giao_dien_ux1_cai_dat.py` bỏ khẳng định dòng "Cách xét khi đông". Ảnh trước/sau: `docs/phien/anh_mt1/`.
+
 ## 2026-11-20 — MT1-L3 fix1: báo cáo không bịa "0 em được giúp" khi thiếu chỗ giữ ban đầu
 
 - `api_muc_tieu.py` (`bao_cao_muc_tieu`): thẻ `danh_cho` mà `muc_tieu.truoc` thiếu hoặc rỗng thì `co_so_sanh` = False, bỏ `duoc_giup` / `nhuong_cho` / `nhom_duoc_giup` / `an_toan_truoc`; vẫn có `dat` và `an_toan`. Test: 2 ca trong `tests/test_mt1_uoc_tinh.py`.

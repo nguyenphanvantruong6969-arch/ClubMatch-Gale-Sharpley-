@@ -736,17 +736,31 @@ function wsBuoc3(hop) {
     the.khoa("huy_chuong", !cho);
     the.datCach(ux1aCachTuLuat({ wharton: w.wharton === true, fa_daa: w.faDaa === true }));
   };
+  /* MT1-L4: câu hỏi mục tiêu, cùng thành phần. Chưa có danh sách học sinh nên "Dành chỗ" chọn sau, ở Cài đặt;
+     hai thẻ kia đặt ô "Thứ tự ưu tiên" bên dưới (điểm / chỉ nhóm) rồi để các ô tự đồng bộ. */
+  const mucTieu = ux1aTaoThe("wzMt", (ma) => {
+    oPriority.value = ma === "co_hoi" ? "tier" : "score";
+    oPriority.dispatchEvent(new Event("change"));
+  }, MT1_THE, "mt1_cau_hoi", true);
+  const veMucTieu = () => {
+    mucTieu.datCach(oPriority.value === "tier" ? "co_hoi" : oPriority.value === "score" ? "nang_luc" : "");
+    mucTieu.khoa("danh_cho", true);
+  };
   const capNhatODanhSachNhom = () => {
     oTiers.disabled = !(oTierMode.value === "strict" || oPriority.value === "tier");
   };
   oTierMode.addEventListener("change", capNhatODanhSachNhom);
   oPriority.addEventListener("change", capNhatODanhSachNhom);
   oPriority.addEventListener("change", veThe);
+  oPriority.addEventListener("change", veMucTieu);
   oScope.addEventListener("change", veThe);
 
   veThe();
+  veMucTieu();
   hop.append(
     the.hop,
+    mucTieu.hop,
+    wsEl("p", { class: "mt1-dong", id: "wzMtLyDo", text: t("mt1_wz_danh_cho_sau") }),
     wsTruong("wzMaxChoices", "ws_r_max_choices", wsEl("input", { type: "number", id: "wzMaxChoices",
       class: "text-input ws-so", min: "1", max: "20", step: "1", value: w.maxChoices })),
     wsTruong("wzMaxTests", "ws_r_max_tests", wsEl("div", { class: "ws-hang" }, oMaxTests,

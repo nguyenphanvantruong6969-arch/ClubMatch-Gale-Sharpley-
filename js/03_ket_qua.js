@@ -252,6 +252,7 @@ function moMucVaCuon(id) {
 function loadTomTatKetQua() {
   const dai = el("tomTatKetQua");
   if (!dai) return;
+  if (typeof mt1VeKetQua === "function") mt1VeKetQua();   /* MT1-L4: dòng kết quả của mục tiêu */
   Promise.all([
     callApi("get_em_chua_co_cho"),
     callApi("get_club_fill_stats"),
