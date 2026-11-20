@@ -4,7 +4,7 @@
 |---|---|
 | **Tác giả đề tài** | Truong (học sinh) |
 | **Công cụ AI** | Claude Code của hãng Anthropic. Hai loại: **Opus** dùng để lập kế hoạch, điều phối và kiểm tra lại; **Sonnet** dùng để viết mã theo kế hoạch |
-| **Thời gian** | 26/08/2026 đến 10/11/2026 |
+| **Thời gian** | 26/08/2026 đến 20/11/2026 |
 | **Nguồn của nhật ký** | Chỉ những ghi chép có sẵn trong kho mã của dự án (tệp bàn giao, nhật ký thay đổi, lịch sử lưu mã). Không lấy từ lịch sử trò chuyện |
 | **Cấu trúc** | Mục 1–6: bản dễ đọc. Mục 7: đầy đủ chi tiết từng giai đoạn (từng phiên, từng quyết định, từng lần lưu) |
 
@@ -34,12 +34,12 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 **Phần AI làm** (theo yêu cầu và dưới sự duyệt của Truong):
 
 - Tìm và sửa lỗi, viết bộ kiểm thử tự động.
-- Thêm tính năng mới: không gian làm việc nhiều ngành, điểm quyết tâm, lớp của học sinh, làm gọn giao diện, công cụ cho hệ thống Microsoft của trường, cơ chế xếp mới FA-DAA.
+- Thêm tính năng mới: không gian làm việc nhiều ngành, điểm quyết tâm, lớp của học sinh, làm gọn giao diện, công cụ cho hệ thống Microsoft của trường, cơ chế xếp mới FA-DAA, giải trình kết quả cho từng học sinh, tài khoản và nhật ký thao tác, xuất PDF, thẻ mục tiêu (đang lập kế hoạch).
 - Viết tài liệu hướng dẫn, kế hoạch và báo cáo kiểm tra.
 
 **Vai trò của Truong:** đặt yêu cầu và mục tiêu, viết bản tầm nhìn cho cơ chế mới, duyệt từng kế hoạch, chọn phương án ở các điểm cần quyết định, cho phép hoặc từ chối các ngoại lệ với quy tắc, và quyết định gộp mã vào bản chính.
 
-**Quy mô** (từ 24/10/2026, khi lịch sử lưu mã bắt đầu được giữ trong kho): khoảng 430 lần lưu mã, 70 phiên có ghi tên trong lịch sử lưu, 12 luồng việc có tệp bàn giao.
+**Quy mô** (từ 24/10/2026, khi lịch sử lưu mã bắt đầu được giữ trong kho; số do công cụ dựng nhật ký đếm ngày 20/11): khoảng 1.050 lần lưu mã, 176 phiên có ghi tên trong lịch sử lưu, 44 luồng việc có tệp bàn giao.
 
 ## 3. Dòng thời gian
 
@@ -55,6 +55,11 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 | 8 | 05/11 – 06/11 | Kết nối với hệ thống Microsoft của trường |
 | 9 | 08/11 – 10/11 | Cơ chế xếp mới FA-DAA (5 đợt chạy đêm) |
 | 10 | 10/11 | Lập nhật ký AI này |
+| 11 | 10/11 – 13/11 | Việc sau khi xếp và biểu mẫu cho cơ chế FA-DAA |
+| 12 | 13/11 – 15/11 | Soát giao diện, xử lý sự cố do con người |
+| 13 | 15/11 – 18/11 | Giải trình kết quả, tài khoản và nhật ký thao tác |
+| 14 | 18/11 – 20/11 | Làm gọn thao tác, xuất PDF |
+| 15 | 20/11 | Thẻ mục tiêu giáo dục: nghiên cứu và kế hoạch (chưa có mã) |
 
 ## 4. Chi tiết từng giai đoạn
 
@@ -136,12 +141,43 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 | Đêm 4 | Sửa lỗi của đêm 3, biên bản bốc thăm, bộ mô phỏng so sánh | 6/6 xong, kiểm tra lại: đạt, tìm thêm 1 lỗi |
 | Đêm 5 | Sửa lỗi của đêm 4, bản Excel của biên bản bốc thăm | 2/2 xong; lượt kiểm tra lại tìm và sửa thêm 2 lỗi |
 
-- **Kết quả:** yêu cầu gộp số 14 được mở ngày 10/11, đang chờ kiểm thử toàn bộ và chờ Truong quyết định gộp. **Chưa thử trên máy kiosk và hệ thống Microsoft thật.**
+- **Kết quả:** yêu cầu gộp số 14 được mở ngày 10/11 và được gộp vào bản chính ngày 11/11. **Chưa thử trên máy kiosk và hệ thống Microsoft thật.**
 
 ### Giai đoạn 10 — Lập nhật ký AI này (10/11)
 
 - **Truong yêu cầu:** lập nhật ký sử dụng AI chỉ từ dữ liệu trong kho mã. Lời nhắn của phiên chính được ghi lại, phiên phụ chỉ tóm tắt. Bản cuối phải dễ đọc.
 - **AI đã làm:** viết công cụ tự dựng bản chi tiết (`NHAT_KY_AI.md`) từ kho mã, rồi viết bản dễ đọc này.
+
+### Giai đoạn 11 — Việc sau khi xếp và biểu mẫu cho cơ chế FA-DAA (10/11 – 13/11)
+
+- **Việc chính:** các việc sau khi công bố kết quả (điểm danh 3 buổi đầu, mời danh sách chờ, khiếu nại trong hạn, vòng 2, phản hồi, bảng điều khiển quản trị); gộp biểu mẫu đăng ký thành một biểu mẫu cho mọi ngày; thẻ "Chuẩn bị đợt" trên kiosk; bật/tắt từng tính năng sau khi xếp (mục GAP-0 đến GAP-14, FA-M2b đến FA-M10, FG-1 đến FG-9 trong `CHANGELOG.md`).
+- **Truong quyết định** (theo ghi chép): giao vai nghiên cứu cho một phiên riêng (12/11); yêu cầu kế hoạch giảm may rủi khi giao việc cho Sonnet (13/11).
+- **Kết quả:** yêu cầu gộp số 15 (11/11) và số 16 (13/11) được gộp. Phần chạy trên Microsoft ghi "TH" = chưa thử trên hệ thống thật.
+
+### Giai đoạn 12 — Soát giao diện, xử lý sự cố do con người (13/11 – 15/11)
+
+- **Việc chính:** ba phiên soát giao diện toàn kiosk song song rồi sửa 12 mục (SG-1 đến SG-12); nghiên cứu và xử lý các sự cố do người vận hành gây ra (FA-SC): danh sách học sinh của trường làm đầu vào, sheet "Cần xử lý", báo cáo cho giáo viên CLB và giáo viên chủ nhiệm, khoá thứ tự bốc thăm theo buổi.
+- **Truong quyết định** (theo ghi chép): duyệt mục mới FA-SC (14/11); duyệt thêm bảng mới `stb_buoi` (15/11).
+- **Kết quả:** yêu cầu gộp số 17, 18 (14/11) và 19 (15/11) được gộp.
+
+### Giai đoạn 13 — Giải trình kết quả, tài khoản và nhật ký thao tác (15/11 – 18/11)
+
+- **Việc chính:** tra cứu và phiếu giải trình cho từng học sinh, mã tra cứu cho học sinh tự xem (GT1); tiêu chí xếp bằng lời thường, chạy thử, so sánh hai lần chạy (GT2); tài khoản quản trị / giáo viên, cổng phân quyền, nhật ký thao tác chỉ thêm, bộ tài liệu minh chứng `docs/giai_trinh/` (GT3); một vòng hoàn thiện sau soát (GT4).
+- **Cách làm:** mỗi phần một nhóm ba phiên (một phiên dẫn Opus, một phiên viết mã Sonnet, một phiên soát Sonnet), rồi một nhánh tích hợp.
+- **Kết quả:** yêu cầu gộp số 20 được gộp ngày 18/11.
+
+### Giai đoạn 14 — Làm gọn thao tác, xuất PDF (18/11 – 20/11)
+
+- **Việc chính:** rà soát thao tác người dùng (UX1): thanh "Việc tiếp theo", thanh bên 4 nhóm, Cài đặt thành một câu hỏi với ba thẻ, menu "Xuất…" gộp; phiếu giải trình và báo cáo tổng hợp; xuất PDF danh sách thành viên và phiếu theo lớp (XP1).
+- **Truong quyết định** (theo ghi chép): duyệt mục mới UX1 (18/11); duyệt thư viện mới `reportlab` để xuất PDF (18/11); đặt cách làm cho mọi tính năng: Opus lập kế hoạch, một nhóm phiên dẫn – viết – soát xây (19/11, quy tắc 12 trong `CLAUDE.md`).
+- **Kết quả:** yêu cầu gộp số 21 được gộp ngày 20/11.
+
+### Giai đoạn 15 — Thẻ mục tiêu giáo dục: nghiên cứu và kế hoạch (20/11)
+
+- **Truong yêu cầu:** phát triển phần mềm thành công cụ giúp nhà trường ra quyết định minh bạch, thay đổi theo mục tiêu giáo dục, không chỉ xuất danh sách; giao diện đồng bộ, không phức tạp, tối giản số lần bấm.
+- **Truong quyết định:** bỏ vai nghiên cứu riêng ("Fable"), phiên Opus tự làm phần nghiên cứu; duyệt mục mới MT.
+- **AI đã làm:** chạy mô phỏng trên dữ liệu tự sinh về cái giá của việc giữ chỗ cho một nhóm (`docs/fable/08_MT0_MEMO.md`, `du_lieu_test/do_muc_tieu_mt0.py`); lập kế hoạch 3 thẻ mục tiêu trong trang Cài đặt (`docs/phien/claude__mt1-bo-muc-tieu.md`, `docs/phien/MT1_GIAO_THUC.md`). Một lần AI hiểu sai yêu cầu (thu hẹp "mục tiêu giáo dục" thành "giữ chỗ cho một nhóm"), Truong chỉ ra và AI sửa lại kế hoạch.
+- **Kết quả:** chưa có mã; nhánh `claude/mt1-bo-muc-tieu` đã tạo, chờ phiên dẫn.
 
 ## 5. Lời của Truong được lưu nguyên văn trong kho mã
 
@@ -267,22 +303,18 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
   - Phiên phụ · 01/11/2026 · Sonnet: Handoff re-confirmed (hook fired again); nothing new done
   - Phiên phụ · 01/11/2026 · Sonnet: Session 2 picked up handoff 74ab5bb
 
-**(d) Các phiên có lưu mã (20 phiên, 133 lần lưu):**
+**(d) Các phiên có lưu mã (16 phiên, 93 lần lưu):**
 
 | Mã phiên | Từ | Đến | Số lần lưu | Mã mục việc | Lần lưu ví dụ |
 |---|---|---|---|---|---|
 | C3a1YhqF | 24/10/2026 | 24/10/2026 | 1 | — | e08af78 |
-| hz6WMv5u | 24/10/2026 | 25/10/2026 | 12 | A13 | a8b077d 1011f35 fb35974 |
+| hz6WMv5u | 24/10/2026 | 25/10/2026 | 8 | — | a8b077d 1011f35 fb35974 |
 | mCWfrrwL | 25/10/2026 | 25/10/2026 | 6 | A13.3 | 4c448ae dd4a5f3 17497bd |
 | JjS1z2mZ | 25/10/2026 | 27/10/2026 | 8 | A13.4 | d85fe2c d54ba04 aa60ebe |
 | V9pSwnP8 | 27/10/2026 | 27/10/2026 | 10 | A13.5 | cb53cc0 6ed3718 eb203a7 |
 | xJpKsyKc | 27/10/2026 | 27/10/2026 | 1 | — | 11bd6f6 |
-| v6DHpVSA | 27/10/2026 | 27/10/2026 | 2 | A13.7, A13.6 | 088573d 2df59ce |
-| Mds6oLDe | 27/10/2026 | 28/10/2026 | 8 | Z-SOAT | 77fa953 5ddd516 2ce3af7 |
-| gDSHZQp2 | 28/10/2026 | 28/10/2026 | 1 | — | 4b4ac50 |
-| CowtT2Bd | 28/10/2026 | 28/10/2026 | 12 | A13.8 | 0f13771 3b80854 f004c35 |
-| VBKnzq8m | 28/10/2026 | 28/10/2026 | 17 | A13.11, A13.9 | daff982 77b1cb9 02c3089 |
-| zafjmyBa | 28/10/2026 | 28/10/2026 | 5 | — | a2d8b4b c27ff32 167be48 |
+| zafjmyBa | 28/10/2026 | 28/10/2026 | 2 | — | a2d8b4b c27ff32 |
+| VBKnzq8m | 28/10/2026 | 28/10/2026 | 7 | A13.11 | daff982 77b1cb9 02c3089 |
 | 6bVDyWHg | 28/10/2026 | 28/10/2026 | 6 | A13.10 | 43f3f89 5088334 86f7c65 |
 | HdJs6TZX | 28/10/2026 | 28/10/2026 | 18 | A13.12 | b045b42 2f4228d e1f6d56 |
 | Lys3VpqX | 29/10/2026 | 29/10/2026 | 4 | A13.14, A13.13 | 578af21 b4ffce3 df3eda1 |
@@ -408,7 +440,7 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
   - Phiên phụ · 04/11/2026 · Sonnet (kiểm thử): L2 fix1 re-check, screenshots 01/04/07
   - Phiên phụ · 04/11/2026 · Sonnet (kiểm thử): L3 review, 6 screenshots
 
-**(d) Các phiên có lưu mã (10 phiên, 47 lần lưu):**
+**(d) Các phiên có lưu mã (9 phiên, 33 lần lưu):**
 
 | Mã phiên | Từ | Đến | Số lần lưu | Mã mục việc | Lần lưu ví dụ |
 |---|---|---|---|---|---|
@@ -416,9 +448,8 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
 | 4MDFqofZ | 04/11/2026 | 04/11/2026 | 2 | T4-K1 | 85d22ce fff0f41 |
 | b4CTcC1X | 04/11/2026 | 04/11/2026 | 1 | — | 00372e0 |
 | rzrTqFD7 | 04/11/2026 | 04/11/2026 | 1 | — | a16bf16 |
-| CeJXaN5S | 04/11/2026 | 04/11/2026 | 21 | T3-L4, T3-L3, T3-L2, fix3, T3, fix2, CI-HUY, T3-HT | b9d4e19 1f5903d 384065a |
-| 5pa3nYSD | 04/11/2026 | 04/11/2026 | 9 | T3-L4, T3, T3-L1, T3-L0, fixci1, fix1 | b17ac78 4aa7ab4 7d1e130 |
-| uzPors7z | 04/11/2026 | 04/11/2026 | 3 | T3-L0 | a9b56b4 6bd191b c34b3ce |
+| 5pa3nYSD | 04/11/2026 | 04/11/2026 | 7 | T3-L4, T3, T3-L1, T3-L0, fixci1 | b17ac78 4aa7ab4 7d1e130 |
+| CeJXaN5S | 04/11/2026 | 04/11/2026 | 12 | T3-L4, T3-L3, T3-L2, fix3, T3, fix2, CI-HUY | b9d4e19 1f5903d 384065a |
 | zT6ML4Qx | 04/11/2026 | 04/11/2026 | 4 | T3, T3-L2, T3-L1 | fab9f82 9dd8e14 555847d |
 | oGYkwnan | 04/11/2026 | 04/11/2026 | 1 | T3-L3 | ad4f227 |
 | gz5yriDb | 04/11/2026 | 04/11/2026 | 2 | T3-L3 | 1d5a384 ca81585 |
@@ -523,21 +554,12 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
 - **06/11/2026 · Phiên chính · Opus:** K3: reviewed K2 979213b (accepted; rule-2 gap noted); round 5 done *(Next: Truong/IT)*
 - **06/11/2026 · Phiên chính · Opus:** Fixed PR #13 CI red (3 causes reproduced locally first); flaky UI test from main split off
 
-**(d) Các phiên có lưu mã (23 phiên, 77 lần lưu):**
+**(d) Các phiên có lưu mã (14 phiên, 45 lần lưu):**
 
 | Mã phiên | Từ | Đến | Số lần lưu | Mã mục việc | Lần lưu ví dụ |
 |---|---|---|---|---|---|
 | wSnLDQPq | 05/11/2026 | 05/11/2026 | 2 | — | 2324aaa ceeeef8 |
-| F99hYjD7 | 05/11/2026 | 05/11/2026 | 5 | Z-CLAUDE-GON, T4M-NC | b3481d5 fc183e4 fd4d2ee |
-| APhazqHY | 05/11/2026 | 06/11/2026 | 21 | T4M-NC, T4M-M4, T4M-M1, P5 | f341694 3b4ef49 790eb4d |
-| rNoH558W | 05/11/2026 | 05/11/2026 | 2 | — | 62a0dc7 ec5a580 |
-| NUSf436V | 05/11/2026 | 05/11/2026 | 1 | T4M-Q1..Q3 | 6947ec2 |
-| AZU8QavQ | 06/11/2026 | 06/11/2026 | 2 | T4M-DEMO | 5416cf3 4c7ad66 |
-| gRBbDN1H | 06/11/2026 | 06/11/2026 | 2 | T4M-GOI-TK | 0e65a25 34ccd56 |
-| t7851RAL | 06/11/2026 | 06/11/2026 | 1 | T4M-VH | c34c2ad |
-| Hsc1FY4u | 06/11/2026 | 06/11/2026 | 3 | T4M-Q1b-b, T4M-Q1b | b6d406d 4f7c4e2 7f9a6bd |
-| SZ6wfJsM | 06/11/2026 | 06/11/2026 | 2 | T4M-DO | bf30863 f240afd |
-| 7Lajfo3o | 06/11/2026 | 06/11/2026 | 2 | — | a89b0cc ce342ee |
+| APhazqHY | 06/11/2026 | 06/11/2026 | 9 | T4M-NC, T4M-M4, T4M-M1 | f341694 3b4ef49 790eb4d |
 | wrMDXQXg | 06/11/2026 | 06/11/2026 | 1 | T4M-M1 | d78dcc4 |
 | na8W6GrA | 06/11/2026 | 06/11/2026 | 1 | T4M-M4 | d8d47c7 |
 | MfgeCCPS | 06/11/2026 | 06/11/2026 | 2 | T4M-M3 | 8711ae1 d9d69fc |
@@ -559,8 +581,11 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
 - 08/11/2026 — FA-M3 (một phần, Truong duyệt): đặt huy chương trên đường B, đủ 6 cách đặt
 - 10/11/2026 — FA-9b: biên bản bốc thăm bản Excel (đêm 5, Truong duyệt)
 - 10/11/2026 — FA-CI3: CI Windows cài python-docx (PR #14, Truong chọn)
+- 10/11/2026 — FA-KH: hướng dẫn mới nhất cho 7 lỗi nhỏ trước khi merge PR #14 (Truong yêu cầu)
+- 14/11/2026 — FA-SC (mục mới ngoài sổ, Truong duyệt D-SC1): sự cố do con người, phần nghiên cứu
+- 15/11/2026 — FA-SC-L5 (FA-SC-10 / P2-1, Truong duyệt 15/11 kể cả bảng mới `stb_buoi`): khoá thứ tự bốc thăm THEO NGÀY
 
-**(b) Các mục việc trong `CHANGELOG.md` (42 mục):**
+**(b) Các mục việc trong `CHANGELOG.md` (72 mục):**
 
 - 08/11/2026 — FA-KH: kế hoạch triển khai FA-DAA và tệp chạy đêm (chỉ tài liệu)
 - 08/11/2026 — FA-KH (sửa sau soát hội đồng): D1, D3, D4, D5, D9, D11, D12, FA-9
@@ -604,6 +629,36 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
 - 10/11/2026 — FA-P2: nhập tại chỗ, huy chương mặc định vẫn lưu khi người nhập sang em khác giữa lúc lưu (soát đêm 5)
 - 10/11/2026 — FA-CI1: sửa CI đỏ của PR #14 (Windows + văn phong)
 - 10/11/2026 — FA-CI2: test giao diện T3-19 hết chập chờn (CI Linux PR #14)
+- 10/11/2026 — SM-1: biên bản Excel không hỏng vì ký tự điều khiển
+- 10/11/2026 — FA-P3: màn hình kết quả báo buổi thiếu lý do
+- 10/11/2026 — FA-P4: biên bản bốc thăm liệt kê buổi theo thứ tự ngày
+- 10/11/2026 — FA-P6: cảnh báo buổi thiếu lý do theo thứ tự ngày
+- 10/11/2026 — FA-P5: cặp biên bản HTML + Excel luôn cùng tên gốc
+- 10/11/2026 — SM-2: test giao diện chờ điều kiện thật thay cho 800 ms cố định
+- 10/11/2026 — FA-P7/SM-3: kiem_nhanh --so-seed N > 5 chạy đủ N seed
+- 10/11/2026 — GAP-0: nhật ký điều chỉnh sau khi xếp + hàm phát lại
+- 10/11/2026 — GAP-1: điểm danh 3 buổi đầu, vắng 2/3 không phép thì giải phóng chỗ
+- 10/11/2026 — GAP-2: mời học sinh đầu danh sách chờ vào chỗ được giải phóng
+- 10/11/2026 — GAP-3: khiếu nại lỗi dữ liệu trong hạn, chạy lại với seed đã khoá
+- 10/11/2026 — GAP-4: vòng 2 cho học sinh chưa có CLB mong muốn
+- 10/11/2026 — GAP-5: 3 câu phản hồi sau khi xem kết quả (kiosk + Forms)
+- 10/11/2026 — GAP-6: khảo sát tuần 3 (2 câu) trên Forms
+- 10/11/2026 — GAP-9: độ lệch giữa hai người chấm (TH)
+- 10/11/2026 — GAP-10: nhắc hạn đăng ký + danh sách chưa đăng ký cho GVCN (TH)
+- 10/11/2026 — GAP-7: gợi ý chỉ tiêu kỳ sau = NV1 kỳ này, chặn bởi giới hạn giáo viên
+- 10/11/2026 — GAP-8: bảng điều khiển quản trị (V§11), chỉ đọc
+- 10/11/2026 — GAP-11: công thức Power Fx màn đăng ký FA, đường A (TH)
+- 10/11/2026 — GAP-12: mô phỏng đầy đủ — kiểu "tính toán", bảng cũ/mới theo kiểu (SỐ LIỆU MÔ PHỎNG)
+- 10/11/2026 — GAP-13: chu trình cải thiện ổn định, chế độ đo (không bảo đảm ổn định)
+- 10/11/2026 — GAP-14: bản ghi nhớ D1 (ưu tiên bù), KHÔNG có mã
+- 11/11/2026 — FA-M2b: MỘT biểu mẫu đăng ký cho mọi ngày, đường B (TH = chưa thử trên Microsoft thật)
+- 11/11/2026 — FA-M6b: MỘT biểu mẫu "Sau khi xem kết quả" = 3 câu phản hồi + nhánh khiếu nại lỗi dữ liệu (TH = chưa thử trên Microsoft thật)
+- 11/11/2026 — FA-M7 (+ G0): thẻ "Chuẩn bị đợt", CLB nhập một lần, đề thi trong một tệp Excel (TH = chưa thử trên Microsoft thật)
+- 12/11/2026 — FA-M8, FA-M9, FA-M10: bước 3–5 của thẻ "Chuẩn bị đợt" (TH = chưa thử trên Microsoft thật)
+- 14/11/2026 — FA-SC-L1 (FA-SC-6, kế hoạch P1-1): danh sách học sinh của trường làm đầu vào bộ chuyển đổi
+- 14/11/2026 — FA-SC-L2 (FA-SC-4, kế hoạch P1-2): sheet "Cần xử lý" trong BANG_DIEM.xlsx
+- 14/11/2026 — FA-SC-L3 (FA-SC-4b, kế hoạch P1-4): báo cáo theo CLB cho giáo viên CLB
+- 14/11/2026 — FA-SC-L4 (FA-SC-2, kế hoạch P1-3): phiếu xác nhận theo lớp cho giáo viên chủ nhiệm
 
 **(c) Các phiên theo tệp bàn giao:**
 
@@ -663,19 +718,60 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
   - Phiên phụ · 10/11/2026 · Sonnet (đêm 5): FA-O1: reasons sorted with khoa_sap_buoi; test in test_fa_n1_ly_do_mot_phan.py red first; related 2135 passed/1 skipped; mutation caught; ruff clean
   - Phiên phụ · 10/11/2026 · Sonnet (đêm 5): FA-9b: fa_bien_ban.ghi_xlsx + path_xlsx + button/i18n; 5 tests red first + Chromium check; 3 mutations caught (2 unit/API, 1 UI); related 2195 passed/1 skipped; ruff clean; kiem_nhanh 7/7
   - Phiên phụ · 10/11/2026 · Sonnet (đêm 5): Night 5 report 2026-11-10: 2/2 done, 0 blocked; report in docs/phien/bao_cao_dem/2026-11-10_dem5.md
+- **10/11/2026 · Phiên chính · Opus:** Review night 5 (2 trung FA-P1/P2 fixed test-first, mutations caught; 5 nhỏ listed); soat-ma 4 tiers; PR #14 opened; CI fixes FA-CI1..3 *(3x20 seeds identical; Truong chose python-docx on Windows CI)*
+- **10/11/2026 · Phiên chính · Opus:** Vision coverage brief (~70 % overall, ~85 % P1+P2); Truong chose the 8 small review fixes (7 items, FA-P7=SM-3); wrote LATEST_INSTRUCTION.md for his friend's Sonnet run *(Docs only)*
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** SM-1: ghi_xlsx cleans cells via so_excel.lam_sach; 2 tests red first; related 2035 passed/1 skipped (D1 marker); mutation caught; ruff clean
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** FA-P3: get_ly_do_ket_qua returns thieu_buoi; one notice #lyDoThieuBuoi from fa_ly_do_thieu_buoi; 2 API + 1 UI tests red first (FA-off unchanged guard); 2 mutations caught (API, JS); related 2151 passed/1 skipped, Chromium ran; ruff clean
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** FA-P4: tao_ban_ghi sorts days with khoa_sap_buoi; 1 test red first (HTML + xlsx + hash unchanged); mutation caught; related passed; ruff clean
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** FA-P6: _doc_ly_do_moi_nhat sorts days with khoa_sap_buoi; 1 test red first (canh_bao + thieu_buoi); mutation caught; related passed; ruff clean
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** FA-P5: one base name for html+xlsx via _duong_xuat kem_duoi; repro test red first + empty-folder test; mutation caught; related passed; ruff clean
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** SM-2: condition wait (held call settled + DB poll ≤5 s) instead of 800 ms; 5/5 passed in Chromium; all FA UI tests passed *(test-only)*
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** FA-P7/SM-3: danh_sach_seed(n) deterministic; 3 tests red first; mutation caught; --so-seed 20 -> 60/60 identical, 7/7
+- **10/11/2026 · Phiên chính · Opus (SOLO, small fixes):** Small-fix report: 7/7 done, 0 blocked; --so-seed 20 60/60 identical; report docs/phien/bao_cao_dem/2026-11-10_sua_nho.md *(RUNNING line removed)*
 
-**(d) Các phiên có lưu mã (8 phiên, 62 lần lưu):**
+*Nhánh `claude/fa-gaps`* — nguồn `docs/phien/claude__fa-gaps.md`. Mục tiêu ghi trong tệp: Fill every remaining FA-DAA vision gap (GAP-0 … GAP-14) per `INSTRUCTION_FILL_GAPS.md`: post-allocation changes (adjustment table + replay, attendance, waitlist invites, appeals, round 2), feedback/surveys, next-term capacity, admin dashboard, two-grader deviation, reminders, Power Apps kit, simulation, improvement cycles (measurement mode), D1 memo. Every behaviour behind a new `rules` key defaulting to False; defa…
+
+- **10/11/2026 · Phiên chính · Opus (SOLO):** F1 setup: branch claude/fa-gaps from keen-ride 60f75a5 *(phase 1 done 7/7)*
+- **10/11/2026 · Phiên chính · Opus (SOLO, son hat):** GAP-0 done: fa_dieu_chinh + vi_tri_hien_tai; 16 tests red first; related 2456 passed/1 skipped; 2 mutations caught; 60/60
+- **10/11/2026 · Phiên chính · Opus (SOLO, son hat):** GAP-1 done: attendance + release; 13 tests red first (3 Chromium); related 4768 passed/4 skipped (D1 marker, numpy, POSIX user); 2 mutations caught; 60/60
+- **10/11/2026 · Phiên chính · Opus (SOLO, son hat):** GAP-2 done: waitlist invites; 10 tests red first (1 Chromium); related 4636 passed/4 skipped; 3 mutations caught; 60/60
+- **10/11/2026 · Phiên chính · Opus (SOLO):** Phase 1 7/7; wave 1 done + GO; wave 2 coded (suites unconfirmed); wave-3 spec draft *(context limit stop)*
+- **10/11/2026 · Phiên chính · Opus (SOLO):** Wave 2 suites + GO; waves 3–4 coded (GAP-7..14); GAP-13 spec edge rule corrected *(suites running)*
+- **10/11/2026 · Phiên chính · Opus (SOLO):** Waves 3–4 reviewed GO; final report; ALL WAVES DONE; draft PR #15 *(handoff (context limit))*
+
+**(d) Các phiên có lưu mã (29 phiên, 149 lần lưu):**
 
 | Mã phiên | Từ | Đến | Số lần lưu | Mã mục việc | Lần lưu ví dụ |
 |---|---|---|---|---|---|
-| dsJPAz6x | 09/11/2026 | 09/11/2026 | 5 | FA-BC, FA-4..FA-8, FA-3, FA-2, FA-1 | a80e626 1037920 702b09e |
-| ch62p4KC | 09/11/2026 | 09/11/2026 | 3 | FA-SOAT | 50cfa5d f9b9031 33d4fa9 |
-| UGSanNrv | 09/11/2026 | 09/11/2026 | 8 | FA-BC, FA-M6, FA-M5, FA-M4, FA-M3, FA-M2, FA-M1 | 3e7d8a7 58bc370 cd1fe46 |
-| o8eUqFKt | 09/11/2026 | 09/11/2026 | 9 | FA-KH, FA-SOAT3, FA-SOAT2 | 99d4724 8003e9a 9f740c2 |
-| ohi9Fo5P | 09/11/2026 | 09/11/2026 | 17 | FA-BC, FA-UI-5, FA-UI-4, FA-UI-3, FA-UI-2, FA-UI-1, FA-S10, FA-S11 | c962bb8 5bf7a8d 0c8e5f8 |
-| PgyEfvMe | 09/11/2026 | 09/11/2026 | 7 | FA-BC, FA-10, FA-9, FA-N3, FA-N4, FA-N2, FA-N1, FA-N0 | 1198ef5 6c7bf4d cf90452 |
+| PgyEfvMe | 09/11/2026 | 09/11/2026 | 6 | FA-BC, FA-10, FA-9, FA-N3, FA-N4, FA-N2, FA-N1 | 1198ef5 6c7bf4d cf90452 |
 | B56GWZ8J | 10/11/2026 | 10/11/2026 | 6 | FA-BC, FA-9b, FA-O1, FA-O0, FA-SOAT | b93b3d0 d9482a7 fff8df5 |
-| TsLFG9TZ | 10/11/2026 | 10/11/2026 | 7 | FA-CI3, FA-CI2, FA-CI1, FA-SOAT, FA-P2, FA-P1 | c6e5e6a a7e91e4 45d6c7a |
+| TsLFG9TZ | 10/11/2026 | 10/11/2026 | 9 | FA-KH, FA-CI1, FA-CI3, FA-CI2, FA-SOAT, FA-P2, FA-P1 | 1d2aa20 40947ae c6e5e6a |
+| Ne6xXHXP | 10/11/2026 | 11/11/2026 | 6 | FA-KH, GAP-KH | d12835a 19a8f8e fb5815b |
+| bwqiigmr | 10/11/2026 | 10/11/2026 | 23 | GAP-KH, GAP-4, GAP-5, GAP-6, GAP-3, GAP-2, GAP-1, GAP-0 | f85c3e7 9b2d588 db043db |
+| 52cE6GqX | 10/11/2026 | 10/11/2026 | 21 | GAP-KH, GAP-BC, GAP-14, GAP-13, GAP-12, GAP-4, GAP-11, GAP-8 | 9264f31 3f4f21f e9dde74 |
+| JqJkPihi | 11/11/2026 | 11/11/2026 | 3 | FA-BC, FA-M6b, FA-M2b | a8e8f32 fa7d2e0 56fa911 |
+| o75CQETh | 11/11/2026 | 12/11/2026 | 12 | FA-BC, FIX-1, INTEGRATE-2, FA-KH | ac47f39 24f5137 d60d221 |
+| CZzBpJCq | 11/11/2026 | 12/11/2026 | 10 | FA-KH | 5196217 bfb0bb3 c4ef825 |
+| R4JaidNW | 11/11/2026 | 11/11/2026 | 2 | FA-M7, G0 | d731a3d c7b5d1d |
+| hxvfMDWv | 11/11/2026 | 11/11/2026 | 4 | FA-M7-FIX1, FA-M7 | ffb8e83 414a94c 4db0c03 |
+| PuhpnPyu | 11/11/2026 | 11/11/2026 | 2 | FA-KH | 5ead67e db76ea9 |
+| 8oSuiyFi | 12/11/2026 | 12/11/2026 | 6 | FA-KH | 0bbe563 b31ffb4 58e75ee |
+| tw7iV7Z7 | 12/11/2026 | 12/11/2026 | 3 | FA-M9-THUAN, FA-M10-THUAN | 69e3d00 194d5de 568bd20 |
+| cjoTQrMS | 12/11/2026 | 12/11/2026 | 2 | FA-M8-THUAN | c6058ba c9550fa |
+| EqWPy8jf | 12/11/2026 | 12/11/2026 | 2 | FA-M9 | cf38ab5 934d031 |
+| ZvebVahw | 12/11/2026 | 12/11/2026 | 3 | FA-M8 | 959eca9 14a4435 57f4631 |
+| XNUQbYRG | 12/11/2026 | 12/11/2026 | 1 | FA-M10 | b43953c |
+| X8QiFtNh | 14/11/2026 | 15/11/2026 | 10 | FA-SC | 7186043 0b7321c 8fc0137 |
+| YtTbwpaU | 14/11/2026 | 14/11/2026 | 3 | FA-SC, 3-5, 1 | 222edb7 41b70ab 84940b8 |
+| fiJpThan | 14/11/2026 | 14/11/2026 | 4 | FA-SC | 684b897 76b2c45 b0614a3 |
+| JPLLF9Ru | 14/11/2026 | 14/11/2026 | 2 | FA-SC-L2, FA-SC-L1 | bca5941 cc2d9a4 |
+| M5WpigYs | 14/11/2026 | 14/11/2026 | 1 | FA-SC-L3 | 7c3d3b3 |
+| jw3GVFr6 | 14/11/2026 | 14/11/2026 | 1 | FA-SC-L4 | db28790 |
+| ttMTk2LY | 14/11/2026 | 14/11/2026 | 1 | FA-SC | 0c81390 |
+| BkzjQFwa | 15/11/2026 | 15/11/2026 | 3 | FA-SC | aee944b 68af423 61eedb1 |
+| n3aTHjZY | 15/11/2026 | 15/11/2026 | 1 | FA-SC-L5 | adc42d8 |
+| rpUnB73L | 15/11/2026 | 15/11/2026 | 1 | FA-SC-L5 | 98b8b09 |
+| MPNpoLfb | 15/11/2026 | 15/11/2026 | 1 | FA-SC | 91f3da8 |
 
 ### Giai đoạn 10 — Lập nhật ký AI này (chi tiết)
 
@@ -683,11 +779,11 @@ Nhật ký từng việc của giai đoạn này đã có sẵn trong `KE_HOACH_
 
 - 10/11/2026 — AI-LOG: nhật ký AI chỉ từ dữ liệu trong repo (Truong yêu cầu)
 
-**(d) Các phiên có lưu mã (2 phiên, 6 lần lưu):**
+**(d) Các phiên có lưu mã (2 phiên, 7 lần lưu):**
 
 | Mã phiên | Từ | Đến | Số lần lưu | Mã mục việc | Lần lưu ví dụ |
 |---|---|---|---|---|---|
-| 7JUvpaoF | 09/11/2026 | 10/11/2026 | 4 | AI-LOG, FA-KH | c43d4d9 4adc3eb 1300e4a |
+| 7JUvpaoF | 09/11/2026 | 10/11/2026 | 5 | AI-LOG, FA-KH | 20332d0 c43d4d9 4adc3eb |
 | xW9hz2Sq | 10/11/2026 | 10/11/2026 | 2 | AI-LOG | 9644288 e6052ec |
 
 ---

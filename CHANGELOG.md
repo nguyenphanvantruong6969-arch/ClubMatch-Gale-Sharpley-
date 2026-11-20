@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-KH + DOC (mục MT, Truong yêu cầu): kế hoạch 3 thẻ mục tiêu; nhật ký AI đến 20/11; khung tự viết
+
+- Kế hoạch (chỉ tài liệu): `docs/phien/claude__mt1-bo-muc-tieu.md` (bản 2: 3 thẻ, hợp đồng giao diện 1–7, lô L1–L5), `docs/phien/MT1_GIAO_THUC.md`; nhánh `claude/mt1-bo-muc-tieu` đã tạo.
+- Nhật ký AI: `docs/nhat_ky_ai/NHAT_KY_AI_DE_DOC.md` thêm giai đoạn 11–15 (10/11–20/11), sửa trạng thái PR #14 (đã gộp 11/11) và quy mô; dựng lại `NHAT_KY_AI.md`, `NHAT_KY_AI_DAY_DU.md` bằng `dung_nhat_ky_ai.py`, xuất lại `NHAT_KY_AI.docx`.
+- Mới: `docs/giai_trinh/KHUNG_TU_VIET.md` — danh sách và khung đề mục các phần học sinh tự viết (không có câu viết sẵn).
+- Không đổi mã sản phẩm, không test mới.
+
 ## 2026-11-20 — MT0 (mục mới MT, ngoài sổ; mục cha C3/A1): nghiên cứu mục tiêu giáo dục (chỉ đo)
 
 - Mới: `du_lieu_test/do_muc_tieu_mt0.py` (gọi `run_rbda`, `verify_stability` thật; 3 kịch bản × 20 seed), `docs/fable/08_MT0_MEMO.md`.

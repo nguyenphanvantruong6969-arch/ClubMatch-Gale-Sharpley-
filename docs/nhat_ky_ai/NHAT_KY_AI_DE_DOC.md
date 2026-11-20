@@ -4,7 +4,7 @@
 |---|---|
 | **Tác giả đề tài** | Truong (học sinh) |
 | **Công cụ AI** | Claude Code của hãng Anthropic. Hai loại: **Opus** dùng để lập kế hoạch, điều phối và kiểm tra lại; **Sonnet** dùng để viết mã theo kế hoạch |
-| **Thời gian** | 26/08/2026 đến 10/11/2026 |
+| **Thời gian** | 26/08/2026 đến 20/11/2026 |
 | **Nguồn của nhật ký** | Chỉ những ghi chép có sẵn trong kho mã của dự án (tệp bàn giao, nhật ký thay đổi, lịch sử lưu mã). Không lấy từ lịch sử trò chuyện |
 | **Bản chi tiết** | `docs/nhat_ky_ai/NHAT_KY_AI.md` (đủ từng phiên, từng lần lưu, dành cho người cần tra cứu) |
 
@@ -34,12 +34,12 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 **Phần AI làm** (theo yêu cầu và dưới sự duyệt của Truong):
 
 - Tìm và sửa lỗi, viết bộ kiểm thử tự động.
-- Thêm tính năng mới: không gian làm việc nhiều ngành, điểm quyết tâm, lớp của học sinh, làm gọn giao diện, công cụ cho hệ thống Microsoft của trường, cơ chế xếp mới FA-DAA.
+- Thêm tính năng mới: không gian làm việc nhiều ngành, điểm quyết tâm, lớp của học sinh, làm gọn giao diện, công cụ cho hệ thống Microsoft của trường, cơ chế xếp mới FA-DAA, giải trình kết quả cho từng học sinh, tài khoản và nhật ký thao tác, xuất PDF, thẻ mục tiêu (đang lập kế hoạch).
 - Viết tài liệu hướng dẫn, kế hoạch và báo cáo kiểm tra.
 
 **Vai trò của Truong:** đặt yêu cầu và mục tiêu, viết bản tầm nhìn cho cơ chế mới, duyệt từng kế hoạch, chọn phương án ở các điểm cần quyết định, cho phép hoặc từ chối các ngoại lệ với quy tắc, và quyết định gộp mã vào bản chính.
 
-**Quy mô** (từ 24/10/2026, khi lịch sử lưu mã bắt đầu được giữ trong kho): khoảng 430 lần lưu mã, 70 phiên có ghi tên trong lịch sử lưu, 12 luồng việc có tệp bàn giao.
+**Quy mô** (từ 24/10/2026, khi lịch sử lưu mã bắt đầu được giữ trong kho; số do công cụ dựng nhật ký đếm ngày 20/11): khoảng 1.050 lần lưu mã, 176 phiên có ghi tên trong lịch sử lưu, 44 luồng việc có tệp bàn giao.
 
 ## 3. Dòng thời gian
 
@@ -55,6 +55,11 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 | 8 | 05/11 – 06/11 | Kết nối với hệ thống Microsoft của trường |
 | 9 | 08/11 – 10/11 | Cơ chế xếp mới FA-DAA (5 đợt chạy đêm) |
 | 10 | 10/11 | Lập nhật ký AI này |
+| 11 | 10/11 – 13/11 | Việc sau khi xếp và biểu mẫu cho cơ chế FA-DAA |
+| 12 | 13/11 – 15/11 | Soát giao diện, xử lý sự cố do con người |
+| 13 | 15/11 – 18/11 | Giải trình kết quả, tài khoản và nhật ký thao tác |
+| 14 | 18/11 – 20/11 | Làm gọn thao tác, xuất PDF |
+| 15 | 20/11 | Thẻ mục tiêu giáo dục: nghiên cứu và kế hoạch (chưa có mã) |
 
 ## 4. Chi tiết từng giai đoạn
 
@@ -136,12 +141,43 @@ Mọi con số kiểm thử nhắc tới trong tài liệu này đều chạy tr
 | Đêm 4 | Sửa lỗi của đêm 3, biên bản bốc thăm, bộ mô phỏng so sánh | 6/6 xong, kiểm tra lại: đạt, tìm thêm 1 lỗi |
 | Đêm 5 | Sửa lỗi của đêm 4, bản Excel của biên bản bốc thăm | 2/2 xong; lượt kiểm tra lại tìm và sửa thêm 2 lỗi |
 
-- **Kết quả:** yêu cầu gộp số 14 được mở ngày 10/11, đang chờ kiểm thử toàn bộ và chờ Truong quyết định gộp. **Chưa thử trên máy kiosk và hệ thống Microsoft thật.**
+- **Kết quả:** yêu cầu gộp số 14 được mở ngày 10/11 và được gộp vào bản chính ngày 11/11. **Chưa thử trên máy kiosk và hệ thống Microsoft thật.**
 
 ### Giai đoạn 10 — Lập nhật ký AI này (10/11)
 
 - **Truong yêu cầu:** lập nhật ký sử dụng AI chỉ từ dữ liệu trong kho mã. Lời nhắn của phiên chính được ghi lại, phiên phụ chỉ tóm tắt. Bản cuối phải dễ đọc.
 - **AI đã làm:** viết công cụ tự dựng bản chi tiết (`NHAT_KY_AI.md`) từ kho mã, rồi viết bản dễ đọc này.
+
+### Giai đoạn 11 — Việc sau khi xếp và biểu mẫu cho cơ chế FA-DAA (10/11 – 13/11)
+
+- **Việc chính:** các việc sau khi công bố kết quả (điểm danh 3 buổi đầu, mời danh sách chờ, khiếu nại trong hạn, vòng 2, phản hồi, bảng điều khiển quản trị); gộp biểu mẫu đăng ký thành một biểu mẫu cho mọi ngày; thẻ "Chuẩn bị đợt" trên kiosk; bật/tắt từng tính năng sau khi xếp (mục GAP-0 đến GAP-14, FA-M2b đến FA-M10, FG-1 đến FG-9 trong `CHANGELOG.md`).
+- **Truong quyết định** (theo ghi chép): giao vai nghiên cứu cho một phiên riêng (12/11); yêu cầu kế hoạch giảm may rủi khi giao việc cho Sonnet (13/11).
+- **Kết quả:** yêu cầu gộp số 15 (11/11) và số 16 (13/11) được gộp. Phần chạy trên Microsoft ghi "TH" = chưa thử trên hệ thống thật.
+
+### Giai đoạn 12 — Soát giao diện, xử lý sự cố do con người (13/11 – 15/11)
+
+- **Việc chính:** ba phiên soát giao diện toàn kiosk song song rồi sửa 12 mục (SG-1 đến SG-12); nghiên cứu và xử lý các sự cố do người vận hành gây ra (FA-SC): danh sách học sinh của trường làm đầu vào, sheet "Cần xử lý", báo cáo cho giáo viên CLB và giáo viên chủ nhiệm, khoá thứ tự bốc thăm theo buổi.
+- **Truong quyết định** (theo ghi chép): duyệt mục mới FA-SC (14/11); duyệt thêm bảng mới `stb_buoi` (15/11).
+- **Kết quả:** yêu cầu gộp số 17, 18 (14/11) và 19 (15/11) được gộp.
+
+### Giai đoạn 13 — Giải trình kết quả, tài khoản và nhật ký thao tác (15/11 – 18/11)
+
+- **Việc chính:** tra cứu và phiếu giải trình cho từng học sinh, mã tra cứu cho học sinh tự xem (GT1); tiêu chí xếp bằng lời thường, chạy thử, so sánh hai lần chạy (GT2); tài khoản quản trị / giáo viên, cổng phân quyền, nhật ký thao tác chỉ thêm, bộ tài liệu minh chứng `docs/giai_trinh/` (GT3); một vòng hoàn thiện sau soát (GT4).
+- **Cách làm:** mỗi phần một nhóm ba phiên (một phiên dẫn Opus, một phiên viết mã Sonnet, một phiên soát Sonnet), rồi một nhánh tích hợp.
+- **Kết quả:** yêu cầu gộp số 20 được gộp ngày 18/11.
+
+### Giai đoạn 14 — Làm gọn thao tác, xuất PDF (18/11 – 20/11)
+
+- **Việc chính:** rà soát thao tác người dùng (UX1): thanh "Việc tiếp theo", thanh bên 4 nhóm, Cài đặt thành một câu hỏi với ba thẻ, menu "Xuất…" gộp; phiếu giải trình và báo cáo tổng hợp; xuất PDF danh sách thành viên và phiếu theo lớp (XP1).
+- **Truong quyết định** (theo ghi chép): duyệt mục mới UX1 (18/11); duyệt thư viện mới `reportlab` để xuất PDF (18/11); đặt cách làm cho mọi tính năng: Opus lập kế hoạch, một nhóm phiên dẫn – viết – soát xây (19/11, quy tắc 12 trong `CLAUDE.md`).
+- **Kết quả:** yêu cầu gộp số 21 được gộp ngày 20/11.
+
+### Giai đoạn 15 — Thẻ mục tiêu giáo dục: nghiên cứu và kế hoạch (20/11)
+
+- **Truong yêu cầu:** phát triển phần mềm thành công cụ giúp nhà trường ra quyết định minh bạch, thay đổi theo mục tiêu giáo dục, không chỉ xuất danh sách; giao diện đồng bộ, không phức tạp, tối giản số lần bấm.
+- **Truong quyết định:** bỏ vai nghiên cứu riêng ("Fable"), phiên Opus tự làm phần nghiên cứu; duyệt mục mới MT.
+- **AI đã làm:** chạy mô phỏng trên dữ liệu tự sinh về cái giá của việc giữ chỗ cho một nhóm (`docs/fable/08_MT0_MEMO.md`, `du_lieu_test/do_muc_tieu_mt0.py`); lập kế hoạch 3 thẻ mục tiêu trong trang Cài đặt (`docs/phien/claude__mt1-bo-muc-tieu.md`, `docs/phien/MT1_GIAO_THUC.md`). Một lần AI hiểu sai yêu cầu (thu hẹp "mục tiêu giáo dục" thành "giữ chỗ cho một nhóm"), Truong chỉ ra và AI sửa lại kế hoạch.
+- **Kết quả:** chưa có mã; nhánh `claude/mt1-bo-muc-tieu` đã tạo, chờ phiên dẫn.
 
 ## 5. Lời của Truong được lưu nguyên văn trong kho mã
 
