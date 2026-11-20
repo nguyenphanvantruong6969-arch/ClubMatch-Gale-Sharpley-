@@ -19,3 +19,6 @@
 ## L3 fix1 | 6159eb2..7da70ad | 1 BUG (test only)
 - Product fix OK: truoc missing/{} => co_so_sanh False, no fake 0s; uoc_tinh has no analogous issue.
 - BUG: test_muc_tieu_khong_ro_ri_* flaky — dau_van_tay_chay.luc (timestamp) not excluded from the comparison. Exclude "luc".
+
+## L3 fix2 | e02b83c..859d9c3 | NO BUGS
+- Only "luc" added to the excluded columns; dau_van_tay still compared; 5x270 passed; ruff clean.
