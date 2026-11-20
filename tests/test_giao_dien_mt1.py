@@ -305,7 +305,7 @@ def test_danh_cho_hien_giu_cho_trong_details_gap_san(mo_trang):  # noqa: F811
     assert len(dong) == 9 and all(re.search(r"giữ \d+/\d+", d) for d in dong)
     canh = page.locator("#ux1aMtCanhBao .canh-bao-vang").all_inner_texts()
     assert canh and all("chênh lệch ngược" not in c for c in canh)          # câu cũ khó hiểu đã thay
-    assert any("không bị thiệt" in c and "Giữ chỗ có thể không cần thiết." in c for c in canh), canh
+    assert any("chưa thấy nhóm này bị thiệt hơn các nhóm khác, nên có thể chưa cần giữ chỗ." in c for c in canh), canh
     assert not loi, loi
 
 

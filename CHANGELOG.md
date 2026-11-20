@@ -4,7 +4,7 @@
 
 - `js/19_muc_tieu.js`: ước tính 0/0 nay nói kết quả ("Không học sinh nào đổi chỗ so với lần xếp gần nhất."; khoá `mt1_khong_doi` thay `mt1_da_theo`, vì lần xếp trước có thể dùng luật khác); lần chọn thẻ mới đóng thông báo "Đã chuyển sang…" cũ, Hoàn tác luôn là của lần mới nhất.
 - `js/075_workspace.js` (bước 3): chọn "Cơ hội như nhau" khi đang "Chia 100 điểm" hiện cùng dòng "Điểm chia không được dùng với mục tiêu này." (`#wzMtGhiChu`).
-- `i18n_errors.py` (`mt_khong_co_khoang_cach`): câu rõ hơn, "Lần xếp gần nhất, nhóm này không bị thiệt so với các học sinh khác. Giữ chỗ có thể không cần thiết."
+- `i18n_errors.py` (`mt_khong_co_khoang_cach`): câu rõ hơn, "Lần xếp gần nhất chưa thấy nhóm này bị thiệt hơn các nhóm khác, nên có thể chưa cần giữ chỗ." (câu do lead chốt)
 - "Xem từng CLB" vốn đã thu gọn sẵn (ảnh cũ do script chụp mở ra); đã có test canh. Test: `tests/test_giao_dien_mt1.py` 24 ca (+3, sửa 2); ảnh làm mới ở `docs/phien/anh_mt1/`.
 
 ## 2026-11-20 — MT1-L4: giao diện ba thẻ mục tiêu
