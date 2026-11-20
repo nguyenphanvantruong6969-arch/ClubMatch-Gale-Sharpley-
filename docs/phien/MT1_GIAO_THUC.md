@@ -17,7 +17,7 @@
 ## 1. Branch, lots
 | Branch | Lots | Branch file |
 |---|---|---|
-| `claude/mt1-bo-muc-tieu` (create from `origin/claude/trusting-bohr-wg0l4n`) | L1 catalogue → L2 API → L3 estimate + result → L4 UI → L5 docs/review | `docs/phien/claude__mt1-bo-muc-tieu.md` |
+| `claude/mt1-bo-muc-tieu` (already created by the planning session) | L1 catalogue → L2 API → L3 estimate + result → L4 UI → L5 docs/review | `docs/phien/claude__mt1-bo-muc-tieu.md` |
 
 - Each lot's spec and tests = its box in the branch file's Plan; "Done when" = box + Acceptance.
 - Before each lot and before the CI gate: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase
@@ -79,8 +79,8 @@ file, what Truong should try by hand in 3 steps, incl. the Windows exe). `__code
 ## 7. Prompts (lead uses the child prompts verbatim; replace <LEAD_ID>)
 **Lead** (Truong pastes this into a new Opus session):
 ```
-You are LEAD for MT1 on branch claude/mt1-bo-muc-tieu. First create the branch from
-origin/claude/trusting-bohr-wg0l4n and push it. Read CLAUDE.md, then docs/phien/MT1_GIAO_THUC.md and
+You are LEAD for MT1 on branch claude/mt1-bo-muc-tieu (it already exists on origin; check it out).
+Read CLAUDE.md, then docs/phien/MT1_GIAO_THUC.md and
 docs/phien/claude__mt1-bo-muc-tieu.md and follow them exactly. Fill the Status line, Sessions table and "Needs
 Truong" list in the branch file, push, then create the CODER and CHECKER sessions with the protocol §7 prompts
 (repo https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV, source_revision claude/mt1-bo-muc-tieu, models

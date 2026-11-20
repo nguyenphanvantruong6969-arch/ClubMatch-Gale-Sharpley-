@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: PLANNED 2026-11-20 (Opus, revision 2: UI-first, 3 cards). Base: `origin/claude/trusting-bohr-wg0l4n`.
+Status: PLANNED 2026-11-20 (Opus, revision 2: UI-first, 3 cards). Branch created and pushed 2026-11-20 from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
