@@ -54,3 +54,25 @@ Edge (own): a SINGLE session taller than a page inside KeepTogether -> reportlab
  pathological text length. Optional: no action.
 Invariants 1, 4, 6: n/a (HTML attribute + layout only). Privacy ok. Teacher limits: unchanged scope (teacher could already call this
  API for any student_ids/class; Truong answered "keep" on class scoping).
+
+## L4 | reviewed 55255f2..252466e
+verdict: NO BUGS (2 low notes)
+Boxes: exactly one visible "Chọn lớp" label/select (-> #kqChonLop) on Results for admin and teacher (own Chromium run + ux1f_l4 tests);
+ #ux1bLop gone from html/js/tests/css (grep: only a negative assertion + docs remain); stale comment above #ux1bPanel replaced.
+Tests: ux1f_l4 + t2_ket_qua + ux1b_vai_gv + ux1i_i3 + ux1b_phieu + t3_l1_ws -> 40 passed, 0 skipped.
+Judging the coder's call: CORRECT. export_theo_lop(output_path) and export_bao_cao_tong_hop[_pdf](output_path) have no `lop`
+ parameter and are school-wide by definition (one file per class / aggregate numbers, no ids). Only export_phieu_giai_trinh_pdf
+ takes `lop`, and "In phiếu cả lớp" now reads #kqChonLop (test: PDF holds exactly the 10A2 students, no other class). Scoping the
+ other two would need backend/contract changes (outside L4, would alter existing outputs). Read the box as "all homeroom actions that
+ take a class use its value".
+t2_ket_qua change: LEGITIMATE, not weakened. The test still asserts the exact visibility triple per tier; only the class-picker
+ element's expectation changes ([True,False,False] -> always True when classes exist), a direct consequence of "one select serves
+ both" (it now lives in #ux1bPanel, outside the tier switch). No assertion removed or loosened.
+Own edge runs (Chromium, 120HS, scratch script): (a) no class data at all -> select hidden, 0 "Chọn lớp" labels, "In phiếu cả lớp"
+ disabled, other two actions still work, no JS errors; (b) 115/120 with classes + 5 without (admin and teacher gv1) -> options
+ 10A1..10A3 + "Chưa có lớp (5)", picking the empty option disables "In phiếu cả lớp" and stays on "Theo lớp"; (c) switching tiers
+ clb/ma/lop keeps the select visible with the same value; 0 pageerrors.
+Notes: 1. Selecting a class while on the code-lookup tier ("ma") jumps to "Theo lớp" (same behaviour #ux1bLop had; fine).
+ 2. Unused i18n key ux1b_chon_lop (vi+en) left in i18n.js: harmless; remove when convenient. UX: "Xuất theo lớp" / "Báo cáo tổng hợp"
+ sit beside the selector but ignore it (by design) - a short hint could avoid confusion; optional.
+Invariants 1, 4, 6: n/a (UI only; no pipeline/DB/contract change). Privacy/teacher limits unchanged.
