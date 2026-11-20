@@ -3152,6 +3152,7 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .mt1-hang { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .mt1-nut, .mt1-hop .ux1a-the { min-height: 36px; }
 .mt1-nut { font-size: 14px; }
+.ux1a-the.is-cho:not(.is-chon) { border-color: var(--chart-general); border-style: dashed; }   /* chờ chọn nhóm: chưa lưu */
 .mt1-nhom { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .mt1-nhom-nhan { font-size: 14px; font-weight: 600; }
 .mt1-hop .ux1a-the:focus-visible, #wzMtLuoi .ux1a-the:focus-visible { outline-width: 3px; }

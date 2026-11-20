@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L4 fix2: "Dành chỗ" nhiều nhóm không giả vờ đã lưu
+
+- `js/19_muc_tieu.js`: bấm thẻ "Dành chỗ" khi có nhiều nhóm chỉ mở các nút nhóm (tiêu điểm nhảy tới nút đầu; thẻ có `aria-expanded`, viền nét đứt, KHÔNG ✓, `aria-checked` giữ false). Thẻ đã lưu giữ dấu ✓, dòng tác động và thông báo của nó cho tới khi bấm một nhóm (bấm thứ hai mới lưu, rồi mới ✓ + thông báo + ước tính). Bấm thẻ khác hoặc chính thẻ đã lưu thì nút nhóm biến mất. `style.css`: `.ux1a-the.is-cho`.
+- Test: `tests/test_giao_dien_mt1.py` 25 ca (sửa ca hai lần bấm, thêm ca bấm thẻ khác khi đang chờ).
+
 ## 2026-11-20 — MT1-L5 fix1: hướng dẫn nói đúng khi nào có nút "Về mục tiêu mẫu"
 
 - `HUONG_DAN_SU_DUNG.md`: nút chỉ có nếu trước đó đã chọn một thẻ; ví dụ số ghi "(số minh hoạ)".

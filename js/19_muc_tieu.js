@@ -35,7 +35,8 @@ function mt1Dong(cls, chu, id) { return ux1aEl("p", { class: cls, id, text: chu 
 function mt1TaoCauHoi(tienTo) {
   const tt = tienTo + "Mt";
   let d = null;            /* get_muc_tieu */
-  let choNhom = false;     /* đã bấm "Dành chỗ", chờ bấm nhóm (nhiều nhóm) */
+  let choNhom = false;     /* đã bấm "Dành chỗ", chờ bấm nhóm (nhiều nhóm): CHƯA lưu gì, thẻ đã lưu giữ dấu ✓ */
+  let veSauKhiMo = false;  /* vừa mở các nút nhóm: chuyển tiêu điểm tới nút nhóm đầu */
   let ghiChu = [];         /* ghi chú của lần chọn vừa rồi (vd. điểm chia không được dùng) */
   let lan = 0;
   const the = ux1aTaoThe(tt, (ma) => chon(ma, null), MT1_THE, "mt1_cau_hoi", true);
@@ -57,10 +58,12 @@ function mt1TaoCauHoi(tienTo) {
     if (lyThe && lyThe.khoa) return;
     if (ma === "danh_cho" && !nhomChon) {
       const co = d ? d.nhom : [];
-      if (co.length > 1) { choNhom = true; ve(); return; }       /* nhiều nhóm: bấm thẻ chỉ mở các nút nhóm */
+      if (co.length > 1) { choNhom = true; veSauKhiMo = true; ve(); return; }   /* nhiều nhóm: bấm thẻ chỉ mở các nút nhóm */
       nhomChon = co.length ? co[0].nhan : null;                  /* một nhóm: tự chọn */
     }
+    const dangCho = choNhom;
     choNhom = false;
+    if (dangCho) ve();                                           /* thẻ khác: nút nhóm biến mất ngay */
     the.loi("");
     callApi("chon_muc_tieu", ma, nhomChon).then((r) => {
       if (!r.ok) { the.loi(trErrs(r.errors).join(" ")); return; }
@@ -155,7 +158,12 @@ function mt1TaoCauHoi(tienTo) {
     if (!d) return;
     const hienTai = d.hien_tai;
     const co = MT1_THE.some((x) => x.ma === hienTai);
-    the.datCach(choNhom ? "danh_cho" : co ? hienTai : "");
+    the.datCach(co ? hienTai : "");
+    const theDanhCho = hop.querySelector('.ux1a-the[data-cach="danh_cho"]');
+    if (theDanhCho) {                                           /* trạng thái chờ: không ✓, chỉ báo đang mở nút nhóm */
+      if (choNhom) theDanhCho.setAttribute("aria-expanded", "true"); else theDanhCho.removeAttribute("aria-expanded");
+      theDanhCho.classList.toggle("is-cho", choNhom);
+    }
     let ly = "";
     d.cac_the.forEach((c) => {
       the.khoa(c.id, c.khoa);
@@ -173,7 +181,11 @@ function mt1TaoCauHoi(tienTo) {
           onclick: () => chon(d.lan_cuoi.id, d.lan_cuoi.nhom) }));
       }
     }
-    if (choNhom) { hieuQua.hidden = true; canhBao.textContent = ""; chiTiet.hidden = true; return; }
+    if (choNhom && veSauKhiMo) {
+      veSauKhiMo = false;
+      const dau = nhom.querySelector("button");
+      if (dau) dau.focus();
+    }
     veTacDong();
   }
 
@@ -187,6 +199,11 @@ function mt1TaoCauHoi(tienTo) {
     });
   }
 
+  /* Bấm CHÍNH thẻ đã lưu khi đang chờ chọn nhóm: huỷ chờ (thành phần thẻ không gọi khiChon cho thẻ đã chọn). */
+  the.hop.addEventListener("click", (ev) => {
+    const b = ev.target.closest(".ux1a-the");
+    if (b && choNhom && b.dataset.cach !== "danh_cho" && b.getAttribute("aria-checked") === "true") { choNhom = false; ve(); }
+  });
   window.addEventListener("langchange", () => { if (d) ve(); });
   return { hop, lamMoi };
 }

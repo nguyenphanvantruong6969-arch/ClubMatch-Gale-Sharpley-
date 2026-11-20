@@ -168,8 +168,41 @@ def test_danh_cho_nhieu_nhom_hai_cu_bam_va_the_chua_ap_sau_cu_bam_thu_nhat(mo_tr
     page.wait_for_selector("#ux1aMtNhom button")
     assert [b.strip() for b in page.locator("#ux1aMtNhom button").all_inner_texts()] == ["khối 10", "chính sách"]
     assert (_cfg(api), _clb(api)) == truoc
-    _chon_nhom(page)          # BẤM 2
+    assert api.get_muc_tieu()["data"]["hien_tai"] == "nang_luc"
+    # thẻ ĐÃ LƯU giữ dấu ✓ và dòng tác động; "Dành chỗ" chỉ ở trạng thái chờ (không ✓, aria-expanded)
+    assert _the_hien_tai(page) == ["nang_luc"]
+    assert page.locator("#ux1aMtDanhCho").get_attribute("aria-checked") == "false"
+    assert page.locator("#ux1aMtDanhCho").get_attribute("aria-expanded") == "true"
+    assert page.locator("#ux1aMtHieuQua").is_visible() and page.locator("#ux1aMtHieuQua").inner_text().strip()
+    assert page.evaluate("document.activeElement.dataset.nhom") == "khoi_10"     # tiêu điểm nhảy tới nút nhóm đầu
+    page.locator("#ux1aMtNhom button", has_text="khối 10").click()          # BẤM 2
+    _chon_nhom(page)
+    page.wait_for_function("document.getElementById('ux1aMtDanhCho').getAttribute('aria-checked') === 'true'")
+    assert page.locator("#ux1aMtDanhCho").get_attribute("aria-expanded") in (None, "false")
     assert _cfg(api)["muc_tieu"]["nhom"] == "khoi_10" and all(r[3] == "khoi_10" for r in _clb(api))
+    assert not loi, loi
+
+
+def test_bam_the_khac_khi_dang_cho_chon_nhom_an_cac_nut_nhom_va_thong_bao_cu_con_nguyen(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _nap(api)
+    _vao(page)
+    page.locator("#ux1aMtCoHoi").click()
+    page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").wait_for()
+    _cho_chon(page, "CoHoi")
+    page.locator("#ux1aMtDanhCho").click()                                  # đang chờ chọn nhóm
+    page.wait_for_selector("#ux1aMtNhom button")
+    assert _the_hien_tai(page) == ["co_hoi"]                                # thẻ đã lưu vẫn có ✓
+    assert page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").count() == 1   # thông báo của nó còn
+    page.locator("#ux1aMtNangLuc").click()                                  # bấm thẻ khác: nút nhóm biến mất
+    page.wait_for_selector("#ux1aMtNhom", state="hidden")
+    _cho_chon(page, "NangLuc")
+    assert _cfg(api)["muc_tieu"]["id"] == "nang_luc"
+    page.locator("#ux1aMtDanhCho").click()                                  # mở lại rồi bấm CHÍNH thẻ đã lưu: huỷ chờ
+    page.wait_for_selector("#ux1aMtNhom button")
+    page.locator("#ux1aMtNangLuc").click()
+    page.wait_for_selector("#ux1aMtNhom", state="hidden")
+    assert page.locator("#ux1aMtDanhCho").get_attribute("aria-expanded") in (None, "false")
     assert not loi, loi
 
 
