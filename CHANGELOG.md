@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L4 fix1: dòng "đã theo mục tiêu", ghi chú ở trình tạo workspace, thông báo cũ, câu cảnh báo
+
+- `js/19_muc_tieu.js`: ước tính 0/0 nay nói kết quả ("Không học sinh nào đổi chỗ so với lần xếp gần nhất."; khoá `mt1_khong_doi` thay `mt1_da_theo`, vì lần xếp trước có thể dùng luật khác); lần chọn thẻ mới đóng thông báo "Đã chuyển sang…" cũ, Hoàn tác luôn là của lần mới nhất.
+- `js/075_workspace.js` (bước 3): chọn "Cơ hội như nhau" khi đang "Chia 100 điểm" hiện cùng dòng "Điểm chia không được dùng với mục tiêu này." (`#wzMtGhiChu`).
+- `i18n_errors.py` (`mt_khong_co_khoang_cach`): câu rõ hơn, "Lần xếp gần nhất, nhóm này không bị thiệt so với các học sinh khác. Giữ chỗ có thể không cần thiết."
+- "Xem từng CLB" vốn đã thu gọn sẵn (ảnh cũ do script chụp mở ra); đã có test canh. Test: `tests/test_giao_dien_mt1.py` 24 ca (+3, sửa 2); ảnh làm mới ở `docs/phien/anh_mt1/`.
+
 ## 2026-11-20 — MT1-L4: giao diện ba thẻ mục tiêu
 
 - Mới: `js/19_muc_tieu.js` (`mt1TaoCauHoi`, `mt1VeKetQua`, `mt1NhanNhom`; nạp trong `index.html`, `js/_danh_sach.txt`, `initMucTieu` ở `js/08_khoi_dong.js`). Câu hỏi thứ hai ở Cài đặt, "Khi một CLB đông người, trường ưu tiên điều gì?", đặt ngay dưới câu hỏi đầu, vẽ bằng CÙNG thành phần `ux1aTaoThe` (thêm tham số `bo`, `khoaCauHoi`, `moiTheTab`; lưới thẻ có `id`); thay dòng "Cách xét khi đông" (`ux1aVeCachXet` bỏ), "Thay đổi…" nằm dưới câu hỏi mới. 1 lần bấm (`nang_luc`, `co_hoi`, `danh_cho` một nhóm), 2 lần (nhiều nhóm: bấm thẻ hiện nút nhóm đọc được "khối 10", bấm nhóm mới lưu). Lưu ngay, thông báo "Đã chuyển sang …" + Hoàn tác 10 giây (luật VÀ chỗ giữ từng CLB), ghi chú "Điểm chia không được dùng với mục tiêu này." khi `co_hoi` tắt điểm chia. Một dòng tác động (lời trước lần xếp đầu; "Ước tính so với lần xếp gần nhất…" sau đó; "dưới 5" từ `{n: null, duoi_5: true}`), `<details>` "Xem từng CLB", cảnh báo vàng mỗi loại một dòng, lý do khoá một dòng (huy chương / không có cột nhóm), dòng xám "Đang dùng cài đặt riêng · Về mục tiêu mẫu".

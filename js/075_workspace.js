@@ -738,9 +738,13 @@ function wsBuoc3(hop) {
   };
   /* MT1-L4: câu hỏi mục tiêu, cùng thành phần. Chưa có danh sách học sinh nên "Dành chỗ" chọn sau, ở Cài đặt;
      hai thẻ kia đặt ô "Thứ tự ưu tiên" bên dưới (điểm / chỉ nhóm) rồi để các ô tự đồng bộ. */
+  const ghiChuMt = wsEl("p", { class: "mt1-dong", id: "wzMtGhiChu", hidden: true,
+    text: trErrs([{ code: "mt_diem_chia_khong_dung", params: {} }]).join(" ") });
   const mucTieu = ux1aTaoThe("wzMt", (ma) => {
+    const dangChia = w.wharton === true;      /* đang "Chia 100 điểm": thẻ bốc thăm sẽ tự tắt điểm chia */
     oPriority.value = ma === "co_hoi" ? "tier" : "score";
     oPriority.dispatchEvent(new Event("change"));
+    ghiChuMt.hidden = !(ma === "co_hoi" && dangChia);
   }, MT1_THE, "mt1_cau_hoi", true);
   const veMucTieu = () => {
     mucTieu.datCach(oPriority.value === "tier" ? "co_hoi" : oPriority.value === "score" ? "nang_luc" : "");
@@ -760,6 +764,7 @@ function wsBuoc3(hop) {
   hop.append(
     the.hop,
     mucTieu.hop,
+    ghiChuMt,
     wsEl("p", { class: "mt1-dong", id: "wzMtLyDo", text: t("mt1_wz_danh_cho_sau") }),
     wsTruong("wzMaxChoices", "ws_r_max_choices", wsEl("input", { type: "number", id: "wzMaxChoices",
       class: "text-input ws-so", min: "1", max: "20", step: "1", value: w.maxChoices })),

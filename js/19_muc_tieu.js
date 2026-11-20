@@ -22,6 +22,9 @@ function mt1NhanNhom(ma) {
   return String(ma || "").split(/[_\s]+/).filter(Boolean).map((w) => MT1_TU_NHOM[w.toLowerCase()] || w).join(" ");
 }
 
+/* Thông báo "Đã chuyển sang…" mới nhất: lần chọn kế tiếp đóng nó, để Hoàn tác luôn là của lần MỚI NHẤT. */
+let mt1ToastCu = null;
+
 function mt1TenThe(ma) { return t(MT1_THE.find((x) => x.ma === ma).tt); }
 function mt1So(x) { return x && x.duoi_5 ? t("mt1_duoi_5") : String(x ? x.n : 0); }
 function mt1Ngoai() { return document.body.dataset.vai === "giao_vien"; }
@@ -63,19 +66,22 @@ function mt1TaoCauHoi(tienTo) {
       if (!r.ok) { the.loi(trErrs(r.errors).join(" ")); return; }
       ghiChu = (r.data.canh_bao || []).slice();
       const hoanTac = r.data.hoan_tac;
+      if (mt1ToastCu) { mt1ToastCu.goBo(); mt1ToastCu = null; }
       const them = ghiChu.length ? "\n" + trErrs(ghiChu).join(" ") : "";
       callApi("get_last_run_info").then((lr) => {
         const daChay = lr.ok && lr.data;
         const chu = t("ux1a_cd_da_chuyen", { cach: mt1TenThe(ma) }) + them + (daChay ? "\n" + t("ux1a_cd_giu_ket_qua") : "");
         const toast = showToast(chu, "success", { sticky: true, hanhDong: { nhan: t("ux1a_cd_hoan_tac"), khiBam: () => {
           toast.goBo();
+          if (mt1ToastCu === toast) mt1ToastCu = null;
           callApi("hoan_tac_muc_tieu", hoanTac).then((r2) => {
             if (!r2.ok) { the.loi(trErrs(r2.errors).join(" ")); return; }
             ghiChu = [];
             lamMoi(true);
           });
         } } });
-        setTimeout(() => toast.goBo(), 10000);
+        mt1ToastCu = toast;
+        setTimeout(() => { toast.goBo(); if (mt1ToastCu === toast) mt1ToastCu = null; }, 10000);
       });
       lamMoi(true);
     });
@@ -126,7 +132,7 @@ function mt1TaoCauHoi(tienTo) {
         if (du.co_so_sanh) {
           const t0 = du.tot_hon, x0 = du.xuong_sau;
           chu = (t0.n === 0 && x0.n === 0 && !t0.duoi_5 && !x0.duoi_5)
-            ? t("mt1_da_theo")
+            ? t("mt1_khong_doi")
             : t("mt1_uoc_tinh", { tot: mt1So(t0), xuong: mt1So(x0) });
         } else {
           const lines = lang === "en" ? du.mo_ta_en : du.mo_ta;

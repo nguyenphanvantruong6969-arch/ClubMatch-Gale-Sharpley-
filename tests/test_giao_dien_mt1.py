@@ -116,10 +116,13 @@ def test_the_giong_trong_trinh_tao_workspace_buoc_3(mo_trang):  # noqa: F811
         ["Theo năng lực", "Cơ hội như nhau", "Dành chỗ cho một nhóm"]
     assert page.locator("#wzMtDanhCho").is_disabled()                       # chưa có danh sách học sinh để chọn nhóm
     assert page.locator("#wzMtNangLuc").get_attribute("aria-checked") == "true"
+    assert page.locator("#wzMtGhiChu").is_hidden()
     page.locator("#wzMtCoHoi").click()
     assert page.locator("#wzPriority").input_value() == "tier"
+    assert "Điểm chia không được dùng với mục tiêu này." in page.locator("#wzMtGhiChu").inner_text()   # chỉ có khi đang Chia 100
     page.locator("#wzMtNangLuc").click()
     assert page.locator("#wzPriority").input_value() == "score"
+    assert page.locator("#wzMtGhiChu").is_hidden()
     assert not loi, loi
 
 
@@ -181,7 +184,7 @@ def test_danh_cho_khong_co_nhom_the_bi_khoa_voi_mot_dong_ly_do(mo_trang):  # noq
 
 # ----- 2/3. Thông báo, Hoàn tác -----
 
-def test_toast_hoan_tac_tra_dung_luat_va_tung_clb_ke_ca_hoan_tac_hai_lan(mo_trang):  # noqa: F811
+def test_toast_hoan_tac_tra_dung_luat_va_tung_clb_hai_lan_lien_tiep(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _nap(api)
     cfg0, clb0 = _cfg(api), _clb(api)
@@ -190,17 +193,56 @@ def test_toast_hoan_tac_tra_dung_luat_va_tung_clb_ke_ca_hoan_tac_hai_lan(mo_tran
     _chon_nhom(page)
     toast1 = page.locator(".toast", has_text="Đã chuyển sang Dành chỗ cho một nhóm")
     toast1.wait_for()
-    sau1 = (_cfg(api), _clb(api))
-    assert sau1 != (cfg0, clb0)
-    page.locator("#ux1aMtCoHoi").click()
-    toast2 = page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau")
-    toast2.wait_for()
-    toast2.get_by_role("button", name="Hoàn tác").click()                   # hoàn tác lần 1
-    _cho_chon(page, "DanhCho")
-    assert (_cfg(api), _clb(api)) == sau1
-    toast1.get_by_role("button", name="Hoàn tác").click()                   # hoàn tác lần 2 (về đầu)
+    assert (_cfg(api), _clb(api)) != (cfg0, clb0)
+    toast1.get_by_role("button", name="Hoàn tác").click()                   # hoàn tác lần 1
     _cho_chon(page, "NangLuc")
     assert (_cfg(api), _clb(api)) == (cfg0, clb0)
+    page.locator("#ux1aMtCoHoi").click()
+    page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").wait_for()
+    page.locator(".toast .toast-hanh-dong", has_text="Hoàn tác").click()    # hoàn tác lần 2 (thẻ khác)
+    _cho_chon(page, "NangLuc")
+    assert (_cfg(api), _clb(api)) == (cfg0, clb0)
+    assert not loi, loi
+
+
+def test_thong_bao_cu_bi_thay_boi_lan_chon_moi_va_hoan_tac_dung_lan_moi_nhat(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _nap(api)
+    _vao(page)
+    page.locator("#ux1aMtDanhCho").click()
+    _chon_nhom(page)
+    sau_danh_cho = (_cfg(api), _clb(api))
+    page.locator(".toast", has_text="Đã chuyển sang Dành chỗ cho một nhóm").wait_for()
+    page.locator("#ux1aMtCoHoi").click()
+    moi = page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau")
+    moi.wait_for()
+    page.wait_for_function("document.querySelectorAll('.toast').length === 1")      # chỉ còn thông báo mới nhất
+    assert page.locator(".toast", has_text="Dành chỗ cho một nhóm").count() == 0
+    moi.get_by_role("button", name="Hoàn tác").click()                              # hoàn tác lần MỚI NHẤT
+    _cho_chon(page, "DanhCho")
+    assert (_cfg(api), _clb(api)) == sau_danh_cho
+    assert not loi, loi
+
+
+def test_dong_tac_dong_0_0_noi_ket_qua_khong_noi_da_theo_muc_tieu(mo_trang, monkeypatch):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _nap(api)
+    assert api.run_pipeline(42)["ok"]
+    goc_fn = api.uoc_tinh_muc_tieu
+
+    def khong_doi(*a, **k):
+        kq = goc_fn(*a, **k)
+        kq["data"].update({"co_so_sanh": True, "tot_hon": {"n": 0, "duoi_5": False},
+                           "xuong_sau": {"n": 0, "duoi_5": False}})
+        return kq
+    monkeypatch.setattr(api, "uoc_tinh_muc_tieu", khong_doi)
+    _vao(page)
+    page.locator("#ux1aMtCoHoi").click()                                    # luật khác lần xếp, nhưng kết quả y hệt
+    _cho_chon(page, "CoHoi")
+    page.wait_for_function("document.getElementById('ux1aMtHieuQua').textContent.includes('đổi chỗ')")
+    chu = page.locator("#ux1aMtHieuQua").inner_text()
+    assert "Không học sinh nào đổi chỗ so với lần xếp gần nhất." in chu
+    assert "đã theo mục tiêu" not in chu
     assert not loi, loi
 
 
@@ -261,6 +303,9 @@ def test_danh_cho_hien_giu_cho_trong_details_gap_san(mo_trang):  # noqa: F811
     page.locator("#ux1aMtChiTiet > summary").click()
     dong = page.locator("#ux1aMtChiTiet li").all_inner_texts()
     assert len(dong) == 9 and all(re.search(r"giữ \d+/\d+", d) for d in dong)
+    canh = page.locator("#ux1aMtCanhBao .canh-bao-vang").all_inner_texts()
+    assert canh and all("chênh lệch ngược" not in c for c in canh)          # câu cũ khó hiểu đã thay
+    assert any("không bị thiệt" in c and "Giữ chỗ có thể không cần thiết." in c for c in canh), canh
     assert not loi, loi
 
 
