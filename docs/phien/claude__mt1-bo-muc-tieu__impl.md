@@ -6,14 +6,14 @@
 - [x] L1 catalogue (checker NO BUGS)
 - [x] L2 API (checker NO BUGS)
 - [x] L3 estimate + result (NO BUGS after fix1, fix2)
-- [ ] L4 UI — code + tests WRITTEN, committed but NOT yet verified/reported (see Current state)
+- [x] L4 UI — done, verified, reported (CODER DONE L4)
 - [ ] L5 docs + review (lead)
 
 ## Current state
 - L4 implemented: js/19_muc_tieu.js (new), hooks in js/18_cai_dat.js (ux1aTaoThe got params `bo`, `khoaCauHoi`, `moiTheTab`; old "Cách xét khi đông" line removed), js/075_workspace.js (wizard step 3), js/03_ket_qua.js (calls mt1VeKetQua), js/08_khoi_dong.js, index.html (#mt1KetQua + script tag), js/_danh_sach.txt, i18n.js (mt1_* keys), style.css (.mt1-*).
 - tests/test_giao_dien_mt1.py: 22 cases, ALL PASSED alone (Chromium). Old tests/test_giao_dien_ux1_cai_dat.py edited (no more #ux1aCachXet).
 - A wider UI regression run (ux1_cai_dat, ws_giao_dien, a13_12_ws, a13_13, fa_cai_dat, fg1, gt2/gt4_tieu_chi, ux1b_l5c, ux1_tiep_theo, ux1_dieu_huong, tom_tat, fg8_cau_chu, sg11a, t3_l1_ws, mt1) was running with -x: ≥35 dots, no failure seen when handing off; final result NOT read. Re-run it.
-- NOT done: ruff/kiem_nhanh after L4, soat-ma, before/after screenshots (script ready, see below), CODER DONE L4 report.
+- Verified 2026-11-20: 153 UI tests pass (wide list), 204 related backend/doc tests pass, ruff clean, kiem_nhanh 7/7, screenshots in docs/phien/anh_mt1/.
 
 ## Next steps
 1. `git pull --rebase`; run `.venv/bin/ruff check .`; re-run the wider UI list above (PLAYWRIGHT chromium is preinstalled; `-x`, ~10 min) and `tests/test_a13_12_tai_lieu.py tests/test_tai_lieu_dong_bo.py tests/test_gt3_phan_quyen.py tests/test_i18n_sync.py tests/test_skill_soat_ma.py` (code-map test counts tests/test_*.py = 357 in CLAUDE_CHI_TIET.md).
