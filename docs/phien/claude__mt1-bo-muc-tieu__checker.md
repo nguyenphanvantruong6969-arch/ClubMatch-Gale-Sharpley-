@@ -29,3 +29,6 @@
 - OK: clicks 1/1/1/2 counted; Undo x2; teacher UI hidden + 5 backend refusals; words; contrast/size/focus/1024; ux1 test edit necessary.
 - BUG3 (addendum): stale toast stays when a newer card is applied (two toasts, old Undo discards newer choice). Close previous toast in chon().
 - Note: mt_khong_co_khoang_cach wording jargon -> "…nên có thể chưa cần giữ chỗ."; details collapsed OK.
+
+## L4 fix1 | 71105f6..954d0e5 | NO BUGS
+- 3 earlier bugs fixed (0/0 wording, wizard note, single latest toast); rewording plain; 101 tests, kiem_nhanh 7/7, ruff clean.
