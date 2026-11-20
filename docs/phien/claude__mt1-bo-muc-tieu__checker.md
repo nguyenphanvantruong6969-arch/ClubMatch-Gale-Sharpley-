@@ -22,3 +22,8 @@
 
 ## L3 fix2 | e02b83c..859d9c3 | NO BUGS
 - Only "luc" added to the excluded columns; dau_van_tay still compared; 5x270 passed; ruff clean.
+
+## L4 | a563622..3715bd8 | 2 BUGS (small)
+- BUG1: mt1_da_theo "Lần xếp gần nhất đã theo mục tiêu này." is false when last run used another goal (only 0 moves). Reword to outcome ("Không em nào đổi chỗ…").
+- BUG2: wizard step 3, Chia 100 + co_hoi silently flips first question to "Chỉ xếp thứ tự" with no note (Settings shows it).
+- OK: clicks 1/1/1/2 counted; Undo x2; teacher UI hidden + 5 backend refusals; words; contrast/size/focus/1024; ux1 test edit necessary.
