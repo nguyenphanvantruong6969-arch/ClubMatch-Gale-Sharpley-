@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — lead running protocol §3 (L1 next). Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -97,7 +97,7 @@ Status: IN PROGRESS 2026-11-20 — lead running protocol §3 (L1 next). Planned 
 
 ## Current state
 - Done: plan rev. 2 + protocol. Lead started 2026-11-20; nothing coded yet.
-- Next: lead creates coder + checker, sends `GO L1`.
+- Next: coder works on L1 (`GO L1` sent).
 
 ## Needs Truong
 - (none yet)
@@ -106,6 +106,8 @@ Status: IN PROGRESS 2026-11-20 — lead running protocol §3 (L1 next). Planned 
 | Role | Session id | Started |
 |---|---|---|
 | lead (Opus) | session_01TGThn5w7hS2AUUvuf2JfSJ | 2026-11-20 |
+| coder (Sonnet) | session_01TGThn7SbFerFkJFwKrtDKm | 2026-11-20 |
+| checker (Sonnet) | session_01TGThn6J42oxiW1wTNvKYM8 | 2026-11-20 |
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
