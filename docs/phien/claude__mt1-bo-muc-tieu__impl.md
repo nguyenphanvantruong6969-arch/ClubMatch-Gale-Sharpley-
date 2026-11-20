@@ -7,7 +7,7 @@
 - [x] L2 API (checker NO BUGS)
 - [x] L3 estimate + result (NO BUGS after fix1, fix2)
 - [x] L4 UI — done, verified, reported (CODER DONE L4)
-- [ ] L5 docs + review (lead)
+- [x] L5 docs part done by coder (CODER DONE L5, head 6eed91a); §5 review is the lead's
 
 ## Current state
 - L4 implemented: js/19_muc_tieu.js (new), hooks in js/18_cai_dat.js (ux1aTaoThe got params `bo`, `khoaCauHoi`, `moiTheTab`; old "Cách xét khi đông" line removed), js/075_workspace.js (wizard step 3), js/03_ket_qua.js (calls mt1VeKetQua), js/08_khoi_dong.js, index.html (#mt1KetQua + script tag), js/_danh_sach.txt, i18n.js (mt1_* keys), style.css (.mt1-*).
@@ -16,6 +16,7 @@
 - Verified 2026-11-20: 153 UI tests pass (wide list), 204 related backend/doc tests pass, ruff clean, kiem_nhanh 7/7, screenshots in docs/phien/anh_mt1/.
 
 ## Next steps
+0. L5 docs reported; wait for REVIEW/FIX or the CI-gate FIX list (§4).
 1. L4 was reported (CODER DONE L4, head 3715bd8; FIX L4 round 1 head 954d0e5, addendum fix1b head da5d291). Wait for `REVIEW`/`FIX L4` from the lead; fix test-first, run related tests only, `kiem_nhanh.py --so-seed 20`, commit "MT1-L4 fix<k>: ...", push, report in GT_GIAO_THUC §7 format.
 2. L5 is the lead's (docs + final review); coder only helps if asked (HUONG_DAN_SU_DUNG "Chọn mục tiêu").
 3. Wide UI regression list (for fixes): ux1_cai_dat, ws_giao_dien, a13_12_ws, a13_13, fa_cai_dat, fg1, gt2/gt4_tieu_chi, ux1b_l5c, ux1_tiep_theo, ux1_dieu_huong, tom_tat, fg8_cau_chu, sg11a, t3_l1_ws, mt1 (153 passed, ~4 min).
@@ -41,3 +42,4 @@ js/19_muc_tieu.js, js/18_cai_dat.js, js/075_workspace.js, js/03_ket_qua.js, js/0
 | 2026-11-20 | Sonnet (coder) | L4 verified (153 UI + 204 backend tests, kiem_nhanh 7/7, screenshots) and reported | lead: MT1 §2 overrides the 400k stop; same session continues |
 | 2026-11-20 | Sonnet (coder) | FIX L4 round 1 (0/0 sentence, wizard note, old toast replaced, clearer amber text) | head 954d0e5; lead keeps this session per MT1 §2 |
 | 2026-11-20 | Sonnet (coder) | FIX L4 fix1b: amber no-gap sentence set to the lead's wording | head da5d291 |
+| 2026-11-20 | Sonnet (coder) | L5 docs: HUONG_DAN 'Chọn mục tiêu', CHANGELOG, TIEN_DO | head 6eed91a |
