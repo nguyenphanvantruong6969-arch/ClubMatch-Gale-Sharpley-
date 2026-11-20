@@ -34,3 +34,23 @@ Notes:
    overflows the right margin silently. No current caller affected (max found 10 cols fits: 509 of 527 pt). Low.
 3. test_ux1f_l2 guards only the FA 40-student set; the 800-set min-chars figure is not asserted (by design of spec).
 Invariants 1, 4, 6: n/a (layout only; no pipeline/DB/contract change). Privacy: slips built from selected student_ids, unchanged.
+
+## L3 | reviewed f30f05d..f4be762 (d159ba9 L2 follow-up + f4be762 L3)
+verdict: NO BUGS (1 low note on d159ba9)
+L3 boxes: index.html drops data-quyen="quan_tri" from #btnGtPdfMot; backend untouched (export_phieu_giai_trinh_pdf already in
+ phan_quyen's GT1 "phiếu" group for giao_vien, same group as export_phieu_giai_trinh HTML -> no scope widening). Tests: giao_vien +
+ student_ids=["s2"] -> ok, PDF contains only "Mã: s2" (s1/s3/s4 absent); student-lookup mode -> gt3_che_do_hoc_sinh, no file written;
+ not logged in -> gt3_can_dang_nhap; Chromium: search(1) + pick(2) + Lưu PDF(3) = 3 clicks <= 4, button hidden until a student is
+ picked, file name has the sid, no other student in the PDF. In student self-lookup mode the app is `inert` and the backend refuses,
+ so showing the button to non-admin does not expose it.
+Tests run: ux1f_l3 + ux1f_l2 + xp1_phieu_pdf + giao_dien_xp1_luu_pdf_mot_em + ux1b_l7 + giao_dien_ux1b_phieu + ux1i_i3 +
+ fa_sc_l4_phieu_lop -> 71 passed; ux1i_i2_xp1_trong_menu + gt1_tra_cuu + ux1b_vai_gv -> 14 passed. 0 skipped.
+d159ba9 (per-session KeepTogether): 40 students FA = 40 pages (unchanged); 800HS = 1278 pages (unchanged), min page chars 159 -> 267,
+ pages <200: 2 -> 0, pages <400: 106 -> 52. Word-multiset diff vs 235a3d7: only dates/times differ + fewer repeated column headers
+ (tables split less). No content cut. 0 session headings left at a page bottom with the table on the next page (note 1 of L2 closed).
+Edge (own): a SINGLE session taller than a page inside KeepTogether -> reportlab splits it (no overflow, nothing cut: 600/600 cells
+ present at 10 choices x ~600-char reasons) BUT it first breaks to a new page, so the title+summary stay alone on page 1 (27 chars)
+ and the 2nd session also starts a fresh page. Realistic rows (<=~200-char reasons, 10 choices) stay on 1-2 full pages. Low; only
+ pathological text length. Optional: no action.
+Invariants 1, 4, 6: n/a (HTML attribute + layout only). Privacy ok. Teacher limits: unchanged scope (teacher could already call this
+ API for any student_ids/class; Truong answered "keep" on class scoping).
