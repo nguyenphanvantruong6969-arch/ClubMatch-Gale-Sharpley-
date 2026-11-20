@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-20 — UX1F-L3: giáo viên lưu PDF phiếu của MỘT học sinh
+
+- `index.html`: `#btnGtPdfMot` bỏ `data-quyen="quan_tri"`, giáo viên thấy nút "Lưu PDF" ở khung tra cứu. Backend không đổi: `phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"]` vốn đã là giáo viên; chế độ học sinh vẫn bị chặn (`gt3_che_do_hoc_sinh`), chưa đăng nhập bị chặn (`gt3_can_dang_nhap`).
+- Riêng tư: tệp chỉ chứa em đã chọn (`student_ids=[mã]`).
+- Test mới: `tests/test_ux1f_l3_giao_vien_pdf_mot_em.py` (3 ca backend + 1 ca Chromium: giáo viên tìm → chọn → Lưu PDF = 3 lần bấm, tệp chỉ có em đó). Ca Chromium đỏ trước khi sửa (nút ẩn). Bản đồ mã: 354 → 355 tệp test.
+
 ## 2026-11-20 — UX1F-L2 fix1: tiêu đề buổi không nằm một mình ở đáy trang
 
 - `phieu_giai_trinh.py` (`_khoi_pdf`): mỗi buổi là MỘT khối `giu_cung` (từ tiêu đề buổi); buổi cuối gộp luôn chú thích, khiếu nại, mã tra cứu. Trước đó khối giữ chung chỉ bắt đầu ở bảng nên "Thứ 6" có thể ở đáy trang 10 còn bảng ở trang 11.
