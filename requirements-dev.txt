@@ -16,3 +16,7 @@ pillow>=10.0,<13
 # Chi dung cho mau_forms_thi_clb/tao_mau_forms.py de ghi tep Quick Import
 # .docx. Thieu goi nay thi bo qua rieng tep .docx, cac tep khac van sinh.
 python-docx>=1.1,<2
+# Chi dung cho cac test doc PDF (tests/test_xp1_*.py, tests/test_ux1i_i3_phieu_bao_cao.py):
+# trich chu va dem trang cua phieu/danh sach PDF. Chi la phu thuoc DEV, khong dua vao
+# requirements.txt hay kiosk.spec. Thieu goi nay thi cac test do TU BO QUA (UX1F-L1).
+pypdf>=4,<6

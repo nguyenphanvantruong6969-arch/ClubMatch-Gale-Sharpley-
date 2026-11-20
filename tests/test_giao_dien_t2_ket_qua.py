@@ -58,7 +58,8 @@ def test_tang1_ba_nut_mot_cho_bam_doi_khong_tai_lai_trang(mo):
         .map(i => document.getElementById(i).offsetParent !== null)""")  # noqa: E731
     page.wait_for_function("() => document.querySelector('#kqTang1 .is-on')")
     assert page.locator("#kqTang1 .is-on").get_attribute("data-kq") == "lop" and hien() == [True, False, False]
-    for tang1, mong in (("clb", [False, True, False]), ("ma", [False, False, True]), ("lop", [True, False, False])):
+    # UX1F-L4: ô chọn lớp duy nhất nằm ở khối "Theo lớp và báo cáo" nên hiện ở MỌI tầng (khi có lớp)
+    for tang1, mong in (("clb", [True, True, False]), ("ma", [True, False, True]), ("lop", [True, False, False])):
         page.locator('#kqTang1 [data-kq="%s"]' % tang1).click()      # đúng MỘT cú bấm
         assert page.locator("#kqTang1 .is-on").get_attribute("data-kq") == tang1
         assert page.locator('#kqTang1 [data-kq="%s"]' % tang1).get_attribute("aria-pressed") == "true"
