@@ -39,3 +39,6 @@
 ## L5 | 80bc0d3..6eed91a | 1 BUG (doc)
 - HUONG_DAN: "Về mục tiêu mẫu" button only exists after a card was chosen once (lan_cuoi); doc says always.
 - Rest verified true vs UI; rows MT1-L1..L5 present; 58 doc tests, kiem_nhanh 7/7. Optional: "(số minh hoạ)" on example numbers.
+
+## L4 fix2 | 298dc0f..dd81704 | NO BUGS (1 nit)
+- Pending state for danh_cho (several groups): nothing saved after click 1, saved card keeps ✓, dashed token style 6.01:1, keyboard path ok, other card/saved card cancel ok; 40 UI tests, ruff, kiem_nhanh 7/7. Nit: _chon_nhom double-click in the 2-click test.
