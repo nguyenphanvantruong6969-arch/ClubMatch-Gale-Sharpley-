@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1–L3 done; L4 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1–L4 done; L5 docs with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -77,7 +77,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L3 done; L4 with coder. Planned rev. 2; 
   `bao_cao_muc_tieu(run_id)` (met/not in the 5 most-chosen clubs, helped, gave way, guardrails: first choice %,
   unmatched; counts 1–4 ⇒ "dưới 5"). Tests `tests/test_mt1_uoc_tinh.py`: hand-checked case, zero DB writes (compare
   table checksums before/after), suppression, multi-session, trial runs.
-- [ ] **L4 UI** — per UI contract 1–7: `js/19_muc_tieu.js` (new, reuses `ux1aTaoThe`), hooks in `js/18_cai_dat.js`
+- [x] **L4 UI** (da5d291, checker NO BUGS after 1 fix round; fix1b wording checked by lead) — per UI contract 1–7: `js/19_muc_tieu.js` (new, reuses `ux1aTaoThe`), hooks in `js/18_cai_dat.js`
   and `js/03_ket_qua.js`, `index.html`, keys `mt1_*` in `i18n.js`. Tests `tests/test_giao_dien_mt1.py` (Chromium):
   click count per card (1/2), Undo restores, estimate line appears without click, warnings, result line, teacher
   hidden, 1280/1024 px, keyboard, contrast/size. Screenshots before/after in `docs/phien/anh_mt1/`.
@@ -96,8 +96,8 @@ Status: IN PROGRESS 2026-11-20 — L1–L3 done; L4 with coder. Planned rev. 2; 
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report done.
-- Next: coder works on L4 UI (`GO L4` sent).
+- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js` done.
+- Next: coder works on L5 docs (`GO L5` sent); then CI gate §4, lead review §5.
 
 ## Needs Truong
 - (none yet)
