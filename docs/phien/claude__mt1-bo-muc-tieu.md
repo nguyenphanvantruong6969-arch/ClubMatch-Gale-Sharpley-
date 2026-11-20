@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1 done; L2 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1, L2 done; L3 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -23,7 +23,7 @@ Status: IN PROGRESS 2026-11-20 — L1 done; L2 with coder. Planned rev. 2; branc
 | `co_hoi` | Cơ hội như nhau | Mọi em có cơ hội như nhau: bốc thăm, không xét điểm thi. | `priority=tier, tiers=[]` (engine: strict ⇒ lottery only, reserves skipped) | unchanged |
 | `danh_cho` | Dành chỗ cho một nhóm | Giữ một số chỗ ở mỗi CLB cho một nhóm (vd. khối 10, hoàn cảnh khó khăn). | `priority=score, tier_mode=reserve` | per club `reserve_group = group`, `reserve_capacity = ceil(group share × capacity)` |
 
-- Cards never touch `wharton` / `fa_daa`: those belong to the existing first question (Chỉ xếp thứ tự / Chia 100
+- Cards never touch `fa_daa`, nor `wharton` except: `co_hoi` turns "Chia 100 điểm" off (forced by `_chuan_hoa`/engine, same as Nâng cao A13.13), returns warning `mt_diem_chia_khong_dung` which the UI MUST show; only Undo restores it (lead, L2 review). Both belong to the existing first question (Chỉ xếp thứ tự / Chia 100
   điểm / Huy chương). Conflicts: with "Huy chương", `co_hoi` is disabled with one line of reason (medal mode needs
   scores). With "Chia 100 điểm", `co_hoi` shows one line: "Điểm chia không được dùng với mục tiêu này."
 - `danh_cho` group: the student list's group labels. One label ⇒ chosen automatically (0 extra clicks). Several ⇒
@@ -65,7 +65,7 @@ Status: IN PROGRESS 2026-11-20 — L1 done; L2 with coder. Planned rev. 2; branc
   `LUAT_XEP_MAC_DINH` keys, never `wharton`/`fa_daa`; default config ⇒ `nang_luc`; `nang_luc` patch == default rules;
   `co_hoi` assignment == pure lottery order on simulated data (if false → STOP, "Needs Truong"); seat formula on a
   hand-checked 10-student case; share read from students only (invariant 2).
-- [ ] **L2 API** — `api_muc_tieu.py` mixin: `get_muc_tieu()` (cards, current id, groups found, disabled reasons),
+- [x] **L2 API** (bd93958, checker NO BUGS) — `api_muc_tieu.py` mixin: `get_muc_tieu()` (cards, current id, groups found, disabled reasons),
   `chon_muc_tieu(id, nhom=None)` (rules via the `update_workspace_config` path + club seats, ONE transaction,
   backup first; stores top-level config `muc_tieu = {id, nhom}` — not in `rules`, so never in `run_history.luat_xep`
   or fingerprints; returns `hoan_tac` = previous rules + seats), `hoan_tac_muc_tieu(hoan_tac)`. Admin only
@@ -96,8 +96,8 @@ Status: IN PROGRESS 2026-11-20 — L1 done; L2 with coder. Planned rev. 2; branc
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. L1 `muc_tieu.py` done.
-- Next: coder works on L2 (`GO L2` sent, with checker notes a–c from L1).
+- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py` done.
+- Next: coder works on L3 (`GO L3` sent).
 
 ## Needs Truong
 - (none yet)
