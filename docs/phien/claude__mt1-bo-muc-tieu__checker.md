@@ -48,3 +48,6 @@
 
 ## CI-fix1 | 51ba743..37e4bca | NO BUGS
 - test_ws_nhan: only "mt_" prefix added. capNhatViecTiepTheo returns promise; loadHealthReport waits with .catch: list renders even if get_dashboard_status raises; no deadlock; 3x28 UI tests stable.
+
+## CI-fix2 | 4ab12fc..a2b2b34 | NO BUGS (1 nit)
+- MT block hidden until first get_muc_tieu; on failure it stays hidden silently (pre-existing; nit: show a line). Appears 59 ms after the first question, no layout jump; test change = added wait only; stale guard ok; 6/6 parallel runs of 26 tests pass.
