@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: PLANNED 2026-11-20 (Opus, revision 2: UI-first, 3 cards). Branch created and pushed 2026-11-20 from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — lead running protocol §3 (L1 next). Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -96,15 +96,16 @@ Status: PLANNED 2026-11-20 (Opus, revision 2: UI-first, 3 cards). Branch created
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. Nothing coded.
-- Next: lead runs protocol §3 from L1.
+- Done: plan rev. 2 + protocol. Lead started 2026-11-20; nothing coded yet.
+- Next: lead creates coder + checker, sends `GO L1`.
 
 ## Needs Truong
-- (empty)
+- (none yet)
 
 ## Sessions
 | Role | Session id | Started |
 |---|---|---|
+| lead (Opus) | session_01TGThn5w7hS2AUUvuf2JfSJ | 2026-11-20 |
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
