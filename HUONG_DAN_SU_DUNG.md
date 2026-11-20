@@ -124,9 +124,9 @@ Ngay dưới câu hỏi đầu ở **Cài đặt** có câu hỏi thứ hai: **"
 
 Dưới thẻ có MỘT dòng nói điều sẽ xảy ra. Trước lần xếp đầu tiên: thứ tự xét bằng lời. Sau đó: "Ước tính so với lần xếp gần nhất: … học sinh được chỗ tốt hơn, … học sinh xuống nguyện vọng sau" — chỉ là ước tính, kết quả đã xếp không đổi. Dòng vàng báo khi CLB chỉ giữ 1–2 chỗ (quá ít để đổi được kết quả) hoặc khi nhóm chưa bị thiệt hơn các nhóm khác. **Xem từng CLB** mở số chỗ giữ ở mỗi CLB.
 
-Sau khi xếp, ở **Chi tiết và xuất tệp** có MỘT dòng kết quả, ví dụ: "Mục tiêu: Dành chỗ cho khối 10 — đạt ở 5/5 CLB được chọn nhiều nhất · 23 học sinh được giúp · 26 học sinh nhường chỗ." *Nhường chỗ* là học sinh có chỗ kém hơn so với khi không dùng mục tiêu. Số từ 1 đến 4 hiện là "dưới 5" để không ai nhận ra được từng người. Dòng này chỉ hiện khi lần xếp theo đúng mục tiêu đang chọn.
+Sau khi xếp, ở **Chi tiết và xuất tệp** có MỘT dòng kết quả, ví dụ: "Mục tiêu: Dành chỗ cho khối 10 — đạt ở 5/5 CLB được chọn nhiều nhất · 23 học sinh được giúp · 26 học sinh nhường chỗ." (số minh hoạ). *Nhường chỗ* là học sinh có chỗ kém hơn so với khi không dùng mục tiêu. Số từ 1 đến 4 hiện là "dưới 5" để không ai nhận ra được từng người. Dòng này chỉ hiện khi lần xếp theo đúng mục tiêu đang chọn.
 
-Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xám "Đang dùng cài đặt riêng" và nút **Về mục tiêu mẫu** (1 lần bấm). Chỉ quản trị thấy phần này, giáo viên không thấy.
+Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xám "Đang dùng cài đặt riêng" và, nếu trước đó đã chọn một thẻ, nút **Về mục tiêu mẫu** (1 lần bấm) đưa về thẻ đó. Chỉ quản trị thấy phần này, giáo viên không thấy.
 
 **"Chấm điểm mù" nghĩa là gì:** màn hình chấm điểm **chỉ hiện mã và họ tên**. Nó
 không hiện số bốc thăm, cũng không hiện em đó xếp CLB này là nguyện vọng thứ

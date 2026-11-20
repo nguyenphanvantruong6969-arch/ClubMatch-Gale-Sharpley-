@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L5 fix1: hướng dẫn nói đúng khi nào có nút "Về mục tiêu mẫu"
+
+- `HUONG_DAN_SU_DUNG.md`: nút chỉ có nếu trước đó đã chọn một thẻ; ví dụ số ghi "(số minh hoạ)".
+
 ## 2026-11-20 — MT1-L5 (phần tài liệu): hướng dẫn "Chọn mục tiêu"
 
 - `HUONG_DAN_SU_DUNG.md` (mục 4): đoạn "Chọn mục tiêu" (ba thẻ, một/hai lần bấm, Hoàn tác, ghi chú điểm chia, khoá khi huy chương, dòng tác động, dòng kết quả, "dưới 5", dòng xám "cài đặt riêng"); bảng nhóm "Cài đặt và quản lý" nói hai câu hỏi. Bản đồ mã (`CLAUDE_CHI_TIET.md`) đã có `muc_tieu.py`, `muc_tieu_do.py`, `api_muc_tieu.py`, `js/19_muc_tieu.js`. Chưa viết bản đánh giá của lead (§5).
