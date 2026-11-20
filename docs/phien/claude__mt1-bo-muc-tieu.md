@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1–L4 done; L5 docs with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -81,7 +81,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L4 done; L5 docs with coder. Planned rev
   and `js/03_ket_qua.js`, `index.html`, keys `mt1_*` in `i18n.js`. Tests `tests/test_giao_dien_mt1.py` (Chromium):
   click count per card (1/2), Undo restores, estimate line appears without click, warnings, result line, teacher
   hidden, 1280/1024 px, keyboard, contrast/size. Screenshots before/after in `docs/phien/anh_mt1/`.
-- [ ] **L5 Docs + final review** — `HUONG_DAN_SU_DUNG.md` section "Chọn mục tiêu" (≤ 1 screen, plain words),
+- [x] **L5 Docs + final review** (a1a4b90, checker 1 doc bug → fixed, fix verified by lead; §5 review pending) — `HUONG_DAN_SU_DUNG.md` section "Chọn mục tiêu" (≤ 1 screen, plain words),
   `CLAUDE_CHI_TIET.md` code map, `CHANGELOG.md`, `TIEN_DO.md`; protocol §5 review.
 
 ## Acceptance (whole lot)
@@ -96,8 +96,8 @@ Status: IN PROGRESS 2026-11-20 — L1–L4 done; L5 docs with coder. Planned rev
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js` done.
-- Next: coder works on L5 docs (`GO L5` sent); then CI gate §4, lead review §5.
+- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js`, L5 docs done.
+- Next: CI gate §4 on the head commit (no pushes until it finishes), then lead review §5.
 
 ## Needs Truong
 - (none yet)
