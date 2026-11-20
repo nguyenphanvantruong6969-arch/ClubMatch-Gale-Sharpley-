@@ -1555,8 +1555,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "{n} clubs keep only 1-2 seats. That few seats hardly changes the result."
   },
   "mt_khong_co_khoang_cach": {
-    "vi": "Lần xếp gần nhất, nhóm này không bị thiệt so với các {person_l} khác. Giữ chỗ có thể không cần thiết.",
-    "en": "In the latest allocation this group was not at a disadvantage compared with other {person_pl}. Keeping seats may not be needed."
+    "vi": "Lần xếp gần nhất chưa thấy nhóm này bị thiệt hơn các nhóm khác, nên có thể chưa cần giữ chỗ.",
+    "en": "The latest allocation shows no disadvantage for this group, so keeping seats may not be needed."
   },
   "mt_uoc_tinh_fa": {
     "vi": "Chưa ước tính được khi đang dùng chế độ huy chương.",
