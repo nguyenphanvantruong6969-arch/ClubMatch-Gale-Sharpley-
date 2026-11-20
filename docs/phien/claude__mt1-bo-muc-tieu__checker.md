@@ -27,3 +27,5 @@
 - BUG1: mt1_da_theo "Lần xếp gần nhất đã theo mục tiêu này." is false when last run used another goal (only 0 moves). Reword to outcome ("Không em nào đổi chỗ…").
 - BUG2: wizard step 3, Chia 100 + co_hoi silently flips first question to "Chỉ xếp thứ tự" with no note (Settings shows it).
 - OK: clicks 1/1/1/2 counted; Undo x2; teacher UI hidden + 5 backend refusals; words; contrast/size/focus/1024; ux1 test edit necessary.
+- BUG3 (addendum): stale toast stays when a newer card is applied (two toasts, old Undo discards newer choice). Close previous toast in chon().
+- Note: mt_khong_co_khoang_cach wording jargon -> "…nên có thể chưa cần giữ chỗ."; details collapsed OK.
