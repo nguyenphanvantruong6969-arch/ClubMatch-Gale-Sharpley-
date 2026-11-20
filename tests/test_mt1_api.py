@@ -366,3 +366,24 @@ def test_luu_mau_khong_mang_muc_tieu_theo(tmp_path):
     with open(duong, encoding="utf-8") as f:
         mau = json.load(f)
     assert "muc_tieu" not in mau["config"] and mau["config"]["rules"]["tiers"] == []
+
+
+def test_muc_tieu_khong_ro_ri_vao_luat_xep_va_dau_van_tay_khi_dung_co_hoi(tmp_path):
+    """Ca mặc định không phát hiện được rò rỉ (luat_xep NULL); `co_hoi` thì có luật ghi vào lịch sử."""
+    (tmp_path / "the").mkdir()
+    (tmp_path / "tho").mkdir()
+    a1, db1 = _mo(tmp_path / "the", {"wharton": False})
+    assert a1.chon_muc_tieu("co_hoi")["ok"] and a1.run_pipeline(seed=42)["ok"]
+    luat_tho = mt.rules_cua_muc_tieu("co_hoi", {"wharton": False})
+    a2, db2 = _mo(tmp_path / "tho", luat_tho)               # cùng luật, KHÔNG khoá muc_tieu
+    assert "muc_tieu" not in _cfg(db2) and a2.run_pipeline(seed=42)["ok"]
+    ls1 = _sql(db1, "SELECT luat_xep FROM run_history ORDER BY run_id DESC LIMIT 1")[0][0]
+    ls2 = _sql(db2, "SELECT luat_xep FROM run_history ORDER BY run_id DESC LIMIT 1")[0][0]
+    assert ls1 is not None and ls1 == ls2 and "muc_tieu" not in ls1 and "danh_cho" not in ls1
+    assert (_sql(db1, "SELECT student_id, buoi, club_id FROM match_results ORDER BY student_id, buoi")
+            == _sql(db2, "SELECT student_id, buoi, club_id FROM match_results ORDER BY student_id, buoi"))
+    cot = [r[1] for r in _sql(db1, "PRAGMA table_info(dau_van_tay_chay)")]
+    bo = [c for c in cot if c not in ("run_id", "run_at", "tao_luc", "id")]
+    if bo:
+        cau = "SELECT %s FROM dau_van_tay_chay ORDER BY 1" % ", ".join(bo)
+        assert _sql(db1, cau) == _sql(db2, cau)               # dấu vân tay kết quả y hệt

@@ -1653,6 +1653,24 @@ MESSAGES = {
         "en": "The goal could not be changed. Settings are unchanged. Please try again.",
     },
     # === end MT1 (L2) ===
+    # === MT1 (L3) ===
+    "mt_cho_it": {
+        "vi": "Có {n} câu lạc bộ chỉ giữ 1–2 chỗ. Số chỗ ít như vậy gần như không đổi được kết quả.",
+        "en": "{n} clubs keep only 1-2 seats. That few seats hardly changes the result.",
+    },
+    "mt_khong_co_khoang_cach": {
+        "vi": "Lần xếp gần nhất chưa cho thấy nhóm này bị thiệt so với các nhóm khác, nên giữ chỗ có thể chỉ tạo chênh lệch ngược.",
+        "en": "The latest allocation shows no disadvantage for this group, so keeping seats may only create a reverse gap.",
+    },
+    "mt_uoc_tinh_fa": {
+        "vi": "Chưa ước tính được khi đang dùng chế độ huy chương.",
+        "en": "An estimate is not available in medal mode yet.",
+    },
+    "mt_chua_co_ket_qua": {
+        "vi": "Chưa có lần xếp chính thức nào để báo cáo.",
+        "en": "There is no official allocation to report on yet.",
+    },
+    # === end MT1 (L3) ===
 }
 
 

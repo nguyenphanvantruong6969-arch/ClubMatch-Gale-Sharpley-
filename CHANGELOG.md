@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L3: ước tính và dòng kết quả của thẻ mục tiêu (chỉ đọc)
+
+- Mới: `muc_tieu_do.py` (phép đo thuần: `an_so` ẩn số 1–4 thành "dưới 5", `so_sanh_hang`, `dat_o_clb`, `co_khoang_cach`, `pct_nguyen_vong_1`…). `api_muc_tieu.py`: `uoc_tinh_muc_tieu(muc_tieu, nhom)` (thẻ GIẢ ĐỊNH chưa áp; giải trong bộ nhớ với bộ số đã khoá, so với lần chính thức mới nhất; chưa có lần xếp thì chỉ có lời; huy chương → `mt_uoc_tinh_fa`) và `bao_cao_muc_tieu(run_id)` (đạt ở mấy CLB được chọn nhiều nhất, em được giúp / nhường chỗ so với cùng dữ liệu không dùng thẻ, nguyện vọng 1, chưa có chỗ). Cả hai không ghi bảng nào, không sao lưu, không gọi `run_thu`; chỉ quản trị, không vào nhật ký (hàm đọc).
+- `api_tieu_chi.py`: tách `_giai_trong_bo_nho` ra khỏi `_run_thu_da_khoa` (không đổi hành vi; thêm `sao_luu=False`, `sua_clb`).
+- Mã mới `mt_cho_it`, `mt_khong_co_khoang_cach`, `mt_uoc_tinh_fa`, `mt_chua_co_ket_qua` (cuối `i18n_errors.py`, `i18n_loi.js` sinh lại); `phan_quyen.py`, `nhat_ky.py` (`_KHONG_GHI`).
+- Test: `tests/test_mt1_uoc_tinh.py` (31 ca: tính tay 10/10 và 3/3, tổng kiểm mọi bảng trước/sau, nhiều buổi, lần chạy thử không làm mốc, dòng kết quả khớp hai lần chạy thật); `tests/test_mt1_api.py` thêm ca rò rỉ với `co_hoi` (luật ghi lịch sử và dấu vân tay y hệt khi không có `muc_tieu`).
+
 ## 2026-11-20 — MT1-L2: API ba thẻ mục tiêu (chỉ quản trị)
 
 - Mới: `api_muc_tieu.py` (`MucTieuMixin`: `get_muc_tieu`, `chon_muc_tieu`, `hoan_tac_muc_tieu`); gắn vào `PipelineAPI`. Chọn thẻ = MỘT giao dịch (luật + khoá `muc_tieu` + chỗ giữ của CLB), sao lưu trước, không chạy xếp, không đụng `run_history` / `match_results` / `stb_lock`. Hoàn tác trả đúng luật, `muc_tieu` và từng CLB; rời thẻ "Dành chỗ" thì trả chỗ giữ nhập ban đầu.

@@ -104,84 +104,10 @@ class TieuChiMixin:
                 return _fail(err("gt2_chua_co_lan_chinh_thuc"))
             seed = khoa["seed"] if khoa["seed"] is not None else goc["seed"]
 
-            # 3) Sao lưu (hỏng không chặn, như lần chính thức) rồi kiểm dữ liệu.
-            try:
-                self._backup_db()
-            except Exception:
-                pass
-            wharton = None
-            if dung_wharton(luat):
-                du_lieu, _dvt, wharton = load_from_sqlite_kem_dau_van_tay_wharton(self.db_path, luat)
-            else:
-                du_lieu, _dvt = load_from_sqlite_kem_dau_van_tay(self.db_path, luat)
-            (students, clubs, tested_scores, applicants, preferences, _) = du_lieu
-            errors = validate_data_integrity(
-                students, clubs, preferences, applicants, tran_nguyen_vong=luat["max_choices"])
-            if errors:
-                return _fail_co_buoc(steps_log, errors)
-            diem_wharton = None
-            if wharton is not None:
-                w1_dien, w2_dien = tu_dien_wharton_mot_clb(
-                    preferences, wharton["clb_thi"], wharton["w1"], wharton["w2"], clubs)
-                loi_w = kiem_ho_so_wharton(
-                    preferences, wharton["clb_thi"], w1_dien, w2_dien, clubs,
-                    tran_nguyen_vong=luat["max_choices"])
-                diem_wharton, thong_bao = diem_wharton_hieu_luc(
-                    preferences, w1_dien, w2_dien, tested_scores)
-                loi_w += [e for e in thong_bao if e["code"] != "wharton_vang_thi"]
-                if loi_w:
-                    n_em = len({e["params"].get("student_id") for e in loi_w})
-                    return _fail_co_buoc(
-                        steps_log, [err("wharton_ho_so_chua_hop_le", n=n_em)] + loi_w)
-
-            # 4) Buổi cần chạy (như lần chính thức; không có thì chạy hết).
-            ds_buoi_tat_ca = sap_buoi({(c.get("buoi") or BUOI_MAC_DINH) for c in clubs.values()})
-            chi_buoi_chuan = None
-            if chi_buoi is not None:
-                def _chuan(b):
-                    if b in ds_buoi_tat_ca:
-                        return b
-                    ma = self.chuan_hoa_buoi(b) or BUOI_MAC_DINH
-                    return next((x for x in ds_buoi_tat_ca
-                                 if x == ma or self.chuan_hoa_buoi(x) == ma), ma)
-                chi_buoi_chuan = [_chuan(b) for b in chi_buoi]
-                la = sorted(set(chi_buoi_chuan) - set(ds_buoi_tat_ca))
-                if la:
-                    return _fail(err("buoi_khong_ton_tai", buoi=", ".join(la),
-                                     dang_co=", ".join(ds_buoi_tat_ca)))
-                if not chi_buoi_chuan:
-                    return _fail(err("chua_chon_buoi_nao"))
-                if set(chi_buoi_chuan) == set(ds_buoi_tat_ca):
-                    chi_buoi_chuan = None
-
-            # 5) Số bốc thăm: CHỈ ĐỌC từ bộ đã khoá. Thiếu số (người mới) thì từ chối, không bốc.
-            thieu = [sid for sid, info in students.items() if info.get("stb") is None]
-            if thieu:
-                return _fail(err("gt2_thu_stb_chua_day", n=len(thieu)))
-            stb_lottery = {sid: info["stb"] for sid, info in students.items()}
-            with self._ket_noi_doc() as cur:
-                stb_buoi_da_khoa = doc_stb_buoi(cur) or None
-
-            # 6) Giải + hai chốt, y như lần chính thức.
-            reserve_fn = default_reserve_eligible_fn(students, clubs)
-            tham_so = tham_so_luat(luat, students)
-            result = run_rbda_nhieu_buoi(
-                students, clubs, tested_scores, applicants, preferences,
-                stb_lottery, is_reserve_eligible_fn=reserve_fn,
-                che_do_boc_tham=CHE_DO_BOC_THAM_MAC_DINH, seed=seed,
-                chi_buoi=chi_buoi_chuan,
-                tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"],
-                diem_wharton=diem_wharton, stb_buoi_da_khoa=stb_buoi_da_khoa)
-            van_de = []
-            _nhom = nhom_theo_buoi(clubs)
-            for _buoi, _kq in result.per_buoi.items():
-                _clubs_b, _, _, _prefs_b = cat_du_lieu_theo_buoi(
-                    _buoi, _nhom[_buoi], clubs, tested_scores, applicants, preferences)
-                van_de += sanity_check_result(_kq, _clubs_b, _prefs_b)
-                van_de += verify_stability(
-                    _kq, _clubs_b, _prefs_b, reserve_fn, bo_qua_du_tru=tham_so["bo_qua_du_tru"])
-            if van_de:
-                return _fail_co_buoc(steps_log, van_de)
+            # 3–6) Kiểm dữ liệu rồi giải trong bộ nhớ (cũng là đường của `uoc_tinh_muc_tieu`, MT1-L3).
+            result, loi = self._giai_trong_bo_nho(luat, seed, chi_buoi, steps_log)
+            if loi is not None:
+                return loi
 
             # 7) Ghi trong MỘT giao dịch: một dòng run_history + các dòng ket_qua_thu. Lỗi thì rollback.
             conn = connect_db(self.db_path)
@@ -228,6 +154,96 @@ class TieuChiMixin:
                 except Exception:
                     pass
                 conn.close()
+
+    def _giai_trong_bo_nho(self, luat, seed, chi_buoi, steps_log, sao_luu=True, sua_clb=None):
+        """Kiểm dữ liệu rồi giải trong bộ nhớ bằng luật `luat` và bộ số bốc thăm ĐÃ KHOÁ (không bốc lại).
+
+        Trả `(KetQuaTuan, None)` hoặc `(None, phản hồi lỗi)`. KHÔNG ghi CSDL. `sao_luu=False` bỏ cả sao lưu
+        (ước tính MT1-L3). `sua_clb(clubs)`: sửa từ điển CLB đã đọc, trong bộ nhớ, trước khi kiểm
+        (giả định chỗ giữ của một thẻ mục tiêu mà chưa áp)."""
+        # 3) Sao lưu (hỏng không chặn, như lần chính thức) rồi kiểm dữ liệu. Ước tính chỉ đọc thì
+        # `sao_luu=False`: không sao lưu, không viết gì.
+        if sao_luu:
+            try:
+                self._backup_db()
+            except Exception:
+                pass
+        wharton = None
+        if dung_wharton(luat):
+            du_lieu, _dvt, wharton = load_from_sqlite_kem_dau_van_tay_wharton(self.db_path, luat)
+        else:
+            du_lieu, _dvt = load_from_sqlite_kem_dau_van_tay(self.db_path, luat)
+        (students, clubs, tested_scores, applicants, preferences, _) = du_lieu
+        if sua_clb is not None:
+            sua_clb(clubs)
+        errors = validate_data_integrity(
+            students, clubs, preferences, applicants, tran_nguyen_vong=luat["max_choices"])
+        if errors:
+            return None, _fail_co_buoc(steps_log, errors)
+        diem_wharton = None
+        if wharton is not None:
+            w1_dien, w2_dien = tu_dien_wharton_mot_clb(
+                preferences, wharton["clb_thi"], wharton["w1"], wharton["w2"], clubs)
+            loi_w = kiem_ho_so_wharton(
+                preferences, wharton["clb_thi"], w1_dien, w2_dien, clubs,
+                tran_nguyen_vong=luat["max_choices"])
+            diem_wharton, thong_bao = diem_wharton_hieu_luc(
+                preferences, w1_dien, w2_dien, tested_scores)
+            loi_w += [e for e in thong_bao if e["code"] != "wharton_vang_thi"]
+            if loi_w:
+                n_em = len({e["params"].get("student_id") for e in loi_w})
+                return None, _fail_co_buoc(
+                    steps_log, [err("wharton_ho_so_chua_hop_le", n=n_em)] + loi_w)
+
+        # 4) Buổi cần chạy (như lần chính thức; không có thì chạy hết).
+        ds_buoi_tat_ca = sap_buoi({(c.get("buoi") or BUOI_MAC_DINH) for c in clubs.values()})
+        chi_buoi_chuan = None
+        if chi_buoi is not None:
+            def _chuan(b):
+                if b in ds_buoi_tat_ca:
+                    return b
+                ma = self.chuan_hoa_buoi(b) or BUOI_MAC_DINH
+                return next((x for x in ds_buoi_tat_ca
+                             if x == ma or self.chuan_hoa_buoi(x) == ma), ma)
+            chi_buoi_chuan = [_chuan(b) for b in chi_buoi]
+            la = sorted(set(chi_buoi_chuan) - set(ds_buoi_tat_ca))
+            if la:
+                return None, _fail(err("buoi_khong_ton_tai", buoi=", ".join(la),
+                                       dang_co=", ".join(ds_buoi_tat_ca)))
+            if not chi_buoi_chuan:
+                return None, _fail(err("chua_chon_buoi_nao"))
+            if set(chi_buoi_chuan) == set(ds_buoi_tat_ca):
+                chi_buoi_chuan = None
+
+        # 5) Số bốc thăm: CHỈ ĐỌC từ bộ đã khoá. Thiếu số (người mới) thì từ chối, không bốc.
+        thieu = [sid for sid, info in students.items() if info.get("stb") is None]
+        if thieu:
+            return None, _fail(err("gt2_thu_stb_chua_day", n=len(thieu)))
+        stb_lottery = {sid: info["stb"] for sid, info in students.items()}
+        with self._ket_noi_doc() as cur:
+            stb_buoi_da_khoa = doc_stb_buoi(cur) or None
+
+        # 6) Giải + hai chốt, y như lần chính thức.
+        reserve_fn = default_reserve_eligible_fn(students, clubs)
+        tham_so = tham_so_luat(luat, students)
+        result = run_rbda_nhieu_buoi(
+            students, clubs, tested_scores, applicants, preferences,
+            stb_lottery, is_reserve_eligible_fn=reserve_fn,
+            che_do_boc_tham=CHE_DO_BOC_THAM_MAC_DINH, seed=seed,
+            chi_buoi=chi_buoi_chuan,
+            tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"],
+            diem_wharton=diem_wharton, stb_buoi_da_khoa=stb_buoi_da_khoa)
+        van_de = []
+        _nhom = nhom_theo_buoi(clubs)
+        for _buoi, _kq in result.per_buoi.items():
+            _clubs_b, _, _, _prefs_b = cat_du_lieu_theo_buoi(
+                _buoi, _nhom[_buoi], clubs, tested_scores, applicants, preferences)
+            van_de += sanity_check_result(_kq, _clubs_b, _prefs_b)
+            van_de += verify_stability(
+                _kq, _clubs_b, _prefs_b, reserve_fn, bo_qua_du_tru=tham_so["bo_qua_du_tru"])
+        if van_de:
+            return None, _fail_co_buoc(steps_log, van_de)
+        return result, None
 
     # ------------------------------------------------------------------------------------------
     # L3 — so sánh hai lần chạy (chỉ ĐỌC; danh sách em đổi chỗ chỉ cho màn quản lý / giáo viên)
