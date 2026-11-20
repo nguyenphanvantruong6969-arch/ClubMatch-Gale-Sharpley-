@@ -50,8 +50,11 @@ function mt1TaoCauHoi(tienTo, khiDoiCauDau) {
   const canhBao = ux1aEl("div", { id: tt + "CanhBao" });
   const chiTiet = ux1aEl("details", { class: "mt1-chi-tiet", id: tt + "ChiTiet", hidden: true });
   const rieng = ux1aEl("p", { class: "mt1-dong mt1-rieng", id: tt + "Rieng", hidden: true });
-  const hop = ux1aEl("div", { class: "ux1a-cai-dat mt1-hop", id: tt + "Block" },
+  /* Ẩn cho tới khi có dữ liệu đầu tiên: không hiện ba thẻ còn bấm được mà chưa biết thẻ nào bị khoá, và "thấy khối" nghĩa là
+     đã vẽ xong trạng thái khoá / thẻ đang dùng (không còn khoảng hở cho người dùng bấm nhầm, hay cho kiểm tra đọc quá sớm). */
+  const hop = ux1aEl("div", { class: "ux1a-cai-dat mt1-hop", id: tt + "Block", hidden: true },
     the.hop, lyDo, nhom, dong, canhBao, chiTiet, rieng);
+  let lanMoi = 0;          /* lần hỏi get_muc_tieu mới nhất: bỏ phản hồi cũ về muộn */
 
   function chon(ma, nhomChon) {
     const lyThe = d && d.cac_the.find((x) => x.id === ma);
@@ -191,7 +194,9 @@ function mt1TaoCauHoi(tienTo, khiDoiCauDau) {
 
   function lamMoi(giuGhiChu, baoCauDau) {
     if (!giuGhiChu) ghiChu = [];
+    const so = ++lanMoi;
     return callApi("get_muc_tieu").then((r) => {
+      if (so !== lanMoi) return;                       /* có lần hỏi mới hơn: phản hồi cũ không được ghi đè */
       if (!r.ok) { hop.hidden = true; return; }
       hop.hidden = false;
       d = r.data;

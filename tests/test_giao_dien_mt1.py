@@ -309,6 +309,8 @@ def test_co_hoi_khi_chia_100_diem_bao_diem_chia_khong_dung_va_hoan_tac_tra_lai(m
     _vao(page)
     page.locator("#ux1aMtCoHoi").click()
     page.locator(".toast", has_text="Điểm chia không được dùng với mục tiêu này.").wait_for()
+    page.wait_for_function("document.getElementById('ux1aMtHieuQua').textContent"
+                           ".includes('Điểm chia không được dùng với mục tiêu này.')")      # dòng tác động vẽ sau thông báo
     assert "Điểm chia không được dùng với mục tiêu này." in page.locator("#ux1aMtHieuQua").inner_text()
     assert _luat(api)["wharton"] is False
     page.locator(".toast .toast-hanh-dong", has_text="Hoàn tác").click()

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1 CI-fix2: khối mục tiêu chỉ hiện khi đã có dữ liệu; bỏ phản hồi cũ về muộn
+
+- `js/19_muc_tieu.js`: khối câu hỏi mục tiêu ẩn cho tới khi `get_muc_tieu` trả về (trước đó hiện ba thẻ còn bấm được mà chưa biết thẻ nào bị khoá — khoảng hở cho người dùng bấm nhầm, và cho kiểm tra "thẻ bị khoá" đọc quá sớm khi máy chậm); `lamMoi` bỏ phản hồi `get_muc_tieu` cũ về muộn (đếm lần hỏi, như `viecTiepTheoLanGoi`).
+- `tests/test_giao_dien_mt1.py`: ca "Chia 100 điểm → Cơ hội như nhau" đợi đúng điều kiện cuối (dòng tác động có câu ghi chú) trước khi so; khẳng định giữ nguyên.
+- Nguyên nhân gốc: khối hiện sớm hơn trạng thái khoá (cặp 1–2) và dòng tác động vẽ sau thông báo (cặp 3). Tái hiện cục bộ bằng chạy 12 bản song song: trước sửa 4/12 hỏng, sau sửa 0/12; cả tệp 6 bản song song 26/26.
+
 ## 2026-11-20 — MT1 CI-fix1: mã `mt_*` đăng ký ở bản chụp lỗi; thanh "Việc tiếp theo" không còn chạy đua với danh sách cảnh báo
 
 - `tests/test_ws_nhan.py`: tiền tố `mt_` (MT1) vào danh sách tiền tố mã lỗi mới sau ảnh chụp, như `gt3_` / `xp1_`; phép so từng chữ giữ nguyên.
