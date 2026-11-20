@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L5 (phần tài liệu): hướng dẫn "Chọn mục tiêu"
+
+- `HUONG_DAN_SU_DUNG.md` (mục 4): đoạn "Chọn mục tiêu" (ba thẻ, một/hai lần bấm, Hoàn tác, ghi chú điểm chia, khoá khi huy chương, dòng tác động, dòng kết quả, "dưới 5", dòng xám "cài đặt riêng"); bảng nhóm "Cài đặt và quản lý" nói hai câu hỏi. Bản đồ mã (`CLAUDE_CHI_TIET.md`) đã có `muc_tieu.py`, `muc_tieu_do.py`, `api_muc_tieu.py`, `js/19_muc_tieu.js`. Chưa viết bản đánh giá của lead (§5).
+
 ## 2026-11-20 — MT1-L4 fix1: dòng "đã theo mục tiêu", ghi chú ở trình tạo workspace, thông báo cũ, câu cảnh báo
 
 - `js/19_muc_tieu.js`: ước tính 0/0 nay nói kết quả ("Không học sinh nào đổi chỗ so với lần xếp gần nhất."; khoá `mt1_khong_doi` thay `mt1_da_theo`, vì lần xếp trước có thể dùng luật khác); lần chọn thẻ mới đóng thông báo "Đã chuyển sang…" cũ, Hoàn tác luôn là của lần mới nhất.
