@@ -7,12 +7,12 @@ Status: IN PROGRESS (lead started 2026-11-19). Was: NOT STARTED (planned by Opus
 ## Plan (lead ticks)
 - [x] L1 pypdf dev-only; pypdf tests run (not skip) on CI
 - [x] L2 slip PDF: typical slip = 1 page, no near-empty 2nd page; headers never break mid-word (40 students ≤ 44 pages)
-- [ ] L3 giao_vien can "Lưu PDF" for one student (#btnGtPdfMot)
+- [x] L3 giao_vien can "Lưu PDF" for one student (#btnGtPdfMot)
 - [ ] L4 one "Chọn lớp" select on Results (keep #kqChonLop; drop #ux1bLop; stale comment)
 - [ ] L5 CI + Windows build + short UX1F review section; PR (base main if #21 merged, else claude/ux1-tich-hop)
 
 ## Current state (overwrite)
-- Done: L1 (ec962ee), L2 (235a3d7; 40HS 74→40 pages, 800HS 1519→1278). In progress: L3 (+ L2 note 1 heading-orphan fix).
+- Done: L1 (ec962ee), L2 (235a3d7; 40HS 74→40 pages, 800HS 1519→1278). L3 (f4be762) + L2 follow-up d159ba9 (pages <200 chars: 0). In progress: L4.
 
 ## Sessions
 | Role | Session | State |
