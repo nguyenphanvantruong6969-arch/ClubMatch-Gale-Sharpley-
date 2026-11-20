@@ -35,3 +35,7 @@
 
 ## L4 fix1b | 954d0e5..da5d291 | NO BUGS
 - Only mt_khong_co_khoang_cach wording (i18n in sync); 53 tests, kiem_nhanh 7/7, ruff clean.
+
+## L5 | 80bc0d3..6eed91a | 1 BUG (doc)
+- HUONG_DAN: "Về mục tiêu mẫu" button only exists after a card was chosen once (lan_cuoi); doc says always.
+- Rest verified true vs UI; rows MT1-L1..L5 present; 58 doc tests, kiem_nhanh 7/7. Optional: "(số minh hoạ)" on example numbers.
