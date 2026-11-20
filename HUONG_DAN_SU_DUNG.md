@@ -119,7 +119,7 @@ Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự bi
 Ngay dưới câu hỏi đầu ở **Cài đặt** có câu hỏi thứ hai: **"Khi một CLB đông người, trường ưu tiên điều gì?"** Bấm một trong ba thẻ là xong, không có nút Lưu; thông báo hiện ra có nút **Hoàn tác** trong 10 giây (hoàn tác trả lại cả cách xếp lẫn số chỗ giữ của từng CLB).
 
 - **Theo năng lực** (mặc định): CLB có thi thì chọn theo điểm; CLB không thi thì bốc thăm công bằng.
-- **Cơ hội như nhau**: mọi học sinh bốc thăm, không xét điểm thi. Đang ở "Chia 100 điểm" thì phần mềm tự tắt điểm chia và ghi "Điểm chia không được dùng với mục tiêu này."; Hoàn tác bật lại. Đang ở chế độ huy chương thì thẻ này bị khoá (huy chương cần điểm thi), lý do ghi ngay dưới thẻ.
+- **Cơ hội như nhau**: mọi học sinh bốc thăm, không xét điểm thi. Đang ở "Chia 100 điểm" thì phần mềm tự tắt điểm chia và ghi "Điểm chia không được dùng với mục tiêu này."; Hoàn tác bật lại, và khi chuyển sang thẻ khác (nếu chưa sửa tay gì) điểm chia cũng tự bật lại. Đang ở chế độ huy chương thì thẻ này bị khoá (huy chương cần điểm thi), lý do ghi ngay dưới thẻ.
 - **Dành chỗ cho một nhóm**: giữ một số chỗ ở mỗi CLB cho một nhóm, ví dụ khối 10. Số chỗ giữ tính theo tỉ lệ của nhóm trong danh sách học sinh. Chỉ có một nhóm thì tự chọn (1 lần bấm); có nhiều nhóm thì bấm thẻ rồi bấm tên nhóm (2 lần bấm). Sổ nhập chưa có cột nhóm thì thẻ bị khoá.
 
 Dưới thẻ có MỘT dòng nói điều sẽ xảy ra. Trước lần xếp đầu tiên: thứ tự xét bằng lời. Sau đó: "Ước tính so với lần xếp gần nhất: … học sinh được chỗ tốt hơn, … học sinh xuống nguyện vọng sau" — chỉ là ước tính, kết quả đã xếp không đổi. Dòng vàng báo khi CLB chỉ giữ 1–2 chỗ (quá ít để đổi được kết quả) hoặc khi nhóm chưa bị thiệt hơn các nhóm khác. **Xem từng CLB** mở số chỗ giữ ở mỗi CLB.

@@ -185,7 +185,18 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
   let luat = {};
   const dangMo = () => wsTrangThai && wsTrangThai.enabled && wsTrangThai.slug === slug;
   const the = ux1aTaoThe(tienTo, (ma) => doi(ma));
-  const mt = typeof mt1TaoCauHoi === "function" && dangMo() ? mt1TaoCauHoi(tienTo) : null;
+  /* MT1: một thẻ mục tiêu có thể đổi cách xét (vd. "Cơ hội như nhau" tắt điểm chia, rời thẻ thì bật lại): câu hỏi đầu
+     phải vẽ lại từ cấu hình ĐÃ LƯU sau mỗi lần chọn / hoàn tác / "Về mục tiêu mẫu". */
+  const veLaiCauDau = () => callApi("get_workspace_config", slug).then((res) => {
+    if (!res.ok) return;
+    const cfg = res.data.config || {};
+    luat = cfg.rules || {};
+    the.datCach(ux1aCachTuLuat(luat));
+    the.sanSang.hidden = true;
+    if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the, () => doi("chia_100"));
+    if (dangMo()) ux1aApDungSong(cfg);
+  });
+  const mt = typeof mt1TaoCauHoi === "function" && dangMo() ? mt1TaoCauHoi(tienTo, veLaiCauDau) : null;
   host.textContent = "";
   host.append(the.hop);
   if (mt) host.append(mt.hop);

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1 fix3 (L2 + L4): rời "Cơ hội như nhau" trả lại "Chia 100 điểm"; câu hỏi đầu chạy theo thẻ
+
+- `cau_hinh_ws.py` (`_kiem_muc_tieu`): khoá tuỳ chọn `muc_tieu.wharton_truoc` (bool) = "Chia 100 điểm" đang bật TRƯỚC khi `co_hoi` tắt nó. `api_muc_tieu.py` (`_ke_hoach`): vào `co_hoi` thì nhớ; áp lại `co_hoi` giữ nguyên; rời `co_hoi` sang thẻ khác khi chưa sửa tay (không phải `tuy_chinh`) thì trả `rules.wharton` (không chạm `fa_daa`), không thêm ghi chú; `bao_cao_muc_tieu`: mốc "không dùng thẻ" của `co_hoi` gồm cả điểm chia đã nhớ. Hoàn tác giữ nguyên ngữ nghĩa (gói có cả `muc_tieu`).
+- `js/18_cai_dat.js` + `js/19_muc_tieu.js`: câu hỏi đầu vẽ lại từ cấu hình đã lưu sau mỗi lần chọn / hoàn tác / "Về mục tiêu mẫu" (dấu ✓ chuyển sang "Chỉ xếp thứ tự" và trở lại).
+- `HUONG_DAN_SU_DUNG.md`: câu về điểm chia nói cả Hoàn tác lẫn chuyển thẻ.
+- Test: 6 ca mới ở `tests/test_mt1_api.py`, 1 ở `tests/test_mt1_uoc_tinh.py`, 1 ở `tests/test_giao_dien_mt1.py` (26 ca).
+
 ## 2026-11-20 — MT1-L4 fix2: "Dành chỗ" nhiều nhóm không giả vờ đã lưu
 
 - `js/19_muc_tieu.js`: bấm thẻ "Dành chỗ" khi có nhiều nhóm chỉ mở các nút nhóm (tiêu điểm nhảy tới nút đầu; thẻ có `aria-expanded`, viền nét đứt, KHÔNG ✓, `aria-checked` giữ false). Thẻ đã lưu giữ dấu ✓, dòng tác động và thông báo của nó cho tới khi bấm một nhóm (bấm thứ hai mới lưu, rồi mới ✓ + thông báo + ước tính). Bấm thẻ khác hoặc chính thẻ đã lưu thì nút nhóm biến mất. `style.css`: `.ux1a-the.is-cho`.

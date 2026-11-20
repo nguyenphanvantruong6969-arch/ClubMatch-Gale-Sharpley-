@@ -32,7 +32,7 @@ function mt1Dong(cls, chu, id) { return ux1aEl("p", { class: cls, id, text: chu 
 
 /* ---- Câu hỏi trong trang Cài đặt ------------------------------------------------------------- */
 
-function mt1TaoCauHoi(tienTo) {
+function mt1TaoCauHoi(tienTo, khiDoiCauDau) {
   const tt = tienTo + "Mt";
   let d = null;            /* get_muc_tieu */
   let choNhom = false;     /* đã bấm "Dành chỗ", chờ bấm nhóm (nhiều nhóm): CHƯA lưu gì, thẻ đã lưu giữ dấu ✓ */
@@ -80,13 +80,13 @@ function mt1TaoCauHoi(tienTo) {
           callApi("hoan_tac_muc_tieu", hoanTac).then((r2) => {
             if (!r2.ok) { the.loi(trErrs(r2.errors).join(" ")); return; }
             ghiChu = [];
-            lamMoi(true);
+            lamMoi(true, true);
           });
         } } });
         mt1ToastCu = toast;
         setTimeout(() => { toast.goBo(); if (mt1ToastCu === toast) mt1ToastCu = null; }, 10000);
       });
-      lamMoi(true);
+      lamMoi(true, true);
     });
   }
 
@@ -189,13 +189,14 @@ function mt1TaoCauHoi(tienTo) {
     veTacDong();
   }
 
-  function lamMoi(giuGhiChu) {
+  function lamMoi(giuGhiChu, baoCauDau) {
     if (!giuGhiChu) ghiChu = [];
     return callApi("get_muc_tieu").then((r) => {
       if (!r.ok) { hop.hidden = true; return; }
       hop.hidden = false;
       d = r.data;
       ve();
+      if (baoCauDau && khiDoiCauDau) khiDoiCauDau();   /* câu hỏi đầu vẽ lại theo cấu hình đã lưu */
     });
   }
 

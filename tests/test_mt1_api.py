@@ -54,6 +54,10 @@ def _cfg(db):
     return cau_hinh_ws.doc_cau_hinh(db)
 
 
+def _luat(db):
+    return cau_hinh_ws.doc_cau_hinh(db)["rules"]
+
+
 def _ma(r):
     return [e["code"] for e in r["errors"]]
 
@@ -387,3 +391,66 @@ def test_muc_tieu_khong_ro_ri_vao_luat_xep_va_dau_van_tay_khi_dung_co_hoi(tmp_pa
     if bo:
         cau = "SELECT %s FROM dau_van_tay_chay ORDER BY 1" % ", ".join(bo)
         assert _sql(db1, cau) == _sql(db2, cau)               # dấu vân tay kết quả y hệt
+
+
+# ----- fix3: rời `co_hoi` trả lại "Chia 100 điểm" nếu chính thẻ đã tắt nó -----
+
+def test_roi_co_hoi_sang_nang_luc_tra_lai_chia_100_diem(tmp_path):
+    a, db = _mo(tmp_path, {"wharton": True})
+    assert a.chon_muc_tieu("co_hoi")["ok"]
+    assert _luat(db)["wharton"] is False and _cfg(db)["muc_tieu"]["wharton_truoc"] is True
+    r = a.chon_muc_tieu("nang_luc")
+    assert r["ok"] and r["data"]["canh_bao"] == []                         # không ghi chú thêm
+    assert _luat(db)["wharton"] is True and _luat(db)["fa_daa"] is False
+    assert "wharton_truoc" not in _cfg(db)["muc_tieu"]
+    assert a.get_muc_tieu()["data"]["hien_tai"] == "nang_luc"
+
+
+def test_roi_co_hoi_sang_danh_cho_tra_lai_chia_100_diem(tmp_path):
+    a, db = _mo(tmp_path, {"wharton": True})
+    assert a.chon_muc_tieu("co_hoi")["ok"]
+    assert a.chon_muc_tieu("danh_cho", "khoi_10")["ok"]
+    assert _luat(db)["wharton"] is True and "wharton_truoc" not in _cfg(db)["muc_tieu"]
+    assert a.get_muc_tieu()["data"]["hien_tai"] == "danh_cho"
+
+
+def test_co_hoi_ap_lai_giu_gia_tri_cu_va_khong_ghi_chu_lai(tmp_path):
+    a, db = _mo(tmp_path, {"wharton": True})
+    assert a.chon_muc_tieu("co_hoi")["ok"]
+    sau1 = _cfg(db)
+    r = a.chon_muc_tieu("co_hoi")
+    assert r["ok"] and r["data"]["canh_bao"] == [] and _cfg(db) == sau1
+    assert a.chon_muc_tieu("nang_luc")["ok"] and _luat(db)["wharton"] is True
+
+
+def test_khong_tra_lai_neu_chia_100_von_tat_hoac_da_sua_tay(tmp_path):
+    (tmp_path / "tat").mkdir()
+    a, db = _mo(tmp_path / "tat", {"wharton": False})
+    assert a.chon_muc_tieu("co_hoi")["ok"] and "wharton_truoc" not in _cfg(db)["muc_tieu"]
+    assert a.chon_muc_tieu("nang_luc")["ok"] and _luat(db)["wharton"] is False      # vốn tắt: giữ tắt
+    (tmp_path / "tay").mkdir()
+    b, db2 = _mo(tmp_path / "tay", {"wharton": True})
+    assert b.chon_muc_tieu("co_hoi")["ok"]
+    cau_hinh_ws.ghi_cau_hinh(db2, cau_hinh_ws.tron_len(_cfg(db2), {"rules": {            # sửa tay ở "Nâng cao"
+        "priority": "score+tier", "tier_mode": "strict", "tiers": ["khoi_10"]}}))
+    assert b.get_muc_tieu()["data"]["hien_tai"] == "tuy_chinh"
+    assert b.chon_muc_tieu("nang_luc")["ok"] and _luat(db2)["wharton"] is False     # có sửa tay: KHÔNG tự trả lại
+
+
+def test_hoan_tac_sau_khi_roi_co_hoi_tra_dung_trang_thai_co_hoi(tmp_path):
+    a, db = _mo(tmp_path, {"wharton": True})
+    assert a.chon_muc_tieu("co_hoi")["ok"]
+    o_co_hoi = _cfg(db)
+    r = a.chon_muc_tieu("nang_luc")
+    assert r["ok"] and a.hoan_tac_muc_tieu(r["data"]["hoan_tac"])["ok"]
+    assert _cfg(db) == o_co_hoi and _luat(db)["wharton"] is False
+    assert a.hoan_tac_muc_tieu(r["data"]["hoan_tac"])["ok"] and _cfg(db) == o_co_hoi   # hoàn tác hai lần
+
+
+def test_cau_hinh_khoa_wharton_truoc_hop_le_va_khong_co_thi_nhu_cu():
+    ok = cau_hinh_ws.chuan_hoa({"muc_tieu": {"id": "co_hoi", "nhom": None, "wharton_truoc": True}})
+    assert ok["muc_tieu"] == {"id": "co_hoi", "nhom": None, "wharton_truoc": True}
+    assert "wharton_truoc" not in cau_hinh_ws.chuan_hoa({"muc_tieu": {"id": "co_hoi"}})["muc_tieu"]
+    for xau in ("true", 1, [True]):
+        with pytest.raises(ValueError):
+            cau_hinh_ws.chuan_hoa({"muc_tieu": {"id": "co_hoi", "wharton_truoc": xau}})

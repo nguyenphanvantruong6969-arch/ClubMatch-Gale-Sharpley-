@@ -193,20 +193,25 @@ def _ghi_ro_wharton(cfg) -> bool:
 def _kiem_muc_tieu(mt):
     """MT1: kiểm khoá cấp trên `muc_tieu` = `{id, nhom, truoc?}`; trả bản chuẩn hoá, hoặc None (= không có).
 
-    `id` là một thẻ của `muc_tieu.BO_MUC_TIEU`; `nhom` là chuỗi hoặc None; `truoc` (tuỳ chọn) là chỗ giữ của
+    `id` là một thẻ của `muc_tieu.BO_MUC_TIEU`; `nhom` là chuỗi hoặc None; `wharton_truoc` (tuỳ chọn, bool): giá trị `rules.wharton` trước khi thẻ `co_hoi` tắt nó; `truoc` (tuỳ chọn) là chỗ giữ của
     từng CLB trước khi thẻ "Dành chỗ cho một nhóm" ghi đè: `{club_id: [nhóm|None, số chỗ ≥ 0]}`.
     Khoá này nằm NGOÀI `rules`, nên không bao giờ vào `run_history.luat_xep` hay dấu vân tay kết quả.
     """
     if mt is None:
         return None
-    if not isinstance(mt, dict) or set(mt) - {"id", "nhom", "truoc"}:
-        raise ValueError("muc_tieu phải là {id, nhom, truoc} hoặc null.")
+    if not isinstance(mt, dict) or set(mt) - {"id", "nhom", "truoc", "wharton_truoc"}:
+        raise ValueError("muc_tieu phải là {id, nhom, truoc, wharton_truoc} hoặc null.")
     if not isinstance(mt.get("id"), str) or mt["id"] not in BO_MUC_TIEU:
         raise ValueError("muc_tieu.id phải là một trong %s, nhận %r." % (list(BO_MUC_TIEU), mt.get("id")))
     nhom = mt.get("nhom")
     if nhom is not None and not isinstance(nhom, str):
         raise ValueError("muc_tieu.nhom phải là chuỗi hoặc null.")
     ra = {"id": mt["id"], "nhom": nhom}
+    wt = mt.get("wharton_truoc")
+    if wt is not None:
+        if not isinstance(wt, bool):
+            raise ValueError("muc_tieu.wharton_truoc phải là true / false hoặc null.")
+        ra["wharton_truoc"] = wt          # "Chia 100 điểm" đang bật TRƯỚC khi thẻ co_hoi tắt nó (để trả lại khi rời thẻ)
     truoc = mt.get("truoc")
     if truoc is not None:
         if not isinstance(truoc, dict):

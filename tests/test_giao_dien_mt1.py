@@ -279,6 +279,29 @@ def test_dong_tac_dong_0_0_noi_ket_qua_khong_noi_da_theo_muc_tieu(mo_trang, monk
     assert not loi, loi
 
 
+def test_cau_hoi_dau_chay_theo_the_moi_chon_va_hoan_tac_va_ve_muc_tieu_mau(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _nap(api)
+    _vao(page)
+
+    def dau():
+        return page.evaluate("[...document.querySelectorAll('#ux1aLuoi .ux1a-the')]"
+                             ".filter(b => b.getAttribute('aria-checked') === 'true').map(b => b.dataset.cach)")
+    assert dau() == ["chia_100"]
+    page.locator("#ux1aMtCoHoi").click()
+    _cho_chon(page, "CoHoi")
+    page.wait_for_function("document.getElementById('ux1aChiXep').getAttribute('aria-checked') === 'true'")
+    assert dau() == ["chi_xep"] and _luat(api)["wharton"] is False           # ✓ đi theo cấu hình đã lưu
+    page.locator(".toast .toast-hanh-dong", has_text="Hoàn tác").click()
+    page.wait_for_function("document.getElementById('ux1aChia100').getAttribute('aria-checked') === 'true'")
+    page.locator("#ux1aMtCoHoi").click()
+    page.wait_for_function("document.getElementById('ux1aChiXep').getAttribute('aria-checked') === 'true'")
+    page.locator("#ux1aMtNangLuc").click()                                  # rời co_hoi: Chia 100 điểm quay lại
+    page.wait_for_function("document.getElementById('ux1aChia100').getAttribute('aria-checked') === 'true'")
+    assert dau() == ["chia_100"] and _luat(api)["wharton"] is True
+    assert not loi, loi
+
+
 def test_co_hoi_khi_chia_100_diem_bao_diem_chia_khong_dung_va_hoan_tac_tra_lai(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _nap(api)

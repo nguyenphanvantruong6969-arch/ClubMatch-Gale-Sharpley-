@@ -411,3 +411,22 @@ def test_ma_loi_moi_co_vi_va_en():
         m = i18n_errors.MESSAGES[ma]
         assert m["vi"].strip() and m["en"].strip(), ma
     assert all(m.startswith("mt_") for m in list(i18n_errors.MESSAGES)[-12:])
+
+
+def test_bao_cao_co_hoi_so_voi_luat_truoc_do_gom_ca_chia_100_diem(tmp_path, monkeypatch):
+    """Mốc "không dùng thẻ" của `co_hoi` phải là cấu hình TRƯỚC khi thẻ tắt điểm chia (muc_tieu.wharton_truoc)."""
+    a, db = _tao(tmp_path)
+    cfg = cau_hinh_ws.doc_cau_hinh(db)
+    cfg["rules"]["priority"] = "tier"                               # như sau khi chọn co_hoi
+    cfg["muc_tieu"] = {"id": "co_hoi", "nhom": None, "wharton_truoc": True}
+    cau_hinh_ws.ghi_cau_hinh(db, cfg)
+    assert a.run_pipeline(seed=42)["ok"]
+    thay = {}
+    goc_fn = a._giai_gia_dinh
+
+    def ghi(luat, seed, goc, cho):
+        thay["luat"] = dict(luat)
+        return goc_fn(luat, seed, goc, cho)
+    monkeypatch.setattr(a, "_giai_gia_dinh", ghi)
+    a.bao_cao_muc_tieu()
+    assert thay["luat"]["wharton"] is True and thay["luat"]["priority"] == "score"

@@ -107,9 +107,16 @@ class MucTieuMixin:
         hien_tai = mt.nhan_dien_muc_tieu(luat0, clb, cu, hs)
         luat = mt.rules_cua_muc_tieu(muc_tieu, luat0)
         canh_bao = []
+        wharton_truoc = None              # giá trị cần nhớ để trả lại khi rời thẻ co_hoi
         if muc_tieu == mt.CO_HOI and luat.get("wharton") is True:
             luat["wharton"] = False       # luật nhất quán sẵn có: bốc thăm thuần không dùng điểm chia
+            wharton_truoc = True
             canh_bao.append(err("mt_diem_chia_khong_dung"))
+        elif muc_tieu == mt.CO_HOI and hien_tai == mt.CO_HOI:
+            wharton_truoc = (cu or {}).get("wharton_truoc")          # áp lại cùng thẻ: giữ giá trị đã nhớ
+        elif (cu or {}).get("id") == mt.CO_HOI and hien_tai == mt.CO_HOI and (cu or {}).get("wharton_truoc") is True \
+                and luat0.get("wharton") is False:
+            luat["wharton"] = True        # rời co_hoi (chưa ai sửa tay): trả lại "Chia 100 điểm" mà chính thẻ đã tắt
 
         nhom_chon, cho, truoc, thong_tin = None, None, None, {}
         if muc_tieu == mt.DANH_CHO:
@@ -137,7 +144,7 @@ class MucTieuMixin:
             cho = {cid: (v[0], v[1]) for cid, v in cu["truoc"].items() if cid in clb}
         return {"cfg": cfg, "hs": hs, "clb": clb, "luat0": luat0, "cu": cu, "hien_tai": hien_tai,
                 "luat": luat, "canh_bao": canh_bao, "nhom_chon": nhom_chon, "cho": cho,
-                "truoc": truoc, "thong_tin": thong_tin}, None
+                "truoc": truoc, "thong_tin": thong_tin, "wharton_truoc": wharton_truoc}, None
 
     def chon_muc_tieu(self, muc_tieu, nhom=None):
         """Áp thẻ `muc_tieu` (luật + chỗ giữ) trong MỘT giao dịch, sao lưu trước.
@@ -153,6 +160,8 @@ class MucTieuMixin:
             moi = {"id": muc_tieu, "nhom": kh["nhom_chon"]}
             if kh["truoc"] is not None:
                 moi["truoc"] = kh["truoc"]
+            if kh["wharton_truoc"] is not None:
+                moi["wharton_truoc"] = kh["wharton_truoc"]
             cfg2 = copy.deepcopy(kh["cfg"])
             cfg2["rules"] = kh["luat"]
             cfg2["muc_tieu"] = moi
@@ -356,6 +365,8 @@ class MucTieuMixin:
                         # nên KHÔNG báo "được giúp / nhường chỗ" (0 sẽ là một sự thật giả).
                         return _ok(kq)
                 luat_cf = mt.rules_cua_muc_tieu(mt.NANG_LUC, cfg["rules"])
+                if hien_tai == mt.CO_HOI and (da_chon or {}).get("wharton_truoc") is True:
+                    luat_cf["wharton"] = True       # "không dùng thẻ" = cấu hình TRƯỚC khi thẻ tắt điểm chia
                 cf, loi = self._giai_gia_dinh(luat_cf, seed, goc, truoc_clb)
             except Exception as e:
                 return _fail(err("error_reading_results", detail=str(e)))
