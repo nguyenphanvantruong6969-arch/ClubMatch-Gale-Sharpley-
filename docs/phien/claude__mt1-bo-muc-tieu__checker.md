@@ -42,3 +42,6 @@
 
 ## L4 fix2 | 298dc0f..dd81704 | NO BUGS (1 nit)
 - Pending state for danh_cho (several groups): nothing saved after click 1, saved card keeps ✓, dashed token style 6.01:1, keyboard path ok, other card/saved card cancel ok; 40 UI tests, ruff, kiem_nhanh 7/7. Nit: _chon_nhom double-click in the 2-click test.
+
+## fix3 | 6c4950d..b1e1101 (L2+L4) | NO BUGS
+- wharton_truoc: co_hoi→other restores Chia 100, manual edit not restored, fa_daa untouched, Undo exact (incl. twice/after leaving); estimate==report (28/26) on 800HS seed 3; config without muc_tieu unchanged; luat_xep clean; first question re-renders; 277 + 41 tests, ruff, kiem_nhanh 7/7 (20 seeds).
