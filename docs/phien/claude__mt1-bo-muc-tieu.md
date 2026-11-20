@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1 done; L2 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -58,7 +58,7 @@ Status: IN PROGRESS 2026-11-20 — L1 with coder. Planned rev. 2; branch from `c
 7. **Roles:** teacher never sees the question; backend refuses teacher calls.
 
 ## Plan (lead ticks after checker NO BUGS)
-- [ ] **L1 Catalogue (pure)** — new `muc_tieu.py`: `BO_MUC_TIEU` (3 entries: id, vi/en title, sentence, rules
+- [x] **L1 Catalogue (pure)** (6909f06, checker NO BUGS) — new `muc_tieu.py`: `BO_MUC_TIEU` (3 entries: id, vi/en title, sentence, rules
   patch, club action), `rules_cua_muc_tieu(id, rules)`, `nhan_dien_muc_tieu(rules, clubs)` → id or `tuy_chinh`,
   `de_xuat_cho_giu(students, clubs, nhom)` → per club seats `ceil(share × capacity)` capped at capacity, plus
   warnings (`it_qua` if any 1–2). Tests `tests/test_mt1_muc_tieu.py`: patches pass `cau_hinh_ws._chuan_hoa`; only
@@ -96,8 +96,8 @@ Status: IN PROGRESS 2026-11-20 — L1 with coder. Planned rev. 2; branch from `c
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. Lead started 2026-11-20; nothing coded yet.
-- Next: coder works on L1 (`GO L1` sent).
+- Done: plan rev. 2 + protocol. L1 `muc_tieu.py` done.
+- Next: coder works on L2 (`GO L2` sent, with checker notes a–c from L1).
 
 ## Needs Truong
 - (none yet)
