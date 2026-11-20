@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI run 44757824708 (head 49950fa): all green incl. coverage except job "Windows 1/2" still running at 15:35 UTC; Windows exe build NOT run (see Needs Truong). Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: DONE 264ce63 CI green (tests) 2026-11-20 — run https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44764954441 (lint, 4 Linux + 2 Windows shards, coverage ≥ 85 %). Windows exe build not run (see Needs Truong).
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -100,8 +100,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI run 4475
 - Review: `docs/ke_hoach/mt/MT1_DANH_GIA.md` + `docs/ke_hoach/mt/anh/`.
 
 ## Next steps
-1. Read job "Bo test (Windows 1/2)" of run 44757824708. Green ⇒ `Status: DONE 49950fa CI green (tests) 2026-11-20`, add Final summary (Vietnamese, ≤10 lines), push. Red ⇒ FIX to coder (session ids below), checker, push, re-read CI.
-2. Do NOT push while CI runs (every push cancels the run).
+- None for MT1. Truong: see Needs Truong and Final summary.
 
 ## Decisions (lead, this session)
 - `co_hoi` turns "Chia 100 điểm" off (forced by `_chuan_hoa`/engine); leaving `co_hoi` without manual edit restores it (`muc_tieu.wharton_truoc`); Undo exact.
@@ -110,6 +109,13 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI run 4475
 
 ## Files touched (MT1)
 `muc_tieu.py`, `muc_tieu_do.py`, `api_muc_tieu.py`, `api_tieu_chi.py` (`_giai_trong_bo_nho` extracted from `run_thu`), `cau_hinh_ws.py`, `workspace.py`, `phan_quyen.py`, `nhat_ky.py`, `i18n_errors.py`/`i18n_loi.js`, `i18n.js`, `js/19_muc_tieu.js`, `js/18_cai_dat.js`, `js/075_workspace.js`, `js/03_ket_qua.js`, `js/17_viec_tiep_theo.js`, `js/02_van_hanh.js`, `index.html`, `style.css`, tests `test_mt1_*`, `test_giao_dien_mt1.py` (+ small edits in test_gt3_phan_quyen, test_giao_dien_ux1_cai_dat, test_ws_nhan), docs `HUONG_DAN_SU_DUNG.md`, `CLAUDE_CHI_TIET.md`, `CHANGELOG.md`, `TIEN_DO.md`.
+
+## Final summary (Tiếng Việt)
+- Xong MT1: ở Cài đặt có câu hỏi thứ hai "Khi một CLB đông người, trường ưu tiên điều gì?" với 3 thẻ (Theo năng lực · Cơ hội như nhau · Dành chỗ cho một nhóm). Bấm 1 lần là áp dụng (2 lần nếu có nhiều nhóm), có Hoàn tác, có dòng ước tính và dòng kết quả sau khi xếp.
+- Kiểm tra tự động trên GitHub đều đạt: https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44764954441
+- Bản đánh giá từ góc nhìn nhà trường: `docs/ke_hoach/mt/MT1_DANH_GIA.md` (2 lỗi đã sửa, 3 đề xuất cho MT2/MT3). Mọi con số là dữ liệu mô phỏng.
+- Chưa làm: bản cài Windows (.exe) — cần Truong quyết (xem dưới).
+- Thử bằng tay (3 bước): (1) gộp nhánh vào main rồi chạy "Build Windows executable (rbda-kiosk)"; (2) mở phần mềm, nạp `du_lieu_test/SO_NHAP_DQT_800HS_HOP_LE.xlsx`, vào Cài đặt bấm lần lượt 3 thẻ, xem dòng ước tính và thử Hoàn tác; (3) chọn "Dành chỗ cho một nhóm" → khối 10, bấm Xếp, mở "Chi tiết và xuất tệp" đọc dòng "Mục tiêu: …".
 
 ## Needs Truong
 - Windows exe build ("Build Windows executable (rbda-kiosk)") is manual-only and publishes the zip to the public Release "ban-moi-nhat"; not triggered from this unmerged branch. Recommend: merge MT1 to main, then run the build there.
