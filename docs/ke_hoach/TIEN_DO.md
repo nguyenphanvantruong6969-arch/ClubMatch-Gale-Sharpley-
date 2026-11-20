@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| MT1-L1 (danh mục ba thẻ mục tiêu) | xong (chờ checker) | 2026-11-20 | muc_tieu.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_mt1_muc_tieu.py | `co_hoi` = bốc thăm thuần: đúng (không dừng) |
 | MT1-KH (mục MT, Truong duyệt 20/11/2026) | xong (kế hoạch) | 2026-11-20 | docs/phien/claude__mt1-bo-muc-tieu.md, docs/phien/MT1_GIAO_THUC.md | — | Bản 2: 3 thẻ mục tiêu, 1–2 lần bấm, lô L1–L5; nhánh claude/mt1-bo-muc-tieu |
 | MT0 (mục mới MT, ngoài sổ, Truong giao 20/11/2026) | xong | 2026-11-20 | du_lieu_test/do_muc_tieu_mt0.py, docs/fable/08_MT0_MEMO.md, CHANGELOG.md | — (chỉ đo) | Cam kết theo công thức 20/20 so với số cố định 13–14/20 |
 | FA-M7 (+ G0) (IT giao diện, TH) | xong | 2026-11-11 | forms_dot.py, api_forms.py, api_forms_nap.py, api_forms_bo.py, mau_forms_thi_clb/so_de_thi.py, js/11_chuan_bi.js, index.html, i18n.js, i18n_errors.py, kiosk.spec, CHANGELOG.md | tests/test_fa_m7_dong_goi.py, test_fa_m7_duong.py, test_fa_m7_nguon_mot_lan.py, test_giao_dien_fa_m7_the.py, test_giao_dien_fa_m7_nguon.py | Thẻ "Chuẩn bị đợt" bước 1 (CLB) và 2 (Đề thi). Bước 3–5: FA-M8, FA-M9, FA-M10 (2026-11-12). |

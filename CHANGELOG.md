@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L1: danh mục ba thẻ mục tiêu (phần thuần)
+
+- Mới: `muc_tieu.py` (`BO_MUC_TIEU`, `rules_cua_muc_tieu`, `nhan_dien_muc_tieu`, `de_xuat_cho_giu`, `cac_nhom`). Chỉ đặt khoá của `LUAT_XEP_MAC_DINH`, không chạm `wharton`/`fa_daa`; số chỗ giữ = `ceil(tỉ lệ nhóm × sức chứa)` chỉ đọc danh sách học sinh. Chưa nối vào API/giao diện (L2, L4).
+- Test: `tests/test_mt1_muc_tieu.py` (bản vá qua `_chuan_hoa`, mặc định ⇒ `nang_luc`, công thức ca 10 em tính tay, `co_hoi` = bốc thăm thuần so với Gale–Shapley viết riêng, 2 bộ × 3 seed). Số liệu MÔ PHỎNG.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: bản đồ mã thêm `muc_tieu.py`, số tệp test 354.
+
 ## 2026-11-20 — MT0 (mục mới MT, ngoài sổ; mục cha C3/A1): nghiên cứu mục tiêu giáo dục (chỉ đo)
 
 - Mới: `du_lieu_test/do_muc_tieu_mt0.py` (gọi `run_rbda`, `verify_stability` thật; 3 kịch bản × 20 seed), `docs/fable/08_MT0_MEMO.md`.
