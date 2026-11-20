@@ -45,6 +45,7 @@
 ## Academic integrity (student project)
 - All verification numbers are SIMULATED data; never present them as a real survey.
 - Commentary, interpretation and conclusions in the project report are written by the student; never draft them. Operational docs, code and tests are fine.
+  **Exception (Truong, 2026-11-20):** the project now enters an AI competition, not a science fair. AI may draft report text as a clearly labelled "bản tham khảo do AI viết" (`docs/bao_cao/`); numbers stay labelled SIMULATED; personal reflections are marked for Truong to confirm; AI use is disclosed.
 - Log significant AI help in the project's AI log. Correct name: **Gale–Shapley** (not "Sharpley").
 
 ## Sectors and order
