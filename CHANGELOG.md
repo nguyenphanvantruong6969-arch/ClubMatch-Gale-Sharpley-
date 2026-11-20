@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — BAO-CAO-TK (Truong yêu cầu; ngoại lệ liêm chính 20/11): bản tham khảo báo cáo do AI viết
+
+- Mới: `docs/bao_cao/BAN_THAM_KHAO_BAO_CAO.md` (~8.300 chữ, 8 mục theo `KHUNG_TU_VIET.md`), `docs/bao_cao/BAN_THAM_KHAO_VAI_TRO_AI.md` (~1.400 chữ). Viết bởi một phiên Sonnet theo yêu cầu của Truong; Opus soát chọn mẫu số liệu (7,65 s, 3/270, 1,44%, 1.400, 24,3%, 22,9%, 13–14/20, 6.977 ca) khớp nguồn.
+- Số liệu MÔ PHỎNG; 25 chỗ [Truong kiểm lại]. `CLAUDE.md`: ngoại lệ liêm chính học thuật cho cuộc thi AI (Truong, 20/11).
+
 ## 2026-11-20 — MT1-KH + DOC (mục MT, Truong yêu cầu): kế hoạch 3 thẻ mục tiêu; nhật ký AI đến 20/11; khung tự viết
 
 - Kế hoạch (chỉ tài liệu): `docs/phien/claude__mt1-bo-muc-tieu.md` (bản 2: 3 thẻ, hợp đồng giao diện 1–7, lô L1–L5), `docs/phien/MT1_GIAO_THUC.md`; nhánh `claude/mt1-bo-muc-tieu` đã tạo.
