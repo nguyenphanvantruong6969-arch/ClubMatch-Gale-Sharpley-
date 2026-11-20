@@ -328,6 +328,25 @@ def test_bao_cao_danh_cho_khop_hai_lan_chay_that(tmp_path):
     assert set(d["an_toan"]) == {"nguyen_vong_1_pct", "chua_co_cho"}
 
 
+@pytest.mark.parametrize("cach", ["bo_khoa_truoc", "truoc_rong"])
+def test_bao_cao_danh_cho_khong_co_cho_ban_dau_thi_khong_so_sanh(tmp_path, cach):
+    """Không biết chỗ giữ nhập ban đầu thì KHÔNG được báo "0 em được giúp" như một sự thật."""
+    a, db = _tao(tmp_path, nhom=lambda i: "khoi_10" if i > 12 else "")
+    assert a.chon_muc_tieu("danh_cho", "khoi_10")["ok"] and a.run_pipeline(seed=42)["ok"]
+    cfg = cau_hinh_ws.doc_cau_hinh(db)
+    if cach == "bo_khoa_truoc":
+        cfg["muc_tieu"].pop("truoc")
+    else:
+        cfg["muc_tieu"]["truoc"] = {}
+    cau_hinh_ws.ghi_cau_hinh(db, cfg)
+    d = a.bao_cao_muc_tieu()["data"]
+    assert d["ap_dung"] is True and d["muc_tieu"] == "danh_cho"
+    assert d["co_so_sanh"] is False
+    for khoa in ("duoc_giup", "nhuong_cho", "nhom_duoc_giup", "an_toan_truoc"):
+        assert khoa not in d, khoa
+    assert set(d["dat"]) == {"so_dat", "so_clb"} and "nguyen_vong_1_pct" in d["an_toan"]
+
+
 def test_bao_cao_co_hoi_khong_co_dat_va_khop_hai_lan_chay_that(tmp_path):
     a0, db0 = _tao(tmp_path, ten="goc")
     assert a0.run_pipeline(seed=42)["ok"]

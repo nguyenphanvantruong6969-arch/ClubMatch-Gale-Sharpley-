@@ -345,6 +345,16 @@ class MucTieuMixin:
                 # Cùng dữ liệu, KHÔNG dùng thẻ: luật `nang_luc` và chỗ giữ nhập ban đầu.
                 truoc_clb = ({cid: (v[0], v[1]) for cid, v in (da_chon or {}).get("truoc", {}).items()
                               if cid in clb} if hien_tai == mt.DANH_CHO else None)
+                thanh_vien = set()
+                if hien_tai == mt.DANH_CHO:
+                    khoa = mt._khoa_nhom(kq["nhom"])
+                    thanh_vien = {s for s, i in hs.items() if mt._khoa_nhom(i["reserve_group"]) == khoa}
+                    so_dat, so_clb = dd.dat_o_clb(thuc, thanh_vien, len(hs), dd.clb_dong_nhat(nv1, 5))
+                    kq["dat"] = {"so_dat": so_dat, "so_clb": so_clb}
+                    if not truoc_clb:
+                        # Không còn biết chỗ giữ nhập ban đầu (khoá đã sửa tay / bản cũ): không có mốc để so,
+                        # nên KHÔNG báo "được giúp / nhường chỗ" (0 sẽ là một sự thật giả).
+                        return _ok(kq)
                 luat_cf = mt.rules_cua_muc_tieu(mt.NANG_LUC, cfg["rules"])
                 cf, loi = self._giai_gia_dinh(luat_cf, seed, goc, truoc_clb)
             except Exception as e:
@@ -356,9 +366,5 @@ class MucTieuMixin:
                        "nhuong_cho": dd.an_so(len(nhuong)),
                        "an_toan_truoc": {"nguyen_vong_1_pct": dd.pct_nguyen_vong_1(cf)}})
             if hien_tai == mt.DANH_CHO:
-                khoa = mt._khoa_nhom(kq["nhom"])
-                thanh_vien = {s for s, i in hs.items() if mt._khoa_nhom(i["reserve_group"]) == khoa}
-                so_dat, so_clb = dd.dat_o_clb(thuc, thanh_vien, len(hs), dd.clb_dong_nhat(nv1, 5))
-                kq["dat"] = {"so_dat": so_dat, "so_clb": so_clb}
                 kq["nhom_duoc_giup"] = dd.an_so(len(giup & thanh_vien))
             return _ok(kq)

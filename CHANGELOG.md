@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L3 fix1: báo cáo không bịa "0 em được giúp" khi thiếu chỗ giữ ban đầu
+
+- `api_muc_tieu.py` (`bao_cao_muc_tieu`): thẻ `danh_cho` mà `muc_tieu.truoc` thiếu hoặc rỗng thì `co_so_sanh` = False, bỏ `duoc_giup` / `nhuong_cho` / `nhom_duoc_giup` / `an_toan_truoc`; vẫn có `dat` và `an_toan`. Test: 2 ca trong `tests/test_mt1_uoc_tinh.py`.
+
 ## 2026-11-20 — MT1-L3: ước tính và dòng kết quả của thẻ mục tiêu (chỉ đọc)
 
 - Mới: `muc_tieu_do.py` (phép đo thuần: `an_so` ẩn số 1–4 thành "dưới 5", `so_sanh_hang`, `dat_o_clb`, `co_khoang_cach`, `pct_nguyen_vong_1`…). `api_muc_tieu.py`: `uoc_tinh_muc_tieu(muc_tieu, nhom)` (thẻ GIẢ ĐỊNH chưa áp; giải trong bộ nhớ với bộ số đã khoá, so với lần chính thức mới nhất; chưa có lần xếp thì chỉ có lời; huy chương → `mt_uoc_tinh_fa`) và `bao_cao_muc_tieu(run_id)` (đạt ở mấy CLB được chọn nhiều nhất, em được giúp / nhường chỗ so với cùng dữ liệu không dùng thẻ, nguyện vọng 1, chưa có chỗ). Cả hai không ghi bảng nào, không sao lưu, không gọi `run_thu`; chỉ quản trị, không vào nhật ký (hàm đọc).
