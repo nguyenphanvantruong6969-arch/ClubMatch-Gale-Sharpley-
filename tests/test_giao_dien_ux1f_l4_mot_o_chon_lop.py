@@ -65,7 +65,7 @@ def test_quan_tri_mot_o_chon_lop(mo_quan_tri):
     assert not loi, loi
 
 
-def test_giao_vien_mot_o_chon_lop(mo_giao_vien):
+def test_giao_vien_mot_o_chon_lop(mo_giao_vien):  # noqa: F811
     page, api, loi = mo_giao_vien
     page.wait_for_function("() => document.querySelectorAll('#kqChonLop option').length > 1")
     _kiem_mot_o(page)
