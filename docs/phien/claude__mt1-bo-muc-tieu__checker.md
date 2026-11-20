@@ -32,3 +32,6 @@
 
 ## L4 fix1 | 71105f6..954d0e5 | NO BUGS
 - 3 earlier bugs fixed (0/0 wording, wizard note, single latest toast); rewording plain; 101 tests, kiem_nhanh 7/7, ruff clean.
+
+## L4 fix1b | 954d0e5..da5d291 | NO BUGS
+- Only mt_khong_co_khoang_cach wording (i18n in sync); 53 tests, kiem_nhanh 7/7, ruff clean.
