@@ -45,3 +45,6 @@
 
 ## fix3 | 6c4950d..b1e1101 (L2+L4) | NO BUGS
 - wharton_truoc: co_hoi→other restores Chia 100, manual edit not restored, fa_daa untouched, Undo exact (incl. twice/after leaving); estimate==report (28/26) on 800HS seed 3; config without muc_tieu unchanged; luat_xep clean; first question re-renders; 277 + 41 tests, ruff, kiem_nhanh 7/7 (20 seeds).
+
+## CI-fix1 | 51ba743..37e4bca | NO BUGS
+- test_ws_nhan: only "mt_" prefix added. capNhatViecTiepTheo returns promise; loadHealthReport waits with .catch: list renders even if get_dashboard_status raises; no deadlock; 3x28 UI tests stable.
