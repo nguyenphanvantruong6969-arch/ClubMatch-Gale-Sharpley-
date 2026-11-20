@@ -15,3 +15,7 @@
 ## L3 | 2734cf7..f45708a | 1 BUG
 - BUG: bao_cao_muc_tieu with muc_tieu.truoc missing/{} => counterfactual keeps card seats => silent "0 helped / 0 gave way". Expect co_so_sanh False or mt_* error + test.
 - OK: run_thu refactor is a verbatim move (268 tests, ruff, kiem_nhanh 7/7 after fetching origin/main); zero writes (table sha, .bak count, mtime); suppression 1-4 in backend; trial run newest ignored; medal -> mt_uoc_tinh_fa.
+
+## L3 fix1 | 6159eb2..7da70ad | 1 BUG (test only)
+- Product fix OK: truoc missing/{} => co_so_sanh False, no fake 0s; uoc_tinh has no analogous issue.
+- BUG: test_muc_tieu_khong_ro_ri_* flaky — dau_van_tay_chay.luc (timestamp) not excluded from the comparison. Exclude "luc".
