@@ -16,10 +16,9 @@
 - Verified 2026-11-20: 153 UI tests pass (wide list), 204 related backend/doc tests pass, ruff clean, kiem_nhanh 7/7, screenshots in docs/phien/anh_mt1/.
 
 ## Next steps
-1. `git pull --rebase`; run `.venv/bin/ruff check .`; re-run the wider UI list above (PLAYWRIGHT chromium is preinstalled; `-x`, ~10 min) and `tests/test_a13_12_tai_lieu.py tests/test_tai_lieu_dong_bo.py tests/test_gt3_phan_quyen.py tests/test_i18n_sync.py tests/test_skill_soat_ma.py` (code-map test counts tests/test_*.py = 357 in CLAUDE_CHI_TIET.md).
-2. `kiem_nhanh.py --so-seed 20` (7/7 incl. chu_cam: i18n.js text must avoid "em", "bạn", Wharton) + soat-ma four tiers.
-3. Screenshots: scratchpad script /tmp/claude-0/.../scratchpad/chup.py may be gone; recreate: before = `git archive origin/main` copy served by browser_host, after = current tree; Settings default, co_hoi, danh_cho pills, danh_cho applied, result line -> docs/phien/anh_mt1/.
-4. Commit "MT1-L4: ..." (CHANGELOG/TIEN_DO/CLAUDE_CHI_TIET already updated), push, then send `CODER DONE L4 | base <sha> head <sha>` to the lead in GT_GIAO_THUC §7 format.
+1. L4 was reported (CODER DONE L4, head 3715bd8). Wait for `REVIEW`/`FIX L4` from the lead; fix test-first, run related tests only, `kiem_nhanh.py --so-seed 20`, commit "MT1-L4 fix<k>: ...", push, report in GT_GIAO_THUC §7 format.
+2. L5 is the lead's (docs + final review); coder only helps if asked (HUONG_DAN_SU_DUNG "Chọn mục tiêu").
+3. Wide UI regression list (for fixes): ux1_cai_dat, ws_giao_dien, a13_12_ws, a13_13, fa_cai_dat, fg1, gt2/gt4_tieu_chi, ux1b_l5c, ux1_tiep_theo, ux1_dieu_huong, tom_tat, fg8_cau_chu, sg11a, t3_l1_ws, mt1 (153 passed, ~4 min).
 
 ## Decisions
 - Contract strings use label tokens ({person_l} -> "học sinh", {slot_s} -> "CLB") because chu_cam bans "em" in i18n.js; so UI says "N học sinh được chỗ tốt hơn".
@@ -39,3 +38,4 @@ js/19_muc_tieu.js, js/18_cai_dat.js, js/075_workspace.js, js/03_ket_qua.js, js/0
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-20 | Sonnet (coder) | L1–L3 delivered; L4 code + 22 UI tests written | handed off at ~400k context by Stop hook |
+| 2026-11-20 | Sonnet (coder) | L4 verified (153 UI + 204 backend tests, kiem_nhanh 7/7, screenshots) and reported | lead: MT1 §2 overrides the 400k stop; same session continues |
