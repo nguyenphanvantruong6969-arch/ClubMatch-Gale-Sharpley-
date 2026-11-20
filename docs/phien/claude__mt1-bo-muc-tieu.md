@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI gate §4 running. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI run 44757824708 (head 49950fa): all green incl. coverage except job "Windows 1/2" still running at 15:35 UTC; Windows exe build NOT run (see Needs Truong). Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -96,10 +96,24 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI gate §4
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js`, L5 docs done.
-- Next: CI gate §4 on the head commit (no pushes until it finishes); then Status DONE + final summary.
+- All lots L1–L5 ticked (checker NO BUGS). After L5: §5 review found 2 UI bugs → fix2 dd81704, fix3 b1e1101; CI fixes: CI-fix1 37e4bca (register `mt_` codes in test_ws_nhan; pre-existing race #viecTiepTheo vs #healthList in js/17_viec_tiep_theo.js + js/02_van_hanh.js), CI-fix2 a2b2b34 (MT block hidden until first data + stale-response guard in js/19_muc_tieu.js). All checker NO BUGS.
+- Review: `docs/ke_hoach/mt/MT1_DANH_GIA.md` + `docs/ke_hoach/mt/anh/`.
+
+## Next steps
+1. Read job "Bo test (Windows 1/2)" of run 44757824708. Green ⇒ `Status: DONE 49950fa CI green (tests) 2026-11-20`, add Final summary (Vietnamese, ≤10 lines), push. Red ⇒ FIX to coder (session ids below), checker, push, re-read CI.
+2. Do NOT push while CI runs (every push cancels the run).
+
+## Decisions (lead, this session)
+- `co_hoi` turns "Chia 100 điểm" off (forced by `_chuan_hoa`/engine); leaving `co_hoi` without manual edit restores it (`muc_tieu.wharton_truoc`); Undo exact.
+- danh_cho with several groups: card pending (dashed, no ✓) until a group is clicked; nothing saved before.
+- Stop-at-400k overridden by MT1_GIAO_THUC §2 (exactly 3 sessions); this file is kept current instead.
+
+## Files touched (MT1)
+`muc_tieu.py`, `muc_tieu_do.py`, `api_muc_tieu.py`, `api_tieu_chi.py` (`_giai_trong_bo_nho` extracted from `run_thu`), `cau_hinh_ws.py`, `workspace.py`, `phan_quyen.py`, `nhat_ky.py`, `i18n_errors.py`/`i18n_loi.js`, `i18n.js`, `js/19_muc_tieu.js`, `js/18_cai_dat.js`, `js/075_workspace.js`, `js/03_ket_qua.js`, `js/17_viec_tiep_theo.js`, `js/02_van_hanh.js`, `index.html`, `style.css`, tests `test_mt1_*`, `test_giao_dien_mt1.py` (+ small edits in test_gt3_phan_quyen, test_giao_dien_ux1_cai_dat, test_ws_nhan), docs `HUONG_DAN_SU_DUNG.md`, `CLAUDE_CHI_TIET.md`, `CHANGELOG.md`, `TIEN_DO.md`.
 
 ## Needs Truong
+- Windows exe build ("Build Windows executable (rbda-kiosk)") is manual-only and publishes the zip to the public Release "ban-moi-nhat"; not triggered from this unmerged branch. Recommend: merge MT1 to main, then run the build there.
+- Outside MT1 but needed for green CI: pre-existing race fix in `js/17_viec_tiep_theo.js` + `js/02_van_hanh.js` (warning list waits for the next-step bar). Checker NO BUGS; FYI only.
 - Default "Chia 100 điểm" + an import without points (e.g. `SO_NHAP_MAU_120HS_3BUOI.xlsx`) ⇒ the first official run fails until the school switches to "Chỉ xếp thứ tự" (pre-existing, outside MT1). Recommend: on import, if no student has points, default the first question to "Chỉ xếp thứ tự" (new item, e.g. MT2/UX).
 
 ## Sessions
@@ -114,3 +128,4 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI gate §4
 |---|---|---|---|
 | 2026-11-20 | Opus | MT0 research, 6 presets, plan + protocol | on `claude/trusting-bohr-wg0l4n` |
 | 2026-11-20 | Opus | Plan rev. 2: UI-first, 3 cards, click budget, UI contract | Truong: "đồng bộ, không phức tạp, tối giản thao tác" |
+| 2026-11-20 | Opus (lead) | Ran §3 L1–L5 with coder+checker, §5 review (2 UI bugs fixed), §4 CI fixes ×2 | CI green except Windows 1/2 pending; exe build not run |
