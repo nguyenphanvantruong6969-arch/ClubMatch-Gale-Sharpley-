@@ -14,7 +14,7 @@ import api as api_mod  # noqa: E402
 import browser_host  # noqa: E402
 import cau_hinh_ws  # noqa: E402
 import workspace as ws  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(GOC, "du_lieu_test"))
@@ -70,6 +70,7 @@ def mo(tmp_path):
 
 
 def _mo_man_hoc_sinh(page):
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
 
@@ -139,7 +140,9 @@ def test_bam_dong_bang_ket_qua_mo_giai_trinh_va_co_lien_ket_nhay(mo):
     page.wait_for_function("(() => { const r = document.querySelector('#gtPanel').getBoundingClientRect();"
                            " return r.top < window.innerHeight && r.bottom > 0; })()")
     page.evaluate("window.scrollTo(0, 0)")
-    page.click("#gtNhay")                                           # liên kết "Tra cứu" ở đầu thẻ
+    # UX1A-L3: khung tra cứu nằm đầu thẻ Kết quả, không còn liên kết nhảy; ô tìm kiếm bấm tới được ngay.
+    assert page.locator("#gtNhay").count() == 0
+    page.click("#gtTim")
     assert page.evaluate("document.activeElement.id") == "gtTim"
     assert not loi, loi
 
@@ -150,7 +153,9 @@ def test_huong_dan_bon_buoc_chi_cho_quan_tri(mo):
     api.dang_xuat()
     assert api.dang_nhap("quantri", MK)["ok"]
     vao()
+    mo_gap_ma(page)
     assert page.locator("#gtBuocHuongDan").is_visible()
+    mo_gap_ma(page)
     assert len(page.locator("#gtBuocHuongDan li").all()) == 4
     api.dang_xuat()
     assert api.dang_nhap("gv1", MK)["ok"]
@@ -167,6 +172,7 @@ def test_sau_khi_xuat_co_mo_thu_muc_va_mo_tep(mo):
     vao()
     goi = []
     api.mo_tep = lambda p: goi.append(p) or {"ok": True, "data": {"path": p}, "errors": []}
+    mo_gap_ma(page)
     page.click("#btnGtXuatMa")
     page.wait_for_selector("#gtMaPhanHoi .nut-mo-thu-muc")
     nut = page.locator("#gtMaPhanHoi .nut-mo-tep")

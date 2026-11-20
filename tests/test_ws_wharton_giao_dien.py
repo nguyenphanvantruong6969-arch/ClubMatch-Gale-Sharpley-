@@ -71,14 +71,18 @@ def _cho_ten(page, ten):
         "n => document.querySelector('#wsTenHienTai').textContent === n", arg=ten, timeout=10000)
 
 
+def _the(page, ma):
+    return page.locator("#wz" + ma).get_attribute("aria-checked") == "true"
+
+
 def test_buoc_luat_co_o_wharton_bat_san_va_nhan_dung(mo_trang):
+    # UX1A-L2b: ô điểm quyết tâm nay là thẻ "Chia 100 điểm" (ba thẻ thay các ô tick).
     page, _, loi = mo_trang()
     _toi_buoc_luat(page)
-    assert page.locator("#wzWharton").count() == 1
-    assert page.locator("#wzWharton").is_checked()        # A13.13: mặc định (mẫu Trường học) BẬT
-    assert page.locator("#wzWharton").is_enabled()
-    assert page.locator('label[for="wzWharton"]').inner_text() == "Dùng điểm quyết tâm"
-    assert "100" in page.locator("#wzWharton").locator("xpath=../..").inner_text()
+    assert page.locator("#wzChia100").count() == 1
+    assert _the(page, "Chia100")                              # A13.13: mặc định (mẫu Trường học) BẬT
+    assert page.locator("#wzChia100").is_enabled()
+    assert "Chia 100 điểm" in page.locator("#wzChia100").inner_text()
     assert not loi, loi
 
 
@@ -87,36 +91,36 @@ def test_nhan_tieng_anh(mo_trang):
     page.evaluate("window.I18N.setLang('en')")
     page.wait_for_function("document.documentElement.lang === 'en'")
     _toi_buoc_luat(page)
-    assert page.locator('label[for="wzWharton"]').inner_text() == "Use commitment points"
+    assert "Split 100 points" in page.locator("#wzChia100").inner_text()
     assert not loi, loi
 
 
 def test_khoa_va_tu_bo_chon_khi_chuyen_sang_to_hop_khong_duoc(mo_trang):
     page, _, loi = mo_trang()
     _toi_buoc_luat(page)
-    page.locator("#wzWharton").check()
-    assert page.locator("#wzWharton").is_checked()
+    page.locator("#wzChia100").click()
+    assert _the(page, "Chia100")
 
     page.select_option("#wzPriority", "tier")               # chỉ theo nhóm: không có điểm
-    assert page.locator("#wzWharton").is_disabled()
-    assert not page.locator("#wzWharton").is_checked()
+    assert page.locator("#wzChia100").is_disabled() and page.locator("#wzHuyChuong").is_disabled()
+    assert not _the(page, "Chia100") and _the(page, "ChiXep")
     page.select_option("#wzPriority", "score+tier")         # nhóm trước rồi đến điểm: dùng được
-    assert page.locator("#wzWharton").is_enabled()
-    assert not page.locator("#wzWharton").is_checked()      # không tự bật lại
-    page.locator("#wzWharton").check()
+    assert page.locator("#wzChia100").is_enabled()
+    assert not _the(page, "Chia100")                        # không tự bật lại
+    page.locator("#wzChia100").click()
 
     page.select_option("#wzScoreScope", "per_person")       # mỗi người một điểm: không dùng được
-    assert page.locator("#wzWharton").is_disabled()
-    assert not page.locator("#wzWharton").is_checked()
+    assert page.locator("#wzChia100").is_disabled()
+    assert not _the(page, "Chia100")
     page.select_option("#wzScoreScope", "per_slot")
-    assert page.locator("#wzWharton").is_enabled()
+    assert page.locator("#wzChia100").is_enabled()
     assert not loi, loi
 
 
 def test_bat_roi_tao_thi_rules_wharton_duoc_luu_va_xem_lai_co_hang_rvwharton(mo_trang):
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt Wharton")
-    page.locator("#wzWharton").check()
+    page.locator("#wzChia100").click()
     page.locator("#wzTiep").click()                          # sang bước xem lại
     assert page.locator("#rvWharton").inner_text() == "Bật"
     page.locator("#wzTao").click()
@@ -142,7 +146,7 @@ def test_mac_dinh_tao_ra_wharton_bat_va_xem_lai_ghi_bat(mo_trang):
 def test_bo_chon_o_wharton_thi_tao_ra_wharton_tat_va_xem_lai_ghi_tat(mo_trang):
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt thường")
-    page.locator("#wzWharton").uncheck()
+    page.locator("#wzChiXep").click()
     page.locator("#wzTiep").click()
     assert page.locator("#rvWharton").inner_text() == "Tắt"
     page.locator("#wzTao").click()
@@ -154,10 +158,10 @@ def test_bo_chon_o_wharton_thi_tao_ra_wharton_tat_va_xem_lai_ghi_tat(mo_trang):
 def test_quay_lai_buoc_luat_giu_nguyen_o_da_chon(mo_trang):
     page, _, loi = mo_trang()
     _toi_buoc_luat(page)
-    page.locator("#wzWharton").check()
+    page.locator("#wzHuyChuong").click()
     page.locator("#wzTiep").click()
     page.locator("#wzLui").click()
-    assert page.locator("#wzWharton").is_checked()
+    assert _the(page, "HuyChuong")
     assert not loi, loi
 
 
@@ -172,7 +176,7 @@ def test_chon_mau_da_bat_wharton_thi_dien_san(mo_trang):
     page.select_option("#wzMau", label="Mẫu Wharton")
     page.locator("#wzTuyChinh").click()
     page.locator("#wzTiep").click()
-    assert page.locator("#wzWharton").is_checked()
+    assert _the(page, "Chia100")
     assert not loi, loi
 
 
@@ -183,7 +187,7 @@ def test_tieng_viet_khong_lan_chu_tieng_anh_o_bo_loc_cua_buoc_luat(mo_trang):
     buoc = _chu_cac_buoc_wizard(page, 4)
     for chu in buoc:
         assert not re.search(r"workspace|zip", chu, re.I), chu
-    assert "Dùng điểm quyết tâm" in buoc[2]
+    assert "Chia 100 điểm" in buoc[2]
     assert not loi, loi
 
 
@@ -194,7 +198,7 @@ def test_tieng_anh_khong_lan_chu_co_dau_o_buoc_luat(mo_trang):
     page.locator("#btnWorkspace").click()
     page.wait_for_selector("#wsTieuDe")
     buoc = _chu_cac_buoc_wizard(page, 3)
-    assert "Use commitment points" in buoc[2]
+    assert "Split 100 points" in buoc[2]
     for chu in buoc:
         assert not DAU_VIET.search(chu), chu
     assert not loi, loi

@@ -610,6 +610,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} CLB có cột loại / điểm sàn / tối thiểu / sức chứa phòng đã được bỏ qua phần đó, không lưu.",
     "en": "This workspace doesn't use FA-DAA yet: the type / pass mark / minimum / room capacity columns of {n} club(s) were skipped and not saved."
   },
+  "so_nhap_canh_bao_huy_chuong_che_do_tat": {
+    "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
+    "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off. Turn it on in Settings, or the medals will not be used."
+  },
   "fa_giu_cho_bo_qua": {
     "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} dòng giữ chỗ trong sổ đã được bỏ qua, không lưu.",
     "en": "This workspace doesn't use FA-DAA yet: {n} reserved-seat row(s) in the file were skipped and not saved."
@@ -1023,16 +1027,16 @@ window.I18N_ERROR_MESSAGES = {
     "en": "{slot} {club_id}: {n} {score_l}(s) are far from the rest (the {slot_l}'s middle {score_l} is {trung_vi}). For example: {sample}. A {score_l} may be mistyped, such as 70 instead of 7.0. Check them on the Scoring tab."
   },
   "health_oversubscribed": {
-    "vi": "Tổng số chỗ là {n_seats} nhưng có {n_students} {person_l} đã nộp nguyện vọng. Ít nhất {n_short} {person_l} sẽ không có chỗ.",
-    "en": "There are {n_seats} seats in total but {n_students} {person_pl} submitted preferences. At least {n_short} {person_l}(s) won't get a seat."
+    "vi": "{n_seats} chỗ cho {n_students} {person_l}: ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
+    "en": "{n_seats} seats for {n_students} {person_pl}: at least {n_short} won't get one. Raise capacity or add {slot_la}."
   },
   "health_oversubscribed_chua_khai_buoi": {
-    "vi": "Các {slot_l} chưa khai {session_l} có tổng {n_seats} chỗ, trong khi {n_students} {person_l} xếp nguyện vọng vào các {slot_l} này. Ít nhất {n_short} {person_l} chắc chắn không có chỗ ở nhóm này. Các {slot_l} chưa khai {session_l} được xếp chung như một {session_l} riêng. Hãy khai {session_l} cho chúng ở màn Quản lý {slot_sl}, tăng sức chứa, hoặc chấp nhận.",
-    "en": "{slot_p} with no {session_l} set have {n_seats} seats in total, but {n_students} {person_l}(s) ranked these {slot_pl}. At least {n_short} {person_l}(s) will certainly get no seat among them. {slot_p} with no {session_l} set are matched together as one separate {session_l}. Set their {session_l} in Manage {slot_pl}, raise capacity, or accept it."
+    "vi": "{slot_p} chưa khai {session_l}: {n_seats} chỗ cho {n_students} {person_l}, ít nhất {n_short} {person_l} sẽ không có chỗ. Khai {session_l} cho chúng hoặc tăng chỉ tiêu.",
+    "en": "{slot_p} with no {session_l} set: {n_seats} seats for {n_students} {person_pl}, at least {n_short} won't get one. Set their {session_l} or raise capacity."
   },
   "health_oversubscribed_buoi": {
-    "vi": "{session} {buoi} có tổng {n_seats} chỗ, trong khi {n_students} {person_l} xếp nguyện vọng ở {session_l} này. Ít nhất {n_short} {person_l} chắc chắn không có {slot_l} nào trong {session_l} {buoi}. Chỗ trống ở {session_l} khác không bù được. Hãy tăng sức chứa, thêm {slot_l} cho {session_l} này, hoặc chấp nhận.",
-    "en": "{session} {buoi} has {n_seats} seats in total, but {n_students} {person_l}(s) ranked {slot_pl} in this {session_l}. At least {n_short} {person_l}(s) will certainly get no {slot_l} on {buoi}. Free seats in other {session_pl} cannot make up for it. Raise capacity, add {slot_la} to this {session_l}, or accept it."
+    "vi": "{session} {buoi}: {n_seats} chỗ cho {n_students} {person_l}, nên ít nhất {n_short} {person_l} sẽ không có chỗ. Tăng chỉ tiêu hoặc thêm {slot_l}.",
+    "en": "{session} {buoi}: {n_seats} seats for {n_students} {person_pl}, so at least {n_short} won't get one. Raise capacity or add {slot_la}."
   },
   "recovery_db_is_healthy": {
     "vi": "Tệp dữ liệu hiện tại vẫn đọc được bình thường, nên phần mềm không đổi tên hay thay thế nó. Lỗi lúc khởi động có lẽ không phải do dữ liệu hỏng, mà thường do thư mục không có quyền ghi hoặc tệp đang được mở ở chương trình khác. Đóng các chương trình khác, chuyển thư mục phần mềm ra chỗ có quyền ghi (ví dụ Desktop), rồi mở lại.",
@@ -1307,8 +1311,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "Appeal not accepted: {person_l} {student_id} has no result for session {buoi} yet."
   },
   "so_nhap_canh_bao_wharton_trong": {
-    "vi": "{n} {person_l} (ví dụ {vd}) có từ hai {slot_l} trong cùng một buổi mà chưa điền điểm quyết tâm nào, nên lần chạy xếp sẽ bị chặn. Cách sửa: điền đủ 100 điểm cho mỗi nhóm trong sổ rồi nhập lại, hoặc tắt điểm quyết tâm ở Không gian làm việc → ⋯ → Tính năng sau khi xếp….",
-    "en": "{n} {person_l}(s) (for example {vd}) have two or more {slot_l}s in the same session with no commitment points filled in, so the allocation run will be blocked. To fix it: fill in 100 points for each group in the workbook and import again, or turn commitment points off in Workspace → ⋯ → After-allocation features…."
+    "vi": "{n} {person_l} (ví dụ {vd}) có từ hai {slot_l} trong cùng một buổi mà chưa điền điểm quyết tâm nào, nên lần chạy xếp sẽ bị chặn. Cách sửa: điền đủ 100 điểm cho mỗi nhóm trong sổ rồi nhập lại, hoặc tắt điểm quyết tâm bằng cách chọn «Chỉ xếp thứ tự» ở Cài đặt (nếu sổ dùng cột Huy chương thì bật chế độ huy chương ở Cài đặt).",
+    "en": "{n} {person_l}(s) (for example {vd}) have two or more {slot_l}s in the same session with no commitment points filled in, so the allocation run will be blocked. To fix it: fill in 100 points for each group in the workbook and import again, or choose \"Ranking only\" in Settings (if the book uses a Medal column, turn on medal mode in Settings)."
   },
   "phieu_nd_phieu_thieu_cau_2": {
     "vi": "{clb}: chưa trả lời câu 2 (mở thêm nhóm được không): không phân loại được, đã bỏ qua",
@@ -1497,5 +1501,21 @@ window.I18N_ERROR_MESSAGES = {
   "gt3_khong_xoa_duoc_tai_khoan": {
     "vi": "Không xoá được tài khoản. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
     "en": "The accounts could not be cleared. Check the data file and try again."
+  },
+  "xp1_thieu_thu_vien_pdf": {
+    "vi": "Chưa xuất được PDF vì phần mềm thiếu thư viện hoặc phông chữ PDF. Hãy cài lại bản phần mềm đầy đủ.",
+    "en": "PDF export is unavailable because the PDF library or font is missing. Reinstall the full application."
+  },
+  "xp1_kieu_xuat_la": {
+    "vi": "Không rõ cách chia danh sách. Hãy chọn theo câu lạc bộ hoặc theo lớp.",
+    "en": "Unknown way to split the lists. Choose by club or by class."
+  },
+  "ux1b_huy_chuong_gop": {
+    "vi": "{n} {person_l} chưa có huy chương hợp lệ (ví dụ ở: {clb}). Sổ đang nạp mang điểm quyết tâm hoặc huy chương đặt sai chỗ, không phải lỗi của từng {person_l}. Hãy nạp lại sổ có cột Huy chương, hoặc quay lại Chia 100 điểm ở Cài đặt.",
+    "en": "{n} {person_pl} have no valid medals (for example at: {clb}). The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings."
+  },
+  "ux1b_huy_chuong_gop_khong_clb": {
+    "vi": "{n} {person_l} chưa có huy chương hợp lệ. Sổ đang nạp mang điểm quyết tâm hoặc huy chương đặt sai chỗ, không phải lỗi của từng {person_l}. Hãy nạp lại sổ có cột Huy chương, hoặc quay lại Chia 100 điểm ở Cài đặt.",
+    "en": "{n} {person_pl} have no valid medals. The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings."
   }
 };

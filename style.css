@@ -3032,7 +3032,6 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .gt-hs-hien { font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 28px; }
 .gt-hs-dem { color: #b45309; font-weight: 600; margin: 4px 0; }
 .gt-hs-dem[hidden] { display: none; }
-.kq-nhay { margin: 0 0 8px; }
 .gt-buoc { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 0; margin: 0 0 12px; list-style: none; counter-reset: gtb; }
 .gt-buoc li { counter-increment: gtb; display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .gt-buoc li::before { content: counter(gtb); display: inline-flex; width: 24px; height: 24px; align-items: center;
@@ -3108,3 +3107,79 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 
 .gt2-ket-qua .gt2-bang-cuon table, .gt2-ket-qua .gt2-bang-cuon td, .gt2-ket-qua .gt2-bang-cuon th { font-family: inherit; text-transform: none; letter-spacing: 0; }
 .gt2-ket-qua .gt2-bang-cuon td:first-child { min-width: 140px; }
+
+/* UX1A-L1: thanh "Việc tiếp theo" */
+.viec-tiep-theo {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 20px; padding: 12px 16px;
+  border: 1px solid var(--slate); border-radius: 8px; background: var(--surface, #fff);
+}
+.viec-tiep-theo[hidden] { display: none; }
+.viec-tiep-theo-cau { font-weight: 600; }
+
+/* UX1A-L2: nhóm điều hướng */
+.nav-nhom { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+.nav-nhom[hidden] { display: none; }
+.nav-nhom-nut {
+  text-align: left; background: transparent; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.55); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 6px 12px 2px;
+}
+.nav-nhom-nut:hover, .nav-nhom.is-active .nav-nhom-nut { color: #fff; }
+.nav-nhom-nut:focus-visible { outline: 2px solid #9CC2FF; outline-offset: 2px; }
+.nav-nhom .nav-item { padding-left: 20px; }
+.ux1a-nang-cao { margin-top: 20px; }
+.ux1a-nang-cao > summary { cursor: pointer; font-weight: 600; padding: 8px 0; }
+
+/* UX1A-L2b: trang Cài đặt (ba thẻ) và hành động sau khi xếp */
+.ux1a-cau-hoi { font-size: 16px; margin: 0 0 12px; }
+.ux1a-the-luoi { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.ux1a-the {
+  display: flex; flex-direction: column; gap: 4px; text-align: left; cursor: pointer;
+  padding: 14px 16px; border: 2px solid var(--slate); border-radius: 10px; background: transparent; color: inherit;
+  font: inherit;
+}
+.ux1a-the:hover:not(:disabled) { border-color: var(--chart-general); }
+.ux1a-the:focus-visible { outline: 2px solid var(--chart-general); outline-offset: 2px; }
+.ux1a-the:disabled { opacity: 0.5; cursor: not-allowed; }
+.ux1a-the.is-chon { border-color: var(--chart-general); box-shadow: inset 0 0 0 1px var(--chart-general); }
+.ux1a-the.is-chon .ux1a-the-tt::before { content: "✓ "; }
+.ux1a-the-tt { font-weight: 700; }
+.ux1a-loi { color: #B42318; margin: 8px 0 0; }
+.ux1a-san-sang { margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--slate); border-radius: 8px; }
+.ux1a-ss-dau { font-weight: 600; margin: 0 0 8px; }
+.ux1a-ss-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
+.ux1a-ss-ten { min-width: 160px; }
+.ux1a-vien-nhom { display: inline-flex; gap: 6px; }
+.ux1a-vien { border: 1px solid var(--slate); border-radius: 999px; padding: 3px 12px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.ux1a-vien:hover { border-color: var(--chart-general); }
+.ux1a-so { width: 72px; }
+.ux1a-san-sang-xong { margin: 0; font-weight: 600; }
+.ux1a-cach-xet { margin: 14px 0 0; }
+.ux1a-sx-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
+
+/* UX1A-L2b fix2: nút "Hoàn tác" trong thông báo nổi phải đọc được trên nền xanh/đỏ/vàng */
+.toast .toast-hanh-dong { color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+.toast .toast-hanh-dong:hover { background: rgba(255,255,255,0.18); }
+.toast .toast-hanh-dong:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.ux1a-ss-hc-sai { margin: 6px 0; color: #B42318; font-weight: 600; }
+
+/* UX1B-L7: thẻ giải trình — dòng tóm tắt, thanh điểm, "Em nên làm gì tiếp" */
+.gt-tom-tat-dong { font-weight: 600; margin: 8px 0; }
+.gt-tiep-theo { border: 1px solid var(--border, #d1d5db); border-radius: 6px; padding: 8px 12px; margin: 12px 0; }
+.gt-tiep-theo h4 { margin: 0 0 4px; }
+.gt-tiep-theo ul { margin: 0; padding-left: 18px; }
+.gt-diem-thi-tieu-de { margin: 12px 0 4px; }
+svg.thanh-diem { display: block; }
+
+/* UX1B-L5c: ô tìm to, gập "Mã tra cứu…", hành động "Sau khi xếp" nói trọn câu, cảnh báo huy chương gộp */
+.gt-tim-hang { margin-bottom: 8px; }
+.gt-tim-to { flex: 1 1 320px; font-size: 1.05rem; padding: 12px 14px; min-height: 46px; }
+.gt-ma-gap { margin: 10px 0 0; }
+.gt-ma-gap > summary { cursor: pointer; }
+.ux1b-sx-hang { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ux1b-sx-hang .ux1a-so { height: 36px; text-align: center; font-variant-numeric: tabular-nums; }
+.ux1b-sx-ngay { line-height: 36px; }
+.ux1b-sx-he-qua { margin: 2px 0 0; }
+.ux1a-sx-dong { display: block; padding: 6px 0; }
+.ux1b-ss-nut { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }

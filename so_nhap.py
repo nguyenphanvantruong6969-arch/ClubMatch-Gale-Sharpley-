@@ -556,7 +556,9 @@ def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dic
                            cfg, chuan_clb)
     students = _doc_sheet_hs(wb[ten_hs], clubs, loi, cfg, chuan_hs)
     ra = {"clubs": [c for c in clubs if not c.get("hong")],
-          "students": students, "loi": loi}
+          "students": students, "loi": loi,
+          # UX1A-L5: chỉ để NÓI (xem trước): sổ có cột Huy chương không? Không ảnh hưởng gì được lưu.
+          "co_cot_huy_chuong": _sheet_co_cot_huy_chuong(wb[ten_hs])}
     # FA-1: sheet "Giữ chỗ" tuỳ chọn. Có sheet thì khoá `giu_cho` có mặt (kể cả rỗng = xoá hết).
     ten_gc = _tim_sheet(ten_cac_sheet, SHEET_GIU_CHO, "Giu cho")
     if ten_gc:
@@ -813,6 +815,35 @@ def _mau_diem_w(cfg=None):
     """
     cac = sorted({"diem"} | _bien_the(cfg, "score"), key=len, reverse=True)
     return re.compile(r"^(?:%s)\s*w\s*(\d+)$" % "|".join(re.escape(x) for x in cac))
+
+
+# UX1A-L5b: chữ thay cho 60/30/10 ở ô huy chương (đã bỏ dấu, hạ chữ thường; vi và en).
+CHU_HUY_CHUONG = {"vang": "60", "gold": "60", "bac": "30", "silver": "30", "dong": "10", "bronze": "10"}
+
+
+def chuan_hoa_chu_huy_chuong(du_lieu: dict) -> int:
+    """Đổi Vàng/Bạc/Đồng (và vang/bac/dong, gold/silver/bronze, mọi kiểu hoa/thường) trong ô huy chương
+    (`diem_w`) về "60"/"30"/"10", TẠI CHỖ. Chữ lạ giữ nguyên (sẽ báo `fa_huy_chuong_gia_tri_sai`). Trả số ô đã đổi."""
+    n = 0
+    for s in du_lieu.get("students", []):
+        for x in s.get("nv", []):
+            w = x.get("diem_w")
+            if isinstance(w, str) and w.strip():
+                moi = CHU_HUY_CHUONG.get(bo_dau(w))
+                if moi is not None:
+                    x["diem_w"] = moi
+                    n += 1
+    return n
+
+
+def _sheet_co_cot_huy_chuong(ws) -> bool:
+    """UX1A-L5: một trong hai hàng đầu của sheet học sinh có ô tiêu đề "Huy chương…" (không phân biệt dấu/hoa)."""
+    for i, dong in enumerate(ws.iter_rows(values_only=True)):
+        if i >= 2:
+            break
+        if any(isinstance(c, str) and "huy chuong" in bo_dau(c) for c in dong):
+            return True
+    return False
 
 
 def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS) -> list:
@@ -1317,8 +1348,9 @@ def _huong_dan_fa(ra: list, cfg=None) -> list:
         "        Tuyển chọn cần thêm Điểm sàn.",
         "        Cột %s (sau cột %s): mỗi em đặt tối đa ba huy chương cho mỗi buổi:" % (
             TEN_COT_HUY_CHUONG, ten_cot_diem_thi(cfg)),
-        "        60 (vàng), 30 (bạc), 10 (đồng), mỗi giá trị một lần mỗi buổi, chỉ đặt vào %s" % slot_l,
+        "        Vàng / Bạc / Đồng hoặc 60 / 30 / 10, mỗi huy chương một lần mỗi buổi, chỉ đặt vào %s" % slot_l,
         "        em đã xếp trong nguyện vọng và không phải %s Tự do. Ô trống = không đặt." % slot_l,
+        "        Sổ này chỉ dùng được khi chế độ \"Xếp theo loại %s và huy chương\" đang BẬT ở Cài đặt." % slot_l,
         "",
     ]
     ra = ra[:b5] + fa + ra[b5:]
@@ -1627,9 +1659,9 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
             c_w = get_column_letter(nv1 + 2 + buoc * k)
             if che_do_fa:
                 dv_w = DataValidation(
-                    type="list", formula1='"60,30,10"', allow_blank=True,
+                    type="list", formula1='"Vàng,Bạc,Đồng,60,30,10"', allow_blank=True,
                     showErrorMessage=True, errorTitle=ten_w,
-                    error="Huy chương chỉ nhận 60 (vàng), 30 (bạc) hoặc 10 (đồng).")
+                    error="Huy chương chỉ nhận Vàng, Bạc, Đồng (hoặc 60, 30, 10).")
             else:
                 dv_w = DataValidation(
                     type="whole", operator="greaterThanOrEqual", formula1="0", allow_blank=True,

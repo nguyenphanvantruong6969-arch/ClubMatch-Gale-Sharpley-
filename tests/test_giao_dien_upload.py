@@ -180,7 +180,9 @@ def test_bo_tep_xoa_luon_phan_hoi_cua_lan_nhap_truoc(trang):
                            " && !document.getElementById('importActions').hidden")
     page.locator("#btnImportAll").click()
     page.wait_for_selector(".queue-row.is-done", timeout=20000)
-    assert page.locator("#feedbackImportAll").inner_text().strip()
+    # UX1A-L3: kết quả nạp hiện một lần ở hàng của tệp (dòng phản hồi riêng đã bỏ); bỏ tệp thì hàng biến mất.
+    assert page.locator(".queue-row .queue-detail").inner_text().strip()
+    assert page.locator("#feedbackImportAll").inner_text().strip() == ""
 
     page.locator("#btnClearQueue").click()
     page.wait_for_function(
@@ -221,3 +223,29 @@ def test_so_trong_bo_nho_doc_duoc(tmp_path):
     buf = io.BytesIO()
     so_nhap.ghi_so_nhap(buf, [{"name": "CLB A", "capacity": 2}], [])
     assert so_nhap.doc_so_nhap(openpyxl.load_workbook(buf))["loi"] == []
+
+
+def test_nap_loi_roi_thu_lai_thanh_cong_khong_con_dong_loi_cu(trang, api, monkeypatch):
+    """UX1A-L3 fix1: lần nạp đầu hỏng (lỗi phía phần mềm) để lại dòng lỗi; thử lại thành công phải xoá dòng đó."""
+    import i18n_errors
+    lan = {"n": 0}
+    goc = api.import_so_nhap
+
+    def lan_dau_hong(b64):
+        lan["n"] += 1
+        if lan["n"] == 1:
+            return i18n_errors.phan_hoi_loi(i18n_errors.err("loi_nap_so_nhap", detail="locked"))
+        return goc(b64)
+    monkeypatch.setattr(api, "import_so_nhap", lan_dau_hong)
+    page, loi = trang
+    tha(page, SO_VI_DU)
+    page.wait_for_function(CHO)
+    page.locator("#btnImportAll").click()
+    page.wait_for_selector(".toast.is-error")
+    assert "is-error" in page.get_attribute("#feedbackImportAll", "class")
+    assert page.locator("#feedbackImportAll").inner_text().strip()
+    page.locator("#btnImportAll").click()
+    page.wait_for_selector(".queue-row.is-done", timeout=20000)
+    assert page.locator("#feedbackImportAll").inner_text().strip() == ""
+    assert "is-error" not in (page.get_attribute("#feedbackImportAll", "class") or "")
+    assert not loi, loi

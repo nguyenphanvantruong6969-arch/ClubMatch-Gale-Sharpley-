@@ -36,28 +36,28 @@ def test_dong_tom_tat_chi_do_khi_co_muc_nghiem_trong(mo_dau, n_high, do):  # noq
 
 
 def test_buoc_3_khoa_bon_o_khi_chua_chon_xep_theo_loai_clb(mo_trang):  # noqa: F811
+    # UX1A-L2b: bốn ô "Theo dõi sau khi xếp…" không còn ở bước 3; chúng là hành động ở thẻ Chi tiết và
+    # chỉ hiện ở chế độ Huy chương (kiểm ở test_giao_dien_ux1_cai_dat.py).
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt khoá ô")
-    assert not page.locator("#wzFaDaa").is_checked()
-    for o in CAC_O_FA:
-        assert page.locator("#" + o).is_disabled() and not page.locator("#" + o).is_checked(), o
-    page.locator("#wzFaDaa").check()
-    for o in CAC_O_FA:
-        assert page.locator("#" + o).is_enabled(), o
-    page.locator("#wzFaPhanHoi").check()
-    page.locator("#wzFaDaa").uncheck()                                    # tắt FA: ô con bị khoá VÀ bỏ tick
-    assert page.locator("#wzFaPhanHoi").is_disabled() and not page.locator("#wzFaPhanHoi").is_checked()
+    assert page.locator("#wzHuyChuong").get_attribute("aria-checked") == "false"
+    for o in CAC_O_FA + ("wzFaDaa", "wzWharton"):
+        assert page.locator("#" + o).count() == 0, o
+    page.locator("#wzHuyChuong").click()
+    assert page.locator("#wzHuyChuong").get_attribute("aria-checked") == "true"
     assert not loi, loi
 
 
 def test_o_tick_nam_cung_dong_voi_nhan(mo_trang):  # noqa: F811
+    # UX1A-L2b: ba thẻ nằm trên cùng một hàng và chữ nằm trong thẻ (không còn ô tick tách khỏi nhãn).
     page, api, loi = mo_trang()
     _toi_buoc_luat(page, "Đợt cùng dòng")
-    for o in ("wzFaDaa",) + CAC_O_FA:
-        h_o = page.locator("#" + o).bounding_box()
-        h_n = page.locator('label[for="%s"]' % o).bounding_box()
-        tam = h_o["y"] + h_o["height"] / 2
-        assert h_n["y"] - 2 <= tam <= h_n["y"] + h_n["height"] + 2, (o, h_o, h_n)
+    hop = [page.locator("#wz" + m).bounding_box() for m in ("ChiXep", "Chia100", "HuyChuong")]
+    assert max(h["y"] for h in hop) - min(h["y"] for h in hop) <= 2, hop
+    for m in ("ChiXep", "Chia100", "HuyChuong"):
+        tt = page.locator("#wz" + m + " .ux1a-the-tt").bounding_box()
+        h = page.locator("#wz" + m).bounding_box()
+        assert h["x"] <= tt["x"] and tt["x"] + tt["width"] <= h["x"] + h["width"] + 1, m
     assert not loi, loi
 
 

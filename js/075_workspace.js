@@ -297,97 +297,16 @@ function wsDongWorkspace(w) {
           hanhDong("doi_ten", () => wsBatSua(w, "doi_ten")),
           hanhDong("nhan_ban", () => wsBatSua(w, "nhan_ban")),
           hanhDong("luu_mau", () => wsBatSua(w, "luu_mau")),
-          hanhDong("tinh_nang", () => wsMoTinhNang(w)),
+          hanhDong("cai_dat", () => ux1aMoCaiDatWs(w)),
           hanhDong("xuat", () => wsXuat(w)),
           nutXoa)))));
 }
 
-/* FG-1: bật/tắt tính năng sau khi xếp cho một không gian làm việc (không đụng luật làm đổi kết quả). */
-const WS_TINH_NANG = [["fa_diem_danh", "ws_r_fa_diem_danh"], ["fa_khieu_nai", "ws_r_fa_khieu_nai"],
-  ["fa_vong_2", "ws_r_fa_vong_2"], ["fa_phan_hoi", "ws_r_fa_phan_hoi"], ["fa_vong_doi_cho", "ws_tn_vong_doi_cho"]];
-
-function wsMoTinhNang(w) {
-  /* Hộp thoại dựng và hiện NGAY (ô còn khoá), rồi mới nạp cấu hình: màn chọn không còn là
-     hộp thoại duy nhất trong lúc chờ backend. */
-  const dong = (xong) => {
-    lop.remove();
-    if (xong && wsCoTheDong) { wsDongManChon(); return; }
-    wsHienOverlay(true);
-    /* Trả focus vào màn chọn: nút ⋯ đã mở hộp này nếu còn, không thì tiêu đề. */
-    const tom = document.querySelector('#wsBang tr[data-slug="' + w.slug + '"] .menu-khac > summary');
-    const dich = tom || el("wsTieuDe");
-    if (dich) dich.focus();
-  };
-  const o = WS_TINH_NANG.map(([khoa, nhan], i) => {
-    const hop = wsEl("input", { type: "checkbox", id: "wsTn" + i, "data-khoa": khoa, disabled: true });
-    return [hop, wsEl("label", { class: "ws-kem", for: "wsTn" + i }, hop, " ", t(nhan))];
-  });
-  const ngay = wsEl("input", { type: "number", class: "text-input", id: "wsTnNgay", min: "1", max: "14",
-    value: "3", disabled: true, "aria-label": t("ws_tn_so_ngay") });
-  const hopW = wsEl("input", { type: "checkbox", role: "switch", id: "wsTnWharton", disabled: true });
-  const ghiChuW = wsEl("p", { class: "hint-text ws-tn-wharton-ghi-chu", id: "wsTnWhartonGhiChu",
-    text: t("ws_tn_wharton_goi_y") });
-  hopW.setAttribute("aria-describedby", "wsTnWhartonGhiChu");
-  const loi = wsEl("p", { class: "hint-text", role: "alert" });
-  const khongFa = wsEl("p", { class: "hint-text", text: t("ws_tn_khong_fa") });
-  const luu = wsEl("button", { type: "button", class: "btn btn-primary", text: t("ws_btn_luu"), disabled: true });
-  luu.addEventListener("click", () => khiBan(luu, () => {
-    const rules = {};
-    if (hopW.disabled) {
-      o.forEach(([hop]) => { rules[hop.dataset.khoa] = hop.checked; });
-      rules.fa_khieu_nai_so_ngay = Number(ngay.value);
-    } else {
-      rules.wharton = hopW.checked;   // không FA: chỉ ô điểm quyết tâm mở, các ô FA vẫn khoá
-    }
-    return callApi("update_workspace_config", { rules }, w.slug).then((r) => {
-      if (!r.ok) { loi.textContent = trErrs(r.errors).join(" "); return; }
-      showToast(t("ws_tn_da_luu"), "success");
-      dong(true);
-      if (w.dang_mo) {
-        wsApDungCauHinh(r.data.config);
-        if (typeof TAB_LOADERS !== "undefined" && TAB_LOADERS.others) TAB_LOADERS.others();
-      }
-    });
-  }));
-  const huy = wsEl("button", { type: "button", class: "btn btn-ghost", text: t("btn_cancel"), onclick: () => dong(false) });
-  const lop = wsEl("div", { class: "ws-overlay", role: "dialog", "aria-modal": "true", "aria-labelledby": "wsTnTieuDe" },
-    wsEl("div", { class: "ws-hop" },
-      wsEl("h2", { id: "wsTnTieuDe", class: "ws-tieu-de", text: t("ws_tn_tieu_de", { ten: w.name }) }),
-      khongFa,
-      ...o.map(([, nhan]) => wsEl("div", null, nhan)),
-      wsEl("div", null, wsEl("span", { class: "ws-sua-nhan", text: t("ws_tn_so_ngay") }), " ", ngay),
-      wsEl("div", { class: "ws-tn-wharton" },
-        wsEl("label", { class: "ws-kem", for: "wsTnWharton" }, hopW, " ", t("ws_tn_wharton")), ghiChuW),
-      loi,
-      wsEl("div", { class: "ws-chan" }, luu, huy)));
-  lop.addEventListener("keydown", (ev) => { if (ev.key === "Escape") dong(false); });
-  wsHienOverlay(false);
-  document.body.append(lop);
-  huy.focus();
-  callApi("get_workspace_config", w.slug).then((res) => {
-    if (!res.ok) { dong(false); showErrorToast(res.errors); return; }
-    const luat = res.data.config.rules || {};
-    const coFa = luat.fa_daa === true;
-    o.forEach(([hop]) => { hop.checked = luat[hop.dataset.khoa] === true; hop.disabled = !coFa; });
-    if (Number.isInteger(luat.fa_khieu_nai_so_ngay)) ngay.value = String(luat.fa_khieu_nai_so_ngay);
-    ngay.disabled = !coFa;
-    // Điểm quyết tâm: FA cần nó (FA-N3) nên khoá kèm lý do; không FA thì tắt/bật được. Mặc định (khoá vắng) = bật.
-    hopW.checked = coFa || luat.wharton !== false;
-    hopW.disabled = coFa;
-    ghiChuW.textContent = t(coFa ? "ws_tn_wharton_can_fa" : "ws_tn_wharton_goi_y");
-    luu.disabled = false;
-    khongFa.hidden = coFa;   // hiện sẵn cho tới khi biết có FA
-  });
-}
-
-/* Từ khung lỗi chạy xếp: mở hộp thoại "Tính năng sau khi xếp…" của không gian làm việc đang mở. */
+/* Từ khung lỗi chạy xếp: mở trang Cài đặt (UX1A-L2b: một câu hỏi, ba thẻ). */
 function wsMoTinhNangDangMo() {
   if (!wsTrangThai || !wsTrangThai.enabled) return;
-  wsMoManChon(true);
-  wsLamMoiDanhSach().then(() => {
-    const w = wsDanhSach.find((x) => x.slug === wsTrangThai.slug);
-    if (w) wsMoTinhNang(w);
-  });
+  switchTab("admin");
+  viecChoRoiLam(() => el("ux1aCaiDat") && !el("ux1aCaiDat").hidden, () => el("ux1aCaiDat").scrollIntoView({ block: "start" }));
 }
 
 function wsBatSua(w, kieu) {
@@ -552,12 +471,6 @@ function wsGomBuoc() {
     w.priority = lay("wzPriority").value;
     w.tierMode = lay("wzTierMode").value;
     w.scoreScope = lay("wzScoreScope").value;
-    w.wharton = lay("wzWharton").checked;
-    w.faDaa = lay("wzFaDaa").checked;
-    w.faDiemDanh = lay("wzFaDiemDanh").checked;
-    w.faKhieuNai = lay("wzFaKhieuNai").checked;
-    w.faVong2 = lay("wzFaVong2").checked;
-    w.faPhanHoi = lay("wzFaPhanHoi").checked;
     w.tiersText = lay("wzTiers").value;
   }
 }
@@ -808,32 +721,32 @@ function wsBuoc3(hop) {
     ["score+tier", t("ws_r_priority_both")]]);
   const oScope = wsChon("wzScoreScope", w.scoreScope, [
     ["per_slot", t("ws_r_ss_per_slot")], ["per_person", t("ws_r_ss_per_person")]]);
-  /* Điểm Wharton: khoá — và tự bỏ chọn — khi tổ hợp không dùng được, để không lưu một cấu
-     hình mà backend sẽ từ chối. Không tự bật lại khi tổ hợp dùng được trở lại. */
-  const oWharton = wsEl("input", { type: "checkbox", id: "wzWharton", checked: w.wharton === true,
-    disabled: !wsChoPhepWharton(w) });
-  const capNhatOWharton = () => {
+  /* UX1A-L2b: ba thẻ (cùng thành phần với trang Cài đặt) thay cho các ô điểm quyết tâm / huy chương.
+     Thẻ "Chia 100 điểm" và "Huy chương" bị khoá khi tổ hợp xếp không dùng được điểm quyết tâm. */
+  const the = ux1aTaoThe("wz", (ma) => {
+    const c = UX1A_CACH.find((x) => x.ma === ma);
+    w.wharton = c.wharton;
+    w.faDaa = c.fa;
+    veThe();
+  });
+  const veThe = () => {
     const cho = wsChoPhepWharton({ priority: oPriority.value, scoreScope: oScope.value });
-    oWharton.disabled = !cho;
-    if (!cho) oWharton.checked = false;
+    if (!cho) { w.wharton = false; w.faDaa = false; }
+    the.khoa("chia_100", !cho);
+    the.khoa("huy_chuong", !cho);
+    the.datCach(ux1aCachTuLuat({ wharton: w.wharton === true, fa_daa: w.faDaa === true }));
   };
   const capNhatODanhSachNhom = () => {
     oTiers.disabled = !(oTierMode.value === "strict" || oPriority.value === "tier");
   };
-  /* Bốn ô "Theo dõi sau khi xếp…" cần xếp theo loại CLB: khoá và bỏ tick khi ô đó tắt. */
-  const oFaCon = ["wzFaDiemDanh", "wzFaKhieuNai", "wzFaVong2", "wzFaPhanHoi"].map((id) => {
-    const khoa = { faDiemDanh: "wzFaDiemDanh", faKhieuNai: "wzFaKhieuNai", faVong2: "wzFaVong2", faPhanHoi: "wzFaPhanHoi" };
-    const k = Object.keys(khoa).find((x) => khoa[x] === id);
-    return wsEl("input", { type: "checkbox", id, checked: w.faDaa === true && w[k] === true, disabled: w.faDaa !== true });
-  });
-  const oFaDaa = wsEl("input", { type: "checkbox", id: "wzFaDaa", checked: w.faDaa === true,
-    onchange: (ev) => oFaCon.forEach((o) => { o.disabled = !ev.target.checked; if (!ev.target.checked) o.checked = false; }) });
   oTierMode.addEventListener("change", capNhatODanhSachNhom);
   oPriority.addEventListener("change", capNhatODanhSachNhom);
-  oPriority.addEventListener("change", capNhatOWharton);
-  oScope.addEventListener("change", capNhatOWharton);
+  oPriority.addEventListener("change", veThe);
+  oScope.addEventListener("change", veThe);
 
+  veThe();
   hop.append(
+    the.hop,
     wsTruong("wzMaxChoices", "ws_r_max_choices", wsEl("input", { type: "number", id: "wzMaxChoices",
       class: "text-input ws-so", min: "1", max: "20", step: "1", value: w.maxChoices })),
     wsTruong("wzMaxTests", "ws_r_max_tests", wsEl("div", { class: "ws-hang" }, oMaxTests,
@@ -841,13 +754,6 @@ function wsBuoc3(hop) {
     wsTruong("wzPriority", "ws_r_priority", oPriority),
     wsTruong("wzTierMode", "ws_r_tier_mode", oTierMode),
     wsTruong("wzScoreScope", "ws_r_score_scope", oScope),
-    wsTruong("wzWharton", "ws_r_wharton", oWharton, wsGoiYNgan(
-      "wzWharton", t("ws_r_wharton_ngan"), t("ws_r_wharton_ghi_chu"))),
-    wsTruong("wzFaDaa", "ws_r_fa_daa", oFaDaa, wsGoiYNgan("wzFaDaa", t("ws_r_fa_daa_ngan"), t("ws_r_fa_daa_ghi_chu"))),
-    wsTruong("wzFaDiemDanh", "ws_r_fa_diem_danh", oFaCon[0], t("ws_r_fa_diem_danh_ngan")),
-    wsTruong("wzFaKhieuNai", "ws_r_fa_khieu_nai", oFaCon[1], t("ws_r_fa_diem_danh_ngan")),
-    wsTruong("wzFaVong2", "ws_r_fa_vong_2", oFaCon[2], t("ws_r_fa_diem_danh_ngan")),
-    wsTruong("wzFaPhanHoi", "ws_r_fa_phan_hoi", oFaCon[3], t("ws_r_fa_diem_danh_ngan")),
     wsTruong("wzTiers", "ws_r_tiers", oTiers, t("ws_r_tiers_chi_strict")),
   );
 }
@@ -871,10 +777,6 @@ function wsBuoc4(hop) {
     hang(t("ws_r_score_scope"), t(r.score_scope === "per_person" ? "ws_r_ss_per_person" : "ws_r_ss_per_slot"), "rvScoreScope"),
     hang(t("ws_r_wharton"), t(r.wharton ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvWharton"),
     hang(t("ws_r_fa_daa"), t(r.fa_daa ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaDaa"),
-    hang(t("ws_r_fa_diem_danh"), t(r.fa_diem_danh ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaDiemDanh"),
-    hang(t("ws_r_fa_khieu_nai"), t(r.fa_khieu_nai ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaKhieuNai"),
-    hang(t("ws_r_fa_vong_2"), t(r.fa_vong_2 ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaVong2"),
-    hang(t("ws_r_fa_phan_hoi"), t(r.fa_phan_hoi ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaPhanHoi"),
     ...(r.tiers.length ? [hang(t("ws_r_tiers"), r.tiers.join(" › "), "rvTiers")] : []),
   ];
   hop.append(

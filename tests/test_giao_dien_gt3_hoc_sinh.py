@@ -11,7 +11,7 @@ pytest.importorskip("playwright", reason="chưa cài playwright")
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 import browser_host  # noqa: E402
-from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import CHROMIUM, mo_gap_ma  # noqa: E402
 from test_gt_tich_hop import HS, MK, _dung  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -53,6 +53,7 @@ def _goi(page, ten, *args):
 def test_hoc_sinh_khong_toi_duoc_tab_nao_va_khong_goi_duoc_ham_khac(mo):
     page, loi, vao = mo
     ma = vao(True)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
     assert page.evaluate("document.querySelector('.app-shell').inert") is True
@@ -74,6 +75,7 @@ def test_hoc_sinh_khong_toi_duoc_tab_nao_va_khong_goi_duoc_ham_khac(mo):
 def test_thoat_can_quan_tri_giao_vien_va_mat_khau_sai_deu_bi_giu_lai(mo):
     page, loi, vao = mo
     vao(True)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.click("#btnGtHsThoat")
     page.click("#btnGtHsCo")
@@ -100,6 +102,7 @@ def test_thoat_can_quan_tri_giao_vien_va_mat_khau_sai_deu_bi_giu_lai(mo):
 def test_khong_co_tai_khoan_thoat_nhu_cu(mo):
     page, loi, vao = mo
     vao(False)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.click("#btnGtHsThoat")
     page.click("#btnGtHsCo")
@@ -111,6 +114,7 @@ def test_khong_co_tai_khoan_thoat_nhu_cu(mo):
 def test_tai_lai_trang_o_che_do_hoc_sinh_van_con_lop_phu_va_quan_tri_thoat_duoc(mo):
     page, loi, vao = mo
     ma = vao(True)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
     page.wait_for_timeout(300)                        # để vao_che_do_hoc_sinh kịp tới backend
@@ -142,6 +146,7 @@ def test_tra_loi_phien_cu_khong_mo_lai_lop_phu_sau_khi_quan_tri_thoat(mo):
     """Trả lời get_phien_dang_nhap (che_do_hs: true) bị giữ chậm, tới sau khi quản trị đã thoát: bỏ, lớp phủ không mở lại."""
     page, loi, vao = mo
     vao(True)
+    mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
     page.wait_for_selector("#gtHs", state="visible")
     page.wait_for_timeout(300)

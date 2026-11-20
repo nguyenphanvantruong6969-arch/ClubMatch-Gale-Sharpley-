@@ -149,6 +149,16 @@ jobs:
             Write-Output "bo chu: $($fonts.Count) tep"
           }
 
+          # XP1: xuat PDF can phong .ttf (reportlab khong doc duoc .woff2) va giay phep OFL di kem.
+          foreach ($ttf in @("BeVietnamPro-Regular.ttf", "BeVietnamPro-Bold.ttf", "OFL-BeVietnamPro.txt")) {
+            if (-not (Test-Path (Join-Path $noi_bo "assets\fonts\$ttf"))) {
+              Write-Output "::error::Thieu phong PDF trong ban dong goi: assets/fonts/$ttf"
+              $loi++
+            } else {
+              Write-Output "phong PDF: $ttf"
+            }
+          }
+
           if ($loi -gt 0) { exit 1 }
           Write-Output "Ban dong goi khop ma nguon."
 

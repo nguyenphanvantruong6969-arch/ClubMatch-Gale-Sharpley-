@@ -88,7 +88,7 @@ def test_the_hien_dung_cho_em_duoc_xep_va_em_bi_tu_choi(api, mo, fa):
         if page.locator("#gtKetQua tbody tr").count() > 1:     # có hàng bị từ chối: câu giải thích không rỗng
             thay_bi_tu_choi = True
             hang = page.locator("#gtKetQua tbody tr:not(.gt-duoc-xep)").first
-            assert len(hang.locator("td").nth(5).inner_text().strip()) > 10
+            assert len(hang.locator("td").last.inner_text().strip()) > 10
     assert thay_bi_tu_choi
     assert loi == []
 

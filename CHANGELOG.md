@@ -1,5 +1,240 @@
 # CHANGELOG
 
+## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.
+- Chạy cả bộ Linux một lượt (Chromium + pypdf): 6977 qua, 4 bỏ qua (numpy ×2, người dùng POSIX, ưu tiên bù hoãn kỳ 2).
+
+## 2026-11-19 — UX1I-I3 fix1: cột Buổi của Báo cáo tổng hợp không lộ mã nội bộ
+
+- `bao_cao_tong_hop.py` (`dung_html`, `dung_pdf`): cột Buổi dùng thẳng `giai_trinh.nhan_buoi` (rỗng cho buổi mặc định), bỏ phần dự phòng in mã `__mac_dinh__`.
+- Test: 2 ca mới trong `tests/test_ux1i_i3_phieu_bao_cao.py` (workspace một buổi, HTML và PDF).
+
+## 2026-11-19 — UX1I-I3: gộp nhánh B (phiếu, vai giáo viên) với XP1 (PDF)
+
+- Gộp `origin/claude/ux1-b-phieu` (xung đột ở `phieu_giai_trinh.py`, `api_xuat.py`, `i18n_errors.py`, tài liệu): bảng phiếu có cột "Loại CLB" (XP1) rồi "Huy chương" (B, chỉ khi bật huy chương); `i18n_loi.js` sinh lại bằng `tao_i18n_js.py`.
+- `phieu_giai_trinh.py` (`_khoi_pdf`): bản PDF của phiếu có thêm dòng tóm tắt, cột Huy chương, bảng điểm các CLB đã thi, ghi chú huy chương và "Em nên làm gì tiếp", như bản HTML.
+- `bao_cao_tong_hop.py` (`dung_pdf`), `api_xuat.py` (`export_bao_cao_tong_hop_pdf`): "Báo cáo tổng hợp" dạng PDF qua `xuat_pdf.py`, cùng số liệu gộp (không tên, mã, điểm).
+- `phan_quyen.py`: giáo viên được gọi `export_phieu_giai_trinh_pdf` và `export_bao_cao_tong_hop_pdf`; `export_danh_sach_pdf` vẫn chỉ quản trị.
+- `index.html`, `js/19_ux1b_gv.js`, `i18n.js`: khối "Theo lớp và báo cáo" thêm "In phiếu cả {cohort_l}" (MỘT tệp PDF của lớp đang chọn) và "Báo cáo tổng hợp (PDF)"; giáo viên cần 1 lần bấm sau khi vào thẻ Kết quả.
+- Test: thêm `tests/test_ux1i_i3_phieu_bao_cao.py`; sửa `tests/test_ux1b_l7_phieu.py` (nay có cả hai cột) và `tests/test_xp1_phieu_pdf.py` (quyền). `docs/giai_trinh/CA_MAU.md` sinh lại: không đổi.
+
+## 2026-11-19 — UX1I-I2: XP1 gộp vào menu "Xuất…" của A
+
+- `index.html`, `js/03_ket_qua.js`: bỏ menu riêng `#xuatPdfMenu`; ba mục PDF (`btnPdfDsClb`, `btnPdfDsLop`, ô `pdfLop`, `btnPdfPhieuLop`) nằm trong `#xuatMenu`, menu này nay luôn hiện cho quản trị (`data-quyen="quan_tri"`), bốn nút chỉ-huy-chương vẫn ẩn khi tắt chế độ. Bỏ khoá `xp1_menu` ở `i18n.js` (không còn dùng).
+- Test: thêm `tests/test_ux1i_i2_xp1_trong_menu.py` (một menu, giáo viên không thấy, "Lưu PDF" một em ≤ 4 lần bấm từ thẻ Kết quả, loại CLB đặt bằng `dat_loai_clb` vào phiếu); sửa `test_giao_dien_xp1_xuat_pdf.py` và `test_giao_dien_ux1_ket_qua.py` theo menu gộp.
+## 2026-11-19 — UX1I-I1: gộp nhánh A vào nhánh tích hợp
+
+- Lead gộp `origin/claude/ux1-a-giao-dien` (`--no-ff`, không xung đột). Không đổi mã sản phẩm; `python tao_i18n_js.py` sinh lại `i18n_loi.js` không đổi byte nào.
+- Kiểm: 150 test của bộ I1 qua (`test_giao_dien_ux1_*`, `test_ux1_*`, `test_khoi_dong_backend`, `test_ws_nhan`, `test_van_phong_tu_nhien`, `test_gt4_nhat_ky_doc`, `test_gt_tich_hop`); `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7 (60 ca trùng khít).
+
+## 2026-11-19 — XP1-L5 fix3: danh sách PDF (từ lượt xem của lead trên sổ mẫu 3 buổi)
+
+- `xuat_pdf.py` (`bang`): tham số `cot_dau_mm` (cột đầu rộng cố định). `danh_sach_pdf.py`: cột STT rộng 13 mm (đủ "STT" in đậm và số 4 chữ số; trước đó 0,5/(0,5 + 2 x số cột) nên "STT" bị cắt dọc thành S/T/T và số 2 chữ số xuống dòng ở bảng nhiều buổi), `hoa_dau` viết hoa chữ cái đầu mọi tiêu đề và nhãn đứng đầu dòng (trước: "học sinh chưa có câu lạc bộ").
+- `api_xuat.py`: `_chua_duoc_xep.pdf` nhiều buổi đếm EM khác nhau ("Số học sinh: 112", trước 222 là số lượt em x buổi) và thêm dòng "Số lượt chưa có chỗ: 222" khi hai số khác nhau.
+- Test mới trong `tests/test_xp1_danh_sach_pdf.py` (+5 ca, 24 ca): độ rộng cột STT (luôn chạy), "STT" không bị cắt (pypdf), đếm em / lượt, tiêu đề viết hoa, `hoa_dau`. Xem ảnh trang trên sổ `SO_NHAP_MAU_120HS_3BUOI.xlsx` seed 3.
+
+## 2026-11-19 — XP1-L5: tài liệu, đóng gói, hiệu năng
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Xuất PDF hàng loạt" (ba mục menu, ô chọn lớp, phiếu một em, ghi chú: CLB không có em nào được xếp thì không có tệp danh sách). `CLAUDE_CHI_TIET.md`: bản đồ mã (`xuat_pdf.py`, `danh_sach_pdf.py`, hai hàm API), số tệp test 346.
+- `.github/workflows/build-windows-exe.yml`: bước soát bản đóng gói kiểm thêm hai phông `.ttf` và tệp giấy phép OFL (reportlab không đọc `.woff2`). `kiosk.spec` đã có `assets/fonts` và `collect_all("reportlab")` từ L1.
+- `xuat_pdf.py`: kiểu đoạn tạo một lần (không tạo lại cho từng ô). Không đổi kết quả đầu ra.
+- Hiệu năng, sổ mô phỏng `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (800 em, 27 lớp, seed 3, Linux). Mục tiêu của kế hoạch: phiếu giải trình cả trường < 30 giây trên CI Linux.
+
+  | Xuất | Không đo độ phủ | Có `--cov` |
+  |---|---|---|
+  | Phiếu theo lớp (28 tệp, 1.519 trang) | 12,6 giây | 21,6 giây |
+  | Phiếu một tệp | 15,8 giây | 23,3 giây |
+  | Danh sách theo CLB (21 tệp) | 2,7 giây | 4,1 giây |
+  | Danh sách theo lớp (28 tệp) | 0,8 giây | 1,2 giây |
+
+  Số đo thật trên CI (lần chạy 44551113280, ngưỡng cũ 30 giây): bước chạy KHÔNG đo độ phủ, các ca hiệu năng đạt; bước CÓ đo độ phủ, phiếu theo lớp 30,08 giây và phiếu một tệp 30,04 giây nên đỏ (đo độ phủ làm chậm thêm khoảng 50 %); Windows (không đo độ phủ) đạt. Vì vậy test tạm dừng đo độ phủ (`coverage.Coverage.current().stop()`, bật lại sau) CHỈ trong đoạn bấm giờ; sau sửa, máy phát triển có `--cov`: phiếu theo lớp 12,8 giây, một tệp 14,3 giây (không `--cov`: 13,2 và 14,5 giây). Mục tiêu 30 giây trên CI Linux giữ nguyên.
+
+  Ngưỡng test: 30 giây trên Linux (mục tiêu của kế hoạch), 90 giây trên Windows (kế hoạch không đặt mục tiêu cho Windows), đổi được bằng biến môi trường `XP1_NGUONG_GIAY`; luôn in số giây đo được, không bỏ qua test.
+- Test mới: `tests/test_xp1_hieu_nang.py` (4 ca, ngưỡng 30 giây), `tests/test_xp1_dong_goi.py` (5 ca: phông, giấy phép, spec, ghim phiên bản, workflow). `kiem_nhanh.py` 7/7.
+
+## 2026-11-19 — XP1-L4: menu "Xuất PDF…" ở thẻ Xuất dữ liệu
+
+- `index.html`, `js/03_ket_qua.js`: menu riêng `#xuatPdfMenu` (chỉ quản trị, `data-quyen="quan_tri"`) với "Danh sách theo CLB (PDF)", "Danh sách theo lớp (PDF)", ô chọn lớp `#pdfLop` (dùng lại `napOLocLop`, không có mục "chưa có lớp") và "Phiếu giải trình theo lớp (PDF)": "Tất cả lớp" ra thư mục mỗi lớp một tệp, chọn một lớp ra MỘT tệp. Ba nút khoá khi chưa có kết quả / đang chạy / đang xuất (như "Xuất theo lớp"); bấm xong menu tự đóng. Menu riêng vì "Xuất…" cũ chỉ hiện ở chế độ Huy chương và `test_giao_dien_ux1_ket_qua.py` khoá điều đó.
+- `i18n.js`: khoá `xp1_menu`, `xp1_pdf_ds_clb`, `xp1_pdf_ds_lop`, `xp1_pdf_phieu_lop`, `xp1_pdf_lop_aria`, `xp1_kq_thu_muc`, `xp1_kq_mot_tep` (vi/en). Quyền backend và nhãn nhật ký đã có từ L2/L3.
+- Sửa có chủ ý `tests/test_giao_dien_ux1_ket_qua.py`: "nút đang hiện" không đếm nút nằm trong menu `<details>` đang đóng (menu PDF mới có nút trong đó).
+- Test mới: `tests/test_giao_dien_xp1_xuat_pdf.py` (7 ca Chromium: menu, khoá khi chưa có kết quả, gọi đúng hàm, một lớp / mọi lớp, giáo viên không thấy menu). Số tệp test trong `CLAUDE_CHI_TIET.md`: 344.
+
+## 2026-11-19 — XP1-L3: danh sách thành viên PDF (theo CLB, theo lớp)
+
+- `api_xuat.py`: `export_danh_sach_pdf(output_path, theo)` ("clb" hoặc "lop") ra một THƯ MỤC PDF; cùng nguồn `_du_lieu_xuat` với `export_theo_lop`, không điểm / số bốc thăm / diện trúng tuyển. Theo CLB: mỗi CLB (nhiều buổi: mỗi CLB mỗi buổi) một tệp có mã, loại CLB, giờ, địa điểm; CLB không ai được xếp không có tệp (như CSV); `_chua_duoc_xep.pdf` cho em chưa có chỗ. Theo lớp: mỗi lớp một tệp, em chưa có chỗ ở mục riêng, `_chua_co_lop.pdf`. Thêm `_loai_clb_theo_ma`.
+- `danh_sach_pdf.py` (mới): bố cục hai kiểu tệp. `i18n_errors.py`: `xp1_kieu_xuat_la`. `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn `nkhd_export_danh_sach_pdf`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp test 343, bản đồ mã.
+- Test mới: `tests/test_xp1_danh_sach_pdf.py` (19 ca, gồm sổ mẫu 3 buổi 120 HS).
+
+## 2026-11-19 — XP1-L2: phiếu giải trình PDF theo lớp, có loại CLB
+
+- `giai_trinh.py` (`dung_du_lieu_run`, `_lua_chon_rbda`, `_lua_chon_fa`): mỗi `cac_lua_chon` có thêm khoá `loai_clb` (mã `TU_DO`/`GIOI_HAN`/`TUYEN_CHON` hoặc None); chỉ thêm khoá, thuật toán xếp không đọc nó.
+- `phieu_giai_trinh.py`: cột "Loại CLB" ở phiếu HTML; `dung_phieu_pdf` (cùng dữ liệu, mỗi học sinh một trang mới).
+- `api_xuat.py`: `export_phieu_giai_trinh_pdf(output_path, lop, theo_lop)` (một tệp, hoặc thư mục `phieu_giai_trinh_theo_lop` mỗi lớp một PDF + `_chua_co_lop.pdf`); tách `_phieu_chuan_bi`, `_phieu_cac_em` dùng chung với phiếu HTML và `_thu_muc_xuat_moi` dùng chung với `export_theo_lop`. `_giai_trinh_dung_lai` đọc thêm `clubs.loai`.
+- `xuat_pdf.py`: `dem_trang`, `san_sang`. `i18n_errors.py`: mã lỗi `xp1_thieu_thu_vien_pdf` (+ `i18n_loi.js` sinh lại). `phan_quyen.py`: hàm mới chỉ QUAN_TRI; `i18n.js`: nhãn nhật ký `nkhd_export_phieu_giai_trinh_pdf` (vi/en).
+- Phiếu MỘT em: `export_phieu_giai_trinh_pdf(..., student_ids=[mã])` ra một tệp `phieu_giai_trinh_<mã>.pdf`; nút "Lưu PDF" (`#btnGtPdfMot`, chỉ quản trị) ở khung tra cứu thẻ Kết quả (`index.html`, `js/14_giai_trinh.js`, khoá i18n `xp1_luu_pdf`, `xp1_pdf_mot_xong`): tìm → chọn → Lưu PDF = 3 bước.
+- Test: `tests/test_xp1_phieu_pdf.py` (22 ca), `tests/test_giao_dien_xp1_luu_pdf_mot_em.py` (Chromium). Sửa có chủ ý: `test_gt4_cau_giai_trinh.py` (cột "Mức vào được" dời từ 4 sang 5 vì thêm cột), `test_van_phong_tu_nhien.py` (thêm "PDF" vào viết tắt cho phép), `test_ws_nhan.py` (cho phép tiền tố mã lỗi `xp1_`).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp test sửa thành 342 (đếm thật; CI #44514194103 đỏ vì còn 339), thêm hàng `xuat_pdf.py` vào bản đồ mã.
+- `docs/phien/claude__ux1-b-phieu.md`: ghi chú L6/L7 đã được XP1 thay/làm. `kiem_nhanh.py` 7/7.
+
+## 2026-11-19 — XP1-L1: lõi xuất PDF (chưa có giao diện)
+
+- `xuat_pdf.py` (mới): `dung_pdf`, `tieu_de`, `dong_khoa_gia_tri`, `bang` (lặp tiêu đề cột, ô tự xuống dòng, thoát ký tự markup), `ngat_trang`; A4 dọc, chân trang "Trang x/y", ghi qua tệp tạm rồi đổi tên, không ghi đè (`duong_dan_khong_de`); thiếu reportlab/phông thì `ThieuThuVienPdf`.
+- `assets/fonts/BeVietnamPro-Regular.ttf`, `BeVietnamPro-Bold.ttf`, `OFL-BeVietnamPro.txt` (SIL OFL; `assets/fonts` đã nằm trong `kiosk.spec` datas).
+- `requirements.txt`: `reportlab==5.1.0` (thư viện mới, Truong duyệt 2026-11-18). `pypdf` KHÔNG thêm vào requirements: test đọc chữ tự bỏ qua khi thiếu nó.
+- `kiosk.spec`: `collect_all("reportlab")`.
+- Test mới: `tests/test_xp1_pdf_loi.py` (13 ca: 8 ca mức byte luôn chạy, 5 ca đọc chữ cần pypdf tuỳ chọn). Không đụng thuật toán/DB; `kiem_nhanh.py` 7/7.
+## 2026-11-19 — UX1B R1 fix2 (từ checker)
+
+- `giai_trinh._chuan_clb_fa`: mức vào được của CLB có thi (FA) lấy từ các dòng REJECTED đã lưu của CLB (cùng nguồn với câu "Vì sao"): có dòng RESERVED -> "Chỗ dành riêng" (không số), ngược lại `cut_score`; chưa ai bị từ chối -> "Còn chỗ". Không còn lấy điểm thấp nhất của người nhận (kể cả người giữ chỗ). Cột, thanh SVG và câu cùng một mức.
+- `phieu_giai_trinh._o_chuan`: số điểm in như câu ("8" thay "8.0").
+- Test: 3 ca mới trong `tests/test_ux1b_l7_phieu.py` (giữ chỗ 3 điểm + t 8 + x 7; người nhận cuối giữ chỗ; chưa ai bị từ chối).
+
+## 2026-11-19 — UX1B R1 (từ lượt duyệt của lead)
+
+- `giai_trinh._chuan_clb_fa`: chế độ FA, CLB có thi giờ có "Mức vào được" (điểm thấp nhất trong số người đã nhận khi CLB đầy, hay "Còn chỗ"), kể cả dòng ACCEPTED; thanh SVG có vạch đỏ. CLB không thi, dòng MEDAL: ghi huy chương của người nhận cuối ("Huy chương Vàng", `ux1b_gt_chuan_huy_chuong`). Chỉ con số của CLB.
+- Lý do MEDAL chỉ còn MỘT câu: "Em đặt huy chương Bạc; các bạn đặt Vàng ở {CLB} được xét trước." (hoặc "Em chưa đặt huy chương ở {CLB}; …"); `CA_MAU.md` không đổi.
+- `bao_cao_tong_hop.py`: buổi hiện "Thứ 2" (`giai_trinh.nhan_buoi`), mọi tiêu đề viết hoa chữ đầu sau khi điền nhãn, bảng nguyện vọng ghi "Số lượt xếp ({person_l} × {session_l})" (đếm lượt, không phải người).
+- Test: `tests/test_ux1b_l7_phieu.py` (+1 trên sổ FA mẫu, sửa 2 câu cũ), `tests/test_ux1b_l4_bao_cao.py` (+1), `tests/test_giao_dien_ux1b_phieu.py` (sửa câu).
+
+## 2026-11-19 — UX1B CI-1
+
+- `index.html`: chữ dự phòng của nhóm `ux1a_nhom_cai_dat` đổi thành "Cài đặt và quản lý" cho khớp `i18n.js` (`tests/test_t3_l1_chu_du_phong.py`). Không đổi test.
+
+## 2026-11-19 — UX1B-L8-B: tài liệu phiếu, ảnh, bảng "Sau"
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Phiếu giải trình và Báo cáo tổng hợp" (nội dung phiếu mới, khối "Theo lớp và báo cáo", thẻ học sinh không số khoá); hàng Kết quả; nhóm "Cài đặt và quản lý". `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: tên nhóm mới.
+- `docs/ke_hoach/ux/anh/04_phieu.png`, `phieu_mau.pdf`, `03_tra_cuu_HS004.png` chụp lại bằng `chup_phieu.py` (Chromium, dữ liệu MÔ PHỎNG, hạt giống 42).
+- `UX1_RA_SOAT.md` bảng "Sau": phiếu một em đo 5 lần bấm, CHƯA đạt mục tiêu 4 (cần nút PDF của XP1, tích hợp I3); báo cáo tổng hợp 1 lần bấm (HTML).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: hai hàng bản đồ mã (`bao_cao_tong_hop.py`, `js/19_ux1b_gv.js`, `_huy_chuong_ca_so_sai`).
+- `CA_MAU.md` và gói minh chứng: câu chữ không đổi từ L7, test sinh lại giống từng byte vẫn qua.
+
+## 2026-11-19 — UX1B-L5c fix1 (từ checker)
+
+- `api_quan_ly._huy_chuong_ca_so_sai`: MỘT nơi giữ ngưỡng "cả sổ sai" (từ một nửa số học sinh có nguyện vọng); `get_data_health_report` chỉ trả `gop_huy_chuong` khi qua ngưỡng, `get_san_sang_huy_chuong` thêm `huy_chuong_ca_so`. Ít em sai: giữ từng dòng có mã, thanh "Việc tiếp theo" không nhảy sang Cài đặt, khung Cài đặt vẫn cho đặt loại CLB (kèm nút Quay lại).
+- Không in "ví dụ ở: " rỗng: mã lỗi mới `ux1b_huy_chuong_gop_khong_clb`.
+- Dòng đỏ quyền riêng tư của khung Xuất trở lại hiện sẵn: tệp xuất mặc định có sheet "Điểm chuẩn" và "Dấu vết" (hạt giống, bộ số bốc thăm).
+- Test: `tests/test_giao_dien_ux1b_l5c.py` thêm r1b (ít em sai), r1c (không có tên CLB), r5 đổi (dòng đỏ vẫn hiện).
+
+## 2026-11-19 — UX1B-L5c: năm đề xuất của UX1_DANH_GIA_A §4 (chỉ thông điệp / bố cục)
+
+- Đề xuất 1: `api.get_data_health_report` trả thêm `gop_huy_chuong` {n_em, n_clb, clb (tên, tối đa 3)} (danh sách `warnings` và `n_high` GIỮ NGUYÊN); `js/02_van_hanh.js` gộp các dòng `fa_huy_chuong_*` thành MỘT dòng `ux1b_huy_chuong_gop` (mã mới trong `i18n_errors.py`) có số em và tên CLB, kèm nút "Mở Cài đặt"; thanh "Việc tiếp theo" (`js/17_viec_tiep_theo.js`) có trạng thái `huy_chuong_sai` trỏ khung Cài đặt (`ux1bMoCaiDat`, `js/19_ux1b_gv.js`); nút "Quay lại Chia 100 điểm" cạnh câu "nạp lại sổ" (`js/18_cai_dat.js`).
+- Đề xuất 2: `get_san_sang_huy_chuong` thêm `n_hoc_sinh`; khi có ô huy chương sai, khung sửa tại chỗ chỉ còn câu "nạp lại sổ" + "Tải sổ mẫu có huy chương" + "Quay lại Chia 100 điểm", ẩn nút loại CLB. `tests/test_giao_dien_ux1_cai_dat.py`: tách bài "chưa sẵn sàng" thành hai (cả sổ sai: không nút loại; sổ không có huy chương: sửa loại tại chỗ đến "Sẵn sàng").
+- Đề xuất 3: "Sau khi xếp": mỗi hành động có một dòng hệ quả, nút/ô số/chữ "ngày" cùng một hàng; đang bật thì nút nói trọn câu ("Nhận khiếu nại trong 3 ngày"). Nhãn nút khi tắt giữ nguyên.
+- Đề xuất 4: khung tra cứu: ô tìm to ở đầu, chữ gợi ý khác ô lọc bảng; dải 4 bước + ba nút mã tra cứu gập vào "Mã tra cứu…" (`#gtMaFold`, chỉ quản trị). Test cũ mở gập bằng `mo_gap_ma` (`tests/_trinh_duyet.py`); chỉ đổi cách chọn, không bỏ test.
+- Đề xuất 5: nhóm "Cài đặt" đổi tên "Cài đặt và quản lý" (khớp trang Quản lý); dòng đỏ quyền riêng tư của khung Xuất chuyển vào "Tuỳ chọn khác".
+- `tests/test_ws_nhan.py`: thêm mã `ux1b_huy_chuong_gop` vào `MA_MOI_SAU_ANH_CHUP`.
+- Test mới: `tests/test_giao_dien_ux1b_l5c.py` (5, mỗi đề xuất một test).
+
+## 2026-11-19 — UX1B-L7 fix2 (từ checker)
+
+- `tests/test_giao_dien_gt1_tra_cuu.py`, `tests/test_gt4_cau_giai_trinh.py`: chọn ô "Vì sao" / "Mức vào được" theo vị trí cuối (không theo chỉ số cố định), để cột Huy chương (và cột Loại CLB của XP1 sau này) không làm lệch. Chỉ sửa bộ chọn, không bỏ test.
+
+## 2026-11-19 — UX1B-L7 fix1 (từ checker)
+
+- `fa_ly_do.cau_ly_do` (MEDAL): CLB không có điểm thi (`diem_em` rỗng) nói "Các bạn đặt huy chương cao hơn ở {CLB} được xét trước." thay vì "bằng điểm"; `docs/giai_trinh/HUONG_DAN_CHAY.md` sửa ví dụ cho khớp.
+- `api_xuat.tra_cuu_hoc_sinh`: phản hồi cho học sinh bỏ `run.seed` và `stb_em` từng dòng (đường quản trị / giáo viên giữ nguyên).
+- Test thêm trong `tests/test_ux1b_l7_phieu.py` (3).
+
+## 2026-11-19 — UX1B-L7: nội dung phiếu giải trình (không gồm loại CLB — XP1)
+
+- `giai_trinh.py`: `tom_tat_dong`, `cac_buoc_tiep`, `_diem_da_thi`, `NHAN_HUY_CHUONG`, `CHU_THICH_HUY_CHUONG`; `giai_trinh_mot_hoc_sinh` trả thêm `tom_tat_dong`, `buoc_tiep` (chỉ khi có buổi chưa có chỗ), `chu_thich_huy_chuong` (FA), `diem_da_thi` mỗi buổi; FA: mỗi dòng có `huy_chuong` (chỉ của chính em), dòng lý do MEDAL nối câu "Em đặt huy chương X; các bạn đặt Y được xét trước."
+- `api_xuat._giai_trinh_dung_lai`: đọc `wharton_bids` (FA) và cờ `fa_vong_2` / `fa_diem_danh` / `fa_khieu_nai` thành `tinh_nang`.
+- `phieu_giai_trinh.py`: dòng tóm tắt, bảng điểm CLB đã thi + thanh SVG (chỉ số, đã thoát, không tệp ngoài), khối "Em nên làm gì tiếp", cột "Huy chương" ngay sau cột CLB (chỉ FA) + chú giải; cột "Điểm thi", "Chỗ đã nhận / tối đa"; "Mức vào được" = "Chọn ngẫu nhiên khi bằng điểm" thay cho "Bốc thăm".
+- `js/14_giai_trinh.js`, `i18n.js` (`ux1b_gt_*`, đổi `gt_th_diem`, `gt_th_cho`, `gt_chuan_boc_tham`), `style.css`: thẻ trên màn hình cùng nội dung; thẻ học sinh bỏ "số khoá bốc thăm" (quản trị / giáo viên vẫn thấy).
+- `bao_cao_tong_hop.py`: thêm dòng "dữ liệu đã sửa sau lần xếp" khi kết quả cũ (gợi ý của checker L4-B).
+- `docs/giai_trinh/CA_MAU.md` sinh lại (không đổi byte), `GOI_MINH_CHUNG.docx/.pdf` sinh lại.
+- Test mới: `tests/test_ux1b_l7_phieu.py` (10), `tests/test_giao_dien_ux1b_phieu.py` (3, Chromium), thêm 1 test ở `tests/test_ux1b_l4_bao_cao.py`.
+
+## 2026-11-19 — UX1B-L4-B: "Báo cáo tổng hợp" + khối chọn lớp ở thẻ Kết quả
+
+- `bao_cao_tong_hop.py` (mới): `gom_du_lieu` (số liệu từ `get_dashboard_status`, `get_do_phu`, `get_club_fill_stats`, `get_phan_bo_nguyen_vong` + số em chưa có chỗ theo lớp; danh sách trắng khoá, không mã/tên/điểm/số bốc thăm) và `dung_html` (thuần, `html.escape`, một tệp tự đủ).
+- `api_xuat.py`: `export_bao_cao_tong_hop` (HTML, không ghi đè, từ chối khi chưa có kết quả); `phan_quyen.py`: `giao_vien`; nhật ký thao tác: một dòng tự động, nhãn `nkhd_export_bao_cao_tong_hop` (vi/en).
+- Giao diện: khối `<!-- UX1B -->` (`#ux1bPanel`) ngay sau `#gtPanel` ở thẻ Kết quả: chọn lớp (mở bảng Theo lớp), "Xuất theo {cohort_l}", "Báo cáo tổng hợp"; `js/19_ux1b_gv.js`, khoá i18n `ux1b_*`. KHÔNG có nút "In phiếu cả lớp" (XP1, nối ở bước tích hợp I3).
+- Test mới: `tests/test_ux1b_l4_bao_cao.py` (7), `tests/test_giao_dien_ux1b_vai_gv.py` (3, Chromium).
+
+## 2026-11-18 — UX1A-L2b fix4: CI #1014 còn 2 job đỏ
+
+- `js/02_van_hanh.js` (`loadHealthReport`), `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo`, `initViecTiepTheo`): thanh "Việc tiếp theo" dùng lại kết quả `get_data_health_report` vừa có hoặc lần hỏi đang bay, và không tự vẽ lúc `init()`; lúc khởi động chỉ còn MỘT lần gọi (trước: 4).
+- `tests/test_ws_nhan.py`: `SUA_CO_Y` của `health_oversubscribed_buoi` khớp câu mới (bỏ gạch ngang ở fix3).
+
+## 2026-11-18 — UX1A-L2b fix3: sửa CI #1013 đỏ
+
+- `js/18_cai_dat.js` (`ux1aVeSauXep`, `ux1aTaiCaiDat`): đọc `(data.config || {}).rules`, hết lỗi JS `Cannot read … 'rules'` khi backend trả `data: {}`.
+- `i18n.js`: thêm nhãn nhật ký `nkhd_dat_loai_clb` (vi/en); bỏ gạch ngang nối câu ở `ux1a_ss_huy_chuong_sai`, `ux1a_ss_thieu_tu_do`.
+- `i18n_errors.py` (+ `i18n_loi.js` sinh lại): bỏ gạch ngang nối câu ở `so_nhap_canh_bao_huy_chuong_che_do_tat`, `health_oversubscribed_buoi`; `so_nhap_canh_bao_wharton_trong` (vi) lại nói "tắt điểm quyết tâm".
+- `index.html`: chữ dự phòng `import_hint` khớp catalog.
+- Không thêm test mới; sửa để các test sẵn có qua lại.
+
+## 2026-11-18 — UX1A-L2b fix2 (từ lượt duyệt của lead)
+
+- `get_san_sang_huy_chuong` thêm `huy_chuong_sai` (+ `huy_chuong_sai_vd`): số học sinh có ô không phải huy chương hợp lệ hoặc có huy chương ở CLB Tự do, đọc bằng `fa_daa.kiem_ho_so_huy_chuong` (chỉ đọc, không đổi dữ liệu). Còn > 0 thì `san_sang = false` và bảng sửa tại chỗ nói MỘT dòng "n học sinh có giá trị không phải huy chương … nạp lại sổ có cột Huy chương (Vàng/Bạc/Đồng)" thay vì "Sẵn sàng" (trước đây báo sẵn sàng mà lần chạy vẫn bị chặn).
+- Khung "Sau khi xếp": "Mở vòng 2" chỉ hiện khi còn em chưa có chỗ, "Mời danh sách chờ" chỉ khi còn chỗ trống (đang bật thì vẫn hiện để tắt).
+- Nút "Hoàn tác" ở thông báo nổi: chữ trắng, gạch chân, rõ trên nền xanh.
+- Test: `tests/test_ux1_cai_dat_backend.py` (sổ chế độ thường chưa sẵn sàng; sổ huy chương hợp lệ sẵn sàng VÀ chạy được), `tests/test_giao_dien_ux1_cai_dat.py` (+4).
+
+## 2026-11-18 — UX1A-L8-A: tài liệu, ảnh chụp, bảng "Sau" đo được
+
+- `HUONG_DAN_SU_DUNG.md`: bảng điều hướng thành 4 nhóm; mục mới về thanh "Việc tiếp theo", Cài đặt (ba thẻ), sổ mẫu có huy chương, Vàng/Bạc/Đồng; bỏ số thứ tự thẻ cũ (01–06). `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`, `KICH_BAN_VIDEO.md`: cách bật chế độ huy chương theo giao diện mới. `docs/ke_hoach/CLAUDE_CHI_TIET.md`: bản đồ mã (`js/17`, `js/18`, `get_san_sang_huy_chuong`, `dat_loai_clb`, lớp đọc huy chương), số tệp/ca test (339 / 6.845).
+- Chữ hiển thị trỏ tới hộp "Tính năng sau khi xếp…" đã bỏ nay trỏ tới Cài đặt / khung "Sau khi xếp": `i18n_errors.py` (`so_nhap_canh_bao_wharton_trong`), `mau_forms_thi_clb/tao_mau_forms.py` (+ `tests/test_fg7_bieu_mau_sau_ket_qua.py`).
+- Poster: `poster/DU_LIEU_POSTER.md` (tên thẻ), ảnh giao diện chụp lại (`poster/hinh/giao_dien_*.png`). CHƯA dựng lại `poster_*.pdf/pptx` (cần python-pptx, matplotlib: thư viện chưa có trong môi trường) -> mục "Cần Truong".
+- `docs/ke_hoach/ux/chup_luong_chinh.py` viết lại: chụp ảnh mới VÀ in số lần bấm; ảnh trong `docs/ke_hoach/ux/anh/` thay mới (`11_ws_tinh_nang.png` bỏ, `11_cai_dat.png` thêm; `04_phieu.png`, `phieu_mau.pdf` KHÔNG đụng: nhóm B). `UX1_RA_SOAT.md` mục 2b: bảng "Sau" với số đo (nạp→chạy→tải = 4; xử lý em chưa có CLB = 1; GV chủ nhiệm ≤ 2; học sinh 2); dòng phiếu PDF và báo cáo BGH ghi "nhóm B, sau tích hợp".
+
+## 2026-11-18 — UX1A-L5b: ô huy chương nhận Vàng/Bạc/Đồng
+
+- Chế độ huy chương BẬT: ô huy chương của Sổ nhập nhận `Vàng/Bạc/Đồng` (không phân biệt hoa/thường, dấu; cả `vang/bac/dong`, `gold/silver/bronze`), đổi về 60/30/10 ngay ở lớp đọc (`so_nhap.chuan_hoa_chu_huy_chuong`, gọi trong `api_nhap._doc_so_nhap`); giá trị lưu (`wharton_bids`), `fa_daa.kiem_ho_so_huy_chuong` và kết quả xếp không đổi. Chữ lạ vẫn báo `fa_huy_chuong_gia_tri_sai`. Chế độ tắt: không ánh xạ (như cũ). Đường Forms đi qua sổ nhập nên được phủ cùng chỗ.
+- Sổ mẫu có huy chương: ô chọn sổ xổ xuống `Vàng,Bạc,Đồng,60,30,10`; Hướng dẫn: "Vàng / Bạc / Đồng hoặc 60 / 30 / 10". Sổ mẫu thường KHÔNG có dòng này nên giữ nguyên (đã so với bản cũ: giá trị ô và quy tắc nhập giống hệt).
+- Sửa nhỏ của L5: nút "Bật chế độ huy chương" chỉ hiện khi đang mở một workspace.
+- Test mới: `tests/test_ux1_l5b_huy_chuong_chu.py` (9: số vs chữ cho `wharton_bids` VÀ `match_results` giống hệt, hoa/thường/không dấu/tiếng Anh, chữ lạ, chế độ tắt, Hướng dẫn), thêm 1 test giao diện ở `tests/test_giao_dien_ux1_nhap_so.py`.
+
+## 2026-11-18 — UX1A-L5: cảnh báo đúng mức và đúng lời; sổ huy chương sai chế độ; hai sổ mẫu
+
+- Ba cảnh báo "vượt chỉ tiêu" (`health_oversubscribed`, `_buoi`, `_chua_khai_buoi`) từ "info" lên "medium" (vẫn không chặn: chỉ "high" chặn; không chỗ nào chặn theo mức này) và rút còn MỘT câu + MỘT hành động (`i18n_errors.py`).
+- Xem trước sổ (`xem_truoc_so_nhap`): sổ có cột Huy chương (`so_nhap.TEN_COT_HUY_CHUONG`, cờ `co_cot_huy_chuong` của `doc_so_nhap`) hoặc cột Loại mà chế độ huy chương TẮT → cảnh báo mới `so_nhap_canh_bao_huy_chuong_che_do_tat` kèm nút "Bật chế độ huy chương" (`#btnBatHuyChuong`: `update_workspace_config {wharton, fa_daa}` rồi đọc thử lại sổ đang chờ; quản trị, có dòng nhật ký; không bật ngầm). Chỉ đổi thông điệp: cái được lưu và cách chạy không đổi (60 ca trùng khít).
+- Nạp sổ huy chương khi chế độ tắt: thêm một dòng tóm tắt "n … chưa đặt đủ điểm quyết tâm (huy chương)" trên danh sách gom (5 ví dụ + "và N nữa" giữ nguyên); gợi ý ở khung lỗi chạy nói tới chế độ huy chương.
+- "Tải sổ nhập mẫu": giữ nguyên (sổ mẫu thường) + nút mới "Tải sổ mẫu có huy chương" (`tao_so_nhap_mau(output_path, kieu)`, kiểu "huy_chuong" → `che_do_fa=True`; Hướng dẫn nói chế độ phải bật).
+- Test mới: `tests/test_ux1_l5_backend.py` (7), `tests/test_giao_dien_ux1_nhap_so.py` (5). Cập nhật theo chủ ý đổi chữ: `tests/test_data_health.py` (mức "medium"), `tests/test_ws_nhan.py` (`SUA_CO_Y` + mã mới), `tests/du_lieu_ws/chu_ui_doi_co_y_t3.json` (`import_hint`).
+
+## 2026-11-18 — UX1A-L3 fix1
+
+- `nhapTatCa()` xoá dòng `#feedbackImportAll` cũ trước khi thử lại (lỗi lần trước không còn dính sau khi nạp thành công); test fail→thử lại→thành công trong `test_giao_dien_upload.py`.
+- Thanh "Việc tiếp theo", trạng thái "Xử lý n …": thêm nút PHỤ `#viecTiepTheoNut2` "Xuất kết quả" (cùng hành động với trạng thái "xuất") để sổ mẫu thật (còn em chưa có CLB) vẫn tải kết quả trong 4 lần bấm; test không giả lập trong `test_giao_dien_ux1_tiep_theo.py`.
+
+## 2026-11-18 — UX1A-L3: thẻ Kết quả tra cứu trước, một menu "Xuất…", thông báo nạp sổ một lần
+
+- `#gtPanel` (tra cứu một học sinh) lên ĐẦU thẻ Kết quả, trên `#kqBang`; bỏ liên kết nhảy `#gtNhay` và khoá i18n `gt_nhay`.
+- Thẻ "Chi tiết": chỉ hai nút xuất chính hiện sẵn ("Xuất kết quả (Excel)", "Xuất theo lớp"); bốn nút phụ (lý do, nhu cầu, gợi ý chỉ tiêu, biên bản bốc thăm) vào menu `#xuatMenu` "Xuất…" (chỉ có ở chế độ Huy chương). Giữ nguyên id và trình xử lý.
+- Nạp sổ: câu kết quả (số CLB, học sinh) chỉ hiện ở hàng của tệp; bỏ dòng `#feedbackImportAll` khi thành công; thông báo nổi chỉ xác nhận "Đã nạp sổ".
+- Thanh "Việc tiếp theo": trạng thái "Xuất" bấm là xuất luôn (tuỳ chọn mặc định) → luồng nạp → chạy → tải = 4 lần bấm (test `test_luong_chinh_nap_chay_tai_ket_qua_bon_lan_bam`).
+- Test mới: `tests/test_giao_dien_ux1_ket_qua.py` (4). Sửa test cũ theo vị trí: fa_ket_qua, sg11a_ve_sinh (mở menu / chờ ở trạng thái attached), gt4_man_hoc_sinh (bỏ `#gtNhay`), upload, xoa_du_lieu (kết quả nạp ở hàng tệp).
+
+## 2026-11-18 — UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay
+
+- Mới: thẻ "Chỉ xếp thứ tự" / "Chia 100 điểm" (mặc định) / "Huy chương" (`js/18_cai_dat.js`, thành phần `ux1aTaoThe`) ánh xạ `wharton` + `fa_daa`; lưu ngay bằng MỘT lời gọi `update_workspace_config` (ghi một dòng nhật ký thao tác như mọi lần gọi khi có tài khoản), áp dụng tại chỗ, thông báo "Đã chuyển sang … · Hoàn tác" 10 giây; lỗi hiện dưới thẻ, thẻ không đổi. Một dòng "Cách xét khi đông" sinh từ Tiêu chí xếp; "Thay đổi…" mở mục Nâng cao.
+- Một nơi duy nhất: panel `#ux1aCaiDat` (đầu thẻ Quản lý), mục ⋯ "Cài đặt…" (thay "Tính năng sau khi xếp…", hộp `wsMoTinhNang` đã xoá), bước 3 trình tạo workspace (cùng thành phần; ô điểm quyết tâm / huy chương / 4 ô theo dõi bỏ). Ô "Xét điểm quyết tâm" của Tiêu chí xếp bỏ (chỉ tự tắt cờ khi lựa chọn làm nó vô nghĩa).
+- Huy chương mà dữ liệu chưa sẵn sàng: sửa tại chỗ (viên "Tự do · Giới hạn · Tuyển chọn" theo CLB, chọn CLB Tự do cho buổi thiếu, điểm sàn) cho tới "Sẵn sàng". Backend mới: `get_san_sang_huy_chuong` (đọc), `dat_loai_clb` (ghi, dùng lại `fa_daa.ghi_thuoc_tinh_clb`); thêm vào `phan_quyen.py`.
+- Việc sau khi xếp thành hành động ở thẻ "Chi tiết và xuất tệp" (`#ux1aSauXep`, chỉ ở chế độ Huy chương): Mở vòng 2, Nhận khiếu nại trong [n] ngày, Điểm danh, Mời danh sách chờ, Thu phản hồi.
+- Test mới: `tests/test_giao_dien_ux1_cai_dat.py` (10), `tests/test_ux1_cai_dat_backend.py` (7). Viết lại theo thẻ: ws_wharton_giao_dien, a13_13_kiem_nhan, fa_cai_dat, fa_gap1/gap3, fg8_cau_chu, fg1_bat_tinh_nang, sg2_diem_quyet_tam, sg11b, gt2_tieu_chi, gt4_tieu_chi, ws_giao_dien (một test cũ "FA bật, điểm quyết tâm tắt" nay không tạo được từ giao diện; backend vẫn từ chối, test ở test_a13_13_kiem_nhan.py).
+- L2: nhóm điều hướng ẩn theo thuộc tính (hidden / vai giáo viên), không theo getClientRects.
+
+## 2026-11-18 — UX1A-L2: thanh bên 4 nhóm
+
+- Thanh bên: 4 nhóm "1. Nạp & xếp" (pipeline), "2. Nhập tay" (fallback, scoring), "3. Kết quả & phiếu" (results, others), "Cài đặt" (admin, chuan_bi). Nút nhóm mở thẻ đầu còn hiện; nhóm không còn thẻ hiện (vai giáo viên, thẻ ẩn) tự ẩn (`capNhatNhomDieuHuong`, `js/01_khung.js`). Mọi `.nav-item[data-tab]` và id giữ nguyên, vẫn bấm được từ nhóm khác. Giáo viên vào "Kết quả" như cũ.
+- Cài đặt: "Tiêu chí xếp" + "Thử cấu hình" gấp vào `<details id="ux1aNangCao">` đóng mặc định, đặt SAU phần sửa CLB/học sinh.
+- Việc tiếp theo (L1): trạng thái "đã chạy" dùng `has_results` (hoặc `n_matched > 0`).
+- Test mới: `tests/test_giao_dien_ux1_dieu_huong.py` (5). Sửa test theo selector: GT2/GT4 mở `#ux1aNangCao` sau khi vào thẻ Quản lý; `test_giao_dien_a14_lop.py` đổi thứ tự thẻ kỳ vọng.
+
+## 2026-11-18 — UX1A-L1: thanh "Việc tiếp theo"
+
+- Mới: `#viecTiepTheo` ở đầu `<main>` (chỉ quản trị) — một nút chính theo trạng thái: nạp sổ → xem cảnh báo chặn → chạy → xử lý n {person_l} chưa có {slot_l} → xuất. Ô "Cần xử lý" ở thẻ "Chi tiết" dùng chung hành động. Mã: `js/17_viec_tiep_theo.js` (mới), móc ở `js/02_van_hanh.js`, `js/03_ket_qua.js`, `js/08_khoi_dong.js`; khoá i18n `ux1a_*`.
+- Test mới: `tests/test_giao_dien_ux1_tiep_theo.py` (6). Không đổi backend/thuật toán; invariant 1 trùng khít (60 ca).
+
+## 2026-11-18 — UX1a: rà soát thao tác người dùng (mục mới UX1, Truong duyệt)
+
+- Mới: `docs/ke_hoach/ux/UX1_RA_SOAT.md` (số lần bấm theo 4 nhóm người dùng, 10 vấn đề, đề xuất UX1b/UX1c), ảnh `docs/ke_hoach/ux/anh/`, script chụp `docs/ke_hoach/ux/chup_luong_chinh.py`, `chup_phieu.py` (dữ liệu MÔ PHỎNG).
+- Không đổi mã sản phẩm; không test mới.
+
 ## 2026-11-18 — GT4 fix 2: các ghi chú nhỏ của checker (L2, L3, L5, L6, L7) + Gate
 
 - L2: thông báo nổi sau khi xuất chỉ nói đã xuất gì (đường dẫn đầy đủ vẫn ở dòng dưới nút) nên không che bảng kết quả.

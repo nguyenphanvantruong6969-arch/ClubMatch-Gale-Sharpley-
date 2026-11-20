@@ -26,13 +26,14 @@
     if (x.diem_chuan_loai === "diem" && x.diem_chuan !== null && x.diem_chuan !== undefined) {
       return t("gt_chuan_diem", { n: x.diem_chuan });
     }
+    if (x.diem_chuan_loai === "huy_chuong" && x.diem_chuan) return t("ux1b_gt_chuan_huy_chuong", { n: x.diem_chuan });
     if (x.diem_chuan_loai === "boc_tham") return t("gt_chuan_boc_tham");
     if (x.diem_chuan_loai === "con_cho") return t("gt_chuan_con_cho");
     if (x.diem_chuan_loai === "giu_cho") return t("gt_chuan_giu_cho");   // GT4-L4: chỗ dành riêng, không hiện số
     return t("gt_khong_co");
   }
 
-  function veBuoi(b, hienNhan) {
+  function veBuoi(b, hienNhan, fa) {
     const khung = mot("div", "gt-buoi");
     if (hienNhan) khung.appendChild(mot("h3", "", nhanBuoi(b.buoi)));
     khung.appendChild(mot("p", "gt-ket-qua", b.ket_qua
@@ -42,8 +43,10 @@
     if (b.cac_lua_chon.length) {
       const bang = mot("table", "data-table gt-bang");
       const dau = mot("tr");
-      ["gt_th_hang", "gt_th_clb", "gt_th_diem", "gt_th_cho", "gt_th_chuan", "gt_th_ly_do"].forEach((k) => {
-        dau.appendChild(mot("th", "", t(k)));
+      /* UX1B-L7: cột "Huy chương" chỉ ở chế độ huy chương, ngay sau cột CLB (cột "Loại CLB" của XP1 chèn trước nó). */
+      ["gt_th_hang", "gt_th_clb", fa ? "ux1b_gt_th_huy_chuong" : null, "gt_th_diem", "gt_th_cho", "gt_th_chuan",
+        "gt_th_ly_do"].forEach((k) => {
+        if (k) dau.appendChild(mot("th", "", t(k)));
       });
       const th = mot("thead");
       th.appendChild(dau);
@@ -54,6 +57,7 @@
         if (x.duoc_xep) hang.setAttribute("aria-current", "true");
         hang.appendChild(mot("td", "", x.hang === null || x.hang === undefined ? t("gt_ngoai_nv") : String(x.hang)));
         hang.appendChild(mot("td", "", x.ten_clb));
+        if (fa) hang.appendChild(mot("td", "", x.huy_chuong || "—"));
         hang.appendChild(mot("td", "", x.chon_loc ? oDiem(x.diem_em) : t("gt_khong_co")));
         hang.appendChild(mot("td", "", (x.da_nhan === null || x.da_nhan === undefined ? "?" : x.da_nhan) +
           " / " + oDiem(x.suc_chua)));
@@ -69,7 +73,61 @@
       khung.appendChild(cuon);
       if (b.chu_thich) khung.appendChild(mot("p", "gt-chu-thich hint-text", b.chu_thich));   // câu cố định từ backend
     }
+    veDiemDaThi(khung, b);
     return khung;
+  }
+
+  /* UX1B-L7: điểm của MỌI {slot_l} em đã thi, mỗi cái một thanh SVG (điểm của em, vạch đỏ = mức vào được). Dữ liệu
+     từ backend (cùng nguồn với phiếu in); dựng bằng DOM, không innerHTML. */
+  const SVG_NS = "http://www.w3.org/2000/svg";
+  function veThanh(diem, chuan) {
+    const cao = Math.max(Number(diem), chuan === null ? 0 : Number(chuan), 1);
+    const rong = 180;
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "thanh-diem");
+    svg.setAttribute("width", String(rong + 4));
+    svg.setAttribute("height", "16");
+    svg.setAttribute("role", "img");
+    const them = (ten, thuocTinh) => {
+      const n = document.createElementNS(SVG_NS, ten);
+      Object.keys(thuocTinh).forEach((k) => n.setAttribute(k, thuocTinh[k]));
+      svg.appendChild(n);
+    };
+    them("rect", { x: 0, y: 3, width: rong, height: 10, fill: "#e5e7eb" });
+    them("rect", { x: 0, y: 3, width: (Number(diem) / cao) * rong, height: 10, fill: "#2563eb" });
+    if (chuan !== null) {
+      const x = (Number(chuan) / cao) * rong;
+      them("line", { x1: x, y1: 0, x2: x, y2: 16, stroke: "#b91c1c", "stroke-width": 2 });
+    }
+    return svg;
+  }
+
+  function veDiemDaThi(khung, b) {
+    const thi = b.diem_da_thi || [];
+    if (!thi.length) return;
+    khung.appendChild(mot("h4", "gt-diem-thi-tieu-de", t("ux1b_gt_diem_thi")));
+    const bang = mot("table", "data-table gt-bang gt-diem-thi");
+    const dau = mot("tr");
+    ["gt_th_clb", "gt_th_diem", "gt_th_chuan", "ux1b_gt_th_thanh"].forEach((k) => dau.appendChild(mot("th", "", t(k))));
+    const th = mot("thead");
+    th.appendChild(dau);
+    bang.appendChild(th);
+    const than = mot("tbody");
+    thi.forEach((x) => {
+      const hang = mot("tr");
+      hang.appendChild(mot("td", "", x.ten_clb));
+      hang.appendChild(mot("td", "", oDiem(x.diem_em)));
+      hang.appendChild(mot("td", "", oChuan(x)));
+      const o = mot("td");
+      const cn = x.diem_chuan_loai === "diem" && x.diem_chuan !== null && x.diem_chuan !== undefined ? x.diem_chuan : null;
+      o.appendChild(veThanh(x.diem_em, cn));
+      hang.appendChild(o);
+      than.appendChild(hang);
+    });
+    bang.appendChild(than);
+    const cuon = mot("div", "scroll-x");
+    cuon.appendChild(bang);
+    khung.appendChild(cuon);
   }
 
   /* `g`: chỗ vẽ thẻ; `quanTri` false = thẻ trong chế độ học sinh (không có nút quản trị). */
@@ -84,11 +142,25 @@
       g.appendChild(c);
     }
     const r = d.run || {};
-    g.appendChild(mot("p", "gt-lan-chay", t("gt_lan_chay", { gio: dinhDangGio(r.run_at), seed: r.seed })));
+    /* UX1B-L7: thẻ của học sinh không nói "số khoá bốc thăm"; quản trị / giáo viên vẫn thấy. */
+    g.appendChild(mot("p", "gt-lan-chay", quanTri ? t("gt_lan_chay", { gio: dinhDangGio(r.run_at), seed: r.seed })
+                                                  : t("ux1b_gt_lan_chay_hs", { gio: dinhDangGio(r.run_at) })));
+    if (d.tom_tat_dong) g.appendChild(mot("p", "gt-tom-tat-dong", d.tom_tat_dong));
     let tc = d.fa_bat ? t("gt_tieu_chi_fa") : t("gt_tieu_chi_thuong");
     if (!d.fa_bat && r.luat_xep && r.luat_xep.wharton) tc += t("gt_tieu_chi_diem_quyet_tam");
     g.appendChild(mot("p", "gt-tieu-chi", tc));
-    d.buoi.forEach((b) => g.appendChild(veBuoi(b, d.buoi.length > 1 || b.buoi !== BUOI_MAC_DINH)));
+    d.buoi.forEach((b) => g.appendChild(veBuoi(b, d.buoi.length > 1 || b.buoi !== BUOI_MAC_DINH, !!d.fa_bat)));
+    if (d.fa_bat && d.buoi.length && d.chu_thich_huy_chuong) {
+      g.appendChild(mot("p", "gt-chu-thich hint-text", d.chu_thich_huy_chuong));
+    }
+    if ((d.buoc_tiep || []).length) {
+      const kh = mot("div", "gt-tiep-theo");
+      kh.appendChild(mot("h4", "", t("ux1b_gt_tiep_theo")));
+      const ul = mot("ul");
+      d.buoc_tiep.forEach((c) => ul.appendChild(mot("li", "", c)));
+      kh.appendChild(ul);
+      g.appendChild(kh);
+    }
     if (quanTri) {
       el("gtIn").hidden = false;
       el("btnGtInLop").hidden = !d.lop;
@@ -175,10 +247,11 @@
     el("gtPanel").scrollIntoView({ behavior: "auto", block: "start" });   // GT4: tức thì (cuộn mượt dừng giữa chừng, kết quả nằm dưới mép màn)
     xem(sid);
   };
-  el("gtNhay").addEventListener("click", (ev) => {
-    ev.preventDefault();
-    el("gtPanel").scrollIntoView({ behavior: "smooth", block: "start" });
-    el("gtTim").focus();
+  /* XP1-L2: phiếu của MỘT em dạng PDF (export_phieu_giai_trinh_pdf, student_ids = [mã]); tệp rơi vào Tải xuống. */
+  el("btnGtPdfMot").addEventListener("click", () => {
+    if (!dangXem) return;
+    chayXuat([["gt_in_muc", "export_phieu_giai_trinh_pdf", ["", null, false, [dangXem.student_id]],
+      (d) => t("xp1_pdf_mot_xong", { path: d.path })]], el("gtXuatPhanHoi"), true);
   });
   el("btnGtInMot").addEventListener("click", () => { if (dangXem) inPhieu(["", [dangXem.student_id]]); });
   el("btnGtInLop").addEventListener("click", () => { if (dangXem && dangXem.lop) inPhieu(["", null, dangXem.lop]); });
