@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1 CI-fix1: mã `mt_*` đăng ký ở bản chụp lỗi; thanh "Việc tiếp theo" không còn chạy đua với danh sách cảnh báo
+
+- `tests/test_ws_nhan.py`: tiền tố `mt_` (MT1) vào danh sách tiền tố mã lỗi mới sau ảnh chụp, như `gt3_` / `xp1_`; phép so từng chữ giữ nguyên.
+- `js/02_van_hanh.js` (`loadHealthReport`) + `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo` trả promise): danh sách cảnh báo chỉ hiện SAU khi thanh "Việc tiếp theo" đã có trạng thái. Nguyên nhân gốc (có sẵn từ trước, không do MT1: bản `main` cũng hỏng 3/14 lần khi máy bận): thanh còn chờ thêm hai lời gọi (`get_dashboard_status`, `get_em_chua_co_cho`) SAU khi danh sách đã hiện, nên nơi đọc (và `test_r1_canh_bao_huy_chuong…`) thấy danh sách mà `data-trang-thai` còn trống. Sau sửa: 0/14 lần hỏng ở cùng điều kiện (trước 4/14).
+
 ## 2026-11-20 — MT1 fix3 (L2 + L4): rời "Cơ hội như nhau" trả lại "Chia 100 điểm"; câu hỏi đầu chạy theo thẻ
 
 - `cau_hinh_ws.py` (`_kiem_muc_tieu`): khoá tuỳ chọn `muc_tieu.wharton_truoc` (bool) = "Chia 100 điểm" đang bật TRƯỚC khi `co_hoi` tắt nó. `api_muc_tieu.py` (`_ke_hoach`): vào `co_hoi` thì nhớ; áp lại `co_hoi` giữ nguyên; rời `co_hoi` sang thẻ khác khi chưa sửa tay (không phải `tuy_chinh`) thì trả `rules.wharton` (không chạm `fa_daa`), không thêm ghi chú; `bao_cao_muc_tieu`: mốc "không dùng thẻ" của `co_hoi` gồm cả điểm chia đã nhớ. Hoàn tác giữ nguyên ngữ nghĩa (gói có cả `muc_tieu`).
