@@ -68,7 +68,8 @@ tao_ma_tra_cuu tao_lai_ma_tra_cuu export_ma_tra_cuu_csv
 vao_che_do_hoc_sinh
 dat_loai_clb get_tieu_chi run_thu list_lan_chay so_sanh_lan_chay export_so_sanh_html export_so_sanh_csv ap_dung_tieu_chi
 export_danh_sach_pdf
-""".split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát)
+get_muc_tieu chon_muc_tieu hoan_tac_muc_tieu
+""".split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát); MT1: ba hàm mục tiêu (cả hàm đọc) chỉ quản trị
 
 QUYEN = {}
 for _ten in _CONG_KHAI:

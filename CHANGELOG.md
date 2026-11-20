@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-20 — MT1-L2: API ba thẻ mục tiêu (chỉ quản trị)
+
+- Mới: `api_muc_tieu.py` (`MucTieuMixin`: `get_muc_tieu`, `chon_muc_tieu`, `hoan_tac_muc_tieu`); gắn vào `PipelineAPI`. Chọn thẻ = MỘT giao dịch (luật + khoá `muc_tieu` + chỗ giữ của CLB), sao lưu trước, không chạy xếp, không đụng `run_history` / `match_results` / `stb_lock`. Hoàn tác trả đúng luật, `muc_tieu` và từng CLB; rời thẻ "Dành chỗ" thì trả chỗ giữ nhập ban đầu.
+- `cau_hinh_ws.py`: khoá cấp trên TUỲ CHỌN `muc_tieu` `{id, nhom, truoc?}` (`_kiem_muc_tieu`; không có thì cấu hình y như cũ, nằm ngoài `rules` nên không vào `luat_xep` / dấu vân tay); `ghi_cau_hinh(..., cung_giao_dich=f)` chạy `f(conn)` trong cùng giao dịch, lỗi thì rollback cả hai. `workspace.py` (`luu_mau`): mẫu không mang `muc_tieu`.
+- `muc_tieu.py`: thẻ `danh_cho` đặt lại cả `tiers=[]` và `score_scope=per_slot` (thẻ sáng lại sau khi luật từng bị sửa tay).
+- `co_hoi`: huy chương bật → lỗi `mt_the_can_diem`; "Chia 100 điểm" bật → chạy được, `wharton` tự tắt theo luật nhất quán sẵn có của `cau_hinh_ws`, kèm ghi chú `mt_diem_chia_khong_dung`, Hoàn tác trả lại.
+- `phan_quyen.py` (ba hàm, cả hàm đọc, chỉ quản trị), `i18n.js` (`nkhd_chon_muc_tieu`, `nkhd_hoan_tac_muc_tieu`), `i18n_errors.py` (tám mã `mt_*` ở cuối) + `i18n_loi.js` sinh lại.
+- Test: `tests/test_mt1_api.py` (28 ca, viết trước); `tests/test_gt3_phan_quyen.py` thêm `get_muc_tieu` vào danh sách hàm đọc chỉ quản trị.
+
 ## 2026-11-20 — MT1-L1: danh mục ba thẻ mục tiêu (phần thuần)
 
 - Mới: `muc_tieu.py` (`BO_MUC_TIEU`, `rules_cua_muc_tieu`, `nhan_dien_muc_tieu`, `de_xuat_cho_giu`, `cac_nhom`). Chỉ đặt khoá của `LUAT_XEP_MAC_DINH`, không chạm `wharton`/`fa_daa`; số chỗ giữ = `ceil(tỉ lệ nhóm × sức chứa)` chỉ đọc danh sách học sinh. Chưa nối vào API/giao diện (L2, L4).

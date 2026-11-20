@@ -46,7 +46,9 @@ BO_MUC_TIEU = {
         "tieu_de": {"vi": "Dành chỗ cho một nhóm", "en": "Seats kept for a group"},
         "cau": {"vi": "Giữ một số chỗ ở mỗi CLB cho một nhóm (vd. khối 10, hoàn cảnh khó khăn).",
                 "en": "Keep some seats in every club for one group (e.g. grade 10, disadvantaged)."},
-        "luat": {"priority": "score", "tier_mode": "reserve"},
+        # Cùng bốn khoá với `nang_luc`: đặt lại cả danh sách nhóm và phạm vi điểm, để thẻ sáng lại sau khi
+        # luật từng bị sửa tay (khác nhau ở CLB: chỗ giữ cho nhóm).
+        "luat": {"priority": "score", "tier_mode": "reserve", "score_scope": "per_slot", "tiers": []},
         "doi_cho": True,
     },
 }

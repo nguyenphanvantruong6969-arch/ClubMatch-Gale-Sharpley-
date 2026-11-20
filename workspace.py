@@ -307,6 +307,7 @@ def luu_mau(root: str, slug: str, ten_mau: str) -> str:
     ten_mau = _kiem_ten(ten_mau)
     cfg = doc_cau_hinh(os.path.join(_thu_muc_ton_tai(root, slug), TEN_DB), nghiem=True)
     cfg["name"] = ten_mau
+    cfg.pop("muc_tieu", None)   # MT1: lần chọn thẻ gắn với CLB của workspace này, không mang sang mẫu
     chuan_hoa(cfg)      # T1b: mẫu là cấu hình MỚI, nhãn trùng không được lọt (nếu không mẫu biến mất khỏi danh sách)
     thu_muc = os.path.join(root, THU_MUC_MAU)
     os.makedirs(thu_muc, exist_ok=True)

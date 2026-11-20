@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| MT1-L2 (API ba thẻ mục tiêu) | xong (chờ checker) | 2026-11-20 | api_muc_tieu.py, api.py, cau_hinh_ws.py, muc_tieu.py, workspace.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, i18n.js, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_mt1_api.py (+ sửa test_gt3_phan_quyen.py) | khoá cấu hình `muc_tieu`, không bảng/cột mới |
 | MT1-L1 (danh mục ba thẻ mục tiêu) | xong (chờ checker) | 2026-11-20 | muc_tieu.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_mt1_muc_tieu.py | `co_hoi` = bốc thăm thuần: đúng (không dừng) |
 | MT1-KH (mục MT, Truong duyệt 20/11/2026) | xong (kế hoạch) | 2026-11-20 | docs/phien/claude__mt1-bo-muc-tieu.md, docs/phien/MT1_GIAO_THUC.md | — | Bản 2: 3 thẻ mục tiêu, 1–2 lần bấm, lô L1–L5; nhánh claude/mt1-bo-muc-tieu |
 | MT0 (mục mới MT, ngoài sổ, Truong giao 20/11/2026) | xong | 2026-11-20 | du_lieu_test/do_muc_tieu_mt0.py, docs/fable/08_MT0_MEMO.md, CHANGELOG.md | — (chỉ đo) | Cam kết theo công thức 20/20 so với số cố định 13–14/20 |

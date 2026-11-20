@@ -1619,6 +1619,40 @@ MESSAGES = {
         "en": "{n} {person_pl} have no valid medals. The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings.",
     },
     # === end UX1B (L5c) ===
+    # === MT1 (L2) ===
+    "mt_muc_tieu_la": {
+        "vi": "Không có mục tiêu này. Hãy chọn một trong ba thẻ.",
+        "en": "There is no such goal. Please choose one of the three cards.",
+    },
+    "mt_can_chon_nhom": {
+        "vi": "Có nhiều nhóm. Hãy chọn nhóm cần giữ chỗ.",
+        "en": "There are several groups. Please choose the group to keep seats for.",
+    },
+    "mt_nhom_khong_co": {
+        "vi": "Danh sách không có nhóm {nhom}. Hãy chọn một nhóm có sẵn.",
+        "en": "The list has no group {nhom}. Please choose one of the existing groups.",
+    },
+    "mt_khong_co_nhom": {
+        "vi": "Sổ nhập chưa có cột nhóm.",
+        "en": "The input book has no group column.",
+    },
+    "mt_the_can_diem": {
+        "vi": "Chế độ huy chương cần điểm thi nên không dùng được với mục tiêu bốc thăm. Hãy chọn thẻ khác.",
+        "en": "Medal mode needs test scores, so it cannot be used with a lottery goal. Please choose another card.",
+    },
+    "mt_diem_chia_khong_dung": {
+        "vi": "Điểm chia không được dùng với mục tiêu này.",
+        "en": "Divided points are not used with this goal.",
+    },
+    "mt_hoan_tac_khong_hop_le": {
+        "vi": "Không hoàn tác được vì dữ liệu hoàn tác không hợp lệ. Chưa có gì bị đổi.",
+        "en": "Undo is not possible because the undo data is not valid. Nothing was changed.",
+    },
+    "mt_khong_ap_dung": {
+        "vi": "Chưa đổi được mục tiêu. Cài đặt vẫn như cũ. Hãy thử lại.",
+        "en": "The goal could not be changed. Settings are unchanged. Please try again.",
+    },
+    # === end MT1 (L2) ===
 }
 
 
