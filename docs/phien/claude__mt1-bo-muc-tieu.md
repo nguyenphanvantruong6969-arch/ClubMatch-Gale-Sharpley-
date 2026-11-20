@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1–L5 done, §5 review written; CI gate §4 running. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -23,7 +23,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned re
 | `co_hoi` | Cơ hội như nhau | Mọi em có cơ hội như nhau: bốc thăm, không xét điểm thi. | `priority=tier, tiers=[]` (engine: strict ⇒ lottery only, reserves skipped) | unchanged |
 | `danh_cho` | Dành chỗ cho một nhóm | Giữ một số chỗ ở mỗi CLB cho một nhóm (vd. khối 10, hoàn cảnh khó khăn). | `priority=score, tier_mode=reserve` | per club `reserve_group = group`, `reserve_capacity = ceil(group share × capacity)` |
 
-- Cards never touch `fa_daa`, nor `wharton` except: `co_hoi` turns "Chia 100 điểm" off (forced by `_chuan_hoa`/engine, same as Nâng cao A13.13), returns warning `mt_diem_chia_khong_dung` which the UI MUST show; only Undo restores it (lead, L2 review). Both belong to the existing first question (Chỉ xếp thứ tự / Chia 100
+- Cards never touch `fa_daa`, nor `wharton` except: `co_hoi` turns "Chia 100 điểm" off (forced by `_chuan_hoa`/engine, same as Nâng cao A13.13), returns warning `mt_diem_chia_khong_dung` which the UI MUST show; Undo or leaving `co_hoi` without a manual edit restores it (`muc_tieu.wharton_truoc`, fix3 after §5 review). Both belong to the existing first question (Chỉ xếp thứ tự / Chia 100
   điểm / Huy chương). Conflicts: with "Huy chương", `co_hoi` is disabled with one line of reason (medal mode needs
   scores). With "Chia 100 điểm", `co_hoi` shows one line: "Điểm chia không được dùng với mục tiêu này."
 - `danh_cho` group: the student list's group labels. One label ⇒ chosen automatically (0 extra clicks). Several ⇒
@@ -81,7 +81,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned re
   and `js/03_ket_qua.js`, `index.html`, keys `mt1_*` in `i18n.js`. Tests `tests/test_giao_dien_mt1.py` (Chromium):
   click count per card (1/2), Undo restores, estimate line appears without click, warnings, result line, teacher
   hidden, 1280/1024 px, keyboard, contrast/size. Screenshots before/after in `docs/phien/anh_mt1/`.
-- [x] **L5 Docs + final review** (a1a4b90, checker 1 doc bug → fixed, fix verified by lead; §5 review pending) — `HUONG_DAN_SU_DUNG.md` section "Chọn mục tiêu" (≤ 1 screen, plain words),
+- [x] **L5 Docs + final review** (a1a4b90; §5 review `docs/ke_hoach/mt/MT1_DANH_GIA.md` found 2 UI bugs → fix2 dd81704, fix3 b1e1101, checker NO BUGS) — `HUONG_DAN_SU_DUNG.md` section "Chọn mục tiêu" (≤ 1 screen, plain words),
   `CLAUDE_CHI_TIET.md` code map, `CHANGELOG.md`, `TIEN_DO.md`; protocol §5 review.
 
 ## Acceptance (whole lot)
@@ -97,7 +97,7 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned re
 
 ## Current state
 - Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js`, L5 docs done.
-- Next: L4 fix2 (danh_cho several groups shows ✓ before saving, found in §5 review) → checker → CI gate §4 → finish §5.
+- Next: CI gate §4 on the head commit (no pushes until it finishes); then Status DONE + final summary.
 
 ## Needs Truong
 - Default "Chia 100 điểm" + an import without points (e.g. `SO_NHAP_MAU_120HS_3BUOI.xlsx`) ⇒ the first official run fails until the school switches to "Chỉ xếp thứ tự" (pre-existing, outside MT1). Recommend: on import, if no student has points, default the first question to "Chỉ xếp thứ tự" (new item, e.g. MT2/UX).
