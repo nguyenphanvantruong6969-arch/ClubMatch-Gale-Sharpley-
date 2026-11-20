@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — MT0 (mục mới MT, ngoài sổ; mục cha C3/A1): nghiên cứu mục tiêu giáo dục (chỉ đo)
+
+- Mới: `du_lieu_test/do_muc_tieu_mt0.py` (gọi `run_rbda`, `verify_stability` thật; 3 kịch bản × 20 seed), `docs/fable/08_MT0_MEMO.md`.
+- Không đổi mã sản phẩm, không test mới. Số liệu MÔ PHỎNG.
+
 ## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.
