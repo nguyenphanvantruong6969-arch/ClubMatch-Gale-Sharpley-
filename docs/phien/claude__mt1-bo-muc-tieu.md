@@ -14,7 +14,7 @@ algorithm does not change. Later lots (not here): MT2 publish goal before regist
 parent report.
 
 ## Status
-Status: IN PROGRESS 2026-11-20 — L1, L2 done; L3 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
+Status: IN PROGRESS 2026-11-20 — L1–L3 done; L4 with coder. Planned rev. 2; branch from `claude/trusting-bohr-wg0l4n`.
 
 ## The 3 goal cards (fixed; wording may be polished)
 | id | Card title (vi) | One sentence on the card (≤ 90 chars) | Rules set | Club data |
@@ -72,7 +72,7 @@ Status: IN PROGRESS 2026-11-20 — L1, L2 done; L3 with coder. Planned rev. 2; b
   (`phan_quyen.QUYEN`, `nkhd_` labels). Codes `mt_*` at end of `i18n_errors.py` → `python tao_i18n_js.py`.
   Tests `tests/test_mt1_api.py`: roles, unknown id, group missing, medal conflict, Undo exact (rules + every club),
   re-apply idempotent, manual edit ⇒ `tuy_chinh`, config without `muc_tieu` exactly as today.
-- [ ] **L3 Estimate + result (read-only)** — `uoc_tinh_muc_tieu(id, nhom)` (in-memory solve with the locked
+- [x] **L3 Estimate + result (read-only)** (859d9c3, checker NO BUGS after 2 fix rounds) — `uoc_tinh_muc_tieu(id, nhom)` (in-memory solve with the locked
   lottery vs the last official run; none ⇒ words only; medal mode ⇒ `mt_uoc_tinh_fa`) and
   `bao_cao_muc_tieu(run_id)` (met/not in the 5 most-chosen clubs, helped, gave way, guardrails: first choice %,
   unmatched; counts 1–4 ⇒ "dưới 5"). Tests `tests/test_mt1_uoc_tinh.py`: hand-checked case, zero DB writes (compare
@@ -96,8 +96,8 @@ Status: IN PROGRESS 2026-11-20 — L1, L2 done; L3 with coder. Planned rev. 2; b
 - All numbers in tests/docs are SIMULATED. No report commentary for the student's science report.
 
 ## Current state
-- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py` done.
-- Next: coder works on L3 (`GO L3` sent).
+- Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report done.
+- Next: coder works on L4 UI (`GO L4` sent).
 
 ## Needs Truong
 - (none yet)
