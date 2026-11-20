@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-20 — UX1F-L2 fix1: tiêu đề buổi không nằm một mình ở đáy trang
+
+- `phieu_giai_trinh.py` (`_khoi_pdf`): mỗi buổi là MỘT khối `giu_cung` (từ tiêu đề buổi); buổi cuối gộp luôn chú thích, khiếu nại, mã tra cứu. Trước đó khối giữ chung chỉ bắt đầu ở bảng nên "Thứ 6" có thể ở đáy trang 10 còn bảng ở trang 11.
+- Test: thêm `test_tieu_de_buoi_cuoi_khong_mot_minh_o_day_trang` (quét 3–8 buổi × 4 độ dài lời giải thích; đỏ trước khi sửa). 800 em vẫn 1278 trang.
+
 ## 2026-11-20 — UX1F-L2: bố cục phiếu giải trình PDF (một trang, tiêu đề cột không gãy từ)
 
 - `xuat_pdf.py`: lề 12 mm (trước 18/18/16/18), chữ bảng 8,5 pt (trước 9), đoạn và đệm ô chặt hơn; `bang` tính độ rộng tối thiểu từng cột từ TỪ DÀI NHẤT của tiêu đề (`_rong_toi_thieu`, `_chia_cot`) nên tiêu đề chỉ xuống dòng ở dấu cách ("Huy chương", "Mức vào được" không còn gãy "Huy ch/ương"); thêm `giu_cung` (KeepTogether).
