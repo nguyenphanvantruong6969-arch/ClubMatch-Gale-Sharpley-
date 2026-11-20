@@ -97,10 +97,10 @@ Status: IN PROGRESS 2026-11-20 — L1–L5 done; CI gate §4 running. Planned re
 
 ## Current state
 - Done: plan rev. 2 + protocol. L1 `muc_tieu.py`, L2 `api_muc_tieu.py`, L3 `muc_tieu_do.py` + estimate/report, L4 UI `js/19_muc_tieu.js`, L5 docs done.
-- Next: CI gate §4 on the head commit (no pushes until it finishes), then lead review §5.
+- Next: L4 fix2 (danh_cho several groups shows ✓ before saving, found in §5 review) → checker → CI gate §4 → finish §5.
 
 ## Needs Truong
-- (none yet)
+- Default "Chia 100 điểm" + an import without points (e.g. `SO_NHAP_MAU_120HS_3BUOI.xlsx`) ⇒ the first official run fails until the school switches to "Chỉ xếp thứ tự" (pre-existing, outside MT1). Recommend: on import, if no student has points, default the first question to "Chỉ xếp thứ tự" (new item, e.g. MT2/UX).
 
 ## Sessions
 | Role | Session id | Started |
