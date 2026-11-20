@@ -383,7 +383,7 @@ def test_muc_tieu_khong_ro_ri_vao_luat_xep_va_dau_van_tay_khi_dung_co_hoi(tmp_pa
     assert (_sql(db1, "SELECT student_id, buoi, club_id FROM match_results ORDER BY student_id, buoi")
             == _sql(db2, "SELECT student_id, buoi, club_id FROM match_results ORDER BY student_id, buoi"))
     cot = [r[1] for r in _sql(db1, "PRAGMA table_info(dau_van_tay_chay)")]
-    bo = [c for c in cot if c not in ("run_id", "run_at", "tao_luc", "id")]
+    bo = [c for c in cot if c not in ("id", "luc", "run_id", "run_at", "tao_luc")]
     if bo:
         cau = "SELECT %s FROM dau_van_tay_chay ORDER BY 1" % ", ".join(bo)
         assert _sql(db1, cau) == _sql(db2, cau)               # dấu vân tay kết quả y hệt
