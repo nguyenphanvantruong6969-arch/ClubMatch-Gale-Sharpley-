@@ -17,16 +17,17 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L3 #8 #9 #1 hit area / one focus ring / state layer     PASSED (+fix1 nav-item 44px, fix2 controls above ::after)
 - [x] L4 #7 inline field errors (baoLoiTaiO...)               PASSED (+fix1 language switch)
 - [x] L5 #11 four-phase progress (UX2_PHA)                    PASSED (+fix1 backup warning)
-- [x] L6 #12 guided empty states (veTrangThaiRong)            DONE 291deb8 + fix1 788709f (role-aware, nav tab names), reported, checker verdict pending
-- [ ] L7 #6 skeleton loading   [ ] L8 #10 smooth transitions   [ ] L9 docs/screenshots/verify (spec: lead's branch file)
+- [x] L6 #12 guided empty states (veTrangThaiRong)            PASSED (291deb8 + fix1 788709f)
+- [x] L7 #6 skeleton loading (hienKhungCho)                   DONE head b00b9e3, reported, checker verdict pending
+- [ ] L8 #10 smooth transitions   [ ] L9 docs/screenshots/verify (spec: lead's branch file)
 
 ## Current state (overwrite each handoff)
-- Done: L1-L6 committed + pushed; last code commit 788709f (L6 fix1). Working tree clean after the handoff push.
-- In progress: nothing. Waiting for lead: checker verdict on L6 fix1 and "GO L7".
-- Tests: related ones only (never the 22-min full suite); redirect pytest output to a file in the scratchpad.
-  Last (L6 fix1): 203 passed (ux2_*, tien_trinh, i18n_sync, van_phong, ws_nhan, a13_12_tkb, a14_lop, t2_ket_qua, t3_l3,
-  gt3_phan_quyen, ux1_ket_qua, khoa_xuat), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
-- Open problems: none known. scoringOverviewEmpty left unchanged (not in lead's L6 list).
+- Done: L1-L7 committed + pushed; last code commit b00b9e3 (L7). Working tree clean after the handoff push.
+- In progress: nothing. Waiting for lead: checker verdict on L7 and "GO L8".
+- Tests: related ones only (never the 22-min full suite); redirect pytest output to a scratchpad file.
+  Last (L7): 217 passed (ux2_*, tien_trinh, a13_8, a13_12, quan_ly_tab_con, a14_lop, t3_l0, t3_l2_van_hanh, chay, ux1_ket_qua,
+  fa_n2, cham_diem, tro_nang, i18n_sync, khoa_xuat, ux_xuat), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
+- Open problems: none known. 800 HS admin list loads in ~0.4 s locally (no skeleton shown; threshold 300 ms).
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -46,14 +47,15 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
   test_van_phong_tu_nhien bans long dashes, address forms (en "you"), ALL CAPS, internal words in UI strings.
 - Empty states (L6): cfg.gv = role text for giao_vien (no button, "ask an administrator"); tab names come from ux2TenThe() = nav
   labels ({the_xep}/{the_quan_ly}/{the_nhap}); redraw on `langchange` AND `ux2vai` (ganVai in 16_tai_khoan.js dispatches it).
+- Skeleton (L7): hienKhungCho(tbody, soCot, soDong, hoi, caoHang): 300 ms delay, only when tbody empty, ONE colspan cell per row
+  (per-column bars made columns jump 100-135 px), cleared by hoi.then(ket, ket) (success/error/reject), token compare for double
+  loads; tests avoid wall-clock asserts (use the synthetic-table test); admin student row height 55 px.
 - Push rejected -> `git fetch origin claude/ux2-phan-hoi-nut && git merge --no-edit FETCH_HEAD` (protocol: never rebase/force).
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Wait for lead: checker verdict on L6 fix1 (FIX L6 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
-2. On "GO L7": `git pull origin claude/ux2-phan-hoi-nut` + `git fetch origin main && git merge --no-edit FETCH_HEAD`, read the L7 block
-   (hienKhungCho(tbody, soCot, soDong), only if load > 300 ms, aria-busy on table, results / admin student / run history / admin club
-   tables; shimmer off under tat-hieu-ung and reduced motion; MutationObserver test for no flicker on fast API).
+1. Wait for lead: checker verdict on L7 (FIX L7 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
+2. On "GO L8": `git pull origin claude/ux2-phan-hoi-nut` + `git fetch origin main && git merge --no-edit FETCH_HEAD`, read the L8 block.
 3. L8 smooth transitions (@supports for ::details-content / interpolate-size), L9 docs + screenshots (HUONG_DAN_SU_DUNG.md section,
    re-shoot docs/ke_hoach/ux/anh/, CLAUDE_CHI_TIET.md code map, kiem_nhanh 7/7, CHANGELOG + TIEN_DO rows).
 4. Each lot: failing test first -> minimal code -> related tests -> ruff -> kiem_nhanh 7/7 -> CHANGELOG + TIEN_DO row `UX2-L<n>` ->
@@ -74,3 +76,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 |---|---|---|---|
 | 2026-11-21 | Sonnet (coder) | L1-L6 built, fixed per checker (L1 x2, L3 x2, L4 x1, L5 x1), all pushed; handoff written at ~400k context | head 291deb8 |
 | 2026-11-21 | Sonnet (coder) | L6 fix1 (role-aware empty boxes, nav tab names, ux2vai), handoff refreshed (hook fired again) | head 788709f |
+| 2026-11-21 | Sonnet (coder) | L7 skeleton loading built + reported; handoff refreshed (hook fired again) | head b00b9e3 |
