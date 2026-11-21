@@ -121,8 +121,8 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 4. Refresh timings when shards drift: download job logs, take lines `THOI_GIAN_TEP_JSON {...}`
    (Linux -> `.github/thoi_gian_test.json`, Windows -> `.github/thoi_gian_test_windows.json`).
 
-5. PR (not opened; Truong asked "ready?"): recommend PR A `claude/mt1-bang-loai-clb` -> `main` (MT1 + MT1-X1),
-   PR B = CI commits on a separate branch (outside registry). Mention N1 open, build workflow untested.
+5. PRs OPENED: #23 `claude/mt1-bang-loai-clb` -> `main` (MT1 + MT1-X1); #24 this branch -> `claude/mt1-bang-loai-clb`
+   (CI). Suggested merge order: #24 then #23. Nothing merged yet.
 
 ## Decisions (CI work, 2026-11-21)
 - `pytest-xdist` added to requirements-dev.txt only (Truong approved); NOT in requirements-build.txt.
