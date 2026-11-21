@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L8, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L9, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -84,7 +84,7 @@ Lot L7 ✅ PASSED (checker NO BUGS, head b00b9e3) — #6 skeleton loading
       results table, admin student table, run history, admin club table.
 - [x] Test: slow API → skeleton after 400 ms, gone after data; fast API → never inserted (MutationObserver);
       shimmer off under both motion switches.
-Lot L8 — #10 smooth transitions
+Lot L8 ✅ PASSED (checker NO BUGS, head a71baec, 1 fix round) — #10 smooth transitions
 - [x] New list rows slide in (≤ 20 rows, 180 ms, no stagger beyond 200 ms total); `<details>` accordions open by
       height via `::details-content` + `interpolate-size` inside `@supports` (fallback: instant).
 - [x] Test: animation/transition present with effects on; none with `tat-hieu-ung` / reduced motion; accordion
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f), L7 (b00b9e3) passed.
-- In progress: L8 sent to coder (GO L8). Coder handoff file: __impl.md (kept same session per §2).
+- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f), L7 (b00b9e3), L8 (a71baec) passed.
+- In progress: L9 sent to coder (GO L9). Then CI gate §6 and lead review §7.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
