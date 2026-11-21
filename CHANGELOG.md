@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
+
+- CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.
+
 ## 2026-11-21 — SM2-FIX1: từ điển cột chỉ ghi ở từ vựng trường học (checker lỗi 1)
 
 - `so_nhap.ghi_so_nhap(day_du=True)`: bảng TỪ ĐIỂN CỘT viết bằng từ vựng trường ("1. CLB", "Mã HS", "học sinh") nên chỉ ghi khi tên sheet và tiêu đề cột là mặc định của trường; workspace nhãn riêng (vd. công ty "1. Dự án" / "2. Nhân viên") vẫn đủ cấu trúc nhưng không có từ điển, để không chỉ tới sheet / cột không có trong tệp. Sổ mẫu trường học không đổi (băm FG-2, T1a xanh).

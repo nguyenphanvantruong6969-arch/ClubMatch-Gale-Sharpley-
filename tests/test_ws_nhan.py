@@ -236,6 +236,12 @@ SUA_CO_Y = {
         ('Clubs with no session set have {n_seats} seats in total, but {n_students} student(s) ranked these clubs. At least {n_short} student(s) will certainly get no seat among them. Clubs with no session set are matched together as one separate session. Set their session in Manage clubs, raise capacity, or accept it.',
          "Clubs with no session set: {n_seats} seats for {n_students} students, at least {n_short} won't get one. Set their session or raise capacity."),
     ],
+    # SM2-L2: một nút sổ mẫu (bỏ "Tải sổ mẫu có huy chương"), câu gợi ý nói sổ có đủ cột (chủ ý đổi chữ).
+    ("ui", "import_hint"): [
+        ('(hoặc "Tải sổ mẫu có huy chương" nếu chế độ huy chương đang bật)',
+         '(sổ có đủ mọi cột và bảng giải thích từng cột)'),
+        ('(or "Download the medal workbook" if medal mode is on)',
+         '(it has every column and a table explaining each one)')],
     ("ui", "health_panel_hint"): [
         ("Những điểm dưới đây không chặn việc sắp xếp nhưng có thể làm kết quả sai lệch.",
          'Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch.'),

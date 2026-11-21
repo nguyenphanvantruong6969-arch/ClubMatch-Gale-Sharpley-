@@ -3,7 +3,7 @@
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: FIX ROUND 1 DONE (checker bug 1), CI pending
+Status: CI FIX ROUND 1 pushed (test_ws_nhan snapshot), CI pending
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
@@ -84,3 +84,4 @@ Lot L2 — one button, full structure (#2)
 | 2026-11-21 | coder | L1 done, kiem_nhanh 7/7 | import warnings live in data.warnings |
 | 2026-11-21 | coder | L2 done, related tests 507 green, kiem_nhanh 7/7 | READY FOR REVIEW |
 | 2026-11-21 | coder | FIX round 1: checker bug 1 (dictionary vocabulary), +2 tests, kiem_nhanh 7/7 | minimal fix |
+| 2026-11-21 | coder | CI round 1: SUA_CO_Y entry for import_hint in test_ws_nhan (deliberate text change) | checker recheck FIX1 = NO BUGS |
