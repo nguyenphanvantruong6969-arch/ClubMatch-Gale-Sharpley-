@@ -48,14 +48,14 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Plan (written by Opus; ticked by coder, lead ticks after checker NO BUGS)
 ### L1 — FA club columns in export (`api_xuat.py` `_du_lieu_so_nhap`)
-- [ ] Remove the `xfail` mark; run the test, confirm RED (rule 2); record the failure line in the commit message.
-- [ ] Add a new test (same file or `tests/test_mt1_x1_xuat_so_nhap.py`): normal workspace (FA off, no FA values),
+- [x] Remove the `xfail` mark; run the test, confirm RED (rule 2); record the failure line in the commit message.
+- [x] Add a new test (same file or `tests/test_mt1_x1_xuat_so_nhap.py`): normal workspace (FA off, no FA values),
       export `SO_NHAP_DQT_120HS_HOP_LE.xlsx` data → sheet "1. CLB" has NO column Loại/Điểm sàn/Tối thiểu/Sức chứa
       phòng, and every sheet's cell values equal a reference produced from the unchanged path (build reference by
       calling `so_nhap.ghi_so_nhap` with the old club dicts, or a stored expected list — no timestamps).
-- [ ] Add test: FA on, clubs with NULL type → FA columns present, cells empty; import into empty FA DB → NULLs.
-- [ ] Add test: FA OFF but one club has `loai` set → columns present, round trip keeps it.
-- [ ] Implement D1. Red test now green.
+- [x] Add test: FA on, clubs with NULL type → FA columns present, cells empty; import into empty FA DB → NULLs.
+- [x] Add test: FA OFF but one club has `loai` set → columns present, round trip keeps it.
+- [x] Implement D1. Red test now green.
 ### L2 — reserved seats + full round trip
 - [ ] Failing test: FA DB from `SO_NHAP_FA_MAU_120HS.xlsx`; set `so_toi_thieu`, `suc_chua_phong` on two clubs
       (via `dat_loai_clb` if it takes them, else direct UPDATE in the test), add 2–3 `giu_cho` pairs with
@@ -92,7 +92,7 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: L1 (GO sent to coder)
+- In progress: L2 (L1 passed checker NO BUGS, head 2ea9193)
 - Tests: none run (planning only; container had no `.venv`).
 - Open problems: —
 
