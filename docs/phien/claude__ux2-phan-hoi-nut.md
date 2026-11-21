@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L4, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L5, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -61,7 +61,7 @@ Lot L3 ✅ PASSED (checker NO BUGS, head 2a05e8f, 2 fix rounds) — #8 hit area,
 - [x] Compact buttons (`.btn-nho`, `.btn-ghost`, icon/close buttons) keep visual size; hit area grows with a
       transparent pseudo-element or padding (grep `::after`/`::before` users first; 6 `::after` exist).
 - [x] Remove duplicated per-component `:focus-visible` rules only when the shared one covers them.
-Lot L4 — #7 inline field errors
+Lot L4 ✅ PASSED (checker NO BUGS, head 26a1d96, 1 fix round) — #7 inline field errors
 - [x] Test `tests/test_giao_dien_ux2_loi_o.py`: invalid seed, admin add-club form, admin add-student form, a
       score input (`06_cham_diem`): input gets `aria-invalid="true"`, class `is-loi`, `aria-describedby` → a
       `.loi-o` text = translated message; focus on the FIRST invalid input; shake 200 ms (`ux2Rung`) only when
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f) passed.
-- In progress: L4 sent to coder (GO L4). Open problems: none.
+- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96) passed — must-ship core done.
+- In progress: L5 sent to coder (GO L5). Open problems: none.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
