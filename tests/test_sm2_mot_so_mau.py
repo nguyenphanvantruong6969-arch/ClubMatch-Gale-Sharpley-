@@ -68,3 +68,26 @@ def test_ghi_so_nhap_mac_dinh_khong_doi(tmp_path):
     wb = openpyxl.load_workbook(p)
     assert so_nhap.SHEET_GIU_CHO not in wb.sheetnames
     assert "Loại" not in _tieu_de(wb[wb.sheetnames[0]])
+
+
+def _chu_hd(wb):
+    return "\n".join(str(o.value) for h in wb[so_nhap.SHEET_HD].iter_rows() for o in h if o.value)
+
+
+def test_tu_dien_khong_chi_toi_sheet_khong_co_o_workspace_nhan_rieng(tmp_path):
+    """SM2 checker lỗi 1: nhãn riêng (công ty) -> sổ vẫn đủ cấu trúc nhưng không có từ điển viết bằng từ vựng trường."""
+    from test_ws_so_nhap import CONG_TY
+    cfg = ch.chuan_hoa({"industry": "company", **CONG_TY})
+    p = str(tmp_path / "ct.xlsx")
+    so_nhap.ghi_so_nhap(p, [], [], cfg=cfg, luon_co_cot_w=True, co_lop=True, day_du=True)
+    wb = openpyxl.load_workbook(p)
+    assert wb.sheetnames[:2] == ["1. Dự án", "2. Nhân viên"] and so_nhap.SHEET_GIU_CHO in wb.sheetnames
+    chu = _chu_hd(wb)
+    assert "TỪ ĐIỂN CỘT" not in chu
+    assert "1. CLB" not in chu and "2. Học sinh" not in chu
+
+
+def test_tu_dien_van_co_o_truong_hoc_mac_dinh(tmp_path):
+    p = str(tmp_path / "th.xlsx")
+    so_nhap.ghi_so_nhap(p, [], [], cfg=ch.chuan_hoa({}), luon_co_cot_w=True, co_lop=True, day_du=True)
+    assert "TỪ ĐIỂN CỘT" in _chu_hd(openpyxl.load_workbook(p))

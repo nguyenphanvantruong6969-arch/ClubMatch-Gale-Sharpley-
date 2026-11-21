@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-21 — SM2-FIX1: từ điển cột chỉ ghi ở từ vựng trường học (checker lỗi 1)
+
+- `so_nhap.ghi_so_nhap(day_du=True)`: bảng TỪ ĐIỂN CỘT viết bằng từ vựng trường ("1. CLB", "Mã HS", "học sinh") nên chỉ ghi khi tên sheet và tiêu đề cột là mặc định của trường; workspace nhãn riêng (vd. công ty "1. Dự án" / "2. Nhân viên") vẫn đủ cấu trúc nhưng không có từ điển, để không chỉ tới sheet / cột không có trong tệp. Sổ mẫu trường học không đổi (băm FG-2, T1a xanh).
+- Test mới trong `tests/test_sm2_mot_so_mau.py`: `test_tu_dien_khong_chi_toi_sheet_khong_co_o_workspace_nhan_rieng` (đỏ khi bỏ điều kiện), `test_tu_dien_van_co_o_truong_hoc_mac_dinh`. kiem_nhanh 7/7.
+
 ## 2026-11-21 — SM2-L2: MỘT nút "Tải sổ nhập mẫu", sổ luôn đủ cấu trúc
 
 - `so_nhap.py`: `TU_DIEN_COT` + `_ghi_tu_dien_cot(wb, tieu_de, ghi_chu, che_do_fa)` (nguồn duy nhất của từ điển cột; dòng cột thứ ba theo chế độ: FA nói Huy chương, không nói quỹ) và tham số `ghi_so_nhap(..., day_du=False)`: True thì luôn có 4 cột FA, Giờ, Địa điểm, sheet Giữ chỗ (chỉ tiêu đề) và bảng TỪ ĐIỂN CỘT. Mặc định không đổi.

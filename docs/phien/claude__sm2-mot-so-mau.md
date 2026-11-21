@@ -3,7 +3,7 @@
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: READY FOR REVIEW 4376750 (CI pending) Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
+Status: FIX ROUND 1 DONE (checker bug 1), CI pending
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
@@ -58,15 +58,20 @@ Lot L2 — one button, full structure (#2)
 ## Current state
 - Done: L1 (api_nhap skip in FA; list_wharton_canh_bao drops the code in FA; health report already FA-split).
 - Done: L2 (`ghi_so_nhap(day_du=True)` from `tao_so_nhap_mau` and `mau_csv/tao_so_nhap.tao_mau_trong`; one button; ✓ on success).
-- Next: checker review; coder waits for CI (send_later) and fixes red only.
+- Done: FIX round 1 (checker bug 1): dictionary written only for default school vocabulary.
+- Next: wait for CI (send_later) and fix red only; then Status DONE.
 
 ## Decisions and gotchas
+- FIX1 chose the checker's minimal option (skip dictionary for custom vocabulary) rather than translating it: its notes also say "CLB", "học sinh", "CLB Tự do" and a label-aware rewrite is a larger change.
 - i18n key `ux1a_btn_so_mau_huy_chuong` KEPT: the wrong-mode prompt button `ux1bSsTaiSoMau` (js/18_cai_dat.js) still uses it (plan said remove; removing would break the kept prompt).
 - `mau_csv/SO_NHAP_CLB.xlsx` must equal the app sample (T1a) → `tao_mau_trong` also passes `day_du=True`; regenerated.
 - Sheet Hướng dẫn may not say "em" (T1a/G3): dictionary rows reworded to "học sinh" (so `SO_NHAP_MAU_DAY_DU.xlsx` text changed in 4 cells).
 - FA sample Hướng dẫn may not mention "Điểm quyết tâm"/"quỹ" (FG-2): `_ghi_tu_dien_cot(che_do_fa=bool)` swaps the third-column row per mode; `None` (du_lieu_test script) keeps the combined row.
 - Import warnings are in `data.warnings`, not `errors`.
 - `CLAUDE_CHI_TIET.md` counts test files (`370 tệp`); each new test file → update the count (CI checks docs).
+
+## Needs Truong
+- (not blocking) Should custom-vocabulary workspaces (company, dorm…) get a column dictionary written in their own labels? Today they get none (SM2-FIX1). Would be a new item.
 
 ## Files touched
 - L2: so_nhap.py, api_xuat.py, index.html, js/02_van_hanh.js, i18n.js, mau_csv/tao_so_nhap.py + SO_NHAP_CLB.xlsx, du_lieu_test/tao_so_nhap_day_du.py + SO_NHAP_MAU_DAY_DU.xlsx, 2 guides, tests (1 new + 6 updated)
@@ -78,3 +83,4 @@ Lot L2 — one button, full structure (#2)
 | 2026-11-21 | Opus (planner) | Goal, decisions, Plan L1–L2 | no product code |
 | 2026-11-21 | coder | L1 done, kiem_nhanh 7/7 | import warnings live in data.warnings |
 | 2026-11-21 | coder | L2 done, related tests 507 green, kiem_nhanh 7/7 | READY FOR REVIEW |
+| 2026-11-21 | coder | FIX round 1: checker bug 1 (dictionary vocabulary), +2 tests, kiem_nhanh 7/7 | minimal fix |

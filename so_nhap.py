@@ -1782,7 +1782,12 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
                 if isinstance(o.value, str) and o.value.startswith("="):
                     o.data_type = "s"
 
-    if day_du:
+    # SM2 (checker lỗi 1): từ điển viết bằng từ vựng trường học ("1. CLB", "Mã HS", "học sinh"), nên chỉ
+    # ghi khi sổ dùng đúng từ vựng đó; workspace đặt nhãn riêng (vd. công ty) thì bỏ, để không chỉ tới
+    # sheet / cột không có trong tệp.
+    tu_vung_truong = (sheet_clb, sheet_hs) == (SHEET_CLB, SHEET_HS) and cot_clb(cfg) == COT_CLB \
+        and cot_hs_dau(cfg) == COT_HS_DAU and nhan_lop(cfg) == "Lớp"
+    if day_du and tu_vung_truong:
         _ghi_tu_dien_cot(wb, che_do_fa=che_do_fa)
     wb.active = 0
     wb.save(duong_dan_hoac_tep)
