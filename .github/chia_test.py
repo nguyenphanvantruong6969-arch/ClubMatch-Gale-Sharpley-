@@ -23,6 +23,7 @@ import sys
 THU_MUC = os.path.dirname(os.path.abspath(__file__))
 TEP_THOI_GIAN = os.path.join(THU_MUC, "thoi_gian_test.json")
 HE_SO_BYTE = 2000.0  # ~2 KB mã test ~ 1 giây (chỉ dùng khi tệp chưa có số đo)
+HE_SO_SONG_SONG = 3.0  # 4 nhân CI, trừ hao phí khởi động tiến trình
 
 
 def _doc_thoi_gian():
@@ -68,9 +69,10 @@ def chia(so_phan, windows=False):
     def nang(t):
         if windows and _bo_qua_tren_windows(t):
             return 0.01
-        if t in do:
-            return float(do[t])
-        return os.path.getsize(t) / HE_SO_BYTE * (4 if "giao_dien" in os.path.basename(t) else 1)
+        g = float(do[t]) if t in do else (
+            os.path.getsize(t) / HE_SO_BYTE * (4 if "giao_dien" in os.path.basename(t) else 1))
+        # Tệp thường chạy với -n auto (4 nhân) nên chỉ tốn ~1/HE_SO_SONG_SONG thời gian thực.
+        return g if nhay_thoi_gian(t) else g / HE_SO_SONG_SONG
 
     phan = [[] for _ in range(so_phan)]
     tong = [0.0] * so_phan
