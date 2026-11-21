@@ -22,16 +22,20 @@ import sys
 
 THU_MUC = os.path.dirname(os.path.abspath(__file__))
 TEP_THOI_GIAN = os.path.join(THU_MUC, "thoi_gian_test.json")
+TEP_THOI_GIAN_WINDOWS = os.path.join(THU_MUC, "thoi_gian_test_windows.json")
 HE_SO_BYTE = 2000.0  # ~2 KB mã test ~ 1 giây (chỉ dùng khi tệp chưa có số đo)
 HE_SO_SONG_SONG = 3.0  # 4 nhân CI, trừ hao phí khởi động tiến trình
 
 
-def _doc_thoi_gian():
-    try:
-        with open(TEP_THOI_GIAN, encoding="utf-8") as f:
-            return json.load(f)
-    except (OSError, ValueError):
-        return {}
+def _doc_thoi_gian(windows=False):
+    """Số đo đúng máy: Windows dùng số đo Windows nếu có (máy Windows chậm hơn và lệch tỉ lệ)."""
+    for duong in ([TEP_THOI_GIAN_WINDOWS] if windows else []) + [TEP_THOI_GIAN]:
+        try:
+            with open(duong, encoding="utf-8") as f:
+                return json.load(f), duong == TEP_THOI_GIAN_WINDOWS
+        except (OSError, ValueError):
+            continue
+    return {}, False
 
 
 def _bo_qua_tren_windows(t):
@@ -64,14 +68,15 @@ def nhay_thoi_gian(t):
 
 def chia(so_phan, windows=False):
     tep = sorted(t.replace("\\", "/") for t in glob.glob(os.path.join("tests", "test_*.py")))
-    do = _doc_thoi_gian()
+    do, _ = _doc_thoi_gian(windows)
 
     def nang(t):
         if windows and _bo_qua_tren_windows(t):
             return 0.01
         g = float(do[t]) if t in do else (
             os.path.getsize(t) / HE_SO_BYTE * (4 if "giao_dien" in os.path.basename(t) else 1))
-        # Tệp thường chạy với -n auto (4 nhân) nên chỉ tốn ~1/HE_SO_SONG_SONG thời gian thực.
+        # Tệp thường chạy -n auto (4 tiến trình cùng lúc): thời gian thực của cả bước ~ tổng thời gian
+        # từng test / số tiến trình, nên trọng số chia HE_SO_SONG_SONG. Tệp tuần tự giữ nguyên.
         return g if nhay_thoi_gian(t) else g / HE_SO_SONG_SONG
 
     phan = [[] for _ in range(so_phan)]

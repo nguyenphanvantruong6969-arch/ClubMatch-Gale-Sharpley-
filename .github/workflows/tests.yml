@@ -78,9 +78,13 @@ jobs:
           SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --song-song)
           TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --tuan-tu)
           rc=0
-          if [ -n "$SS" ]; then python -m pytest -q -n auto --cov --cov-report= --cov-fail-under=0 $SS || rc=$?; fi
-          if [ -n "$TT" ]; then python -m pytest -q --cov --cov-append --cov-report= --cov-fail-under=0 $TT || rc=$?; fi
+          if [ -n "$SS" ]; then python -m pytest -q -n auto --junitxml=junit_ss.xml --cov --cov-report= --cov-fail-under=0 $SS || rc=$?; fi
+          if [ -n "$TT" ]; then python -m pytest -q --junitxml=junit_tt.xml --cov --cov-append --cov-report= --cov-fail-under=0 $TT || rc=$?; fi
           exit $rc
+      # In thoi gian tung tep (dong THOI_GIAN_TEP_JSON) de cap nhat .github/thoi_gian_test*.json theo dung may CI.
+      - name: In thoi gian tung tep
+        if: always()
+        run: python .github/do_thoi_gian_test.py --in junit_ss.xml junit_tt.xml
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -145,8 +149,13 @@ jobs:
           SS=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --song-song)
           TT=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --tuan-tu)
           rc=0
-          if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
+          if [ -n "$SS" ]; then python -m pytest -q -n auto --junitxml=junit_ss.xml $SS || rc=$?; fi
           # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
           # khong cai playwright). Do KHONG phai test hong.
-          if [ -n "$TT" ]; then python -m pytest -q $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
+          if [ -n "$TT" ]; then python -m pytest -q --junitxml=junit_tt.xml $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
           exit $rc
+      # In thoi gian tung tep (dong THOI_GIAN_TEP_JSON) de cap nhat .github/thoi_gian_test*.json theo dung may CI.
+      - name: In thoi gian tung tep
+        if: always()
+        shell: bash
+        run: python .github/do_thoi_gian_test.py --in junit_ss.xml junit_tt.xml
