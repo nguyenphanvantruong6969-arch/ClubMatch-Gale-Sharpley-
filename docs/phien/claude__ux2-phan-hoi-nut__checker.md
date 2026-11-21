@@ -147,3 +147,10 @@ files" and "9 UX2 test files" counts are right. PNGs 07_sau_chay (4 pha "Xong"),
 non-test .py (api*, rbda_priority_pipeline, schema, CSV).
 Note: 02_co_dl_admin.png and 11_cai_dat.png are byte-identical (same Quản lý screen) — pre-existing, but the
 "cài đặt" shot adds nothing; the sidebar in 07 is cut at the 800 px viewport (pre-existing).
+
+## CHECKER REPORT CI-1 | reviewed 640e644..21de7b7
+verdict: NO BUGS. `test_giao_dien_ux2_nut.py` unchanged (diff none). New frame-0 test FAILS on the old CSS (style.css of 640e644
+restored locally, reverted back, nothing committed) and passes on the new one. Own check: click points taken at the FINAL
+control centres (13 px checkboxes) sampled every 8 ms for 400 ms while `<details>` opens, CPU x1 and x6 -> 0 misses (4 px
+slide stays inside a 13 px control). With `tat-hieu-ung` `::details-content` animation = none. Related: ux2 chuyen_canh +
+ux2 nut 32 passed. Not rechecked: T3-06 stepper / menu-khac (CSS selectors exclude them; unchanged).
