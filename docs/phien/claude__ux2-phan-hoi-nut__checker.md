@@ -74,3 +74,15 @@ verdict: NO BUGS. Score tab, row1 "abc" (error) + row2 "55" (unsaved valid): aft
 row1 keeps the typed INVALID value + exactly 1 `.loi-o` with text in the current language (also title); row2 keeps
 55 (no error); fixing row1 clears the error; removing the errored row then switching language: no exception, other
 row intact. Club form text refresh covered by the new test. Related tests passed.
+
+## CHECKER REPORT L5 | reviewed 5727cc5..7b703e4
+verdict: 1 BUG
+1. js/02_van_hanh.js:ux2TinhPha | repro: `api._backup_db` raises (non-busy error) -> run_pipeline returns ok:true with
+   step backup=error (api.py ~1019-1033: "Sao luu hong KHONG chan viec chay" = warning); phases show
+   `Kiểm tra: Lỗi`, Xếp/Ghi/Xuất `Xong` | expected: a successful run must not show "Lỗi"; use a warning state (or Xong +
+   note) for a non-fatal backup error when ok:true. (Export error with ok:true -> `Xuất: Lỗi` is acceptable: results saved,
+   export really failed.)
+OK: real run (120 dataset fixture) -> 4 Xong vi+en, no overflow at 1024 px; validate error / no steps / rbda error /
+write error+rollback (via ux2TinhPha cases): Ghi is never Xong after rollback, later phases "Chưa tới", rollback note
+shown; reload: pha and stepper both "Chưa chạy" (consistent, not stuck "Đang chạy…"); aria-current only on running
+phase (code). Related tests passed. Not run: giao_vien view, real DB write-failure, pulse under motion switches (CSS read).
