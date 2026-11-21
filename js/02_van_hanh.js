@@ -45,6 +45,7 @@ function docHatGiong() {
 }
 
 function loadPipelineTab() {
+  ux2VePha(); /* UX2-L5: ve 4 pha ngay khi mo the (trang thai hien co, mac dinh "chua chay") */
   refreshDashboardStats();
   refreshStbLockLine();
   refreshSidebarStatus();
@@ -307,6 +308,84 @@ function dongBuocThem(stepper, ten) {
   return li;
 }
 
+/* ---- UX2-L5 (#11): 4 pha tien trinh — CHI HIEN THI ----
+   run_pipeline tra danh sach buoc khi da xong het, nen trong luc chay ca 4 pha cung "dang chay" (khong dinh); khi co
+   ket qua thi suy tung pha tu `steps`. Thu tu pha = thu tu cua bat bien 5 (backup -> validate -> bốc thăm -> xếp ->
+   ghi -> xuat). Moi ten buoc trong api.py run_pipeline phai co o day (test tinh); "unknown" co y khong thuoc pha nao:
+   no la loi, hien tren pha DANG CHAY. "rollback" thuoc pha Ghi nhung KHONG BAO GIO tinh la "xong": no chi noi
+   "da hoan tac" (dong ghi chu), pha loi van la pha loi. */
+const UX2_PHA = [
+  { ma: "kiem_tra", buoc: ["backup", "validate"] },
+  { ma: "xep", buoc: ["stb_lottery", "rbda_cascade"] },
+  { ma: "ghi", buoc: ["write_results", "rollback"] },
+  { ma: "xuat", buoc: ["export"] },
+];
+const UX2_PHA_BO_QUA = ["unknown"];
+const UX2_PHA_CHU = {
+  cho: "step_not_run_yet", dang: "step_running", xong: "ux2_pha_xong", loi: "ux2_pha_loi", chua_den: "ux2_pha_chua_den",
+  canh_bao: "ux2_pha_canh_bao",
+};
+let ux2PhaTrang = { che: "cho", steps: [], ok: true };
+
+/* Thuan: (steps, ok) -> {pha: [{ma, tt}], hoanTac, canhBao}. tt = cho | dang | xong | loi | chua_den | canh_bao.
+   canh_bao: buoc sao luu loi nhung lan chay VAN THANH CONG (api.py: sao luu hong khong chan chay) — khong phai loi;
+   canhBao = chi tiet cua buoc do (de hien o dong ghi chu). Loi xuat tep khi ok van la "loi" (ket qua da ghi). */
+function ux2TinhPha(steps, ok) {
+  const cuoi = {};
+  (steps || []).forEach((s) => { cuoi[s.step] = s.status; });
+  const pha = UX2_PHA.map((p) => {
+    const that = p.buoc.filter((b) => b !== "rollback");
+    const tt = that.map((b) => cuoi[b]);
+    let st = "chua_den";
+    if (tt.includes("error")) st = (ok && p.ma === "kiem_tra" && cuoi.validate !== "error") ? "canh_bao" : "loi";
+    else if (tt.every((x) => x === "done")) st = "xong";
+    else if (tt.includes("running")) st = "dang"; /* dung giua chung: sap bi doi thanh loi ben duoi */
+    return { ma: p.ma, tt: st };
+  });
+  const coLoiChung = !ok || cuoi.unknown === "error";
+  let iLoi = pha.findIndex((p) => p.tt === "loi");
+  if (iLoi < 0 && coLoiChung) {
+    /* loi khong gan voi buoc nao (vd "unknown", hoac API nem loi): pha DANG CHAY, khong thi pha dau tien chua xong */
+    iLoi = pha.findIndex((p) => p.tt === "dang");
+    if (iLoi < 0) iLoi = pha.findIndex((p) => p.tt !== "xong");
+    if (iLoi >= 0) pha[iLoi].tt = "loi";
+  }
+  if (!ok && iLoi >= 0) for (let i = iLoi + 1; i < pha.length; i += 1) pha[i].tt = "chua_den";
+  const bk = ok && cuoi.backup === "error" ? (steps || []).filter((s) => s.step === "backup" && s.status === "error").pop() : null;
+  return { pha, hoanTac: cuoi.rollback === "done" && !ok, canhBao: bk ? (bk.detail || null) : null };
+}
+
+function ux2VePha() {
+  const hop = el("ux2Pha");
+  if (!hop) return;
+  const tc = ux2PhaTrang;
+  let kq;
+  if (tc.che === "cho") kq = { pha: UX2_PHA.map((p) => ({ ma: p.ma, tt: "cho" })), hoanTac: false };
+  else if (tc.che === "dang") kq = { pha: UX2_PHA.map((p) => ({ ma: p.ma, tt: "dang" })), hoanTac: false };
+  else kq = ux2TinhPha(tc.steps, tc.ok);
+  kq.pha.forEach((p) => {
+    const li = hop.querySelector('[data-pha="' + p.ma + '"]');
+    if (!li) return;
+    li.dataset.trangThai = p.tt;
+    li.querySelector(".ux2-pha-tt").textContent = t(UX2_PHA_CHU[p.tt]);
+    if (p.tt === "dang") li.setAttribute("aria-current", "step");
+    else li.removeAttribute("aria-current");
+  });
+  hop.setAttribute("aria-busy", tc.che === "dang" ? "true" : "false");
+  const ghiChu = el("ux2PhaGhiChu");
+  if (ghiChu) {
+    const chu = kq.hoanTac ? trErr({ code: "pipeline_rolled_back", params: {} })
+      : (kq.canhBao ? (Array.isArray(kq.canhBao) ? chuLoiBuocGon(kq.canhBao) : trErr(kq.canhBao)) : "");
+    ghiChu.hidden = !chu;
+    ghiChu.textContent = chu;
+  }
+}
+
+function ux2DatPha(che, steps, ok) {
+  ux2PhaTrang = { che, steps: steps || [], ok: ok !== false };
+  ux2VePha();
+}
+
 function renderSteps(steps) {
   lastRenderedSteps = steps;
   const stepper = el("stepper");
@@ -352,6 +431,7 @@ function resetSteps() {
   chiTietBuocMo = false;
   veRunXong();
   lastRenderedSteps = null;
+  ux2DatPha("cho");
   document.querySelectorAll('#stepper .step[data-dong="them"]').forEach((li) => li.remove());
   document.querySelectorAll("#stepper .step").forEach((li) => {
     li.dataset.status = "";
@@ -363,6 +443,7 @@ function resetSteps() {
    luc cho, danh dau moi buoc la "dang chay" de man hinh khong dung yen o
    "Chua chay" — nhin nhu treo, va nguoi dung bam tiep hoac chuyen the. */
 function danhDauDangChay() {
+  ux2DatPha("dang");
   renderSteps(
     Array.from(document.querySelectorAll("#stepper .step")).map((li) => ({
       step: li.dataset.step, status: "running",
@@ -391,7 +472,9 @@ function capNhatKhoaVanHanh() {
     || khoa.dangNhap || khoa.dangKiemTra || khoa.thieuDuLieu;
   if (khoa.thieuDuLieu) btnRun.title = t("health_chua_co_du_lieu");
   else btnRun.removeAttribute("title");
-  btnRun.textContent = khoa.dangChay ? t("btn_dang_chay") : t("btn_run_pipeline");
+  /* UX2-L1: dung datNutBan (spinner + aria-busy + khoa min-width), khong tu doi textContent luc dang chay. */
+  datNutBan(btnRun, khoa.dangChay || khoa.dangHoiChay, "ux2_dang_xep");
+  if (!(khoa.dangChay || khoa.dangHoiChay) && btnRun.textContent !== t("btn_run_pipeline")) btnRun.textContent = t("btn_run_pipeline");
   const nutChinh = trangThaiVanHanh === "san_sang" && !importQueue.length;
   btnRun.classList.toggle("btn-primary", nutChinh);
   btnRun.classList.toggle("btn-secondary", !nutChinh);
@@ -614,7 +697,8 @@ function runPipelineFlow() {
   const seed = docHatGiong();
   if (seed === null) {
     showToast(t("hat_giong_khong_hop_le"), "error");
-    el("seedInput").focus();
+    baoLoiTaiO(el("seedInput"), () => t("hat_giong_khong_hop_le")); /* UX2-L4: lỗi ngay tại ô (toast giữ nguyên: ô nằm trong mục Nâng cao) */
+    focusODau([el("seedInput")]);
     return;
   }
 
@@ -685,6 +769,7 @@ function executeRun(seed, forceRedraw, chiBuoi) {
     // Xoa dau "dang chay" o nhung buoc phan loi khong bao lai (vd. dung som).
     resetSteps();
     renderSteps(steps);
+    ux2DatPha("xong", steps, res.ok); /* UX2-L5: 4 pha suy tu danh sach buoc */
 
     if (res.ok) {
       const thongBao = t("toast_run_success", {
@@ -742,7 +827,9 @@ function capNhatTheLichSu() {
 }
 
 function loadRunHistory() {
-  callApi("get_run_history", 20).then((res) => {
+  const hoi = callApi("get_run_history", 20);
+  hienKhungCho(el("historyTableBody"), 0, 5, hoi); /* UX2-L7 */
+  hoi.then((res) => {
     const body = el("historyTableBody");
     clear(body);
     if (!res.ok || !res.data.length) {

@@ -42,11 +42,19 @@ function loadScoringTab() {
 }
 
 /* Chấm theo NGƯỜI: một ô điểm cho mỗi người. Vẫn chấm mù: chỉ mã và họ tên. */
+/* UX2-L6: giao_vien thay huong dan (nho quan tri nap danh sach), khong thay nut cua quan tri. */
+const UX2_RONG_CHAM_NGUOI = {
+  chu: "scoring_person_empty", huongDan: "ux2_rong_huong_cham_nguoi",
+  gv: { chu: "ux2_rong_chu_cham_nguoi_gv", huongDan: "ux2_rong_huong_cham_nguoi_gv" },
+  nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
+};
+
 function loadScoringPersons() {
   return callApi("get_person_scoring_list").then((res) => {
     const body = el("scoringPersonBody");
     clear(body);
     const rong = !res.ok || !res.data.persons.length;
+    if (rong) veTrangThaiRong(el("scoringPersonEmpty"), UX2_RONG_CHAM_NGUOI);
     el("scoringPersonEmpty").hidden = !rong;
     el("btnSavePersonScores").hidden = rong;
     el("scoringPersonProgress").textContent = rong ? "" : t("scoring_person_progress", {
@@ -142,6 +150,7 @@ function initScoringHandlers() {
   el("btnSavePersonScores").addEventListener("click", () => {
     const inputs = document.querySelectorAll("#scoringPersonBody .score-input");
     inputs.forEach((input) => {
+      xoaLoiTaiO(input);
       input.classList.remove("is-invalid");
       input.removeAttribute("title");
       input.removeAttribute("aria-invalid");
@@ -150,7 +159,7 @@ function initScoringHandlers() {
       student_id: input.dataset.studentId,
       score: input.value === "" ? null : input.value,
     }));
-    khiBan(el("btnSavePersonScores"), () => callApi("submit_person_scores", scores)).then((res) => {
+    khiBan(el("btnSavePersonScores"), () => callApi("submit_person_scores", scores), { xongKhi: (r) => r && r.ok }).then((res) => {
       if (!res.ok) {
         feedbackErrors(el("scoringPersonFeedback"), res.errors);
         return;
@@ -161,10 +170,9 @@ function initScoringHandlers() {
         const sid = w && w.params && w.params.student_id;
         const input = sid === undefined || sid === null ? null : oTheoMa.get(String(sid));
         if (!input) return;
-        input.classList.add("is-invalid");
-        input.setAttribute("aria-invalid", "true");
-        input.title = trErr(w);
+        baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
       });
+      focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
       if (boQua.length) {
         const cau = t("feedback_scores_saved_mot_phan", { n: res.data.n_saved, k: boQua.length });
         feedback(el("scoringPersonFeedback"), cau, true);
@@ -184,6 +192,7 @@ function initScoringHandlers() {
     if (!currentScoringClub) return;
     const inputs = document.querySelectorAll("#scoringTableBody .score-input");
     inputs.forEach((input) => {
+      xoaLoiTaiO(input);
       input.classList.remove("is-invalid");
       input.removeAttribute("title");
       input.removeAttribute("aria-invalid");
@@ -192,7 +201,7 @@ function initScoringHandlers() {
       student_id: input.dataset.studentId,
       score: input.value === "" ? null : input.value,
     }));
-    khiBan(el("btnSaveScores"), () => callApi("submit_club_scores", currentScoringClub, scores)).then((res) => {
+    khiBan(el("btnSaveScores"), () => callApi("submit_club_scores", currentScoringClub, scores), { xongKhi: (r) => r && r.ok }).then((res) => {
       if (res.ok) {
         const boQua = res.data.warnings || [];
         if (boQua.length) {
@@ -204,10 +213,9 @@ function initScoringHandlers() {
             const sid = w && w.params && w.params.student_id;
             const input = sid === undefined || sid === null ? null : oTheoHs.get(String(sid));
             if (!input) return;
-            input.classList.add("is-invalid");
-            input.setAttribute("aria-invalid", "true");
-            input.title = trErr(w);
+            baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
           });
+          focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
           const cau = t("feedback_scores_saved_mot_phan", { n: res.data.n_saved, k: boQua.length });
           feedback(el("scoringFeedback"), cau, true);
           showToast(cau + "\n" + trErrs(boQua).join("\n"), "warn");
@@ -222,10 +230,9 @@ function initScoringHandlers() {
           const sid = w && w.params && w.params.student_id;
           const input = sid === undefined || sid === null ? null : oTheoHs.get(String(sid));
           if (!input) return;
-          input.classList.add("is-invalid");
-          input.setAttribute("aria-invalid", "true");
-          input.title = trErr(w);
+          baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
         });
+        focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
         feedbackErrors(el("scoringFeedback"), res.errors);
         /* Nhu nhanh luu mot phan: mot thong bao neu HET cac o sai, khong chi o dau tien. */
         if (res.errors && res.errors.some((w) => w && w.params && w.params.student_id !== undefined)) {

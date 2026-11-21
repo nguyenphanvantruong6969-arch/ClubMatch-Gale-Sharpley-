@@ -81,8 +81,19 @@ function kqSapHang(hang, cot, cotLop, giam) {
 
 /* ---- Khung chung ---- */
 
+/* UX2-L6: moi truong hop rong mot cau neu + huong dan; "chua co ket qua" / "chua co CLB" co them MOT nut (chi quan tri). */
+const UX2_RONG_THE_XEM = {
+  the_xem_chua_co_ket_qua: { chu: "ux2_rong_chu_ket_qua", huongDan: "ux2_rong_huong_ket_qua",
+    gv: { huongDan: "ux2_rong_huong_ket_qua_gv" },
+    nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" } },
+  kq_khong_co_clb: { huongDan: "ux2_rong_huong_clb", gv: { huongDan: "ux2_rong_huong_clb_gv" },
+    nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" } },
+  kq_tim_khong_thay: { huongDan: "ux2_rong_huong_tim" },
+};
+
 function kqBaoRong(khoaChu, thamSo) {
-  el("kqRong").textContent = t(khoaChu, thamSo);
+  const them = UX2_RONG_THE_XEM[khoaChu] || {};
+  veTrangThaiRong(el("kqRong"), { chu: them.chu || khoaChu, thamSo, huongDan: them.huongDan, nut: them.nut, gv: them.gv });
   el("kqRong").hidden = false;
   el("kqBang").hidden = true;
 }

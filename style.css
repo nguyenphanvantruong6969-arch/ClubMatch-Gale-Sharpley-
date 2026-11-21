@@ -21,7 +21,7 @@
   --gold-text: #7A5210;
   --rust-text: #9A3A30;
   /* Vong focus ban phim: phai thay ro tren ca giay trang lan thanh ben toi. */
-  --focus-ring: #2F6FD0;
+  --focus-ring: #173F8C; /* UX2-L3: >= 3:1 tren --paper, trang VA --gold (cu #2F6FD0 chi 1,7:1 tren nut vang) */
 
   /* Màu CHUỖI SỐ LIỆU của biểu đồ — tách khỏi --moss/--gold vì hai màu đó
      trượt phép kiểm bảng màu (xanh rêu quá xám, vàng dưới 3:1 trên nền
@@ -180,6 +180,7 @@ button, input {
   border: none;
   color: rgba(255,255,255,0.72);
   padding: 11px 12px;
+  min-height: 44px; /* UX2-L3 fix1: vung bam 44 px that (nhin thay) */
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 13.5px;
@@ -580,14 +581,12 @@ html.tat-hieu-ung .status-strip:hover {
   background: var(--gold);
   color: var(--ink);
 }
-.btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
 
 .btn-secondary {
   background: var(--paper);
   color: var(--ink);
   border-color: var(--hairline);
 }
-.btn-secondary:hover:not(:disabled) { background: var(--paper-hover); }
 
 .btn-ghost {
   background: transparent;
@@ -2786,7 +2785,6 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 }
 .nut-i:hover { background: var(--paper-hover); }
 .nut-i[aria-expanded="true"] { background: var(--ink); color: var(--paper-raised); border-color: var(--ink); }
-.nut-i:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .dc-hinh { margin: 22px 0 0; }
 .dc-hinh figcaption { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
 .dc-svg { display: block; width: 100%; height: auto; max-width: 640px; }
@@ -2879,7 +2877,6 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
   color: var(--ink);
   box-shadow: inset 0 2px 0 var(--gold);
 }
-.ql-tab:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 /* A13.5: lỗi chặn gọn ở thẻ Vận hành; hàng nút xử lý hàng loạt ở khối Điểm quyết tâm */
 .log-hang-cuoi { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -3124,6 +3121,7 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
   text-align: left; background: transparent; border: none; cursor: pointer;
   color: rgba(255,255,255,0.55); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
   padding: 6px 12px 2px;
+  min-height: 24px; /* UX2-L3 fix1: WCAG 2.5.8 AA (24 px); khong len 44 de khoi keo dai thanh ben */
 }
 .nav-nhom-nut:hover, .nav-nhom.is-active .nav-nhom-nut { color: #fff; }
 .nav-nhom-nut:focus-visible { outline: 2px solid #9CC2FF; outline-offset: 2px; }
@@ -3224,3 +3222,140 @@ svg.thanh-diem { display: block; }
 .ux1b-sx-he-qua { margin: 2px 0 0; }
 .ux1a-sx-dong { display: block; padding: 6px 0; }
 .ux1b-ss-nut { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* UX2 — L1: nút đang bận (#2/#13). Vòng xoay là <span> thật, không dùng ::before/::after (để dành cho #1/#8). */
+.ux2-xoay {
+  display: inline-block; width: 14px; height: 14px; margin-right: 8px; vertical-align: -2px;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  box-sizing: border-box;
+}
+@keyframes ux2Xoay { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-xoay { animation: ux2Xoay 0.8s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-xoay { animation: none; }
+}
+/* Nút bận bớt đệm hai bên để vòng xoay không làm nút rộng ra (min-width đã khoá ở datNutBan). */
+.btn.is-ban, button.is-ban { padding-left: 10px; padding-right: 10px; white-space: nowrap; }
+
+/* UX2 — L2: dấu ✓ sau khi lưu/xuất xong. Là trạng thái (hiện cả khi tắt hiệu ứng); chỉ phần hiện dần là chuyển động. */
+.ux2-xong { display: inline-block; margin-right: 4px; font-weight: 700; font-size: 0.9em; line-height: 1; }
+.btn.is-xong, button.is-xong { padding-left: 6px; padding-right: 6px; white-space: nowrap; }
+@keyframes ux2Xong { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-xong { animation: ux2Xong 160ms var(--ease-out) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-xong { animation: none; }
+}
+
+/* UX2 — L3: nút bấm — vùng bấm 44 px (#8), MỘT vòng focus (#9), lớp trạng thái (#1).
+   Vòng focus dùng chung ở khối `:where(button, a, …):focus-visible` phía trên (đã bỏ bản lặp .nut-i/.ql-tab);
+   ở đây chỉ thêm ngoại lệ nền tối.
+   Lớp trạng thái = một lớp `background-image` (không đổi màu nền gốc, không dùng ::before/::after).
+   Vùng bấm = ::after trong suốt rộng tối thiểu 44 px quanh tâm nút (kích thước nhìn thấy không đổi). */
+:where(button, .btn, [role="button"]) { touch-action: manipulation; }
+:where(button, .btn, [role="button"]) { position: relative; }
+:where(button, .btn, [role="button"])::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%);
+}
+.menu-khac-nen-toi :where(button, a, summary):focus-visible, .nav-item:focus-visible { outline-color: #9CC2FF; }
+:root { --ux2-lop-hover: 8%; --ux2-lop-focus: 10%; --ux2-lop-nhan: 12%; }
+@media (hover: hover) {
+  :is(.btn, .nut-i, .menu-khac-muc):hover:not(:disabled):not([aria-disabled="true"]) {
+    background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent), color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent));
+  }
+}
+:is(.btn, .nut-i, .menu-khac-muc):focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-focus), transparent), color-mix(in srgb, currentColor var(--ux2-lop-focus), transparent));
+}
+:is(.btn, .nut-i, .menu-khac-muc):active:not(:disabled):not([aria-disabled="true"]) {
+  background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-nhan), transparent), color-mix(in srgb, currentColor var(--ux2-lop-nhan), transparent));
+}
+/* Nút chữ trần trong bảng dày (hàng ~36 px, vd nút Xoá CLB): vùng bấm lớn tới chiều cao hàng chứ không tới 44 px, để hàng liền kề không chồng nhau. */
+td :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 34px); }
+/* Danh sách dày (vd .ranking-list: hàng ~22 px): chỉ nới nhẹ, nếu không vùng bấm của nút dưới đè lên nút trên. */
+li :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 20px); }
+/* UX2 — L3 fix2: vùng bấm ::after của nút (≥ 44 px) tràn ra ngoài nút; ô nhập / chọn / nhãn / summary nằm trên nó để
+   cú bấm vào chính ô đó không bị nút bên cạnh cướp (vd ô tick "Kèm CSV" cạnh nút Xuất). Độ ưu tiên 0 (:where). */
+:where(input, select, textarea, summary, label) { position: relative; z-index: 1; }
+/* Nội dung của <details> đang ĐÓNG không có hộp thật nhưng vẫn có toạ độ: không nâng lên, kẻo nó đè lên nút nằm ở đó. */
+details:not([open]) :where(input, select, textarea, label) { position: static; z-index: auto; }
+
+/* UX2 — L4: lỗi ngay tại ô (#7). Chữ lỗi dưới ô, nối bằng aria-describedby; lắc 200 ms chỉ khi cho phép chuyển động. */
+.loi-o { color: var(--rust-text); font-size: 12px; line-height: 1.35; margin-top: 4px; }
+.is-loi { border-color: var(--rust); background: var(--rust-soft); }
+@keyframes ux2Rung { 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-rung { animation: ux2Rung 200ms ease-in-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-rung { animation: none; }
+}
+
+/* UX2 — L5: 4 pha tiến trình (chỉ hiển thị). Nghĩa nằm ở CHỮ trạng thái + aria-current; chấm chỉ phụ trợ. */
+.ux2-pha { list-style: none; margin: 0 0 12px; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.ux2-pha li { flex: 1 1 110px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm); background: var(--paper-raised); font-size: 13px; }
+.ux2-pha-ten { font-weight: 600; }
+.ux2-pha-tt { margin-left: auto; font-size: 12px; color: var(--slate); }
+.ux2-pha-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--hairline); }
+.ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { background: var(--gold); }
+.ux2-pha li[data-trang-thai="xong"] { border-color: var(--moss); }
+.ux2-pha li[data-trang-thai="xong"] .ux2-pha-dot { background: var(--moss); }
+.ux2-pha li[data-trang-thai="xong"] .ux2-pha-tt { color: var(--moss); }
+.ux2-pha li[data-trang-thai="loi"] { border-color: var(--rust); background: var(--rust-soft); }
+.ux2-pha li[data-trang-thai="loi"] .ux2-pha-dot { background: var(--rust); }
+.ux2-pha li[data-trang-thai="loi"] .ux2-pha-tt { color: var(--rust-text); font-weight: 600; }
+.ux2-pha li[data-trang-thai="chua_den"] { opacity: 0.6; }
+@keyframes ux2PhaNhap { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { animation: ux2PhaNhap 1s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { animation: none; }
+}
+/* UX2 — L5 fix1: cảnh báo (sao lưu hỏng nhưng vẫn chạy xong) — màu vàng, KHÔNG đỏ; nghĩa nằm ở chữ "Cảnh báo". */
+.ux2-pha li[data-trang-thai="canh_bao"] { border-color: var(--gold); background: var(--gold-soft); }
+.ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-dot { background: var(--gold); }
+.ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-tt { color: var(--gold-text); font-weight: 600; }
+
+/* UX2 — L6: trạng thái rỗng có hướng dẫn + MỘT nút chính (nút dùng hệ nút L3). */
+.empty-state .ux2-rong-chu { margin: 0 0 6px; }
+.empty-state .ux2-rong-huong { margin: 0 0 12px; color: var(--slate); }
+.empty-state .ux2-rong-nut { margin-top: 2px; }
+
+/* UX2 — L7: khung chờ (skeleton) của bảng đang tải. Hàng cao ngang hàng thật để không nhảy bố cục khi dữ liệu thay vào. */
+.ux2-khung { display: block; height: 19px; border-radius: 4px; background: var(--hairline); }
+@keyframes ux2Khung { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-khung { background: linear-gradient(90deg, var(--hairline) 25%, var(--paper-hover) 50%, var(--hairline) 75%);
+    background-size: 200% 100%; animation: ux2Khung 1.4s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-khung { animation: none; }
+}
+
+/* UX2 — L8: chuyển cảnh mượt (#10), CHỈ trang trí. Mọi thứ nằm trong no-preference; "Hiệu ứng" tắt thì animation:none!important
+   (khối html.tat-hieu-ung) lo phần còn lại. */
+@keyframes ux2Vao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-vao { animation: ux2Vao 180ms var(--ease-out) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-vao { animation: none; }
+}
+/* <details> mở nhẹ (mờ dần + trượt xuống 4 px): CHỈ khi trình duyệt có ::details-content (WebView2 cũ: bỏ qua hết = mở tức thì).
+   KHÔNG animate chiều cao và KHÔNG cắt (overflow) nội dung: bản đầu mở theo chiều cao nên vùng chưa mở tới bị cắt khỏi hit-test và
+   cú bấm vào ô nhập trong ~30 ms đầu trượt (CI máy chậm: test bấm ô tick ngay sau khi mở bị hụt). Giờ ô nhập bấm được từ khung hình
+   đầu tiên. Chỉ các mục "nâng cao" / "chi tiết" (không đụng .menu-khac). */
+@supports selector(::details-content) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes ux2Abre { from { opacity: 0.2; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    :is(.nang-cao, .ux1a-nang-cao, .wh-thao-tac, .mt1-chi-tiet, .chi-tiet-ky-thuat)[open]::details-content { animation: ux2Abre 180ms ease-out; }
+  }
+  /* "Hiệu ứng" tắt: html.tat-hieu-ung *::before/::after không phủ ::details-content, nên tắt riêng ở đây. */
+  html.tat-hieu-ung ::details-content { animation: none !important; transition: none !important; }
+}

@@ -266,7 +266,7 @@
   });
   el("btnGtXuatMa").addEventListener("click", () => {
     chayXuat([["gt_xuat_ma_muc", "export_ma_tra_cuu_csv", [""],
-      (d) => t("gt_xuat_ma_xong", { n: d.n_dong, path: d.path })]], el("gtMaPhanHoi"), true);
+      (d) => t("gt_xuat_ma_xong", { n: d.n_dong, path: d.path })]], el("gtMaPhanHoi"), true, el("btnGtXuatMa"));
   });
 
   /* ---- Chế độ học sinh tự tra cứu (toàn màn hình) ----

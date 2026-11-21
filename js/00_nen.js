@@ -94,6 +94,95 @@ window.addEventListener("unhandledrejection", (ev) => {
     [{ code: "loi_giao_dien_ngoai_du_kien", params: { detail: String(ev.reason) } }]);
 });
 
+/* UX2-L1 (#2 + #13): MOT cho dat/bo trang thai "dang ban" cho nut — dung chung cho chayNut, khiBan va btnRun
+   (capNhatKhoaVanHanh). KHONG khoa `disabled` (nguoi goi tu khoa, vi btnRun con nhieu co khoa khac).
+   bat=true: giu cac nut con that (icon khong mat), khoa min-width o be rong hien tai (nut khong nhay),
+   thay noi dung bang <span.ux2-xoay aria-hidden> + nhan t(khoaNhan), aria-busy="true", lop is-ban.
+   bat=false: tra nut con that; neu noi dung da bi viet lai giua chung (doi ngon ngu, khiXong tu doi nhan) thi
+   KHONG ghi de. Goi lap lai khi dang ban chi lam moi nhan. */
+function datNutBan(nut, bat, khoaNhan) {
+  if (!nut) return;
+  const trang = nut.__ux2Ban;
+  if (bat) {
+    goDauXong(nut);
+    const khoa = khoaNhan || "dang_xu_ly";
+    const chu = t(khoa);
+    if (trang) {
+      trang.khoa = khoa;
+      if (trang.chu.parentNode === nut) trang.chu.textContent = chu;
+      return;
+    }
+    const rong = nut.offsetWidth /* bo qua transform (:active scale) */;
+    const xoay = document.createElement("span");
+    xoay.className = "ux2-xoay";
+    xoay.setAttribute("aria-hidden", "true");
+    const nhan = document.createElement("span");
+    nhan.className = "ux2-nhan-ban";
+    nhan.textContent = chu;
+    nut.__ux2Ban = { con: Array.from(nut.childNodes), xoay, chu: nhan, khoa, minGoc: nut.style.minWidth };
+    if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
+    while (nut.firstChild) nut.removeChild(nut.firstChild);
+    nut.append(xoay, nhan);
+    nut.setAttribute("aria-busy", "true");
+    nut.classList.add("is-ban");
+    return;
+  }
+  if (!trang) return;
+  if (trang.xoay.parentNode === nut && trang.chu.parentNode === nut) {
+    while (nut.firstChild) nut.removeChild(nut.firstChild);
+    const kd = nut.getAttribute("data-i18n");
+    if (kd) nut.textContent = t(kd); /* nhan tinh: tra theo ngon ngu HIEN TAI (co the da doi luc dang ban) */
+    else {
+      trang.con.forEach((n) => nut.appendChild(n));
+      /* nut con tach roi khoi DOM luc ban nen applyStaticText bo qua: dich lai cac con [data-i18n] */
+      nut.querySelectorAll("[data-i18n]").forEach((c) => { c.textContent = t(c.getAttribute("data-i18n")); });
+    }
+  }
+  nut.style.minWidth = trang.minGoc;
+  nut.setAttribute("aria-busy", "false");
+  nut.classList.remove("is-ban");
+  delete nut.__ux2Ban;
+}
+
+/* UX2-L2 (#3): dau ✓ tren CHINH nut vua luu/xuat xong (thanh cong, khong phai loi). La TRANG THAI, khong phai
+   chuyen dong: van hien khi tat hieu ung (chi hieu ung hien dan moi tat). ~1,2 s roi go, min-width khoa de nut khong nhay.
+   Dung lai khi dang ban (datNutBan(true) go ✓ truoc) va khi doi ngon ngu (applyStaticText ghi de noi dung -> ✓ mat, don dep van chay). */
+const UX2_XONG_MS = 1200;
+
+function goDauXong(nut) {
+  const x = nut && nut.__ux2Xong;
+  if (!x) return;
+  clearTimeout(x.hen);
+  if (x.dau.parentNode) x.dau.parentNode.removeChild(x.dau);
+  nut.style.minWidth = x.minGoc;
+  nut.classList.remove("is-xong");
+  delete nut.__ux2Xong;
+}
+
+function nutDaXong(nut) {
+  if (!nut || nut.__ux2Ban) return;
+  goDauXong(nut);
+  const dau = document.createElement("span");
+  dau.className = "ux2-xong";
+  dau.setAttribute("aria-hidden", "true");
+  dau.textContent = "\u2713";
+  const rong = nut.offsetWidth /* bo qua transform (:active scale) */;
+  const x = { dau, minGoc: nut.style.minWidth, hen: 0 };
+  if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
+  nut.insertBefore(dau, nut.firstChild);
+  nut.classList.add("is-xong");
+  x.hen = setTimeout(() => goDauXong(nut), UX2_XONG_MS);
+  nut.__ux2Xong = x;
+}
+
+/* Doi ngon ngu luc nut dang ban: nhan ban theo ngon ngu moi (nut khong co data-i18n khong qua applyStaticText). */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll(".is-ban").forEach((n) => {
+    const tr = n.__ux2Ban;
+    if (tr && tr.chu.parentNode === n) tr.chu.textContent = t(tr.khoa);
+  });
+});
+
 /* Khoa nut trong luc yeu cau dang chay, MO LAI du yeu cau thanh cong,
    that bai hay nem loi.
 
@@ -102,12 +191,20 @@ window.addEventListener("unhandledrejection", (ev) => {
    nhanh thanh cong — mot loi JS giua chung la nut xam vinh vien, phai
    tat app mo lai. Nut dang khoa thi bo qua lan bam (tra Promise khong
    bao gio xong, doan `.then` phia sau khong chay). */
-function khiBan(nut, taoPromise) {
+function khiBan(nut, taoPromise, tuyChon) {
   if (!nut || nut.disabled) return new Promise(() => {});
+  const tc = tuyChon || {};
+  let ket;
   nut.disabled = true;
+  datNutBan(nut, true);
   return Promise.resolve()
     .then(taoPromise)
-    .finally(() => { nut.disabled = false; });
+    .then((r) => { ket = r; return r; })
+    .finally(() => {
+      datNutBan(nut, false);
+      nut.disabled = false;
+      if (tc.xongKhi && ket !== undefined && tc.xongKhi(ket)) nutDaXong(nut);
+    });
 }
 
 /* SG-9: MOT cho cho moi lan goi API. Truoc day ~68 cho viet `callApi(..).then(..)` tran: loi JS trong
@@ -120,7 +217,7 @@ function khiBan(nut, taoPromise) {
      bo qua lan bam (Promise khong bao gio xong) nen bam dup chi goi API MOT lan.
      Mac dinh nut mo lai ngay khi API tra ve (truoc khiXong, nhu khiBan: khiXong co the khoa nut lai).
      tuyChon.nhan = khoa i18n cua nhan ban ("dang_xu_ly"); tuyChon.giuDenKhiXong = true: giu khoa den het khiXong;
-     tuyChon.sauCung: ham chay trong `finally`. */
+     tuyChon.sauCung: ham chay trong `finally`; tuyChon.xongKhi(ketQua) -> true: hien dau ✓ tren nut (UX2-L2, nutDaXong). */
 function baoLoiGiaoDien(loi) {
   console.error(loi);
   showToast(t("loi_giao_dien_ngoai_du_kien"), "error",
@@ -139,16 +236,17 @@ function chayNut(nut, taoPromise, khiXong, tuyChon) {
   if (!nut || nut.disabled) return new Promise(() => {});
   const tc = tuyChon || {};
   const laNutBam = nut.tagName === "BUTTON";
-  const chuGoc = laNutBam ? nut.textContent : "";
-  const chuBan = laNutBam ? t(tc.nhan || "dang_xu_ly") : "";
   nut.disabled = true;
-  if (laNutBam) nut.textContent = chuBan;
+  if (laNutBam) datNutBan(nut, true, tc.nhan);
+  let ket;
   const khoi = () => {
-    if (laNutBam && nut.textContent === chuBan) nut.textContent = chuGoc;
+    if (laNutBam) datNutBan(nut, false);
     nut.disabled = false;
+    /* UX2-L2: tuyChon.xongKhi(ketQua) -> true thi hien ✓ tren nut (khong khi API ne loi / tra {ok:false}). */
+    if (laNutBam && tc.xongKhi && ket !== undefined && tc.xongKhi(ket)) nutDaXong(nut);
     if (tc.sauCung) tc.sauCung();
   };
-  const goi = Promise.resolve().then(taoPromise);
+  const goi = Promise.resolve().then(taoPromise).then((r) => { ket = r; return r; });
   if (tc.giuDenKhiXong) return goi.then(khiXong).catch(baoLoiGiaoDien).finally(khoi);
   return goi.finally(khoi).then(khiXong).catch(baoLoiGiaoDien);
 }
@@ -396,6 +494,265 @@ function feedbackErrors(node, errors) {
   nhacHoiPhienNeuCan(errors);
   feedback(node, trErrs(errors).join(" "), true);
   ganChiTietKyThuat(node, errors);
+}
+
+/* UX2-L8 (#10): hang MOI cua bang truot vao (<= 20 hang, 180 ms, tre xep chong toi da 19 ms nen tong <= 200 ms). CHI trang
+   tri: hang bam duoc ngay (khong pointer-events, khong cho); khong lam gi voi khung cho L7 (hang .ux2-khung-hang) va khong
+   hoat hoa tu hang thu 21 (bang 800 dong). Tat hieu ung / giam chuyen dong thi khong gan lop (ux2ChoPhepChuyenDong).
+   "MOI" = khoa hang chua tung xuat hien trong bang nay (tap khoa TICH LUY theo tung tbody): ve lai cung du lieu (tai lai, tim
+   kiem, sap xep, doi ngon ngu, loc roi bo loc) -> 0 hang truot, KHONG nhap nhay; them mot CLB / hoc sinh -> dung hang do;
+   do bang trong lan dau -> toi da 20 hang dau. Tbody bi lam trong han (khong con hang du lieu) thi quen tap khoa de lan do
+   day tiep theo la "lan dau". Khoa moi bang (UX2_KHOA_HANG): ket qua = ma hoc sinh + ten CLB (mot em nhieu buoi = nhieu hang),
+   hoc sinh quan ly = data-student-id, CLB quan ly = data-club-id, lich su chay = ma lan chay (cot dau). */
+const UX2_VAO_TOI_DA = 20;
+const UX2_KHOA_HANG = {
+  resultsTableBody: (tr) => (tr.cells[1] ? tr.cells[1].textContent.trim() : "") + "|" + (tr.cells[5] ? tr.cells[5].textContent.trim() : ""),
+  adminStudentTableBody: (tr) => { const o = tr.querySelector("[data-student-id]"); return o ? o.dataset.studentId : ""; },
+  adminClubTableBody: (tr) => tr.dataset.clubId || "",
+  historyTableBody: (tr) => (tr.cells[0] ? tr.cells[0].textContent.trim() : ""),
+};
+
+function ux2QuanSatBang(dsId) {
+  dsId.forEach((id) => {
+    const tb = el(id);
+    if (!tb || tb.__ux2Quan || typeof MutationObserver === "undefined") return;
+    const khoaCua = UX2_KHOA_HANG[id] || ((tr) => (tr.cells[0] ? tr.cells[0].textContent.trim() : ""));
+    const daThay = new Set();
+    tb.__ux2DaThay = daThay;
+    tb.__ux2Quan = new MutationObserver((cacBanGhi) => {
+      const hang = [];
+      let coGo = false;
+      cacBanGhi.forEach((m) => {
+        m.addedNodes.forEach((n) => { if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) hang.push(n); });
+        m.removedNodes.forEach((n) => { if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) coGo = true; });
+      });
+      if (coGo && !tb.querySelector("tr:not(.ux2-khung-hang)")) daThay.clear(); /* bang bi lam trong han: lan do ke tiep la lan dau */
+      const moi = [];
+      hang.forEach((tr) => {
+        if (!tr.isConnected) return;
+        const k = khoaCua(tr);
+        if (k !== "" && daThay.has(k)) return;
+        if (k !== "") daThay.add(k);
+        moi.push(tr);
+      });
+      if (!ux2ChoPhepChuyenDong()) return;
+      moi.slice(0, UX2_VAO_TOI_DA).forEach((tr, i) => {
+        tr.style.animationDelay = Math.min(i, 19) + "ms";
+        tr.classList.add("ux2-vao");
+        const bo = () => { tr.classList.remove("ux2-vao"); tr.style.animationDelay = ""; };
+        tr.addEventListener("animationend", bo, { once: true });
+        setTimeout(bo, 500);
+      });
+    });
+    tb.__ux2Quan.observe(tb, { childList: true });
+  });
+}
+
+/* UX2-L7 (#6): khung cho (skeleton) cho bang dang tai. CHI hien neu tai lau hon UX2_KHUNG_TRE_MS (nhanh thi khong chen
+   gi: khong nhap nhay) va chi khi tbody dang TRONG (bang con du lieu cu thi cu de du lieu cu). Hang khung aria-hidden,
+   bang aria-busy true -> false. `hoi` (promise cua lan tai) duoc gan then(ket, ket): go khung ca khi THANH CONG lan LOI /
+   bi tu choi (khong bao gio ket). Goi lan hai khi lan mot chua xong: huy khung cu, chi con MOT bo khung; lan tai cu ve
+   muon khong go nham khung moi (so khop `st`). caoHang (px, tuy chon) = chieu cao hang that de khung khong lam bang nhay. Chay xong thi nguoi goi tu ve du lieu hoac trang thai rong (L6). */
+const UX2_KHUNG_TRE_MS = 300;
+
+function hienKhungCho(tbody, soCot, soDong, hoi, caoHang) {
+  if (!tbody) return () => {};
+  const bang = tbody.closest("table");
+  if (tbody.__ux2Khung) tbody.__ux2Khung.go();
+  const st = {};
+  st.go = () => {
+    clearTimeout(st.hen);
+    tbody.querySelectorAll(".ux2-khung-hang").forEach((r) => r.remove());
+  };
+  st.hen = setTimeout(() => {
+    if (tbody.__ux2Khung !== st || tbody.children.length) return;
+    const cot = soCot || (bang ? bang.querySelectorAll("thead th").length : 0) || 1;
+    for (let i = 0; i < (soDong || 5); i += 1) {
+      const tr = document.createElement("tr");
+      tr.className = "ux2-khung-hang";
+      tr.setAttribute("aria-hidden", "true");
+      if (caoHang) tr.style.height = caoHang + "px"; /* bang co o nhap trong hang: hang that cao hon hang chu */
+      /* MOT o tran het chieu ngang (colspan): khung khong lam cot nao gian ra, nen tieu de cot dung yen y nhu luc bang trong. */
+      const td = document.createElement("td");
+      td.colSpan = cot;
+      const x = document.createElement("span");
+      x.className = "ux2-khung";
+      td.appendChild(x);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+  }, UX2_KHUNG_TRE_MS);
+  tbody.__ux2Khung = st;
+  if (bang) bang.setAttribute("aria-busy", "true");
+  const ket = () => {
+    if (tbody.__ux2Khung !== st) return;
+    st.go();
+    delete tbody.__ux2Khung;
+    if (bang) bang.setAttribute("aria-busy", "false");
+  };
+  if (hoi && typeof hoi.then === "function") hoi.then(ket, ket);
+  return ket;
+}
+
+/* UX2-L6 (#12): trang thai RONG co huong dan + MOT nut chinh (he nut L3). Tham so la KHOA i18n (khong chuoi co dinh) de
+   ve lai theo ngon ngu khi langchange. cfg = {chu, thamSo, huongDan, nut: {nhan, quyen, tab, oId}}:
+   chu = cau neu hien trang (giu cau cu cua trang thai rong, test cu van khop); huongDan = nen lam gi; nut = viec nen lam
+   (nhan = khoa; quyen = "quan_tri" -> nut mang data-quyen, giao_vien khong thay; tab = the can toi; oId = o nhap nhan con tro).
+   gv = cau cho giao_vien (the Van hanh / Quan ly an voi ho: bao nho quan tri, khong nut). Ten the lay tu nav (ux2TenThe).
+   Khong co nut thi chi co chu + huong dan. hop KHONG con data-i18n (applyStaticText se xoa nut). */
+function ux2DiToi(tab, oId) {
+  const the = document.querySelector('.nav-item[data-tab="' + tab + '"]');
+  if (the) the.click();
+  setTimeout(() => { const o = oId ? el(oId) : null; if (o) o.focus(); }, 0);
+}
+
+/* Ten cac the dung trong cau huong dan: LAY TU nav (cung khoa nav_*) de khong bao gio lech ten the that. */
+function ux2TenThe(them) {
+  return Object.assign({ the_xep: t("nav_pipeline"), the_quan_ly: t("nav_admin"), the_nhap: t("nav_fallback") }, them || {});
+}
+
+function ux2VeRong(hop) {
+  const cfg = hop && hop.__ux2Rong;
+  if (!cfg) return;
+  clear(hop);
+  /* giao_vien khong thay the Van hanh / Quan ly: cfg.gv = {chu?, huongDan} thay cau chi cho the do va BO nut. */
+  const gv = document.body.dataset.vai === "giao_vien" && cfg.gv ? cfg.gv : null;
+  const tham = ux2TenThe(cfg.thamSo);
+  const p1 = document.createElement("p");
+  p1.className = "ux2-rong-chu";
+  p1.textContent = t((gv && gv.chu) || cfg.chu, tham);
+  hop.appendChild(p1);
+  const huong = (gv && gv.huongDan) || cfg.huongDan;
+  if (huong) {
+    const p2 = document.createElement("p");
+    p2.className = "ux2-rong-huong";
+    p2.textContent = t(huong, tham);
+    hop.appendChild(p2);
+  }
+  if (cfg.nut && !gv) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn btn-primary ux2-rong-nut";
+    if (cfg.nut.quyen) b.setAttribute("data-quyen", cfg.nut.quyen);
+    b.textContent = t(cfg.nut.nhan, tham);
+    b.addEventListener("click", () => ux2DiToi(cfg.nut.tab, cfg.nut.oId));
+    hop.appendChild(b);
+  }
+}
+
+function veTrangThaiRong(hop, cfg) {
+  if (!hop) return;
+  hop.__ux2Rong = cfg;
+  ux2VeRong(hop);
+}
+
+/* Ve lai khi doi ngon ngu VA khi doi vai (dang nhap / dang xuat): ganVai() ban "ux2vai". */
+["langchange", "ux2vai"].forEach((ev) => window.addEventListener(ev, () => {
+  document.querySelectorAll(".empty-state").forEach((h) => { if (h.__ux2Rong) ux2VeRong(h); });
+}));
+
+/* UX2-L4 (#7): loi NGAY TAI O. Chu luon di qua trErr/t (mot nguon, bat bien 6); khong chuoi moi trong JS.
+   baoLoiTaiO(o, chu, tuyChon): aria-invalid, lop is-loi, <div.loi-o> ngay sau o (hoac sau <label> boc o) noi voi o
+     bang aria-describedby; lac 200 ms (ux2Rung) CHI khi cho phep chuyen dong; go chu vao o thi loi tu xoa.
+     tuyChon.them = [lop cu can giu, vd "is-invalid"], tuyChon.tieuDe = true: giu title cu cua o diem,
+     tuyChon.khongRung = true: ve lai loi sau khi bang bi dung lai (doi ngon ngu), khong lac lan nua.
+     chu co the la () => chuoi: ve lai theo ngon ngu khi doi ngon ngu (lang change) — KHONG xoa loi.
+   xoaLoiTaiO(o): go sach moi dau vet (aria-invalid, lop, .loi-o, describedby, ham nghe).
+   focusODau(dsO): dua tro vao o DAU TIEN (theo thu tu tren trang), mo <details> dong boc no.
+   baoLoiForm(goc, errors, bangMaO, tuyChon): bangMaO = {ma_loi: "idO" | (err) => "idO"}; loi co o thi hien tai o, loi
+     khong co o (hoac ma la) thi tuyChon.khac(errors) hoac toast — KHONG BAO GIO im lang. Tra {conO, khac}. */
+let ux2SoLoiO = 0;
+
+/* Doi ngon ngu luc loi con hien: ve lai chu theo ngon ngu moi (KHONG xoa loi). Cung kieu voi datNutBan. */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll(".is-loi").forEach((o) => {
+    const st = o.__ux2Loi;
+    if (!st || !st.hop.parentNode) return;
+    const chu = st.fn();
+    st.hop.textContent = chu;
+    if (st.tieuDe) o.title = chu;
+  });
+});
+
+function ux2ChoPhepChuyenDong() {
+  return !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    && !document.documentElement.classList.contains("tat-hieu-ung");
+}
+
+function xoaLoiTaiO(o) {
+  if (!o) return;
+  const st = o.__ux2Loi;
+  if (!st) return;
+  if (st.hop && st.hop.parentNode) st.hop.parentNode.removeChild(st.hop);
+  const con = (o.getAttribute("aria-describedby") || "").split(/\s+/).filter((x) => x && x !== st.id);
+  if (con.length) o.setAttribute("aria-describedby", con.join(" "));
+  else o.removeAttribute("aria-describedby");
+  o.removeAttribute("aria-invalid");
+  o.classList.remove("is-loi", "ux2-rung");
+  (st.them || []).forEach((c) => o.classList.remove(c));
+  if (st.tieuDe) o.removeAttribute("title");
+  o.removeEventListener("input", st.ham);
+  o.removeEventListener("change", st.ham);
+  delete o.__ux2Loi;
+}
+
+function baoLoiTaiO(o, chuHoacHam, tuyChon) {
+  if (!o) return;
+  xoaLoiTaiO(o);
+  const tc = tuyChon || {};
+  /* chuHoacHam: chuoi, hoac () => chuoi de CHU THEO NGON NGU khi doi ngon ngu luc loi con hien (langchange ve lai). */
+  const fn = typeof chuHoacHam === "function" ? chuHoacHam : () => chuHoacHam;
+  const chu = fn();
+  ux2SoLoiO += 1;
+  const id = "loi-o-" + ux2SoLoiO;
+  const hop = document.createElement("div");
+  hop.className = "loi-o";
+  hop.id = id;
+  hop.textContent = chu;
+  const moc = o.closest("label") || o;
+  moc.parentNode.insertBefore(hop, moc.nextSibling);
+  const ham = () => xoaLoiTaiO(o);
+  o.__ux2Loi = { id, hop, ham, fn, them: tc.them || [], tieuDe: !!tc.tieuDe };
+  o.setAttribute("aria-invalid", "true");
+  o.setAttribute("aria-describedby", ((o.getAttribute("aria-describedby") || "") + " " + id).trim());
+  o.classList.add("is-loi");
+  (tc.them || []).forEach((c) => o.classList.add(c));
+  if (tc.tieuDe) o.title = chu;
+  o.addEventListener("input", ham);
+  o.addEventListener("change", ham);
+  if (!tc.khongRung && ux2ChoPhepChuyenDong()) {
+    o.classList.remove("ux2-rung");
+    void o.offsetWidth;
+    o.classList.add("ux2-rung");
+    setTimeout(() => o.classList.remove("ux2-rung"), 260);
+  }
+}
+
+function focusODau(dsO) {
+  const co = dsO.filter(Boolean);
+  if (!co.length) return;
+  co.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+  const dau = co[0];
+  const d = dau.closest("details");
+  if (d && !d.open) d.open = true;
+  dau.focus();
+}
+
+function baoLoiForm(goc, errors, bangMaO, tuyChon) {
+  const tc = tuyChon || {};
+  const dsO = [];
+  const khac = [];
+  (errors || []).forEach((e) => {
+    const m = bangMaO && bangMaO[e && e.code];
+    const idO = typeof m === "function" ? m(e) : m;
+    const o = idO ? (goc && goc.querySelector ? goc.querySelector("#" + idO) : null) || el(idO) : null;
+    if (!o) { khac.push(e); return; }
+    baoLoiTaiO(o, () => trErr(e));
+    dsO.push(o);
+  });
+  focusODau(dsO);
+  if (khac.length) (tc.khac || ((x) => showErrorToast(x)))(khac);
+  return { conO: dsO.length > 0, khac };
 }
 
 function debounce(fn, ms) {

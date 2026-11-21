@@ -12,6 +12,20 @@
  * 4. TAB 3 — DỮ LIỆU KHÁC (view-others; hàm vẫn tên loadResultsTab)
  * ------------------------------------------------------------------ */
 
+/* UX2-L6: cau hinh trang thai rong (khoa i18n; nut chi cho quan tri vi the Van hanh / Quan ly la cua quan tri). */
+const UX2_RONG_KET_QUA = {
+  /* Cau neu hien trang ngan (khong chi ten the): ten the that nam o huong dan + nut, lay tu nav. Cau cu results_empty_state
+     van con trong i18n.js (anh chup chuoi mac dinh cua ws_nhan). */
+  chu: "ux2_rong_chu_ket_qua", huongDan: "ux2_rong_huong_ket_qua",
+  gv: { huongDan: "ux2_rong_huong_ket_qua_gv" },
+  nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
+};
+const UX2_RONG_CLB = {
+  chu: "clb_empty", huongDan: "ux2_rong_huong_clb",
+  gv: { huongDan: "ux2_rong_huong_clb_gv" },
+  nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
+};
+
 function loadResultsTab() {
   loadTomTatKetQua();
   if (typeof ux1aVeSauXep === "function") ux1aVeSauXep(); /* UX1A-L2b */
@@ -442,7 +456,10 @@ function veBangNhuCauCLB(ds) {
   const rong = el("clbEmpty");
   clear(body);
   panel.hidden = !ds.length;
-  if (rong) rong.hidden = ds.length > 0;
+  if (rong) {
+    if (!ds.length) veTrangThaiRong(rong, UX2_RONG_CLB);
+    rong.hidden = ds.length > 0;
+  }
   if (!ds.length) {
     veDemMuc("clbPanel", null, null);
     dongDanhSachCLB();
@@ -839,12 +856,14 @@ function veCotLyDo(coLyDo) {
 }
 
 function loadMatchResults(search) {
-  Promise.all([
+  const hoi = Promise.all([
     callApiMoiNhat("ket_qua", "get_match_results", search || "",
       lopLocThamSo(el("resultsLopLoc")), el("resultsSapXep").value),
     layDsLop(),
     callApi("get_ly_do_ket_qua"),
-  ]).then(([res, dsLop, lyDo]) => {
+  ]);
+  hienKhungCho(el("resultsTableBody"), 0, 8, hoi); /* UX2-L7 */
+  hoi.then(([res, dsLop, lyDo]) => {
     const fa = lyDo && lyDo.ok && lyDo.data.fa_bat;
     const cauLyDo = fa && lyDo.data.run_id !== null ? lyDo.data.cau : null;
     el("btnXuatLyDo").hidden = !fa;
@@ -873,6 +892,7 @@ function loadMatchResults(search) {
     const manh = document.createDocumentFragment();
 
     if (!res.ok || !res.data.length) {
+      veTrangThaiRong(empty, UX2_RONG_KET_QUA);
       empty.hidden = false;
       badge.hidden = true;
       veDemMuc("dsXepPanel", null, null);
@@ -1025,7 +1045,7 @@ function initResultsHandlers() {
       showToast(t("toast_xuat_chua_chon_muc"), "error");
       return;
     }
-    chayXuat(muc);
+    chayXuat(muc, undefined, undefined, el("btnXuatTuyChon"));
   });
 
   /* "Kem CSV" chi co nghia khi dang xuat ket qua. */
@@ -1038,7 +1058,7 @@ function initResultsHandlers() {
     if (!hsDaChon.size) return;
     chayXuat([["xuat_muc_hoc_sinh", "export_hoc_sinh_csv", [Array.from(hsDaChon).sort(), ""],
       (d) => t("xuat_kq_hoc_sinh", { n: d.n_hoc_sinh, n_dong: d.n_dong, path: d.path }),
-      boHsKhongConTonTai]]);
+      boHsKhongConTonTai]], undefined, undefined, el("btnXuatHsDaChon"));
   });
 
   /* A14: lọc / sắp theo lớp, và xuất mỗi lớp một tệp cho giáo viên chủ nhiệm. */
@@ -1065,7 +1085,7 @@ function initResultsHandlers() {
 
   el("btnXuatTheoLop").addEventListener("click", () => {
     chayXuat([["xuat_muc_theo_lop", "export_theo_lop", [""],
-      (d) => t("xuat_kq_theo_lop", { n: d.n_tep, path: d.thu_muc })]]);
+      (d) => t("xuat_kq_theo_lop", { n: d.n_tep, path: d.thu_muc })]], undefined, undefined, el("btnXuatTheoLop"));
   });
 
   /* XP1-L4: xuất PDF hàng loạt. Danh sách: mỗi CLB / mỗi lớp một tệp trong một thư mục. Phiếu giải trình: "Tất cả"
@@ -1160,7 +1180,7 @@ function capNhatChonHs() {
 /* Chay lan luot cac lan xuat; ghi ket qua vao o phan hoi (KHONG tu tat —
    duong dan tep phai doc duoc) va mot toast tom tat. Dung chung cho the
    Ket qua va the 04. */
-function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
+function chayXuat(dsMuc, oPhanHoi, kemMoTep, nutXuat) {
   /* Bam dup se ghi them mot bo tep "(2)": khoa moi nut xuat trong luc xuat. */
   if (khoa.dangXuat) return;
   datKhoa("dangXuat", true);
@@ -1202,6 +1222,7 @@ function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
       veKetQuaXuat(o, dong, coLoi, duongMo, kemMoTep);
       /* GT4: thông báo nổi chỉ nói đã xuất gì (bỏ phần "→ đường dẫn" — đường dẫn đầy đủ nằm ngay dưới nút), cho khỏi che bảng. */
       showToast(coLoi ? (dong[0] || "") : String(dong[0] || "").split(" → ")[0], coLoi ? "error" : "success");
+      if (!coLoi && nutXuat) nutDaXong(nutXuat); /* UX2-L2 */
       if (currentTabName() === "others") veXuatPanel();
     });
 }

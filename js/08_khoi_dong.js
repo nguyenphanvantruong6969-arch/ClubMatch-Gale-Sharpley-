@@ -29,6 +29,7 @@ function init() {
   initViecTiepTheo(); // UX1A-L1
   initCaiDat();       // UX1A-L2b (js/18_cai_dat.js)
   initMucTieu();      // MT1-L4 (js/19_muc_tieu.js)
+  ux2QuanSatBang(["resultsTableBody", "adminStudentTableBody", "adminClubTableBody", "historyTableBody"]); // UX2-L8
   loadPipelineTab(); // tab mặc định đang mở khi khởi động
 }
 

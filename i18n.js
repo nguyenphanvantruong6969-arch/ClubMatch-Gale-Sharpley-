@@ -93,6 +93,31 @@
       btn_validate: "Kiểm tra lại dữ liệu",
       btn_run_pipeline: "Chạy sắp xếp",
       btn_dang_chay: "Đang chạy…",
+      ux2_dang_xep: "Đang xếp…",
+      ux2_pha_nhan: "Tiến trình xếp",
+      ux2_pha_kiem_tra: "Kiểm tra",
+      ux2_pha_xep: "Xếp",
+      ux2_pha_ghi: "Ghi",
+      ux2_pha_xuat: "Xuất",
+      ux2_pha_xong: "Xong",
+      ux2_pha_loi: "Lỗi",
+      ux2_pha_canh_bao: "Cảnh báo",
+      ux2_rong_huong_ket_qua: "Kết quả hiện ở đây sau khi chạy sắp xếp.",
+      ux2_rong_nut_xep: "Đến thẻ \"{the_xep}\"",
+      ux2_rong_huong_clb: "Thêm {slot_sl} ở thẻ \"{the_quan_ly}\" rồi quay lại đây.",
+      ux2_rong_nut_quan_ly: "Đến thẻ \"{the_quan_ly}\"",
+      ux2_rong_huong_clb_ql: "Điền mã, tên và chỉ tiêu ở biểu mẫu phía trên rồi bấm lưu.",
+      ux2_rong_nut_dien_form: "Bắt đầu điền biểu mẫu",
+      ux2_rong_huong_hs_ql: "Thêm từng người ở thẻ \"{the_nhap}\", hoặc nạp tệp ở thẻ \"{the_xep}\".",
+      ux2_rong_nut_them_mot: "Thêm một người",
+      ux2_rong_huong_cham_nguoi: "Danh sách được nạp ở thẻ \"{the_xep}\".",
+      ux2_rong_huong_tim: "Thử từ khoá khác hoặc xoá ô tìm.",
+      ux2_rong_chu_ket_qua: "Chưa có kết quả.",
+      ux2_rong_huong_ket_qua_gv: "Kết quả hiện ở đây sau khi quản trị viên chạy sắp xếp. Cần xem sớm thì nhờ quản trị viên.",
+      ux2_rong_huong_clb_gv: "Nhờ quản trị viên thêm {slot_sl}.",
+      ux2_rong_chu_cham_nguoi_gv: "Chưa có {person_l} nào để chấm.",
+      ux2_rong_huong_cham_nguoi_gv: "Nhờ quản trị viên nạp danh sách.",
+      ux2_pha_chua_den: "Chưa tới",
       hat_giong_khong_hop_le: "Số khởi tạo bốc thăm phải là một số nguyên, ví dụ 2026. Hãy sửa ô này rồi bấm chạy lại.",
       btn_dong: "Đóng thông báo",
       step_title_backup: "Sao lưu dữ liệu",
@@ -1523,6 +1548,31 @@
       btn_validate: "Re-check data",
       btn_run_pipeline: "Run allocation",
       btn_dang_chay: "Running…",
+      ux2_dang_xep: "Allocating…",
+      ux2_pha_nhan: "Allocation progress",
+      ux2_pha_kiem_tra: "Check",
+      ux2_pha_xep: "Allocate",
+      ux2_pha_ghi: "Save",
+      ux2_pha_xuat: "Export",
+      ux2_pha_xong: "Done",
+      ux2_pha_loi: "Error",
+      ux2_pha_canh_bao: "Warning",
+      ux2_rong_huong_ket_qua: "Results show up here after the allocation runs.",
+      ux2_rong_nut_xep: "Go to the \"{the_xep}\" tab",
+      ux2_rong_huong_clb: "Add {slot_pl} on the \"{the_quan_ly}\" tab, then come back here.",
+      ux2_rong_nut_quan_ly: "Go to the \"{the_quan_ly}\" tab",
+      ux2_rong_huong_clb_ql: "Fill in the code, name and quota in the form above, then save.",
+      ux2_rong_nut_dien_form: "Start filling in the form",
+      ux2_rong_huong_hs_ql: "Add people one by one on the \"{the_nhap}\" tab, or import a file on the \"{the_xep}\" tab.",
+      ux2_rong_nut_them_mot: "Add one person",
+      ux2_rong_huong_cham_nguoi: "The list is imported on the \"{the_xep}\" tab.",
+      ux2_rong_huong_tim: "Try another keyword or clear the search box.",
+      ux2_rong_chu_ket_qua: "No results yet.",
+      ux2_rong_huong_ket_qua_gv: "Results show up here after an administrator runs the allocation.",
+      ux2_rong_huong_clb_gv: "Ask an administrator to add {slot_pl}.",
+      ux2_rong_chu_cham_nguoi_gv: "No {person_pl} to score yet.",
+      ux2_rong_huong_cham_nguoi_gv: "Ask an administrator to import the list.",
+      ux2_pha_chua_den: "Not reached",
       hat_giong_khong_hop_le: "The lottery starting number must be a whole number, for example 2026. Fix that box, then run again.",
       btn_dong: "Close message",
       step_title_backup: "Back up data",
@@ -3072,6 +3122,12 @@
       // would look freshly-unarmed while a single click still fires the
       // destructive action).
       if (elm.classList && elm.classList.contains("is-confirming")) return;
+      /* UX2-L1: nut dang ban (datNutBan) giu vong xoay; chi doi chu cua nhan ban sang ngon ngu moi. */
+      if (elm.__ux2Xong && typeof goDauXong === "function") goDauXong(elm); /* UX2-L3: dau ✓ cu bi ghi de, don min-width/lop */
+      if (elm.__ux2Ban) {
+        elm.__ux2Ban.chu.textContent = t(elm.__ux2Ban.khoa);
+        return;
+      }
       elm.textContent = t(elm.getAttribute("data-i18n"));
     });
     // KHONG co `data-i18n-html`: truoc day co mot nhanh gan thang
