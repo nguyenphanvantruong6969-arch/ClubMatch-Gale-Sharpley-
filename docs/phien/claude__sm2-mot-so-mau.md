@@ -3,7 +3,7 @@
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: READY FOR REVIEW (sha: see git log, commit `SM2-L2`); CI pending. Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
+Status: READY FOR REVIEW 4376750 (CI pending) Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
