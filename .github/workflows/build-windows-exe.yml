@@ -58,7 +58,7 @@ jobs:
 
       - name: Run test suite
         shell: bash
-        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 6)
+        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 6 --windows)
 
   build:
     runs-on: windows-latest
