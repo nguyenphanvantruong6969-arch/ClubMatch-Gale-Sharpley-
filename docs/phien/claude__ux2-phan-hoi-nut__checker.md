@@ -130,3 +130,11 @@ verdict: 1 BUG
 OK: merge 75f99ed vs origin/main side differs only by UX2 files + CHANGELOG/TIEN_DO; typing in the search box keeps
 focus and text; no animation under tat-hieu-ung (L7 offsetTop change is a metric change, not a loosening: it measures
 the same layout shift). 126 related tests passed (ux2 chuyen_canh/khung, mt1, mt1_bang_loai, ux1_cai_dat, i18n_sync, ws_nhan).
+
+## CHECKER REPORT L8 fix1 | reviewed fef2862..a71baec
+verdict: NO BUGS. Admin students (30 rows): identical reload with API 0 / 0.4 / 1.5 s -> 0 `.ux2-vao`; filter then unfilter -> 0;
+results table after a NEW run on the same data (210 rows) -> 0 sliding rows. Loaders clear+fill in one sync block (batch has
+rows) so the set is not wiped; search with no match then clear: set cleared "for good" and refilled to 30 (re-animation
+after a true empty = acceptable). 800 HS reloaded 5x: set size stays 50 (one page), no growth. Related UX2 tests 44 passed.
+Not measured: delete-then-re-add same id (either outcome acceptable), history row slide for a brand-new run id (read 150 ms
+after, row count not yet settled).
