@@ -121,6 +121,9 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 4. Refresh timings when shards drift: download job logs, take lines `THOI_GIAN_TEP_JSON {...}`
    (Linux -> `.github/thoi_gian_test.json`, Windows -> `.github/thoi_gian_test_windows.json`).
 
+5. PR (not opened; Truong asked "ready?"): recommend PR A `claude/mt1-bang-loai-clb` -> `main` (MT1 + MT1-X1),
+   PR B = CI commits on a separate branch (outside registry). Mention N1 open, build workflow untested.
+
 ## Decisions (CI work, 2026-11-21)
 - `pytest-xdist` added to requirements-dev.txt only (Truong approved); NOT in requirements-build.txt.
 - Timing-sensitive files (all playwright UI files + `test_hieu_nang`, `test_xp1_hieu_nang`, `test_a13_11_stress`,
