@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L1, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L3, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
