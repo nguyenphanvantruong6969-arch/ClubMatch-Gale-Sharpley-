@@ -134,3 +134,20 @@ def test_doi_ngon_ngu_luc_ban_giu_vong_xoay_va_tra_nhan_ngon_ngu_moi(api, mo_tra
     page.wait_for_function("!document.querySelector('#btnRun').classList.contains('is-ban')")
     assert page.eval_on_selector("#btnRun", "b => b.textContent.trim()") == "Run allocation"
     assert loi == [], loi
+
+
+def test_doi_ngon_ngu_luc_ban_nut_co_icon_va_con_data_i18n(api, mo_trang):
+    """FIX L1 vòng 2: con [data-i18n] được khôi phục phải mang nhãn ngôn ngữ MỚI, icon vẫn còn."""
+    page, loi = mo_trang()
+    page.evaluate("""() => {
+      const b = document.createElement('button'); b.id = 'ux2Ic';
+      b.innerHTML = '<span id="ic">★</span> <span id="ux2Con" data-i18n="btn_run_pipeline">Chạy sắp xếp</span>';
+      document.body.appendChild(b);
+      window.__chayIc = () => chayNut(b, () => new Promise((r) => { window.__xongIc = r; }), () => {});
+      window.__chayIc();
+    }""")
+    page.evaluate("() => window.I18N.setLang('en')")
+    page.evaluate("() => window.__xongIc()")
+    page.wait_for_function("!document.querySelector('#ux2Ic').classList.contains('is-ban')")
+    assert page.eval_on_selector("#ux2Ic", "b => !!b.querySelector('#ic') && b.textContent.replace(/\\s+/g, ' ').trim()") == "★ Run allocation"
+    assert loi == [], loi

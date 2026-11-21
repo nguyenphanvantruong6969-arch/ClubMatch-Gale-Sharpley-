@@ -131,7 +131,11 @@ function datNutBan(nut, bat, khoaNhan) {
     while (nut.firstChild) nut.removeChild(nut.firstChild);
     const kd = nut.getAttribute("data-i18n");
     if (kd) nut.textContent = t(kd); /* nhan tinh: tra theo ngon ngu HIEN TAI (co the da doi luc dang ban) */
-    else trang.con.forEach((n) => nut.appendChild(n));
+    else {
+      trang.con.forEach((n) => nut.appendChild(n));
+      /* nut con tach roi khoi DOM luc ban nen applyStaticText bo qua: dich lai cac con [data-i18n] */
+      nut.querySelectorAll("[data-i18n]").forEach((c) => { c.textContent = t(c.getAttribute("data-i18n")); });
+    }
   }
   nut.style.minWidth = trang.minGoc;
   nut.setAttribute("aria-busy", "false");

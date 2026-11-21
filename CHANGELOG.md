@@ -8,6 +8,7 @@
 - Test mới: `tests/test_giao_dien_ux2_ban.py` (5). Không test cũ phải sửa: không test nào khẳng định nhãn "Đang chạy…" của btnRun.
 - Không đụng thuật toán/API/CSV/schema; `kiem_nhanh.py` 7/7 (60 ca trùng khít).
 - fix1 (checker): đổi ngôn ngữ lúc nút đang bận không còn ghi đè nhãn/vòng xoay — `applyStaticText` (`i18n.js`) bỏ qua nút `__ux2Ban`, `datNutBan` nhớ khoá nhãn + nghe `langchange`, trả nhãn tĩnh theo ngôn ngữ hiện tại; thêm 1 test.
+- fix2 (checker): nút có icon + con `[data-i18n]` — sau khi khôi phục nút con, `datNutBan` dịch lại các con `[data-i18n]` theo ngôn ngữ hiện tại; thêm 1 test.
 
 ## 2026-11-21 — UX2 (lập kế hoạch): phản hồi tích cực của giao diện khi tương tác
 
