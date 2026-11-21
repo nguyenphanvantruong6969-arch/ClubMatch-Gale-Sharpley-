@@ -103,14 +103,14 @@ Lot L9 — docs, screenshots, verify
 
 ## Current state (overwrite each handoff)
 - Done so far: plan + protocol written (Opus). Lead started; Sessions + Needs Truong added.
-- In progress: creating coder + checker; next GO L1. Tests: none yet. Open problems: none.
+- In progress: L1 sent to coder (GO L1). Tests: none yet. Open problems: none.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
 |---|---|---|---|---|
 | lead | Opus | session_01VfPzNumBTQB5odHhUwJqun | 2026-11-21 | running |
-| coder | Sonnet | (pending) | | |
-| checker | Sonnet | (pending) | | |
+| coder | Sonnet | session_01VfPzNrAmRdig3chvfTGSSu | 2026-11-21 | running |
+| checker | Sonnet | session_01VfPzNv4Zy4WBo2xtuj4piV | 2026-11-21 | running |
 
 ## Needs Truong (1 line each + recommendation)
 - (none yet)
