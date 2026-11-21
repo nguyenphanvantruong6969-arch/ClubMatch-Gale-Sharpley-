@@ -91,3 +91,15 @@ phase (code). Related tests passed. Not run: giao_vien view, real DB write-failu
 verdict: NO BUGS. `_backup_db` repro: Kiểm tra "Cảnh báo" (gold), Xếp/Ghi/Xuất Xong, note "Không sao lưu được dữ liệu…";
 text #7A5210 on #F1DFB8 = 5.26:1 (≥4.5); en switch -> "Warning" + English note; next good run (confirm bar -> Run)
 clears warning (Xong, note hidden); no pageerror. Related tests passed.
+
+## CHECKER REPORT L6 | reviewed d1dd055..291deb8
+verdict: 2 BUGS (1 text, 1 test hygiene)
+1. i18n.js `results_empty_state` (kept as `chu`) + `ux2_rong_huong_clb` | repro: empty DB as `giao_vien`, tab Khác ->
+   results box says "Hãy chạy sắp xếp ở thẻ Xếp CLB trước" (tab hidden for them) and CLB box says "Thêm CLB ở thẻ
+   Quản lý rồi quay lại đây" with the button hidden, no "ask an admin" | expected: giao_vien text names the admin (like
+   `ux2_rong_huong_cham_nguoi` does). Fix: role-aware key (e.g. *_gv variants) chosen by body.dataset.vai.
+2. tests/test_giao_dien_ux2_rong.py:`pytest.skip` (2 places, role != quan_tri) | protocol forbids skips; the cases cannot occur for
+   giao_vien, so assert instead (nav-item admin/pipeline not visible for giao_vien, empty box has no button).
+Notes: empty→add→hides, delete last→returns with button (admin clubs OK); en switch redraws; buttons 36 px tall (44 via L3
+::after); en text mismatch: hint says tab "Allocation", button says tab "Run allocation" (nav_pipeline = "Run allocation").
+Related tests passed.
