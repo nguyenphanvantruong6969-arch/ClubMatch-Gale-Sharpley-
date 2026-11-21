@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L1: nút đang bận + chống bấm đúp (một hàm `datNutBan`)
+
+- `js/00_nen.js`: hàm mới `datNutBan(nut, bat, khoaNhan)` (giữ nút con thật, khoá min-width, vòng xoay `<span.ux2-xoay>`, `aria-busy`, lớp `is-ban`); `chayNut` và `khiBan` gọi nó (nút có icon không còn mất icon).
+- `js/02_van_hanh.js` (`capNhatKhoaVanHanh`): btnRun dùng `datNutBan` với nhãn mới `ux2_dang_xep` ("Đang xếp…" / "Allocating…"), bận từ lúc bấm (kể cả lúc hỏi cảnh báo chạy lại).
+- `i18n.js`: khoá `ux2_dang_xep` (vi + en). `style.css`: khối `/* UX2 */` (`.ux2-xoay`, `@keyframes ux2Xoay`, tĩnh khi `reduce` và `html.tat-hieu-ung`).
+- Test mới: `tests/test_giao_dien_ux2_ban.py` (5). Không test cũ phải sửa: không test nào khẳng định nhãn "Đang chạy…" của btnRun.
+- Không đụng thuật toán/API/CSV/schema; `kiem_nhanh.py` 7/7 (60 ca trùng khít).
+
 ## 2026-11-21 — UX2 (lập kế hoạch): phản hồi tích cực của giao diện khi tương tác
 
 - Mục mới UX2 (Truong yêu cầu; theo dõi ở `TIEN_DO.md`, ngoài sổ 33 mục như UX1/XP1). Nhánh `claude/ux2-phan-hoi-nut`.

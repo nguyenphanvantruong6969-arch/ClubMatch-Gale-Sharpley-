@@ -3183,3 +3183,19 @@ svg.thanh-diem { display: block; }
 .ux1b-sx-he-qua { margin: 2px 0 0; }
 .ux1a-sx-dong { display: block; padding: 6px 0; }
 .ux1b-ss-nut { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+/* UX2 — L1: nút đang bận (#2/#13). Vòng xoay là <span> thật, không dùng ::before/::after (để dành cho #1/#8). */
+.ux2-xoay {
+  display: inline-block; width: 14px; height: 14px; margin-right: 8px; vertical-align: -2px;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  box-sizing: border-box;
+}
+@keyframes ux2Xoay { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-xoay { animation: ux2Xoay 0.8s linear infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-xoay { animation: none; }
+}
+/* Nút bận bớt đệm hai bên để vòng xoay không làm nút rộng ra (min-width đã khoá ở datNutBan). */
+.btn.is-ban, button.is-ban { padding-left: 10px; padding-right: 10px; white-space: nowrap; }

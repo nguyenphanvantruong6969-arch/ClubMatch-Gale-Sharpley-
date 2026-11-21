@@ -94,6 +94,47 @@ window.addEventListener("unhandledrejection", (ev) => {
     [{ code: "loi_giao_dien_ngoai_du_kien", params: { detail: String(ev.reason) } }]);
 });
 
+/* UX2-L1 (#2 + #13): MOT cho dat/bo trang thai "dang ban" cho nut — dung chung cho chayNut, khiBan va btnRun
+   (capNhatKhoaVanHanh). KHONG khoa `disabled` (nguoi goi tu khoa, vi btnRun con nhieu co khoa khac).
+   bat=true: giu cac nut con that (icon khong mat), khoa min-width o be rong hien tai (nut khong nhay),
+   thay noi dung bang <span.ux2-xoay aria-hidden> + nhan t(khoaNhan), aria-busy="true", lop is-ban.
+   bat=false: tra nut con that; neu noi dung da bi viet lai giua chung (doi ngon ngu, khiXong tu doi nhan) thi
+   KHONG ghi de. Goi lap lai khi dang ban chi lam moi nhan. */
+function datNutBan(nut, bat, khoaNhan) {
+  if (!nut) return;
+  const trang = nut.__ux2Ban;
+  if (bat) {
+    const chu = t(khoaNhan || "dang_xu_ly");
+    if (trang) {
+      if (trang.chu.parentNode === nut) trang.chu.textContent = chu;
+      return;
+    }
+    const rong = nut.getBoundingClientRect().width;
+    const xoay = document.createElement("span");
+    xoay.className = "ux2-xoay";
+    xoay.setAttribute("aria-hidden", "true");
+    const nhan = document.createElement("span");
+    nhan.className = "ux2-nhan-ban";
+    nhan.textContent = chu;
+    nut.__ux2Ban = { con: Array.from(nut.childNodes), xoay, chu: nhan, minGoc: nut.style.minWidth };
+    if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
+    while (nut.firstChild) nut.removeChild(nut.firstChild);
+    nut.append(xoay, nhan);
+    nut.setAttribute("aria-busy", "true");
+    nut.classList.add("is-ban");
+    return;
+  }
+  if (!trang) return;
+  if (trang.xoay.parentNode === nut && trang.chu.parentNode === nut) {
+    while (nut.firstChild) nut.removeChild(nut.firstChild);
+    trang.con.forEach((n) => nut.appendChild(n));
+  }
+  nut.style.minWidth = trang.minGoc;
+  nut.setAttribute("aria-busy", "false");
+  nut.classList.remove("is-ban");
+  delete nut.__ux2Ban;
+}
+
 /* Khoa nut trong luc yeu cau dang chay, MO LAI du yeu cau thanh cong,
    that bai hay nem loi.
 
@@ -105,9 +146,10 @@ window.addEventListener("unhandledrejection", (ev) => {
 function khiBan(nut, taoPromise) {
   if (!nut || nut.disabled) return new Promise(() => {});
   nut.disabled = true;
+  datNutBan(nut, true);
   return Promise.resolve()
     .then(taoPromise)
-    .finally(() => { nut.disabled = false; });
+    .finally(() => { datNutBan(nut, false); nut.disabled = false; });
 }
 
 /* SG-9: MOT cho cho moi lan goi API. Truoc day ~68 cho viet `callApi(..).then(..)` tran: loi JS trong
@@ -139,12 +181,10 @@ function chayNut(nut, taoPromise, khiXong, tuyChon) {
   if (!nut || nut.disabled) return new Promise(() => {});
   const tc = tuyChon || {};
   const laNutBam = nut.tagName === "BUTTON";
-  const chuGoc = laNutBam ? nut.textContent : "";
-  const chuBan = laNutBam ? t(tc.nhan || "dang_xu_ly") : "";
   nut.disabled = true;
-  if (laNutBam) nut.textContent = chuBan;
+  if (laNutBam) datNutBan(nut, true, tc.nhan);
   const khoi = () => {
-    if (laNutBam && nut.textContent === chuBan) nut.textContent = chuGoc;
+    if (laNutBam) datNutBan(nut, false);
     nut.disabled = false;
     if (tc.sauCung) tc.sauCung();
   };

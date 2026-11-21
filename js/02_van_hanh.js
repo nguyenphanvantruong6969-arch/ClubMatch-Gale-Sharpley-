@@ -388,7 +388,9 @@ function capNhatKhoaVanHanh() {
     || khoa.dangNhap || khoa.dangKiemTra || khoa.thieuDuLieu;
   if (khoa.thieuDuLieu) btnRun.title = t("health_chua_co_du_lieu");
   else btnRun.removeAttribute("title");
-  btnRun.textContent = khoa.dangChay ? t("btn_dang_chay") : t("btn_run_pipeline");
+  /* UX2-L1: dung datNutBan (spinner + aria-busy + khoa min-width), khong tu doi textContent luc dang chay. */
+  datNutBan(btnRun, khoa.dangChay || khoa.dangHoiChay, "ux2_dang_xep");
+  if (!(khoa.dangChay || khoa.dangHoiChay) && btnRun.textContent !== t("btn_run_pipeline")) btnRun.textContent = t("btn_run_pipeline");
   const nutChinh = trangThaiVanHanh === "san_sang" && !importQueue.length;
   btnRun.classList.toggle("btn-primary", nutChinh);
   btnRun.classList.toggle("btn-secondary", !nutChinh);

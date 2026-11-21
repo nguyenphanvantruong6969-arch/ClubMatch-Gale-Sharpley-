@@ -33,17 +33,17 @@ error code is truly needed). NOT touched: algorithm, `api*.py` behaviour, CSV, s
 
 ## Plan (written by Opus; ticked by Sonnet). Order = dependency order; each lot = one commit `UX2-L<n>: …`
 Lot L1 — #2 busy state + #13 double-click guard (shared helper; everything else builds on it)
-- [ ] Test first `tests/test_giao_dien_ux2_ban.py` (pattern: `test_giao_dien_sg9_nut_ban.py`, slow API via
+- [x] Test first `tests/test_giao_dien_ux2_ban.py` (pattern: `test_giao_dien_sg9_nut_ban.py`, slow API via
       `_cham` in `test_giao_dien_chay.py`): during a slow call the button has `disabled`, `aria-busy="true"`,
       class `is-ban`, one `.ux2-xoay` span, label = `t(nhan)`; width changes ≤ 1 px; double click → API called
       ONCE; after success AND after a rejected promise: `aria-busy="false"`, original children restored (button
       with an icon keeps it). btnRun: label "Đang xếp…", width stable, run called once on dblclick.
-- [ ] `datNutBan(nut, bat, khoaNhan)` in `js/00_nen.js`: lock `style.minWidth` to current width, save/restore
+- [x] `datNutBan(nut, bat, khoaNhan)` in `js/00_nen.js`: lock `style.minWidth` to current width, save/restore
       child nodes (not only textContent), `aria-busy`, spinner span. `chayNut` and `khiBan` call it.
-- [ ] `capNhatKhoaVanHanh` (`js/02_van_hanh.js`) uses it for btnRun instead of setting `textContent`.
-- [ ] CSS `.ux2-xoay` 14 px ring, `@keyframes ux2Xoay`; static under both motion switches (test computed
+- [x] `capNhatKhoaVanHanh` (`js/02_van_hanh.js`) uses it for btnRun instead of setting `textContent`.
+- [x] CSS `.ux2-xoay` 14 px ring, `@keyframes ux2Xoay`; static under both motion switches (test computed
       `animation-name` = none with `html.tat-hieu-ung` and with `reducedMotion:"reduce"`).
-- [ ] Update tests that assert the old "Đang chạy…" label deliberately; list them in CHANGELOG.
+- [x] Update tests that assert the old "Đang chạy…" label deliberately; list them in CHANGELOG.
 Lot L2 — #3 ✓ after save / export (needs L1)
 - [ ] Test `tests/test_giao_dien_ux2_xong.py`: success → `.ux2-xong` visible on the same button within 100 ms,
       gone at 1.6 s (shown ≈1.2 s), width stable; `ok:false` → no ✓; under `tat-hieu-ung` ✓ still shows (state,
