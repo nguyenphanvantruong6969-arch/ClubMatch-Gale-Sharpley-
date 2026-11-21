@@ -103,3 +103,10 @@ verdict: 2 BUGS (1 text, 1 test hygiene)
 Notes: empty→add→hides, delete last→returns with button (admin clubs OK); en switch redraws; buttons 36 px tall (44 via L3
 ::after); en text mismatch: hint says tab "Allocation", button says tab "Run allocation" (nav_pipeline = "Run allocation").
 Related tests passed.
+
+## CHECKER REPORT L6 fix1 | reviewed 291deb8..788709f
+verdict: NO BUGS. giao_vien boxes: "Ask an administrator to add projects" / "after an administrator runs the allocation", 0
+buttons; role flip on the same page (ux2vai) re-renders both ways; 30 lang+vai switches -> each .empty-state keeps ≤1 button.
+Custom labels (Dự án / Nhân viên): hints and buttons say "Xếp dự án", "Chưa có dự án nào", "nhân viên"; no hard-coded
+CLB/học sinh in the new strings. Only remaining pytest.skip = "no Chromium" (repo-wide pattern). 84 related tests passed
+(ux2_rong, i18n_sync, ws_nhan, van_phong_tu_nhien).
