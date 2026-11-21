@@ -56,3 +56,15 @@ OPEN -> real click on #xuatKetQua/#xuatKemCsv hits the input, export button coun
 inside label/summary; sidebar menu box on top (both probe points); no sticky <th> tables contain inputs/labels (only
 `.gt2-bang-cuon`, z-index 1, no controls); no horizontal overflow. 54 related tests passed. Not done: scroll test
 on a real 800-HS table (no sticky header with controls exists).
+
+## CHECKER REPORT L4 | reviewed 8bb0a2a..1b8d0a7
+verdict: 1 BUG
+1. js/00_nen.js:baoLoiTaiO | repro: admin tab, empty club form, Save (3 `.loi-o`), then `I18N.setLang('en')` (same for seed
+   error) | expected: text follows language (trErr/t) or is cleared. Actual: stays Vietnamese ("Hãy nhập mã CLB…")
+   in an English UI while `t()` gives "Enter the club code…" (stale-wrong). Fix: store the key/err (or a `() => text`)
+   in `o.__ux2Loi` and refresh in a `langchange` listener (as datNutBan does), or clear errors on langchange.
+OK: seed error inline (aria-invalid, describedby, 1 `.loi-o`), focus lands in opened Nâng cao details, toast kept;
+fix clears everything; repeated submit -> 1 `.loi-o`; no shake under `tat-hieu-ung`; club form keyboard Enter ->
+focus first invalid, `.loi-o` does not cover btnSaveClub; capacity 0 -> inline "Quota must be more than 0."
+(mapped code exists in i18n_errors + api_quan_ly); no api*/i18n_errors change; 82 related tests passed.
+Not exercised by me: giao_vien score input, 800 HS table row shift.
