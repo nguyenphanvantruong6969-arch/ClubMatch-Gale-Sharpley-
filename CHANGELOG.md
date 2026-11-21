@@ -7,6 +7,7 @@
 - Lớp trạng thái hover 8 % / focus 10 % / nhấn 12 % (`--ux2-lop-*`) bằng `background-image` + `color-mix(currentColor)` — không đổi màu nền gốc; không có lớp khi `:disabled`. Gỡ `.btn-primary:hover{filter}` và `.btn-secondary:hover{background}` cũ (lớp mới thay).
 - `i18n.js`: `applyStaticText` dọn dấu ✓ cũ (min-width/lớp `is-xong`) khi đổi ngôn ngữ. `js/00_nen.js`: `datNutBan`/`nutDaXong` đo `offsetWidth` (bỏ qua `scale` của `:active`).
 - Ngoại lệ có chủ đích (báo lead): hàng thanh bên `.nav-item` (cao 40 px) và `.nav-nhom-nut` (cao 23 px) xếp sát toàn chiều rộng — không nới thành 44 px để khỏi chồng hàng / kéo dài thanh bên; test loại hai lớp này.
+- fix1 (quyết định của lead): `.nav-item` `min-height: 44px` (hết ngoại lệ); `.nav-nhom-nut` `min-height: 24px`; test đòi ≥ 24 px (WCAG 2.5.8 AA) cho tiêu đề nhóm thanh bên và nút chữ trần trong `td`/`li`, riêng `.ranking-list` giữ 20 px (hàng cách ~22 px, 24 px sẽ đè hàng bên). Thanh bên cao thêm ~4 px mỗi mục.
 - Test mới: `tests/test_giao_dien_ux2_nut.py` (10: vùng bấm 5 thẻ, nút nhỏ, một vòng focus + tương phản, không vòng khi bấm chuột, lớp trạng thái, CSS tĩnh) + 1 test dọn ✓ khi đổi ngôn ngữ. Không test cũ phải sửa.
 
 ## 2026-11-21 — UX2-L2: dấu ✓ sau khi lưu / xuất xong

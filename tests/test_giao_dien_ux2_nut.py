@@ -23,17 +23,16 @@ DO_VUNG = """() => {
     const r = b.getBoundingClientRect();
     if (!r.width || !r.height || b.closest('[hidden]') || getComputedStyle(b).visibility === 'hidden') return;
     if (b.closest('details:not([open])') && !b.matches('summary')) return;
-    /* Ngoại lệ có chủ đích: hàng thanh bên xếp sát nhau toàn chiều rộng (chiều cao 40 / 23 px, liền kề nhau) — không có
-       khoảng trống để mở rộng vùng bấm mà không chồng lên hàng bên cạnh; báo ở CHANGELOG / báo cáo L3. */
-    if (b.matches('.nav-item, .nav-nhom-nut')) return;
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     const ok = (x, y) => { const e = document.elementFromPoint(x, y); return e && (e === b || b.contains(e) || e.closest('button, .btn, [role=button]') === b); };
     if (!ok(cx, cy)) return;                                                   // bị khung cuộn che / cắt: không phải nút đang thấy
-    const caoDu = r.height >= 43.5, rongDu = r.width >= 43.5;
     if (cy < 0 || cy > innerHeight || cx < 0 || cx > innerWidth) return;       // ngoài màn hình: bỏ
-    /* Nút trong bảng dày: hàng cách nhau < 44 px nên vùng bấm chỉ lớn được tới chiều cao hàng (hai hàng không giành nhau). */
-    const hang = b.closest('tr'); const nua = hang ? Math.floor(hang.getBoundingClientRect().height / 2) - 2 : 21;
-    const dy = caoDu ? 0 : Math.min(21, nua), dx = rongDu ? 0 : 21;
+    /* Lead (L3 fix1): .nav-item phải đủ 44 px. Ba nhóm còn lại không nới 44 được vì hàng liền kề đè nhau, nên chỉ đòi
+       ≥ 24 px (WCAG 2.5.8 AA): tiêu đề nhóm thanh bên (.nav-nhom-nut), nút chữ trần trong td / li. Ngoại lệ: .ranking-list
+       (hàng cách ~22 px, 24 px sẽ đè hàng bên) giữ 20 px. */
+    const nhoGon = b.matches('.nav-nhom-nut') || (b.closest('td, li') && !b.matches('.btn'));
+    const can = nhoGon ? (b.closest('.ranking-list') ? 9 : 11) : 21;
+    const dy = r.height >= 2 * (can + 1) ? 0 : can, dx = r.width >= 2 * (can + 1) ? 0 : can;
     const diem = [[cx, cy - dy], [cx, cy + dy], [cx - dx, cy], [cx + dx, cy]];
     if (!diem.filter(([x, y]) => y >= 0 && y < innerHeight && x >= 0 && x < innerWidth).every(([x, y]) => ok(x, y))) loi.push((b.id || b.className || b.textContent).toString().slice(0, 50) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height));
     if (getComputedStyle(b).touchAction !== 'manipulation') loi.push('touch-action ' + (b.id || b.className));

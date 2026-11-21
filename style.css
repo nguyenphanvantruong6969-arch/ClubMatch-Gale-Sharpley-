@@ -180,6 +180,7 @@ button, input {
   border: none;
   color: rgba(255,255,255,0.72);
   padding: 11px 12px;
+  min-height: 44px; /* UX2-L3 fix1: vung bam 44 px that (nhin thay) */
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 13.5px;
@@ -3120,6 +3121,7 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
   text-align: left; background: transparent; border: none; cursor: pointer;
   color: rgba(255,255,255,0.55); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
   padding: 6px 12px 2px;
+  min-height: 24px; /* UX2-L3 fix1: WCAG 2.5.8 AA (24 px); khong len 44 de khoi keo dai thanh ben */
 }
 .nav-nhom-nut:hover, .nav-nhom.is-active .nav-nhom-nut { color: #fff; }
 .nav-nhom-nut:focus-visible { outline: 2px solid #9CC2FF; outline-offset: 2px; }
