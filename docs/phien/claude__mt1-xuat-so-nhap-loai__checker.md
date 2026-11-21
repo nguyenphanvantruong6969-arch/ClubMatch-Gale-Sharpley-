@@ -18,3 +18,9 @@
 - Round trip equal for loai/diem_san/so_toi_thieu/suc_chua_phong and the giu_cho SET; student with no preferences still round-trips.
 - Own edge cases (scratch): header-only sheet imported over a DB holding a reserved seat clears it; export → import → export gives identical cell values on every sheet.
 - `_du_lieu_so_nhap` tuple unchanged (D4); callers (2) unaffected.
+
+## L3 bb2ba9b..902dcbb — verdict: NO BUGS
+- Independent D5 (git worktree f809b3f vs HEAD, same import → `export_du_lieu_dau_vao`, sheet names + every cell): `SO_NHAP_DQT_120HS_HOP_LE`, `SO_NHAP_MAU_120HS_3BUOI`, `SO_NHAP_DQT_800HS_HOP_LE`, `SO_NHAP_TEST` → all IDENTICAL (sheets `1. CLB`, `2. Học sinh`, `Hướng dẫn`).
+- Branch vs 05783a7: only `api_xuat.py` changed among product files (+18/-1); no solver, priority, run_history, schema, CSV header, i18n or UI change.
+- Related set 74 passed; `ruff` clean; `kiem_nhanh.py` 7/7 incl. `trung_khit` (15 cases = 3 sets × 5 seeds).
+- Docstring, CHANGELOG, TIEN_DO rows present and accurate. Note: `kiem_nhanh` uses 5 seeds, CLAUDE.md invariant 1 mentions 20 — solver untouched, so not a blocker.
