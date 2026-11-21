@@ -1,6 +1,6 @@
 # SM2 checker verdict — `origin/claude/ux2-phan-hoi-nut..origin/claude/sm2-mot-so-mau` (head cd00b62)
 
-**Verdict: 1 BUG (moderate, vocabulary). Everything else passes.**
+**Verdict (round 1, ff08a62): 1 BUG (moderate, vocabulary). Round 2 recheck of 3a7c44f: see bottom → NO BUGS.**
 
 ## Bugs
 1. **Column dictionary hard-codes school vocabulary → wrong in workspaces with custom labels.**
@@ -47,3 +47,9 @@
 
 ## Needs Truong
 - None blocking. Decide whether Bug 1 is fixed now (coder `FIX`) or accepted (dictionary is school-vocabulary only).
+
+## Recheck of FIX1 (commit 3a7c44f) — NO BUGS
+- Bug 1 fixed with the minimal option: `ghi_so_nhap` writes `_ghi_tu_dien_cot` only when sheet names, club headers, student head and "Lớp" label equal the default school ones. Company labels → full structure + Giữ chỗ, no dictionary, no "1. CLB"/"2. Học sinh" (new test `test_tu_dien_khong_chi_toi_sheet_khong_co_o_workspace_nhan_rieng`).
+- Default school sample unchanged (`test_tu_dien_van_co_o_truong_hoc_mac_dinh`, fg2 hash, T1a). `du_lieu_test` script calls `_ghi_tu_dien_cot` directly, unaffected.
+- Ran: 148 passed (`test_sm2_*`, `test_so_mau_day_du`, `test_fg2_xem_truoc_fa`, `test_so_nhap`, `test_ws_so_nhap`, `test_van_phong_tu_nhien`).
+- Nit (no action): the guard does not look at the score label, so a workspace that renames only "Điểm" (not slot/person/group) still gets the dictionary with "Điểm k". Harmless wording mismatch.
