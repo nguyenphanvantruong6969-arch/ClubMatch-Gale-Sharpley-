@@ -24,6 +24,7 @@ import json
 import os
 import sqlite3
 
+from muc_tieu import BO_MUC_TIEU
 from nhan_ws import DANH_TU, NHAN_MAC_DINH
 from rbda_priority_pipeline import (
     TRAN_CLB_THI_MOI_BUOI,
@@ -32,6 +33,7 @@ from rbda_priority_pipeline import (
 )
 
 KHOA_CAU_HINH = "config"
+KHOA_MUC_TIEU = "muc_tieu"      # MT1: khoá cấp trên TUỲ CHỌN (không có trong mặc định), xem `_kiem_muc_tieu`
 
 # Đọc cấu hình chỉ chờ khoá ngắn (mặc định của kết nối là 3 s từ A13.11): thao tác nào cũng đọc nó ở đầu,
 # nên CSDL đang bị tiến trình khác giữ thì báo "đang bận" sau vài giây chứ không đứng hình.
@@ -188,6 +190,42 @@ def _ghi_ro_wharton(cfg) -> bool:
         and "wharton" in cfg["rules"]
 
 
+def _kiem_muc_tieu(mt):
+    """MT1: kiểm khoá cấp trên `muc_tieu` = `{id, nhom, truoc?}`; trả bản chuẩn hoá, hoặc None (= không có).
+
+    `id` là một thẻ của `muc_tieu.BO_MUC_TIEU`; `nhom` là chuỗi hoặc None; `wharton_truoc` (tuỳ chọn, bool): giá trị `rules.wharton` trước khi thẻ `co_hoi` tắt nó; `truoc` (tuỳ chọn) là chỗ giữ của
+    từng CLB trước khi thẻ "Dành chỗ cho một nhóm" ghi đè: `{club_id: [nhóm|None, số chỗ ≥ 0]}`.
+    Khoá này nằm NGOÀI `rules`, nên không bao giờ vào `run_history.luat_xep` hay dấu vân tay kết quả.
+    """
+    if mt is None:
+        return None
+    if not isinstance(mt, dict) or set(mt) - {"id", "nhom", "truoc", "wharton_truoc"}:
+        raise ValueError("muc_tieu phải là {id, nhom, truoc, wharton_truoc} hoặc null.")
+    if not isinstance(mt.get("id"), str) or mt["id"] not in BO_MUC_TIEU:
+        raise ValueError("muc_tieu.id phải là một trong %s, nhận %r." % (list(BO_MUC_TIEU), mt.get("id")))
+    nhom = mt.get("nhom")
+    if nhom is not None and not isinstance(nhom, str):
+        raise ValueError("muc_tieu.nhom phải là chuỗi hoặc null.")
+    ra = {"id": mt["id"], "nhom": nhom}
+    wt = mt.get("wharton_truoc")
+    if wt is not None:
+        if not isinstance(wt, bool):
+            raise ValueError("muc_tieu.wharton_truoc phải là true / false hoặc null.")
+        ra["wharton_truoc"] = wt          # "Chia 100 điểm" đang bật TRƯỚC khi thẻ co_hoi tắt nó (để trả lại khi rời thẻ)
+    truoc = mt.get("truoc")
+    if truoc is not None:
+        if not isinstance(truoc, dict):
+            raise ValueError("muc_tieu.truoc phải là một từ điển {club_id: [nhóm, số chỗ]}.")
+        gon = {}
+        for cid, v in truoc.items():
+            if (not isinstance(cid, str) or not isinstance(v, list) or len(v) != 2
+                    or not (v[0] is None or isinstance(v[0], str)) or not _la_so_nguyen(v[1]) or v[1] < 0):
+                raise ValueError("muc_tieu.truoc[%r] phải là [nhóm hoặc null, số chỗ ≥ 0]." % (cid,))
+            gon[cid] = [v[0], v[1]]
+        ra["truoc"] = gon
+    return ra
+
+
 def _chuan_hoa(cfg, kiem_trung: bool = True) -> dict:
     """Trộn `cfg` lên mặc định, kiểm, và trả bản ĐẦY ĐỦ đã chuẩn hoá.
 
@@ -196,7 +234,7 @@ def _chuan_hoa(cfg, kiem_trung: bool = True) -> dict:
     if not isinstance(cfg, dict):
         raise ValueError("Cấu hình phải là một từ điển (dict).")
 
-    la_khoa_la = set(cfg) - set(MAC_DINH_TRUONG_HOC)
+    la_khoa_la = set(cfg) - set(MAC_DINH_TRUONG_HOC) - {KHOA_MUC_TIEU}
     if la_khoa_la:
         raise ValueError("Khoá cấu hình không hợp lệ: %s." % ", ".join(sorted(map(str, la_khoa_la))))
 
@@ -206,6 +244,12 @@ def _chuan_hoa(cfg, kiem_trung: bool = True) -> dict:
 
     kq = _tron_sau(MAC_DINH_TRUONG_HOC, cfg)
     _nhan_thieu_en_lay_vi(cfg, kq)
+    if KHOA_MUC_TIEU in kq:                  # MT1: chỉ có mặt khi đã chọn một thẻ; không có thì y như cũ
+        mt = _kiem_muc_tieu(kq[KHOA_MUC_TIEU])
+        if mt is None:
+            del kq[KHOA_MUC_TIEU]
+        else:
+            kq[KHOA_MUC_TIEU] = mt
 
     # --- tên, ngành ---
     if not isinstance(kq["name"], str):
@@ -392,7 +436,7 @@ def doc_cau_hinh(db_path: str, nghiem: bool = False) -> dict:
         return mac_dinh
 
 
-def ghi_cau_hinh(db_path: str, cfg: dict, nhan_goc: dict | None = None) -> dict:
+def ghi_cau_hinh(db_path: str, cfg: dict, nhan_goc: dict | None = None, cung_giao_dich=None) -> dict:
     """Kiểm rồi ghi cấu hình. Trả về bản đầy đủ đã chuẩn hoá và đã ghi.
 
     `cfg` có thể thiếu khoá (trộn lên mặc định). Ghi BẢN ĐẦY ĐỦ chứ không ghi
@@ -401,6 +445,9 @@ def ghi_cau_hinh(db_path: str, cfg: dict, nhan_goc: dict | None = None) -> dict:
 
     `nhan_goc`: nhãn (`labels`) dùng làm mốc so cặp trùng thay cho nhãn đang lưu (nhân bản workspace
     cũ). None = so với nhãn đang lưu ở `db_path`.
+
+    `cung_giao_dich`: hàm `f(conn)` chạy NGAY SAU khi ghi cấu hình, trong CÙNG giao dịch (MT1: đổi chỗ giữ
+    của CLB cùng lúc với luật). Nó ném lỗi thì cả cấu hình lẫn phần nó đã ghi đều bị huỷ.
 
     Raises:
         ValueError: `cfg` sai — chưa ghi gì.
@@ -425,7 +472,12 @@ def ghi_cau_hinh(db_path: str, cfg: dict, nhan_goc: dict | None = None) -> dict:
             "INSERT OR REPLACE INTO workspace_settings (key, value) VALUES (?, ?)",
             (KHOA_CAU_HINH, json.dumps(day_du, ensure_ascii=False)),
         )
+        if cung_giao_dich is not None:
+            cung_giao_dich(conn)
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         conn.close()
     return day_du

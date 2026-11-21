@@ -30,9 +30,15 @@ jobs:
   # hoa ra chi chay duoc tren Linux khong lam ca truong khong co ban cai.
   # -------------------------------------------------------------------
   test:
-    name: Bo test tren Windows
+    name: Bo test tren Windows (${{ matrix.phan }}/12)
     runs-on: windows-latest
     if: ${{ !inputs.bo_qua_test }}
+    # Chia 12 phan song song (.github/chia_test.py): truoc day mot may chay noi tiep ca bo (~72 phut).
+    # Do that tren CI: may Windows ~72 phut-may cho ca bo => 12 phan ~6-7 phut + build ~2 phut. Van chay DU moi test.
+    strategy:
+      fail-fast: false
+      matrix:
+        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - uses: actions/checkout@v4
 
@@ -48,10 +54,19 @@ jobs:
         run: |
           pip install -r requirements.txt
           # python-docx: cac test sinh tep Forms (.docx) chay THAT tren Windows (PR #14), khong bo qua
-          pip install "pytest>=8.0,<10" "pillow>=10.0,<13" "python-docx>=1.1,<2"
+          pip install "pytest>=8.0,<10" "pytest-xdist>=3.5,<4" "pillow>=10.0,<13" "python-docx>=1.1,<2"
 
       - name: Run test suite
-        run: python -m pytest tests/ -q
+        shell: bash
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
+          # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
+          # khong cai playwright). Do KHONG phai test hong.
+          if [ -n "$TT" ]; then python -m pytest -q $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
+          exit $rc
 
   build:
     runs-on: windows-latest

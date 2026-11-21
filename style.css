@@ -3146,6 +3146,24 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .ux1a-the.is-chon .ux1a-the-tt::before { content: "✓ "; }
 .ux1a-the-tt { font-weight: 700; }
 .ux1a-loi { color: #B42318; margin: 8px 0 0; }
+/* MT1-L4: câu hỏi mục tiêu (cùng khuôn thẻ của .ux1a-the; chỉ thêm dòng chữ ≥ 14px, nút ≥ 36px, vòng tiêu điểm 3px) */
+.mt1-hop { margin-top: 24px; }
+.mt1-dong { color: var(--ink-soft); font-size: 14px; margin: 10px 0 0; }
+.mt1-hang { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.mt1-nut, .mt1-hop .ux1a-the { min-height: 36px; }
+.mt1-nut { font-size: 14px; }
+.ux1a-the.is-cho:not(.is-chon) { border-color: var(--chart-general); border-style: dashed; }   /* chờ chọn nhóm: chưa lưu */
+.mt1-nhom { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.mt1-nhom-nhan { font-size: 14px; font-weight: 600; }
+.mt1-hop .ux1a-the:focus-visible, #wzMtLuoi .ux1a-the:focus-visible { outline-width: 3px; }
+.mt1-nhom .ux1a-vien[aria-pressed="true"] { border-color: var(--chart-general); box-shadow: inset 0 0 0 1px var(--chart-general); font-weight: 700; }
+.mt1-canh-bao { font-size: 14px; margin: 8px 0 0; }
+.mt1-chi-tiet { margin-top: 10px; font-size: 14px; }
+.mt1-chi-tiet > summary { cursor: pointer; padding: 8px 0; min-height: 36px; box-sizing: border-box; }
+.mt1-ds { margin: 4px 0 0; padding-left: 20px; }
+.mt1-rieng { color: var(--slate); }
+.mt1-ket-qua { margin: 12px 0; }
+.mt1-kq-dong { font-weight: 600; margin: 0; }
 .ux1a-san-sang { margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--slate); border-radius: 8px; }
 .ux1a-ss-dau { font-weight: 600; margin: 0 0 8px; }
 .ux1a-ss-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
@@ -3154,6 +3172,29 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .ux1a-vien { border: 1px solid var(--slate); border-radius: 999px; padding: 3px 12px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
 .ux1a-vien:hover { border-color: var(--chart-general); }
 .ux1a-so { width: 72px; }
+/* MT1 (gom): bảng đặt loại CLB trong khối "Để dùng Huy chương" */
+.ux1a-ss-dem { margin: 0 0 6px; font-weight: 600; }
+.ux1a-ss-giai-thich { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 0 0 10px; }
+.ux1a-ss-gt { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+.ux1a-ss-gt-ten { font-weight: 600; }
+.ux1a-i { width: 18px; height: 18px; padding: 0; border: 1px solid var(--slate); border-radius: 50%; background: transparent; color: inherit;
+  font: italic 700 11px/1 serif; cursor: help; display: inline-flex; align-items: center; justify-content: center; }
+.ux1a-i:hover, .ux1a-i:focus-visible { border-color: var(--chart-general); color: var(--chart-general); outline: none; }
+.ux1a-i-tip { display: none; position: absolute; z-index: 20; left: 0; top: calc(100% + 6px); width: 280px; padding: 8px 10px;
+  border-radius: 6px; background: #1F2421; color: #F3F4F1; font-size: 13px; line-height: 1.4; font-weight: 400; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.ux1a-i:hover + .ux1a-i-tip, .ux1a-i:focus + .ux1a-i-tip { display: block; }
+.ux1a-ss-bang { width: 100%; border-collapse: collapse; }
+.ux1a-ss-bang th, .ux1a-ss-bang td { text-align: left; padding: 6px 8px; vertical-align: middle; }
+.ux1a-ss-bang .ux1a-ss-dong { display: table-row; padding: 0; }
+.ux1a-ss-bang .ux1a-ss-ten { min-width: 160px; }
+.ux1a-ss-buoi td { padding-top: 12px; border-bottom: 1px solid var(--slate); }
+.ux1a-ss-buoi-tt.is-thieu { color: #B42318; font-weight: 600; }
+.ux1a-ss-buoi-tt.is-xong { color: var(--chart-general); font-weight: 600; }
+.ux1a-vien[aria-pressed="true"] { border-color: var(--chart-general); box-shadow: inset 0 0 0 1px var(--chart-general); font-weight: 700; }
+.ux1a-ss-san { display: inline-flex; align-items: center; gap: 6px; }
+.ux1a-ss-san .ux1a-so { width: 72px; min-width: 0; flex: none; }
+.ux1a-ss-san.is-thieu .ux1a-so { border-color: #B42318; }
+.ux1a-ss-bang td:first-child, .ux1a-ss-buoi-tt { font-family: inherit; }
 .ux1a-san-sang-xong { margin: 0; font-weight: 600; }
 .ux1a-cach-xet { margin: 14px 0 0; }
 .ux1a-sx-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }

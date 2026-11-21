@@ -2,6 +2,9 @@
 pytest>=8.0,<10
 # Do do phu (CI chay `--cov`, san duoi dat trong pyproject.toml).
 pytest-cov>=5.0,<8
+# Chay test song song tren nhieu nhan CPU (CI: `-n auto`). Truong dong y 2026-11-21. Chi dung cho test,
+# KHONG dong vao ban build (requirements-build.txt khong co goi nay).
+pytest-xdist>=3.5,<4
 # Lint: chi bat loi that (xem [tool.ruff.lint] trong pyproject.toml).
 ruff>=0.6,<1
 # Tuỳ chọn: chỉ dùng cho các test giao diện tests/test_giao_dien_*.py (chạy
