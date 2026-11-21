@@ -121,14 +121,14 @@ jobs:
           python -m coverage report
 
   test-windows:
-    name: Bo test (Windows ${{ matrix.phan }}/12)
+    name: Bo test (Windows ${{ matrix.phan }}/9)
     runs-on: windows-latest
-    # 12 phan: tren may Windows, -n auto gan nhu khong tang toc (nghen doc ghi tep), nen chia nhieu may hon.
-    # 6 Linux + 12 Windows + lint = 19 job, duoi gioi han 20 job dong thoi.
+    # 9 phan (do that tren CI 2026-11-21): GitHub chi chay cung luc ~15 job; 6 Linux + 9 Windows + lint
+    # (20 giay) = 16 -> gan nhu khong job nao phai xep hang. Windows ~79 phut test / 9 = ~9 phut moi phan.
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -146,8 +146,8 @@ jobs:
       - name: Chay test
         shell: bash
         run: |
-          SS=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --song-song)
-          TT=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --tuan-tu)
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 9 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 9 --windows --tuan-tu)
           rc=0
           if [ -n "$SS" ]; then python -m pytest -q -n auto --junitxml=junit_ss.xml $SS || rc=$?; fi
           # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
