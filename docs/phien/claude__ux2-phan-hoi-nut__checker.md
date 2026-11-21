@@ -138,3 +138,12 @@ rows) so the set is not wiped; search with no match then clear: set cleared "for
 after a true empty = acceptable). 800 HS reloaded 5x: set size stays 50 (one page), no growth. Related UX2 tests 44 passed.
 Not measured: delete-then-re-add same id (either outcome acceptable), history row slide for a brand-new run id (read 150 ms
 after, row count not yet settled).
+
+## CHECKER REPORT L9 | reviewed 816e92c..dd8887b
+verdict: NO BUGS (1 note). HUONG_DAN section matches behaviour (4 pha texts, Cảnh báo + note, giao_vien empty boxes, ✓ ~1 s,
+Hiệu ứng switch, details instant) and has no conclusions. All 20 named functions exist (grep) in the files listed; "369 test
+files" and "9 UX2 test files" counts are right. PNGs 07_sau_chay (4 pha "Xong"), 02_co_dl_admin, 09_gvcn_ket_qua_lop,
+11_cai_dat: complete pages, no skeleton, no stray focus ring, no ✓ mid-fade. Doc tests 28 passed. Diff vs origin/main touches no
+non-test .py (api*, rbda_priority_pipeline, schema, CSV).
+Note: 02_co_dl_admin.png and 11_cai_dat.png are byte-identical (same Quản lý screen) — pre-existing, but the
+"cài đặt" shot adds nothing; the sidebar in 07 is cut at the 800 px viewport (pre-existing).
