@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
+
+- CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.
+
+## 2026-11-21 — SM2-FIX1: từ điển cột chỉ ghi ở từ vựng trường học (checker lỗi 1)
+
+- `so_nhap.ghi_so_nhap(day_du=True)`: bảng TỪ ĐIỂN CỘT viết bằng từ vựng trường ("1. CLB", "Mã HS", "học sinh") nên chỉ ghi khi tên sheet và tiêu đề cột là mặc định của trường; workspace nhãn riêng (vd. công ty "1. Dự án" / "2. Nhân viên") vẫn đủ cấu trúc nhưng không có từ điển, để không chỉ tới sheet / cột không có trong tệp. Sổ mẫu trường học không đổi (băm FG-2, T1a xanh).
+- Test mới trong `tests/test_sm2_mot_so_mau.py`: `test_tu_dien_khong_chi_toi_sheet_khong_co_o_workspace_nhan_rieng` (đỏ khi bỏ điều kiện), `test_tu_dien_van_co_o_truong_hoc_mac_dinh`. kiem_nhanh 7/7.
+
+## 2026-11-21 — SM2-L2: MỘT nút "Tải sổ nhập mẫu", sổ luôn đủ cấu trúc
+
+- `so_nhap.py`: `TU_DIEN_COT` + `_ghi_tu_dien_cot(wb, tieu_de, ghi_chu, che_do_fa)` (nguồn duy nhất của từ điển cột; dòng cột thứ ba theo chế độ: FA nói Huy chương, không nói quỹ) và tham số `ghi_so_nhap(..., day_du=False)`: True thì luôn có 4 cột FA, Giờ, Địa điểm, sheet Giữ chỗ (chỉ tiêu đề) và bảng TỪ ĐIỂN CỘT. Mặc định không đổi.
+- `api_xuat.tao_so_nhap_mau` truyền `day_du=True`; chữ ký giữ nguyên, `kieu="huy_chuong"` vẫn ép nhãn Huy chương. `mau_csv/tao_so_nhap.py` (`tao_mau_trong`) cũng `day_du=True` để `mau_csv/SO_NHAP_CLB.xlsx` vẫn trùng sổ phần mềm (T1a); sinh lại tệp đó. `du_lieu_test/tao_so_nhap_day_du.py` dùng lại `_ghi_tu_dien_cot` (bỏ `TU_DIEN` riêng); sinh lại `SO_NHAP_MAU_DAY_DU.xlsx` (từ điển: "em" → "học sinh", theo luật chữ của sheet Hướng dẫn).
+- Giao diện: bỏ nút `btnTaiSoMauHuyChuong` (`index.html`, `js/02_van_hanh.js`); `taiSoNhapMau` luôn dùng `btnTaiSoMau` và hiện dấu ✓ UX2 (`nutDaXong`). Khoá i18n `ux1a_btn_so_mau_huy_chuong` GIỮ vì nút lời nhắc sai chế độ (`ux1bSsTaiSoMau`, js/18_cai_dat.js) còn dùng. Chữ `import_hint` (vi + en). `HUONG_DAN_SU_DUNG.md`, `mau_csv/HUONG_DAN_SO_NHAP.md`.
+- Test mới: `tests/test_sm2_mot_so_mau.py` (6 ca). Test sửa có chủ đích (sổ mẫu nay có Giữ chỗ + cột FA/Giờ): `test_giao_dien_ux1_nhap_so.py` (ca "hai nút" → `test_mot_nut_so_mau_day_du_cau_truc`), `test_fg2_xem_truoc_fa.py` (băm `BAM_SO_MAU_MAC_DINH`, đọc sheet Hướng dẫn theo tên), `test_ws_so_nhap.py` (2 ca), `test_ws_so_nhap_giao_dien.py` (2 ca), `test_so_nhap.py::test_mau_trong_doc_duoc_va_dung_bo_cuc`. `CLAUDE_CHI_TIET.md` (372 tệp test). kiem_nhanh 7/7.
+
+## 2026-11-21 — SM2-L1: chế độ FA không còn cảnh báo `wharton_chua_dung_het` giả
+
+- `api_nhap.py` (`import_preferences_csv`, chỗ gọi `_soat_ho_so_wharton`): bỏ qua khi `dung_fa_daa(luat)`; huy chương FA soát bằng `fa_daa.kiem_ho_so_huy_chuong` / `kiem_fa_tu_csdl`. Trước: 657 cảnh báo khi nạp `SO_NHAP_MAU_DAY_DU.xlsx`, 434 với `SO_NHAP_FA_MAU_120HS.xlsx`; nay 0.
+- `api_quan_ly.py` (`list_wharton_canh_bao`, thẻ Quản lý): ở FA bỏ mã `wharton_chua_dung_het`, các lỗi khác giữ nguyên. Báo cáo sức khoẻ (`api.py`) đã tách nhánh FA từ trước, không sửa.
+- Test mới: `tests/test_sm2_canh_bao_fa.py` (3 ca, gồm ca hồi quy không FA vẫn cảnh báo). `CLAUDE_CHI_TIET.md` (371 tệp test). kiem_nhanh 7/7.
+
+## 2026-11-21 — Sổ mẫu đầy đủ (dữ liệu mẫu, không đổi mã sản phẩm)
+
+- `du_lieu_test/tao_so_nhap_day_du.py` sinh `du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx` bằng `so_nhap.ghi_so_nhap` (nguồn duy nhất của định dạng): 12 CLB, ba buổi, đủ bốn cột FA (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng), Giờ, Địa điểm; 120 học sinh mô phỏng có Lớp, điểm thi (CLB Tuyển chọn), huy chương 60/30/10; sheet Giữ chỗ (3 dòng); sheet Hướng dẫn thêm bảng "Từ điển cột".
+- Kiểm: nạp ở workspace bật FA rồi chạy xếp: 120/120 em có chỗ. Workspace thường: các cột FA và Giữ chỗ bị bỏ qua kèm cảnh báo; chạy bị chặn vì cột huy chương được đọc như điểm quyết tâm (giống sổ `SO_NHAP_FA_MAU_120HS.xlsx` sẵn có).
+- Test mới: `tests/test_so_mau_day_du.py` (2 ca). `HUONG_DAN_SU_DUNG.md` (mục cột FA), `CLAUDE_CHI_TIET.md` (370 tệp test).
+
 ## 2026-11-21 — UX2-CI1: `<details>` mở nhẹ, KHÔNG cắt nội dung (sửa test đỏ trên CI)
 
 - Lỗi (CI run 44887663728, shard 1/6): `test_giao_dien_ux2_nut.py::test_bam_chuot_vao_o_tick_xuat_khong_kich_nut_xuat[quan_tri|giao_vien]`: bấm chuột thật vào ô tick ngay sau khi mở mục "Nâng cao" không bật ô. Chẩn đoán: hoạt ảnh mở của L8 (`block-size` 0 → auto + `overflow: hidden` trên `::details-content`) cắt phần nội dung chưa mở tới khỏi hit-test; đo `elementFromPoint` tại tâm ô: ô chỉ trúng sau ~20 đến 36 ms. Máy CI chậm thì cú bấm đầu rơi vào khoảng đó. Đây là lỗi SẢN PHẨM (bấm ô trong ~30 ms đầu bị hụt), không chỉ lỗi test.

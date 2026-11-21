@@ -70,7 +70,7 @@ def test_tai_so_mau_cua_workspace_cong_ty(mo_trang):
     page, api, xuat, loi = mo_trang(CONG_TY)
     api.create_or_update_club("a", "Dự án A", 3, 0, "")
     wb = _tai_mau(page, xuat)
-    assert wb.sheetnames == ["1. Dự án", "2. Nhân viên", "Hướng dẫn"]
+    assert wb.sheetnames == ["1. Dự án", "2. Nhân viên", "Hướng dẫn", "Giữ chỗ"]  # SM2: sổ mẫu luôn có sheet Giữ chỗ
     tieu_de = [c.value for c in wb["2. Nhân viên"][1]]
     assert tieu_de[:4] == ["Mã HS", "Họ tên", "Lớp", "Cấp bậc"]      # A14: sổ mẫu luôn có cột Lớp (đã duyệt)
     assert sum(1 for t in tieu_de if str(t).startswith("Nguyện vọng")) == 3     # max_choices
@@ -81,7 +81,7 @@ def test_tai_so_mau_cua_workspace_cong_ty(mo_trang):
 def test_tai_so_mau_truong_hoc_giu_nguyen(mo_trang):
     page, api, xuat, loi = mo_trang({})
     wb = _tai_mau(page, xuat)
-    assert wb.sheetnames == ["1. CLB", "2. Học sinh", "Hướng dẫn"]
+    assert wb.sheetnames == ["1. CLB", "2. Học sinh", "Hướng dẫn", "Giữ chỗ"]  # SM2: sổ mẫu luôn có sheet Giữ chỗ
     assert not loi, loi
 
 

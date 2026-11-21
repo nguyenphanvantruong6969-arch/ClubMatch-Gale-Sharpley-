@@ -118,7 +118,8 @@ def tao_mau_trong() -> str:
     ra = os.path.join(THU_MUC, TEN_MAU)
     # Cùng cấu hình mặc định như `tao_so_nhap_mau` của phần mềm: MỌI sheet (cả Hướng dẫn) khớp nhau (T1a).
     # A13.7: mẫu trống có cột Điểm quyết tâm; A14: và cột Lớp
-    so_nhap.ghi_so_nhap(ra, cfg=cau_hinh_ws.chuan_hoa({}), luon_co_cot_w=True, co_lop=True)
+    so_nhap.ghi_so_nhap(ra, cfg=cau_hinh_ws.chuan_hoa({}), luon_co_cot_w=True, co_lop=True,
+                        day_du=True)      # SM2: sổ mẫu luôn đủ cấu trúc + từ điển cột
     return ra
 
 

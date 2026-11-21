@@ -1531,6 +1531,8 @@ class XuatKetQuaMixin:
 
         UX1A-L5: `kieu` = "thuong" (như cũ: có cột Huy chương chỉ khi chế độ huy chương đang bật) hoặc
         "huy_chuong" (luôn là sổ mẫu có cột Loại và Huy chương; dùng khi chế độ đó bật).
+        SM2: chỉ còn MỘT nút; sổ luôn đủ cấu trúc (cột FA, Giờ, Địa điểm, Giữ chỗ, từ điển cột).
+        `kieu` vẫn nhận cho bên gọi cũ: "huy_chuong" chỉ còn ép nhãn cột Huy chương.
         """
         try:
             if kieu not in ("thuong", "huy_chuong"):
@@ -1541,7 +1543,8 @@ class XuatKetQuaMixin:
             so_nhap.ghi_so_nhap(path, clubs, [], cfg=self._cfg_ws(nghiem=True),
                                  luon_co_cot_w=True,       # sổ mẫu luôn có cột Điểm quyết tâm (A13.7)
                                  co_lop=True,              # và cột Lớp (A14, đã duyệt)
-                                 che_do_fa=(kieu == "huy_chuong" or dung_fa_daa(self._luat_nghiem())))   # FG-2 (D3); UX1A-L5: kieu
+                                 che_do_fa=(kieu == "huy_chuong" or dung_fa_daa(self._luat_nghiem())),   # FG-2 (D3); UX1A-L5: kieu
+                                 day_du=True)              # SM2: MỘT sổ mẫu, luôn đủ cấu trúc + từ điển cột
             return _ok({"path": path, "dir": os.path.dirname(path),
                         "n_clubs": len(clubs), "n_ten_doi": n_ten_doi})
         except LoiDuongXuat as e:

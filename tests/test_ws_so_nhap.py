@@ -470,7 +470,7 @@ def test_api_company_xuat_mau_roi_nap_lai(goc, tmp_path):
     res = api.tao_so_nhap_mau()
     assert res["ok"], res["errors"]
     wb = openpyxl.load_workbook(res["data"]["path"])
-    assert wb.sheetnames == ["1. Dự án", "2. Nhân viên", "Hướng dẫn"]
+    assert wb.sheetnames == ["1. Dự án", "2. Nhân viên", "Hướng dẫn", "Giữ chỗ"]  # SM2: sổ mẫu luôn có sheet Giữ chỗ
     assert wb["1. Dự án"]["A2"].value == "Dự án A"       # CLB đang có điền sẵn
     hs = wb["2. Nhân viên"]
     # A13.7: sổ mẫu luôn có cột "Điểm quyết tâm" -> mỗi nhóm ba cột
@@ -494,8 +494,8 @@ def test_api_mau_truong_hoc_giong_het_truoc_day(api, tmp_path):
     res = api.tao_so_nhap_mau(str(tmp_path / "m.xlsx"))
     assert res["ok"]
     wb = openpyxl.load_workbook(res["data"]["path"])
-    assert wb.sheetnames == ["1. CLB", "2. Học sinh", "Hướng dẫn"]
-    assert [c.value for c in wb["1. CLB"][1]] == so_nhap.COT_CLB
+    assert wb.sheetnames == ["1. CLB", "2. Học sinh", "Hướng dẫn", "Giữ chỗ"]  # SM2: sổ mẫu luôn có sheet Giữ chỗ
+    assert [c.value for c in wb["1. CLB"][1]] == so_nhap.COT_CLB + so_nhap.COT_FA + so_nhap.COT_GIO  # SM2
     # Hai hàng tiêu đề: hàng 1 có 3 cột đầu + cột Lớp (A14) + 15 ô gộp; hàng 2 có 15 cặp CLB/Điểm thi.
     assert len([c for c in wb["2. Học sinh"][1] if c.value]) == 4 + 15
     # A13.7: sổ mẫu có thêm cột "Điểm quyết tâm" -> ba cột mỗi nhóm.

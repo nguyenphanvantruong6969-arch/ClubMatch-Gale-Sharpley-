@@ -112,7 +112,7 @@ Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự bi
 
 **Phiếu giải trình và Báo cáo tổng hợp.** Phiếu in của một em (và thẻ tra cứu trên màn hình, cùng chữ) có: dòng tóm tắt ("Em có 2/3 buổi: CLB A (Thứ 4), CLB B (Thứ 6)." hoặc "Em chưa có CLB ở buổi nào."), bảng nguyện vọng với cột **Điểm thi**, **Chỗ đã nhận / tối đa**, **Mức vào được** (một số điểm, hoặc "Chọn ngẫu nhiên khi bằng điểm"), bảng **Điểm các CLB em đã thi** có thanh so với mức vào được (chỉ CLB em đã thi), và khối **Em nên làm gì tiếp** khi một buổi chưa có chỗ (chỉ nêu tính năng đang bật, luôn kèm "hỏi giáo viên phụ trách"). Ở chế độ huy chương có thêm cột **Huy chương** (huy chương em đã đặt cho từng CLB) và một câu chú giải. Thẻ của học sinh không hiện số khoá bốc thăm. **Báo cáo tổng hợp** (nút ở khối **Theo lớp và báo cáo**, giáo viên cũng dùng được) ghi một tệp HTML cho ban giám hiệu: số học sinh, mức lấp đầy từng CLB, mức hài lòng về nguyện vọng, số học sinh chưa có chỗ theo lớp; không có tên, mã, điểm hay số bốc thăm; nếu dữ liệu sửa sau lần xếp, báo cáo nói kết quả có thể đã cũ. Nút in phiếu cả lớp và phiếu PDF nằm ở mục xuất PDF riêng.
 
-**Cài đặt là một câu hỏi:** "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?" Bấm một thẻ là lưu ngay (có **Hoàn tác** 10 giây; lần xếp đã có giữ nguyên, lần chạy sau dùng cách mới). **Huy chương** cần dữ liệu CLB sẵn sàng: thiếu loại CLB hay thiếu CLB Tự do ở một buổi thì thẻ liệt kê đúng chỗ thiếu để sửa tại chỗ. Sổ có cột Huy chương mà đang ở cách khác thì phần xem trước nói rõ và có nút **Bật chế độ huy chương**; ô huy chương của sổ nhận cả Vàng / Bạc / Đồng lẫn 60 / 30 / 10. **Tải sổ nhập mẫu** có hai bản: sổ thường và sổ có huy chương.
+**Cài đặt là một câu hỏi:** "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?" Bấm một thẻ là lưu ngay (có **Hoàn tác** 10 giây; lần xếp đã có giữ nguyên, lần chạy sau dùng cách mới). **Huy chương** cần dữ liệu CLB sẵn sàng: thiếu loại CLB hay thiếu CLB Tự do ở một buổi thì thẻ liệt kê đúng chỗ thiếu để sửa tại chỗ. Sổ có cột Huy chương mà đang ở cách khác thì phần xem trước nói rõ và có nút **Bật chế độ huy chương**; ô huy chương của sổ nhận cả Vàng / Bạc / Đồng lẫn 60 / 30 / 10. **Tải sổ nhập mẫu** là MỘT nút: sổ luôn có đủ mọi cột (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng, Giờ, Địa điểm, Lớp), sheet Giữ chỗ và bảng *Từ điển cột* ở sheet Hướng dẫn; cột thứ ba của mỗi nguyện vọng là **Huy chương** ở chế độ huy chương, **Điểm quyết tâm** ở cách khác. Cột không dùng ở chế độ đang chọn cứ để trống, phần mềm không cảnh báo.
 
 ### Chọn mục tiêu
 
@@ -1174,6 +1174,11 @@ Trang **Giữ chỗ** (tuỳ chọn): mỗi dòng một cặp *Mã CLB*, *Mã h�
 CLB nào trong ngày được đưa vào CLB Tự do ít người nhất.
 
 Không gian làm việc chưa bật chế độ này thì các cột trên bị bỏ qua (có một cảnh báo), dòng CLB vẫn được nạp.
+
+**Sổ mẫu đầy đủ:** `du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx` điền sẵn MỌI cột phần mềm đọc được (Loại, Điểm sàn,
+Tối thiểu, Sức chứa phòng, Giờ, Địa điểm, Lớp, Huy chương, sheet Giữ chỗ) cho 120 học sinh mô phỏng, ba buổi.
+Sheet **Hướng dẫn** có bảng *Từ điển cột*: cột nào bắt buộc, dùng ở chế độ nào, giá trị hợp lệ. Sinh lại bằng
+`python du_lieu_test/tao_so_nhap_day_du.py`.
 Bật rồi thì ở thẻ **Quản lý**, bảng CLB có thêm các cột Loại, Điểm sàn, Tối thiểu, Sức chứa phòng, Giữ chỗ.
 
 ### Huy chương (thẻ Nhập nguyện vọng, bước 3)

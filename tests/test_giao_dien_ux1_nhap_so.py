@@ -1,4 +1,4 @@
-"""UX1A-L5, phần giao diện: sổ có cột Huy chương mà chế độ tắt -> nói rõ + một nút bật; cảnh báo gộp; hai sổ mẫu;
+"""UX1A-L5, phần giao diện: sổ có cột Huy chương mà chế độ tắt -> nói rõ + một nút bật; cảnh báo gộp; một sổ mẫu (SM2);
 lỗi chạy chỉ sang Cài đặt. Chromium thật; dữ liệu MÔ PHỎNG."""
 
 import os
@@ -60,18 +60,26 @@ def test_nap_so_huy_chuong_che_do_tat_canh_bao_diem_gop_mot_dong(mo_trang):  # n
     assert not loi, loi
 
 
-def test_hai_nut_so_mau_va_so_mau_huy_chuong_co_cot_loai(mo_trang, monkeypatch):  # noqa: F811
+def test_mot_nut_so_mau_day_du_cau_truc(mo_trang, monkeypatch):  # noqa: F811
+    """SM2-L2 (thay ca "hai nút" của UX1A-L5): MỘT nút; bấm gọi `tao_so_nhap_mau` đúng một lần, hiện dấu ✓, sổ đủ
+    cột Loại, sheet Giữ chỗ và từ điển cột."""
     page, api, goc, loi = mo_trang()
     monkeypatch.setattr(api, "mo_thu_muc", lambda p: {"ok": True})
+    goi = []
+    goc_ham = api.tao_so_nhap_mau
+    monkeypatch.setattr(api, "tao_so_nhap_mau", lambda *a: goi.append(a) or goc_ham(*a))
     api.create_or_update_club("clb_a", "CLB A", 5, 0, "")
-    assert page.locator("#btnTaiSoMau").is_visible() and page.locator("#btnTaiSoMauHuyChuong").is_visible()
-    page.locator("#btnTaiSoMauHuyChuong").click()
+    assert page.locator("#btnTaiSoMauHuyChuong").count() == 0
+    page.locator("#btnTaiSoMau").click()
     page.wait_for_function(
         "document.getElementById('feedbackImportAll').textContent.indexOf('SO_NHAP_CLB') !== -1")
+    page.wait_for_selector("#btnTaiSoMau .ux2-xong", state="attached")
+    assert len(goi) == 1, goi
     duong = page.locator("#feedbackImportAll").inner_text().split("→")[-1].strip()
     wb = openpyxl.load_workbook(duong, read_only=True)
+    assert "Giữ chỗ" in wb.sheetnames
     chu = str([[c for c in r] for ws in wb.worksheets for r in ws.iter_rows(values_only=True)])
-    assert "Huy chương (60/30/10)" in chu and "Loại" in chu
+    assert "Loại" in chu and "TỪ ĐIỂN CỘT" in chu
     assert not loi, loi
 
 

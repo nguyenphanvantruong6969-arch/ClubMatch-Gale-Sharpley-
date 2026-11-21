@@ -1557,8 +1557,11 @@ class NhapDuLieuMixin:
                     row_errors.append(err("wharton_da_khoa"))
                 if bat_wharton:
                     row_errors.extend(loi_wp_som)
-                    row_errors.extend(self._soat_ho_so_wharton(
-                        cur, sids_da_ghi, buoi_cua_clb, tran_nv))
+                    # SM2-L1: FA soát huy chương bằng `fa_daa.kiem_ho_so_huy_chuong` (xem trước),
+                    # không bằng quỹ Wharton — gọi ở đây chỉ đẻ cảnh báo `wharton_chua_dung_het` giả.
+                    if not dung_fa_daa(luat):
+                        row_errors.extend(self._soat_ho_so_wharton(
+                            cur, sids_da_ghi, buoi_cua_clb, tran_nv))
                 elif n_wp_bo_qua:
                     row_errors.append(err("csv_wp_bo_qua", n=n_wp_bo_qua))
 

@@ -15,8 +15,9 @@ from _so_nhap_dump import chup
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAU_FA = os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx")
-# sha256 của `chup()` sổ mẫu mặc định (không FA): chụp trên f5e8a41, cập nhật ở SG-2 (câu "ô trống tính là 0" của Hướng dẫn).
-BAM_SO_MAU_MAC_DINH = "54d4bc37342a8a25a35089b7aae2e762a6edd4bfe1e587d0fafa681d9b837559"
+# sha256 của `chup()` sổ mẫu mặc định (không FA): chụp trên f5e8a41, cập nhật ở SG-2 (câu "ô trống tính là 0" của Hướng dẫn),
+# cập nhật có chủ đích ở SM2-L2 (sổ mẫu luôn đủ cấu trúc: cột FA, Giờ, Địa điểm, Giữ chỗ, từ điển cột).
+BAM_SO_MAU_MAC_DINH = "759566062ae67552f75ebc66e2fc194b5d2c69675ceb3487735f9b81bc099669"
 
 
 def _b64(duong):
@@ -162,5 +163,5 @@ def test_so_mau_fa_huong_dan_noi_ve_huy_chuong_khong_ve_quy(api, tmp_path):
     _bat_fa(api)
     ra = api.tao_so_nhap_mau(str(tmp_path / "fa.xlsx"))
     c = chup(ra["data"]["path"])
-    hd = " ".join(str(v) for v in c["trang"][c["sheets"][-1]]["o"].values())
+    hd = " ".join(str(v) for v in c["trang"][so_nhap.SHEET_HD]["o"].values())   # SM2: Giữ chỗ nay là sheet cuối
     assert "Huy chương (60/30/10)" in hd and "quỹ" not in hd and "Điểm quyết tâm" not in hd

@@ -1392,9 +1392,71 @@ def ten_khong_trung(clubs) -> int:
     return n_doi
 
 
+# SM2: từ điển cột của sổ mẫu đầy đủ (nguồn duy nhất; `du_lieu_test/tao_so_nhap_day_du.py` dùng lại).
+# (trang, cột, bắt buộc?, chế độ dùng, giá trị hợp lệ / ghi chú)
+TU_DIEN_COT = [
+    ("1. CLB", "Tên CLB", "Bắt buộc", "Mọi chế độ", "Tên hiển thị; không trùng trong cùng buổi."),
+    ("1. CLB", "Buổi", "Bắt buộc nếu trường có nhiều buổi", "Mọi chế độ", "Chọn trong danh sách: Thứ 2 … Chủ nhật."),
+    ("1. CLB", "Chỉ tiêu", "Bắt buộc", "Mọi chế độ", "Số nguyên > 0: số chỗ của CLB."),
+    ("1. CLB", "Suất ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Số chỗ dành cho Nhóm ưu tiên (≤ Chỉ tiêu). Chế độ FA bỏ qua: dùng sheet Giữ chỗ."),
+    ("1. CLB", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Tên nhóm được hưởng Suất ưu tiên (vd. chinh_sach)."),
+    ("1. CLB", "Mã CLB", "Tuỳ chọn", "Mọi chế độ", "Để trống thì phần mềm tự tạo; giữ nguyên khi nạp lại để không mất dữ liệu."),
+    ("1. CLB", "Loại", "Bắt buộc ở chế độ FA", "Chỉ FA", "Tự do / Giới hạn / Tuyển chọn. Mỗi buổi cần ít nhất một CLB Tự do."),
+    ("1. CLB", "Điểm sàn", "Bắt buộc với CLB Tuyển chọn", "Chỉ FA", "Số nguyên 0–10. Dưới điểm sàn hoặc chưa thi thì không được xét CLB đó."),
+    ("1. CLB", "Tối thiểu", "Tuỳ chọn", "Chỉ FA", "CLB Giới hạn / Tuyển chọn: số thành viên ít nhất để CLB mở."),
+    ("1. CLB", "Sức chứa phòng", "Tuỳ chọn", "Chỉ FA", "CLB Tự do: đông hơn số này thì chia nhóm theo số bốc thăm."),
+    ("1. CLB", "Giờ", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất (vd. 14:00–15:30)."),
+    ("1. CLB", "Địa điểm", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất."),
+    ("2. Học sinh", "Mã HS", "Bắt buộc", "Mọi chế độ", "Duy nhất cho mỗi học sinh."),
+    ("2. Học sinh", "Họ tên", "Bắt buộc", "Mọi chế độ", ""),
+    ("2. Học sinh", "Lớp", "Tuỳ chọn", "Mọi chế độ", "Dùng để lọc, sắp, xuất theo lớp và in phiếu cả lớp."),
+    ("2. Học sinh", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Trùng tên với Nhóm ưu tiên của CLB thì học sinh được xét Suất ưu tiên."),
+    ("2. Học sinh", "NV k", "Ít nhất 1", "Mọi chế độ", "Chọn tên CLB trong danh sách thả xuống; NV1 là muốn nhất. Tối đa 10 NV mỗi buổi."),
+    ("2. Học sinh", "Điểm k", "Tuỳ chọn", "Mọi chế độ", "Có điểm (hoặc chữ 'thi') = học sinh đã thi CLB đó; trống = không thi. Tối đa 5 CLB thi mỗi buổi."),
+    ("2. Học sinh", "Huy chương / Điểm quyết tâm k", "Tuỳ chọn", "FA: Huy chương · RB-DA bật điểm quyết tâm: Điểm quyết tâm", "FA: chỉ 60 / 30 / 10, mỗi giá trị tối đa một lần mỗi buổi, không đặt ở CLB Tự do."),
+    ("Giữ chỗ", "Mã CLB, Mã học sinh", "Tuỳ chọn", "Chỉ FA", "Mỗi dòng một chỗ giữ trước; học sinh phải có CLB đó trong nguyện vọng."),
+]
+
+
+_TU_DIEN_W = {
+    True: ("2. Học sinh", TEN_COT_HUY_CHUONG + " k", "Tuỳ chọn", "Chỉ chế độ huy chương",
+           "Chỉ Vàng / Bạc / Đồng (hoặc 60 / 30 / 10), mỗi giá trị tối đa một lần mỗi buổi, không đặt ở CLB Tự do."),
+    False: ("2. Học sinh", TEN_COT_QUYET_TAM + " k", "Tuỳ chọn", "Khi bật điểm quyết tâm",
+            "Số nguyên từ 0; mỗi quỹ cộng đúng 100."),
+}
+
+
+def _ghi_tu_dien_cot(wb, tieu_de="TỪ ĐIỂN CỘT", ghi_chu=(), che_do_fa=None):
+    """SM2: thêm bảng "TỪ ĐIỂN CỘT" (`TU_DIEN_COT`) vào cuối sheet Hướng dẫn, rồi các dòng `ghi_chu`.
+
+    `che_do_fa` None = dòng cột thứ ba nói cả hai nghĩa (sổ mẫu đầy đủ của `du_lieu_test`); True / False =
+    chỉ nghĩa của chế độ đó (sổ mẫu FA không được nói về quỹ điểm quyết tâm, FG-2)."""
+    from openpyxl.styles import Font, PatternFill
+    ws = wb[SHEET_HD]
+    r = ws.max_row + 2
+    ws.cell(row=r, column=1, value=tieu_de).font = Font(bold=True, size=12)
+    r += 1
+    for j, t in enumerate(["Trang", "Cột", "Bắt buộc?", "Dùng ở chế độ", "Giá trị hợp lệ / ghi chú"], 1):
+        o = ws.cell(row=r, column=j, value=t)
+        o.font = Font(bold=True)
+        o.fill = PatternFill("solid", fgColor="E8E2D0")
+    for dong in TU_DIEN_COT:
+        if che_do_fa is not None and dong[1].startswith("Huy chương / "):
+            dong = _TU_DIEN_W[bool(che_do_fa)]
+        r += 1
+        for j, v in enumerate(dong, 1):
+            ws.cell(row=r, column=j, value=v)
+    r += 2
+    for dong in ghi_chu:
+        ws.cell(row=r, column=1, value=dong)
+        r += 1
+    for cot, rong in zip("ABCDE", (14, 30, 30, 34, 90)):
+        ws.column_dimensions[cot].width = max(ws.column_dimensions[cot].width or 0, rong)
+
+
 def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=True,
                 cfg=None, luon_co_cot_w: bool = False, co_lop: bool = False, giu_cho=None,
-                che_do_fa: bool = False):
+                che_do_fa: bool = False, day_du: bool = False):
     """Ghi sổ nhập ra tệp .xlsx (đường dẫn hoặc tệp nhị phân đang mở).
 
     clubs:    dict có name, capacity, reserve_capacity, reserve_group, buoi, club_id
@@ -1426,6 +1488,9 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
     che_do_fa: FG-2. True (chỉ sổ MẪU của workspace bật FA-DAA) thì cột CLB có đủ bốn cột FA
               (Loại…), cột điểm quyết tâm đổi nhãn thành "Huy chương (60/30/10)" (chỉ nhận 60, 30,
               10) và Hướng dẫn nói về huy chương. Mặc định False = sổ y như cũ từng byte.
+    day_du:   SM2. True (sổ MẪU duy nhất của nút "Tải sổ mẫu") thì sổ luôn đủ cấu trúc: bốn cột FA,
+              Giờ, Địa điểm, sheet Giữ chỗ (chỉ tiêu đề nếu `giu_cho` None) và bảng "TỪ ĐIỂN CỘT" ở
+              Hướng dẫn. Nhãn cột thứ ba của nhóm NV vẫn theo `che_do_fa`. Mặc định False = như cũ.
     """
     from openpyxl import Workbook
     from openpyxl.formatting.rule import FormulaRule
@@ -1467,10 +1532,10 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
     ws = wb.active
     ws.title = sheet_clb
     # FA-1: cột FA chỉ khi có CLB mang chúng.
-    co_fa = che_do_fa or any(k in c for c in clubs for k in KHOA_FA)
+    co_fa = che_do_fa or day_du or any(k in c for c in clubs for k in KHOA_FA)
     ten_w = TEN_COT_HUY_CHUONG if che_do_fa else TEN_COT_QUYET_TAM
     # SG-6: hai cột Giờ / Địa điểm chỉ khi có CLB mang khoá `gio` / `dia_diem`; không thì sổ y như cũ.
-    co_gio = any(k in c for c in clubs for k in KHOA_GIO)
+    co_gio = day_du or any(k in c for c in clubs for k in KHOA_GIO)
     ws.append(cot_clb(cfg) + (COT_FA if co_fa else []) + (COT_GIO if co_gio else []))
     for c in clubs:
         hang_fa = []
@@ -1489,7 +1554,7 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
         o.fill, o.font, o.alignment = NEN_TIEU_DE, CHU_TIEU_DE, GIUA
     ws.row_dimensions[1].height = 30
     for r in range(2, so_dong_clb + 1):
-        for col in range(1, 7 + (len(COT_FA) if che_do_fa else 0)):
+        for col in range(1, 7 + (len(COT_FA) if che_do_fa or day_du else 0)):
             o = ws.cell(row=r, column=col)
             o.fill, o.border = NEN_NHAP, VIEN
     ws.freeze_panes = "A2"
@@ -1697,6 +1762,8 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
 
     # FA-1: sheet "Giữ chỗ" tuỳ chọn (chỉ khi người gọi truyền `giu_cho`).
     wg = None
+    if day_du and giu_cho is None:
+        giu_cho = []
     if giu_cho is not None:
         wg = wb.create_sheet(SHEET_GIU_CHO)
         wg.append(["Mã CLB", "Mã học sinh"])
@@ -1715,6 +1782,13 @@ def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=T
                 if isinstance(o.value, str) and o.value.startswith("="):
                     o.data_type = "s"
 
+    # SM2 (checker lỗi 1): từ điển viết bằng từ vựng trường học ("1. CLB", "Mã HS", "học sinh"), nên chỉ
+    # ghi khi sổ dùng đúng từ vựng đó; workspace đặt nhãn riêng (vd. công ty) thì bỏ, để không chỉ tới
+    # sheet / cột không có trong tệp.
+    tu_vung_truong = (sheet_clb, sheet_hs) == (SHEET_CLB, SHEET_HS) and cot_clb(cfg) == COT_CLB \
+        and cot_hs_dau(cfg) == COT_HS_DAU and nhan_lop(cfg) == "Lớp"
+    if day_du and tu_vung_truong:
+        _ghi_tu_dien_cot(wb, che_do_fa=che_do_fa)
     wb.active = 0
     wb.save(duong_dan_hoac_tep)
 
