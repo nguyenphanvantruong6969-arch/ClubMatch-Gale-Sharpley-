@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L6, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L7, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -74,7 +74,7 @@ Lot L5 ✅ PASSED (checker NO BUGS, head 079ae85, 1 fix round) — #11 4-phase p
       order and covers EVERY `"step": "<name>"` in `api.py` (parse it; `unknown` explicitly ignored).
 - [x] Chromium test: running → all 4 `aria-current`/running; success → 4 done; validate error → phase 1 error,
       2–4 "not reached"; stepper details unchanged (T3-06 collapse still works).
-Lot L6 — #12 guided empty states
+Lot L6 ✅ PASSED (checker NO BUGS, head 788709f, 1 fix round) — #12 guided empty states
 - [x] Helper `veTrangThaiRong(hop, {chu, huongDan, nut})`; apply to `resultsEmptyState`, `kqRong`,
       `adminClubEmptyState`, `adminStudentEmptyState`, `scoringPersonEmpty`, `clbEmpty` (+ others if cheap).
 - [x] Test: each shows guidance + ONE primary button; click goes to the right tab / focuses the right input;
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85) passed.
-- In progress: L6 sent to coder (GO L6). Open problems: none.
+- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f) passed.
+- In progress: L7 sent to coder (GO L7). Coder handoff file: __impl.md (kept same session per §2).
 
 ## Sessions
 | Role | Model | Session id | Started | State |
@@ -116,6 +116,7 @@ Lot L9 — docs, screenshots, verify
 - L3 hit area: dense table/list buttons and sidebar group headers are 24 px (AA), not 44 px. Recommend: accept; revisit only if teachers mis-tap on the touch kiosk.
 
 ## Decisions and gotchas (keep short)
+- Lead L6: results empty box uses new ux2_rong_chu_ket_qua (old results_empty_state frozen by test_ws_nhan, left untouched).
 - Lead L3 (2026-11-21): 44 px everywhere except edge-to-edge rows: .nav-item gets min-height 44; .nav-nhom-nut + dense td/li buttons ≥ 24 px (WCAG 2.5.8 AA) instead of 44 (they would overlap neighbours); .ranking-list li 20 px if 24 overlaps. Focus ring token #173F8C (≥3:1 on --gold).
 - `chayNut` swaps `textContent` today: a button with an icon loses it. L1 fixes by saving child nodes.
 - `applyStaticText` rewrites `[data-i18n]` on language switch: a busy button must not be rewritten mid-call.
