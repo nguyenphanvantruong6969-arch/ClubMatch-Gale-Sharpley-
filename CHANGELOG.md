@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2 (lập kế hoạch): phản hồi tích cực của giao diện khi tương tác
+
+- Mục mới UX2 (Truong yêu cầu; theo dõi ở `TIEN_DO.md`, ngoài sổ 33 mục như UX1/XP1). Nhánh `claude/ux2-phan-hoi-nut`.
+- `docs/phien/claude__ux2-phan-hoi-nut.md`: mục tiêu, quyết định, kế hoạch 9 lượt (L1 nút bận + chống bấm đúp → L2 dấu ✓ → L3 vùng bấm 44 px, vòng focus, lớp trạng thái → L4 lỗi tại ô → L5 thanh 4 pha → L6 trạng thái rỗng → L7 khung chờ → L8 chuyển cảnh → L9 tài liệu), tiêu chí kiểm nhận đo được.
+- `docs/phien/UX2_GIAO_THUC.md`: giao thức lead / coder / checker, rủi ro, phương án lùi. Chưa đổi mã sản phẩm.
+
 ## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.
