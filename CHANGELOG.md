@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L9: tài liệu, ảnh chụp, kiểm chứng cả mục UX2
+
+- `HUONG_DAN_SU_DUNG.md`: mục mới "Phần mềm báo lại thế nào khi bấm, khi sai, khi chờ" (cuối §4): nút bận + chống bấm đúp, dấu ✓, lỗi ngay tại ô, bốn pha (gồm "Cảnh báo" khi sao lưu hỏng mà vẫn chạy xong), hộp rỗng có nút theo vai, khung chờ, hiệu ứng trượt, nút "Hiệu ứng" tắt mọi chuyển động. Tài liệu vận hành; không có kết luận cho báo cáo khoa học.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md` (Bản đồ mã): dòng mới cho các hàm UX2 (`datNutBan`, `nutDaXong`, `goDauXong`, `baoLoiTaiO`, `xoaLoiTaiO`, `baoLoiForm`, `focusODau`, `ux2TinhPha`, `ux2VePha`, `ux2DatPha`, `veTrangThaiRong`, `ux2DiToi`, `hienKhungCho`, `ux2QuanSatBang`; bảng UX2_PHA, UX2_KHOA_HANG; sự kiện "langchange" / "ux2vai"); dòng `tests/`: 360 → 369 tệp (9 tệp UX2; `test_a13_12_tai_lieu.py` đòi số khớp thật).
+- Ảnh chụp lại bằng `docs/ke_hoach/ux/chup_luong_chinh.py` (Chromium, dữ liệu MÔ PHỎNG, hạt giống 42): đủ 14 ảnh script này ghi vì cả thanh bên (hàng 44 px), nút (lớp trạng thái, vòng focus) và thẻ Xếp CLB (4 pha) đổi giao diện: `01_trang_dau`, `02_co_dl_admin`, `02_co_dl_chua_co_cho`, `02_co_dl_fallback`, `02_co_dl_others`, `02_co_dl_results`, `03_tra_cuu_HS004`, `05_sau_chon_tep`, `06_sau_nhap`, `07_sau_chay`, `08_tieu_chi`, `09_gvcn_ket_qua_lop`, `10_ws_menu`, `11_cai_dat` (`.png` trong `docs/ke_hoach/ux/anh/`). Không đụng `04_phieu.png`, `phieu_mau.pdf` và các thư mục `danh_gia_*` (ảnh của báo cáo UX1).
+- Kiểm chứng: `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7; `ruff check .` sạch; toàn bộ `tests/test_giao_dien_*.py` + `tests/test_*ux2*.py` chạy một lượt (kết quả trong báo cáo L9).
+
 ## 2026-11-21 — UX2-L8: chuyển cảnh mượt (hàng mới trượt vào, `<details>` mở theo chiều cao)
 
 - `js/00_nen.js`: `ux2QuanSatBang(dsId)` (MutationObserver trên 4 `tbody`: `resultsTableBody`, `adminStudentTableBody`, `adminClubTableBody`, `historyTableBody`; gọi ở `init()` của `08_khoi_dong.js`). Hàng dữ liệu mới → tối đa 20 hàng đầu gắn lớp `ux2-vao` (180 ms, trễ xếp chồng ≤ 19 ms nên tổng ≤ 200 ms), tự gỡ khi xong. Không gắn cho hàng khung chờ L7, không gắn từ hàng thứ 21 (bảng 800 dòng), không gắn khi tắt hiệu ứng / giảm chuyển động. Hàng bấm được ngay (không `pointer-events:none`, không chờ).

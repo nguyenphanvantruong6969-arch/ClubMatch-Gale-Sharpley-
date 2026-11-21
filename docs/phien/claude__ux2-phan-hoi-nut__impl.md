@@ -19,18 +19,25 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L5 #11 four-phase progress (UX2_PHA)                    PASSED (+fix1 backup warning)
 - [x] L6 #12 guided empty states (veTrangThaiRong)            PASSED (291deb8 + fix1 788709f)
 - [x] L7 #6 skeleton loading (hienKhungCho)                   PASSED (b00b9e3)
-- [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    DONE fef2862 + fix1 a71baec (only genuinely new rows), reported, checker verdict pending
-- [ ] L9 docs / screenshots / verify (spec: lead's branch file; ONLY lot left)
+- [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    PASSED (fef2862 + fix1 a71baec)
+- [~] L9 docs / screenshots / verify: content WRITTEN + committed as WIP, verification NOT finished (see Current state)
 
 ## Current state (overwrite each handoff)
-- Done: L1-L8 committed + pushed; last code commit a71baec (L8 fix1). origin/main (MT1) merged earlier (75f99ed).
-  Working tree clean after the handoff push.
-- In progress: nothing. Waiting for lead: checker verdict on L8 fix1 and "GO L9" (the only lot left).
-- Tests: related ones only (never the 22-min full suite); redirect pytest output to a scratchpad file.
-  Last (L8 fix1): 182 passed (all ux2_*, quan_ly_tab_con, a13_8, a14_lop, t3_l0, chay, fa_n2, cham_diem, hieu_ung, ux1_ket_qua),
-  ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
-- Open problems: admin-student rows are rebuilt on every redraw so focus/caret in .lop-sua is lost (pre-existing, told to lead,
-  would be a separate item touching loadAdminStudents).
+- L9 (lead said GO L9, base 816e92c) is IN PROGRESS. Written and committed (WIP commit, not yet reported "CODER DONE L9"):
+  HUONG_DAN_SU_DUNG.md new section (end of section 4), docs/ke_hoach/CLAUDE_CHI_TIET.md code-map row + tests/ count 360->369
+  (test_a13_12_tai_lieu.py demands the exact count; backticked names must be top-level `function`/def names, so no const / nested names),
+  14 screenshots re-shot with docs/ke_hoach/ux/chup_luong_chinh.py into docs/ke_hoach/ux/anh/ (all 14 that script writes changed),
+  CHANGELOG.md UX2-L9 entry, TIEN_DO.md row UX2-L9, Plan L9 ticked in the lead's branch file.
+- RUNNING when this handoff was written (background, started ~08:50 machine time): full UI sweep
+  `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers .venv/bin/python -m pytest -q tests/test_giao_dien_*.py tests/test_*ux2*.py`
+  -> output in the scratchpad file full.txt (ends with a line "done"). It takes ~20+ min. A fresh session may have lost that file:
+  then just rerun it. The L9 spec says: run it ONCE and report.
+- Still TO DO for L9: (1) read the sweep result and fix real failures (test first); (2) `.venv/bin/ruff check .`;
+  (3) `.claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so origin/main --so-seed 20` must be 7/7; (4) tests/test_a13_12_tai_lieu.py,
+  test_vi_du_huong_dan.py, test_giao_dien_tieng_viet_sach.py (docs tests, were green); (5) amend CHANGELOG line "kết quả trong báo cáo L9"
+  with the numbers; (6) push; (7) send "CODER DONE L9 | base 816e92c head <sha>" to the lead with: sweep result, list of 14 re-shot PNGs.
+- Earlier lots: L1-L8 all PASSED by the checker. Open note for lead: admin-student rows are rebuilt on redraw so focus/caret in .lop-sua
+  is lost (pre-existing; separate item if wanted).
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -63,14 +70,12 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Wait for lead: checker verdict on L8 fix1 (FIX L8 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
-2. On "GO L9": pull + merge origin/main, read the L9 block.
-3. L9 docs + screenshots (HUONG_DAN_SU_DUNG.md section,
-   re-shoot docs/ke_hoach/ux/anh/, CLAUDE_CHI_TIET.md code map, kiem_nhanh 7/7, CHANGELOG + TIEN_DO rows).
+1. Finish L9 verification exactly as listed under Current state (sweep result, ruff, kiem_nhanh, docs tests), then report to the lead.
+2. After that wait for the checker verdict on L9 (FIX L9 -> test first, minimal fix, related tests, report "CODER DONE L9 fixN").
 4. Each lot: failing test first -> minimal code -> related tests -> ruff -> kiem_nhanh 7/7 -> CHANGELOG + TIEN_DO row `UX2-L<n>` ->
    tick Plan in the lead's branch file only if lead asks (lead ticks) -> commit -> push -> message lead.
 
-## Files touched (whole job so far)
+## Files touched (whole job so far; L9 adds HUONG_DAN_SU_DUNG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/ux/anh/*.png x14)
 - js/00_nen.js: all shared helpers above + langchange listeners
 - js/02_van_hanh.js: btnRun busy via datNutBan; UX2_PHA / ux2TinhPha / ux2VePha; seed inline error
 - js/03_ket_qua.js, 05_quan_ly.js, 06_cham_diem.js, 04_nhap_tai_cho.js, 09_the_xem.js, 10_theo_doi.js, 14_giai_trinh.js: check-mark wiring,
@@ -88,3 +93,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L7 skeleton loading built + reported; handoff refreshed (hook fired again) | head b00b9e3 |
 | 2026-11-21 | Sonnet (coder) | L8 smooth transitions built + reported; merged origin/main (MT1); handoff refreshed | head fef2862 |
 | 2026-11-21 | Sonnet (coder) | L8 fix1 (animate only genuinely new rows) reported; handoff refreshed | head a71baec |
+| 2026-11-21 | Sonnet (coder) | L9 docs + 14 screenshots + code map written, WIP-committed; full UI sweep running; handoff (hook fired mid-L9) | WIP, see git log |

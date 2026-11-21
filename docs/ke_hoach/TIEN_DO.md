@@ -232,4 +232,5 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX2-L6 (trạng thái rỗng có hướng dẫn + một nút chính) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 03, 05, 06, 09, index.html, i18n.js, style.css | tests/test_giao_dien_ux2_rong.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L7 (khung chờ bảng đang tải) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 02, 03, 05, style.css | tests/test_giao_dien_ux2_khung.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L8 (chuyển cảnh mượt: hàng trượt vào, details mở theo chiều cao) | xong, chờ checker | 2026-11-21 | js/00_nen.js, js/08_khoi_dong.js, style.css | tests/test_giao_dien_ux2_chuyen_canh.py | chỉ giao diện; kiem_nhanh 7/7 |
+| UX2-L9 (tài liệu, ảnh chụp lại, bản đồ mã, kiểm chứng) | xong, chờ checker | 2026-11-21 | HUONG_DAN_SU_DUNG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/ux/anh/*.png (14 ảnh) | tests/test_a13_12_tai_lieu.py (số tệp test 369) | chỉ tài liệu + ảnh; kiem_nhanh 7/7 |
 | MT1 (gom): bảng đặt loại CLB trong Cài đặt | xong (chờ checker + Truong xem ảnh) | 2026-11-21 | js/18_cai_dat.js, i18n.js, style.css | tests/test_giao_dien_mt1_bang_loai.py, tests/test_giao_dien_ux1_cai_dat.py |

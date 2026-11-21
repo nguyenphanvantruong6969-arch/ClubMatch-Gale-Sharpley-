@@ -90,7 +90,7 @@ Lot L8 ✅ PASSED (checker NO BUGS, head a71baec, 1 fix round) — #10 smooth tr
 - [x] Test: animation/transition present with effects on; none with `tat-hieu-ung` / reduced motion; accordion
       content still visible and readable after open (no clipped text).
 Lot L9 — docs, screenshots, verify
-- [ ] `HUONG_DAN_SU_DUNG.md` short section; re-shoot changed `docs/ke_hoach/ux/anh/` screens; code map in
+- [x] `HUONG_DAN_SU_DUNG.md` short section; re-shoot changed `docs/ke_hoach/ux/anh/` screens; code map in
       `CLAUDE_CHI_TIET.md`; `kiem_nhanh.py` 7/7; CHANGELOG + TIEN_DO rows per lot.
 
 ## Acceptance (kiem_nhan)

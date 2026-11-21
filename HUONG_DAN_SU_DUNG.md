@@ -132,6 +132,16 @@ Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xá
 không hiện số bốc thăm, cũng không hiện em đó xếp CLB này là nguyện vọng thứ
 mấy. Người chấm không biết cho điểm này thì ai được lợi.
 
+### Phần mềm báo lại thế nào khi bấm, khi sai, khi chờ
+
+- **Nút đang làm việc.** Bấm một nút lưu, xuất hay Chạy thì nút khoá lại ngay, hiện vòng xoay kèm chữ "Đang xử lý…" (nút Chạy ghi "Đang xếp…"), rộng bằng lúc chưa bấm. Bấm đúp chỉ gửi MỘT lần. Làm xong, nút trở về như cũ.
+- **Dấu ✓.** Lưu hoặc xuất xong thì đúng nút vừa bấm hiện dấu ✓ khoảng một giây. Có lỗi thì không có dấu ✓ mà có thông báo.
+- **Lỗi nằm ngay dưới ô sai.** Ô nhập sai (hạt giống không phải số nguyên, thiếu mã, tên hay chỉ tiêu ở biểu mẫu CLB, thiếu mã hay họ tên khi thêm học sinh, điểm không phải số ở bảng chấm điểm) được viền đỏ nhạt, có dòng chữ giải thích ngay dưới, và con trỏ nhảy về ô sai đầu tiên. Gõ lại vào ô thì dòng lỗi tự mất. Lỗi chung, không thuộc ô nào, vẫn hiện thành thông báo.
+- **Bốn pha khi chạy sắp xếp.** Trên thẻ **Xếp CLB**, hàng bốn ô **Kiểm tra, Xếp, Ghi, Xuất** cho biết đang ở đâu. Trong lúc chạy cả bốn cùng ghi "Đang chạy…" (phần mềm chỉ biết từng bước khi chạy xong, nên không có phần trăm). Xong thì mỗi ô ghi **Xong**. Gặp lỗi thì ô đó ghi **Lỗi**, các ô sau ghi **Chưa tới**; nếu có hoàn tác thì có thêm một dòng nói dữ liệu đã trở về như trước khi chạy. Sao lưu hỏng mà lần chạy vẫn thành công thì ô **Kiểm tra** ghi **Cảnh báo** (màu vàng) kèm lý do ở dòng bên dưới: kết quả vẫn dùng được, nhưng lần này không có bản sao lưu. Danh sách chi tiết từng bước vẫn nằm ở mục **Chi tiết**.
+- **Chưa có gì để hiện.** Hộp trống nói rõ chưa có gì, nên làm gì, và có MỘT nút dẫn đến đúng việc (ví dụ **Đến thẻ "Xếp CLB"**; nút đưa con trỏ vào đúng ô cần gõ). Giáo viên không thấy nút của quản trị mà được nhắc nhờ quản trị viên.
+- **Bảng đang tải.** Nếu bảng tải lâu hơn khoảng một phần ba giây, các vạch xám giữ chỗ hiện ra rồi biến mất khi có dữ liệu. Tải nhanh thì không hiện gì. Hàng thật sự mới (vừa thêm) trượt vào nhẹ; vẽ lại cùng dữ liệu thì bảng đứng yên.
+- **Nút "Hiệu ứng" ở thanh bên** (và cài đặt giảm chuyển động của hệ điều hành) tắt mọi chuyển động trên: vòng xoay thành vòng tĩnh, hàng không trượt, vạch chờ không nhấp nháy, mục "Nâng cao" mở tức thì. Nghĩa vẫn đủ nhờ chữ: nút vẫn ghi "Đang xử lý…", ô vẫn ghi "Đang chạy…".
+
 ---
 
 ## 5. Sổ nhập CLB — từng cột nghĩa là gì
