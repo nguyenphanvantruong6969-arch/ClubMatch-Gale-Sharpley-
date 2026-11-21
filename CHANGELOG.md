@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1 (gom): kiểm đồng bộ loại CLB / điểm sàn (giao diện ↔ CSDL ↔ lần chạy ↔ Excel)
+
+- `tests/test_mt1_dong_bo_loai_clb.py` (mới, chỉ backend): (1) `dat_loai_clb` ghi vào CSDL, bảng Quản lý (`list_clubs_admin`), `get_san_sang_huy_chuong` và lần chạy đều đọc đúng giá trị vừa đặt (thiếu loại thì lần chạy bị chặn); (2) nạp lại sổ CÓ cột Loại / Điểm sàn ghi đè giá trị đặt tay; (3) ô Loại để trống xoá về NULL; (4) sổ KHÔNG có các cột đó giữ nguyên giá trị đã đặt.
+- Lỗ hổng ĐÃ ĐO, chưa sửa (ghi bằng `xfail(strict=True)`): `export_du_lieu_dau_vao` (`_du_lieu_so_nhap` trong `api_xuat.py`) không chọn `loai` / `diem_san`, nên Sổ nhập xuất ra thiếu cột Loại, Điểm sàn; nạp vào CSDL trống thì mất loại, trái với lời hứa "dựng lại y nguyên" trong docstring. Cần mục riêng để sửa (đụng hợp đồng cột của Sổ nhập, bất biến 7).
+- Đã chạy: 196 ca liên quan đạt, 1 xfail có chủ ý; `ruff` sạch.
+
 ## 2026-11-21 — MT1 (gom): chữ "i" nhỏ giải thích mục đích từng loại CLB
 
 - `js/18_cai_dat.js`, `i18n.js` (vi + en), `style.css`: thay ba dòng giải thích luôn hiện bằng hàng "Các loại: Tự do (i) Giới hạn (i) Tuyển chọn (i)"; đưa chuột vào chữ "i" (hoặc focus bàn phím / chạm) thì hiện mục đích của loại đó. Chữ có trong DOM (`aria-label` + `role="tooltip"`) nên trình đọc màn hình đọc được. Nội dung bám đúng `fa_daa.py` / `uu_tien_wharton` (Tự do không từ chối ai và là chỗ xếp cho em chưa trúng; Giới hạn bỏ điểm thi, xếp theo huy chương rồi bốc thăm; Tuyển chọn lọc điểm sàn rồi xếp theo điểm thi).
