@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1-X1-L2: Sổ nhập xuất ra mang sheet "Giữ chỗ"; khứ hồi đủ năm loại dữ liệu
+
+- `api_xuat.py` (`export_du_lieu_dau_vao`): đọc bảng `giu_cho` (ORDER BY club_id, student_id) trong cùng khối `_ket_noi_doc()` và truyền `giu_cho=` cho `ghi_so_nhap` CHỈ KHI FA bật; FA tắt thì không có sheet (bước nạp bỏ qua sheet đó). Bảng rỗng + FA bật → sheet chỉ có tiêu đề (nạp lại = không giữ chỗ nào). `_du_lieu_so_nhap` giữ nguyên bộ trả về 4 giá trị (D4). Không đổi schema, CSV, i18n, giao diện.
+- `tests/test_mt1_x1_xuat_so_nhap.py` (+3 ca, đỏ trước khi sửa): khứ hồi `loai, diem_san, so_toi_thieu, suc_chua_phong` và tập `giu_cho`; sheet "Giữ chỗ" chỉ khi FA bật và rỗng thì chỉ có tiêu đề; giữ chỗ của học sinh không có nguyện vọng vẫn khứ hồi.
+
 ## 2026-11-21 — MT1-X1-L1: Sổ nhập xuất ra mang cột FA của CLB (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng)
 
 - `api_xuat.py` (`_du_lieu_so_nhap`): thêm bốn khoá `so_nhap.KHOA_FA` vào từng CLB CHỈ KHI chế độ FA bật HOẶC có CLB đã khai một trong bốn cột; không thì không thêm khoá nào, nên Sổ nhập chế độ thường y như cũ (bất biến 1, 7). Không đổi schema, cột CSV, i18n, giao diện.

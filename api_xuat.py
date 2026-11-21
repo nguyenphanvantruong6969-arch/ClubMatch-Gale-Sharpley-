@@ -1430,8 +1430,13 @@ class XuatKetQuaMixin:
             path = self._duong_xuat(output_path, ten)
             with self._ket_noi_doc() as cur:
                 clubs, students, n_ngoai, n_ten_doi = self._du_lieu_so_nhap(cur)
+                # MT1-X1 (D2): sheet "Giữ chỗ" chỉ khi FA bật (FA tắt thì bước nạp bỏ qua sheet); bảng rỗng = sheet chỉ có tiêu đề.
+                giu_cho = ([tuple(r) for r in cur.execute(
+                    "SELECT club_id, student_id FROM giu_cho ORDER BY club_id, student_id")]
+                    if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) else None)
             so_nhap.ghi_so_nhap(path, clubs, students, cfg=self._cfg_ws(nghiem=True),
-                                co_lop=any(x.get("class_id") for x in students))   # A14
+                                co_lop=any(x.get("class_id") for x in students),   # A14
+                                giu_cho=giu_cho)
             return _ok({
                 "path": path,
                 "dir": os.path.dirname(path),
