@@ -36,3 +36,16 @@ verdict: NO BUGS (2 notes)
     lang switch `is-xong` padding/minWidth(vi px) stay up to 1.2 s.
 (d) chayXuat callers without nutXuat (04, 09, 03 others) unchanged path. Related tests: ux2 xong/ban, sg9, chay,
     i18n_sync, hieu_ung = 69 passed; xuat tests also run.
+
+## CHECKER REPORT L3 | reviewed 44e7677..7f8b2f4
+verdict: 1 BUG
+1. style.css `:where(button,.btn,[role=button])::after` (44 px hit area) | repro: tab "others" (Xuất), real mouse click at
+   centre of checkbox `#xuatKemCsv` (and `#xuatKetQua` reported covered by elementFromPoint) | expected: toggles
+   the checkbox only. Actual: click lands on `btnXuatTuyChon` ::after -> export button handler fires (n=2 vs 1 on
+   base CSS). Positioned ::after paints above non-positioned inputs. Fix: keep hit area but not over form controls
+   (e.g. `position:relative` neighbours get `z-index:1`, or shrink ::after for buttons next to inputs, or give
+   `input,select,textarea,label{position:relative;z-index:1}`), then add a test: elementFromPoint at the centre of every
+   visible input/select/textarea/summary/label on all 5 tabs (vai quan_tri + giao_vien) is the control itself.
+OK: other tabs/vai quan_tri + giao_vien: no stolen inputs; toast-close x clickable and closes; dark ring #9CC2FF 2px on
+.nav-item and menu buttons; focus ring token 2px; state layer tests; 66 related tests passed. Note: `summary.lang-toggle`
+ring is 1px (not a button; pre-existing). Not measured: 800-HS table height (diff has no table-height rule).
