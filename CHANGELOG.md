@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L7: khung chờ (skeleton) của bảng đang tải
+
+- `js/00_nen.js`: `hienKhungCho(tbody, soCot, soDong, hoi, caoHang)`. Chỉ chèn khung khi tải lâu hơn 300 ms (`UX2_KHUNG_TRE_MS`) VÀ `tbody` đang trống (còn dữ liệu cũ thì để dữ liệu cũ); mỗi hàng khung là MỘT ô `colspan` toàn chiều ngang (không làm cột nào giãn ra, tiêu đề cột đứng yên như lúc bảng trống), `aria-hidden="true"`; bảng `aria-busy` true → false. `hoi.then(ket, ket)` gỡ khung cả khi thành công lẫn khi lỗi / bị từ chối (không kẹt). Gọi lần hai khi lần một chưa xong: huỷ khung cũ, chỉ còn một bộ; lần tải cũ về muộn không gỡ nhầm khung mới. Gỡ khung TRƯỚC khi người gọi vẽ dữ liệu hoặc trạng thái rỗng (L6).
+- Nối vào: bảng kết quả `resultsTableBody` (`03_ket_qua.js`), học sinh quản lý `adminStudentTableBody` (hàng khung cao 55 px = hàng thật có ô nhập) và CLB quản lý `adminClubTableBody` (`05_quan_ly.js`), lịch sử chạy `historyTableBody` (`02_van_hanh.js`). `loadMatchResults` / `loadAdminStudents` giữ nguyên hành vi (chỉ tách `hoi`).
+- `style.css`: `.ux2-khung` (xung sáng `ux2Khung` chỉ khi cho phép chuyển động; tĩnh khi `reduce` và `tat-hieu-ung`).
+- Đo: 800 học sinh vào thẻ Quản lý → có dữ liệu ~0,4 s (không hiện khung). Cột co giãn theo dữ liệu khi dữ liệu về là hành vi cũ của bảng tự co giãn, khung không làm nó tệ hơn (đo: cột / đầu bảng khi có khung = khi giấu khung).
+- Test mới: `tests/test_giao_dien_ux2_khung.py` (11): tải chậm → khung sau 300 ms rồi gỡ; tải nhanh không bao giờ chèn (MutationObserver); API bị từ chối vẫn gỡ khung; kết quả rỗng → trạng thái rỗng L6; tải lần hai chỉ một bộ khung; xung sáng tắt khi `tat-hieu-ung` / `reduce`; độ trễ 300 ms xác định; bố cục không nhảy (120 HS); 800 HS; tĩnh: bốn bảng đều nối. Không test cũ phải sửa; 217 test liên quan qua.
+
 ## 2026-11-21 — UX2-L6: trạng thái rỗng có hướng dẫn + một nút chính
 
 - `js/00_nen.js`: `veTrangThaiRong(hop, {chu, thamSo, huongDan, nut:{nhan, quyen, tab, oId}})` (tham số là KHOÁ i18n; vẽ lại khi `langchange`), `ux2DiToi(tab, oId)` (bấm nút thẻ rồi đưa con trỏ vào ô đích). Mỗi trạng thái rỗng = câu nêu hiện trạng cũ (test cũ vẫn khớp) + hướng dẫn + tối đa MỘT nút `btn btn-primary` (hệ nút L3). Nút mang `data-quyen="quan_tri"`: `giao_vien` chỉ thấy hướng dẫn.

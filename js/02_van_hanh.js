@@ -824,7 +824,9 @@ function capNhatTheLichSu() {
 }
 
 function loadRunHistory() {
-  callApi("get_run_history", 20).then((res) => {
+  const hoi = callApi("get_run_history", 20);
+  hienKhungCho(el("historyTableBody"), 0, 5, hoi); /* UX2-L7 */
+  hoi.then((res) => {
     const body = el("historyTableBody");
     clear(body);
     if (!res.ok || !res.data.length) {

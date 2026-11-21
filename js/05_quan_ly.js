@@ -385,7 +385,9 @@ function loadAdminTab(giuTrang) {
 }
 
 function loadAdminClubs() {
-  chayTai(callApi("list_clubs_admin"), (res) => {
+  const hoi = callApi("list_clubs_admin");
+  hienKhungCho(el("adminClubTableBody"), 0, 5, hoi); /* UX2-L7 */
+  chayTai(hoi, (res) => {
     const body = el("adminClubTableBody");
     const emptyState = el("adminClubEmptyState");
     clear(body);
@@ -489,11 +491,13 @@ function loadReserveGroupOptions() {
 
 function loadAdminStudents() {
   const search = el("adminStudentSearch").value.trim();
-  return chayTai(Promise.all([
+  const hoi = Promise.all([
     callApiMoiNhat("ds_hs_quan_ly", "list_students_admin", search, adminStudentPage, ADMIN_PAGE_SIZE,
       el("adminSapXep").value, lopLocThamSo(el("adminLopLoc"))),
     layDsLop(),
-  ]), ([res, dsLop]) => {
+  ]);
+  hienKhungCho(el("adminStudentTableBody"), 0, 8, hoi, 55); /* UX2-L7 */
+  return chayTai(hoi, ([res, dsLop]) => {
     napOLocLop(el("adminLopLoc"), dsLop);
     const body = el("adminStudentTableBody");
     const emptyState = el("adminStudentEmptyState");

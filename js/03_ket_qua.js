@@ -855,12 +855,14 @@ function veCotLyDo(coLyDo) {
 }
 
 function loadMatchResults(search) {
-  Promise.all([
+  const hoi = Promise.all([
     callApiMoiNhat("ket_qua", "get_match_results", search || "",
       lopLocThamSo(el("resultsLopLoc")), el("resultsSapXep").value),
     layDsLop(),
     callApi("get_ly_do_ket_qua"),
-  ]).then(([res, dsLop, lyDo]) => {
+  ]);
+  hienKhungCho(el("resultsTableBody"), 0, 8, hoi); /* UX2-L7 */
+  hoi.then(([res, dsLop, lyDo]) => {
     const fa = lyDo && lyDo.ok && lyDo.data.fa_bat;
     const cauLyDo = fa && lyDo.data.run_id !== null ? lyDo.data.cau : null;
     el("btnXuatLyDo").hidden = !fa;

@@ -80,9 +80,9 @@ Lot L6 ✅ PASSED (checker NO BUGS, head 788709f, 1 fix round) — #12 guided em
 - [x] Test: each shows guidance + ONE primary button; click goes to the right tab / focuses the right input;
       a `giao_vien` never sees an admin-only action (respect `data-quyen`).
 Lot L7 — #6 skeleton loading
-- [ ] `hienKhungCho(tbody, soCot, soDong)` shown only if load > 300 ms (no flicker); `aria-busy` on the table;
+- [x] `hienKhungCho(tbody, soCot, soDong)` shown only if load > 300 ms (no flicker); `aria-busy` on the table;
       results table, admin student table, run history, admin club table.
-- [ ] Test: slow API → skeleton after 400 ms, gone after data; fast API → never inserted (MutationObserver);
+- [x] Test: slow API → skeleton after 400 ms, gone after data; fast API → never inserted (MutationObserver);
       shimmer off under both motion switches.
 Lot L8 — #10 smooth transitions
 - [ ] New list rows slide in (≤ 20 rows, 180 ms, no stagger beyond 200 ms total); `<details>` accordions open by

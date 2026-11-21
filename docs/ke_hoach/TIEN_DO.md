@@ -220,3 +220,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX2-L4 (lỗi ngay tại ô: hạt giống, form CLB, form thêm học sinh, ô điểm) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 02, 04, 05, 06, style.css | tests/test_giao_dien_ux2_loi_o.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L5 (4 pha tiến trình, chỉ hiển thị) | xong, chờ checker | 2026-11-21 | index.html, js/02_van_hanh.js, js/07_ngon_ngu.js, i18n.js, style.css | tests/test_ux2_tien_trinh.py, tests/test_giao_dien_ux2_tien_trinh.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L6 (trạng thái rỗng có hướng dẫn + một nút chính) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 03, 05, 06, 09, index.html, i18n.js, style.css | tests/test_giao_dien_ux2_rong.py | chỉ giao diện; kiem_nhanh 7/7 |
+| UX2-L7 (khung chờ bảng đang tải) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 02, 03, 05, style.css | tests/test_giao_dien_ux2_khung.py | chỉ giao diện; kiem_nhanh 7/7 |

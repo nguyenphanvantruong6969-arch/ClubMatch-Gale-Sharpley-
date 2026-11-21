@@ -496,6 +496,52 @@ function feedbackErrors(node, errors) {
   ganChiTietKyThuat(node, errors);
 }
 
+/* UX2-L7 (#6): khung cho (skeleton) cho bang dang tai. CHI hien neu tai lau hon UX2_KHUNG_TRE_MS (nhanh thi khong chen
+   gi: khong nhap nhay) va chi khi tbody dang TRONG (bang con du lieu cu thi cu de du lieu cu). Hang khung aria-hidden,
+   bang aria-busy true -> false. `hoi` (promise cua lan tai) duoc gan then(ket, ket): go khung ca khi THANH CONG lan LOI /
+   bi tu choi (khong bao gio ket). Goi lan hai khi lan mot chua xong: huy khung cu, chi con MOT bo khung; lan tai cu ve
+   muon khong go nham khung moi (so khop `st`). caoHang (px, tuy chon) = chieu cao hang that de khung khong lam bang nhay. Chay xong thi nguoi goi tu ve du lieu hoac trang thai rong (L6). */
+const UX2_KHUNG_TRE_MS = 300;
+
+function hienKhungCho(tbody, soCot, soDong, hoi, caoHang) {
+  if (!tbody) return () => {};
+  const bang = tbody.closest("table");
+  if (tbody.__ux2Khung) tbody.__ux2Khung.go();
+  const st = {};
+  st.go = () => {
+    clearTimeout(st.hen);
+    tbody.querySelectorAll(".ux2-khung-hang").forEach((r) => r.remove());
+  };
+  st.hen = setTimeout(() => {
+    if (tbody.__ux2Khung !== st || tbody.children.length) return;
+    const cot = soCot || (bang ? bang.querySelectorAll("thead th").length : 0) || 1;
+    for (let i = 0; i < (soDong || 5); i += 1) {
+      const tr = document.createElement("tr");
+      tr.className = "ux2-khung-hang";
+      tr.setAttribute("aria-hidden", "true");
+      if (caoHang) tr.style.height = caoHang + "px"; /* bang co o nhap trong hang: hang that cao hon hang chu */
+      /* MOT o tran het chieu ngang (colspan): khung khong lam cot nao gian ra, nen tieu de cot dung yen y nhu luc bang trong. */
+      const td = document.createElement("td");
+      td.colSpan = cot;
+      const x = document.createElement("span");
+      x.className = "ux2-khung";
+      td.appendChild(x);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+  }, UX2_KHUNG_TRE_MS);
+  tbody.__ux2Khung = st;
+  if (bang) bang.setAttribute("aria-busy", "true");
+  const ket = () => {
+    if (tbody.__ux2Khung !== st) return;
+    st.go();
+    delete tbody.__ux2Khung;
+    if (bang) bang.setAttribute("aria-busy", "false");
+  };
+  if (hoi && typeof hoi.then === "function") hoi.then(ket, ket);
+  return ket;
+}
+
 /* UX2-L6 (#12): trang thai RONG co huong dan + MOT nut chinh (he nut L3). Tham so la KHOA i18n (khong chuoi co dinh) de
    ve lai theo ngon ngu khi langchange. cfg = {chu, thamSo, huongDan, nut: {nhan, quyen, tab, oId}}:
    chu = cau neu hien trang (giu cau cu cua trang thai rong, test cu van khop); huongDan = nen lam gi; nut = viec nen lam
