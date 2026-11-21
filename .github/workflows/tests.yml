@@ -31,15 +31,15 @@ jobs:
       - run: pip install "ruff>=0.6,<1"
       - run: ruff check .
 
-  # Bo test chia 4 phan chay song song (.github/chia_test.py, chia tat dinh theo kich thuoc tep):
+  # Bo test chia 6 phan chay song song (truoc: 4 phan, phan cham nhat ~26 phut) (.github/chia_test.py, chia tat dinh theo kich thuoc tep):
   # truoc day mot may chay noi tiep 51-73 phut. Moi phan ghi do phu rieng; job "do-phu" gop lai.
   test-linux:
-    name: Bo test day du + giao dien that (Linux ${{ matrix.phan }}/4)
+    name: Bo test day du + giao dien that (Linux ${{ matrix.phan }}/6)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4]
+        phan: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -64,7 +64,7 @@ jobs:
         run: |
           # Chi chay khi danh sach test hong cu CO tep thuoc phan nay. Truoc day: khi cac test hong cu
           # khong nam trong phan nay, pytest --lf chay LAI CA PHAN (mat 8-16 phut moi lan, vo ich).
-          TEP=$(python .github/chia_test.py ${{ matrix.phan }} 4)
+          TEP=$(python .github/chia_test.py ${{ matrix.phan }} 6)
           HONG=$(python .github/test_hong_cu.py $TEP)
           if [ -z "$HONG" ]; then echo "Khong co test hong cu trong phan nay: bo qua"; exit 0; fi
           # exit 5 = khong co test nao de chay lai: bo qua
@@ -72,7 +72,7 @@ jobs:
       - name: Chay test (kem do phu)
         env:
           COVERAGE_FILE: .coverage.phan${{ matrix.phan }}
-        run: python -m pytest -q --cov --cov-report= --cov-fail-under=0 $(python .github/chia_test.py ${{ matrix.phan }} 4)
+        run: python -m pytest -q --cov --cov-report= --cov-fail-under=0 $(python .github/chia_test.py ${{ matrix.phan }} 6)
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -109,12 +109,12 @@ jobs:
           python -m coverage report
 
   test-windows:
-    name: Bo test (Windows ${{ matrix.phan }}/4)
+    name: Bo test (Windows ${{ matrix.phan }}/6)
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4]
+        phan: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -131,4 +131,4 @@ jobs:
           pip install "pytest>=8.0,<10" "pillow>=10.0,<13" "python-docx>=1.1,<2"
       - name: Chay test
         shell: bash
-        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 4)
+        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 6)
