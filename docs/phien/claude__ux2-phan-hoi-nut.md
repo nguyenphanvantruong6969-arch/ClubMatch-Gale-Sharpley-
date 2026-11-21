@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L7, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L8, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -79,7 +79,7 @@ Lot L6 ✅ PASSED (checker NO BUGS, head 788709f, 1 fix round) — #12 guided em
       `adminClubEmptyState`, `adminStudentEmptyState`, `scoringPersonEmpty`, `clbEmpty` (+ others if cheap).
 - [x] Test: each shows guidance + ONE primary button; click goes to the right tab / focuses the right input;
       a `giao_vien` never sees an admin-only action (respect `data-quyen`).
-Lot L7 — #6 skeleton loading
+Lot L7 ✅ PASSED (checker NO BUGS, head b00b9e3) — #6 skeleton loading
 - [x] `hienKhungCho(tbody, soCot, soDong)` shown only if load > 300 ms (no flicker); `aria-busy` on the table;
       results table, admin student table, run history, admin club table.
 - [x] Test: slow API → skeleton after 400 ms, gone after data; fast API → never inserted (MutationObserver);
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f) passed.
-- In progress: L7 sent to coder (GO L7). Coder handoff file: __impl.md (kept same session per §2).
+- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f), L7 (b00b9e3) passed.
+- In progress: L8 sent to coder (GO L8). Coder handoff file: __impl.md (kept same session per §2).
 
 ## Sessions
 | Role | Model | Session id | Started | State |
