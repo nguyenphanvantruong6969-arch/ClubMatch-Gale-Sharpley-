@@ -77,7 +77,7 @@ def test_ham_ghi_la_quan_tri_ham_doc_la_giao_vien():
     for n in cac_ham_cong_khai():
         if n.startswith(("get_", "list_")) and n not in (
                 "get_phien_dang_nhap", "get_nhat_ky_thao_tac",
-                "get_tieu_chi", "list_lan_chay"):  # I1: danh sách so sánh lộ kết quả học sinh khác -> chỉ quản trị
+                "get_tieu_chi", "list_lan_chay", "get_muc_tieu"):  # MT1: thẻ mục tiêu chỉ quản trị; I1: danh sách so sánh lộ kết quả học sinh khác -> chỉ quản trị
             assert pq.QUYEN[n] != pq.QUAN_TRI, n
     # I1: GT1/GT2
     assert pq.QUYEN["get_giai_trinh_hoc_sinh"] == pq.GIAO_VIEN

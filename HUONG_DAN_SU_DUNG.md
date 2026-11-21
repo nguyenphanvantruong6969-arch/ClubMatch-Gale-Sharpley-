@@ -103,7 +103,7 @@ Bên trái là **bốn nhóm** (mỗi nhóm bấm một lần để vào thẻ �
 | | **Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
 | **3. Kết quả & phiếu** | **Kết quả** | Ô tìm to ở đầu trang để tra cứu một em (các việc về mã tra cứu gập vào **Mã tra cứu…**, chỉ quản trị), khối **Theo lớp và báo cáo** (chọn lớp, **Xuất theo lớp**, **Báo cáo tổng hợp**), rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Bảng không có điểm hay số bốc thăm |
 | | **Chi tiết và xuất tệp** | Tóm tắt, xuất tệp (hai nút chính + menu **Xuất…**), mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ, khung **Sau khi xếp** (chế độ huy chương) |
-| **Cài đặt và quản lý** | **Quản lý** | **Cài đặt** (một câu hỏi, ba thẻ: Chỉ xếp thứ tự / Chia 100 điểm / Huy chương), thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu; mục **Nâng cao** gập: tiêu chí xếp, thử cấu hình |
+| **Cài đặt và quản lý** | **Quản lý** | **Cài đặt** (hai câu hỏi, mỗi câu ba thẻ: Chỉ xếp thứ tự / Chia 100 điểm / Huy chương, và mục tiêu khi CLB đông người), thêm/sửa CLB, gán diện ưu tiên, xoá dữ liệu; mục **Nâng cao** gập: tiêu chí xếp, thử cấu hình |
 | | **Chuẩn bị đợt** | Chỉ hiện khi bật (chuẩn bị biểu mẫu) |
 
 Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự biến mất (giáo viên chỉ thấy nhóm 2 và 3 và vào thẳng **Kết quả**).
@@ -113,6 +113,20 @@ Nhóm không còn thẻ nào dành cho người đang đăng nhập thì tự bi
 **Phiếu giải trình và Báo cáo tổng hợp.** Phiếu in của một em (và thẻ tra cứu trên màn hình, cùng chữ) có: dòng tóm tắt ("Em có 2/3 buổi: CLB A (Thứ 4), CLB B (Thứ 6)." hoặc "Em chưa có CLB ở buổi nào."), bảng nguyện vọng với cột **Điểm thi**, **Chỗ đã nhận / tối đa**, **Mức vào được** (một số điểm, hoặc "Chọn ngẫu nhiên khi bằng điểm"), bảng **Điểm các CLB em đã thi** có thanh so với mức vào được (chỉ CLB em đã thi), và khối **Em nên làm gì tiếp** khi một buổi chưa có chỗ (chỉ nêu tính năng đang bật, luôn kèm "hỏi giáo viên phụ trách"). Ở chế độ huy chương có thêm cột **Huy chương** (huy chương em đã đặt cho từng CLB) và một câu chú giải. Thẻ của học sinh không hiện số khoá bốc thăm. **Báo cáo tổng hợp** (nút ở khối **Theo lớp và báo cáo**, giáo viên cũng dùng được) ghi một tệp HTML cho ban giám hiệu: số học sinh, mức lấp đầy từng CLB, mức hài lòng về nguyện vọng, số học sinh chưa có chỗ theo lớp; không có tên, mã, điểm hay số bốc thăm; nếu dữ liệu sửa sau lần xếp, báo cáo nói kết quả có thể đã cũ. Nút in phiếu cả lớp và phiếu PDF nằm ở mục xuất PDF riêng.
 
 **Cài đặt là một câu hỏi:** "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?" Bấm một thẻ là lưu ngay (có **Hoàn tác** 10 giây; lần xếp đã có giữ nguyên, lần chạy sau dùng cách mới). **Huy chương** cần dữ liệu CLB sẵn sàng: thiếu loại CLB hay thiếu CLB Tự do ở một buổi thì thẻ liệt kê đúng chỗ thiếu để sửa tại chỗ. Sổ có cột Huy chương mà đang ở cách khác thì phần xem trước nói rõ và có nút **Bật chế độ huy chương**; ô huy chương của sổ nhận cả Vàng / Bạc / Đồng lẫn 60 / 30 / 10. **Tải sổ nhập mẫu** có hai bản: sổ thường và sổ có huy chương.
+
+### Chọn mục tiêu
+
+Ngay dưới câu hỏi đầu ở **Cài đặt** có câu hỏi thứ hai: **"Khi một CLB đông người, trường ưu tiên điều gì?"** Bấm một trong ba thẻ là xong, không có nút Lưu; thông báo hiện ra có nút **Hoàn tác** trong 10 giây (hoàn tác trả lại cả cách xếp lẫn số chỗ giữ của từng CLB).
+
+- **Theo năng lực** (mặc định): xếp theo điểm thi; bằng điểm thì xét điểm quyết tâm (nếu đang dùng "Chia 100 điểm" hoặc huy chương); vẫn bằng thì bốc thăm. CLB không thi thì bỏ bước điểm thi, bắt đầu từ điểm quyết tâm rồi bốc thăm. Khi chọn "Chỉ xếp thứ tự", CLB không thi là bốc thăm thuần.
+- **Cơ hội như nhau**: mọi học sinh bốc thăm, không xét điểm thi. Đang ở "Chia 100 điểm" thì phần mềm tự tắt điểm chia và ghi "Điểm chia không được dùng với mục tiêu này."; Hoàn tác bật lại, và khi chuyển sang thẻ khác (nếu chưa sửa tay gì) điểm chia cũng tự bật lại. Đang ở chế độ huy chương thì thẻ này bị khoá (huy chương cần điểm thi), lý do ghi ngay dưới thẻ.
+- **Dành chỗ cho một nhóm**: giữ một số chỗ ở mỗi CLB cho một nhóm, ví dụ khối 10. Số chỗ giữ tính theo tỉ lệ của nhóm trong danh sách học sinh. Chỉ có một nhóm thì tự chọn (1 lần bấm); có nhiều nhóm thì bấm thẻ rồi bấm tên nhóm (2 lần bấm). Sổ nhập chưa có cột nhóm thì thẻ bị khoá.
+
+Dưới thẻ có MỘT dòng nói điều sẽ xảy ra. Trước lần xếp đầu tiên: thứ tự xét bằng lời. Sau đó: "Ước tính so với lần xếp gần nhất: … học sinh được chỗ tốt hơn, … học sinh xuống nguyện vọng sau" — chỉ là ước tính, kết quả đã xếp không đổi. Dòng vàng báo khi CLB chỉ giữ 1–2 chỗ (quá ít để đổi được kết quả) hoặc khi nhóm chưa bị thiệt hơn các nhóm khác. **Xem từng CLB** mở số chỗ giữ ở mỗi CLB.
+
+Sau khi xếp, ở **Chi tiết và xuất tệp** có MỘT dòng kết quả, ví dụ: "Mục tiêu: Dành chỗ cho khối 10 — đạt ở 5/5 CLB được chọn nhiều nhất · 23 học sinh được giúp · 26 học sinh nhường chỗ." (số minh hoạ). *Nhường chỗ* là học sinh có chỗ kém hơn so với khi không dùng mục tiêu. Số từ 1 đến 4 hiện là "dưới 5" để không ai nhận ra được từng người. Dòng này chỉ hiện khi lần xếp theo đúng mục tiêu đang chọn.
+
+Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xám "Đang dùng cài đặt riêng" và, nếu trước đó đã chọn một thẻ, nút **Về mục tiêu mẫu** (1 lần bấm) đưa về thẻ đó. Chỉ quản trị thấy phần này, giáo viên không thấy.
 
 **"Chấm điểm mù" nghĩa là gì:** màn hình chấm điểm **chỉ hiện mã và họ tên**. Nó
 không hiện số bốc thăm, cũng không hiện em đó xếp CLB này là nguyện vọng thứ

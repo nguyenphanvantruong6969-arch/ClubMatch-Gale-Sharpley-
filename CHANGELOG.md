@@ -69,6 +69,139 @@
 - `docs/phien/claude__ux2-phan-hoi-nut.md`: mục tiêu, quyết định, kế hoạch 9 lượt (L1 nút bận + chống bấm đúp → L2 dấu ✓ → L3 vùng bấm 44 px, vòng focus, lớp trạng thái → L4 lỗi tại ô → L5 thanh 4 pha → L6 trạng thái rỗng → L7 khung chờ → L8 chuyển cảnh → L9 tài liệu), tiêu chí kiểm nhận đo được.
 - `docs/phien/UX2_GIAO_THUC.md`: giao thức lead / coder / checker, rủi ro, phương án lùi. Chưa đổi mã sản phẩm.
 
+## 2026-11-21 — CI: tăng tốc bộ test Windows (ngoài sổ đăng ký, Truong yêu cầu)
+
+- `.github/workflows/tests.yml`: Linux 4 → 6 và Windows 2 → 6 phần song song (`chia_test.py`), thêm `cache: pip` (Windows + Linux). Bước chạy lại test hỏng (`--lf`) trên Linux chỉ chạy khi phần đó thật sự có test hỏng cũ (`.github/test_hong_cu.py` mới) — trước đây pytest chạy lại CẢ PHẦN khi test hỏng cũ nằm ở phần khác (mất 8–16 phút mỗi phần).
+- `.github/workflows/build-windows-exe.yml`: job test chia 6 phần song song (trước: 72 phút nối tiếp; mục tiêu cả lượt ~15–17 phút) thay vì chạy nối tiếp cả bộ; job build vẫn chờ cả 4 phần xanh. Không bỏ/giảm test nào.
+- `pytest-xdist` (Truong đồng ý 2026-11-21, chỉ cho test — không vào `requirements-build.txt`): mọi phần CI chạy `-n auto` (4 nhân/máy). `chia_test.py` chia theo thời gian đo (`.github/thoi_gian_test.json`, tạo bằng `.github/do_thoi_gian_test.py`; thiếu thì ước theo kích thước); `--windows` coi 108 tệp giao diện (bị bỏ qua trên Windows) gần 0. Tệp NHẠY THỜI GIAN (117: giao diện Chromium + 4 tệp đo tốc độ có ngưỡng giây) chạy tuần tự ở bước riêng (`--tuan-tu`), vì chạy song song làm chúng hỏng giả (CI 44866898234: 5 hỏng, ngưỡng 30 s đo ra 42–67 s). Không hạ ngưỡng, không bỏ test. Số đo thời gian lấy THẬT từ CI (mỗi job in dòng `THOI_GIAN_TEP_JSON`): `.github/thoi_gian_test.json` (Linux, 359 tệp) và `.github/thoi_gian_test_windows.json` (Windows, 247 tệp). Windows 9 phần (GitHub chạy cùng lúc ~15 job; 6 Linux + 9 Windows + lint = 16). Kết quả: CI 42–75 phút → 14 phút (run 44869841085, 44871202387), mục tiêu ~10.
+
+## 2026-11-21 — MT1-X1-L3 sửa (CI đỏ): số tệp test trong bản đồ mã
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã", dòng `tests/`): 357 → 360 tệp `test_*.py`. Nhánh nền `claude/mt1-bang-loai-clb` đã có 359 tệp (con số cũ lỗi thời từ trước), MT1-X1 thêm `tests/test_mt1_x1_xuat_so_nhap.py` thành 360. Test `test_ban_do_ma_so_tep_test_la_so_that` không đổi.
+
+## 2026-11-21 — MT1-X1-L3: kiểm chứng và tài liệu
+
+- D5 (MÔ PHỎNG, so SHEET + MỌI Ô, không so byte zip): xuất Sổ nhập từ `SO_NHAP_DQT_120HS_HOP_LE.xlsx`, `SO_NHAP_MAU_120HS_3BUOI.xlsx`, `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (nạp vào workspace thường) bằng mã cũ (`f809b3f`, trước L1) và mã mới: cả ba trùng khít (sheet `1. CLB`, `2. Học sinh`, `Hướng dẫn`; không cột FA, không sheet "Giữ chỗ"). `match_results` 3 bộ × 5 seed: `kiem_nhanh.py` `trung_khit` đạt (bộ giải không đụng).
+- `api_xuat.py`: docstring `export_du_lieu_dau_vao` nêu cột FA, cổng sheet "Giữ chỗ", và việc không truyền `che_do_fa` (D3: có thể thành mục riêng sau). Không đổi hành vi.
+
+## 2026-11-21 — MT1-X1-L2: Sổ nhập xuất ra mang sheet "Giữ chỗ"; khứ hồi đủ năm loại dữ liệu
+
+- `api_xuat.py` (`export_du_lieu_dau_vao`): đọc bảng `giu_cho` (ORDER BY club_id, student_id) trong cùng khối `_ket_noi_doc()` và truyền `giu_cho=` cho `ghi_so_nhap` CHỈ KHI FA bật; FA tắt thì không có sheet (bước nạp bỏ qua sheet đó). Bảng rỗng + FA bật → sheet chỉ có tiêu đề (nạp lại = không giữ chỗ nào). `_du_lieu_so_nhap` giữ nguyên bộ trả về 4 giá trị (D4). Không đổi schema, CSV, i18n, giao diện.
+- `tests/test_mt1_x1_xuat_so_nhap.py` (+3 ca, đỏ trước khi sửa): khứ hồi `loai, diem_san, so_toi_thieu, suc_chua_phong` và tập `giu_cho`; sheet "Giữ chỗ" chỉ khi FA bật và rỗng thì chỉ có tiêu đề; giữ chỗ của học sinh không có nguyện vọng vẫn khứ hồi.
+
+## 2026-11-21 — MT1-X1-L1: Sổ nhập xuất ra mang cột FA của CLB (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng)
+
+- `api_xuat.py` (`_du_lieu_so_nhap`): thêm bốn khoá `so_nhap.KHOA_FA` vào từng CLB CHỈ KHI chế độ FA bật HOẶC có CLB đã khai một trong bốn cột; không thì không thêm khoá nào, nên Sổ nhập chế độ thường y như cũ (bất biến 1, 7). Không đổi schema, cột CSV, i18n, giao diện.
+- `tests/test_mt1_dong_bo_loai_clb.py`: bỏ `xfail(strict=True)` của `test_xuat_so_nhap_mang_loai_va_diem_san_hien_tai` (đỏ trước khi sửa, xanh sau).
+- `tests/test_mt1_x1_xuat_so_nhap.py` (mới): chế độ thường không thêm cột và mọi ô mọi sheet bằng đường cũ; FA bật + loại NULL → cột có, ô trống, nạp lại ra NULL; FA tắt nhưng một CLB có loại → cột có, khứ hồi vào CSDL FA bật giữ nguyên (nạp vào CSDL FA tắt thì bước nạp bỏ qua cột Loại, hành vi có sẵn).
+- Ghi chú D3: xuất không truyền `che_do_fa=True` (sẽ đổi tên cột huy chương và Hướng dẫn); có thể là mục riêng sau. Còn lại: L2 (sheet "Giữ chỗ").
+
+## 2026-11-21 — MT1 (gom): kiểm đồng bộ loại CLB / điểm sàn (giao diện ↔ CSDL ↔ lần chạy ↔ Excel)
+
+- `tests/test_mt1_dong_bo_loai_clb.py` (mới, chỉ backend): (1) `dat_loai_clb` ghi vào CSDL, bảng Quản lý (`list_clubs_admin`), `get_san_sang_huy_chuong` và lần chạy đều đọc đúng giá trị vừa đặt (thiếu loại thì lần chạy bị chặn); (2) nạp lại sổ CÓ cột Loại / Điểm sàn ghi đè giá trị đặt tay; (3) ô Loại để trống xoá về NULL; (4) sổ KHÔNG có các cột đó giữ nguyên giá trị đã đặt.
+- Lỗ hổng ĐÃ ĐO, chưa sửa (ghi bằng `xfail(strict=True)`): `export_du_lieu_dau_vao` (`_du_lieu_so_nhap` trong `api_xuat.py`) không chọn `loai` / `diem_san`, nên Sổ nhập xuất ra thiếu cột Loại, Điểm sàn; nạp vào CSDL trống thì mất loại, trái với lời hứa "dựng lại y nguyên" trong docstring. Cần mục riêng để sửa (đụng hợp đồng cột của Sổ nhập, bất biến 7).
+- Đã chạy: 196 ca liên quan đạt, 1 xfail có chủ ý; `ruff` sạch.
+
+## 2026-11-21 — MT1 (gom): chữ "i" nhỏ giải thích mục đích từng loại CLB
+
+- `js/18_cai_dat.js`, `i18n.js` (vi + en), `style.css`: thay ba dòng giải thích luôn hiện bằng hàng "Các loại: Tự do (i) Giới hạn (i) Tuyển chọn (i)"; đưa chuột vào chữ "i" (hoặc focus bàn phím / chạm) thì hiện mục đích của loại đó. Chữ có trong DOM (`aria-label` + `role="tooltip"`) nên trình đọc màn hình đọc được. Nội dung bám đúng `fa_daa.py` / `uu_tien_wharton` (Tự do không từ chối ai và là chỗ xếp cho em chưa trúng; Giới hạn bỏ điểm thi, xếp theo huy chương rồi bốc thăm; Tuyển chọn lọc điểm sàn rồi xếp theo điểm thi).
+- `tests/test_giao_dien_mt1_bang_loai.py`: ca `test_chu_i_nho_hien_muc_dich_tung_loai_khi_dua_chuot_hoac_focus` (đỏ trước khi dựng). 40 ca liên quan đạt, `ruff` sạch, `soat-ma` kiem_nhanh 7/7.
+
+## 2026-11-21 — MT1 (gom): khối "Để dùng Huy chương" ở Cài đặt dựng lại thành BẢNG đặt loại CLB
+
+- `js/18_cai_dat.js` (`ux1aVeSanSang`): mỗi CLB một dòng, ba nút Tự do / Giới hạn / Tuyển chọn có trạng thái chọn (`aria-pressed`), điểm sàn của Tuyển chọn nhập ngay tại dòng, nhóm theo buổi kèm dấu "Đã có / Cần ít nhất một CLB Tự do", bộ đếm "Đã chọn loại: x/y", ba câu giải thích loại; bỏ ô chọn xổ xuống (trùng với nút Tự do). Sau mỗi lần lưu vẽ lại từ dữ liệu đã lưu và trả tiêu điểm về ô vừa bấm. Vẫn lưu qua `dat_loai_clb`; không đổi backend, CSV hay schema.
+- `i18n.js` (vi + en): `ux1a_ss_con_thieu` đổi chữ; thêm `ux1a_ss_dem`, `ux1a_ss_gt_*`, `ux1a_ss_buoi_*`; bỏ `ux1a_ss_chon_tu_do`, `ux1a_ss_thieu_tu_do`. `style.css`: `.ux1a-ss-*`.
+- Tests: `tests/test_giao_dien_mt1_bang_loai.py` (mới, 6 ca; đỏ trước khi dựng); `tests/test_giao_dien_ux1_cai_dat.py` (ca cũ giả định dòng biến mất và có ô xổ xuống, cập nhật theo bảng). 66 ca liên quan đạt; `ruff` sạch. Chưa chạy cả bộ.
+- Nhánh `claude/mt1-bang-loai-clb` (từ `claude/pensive-turing-s02bgi` @ 6c97791); handoff `docs/phien/claude__mt1-bang-loai-clb.md`.
+
+## 2026-11-21 — MT1 sửa đồng bộ: đặt loại CLB tại chỗ làm tươi bảng CLB và thanh "Việc tiếp theo"
+
+- `js/18_cai_dat.js` (`luu` trong `ux1aVeSanSang`, dùng cho nút Tự do / Giới hạn / Tuyển chọn, ô điểm sàn và ô chọn CLB Tự do của buổi): sau `dat_loai_clb` thành công gọi thêm `loadAdminClubs()` và `capNhatViecTiepTheo()`. Trước đây chỉ khối "còn thiếu" vẽ lại, cột "Loại" của bảng CLB cũ cho tới khi tải lại trang. Không đổi backend, không thêm đường lưu.
+- `tests/test_giao_dien_mt1.py`: ca `test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai` (đỏ trước khi sửa vì ô "Loại" vẫn "—"; xanh sau sửa).
+- Đã chạy: `test_giao_dien_mt1.py` + `test_giao_dien_ux1_cai_dat.py` 42 đạt; `ruff check .` sạch. Chưa chạy cả bộ test.
+
+## 2026-11-21 — MT1 sửa chữ: mô tả thẻ "Theo năng lực" cho đúng thứ tự xếp thật
+
+- `muc_tieu.py` (`BO_MUC_TIEU["nang_luc"]["cau"]`), `i18n.js` (`mt1_the_nang_luc_mt`, vi + en), `HUONG_DAN_SU_DUNG.md`: câu cũ "CLB không thi bốc thăm công bằng" sai khi đang dùng "Chia 100 điểm" / huy chương, vì `khoa_uu_tien_wharton` xét điểm quyết tâm TRƯỚC số bốc thăm (tầng 2: `(1, -w2, stb, sid)`). Câu mới: điểm thi, rồi điểm quyết tâm (nếu có), cuối cùng bốc thăm.
+- Chỉ đổi chữ hiển thị; không đổi luật xếp, không đổi kết quả. Test: `tests/test_mt1_muc_tieu.py`, `tests/test_i18n_sync.py` (40 ca đạt).
+
+## 2026-11-20 — MT1 CI-fix2: khối mục tiêu chỉ hiện khi đã có dữ liệu; bỏ phản hồi cũ về muộn
+
+- `js/19_muc_tieu.js`: khối câu hỏi mục tiêu ẩn cho tới khi `get_muc_tieu` trả về (trước đó hiện ba thẻ còn bấm được mà chưa biết thẻ nào bị khoá — khoảng hở cho người dùng bấm nhầm, và cho kiểm tra "thẻ bị khoá" đọc quá sớm khi máy chậm); `lamMoi` bỏ phản hồi `get_muc_tieu` cũ về muộn (đếm lần hỏi, như `viecTiepTheoLanGoi`).
+- `tests/test_giao_dien_mt1.py`: ca "Chia 100 điểm → Cơ hội như nhau" đợi đúng điều kiện cuối (dòng tác động có câu ghi chú) trước khi so; khẳng định giữ nguyên.
+- Nguyên nhân gốc: khối hiện sớm hơn trạng thái khoá (cặp 1–2) và dòng tác động vẽ sau thông báo (cặp 3). Tái hiện cục bộ bằng chạy 12 bản song song: trước sửa 4/12 hỏng, sau sửa 0/12; cả tệp 6 bản song song 26/26.
+
+## 2026-11-20 — MT1 CI-fix1: mã `mt_*` đăng ký ở bản chụp lỗi; thanh "Việc tiếp theo" không còn chạy đua với danh sách cảnh báo
+
+- `tests/test_ws_nhan.py`: tiền tố `mt_` (MT1) vào danh sách tiền tố mã lỗi mới sau ảnh chụp, như `gt3_` / `xp1_`; phép so từng chữ giữ nguyên.
+- `js/02_van_hanh.js` (`loadHealthReport`) + `js/17_viec_tiep_theo.js` (`capNhatViecTiepTheo` trả promise): danh sách cảnh báo chỉ hiện SAU khi thanh "Việc tiếp theo" đã có trạng thái. Nguyên nhân gốc (có sẵn từ trước, không do MT1: bản `main` cũng hỏng 3/14 lần khi máy bận): thanh còn chờ thêm hai lời gọi (`get_dashboard_status`, `get_em_chua_co_cho`) SAU khi danh sách đã hiện, nên nơi đọc (và `test_r1_canh_bao_huy_chuong…`) thấy danh sách mà `data-trang-thai` còn trống. Sau sửa: 0/14 lần hỏng ở cùng điều kiện (trước 4/14).
+
+## 2026-11-20 — MT1 fix3 (L2 + L4): rời "Cơ hội như nhau" trả lại "Chia 100 điểm"; câu hỏi đầu chạy theo thẻ
+
+- `cau_hinh_ws.py` (`_kiem_muc_tieu`): khoá tuỳ chọn `muc_tieu.wharton_truoc` (bool) = "Chia 100 điểm" đang bật TRƯỚC khi `co_hoi` tắt nó. `api_muc_tieu.py` (`_ke_hoach`): vào `co_hoi` thì nhớ; áp lại `co_hoi` giữ nguyên; rời `co_hoi` sang thẻ khác khi chưa sửa tay (không phải `tuy_chinh`) thì trả `rules.wharton` (không chạm `fa_daa`), không thêm ghi chú; `bao_cao_muc_tieu`: mốc "không dùng thẻ" của `co_hoi` gồm cả điểm chia đã nhớ. Hoàn tác giữ nguyên ngữ nghĩa (gói có cả `muc_tieu`).
+- `js/18_cai_dat.js` + `js/19_muc_tieu.js`: câu hỏi đầu vẽ lại từ cấu hình đã lưu sau mỗi lần chọn / hoàn tác / "Về mục tiêu mẫu" (dấu ✓ chuyển sang "Chỉ xếp thứ tự" và trở lại).
+- `HUONG_DAN_SU_DUNG.md`: câu về điểm chia nói cả Hoàn tác lẫn chuyển thẻ.
+- Test: 6 ca mới ở `tests/test_mt1_api.py`, 1 ở `tests/test_mt1_uoc_tinh.py`, 1 ở `tests/test_giao_dien_mt1.py` (26 ca).
+
+## 2026-11-20 — MT1-L4 fix2: "Dành chỗ" nhiều nhóm không giả vờ đã lưu
+
+- `js/19_muc_tieu.js`: bấm thẻ "Dành chỗ" khi có nhiều nhóm chỉ mở các nút nhóm (tiêu điểm nhảy tới nút đầu; thẻ có `aria-expanded`, viền nét đứt, KHÔNG ✓, `aria-checked` giữ false). Thẻ đã lưu giữ dấu ✓, dòng tác động và thông báo của nó cho tới khi bấm một nhóm (bấm thứ hai mới lưu, rồi mới ✓ + thông báo + ước tính). Bấm thẻ khác hoặc chính thẻ đã lưu thì nút nhóm biến mất. `style.css`: `.ux1a-the.is-cho`.
+- Test: `tests/test_giao_dien_mt1.py` 25 ca (sửa ca hai lần bấm, thêm ca bấm thẻ khác khi đang chờ).
+
+## 2026-11-20 — MT1-L5 fix1: hướng dẫn nói đúng khi nào có nút "Về mục tiêu mẫu"
+
+- `HUONG_DAN_SU_DUNG.md`: nút chỉ có nếu trước đó đã chọn một thẻ; ví dụ số ghi "(số minh hoạ)".
+
+## 2026-11-20 — MT1-L5 (phần tài liệu): hướng dẫn "Chọn mục tiêu"
+
+- `HUONG_DAN_SU_DUNG.md` (mục 4): đoạn "Chọn mục tiêu" (ba thẻ, một/hai lần bấm, Hoàn tác, ghi chú điểm chia, khoá khi huy chương, dòng tác động, dòng kết quả, "dưới 5", dòng xám "cài đặt riêng"); bảng nhóm "Cài đặt và quản lý" nói hai câu hỏi. Bản đồ mã (`CLAUDE_CHI_TIET.md`) đã có `muc_tieu.py`, `muc_tieu_do.py`, `api_muc_tieu.py`, `js/19_muc_tieu.js`. Chưa viết bản đánh giá của lead (§5).
+
+## 2026-11-20 — MT1-L4 fix1: dòng "đã theo mục tiêu", ghi chú ở trình tạo workspace, thông báo cũ, câu cảnh báo
+
+- `js/19_muc_tieu.js`: ước tính 0/0 nay nói kết quả ("Không học sinh nào đổi chỗ so với lần xếp gần nhất."; khoá `mt1_khong_doi` thay `mt1_da_theo`, vì lần xếp trước có thể dùng luật khác); lần chọn thẻ mới đóng thông báo "Đã chuyển sang…" cũ, Hoàn tác luôn là của lần mới nhất.
+- `js/075_workspace.js` (bước 3): chọn "Cơ hội như nhau" khi đang "Chia 100 điểm" hiện cùng dòng "Điểm chia không được dùng với mục tiêu này." (`#wzMtGhiChu`).
+- `i18n_errors.py` (`mt_khong_co_khoang_cach`): câu rõ hơn, "Lần xếp gần nhất chưa thấy nhóm này bị thiệt hơn các nhóm khác, nên có thể chưa cần giữ chỗ." (câu do lead chốt)
+- "Xem từng CLB" vốn đã thu gọn sẵn (ảnh cũ do script chụp mở ra); đã có test canh. Test: `tests/test_giao_dien_mt1.py` 24 ca (+3, sửa 2); ảnh làm mới ở `docs/phien/anh_mt1/`.
+
+## 2026-11-20 — MT1-L4: giao diện ba thẻ mục tiêu
+
+- Mới: `js/19_muc_tieu.js` (`mt1TaoCauHoi`, `mt1VeKetQua`, `mt1NhanNhom`; nạp trong `index.html`, `js/_danh_sach.txt`, `initMucTieu` ở `js/08_khoi_dong.js`). Câu hỏi thứ hai ở Cài đặt, "Khi một CLB đông người, trường ưu tiên điều gì?", đặt ngay dưới câu hỏi đầu, vẽ bằng CÙNG thành phần `ux1aTaoThe` (thêm tham số `bo`, `khoaCauHoi`, `moiTheTab`; lưới thẻ có `id`); thay dòng "Cách xét khi đông" (`ux1aVeCachXet` bỏ), "Thay đổi…" nằm dưới câu hỏi mới. 1 lần bấm (`nang_luc`, `co_hoi`, `danh_cho` một nhóm), 2 lần (nhiều nhóm: bấm thẻ hiện nút nhóm đọc được "khối 10", bấm nhóm mới lưu). Lưu ngay, thông báo "Đã chuyển sang …" + Hoàn tác 10 giây (luật VÀ chỗ giữ từng CLB), ghi chú "Điểm chia không được dùng với mục tiêu này." khi `co_hoi` tắt điểm chia. Một dòng tác động (lời trước lần xếp đầu; "Ước tính so với lần xếp gần nhất…" sau đó; "dưới 5" từ `{n: null, duoi_5: true}`), `<details>` "Xem từng CLB", cảnh báo vàng mỗi loại một dòng, lý do khoá một dòng (huy chương / không có cột nhóm), dòng xám "Đang dùng cài đặt riêng · Về mục tiêu mẫu".
+- Dòng kết quả `#mt1KetQua` ở thẻ "Chi tiết và xuất tệp" (`index.html`, gọi từ `loadTomTatKetQua` ở `js/03_ket_qua.js`): một dòng + `<details>`; không có số được giúp / nhường chỗ khi backend không so được; ẩn khi lần xếp không theo thẻ hiện tại. Giáo viên không thấy (`data-quyen`, và JS không gọi).
+- `js/075_workspace.js` (bước 3 trình tạo workspace): cùng câu hỏi, cùng thành phần; hai thẻ đặt ô "Thứ tự ưu tiên", "Dành chỗ" khoá (chưa có danh sách học sinh).
+- `i18n.js`: khoá `mt1_*` (vi + en, qua nhãn `{person_l}`, `{slot_s}`; không "dự trữ", "STB", "Wharton", "tier"); `style.css`: lớp `.mt1-*` (chữ ≥ 14px, nút ≥ 36px, vòng tiêu điểm 3px) chỉ thêm, không đổi lớp cũ.
+- Test: `tests/test_giao_dien_mt1.py` (22 ca, Chromium); `tests/test_giao_dien_ux1_cai_dat.py` bỏ khẳng định dòng "Cách xét khi đông". Ảnh trước/sau: `docs/phien/anh_mt1/`.
+
+## 2026-11-20 — MT1-L3 fix1: báo cáo không bịa "0 em được giúp" khi thiếu chỗ giữ ban đầu
+
+- `api_muc_tieu.py` (`bao_cao_muc_tieu`): thẻ `danh_cho` mà `muc_tieu.truoc` thiếu hoặc rỗng thì `co_so_sanh` = False, bỏ `duoc_giup` / `nhuong_cho` / `nhom_duoc_giup` / `an_toan_truoc`; vẫn có `dat` và `an_toan`. Test: 2 ca trong `tests/test_mt1_uoc_tinh.py`.
+
+## 2026-11-20 — MT1-L3: ước tính và dòng kết quả của thẻ mục tiêu (chỉ đọc)
+
+- Mới: `muc_tieu_do.py` (phép đo thuần: `an_so` ẩn số 1–4 thành "dưới 5", `so_sanh_hang`, `dat_o_clb`, `co_khoang_cach`, `pct_nguyen_vong_1`…). `api_muc_tieu.py`: `uoc_tinh_muc_tieu(muc_tieu, nhom)` (thẻ GIẢ ĐỊNH chưa áp; giải trong bộ nhớ với bộ số đã khoá, so với lần chính thức mới nhất; chưa có lần xếp thì chỉ có lời; huy chương → `mt_uoc_tinh_fa`) và `bao_cao_muc_tieu(run_id)` (đạt ở mấy CLB được chọn nhiều nhất, em được giúp / nhường chỗ so với cùng dữ liệu không dùng thẻ, nguyện vọng 1, chưa có chỗ). Cả hai không ghi bảng nào, không sao lưu, không gọi `run_thu`; chỉ quản trị, không vào nhật ký (hàm đọc).
+- `api_tieu_chi.py`: tách `_giai_trong_bo_nho` ra khỏi `_run_thu_da_khoa` (không đổi hành vi; thêm `sao_luu=False`, `sua_clb`).
+- Mã mới `mt_cho_it`, `mt_khong_co_khoang_cach`, `mt_uoc_tinh_fa`, `mt_chua_co_ket_qua` (cuối `i18n_errors.py`, `i18n_loi.js` sinh lại); `phan_quyen.py`, `nhat_ky.py` (`_KHONG_GHI`).
+- Test: `tests/test_mt1_uoc_tinh.py` (31 ca: tính tay 10/10 và 3/3, tổng kiểm mọi bảng trước/sau, nhiều buổi, lần chạy thử không làm mốc, dòng kết quả khớp hai lần chạy thật); `tests/test_mt1_api.py` thêm ca rò rỉ với `co_hoi` (luật ghi lịch sử và dấu vân tay y hệt khi không có `muc_tieu`).
+
+## 2026-11-20 — MT1-L2: API ba thẻ mục tiêu (chỉ quản trị)
+
+- Mới: `api_muc_tieu.py` (`MucTieuMixin`: `get_muc_tieu`, `chon_muc_tieu`, `hoan_tac_muc_tieu`); gắn vào `PipelineAPI`. Chọn thẻ = MỘT giao dịch (luật + khoá `muc_tieu` + chỗ giữ của CLB), sao lưu trước, không chạy xếp, không đụng `run_history` / `match_results` / `stb_lock`. Hoàn tác trả đúng luật, `muc_tieu` và từng CLB; rời thẻ "Dành chỗ" thì trả chỗ giữ nhập ban đầu.
+- `cau_hinh_ws.py`: khoá cấp trên TUỲ CHỌN `muc_tieu` `{id, nhom, truoc?}` (`_kiem_muc_tieu`; không có thì cấu hình y như cũ, nằm ngoài `rules` nên không vào `luat_xep` / dấu vân tay); `ghi_cau_hinh(..., cung_giao_dich=f)` chạy `f(conn)` trong cùng giao dịch, lỗi thì rollback cả hai. `workspace.py` (`luu_mau`): mẫu không mang `muc_tieu`.
+- `muc_tieu.py`: thẻ `danh_cho` đặt lại cả `tiers=[]` và `score_scope=per_slot` (thẻ sáng lại sau khi luật từng bị sửa tay).
+- `co_hoi`: huy chương bật → lỗi `mt_the_can_diem`; "Chia 100 điểm" bật → chạy được, `wharton` tự tắt theo luật nhất quán sẵn có của `cau_hinh_ws`, kèm ghi chú `mt_diem_chia_khong_dung`, Hoàn tác trả lại.
+- `phan_quyen.py` (ba hàm, cả hàm đọc, chỉ quản trị), `i18n.js` (`nkhd_chon_muc_tieu`, `nkhd_hoan_tac_muc_tieu`), `i18n_errors.py` (tám mã `mt_*` ở cuối) + `i18n_loi.js` sinh lại.
+- Test: `tests/test_mt1_api.py` (28 ca, viết trước); `tests/test_gt3_phan_quyen.py` thêm `get_muc_tieu` vào danh sách hàm đọc chỉ quản trị.
+
+## 2026-11-20 — MT1-L1: danh mục ba thẻ mục tiêu (phần thuần)
+
+- Mới: `muc_tieu.py` (`BO_MUC_TIEU`, `rules_cua_muc_tieu`, `nhan_dien_muc_tieu`, `de_xuat_cho_giu`, `cac_nhom`). Chỉ đặt khoá của `LUAT_XEP_MAC_DINH`, không chạm `wharton`/`fa_daa`; số chỗ giữ = `ceil(tỉ lệ nhóm × sức chứa)` chỉ đọc danh sách học sinh. Chưa nối vào API/giao diện (L2, L4).
+- Test: `tests/test_mt1_muc_tieu.py` (bản vá qua `_chuan_hoa`, mặc định ⇒ `nang_luc`, công thức ca 10 em tính tay, `co_hoi` = bốc thăm thuần so với Gale–Shapley viết riêng, 2 bộ × 3 seed). Số liệu MÔ PHỎNG.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: bản đồ mã thêm `muc_tieu.py`, số tệp test 354.
+
+## 2026-11-20 — MT0 (mục mới MT, ngoài sổ; mục cha C3/A1): nghiên cứu mục tiêu giáo dục (chỉ đo)
+
+- Mới: `du_lieu_test/do_muc_tieu_mt0.py` (gọi `run_rbda`, `verify_stability` thật; 3 kịch bản × 20 seed), `docs/fable/08_MT0_MEMO.md`.
+- Không đổi mã sản phẩm, không test mới. Số liệu MÔ PHỎNG.
+
 ## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã"): số tệp test 344 → 353 (đếm `tests/test_*.py`), thêm các nhóm XP1 và UX1I; dòng `bao_cao_tong_hop.py` ghi `dung_pdf` và `export_bao_cao_tong_hop_pdf`.

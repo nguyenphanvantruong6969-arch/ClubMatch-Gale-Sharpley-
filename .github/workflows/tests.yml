@@ -31,20 +31,21 @@ jobs:
       - run: pip install "ruff>=0.6,<1"
       - run: ruff check .
 
-  # Bo test chia 4 phan chay song song (.github/chia_test.py, chia tat dinh theo kich thuoc tep):
+  # Bo test chia 6 phan chay song song (truoc: 4 phan, phan cham nhat ~26 phut) (.github/chia_test.py, chia tat dinh theo kich thuoc tep):
   # truoc day mot may chay noi tiep 51-73 phut. Moi phan ghi do phu rieng; job "do-phu" gop lai.
   test-linux:
-    name: Bo test day du + giao dien that (Linux ${{ matrix.phan }}/4)
+    name: Bo test day du + giao dien that (Linux ${{ matrix.phan }}/6)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4]
+        phan: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
       - name: Cai goi
         run: pip install -r requirements-dev.txt
       # Test giao dien chay trinh duyet THAT. Khong co Chromium thi chung tu
@@ -61,12 +62,29 @@ jobs:
           restore-keys: pytest-lf-${{ github.head_ref || github.ref_name }}-${{ matrix.phan }}-
       - name: Chay lai test hong lan truoc (nhanh)
         run: |
-          # exit 5 = khong co test hong nao de chay lai (lan dau, hoac lan truoc xanh): bo qua
-          python -m pytest -q --lf --lfnf=none $(python .github/chia_test.py ${{ matrix.phan }} 4) || [ $? -eq 5 ]
+          # Chi chay khi danh sach test hong cu CO tep thuoc phan nay. Truoc day: khi cac test hong cu
+          # khong nam trong phan nay, pytest --lf chay LAI CA PHAN (mat 8-16 phut moi lan, vo ich).
+          TEP=$(python .github/chia_test.py ${{ matrix.phan }} 6)
+          HONG=$(python .github/test_hong_cu.py $TEP)
+          if [ -z "$HONG" ]; then echo "Khong co test hong cu trong phan nay: bo qua"; exit 0; fi
+          # exit 5 = khong co test nao de chay lai: bo qua
+          python -m pytest -q --lf --lfnf=none $HONG || [ $? -eq 5 ]
       - name: Chay test (kem do phu)
         env:
           COVERAGE_FILE: .coverage.phan${{ matrix.phan }}
-        run: python -m pytest -q --cov --cov-report= --cov-fail-under=0 $(python .github/chia_test.py ${{ matrix.phan }} 4)
+        # Hai buoc: tep thuong chay song song (-n auto); tep NHAY THOI GIAN (giao dien Chromium co timeout,
+        # test do toc do co nguong giay) chay tuan tu — song song thi tranh CPU, hong gia. Do phu cong don.
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto --junitxml=junit_ss.xml --cov --cov-report= --cov-fail-under=0 $SS || rc=$?; fi
+          if [ -n "$TT" ]; then python -m pytest -q --junitxml=junit_tt.xml --cov --cov-append --cov-report= --cov-fail-under=0 $TT || rc=$?; fi
+          exit $rc
+      # In thoi gian tung tep (dong THOI_GIAN_TEP_JSON) de cap nhat .github/thoi_gian_test*.json theo dung may CI.
+      - name: In thoi gian tung tep
+        if: always()
+        run: python .github/do_thoi_gian_test.py --in junit_ss.xml junit_tt.xml
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -103,17 +121,20 @@ jobs:
           python -m coverage report
 
   test-windows:
-    name: Bo test (Windows ${{ matrix.phan }}/2)
+    name: Bo test (Windows ${{ matrix.phan }}/9)
     runs-on: windows-latest
+    # 9 phan (do that tren CI 2026-11-21): GitHub chi chay cung luc ~15 job; 6 Linux + 9 Windows + lint
+    # (20 giay) = 16 -> gan nhu khong job nao phai xep hang. Windows ~79 phut test / 9 = ~9 phut moi phan.
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2]
+        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
       # Khong cai playwright tren Windows: test giao dien da chay o Linux.
       # O day bat loai loi CHI Windows moi co: duong dan gach nguoc, tep
       # mo chua dong nen khong xoa duoc, ten tep danh rieng (CON, NUL...).
@@ -121,7 +142,20 @@ jobs:
         run: |
           pip install -r requirements.txt
           # python-docx: các test sinh tệp Forms (.docx) chạy THẬT trên Windows (PR #14, Truong chọn), không bỏ qua
-          pip install "pytest>=8.0,<10" "pillow>=10.0,<13" "python-docx>=1.1,<2"
+          pip install "pytest>=8.0,<10" "pytest-xdist>=3.5,<4" "pillow>=10.0,<13" "python-docx>=1.1,<2"
       - name: Chay test
         shell: bash
-        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 2)
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 9 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 9 --windows --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto --junitxml=junit_ss.xml $SS || rc=$?; fi
+          # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
+          # khong cai playwright). Do KHONG phai test hong.
+          if [ -n "$TT" ]; then python -m pytest -q --junitxml=junit_tt.xml $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
+          exit $rc
+      # In thoi gian tung tep (dong THOI_GIAN_TEP_JSON) de cap nhat .github/thoi_gian_test*.json theo dung may CI.
+      - name: In thoi gian tung tep
+        if: always()
+        shell: bash
+        run: python .github/do_thoi_gian_test.py --in junit_ss.xml junit_tt.xml

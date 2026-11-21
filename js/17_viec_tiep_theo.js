@@ -68,7 +68,8 @@ function capNhatViecTiepTheo(sucCoSan) {
   /* Kết quả sức khoẻ: lấy cái vừa có (loadHealthReport truyền vào), hoặc lần hỏi đang bay, chỉ hỏi mới khi không có.
      Tránh gọi get_data_health_report nhiều lần lúc khởi động. Sự kiện langchange truyền Event: không phải kết quả. */
   const coSan = sucCoSan && typeof sucCoSan === "object" && "ok" in sucCoSan;
-  Promise.all([
+  /* Trả về promise của lần cập nhật: nơi gọi (loadHealthReport) đợi nó để hai nơi cùng nói một điều cùng lúc. */
+  return Promise.all([
     callApi("get_dashboard_status"),
     coSan ? Promise.resolve(sucCoSan) : (window.healthDangHoi || callApi("get_data_health_report")),
     callApi("get_em_chua_co_cho"),

@@ -1368,6 +1368,13 @@ class XuatKetQuaMixin:
         if any(g or d for g, d in gd.values()):
             for c in clubs:
                 c["gio"], c["dia_diem"] = gd.get(c["club_id"], (None, None))
+        # MT1-X1 (D1): 4 cột FA của CLB đi cùng sổ khi FA bật HOẶC có CLB nào đã khai; không thì sổ y như cũ.
+        fa = {r[0]: r[1:] for r in cur.execute(
+            "SELECT club_id, loai, diem_san, so_toi_thieu, suc_chua_phong FROM clubs")}
+        if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) or any(
+                v is not None for g in fa.values() for v in g):
+            for c in clubs:
+                c.update(zip(so_nhap.KHOA_FA, fa.get(c["club_id"], (None,) * 4)))
         n_ten_doi = so_nhap.ten_khong_trung(clubs)
         hs = {r[0]: {"student_id": r[0], "name": r[1] or "", "reserve_group": r[2],
                      "class_id": r[3], "nv": []}
@@ -1413,6 +1420,11 @@ class XuatKetQuaMixin:
         Sổ nhập CLB. Kéo sổ này vào ô nạp của một CSDL trống là dựng lại y
         nguyên — test `test_xuat_du_lieu.py` canh điều đó.
 
+        MT1-X1: sổ mang thêm bốn cột FA của CLB (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng) khi chế độ FA bật
+        hoặc có CLB đã khai một trong bốn cột, và sheet "Giữ chỗ" khi FA bật (rỗng = chỉ có tiêu đề). Chế độ
+        thường (FA tắt, không CLB nào có giá trị FA) cho sổ y như trước. Không truyền `che_do_fa` (tên cột huy chương
+        và Hướng dẫn không đổi). Nạp vào CSDL FA TẮT thì bước nạp bỏ qua cột Loại và sheet "Giữ chỗ".
+
         Lượt thi một CLB mà em KHÔNG xếp nguyện vọng thì sổ không chứa được
         (điểm luôn nằm cạnh một NV) — đếm vào `n_thi_ngoai_nv` để giao diện
         nói ra. Thuật toán không bao giờ xếp em vào CLB em không chọn, nên
@@ -1423,8 +1435,13 @@ class XuatKetQuaMixin:
             path = self._duong_xuat(output_path, ten)
             with self._ket_noi_doc() as cur:
                 clubs, students, n_ngoai, n_ten_doi = self._du_lieu_so_nhap(cur)
+                # MT1-X1 (D2): sheet "Giữ chỗ" chỉ khi FA bật (FA tắt thì bước nạp bỏ qua sheet); bảng rỗng = sheet chỉ có tiêu đề.
+                giu_cho = ([tuple(r) for r in cur.execute(
+                    "SELECT club_id, student_id FROM giu_cho ORDER BY club_id, student_id")]
+                    if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) else None)
             so_nhap.ghi_so_nhap(path, clubs, students, cfg=self._cfg_ws(nghiem=True),
-                                co_lop=any(x.get("class_id") for x in students))   # A14
+                                co_lop=any(x.get("class_id") for x in students),   # A14
+                                giu_cho=giu_cho)
             return _ok({
                 "path": path,
                 "dir": os.path.dirname(path),

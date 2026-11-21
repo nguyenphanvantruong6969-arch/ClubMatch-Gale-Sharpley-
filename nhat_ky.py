@@ -36,7 +36,8 @@ _TOI_DA_KHOA = 12
 # Không ghi: chỉ đọc / chuẩn hoá / tiện ích giao diện.
 _DOC = ("get_", "list_", "search_", "xem_truoc", "check_", "detect_", "preview_", "liet_ke")
 _KHONG_GHI = frozenset("""chuan_hoa_buoi chuan_hoa_nhom_du_tru dat_tieu_de_cua_so mo_thu_muc mo_tep xlsx_to_csv_text
-kiem_chi_tieu_ky_sau lay_so_nhap_nap nhan_dien_tep_forms tai_mau_de_thi get_phien_dang_nhap""".split())
+kiem_chi_tieu_ky_sau lay_so_nhap_nap nhan_dien_tep_forms tai_mau_de_thi get_phien_dang_nhap
+uoc_tinh_muc_tieu bao_cao_muc_tieu""".split())
 
 
 def nen_ghi(ten: str) -> bool:

@@ -62,8 +62,11 @@ function loadHealthReport() {
   /* Lần hỏi đang bay: thanh "Việc tiếp theo" dùng chung thay vì hỏi lại backend. */
   window.healthDangHoi = hoi;
   hoi.then(() => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; }, () => { if (window.healthDangHoi === hoi) window.healthDangHoi = null; });
-  hoi.then((res) => {
-    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(res); /* UX1A-L1: dùng luôn kết quả vừa có */
+  /* Danh sách cảnh báo chỉ hiện SAU khi thanh "Việc tiếp theo" đã có trạng thái: hai nơi nói cùng một điều nên không
+     được lệch nhau (trước đây thanh còn chờ thêm hai lời gọi sau khi danh sách đã hiện: người xem, và test, thấy
+     danh sách mà thanh còn trống). UX1A-L1: thanh dùng luôn kết quả vừa có. */
+  hoi.then((res) => Promise.resolve(typeof capNhatViecTiepTheo === "function" ? capNhatViecTiepTheo(res) : null)
+    .catch(() => null).then(() => {
     const summary = el("healthSummary");
     const list = el("healthList");
     clear(list);
@@ -148,7 +151,7 @@ function loadHealthReport() {
         }
         list.appendChild(row);
       });
-  });
+  }));
   return hoi;
 }
 

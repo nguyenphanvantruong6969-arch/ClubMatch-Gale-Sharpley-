@@ -38,13 +38,17 @@ function ux1aEl(tag, thuocTinh, ...con) {
 
 /* ---- Ba thẻ (dùng chung) -------------------------------------------------------------- */
 
-/* khiChon(ma) được gọi khi bấm một thẻ chưa chọn. Trả về {hop, datCach, khoa, loi, sanSang}. */
-function ux1aTaoThe(tienTo, khiChon) {
-  const cauHoi = ux1aEl("h2", { id: tienTo + "CauHoi", class: "ux1a-cau-hoi", "data-i18n": "ux1a_cd_cau_hoi",
-    text: t("ux1a_cd_cau_hoi") });
-  const luoi = ux1aEl("div", { class: "ux1a-the-luoi", role: "radiogroup", "aria-labelledby": tienTo + "CauHoi" });
+/* khiChon(ma) được gọi khi bấm một thẻ chưa chọn. Trả về {hop, datCach, khoa, loi, sanSang}.
+   MT1: `bo` (mặc định ba thẻ cách xét), `khoaCauHoi`, `moiTheTab` cho phép cùng thành phần vẽ câu hỏi thứ hai (mục tiêu). */
+function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
+  bo = bo || UX1A_CACH;
+  khoaCauHoi = khoaCauHoi || "ux1a_cd_cau_hoi";
+  const cauHoi = ux1aEl("h2", { id: tienTo + "CauHoi", class: "ux1a-cau-hoi", "data-i18n": khoaCauHoi,
+    text: t(khoaCauHoi) });
+  const luoi = ux1aEl("div", { class: "ux1a-the-luoi", id: tienTo + "Luoi", role: "radiogroup",
+    "aria-labelledby": tienTo + "CauHoi" });
   const nut = {};
-  UX1A_CACH.forEach((c) => {
+  bo.forEach((c) => {
     const b = ux1aEl("button", { type: "button", role: "radio", class: "ux1a-the", id: tienTo + c.id,
       "data-cach": c.ma, "aria-checked": "false" },
       ux1aEl("span", { class: "ux1a-the-tt", "data-i18n": c.tt, text: t(c.tt) }),
@@ -59,11 +63,13 @@ function ux1aTaoThe(tienTo, khiChon) {
   return {
     hop, sanSang,
     datCach(ma) {
-      UX1A_CACH.forEach((c) => {
+      const coThe = bo.some((c) => c.ma === ma);
+      bo.forEach((c, i) => {
         const chon = c.ma === ma;
         nut[c.ma].setAttribute("aria-checked", chon ? "true" : "false");
         nut[c.ma].classList.toggle("is-chon", chon);
-        nut[c.ma].tabIndex = chon ? 0 : -1;
+        /* Mặc định chỉ thẻ đang chọn nhận Tab; `moiTheTab` (MT1): Tab tới MỌI thẻ, Enter chọn. Không thẻ nào chọn: vẫn Tab vào được. */
+        nut[c.ma].tabIndex = moiTheTab || chon || (!coThe && i === 0) ? 0 : -1;
       });
     },
     khoa(ma, dongKhoa) { nut[ma].disabled = !!dongKhoa; },
@@ -101,49 +107,87 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
     hop.append(hang);
     if (ca) return;      /* ít em sai (dưới một nửa): vẫn cho đặt loại CLB tại chỗ bên dưới */
   }
-  const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
+  /* MT1 (gom): BẢNG đặt loại — mỗi CLB một dòng, ba nút loại có trạng thái chọn, điểm sàn của Tuyển chọn ngay tại dòng,
+     nhóm theo buổi kèm dấu "đã có / cần CLB Tự do", bộ đếm. Vẫn lưu qua `dat_loai_clb`; không thêm đường lưu mới.
+     Sau mỗi lần lưu vẽ lại cả khối từ dữ liệu đã lưu, rồi trả tiêu điểm về đúng ô vừa bấm (`hoiPhuc`). */
+  const luu = (cid, loai, diemSan, hoiPhuc) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }
-    taiLai();
+    const xong = taiLai();
+    /* MT1: loại / điểm sàn vừa đổi thì bảng CLB (cột "Loại", "Điểm sàn") và thanh "Việc tiếp theo" phải đổi theo ngay,
+       không đợi tải lại trang. Chỉ gọi lại hàm vẽ sẵn có; không thêm đường lưu mới. */
+    if (typeof loadAdminClubs === "function") loadAdminClubs();
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo();
+    return Promise.resolve(xong).then(() => {
+      const o = hoiPhuc && hop.querySelector(hoiPhuc);
+      if (o) o.focus();
+    });
   });
   const nhieuBuoi = new Set(d.clubs.map((c) => c.buoi)).size > 1;
-  const tenClb = {};
-  d.clubs.forEach((c) => { tenClb[c.club_id] = c.name || c.club_id; });
+  const daDat = d.clubs.filter((c) => c.loai !== null && c.loai !== undefined).length;
+  hop.append(ux1aEl("p", { class: "ux1a-ss-dem", id: "ux1aSsDem", role: "status",
+    text: t("ux1a_ss_dem", { x: daDat, y: d.clubs.length }) }));
+  /* Mục đích từng loại: chữ "i" nhỏ, đưa chuột vào (hoặc focus bằng bàn phím / chạm) thì hiện; chữ luôn nằm trong DOM
+     (aria-label + tooltip) nên trình đọc màn hình đọc được. */
+  hop.append(ux1aEl("p", { class: "hint-text ux1a-ss-giai-thich", id: "ux1aSsGiaiThich" },
+    ux1aEl("span", { class: "ux1a-ss-gt-nhan", text: t("ux1a_ss_cac_loai") }),
+    ...["TU_DO", "GIOI_HAN", "TUYEN_CHON"].map((ma) => {
+      const idTip = "ux1aSsTip_" + ma;
+      const chu = t("ux1a_ss_gt_" + ma);
+      return ux1aEl("span", { class: "ux1a-ss-gt" },
+        ux1aEl("span", { class: "ux1a-ss-gt-ten", text: t("fa_loai_" + ma) }),
+        ux1aEl("button", { type: "button", class: "ux1a-i", "data-loai": ma, text: "i",
+          "aria-label": chu, "aria-describedby": idTip }),
+        ux1aEl("span", { class: "ux1a-i-tip", id: idTip, role: "tooltip", text: chu }));
+    })));
 
-  d.clubs.filter((c) => c.loai === null).forEach((c) => {
+  const bang = ux1aEl("table", { class: "data-table ux1a-ss-bang" });
+  bang.append(ux1aEl("thead", null, ux1aEl("tr", null,
+    ux1aEl("th", { scope: "col", text: t("gt_th_clb") }),
+    ux1aEl("th", { scope: "col", text: t("th_fa_loai") }),
+    ux1aEl("th", { scope: "col", text: t("th_fa_diem_san") }))));
+  const than = ux1aEl("tbody");
+  let buoiTruoc = null;
+  d.clubs.forEach((c) => {
+    if (c.buoi !== buoiTruoc) {
+      buoiTruoc = c.buoi;
+      const co = !d.buoi_thieu_tu_do.includes(c.buoi);
+      than.append(ux1aEl("tr", { class: "ux1a-ss-buoi", "data-buoi": c.buoi, "data-co-tu-do": co ? "true" : "false" },
+        ux1aEl("td", { colspan: "3" },
+          nhieuBuoi ? ux1aEl("strong", { class: "ux1a-ss-buoi-ten", text: nhanBuoi(c.buoi) + " " }) : null,
+          ux1aEl("span", { class: "ux1a-ss-buoi-tt" + (co ? " is-xong" : " is-thieu"),
+            text: t(co ? "ux1a_ss_buoi_co_tu_do" : "ux1a_ss_buoi_can_tu_do") }))));
+    }
     const vien = ux1aEl("span", { class: "ux1a-vien-nhom", role: "group", "aria-label": c.name });
-    [["TU_DO", "fa_loai_TU_DO"], ["GIOI_HAN", "fa_loai_GIOI_HAN"], ["TUYEN_CHON", "fa_loai_TUYEN_CHON"]].forEach(([ma, khoa]) => {
+    ["TU_DO", "GIOI_HAN", "TUYEN_CHON"].forEach((ma) => {
       const b = ux1aEl("button", { type: "button", class: "ux1a-vien", "data-loai": ma, "data-clb": c.club_id,
-        "aria-pressed": "false", text: t(khoa) });
-      b.addEventListener("click", () => luu(c.club_id, ma, null));
+        "aria-pressed": c.loai === ma ? "true" : "false", text: t("fa_loai_" + ma) });
+      b.addEventListener("click", () => {
+        if (c.loai === ma) return;
+        luu(c.club_id, ma, null, 'tr[data-clb="' + c.club_id + '"] button[data-loai="' + ma + '"]');
+      });
       vien.append(b);
     });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-clb": c.club_id },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: c.name + (nhieuBuoi ? " · " + nhanBuoi(c.buoi) : "") }),
-      vien));
+    let sanO = "—";
+    if (c.loai === "TUYEN_CHON") {
+      const o = ux1aEl("input", { type: "number", class: "text-input ux1a-so", min: "0", max: "10", step: "1",
+        value: c.diem_san === null || c.diem_san === undefined ? "" : String(c.diem_san),
+        "aria-label": t("ux1a_ss_diem_san", { clb: c.name }) });
+      const gui = () => {
+        if (o.value === "") { o.focus(); return; }
+        luu(c.club_id, "TUYEN_CHON", Number(o.value), 'tr[data-clb="' + c.club_id + '"] input[type=number]');
+      };
+      o.addEventListener("keydown", (ev) => { if (ev.key === "Enter") gui(); });
+      sanO = ux1aEl("span", { class: "ux1a-ss-san" + (c.diem_san === null || c.diem_san === undefined ? " is-thieu" : "") },
+        o, ux1aEl("button", { type: "button", class: "btn btn-secondary btn-nho", "data-luu-san": c.club_id,
+          text: t("ws_btn_luu"), onclick: gui }));
+    }
+    than.append(ux1aEl("tr", { class: "ux1a-ss-dong", "data-clb": c.club_id, "data-buoi": c.buoi },
+      ux1aEl("td", { class: "ux1a-ss-ten", text: c.name }),
+      ux1aEl("td", null, vien),
+      ux1aEl("td", null, sanO)));
   });
-
-  d.thieu_diem_san.forEach((cid) => {
-    const o = ux1aEl("input", { type: "number", class: "text-input ux1a-so", min: "0", max: "10", step: "1",
-      "aria-label": t("ux1a_ss_diem_san", { clb: tenClb[cid] }) });
-    const b = ux1aEl("button", { type: "button", class: "btn btn-secondary btn-nho", text: t("ws_btn_luu") });
-    b.addEventListener("click", () => {
-      if (o.value === "") return;
-      luu(cid, "TUYEN_CHON", Number(o.value));
-    });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-diem-san": cid },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: t("ux1a_ss_diem_san", { clb: tenClb[cid] }) }), o, b));
-  });
-
-  d.buoi_thieu_tu_do.forEach((buoi) => {
-    const ds = d.clubs.filter((c) => c.buoi === buoi);
-    const sel = ux1aEl("select", { class: "text-input ux1a-chon-tu-do", "data-buoi": buoi,
-      "aria-label": t("ux1a_ss_chon_tu_do", { buoi: nhanBuoi(buoi) }) },
-      ux1aEl("option", { value: "", text: "—" }),
-      ...ds.map((c) => ux1aEl("option", { value: c.club_id, text: c.name })));
-    sel.addEventListener("change", () => { if (sel.value) luu(sel.value, "TU_DO", null); });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-buoi": buoi },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: t("ux1a_ss_thieu_tu_do", { buoi: nhanBuoi(buoi) }) }), sel));
-  });
+  bang.append(than);
+  hop.append(bang);
 }
 
 function ux1aKiemSanSang(the, quayLai) {
@@ -157,19 +201,6 @@ function ux1aKiemSanSang(the, quayLai) {
 /* ---- Trang Cài đặt (đang mở một workspace) ------------------------------------------------- */
 
 function ux1aTenCach(ma) { return t(UX1A_CACH.find((c) => c.ma === ma).tt); }
-
-/* Thứ tự xét khi đông, lấy từ "Tiêu chí xếp" (GT2): cùng nguồn với bảng Nâng cao. */
-function ux1aVeCachXet(hop) {
-  return callApi("get_tieu_chi").then((r) => {
-    if (!r.ok) { hop.hidden = true; return; }
-    const lang = window.I18N.getLang();
-    const mo = (lang === "en" ? r.data.mo_ta_en : r.data.mo_ta).filter((m) => m.nhom === "tang_1");
-    const ngan = (s) => s.split(/\s[(–-]/)[0].trim();
-    hop.hidden = !mo.length;
-    hop.querySelector(".ux1a-cach-xet-chu").textContent =
-      t("ux1a_cd_cach_xet") + " " + mo.map((m) => ngan(m.chu)).join(" → ");
-  });
-}
 
 function ux1aMoNangCao() {
   switchTab("admin");
@@ -192,19 +223,27 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
   let luat = {};
   const dangMo = () => wsTrangThai && wsTrangThai.enabled && wsTrangThai.slug === slug;
   const the = ux1aTaoThe(tienTo, (ma) => doi(ma));
-  const cachXet = ux1aEl("p", { class: "ux1a-cach-xet", id: tienTo + "CachXet", hidden: true },
-    ux1aEl("span", { class: "ux1a-cach-xet-chu" }),
-    " ",
-    ux1aEl("button", { type: "button", class: "btn btn-ghost btn-nho", id: tienTo + "ThayDoi",
-      "data-i18n": "ux1a_cd_thay_doi", text: t("ux1a_cd_thay_doi"), onclick: ux1aMoNangCao }));
+  /* MT1: một thẻ mục tiêu có thể đổi cách xét (vd. "Cơ hội như nhau" tắt điểm chia, rời thẻ thì bật lại): câu hỏi đầu
+     phải vẽ lại từ cấu hình ĐÃ LƯU sau mỗi lần chọn / hoàn tác / "Về mục tiêu mẫu". */
+  const veLaiCauDau = () => callApi("get_workspace_config", slug).then((res) => {
+    if (!res.ok) return;
+    const cfg = res.data.config || {};
+    luat = cfg.rules || {};
+    the.datCach(ux1aCachTuLuat(luat));
+    the.sanSang.hidden = true;
+    if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the, () => doi("chia_100"));
+    if (dangMo()) ux1aApDungSong(cfg);
+  });
+  const mt = typeof mt1TaoCauHoi === "function" && dangMo() ? mt1TaoCauHoi(tienTo, veLaiCauDau) : null;
   host.textContent = "";
-  host.append(the.hop, cachXet);
+  host.append(the.hop);
+  if (mt) host.append(mt.hop);
 
   const ve = () => {
     the.datCach(ux1aCachTuLuat(luat));
     the.sanSang.hidden = true;
     if (ux1aCachTuLuat(luat) === "huy_chuong" && dangMo()) ux1aKiemSanSang(the, () => doi("chia_100"));
-    ux1aVeCachXet(cachXet);
+    if (mt) mt.lamMoi();
   };
   const dat = (rules) => callApi("update_workspace_config", { rules }, slug);
   const luatCu = () => {

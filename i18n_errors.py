@@ -1619,6 +1619,58 @@ MESSAGES = {
         "en": "{n} {person_pl} have no valid medals. The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings.",
     },
     # === end UX1B (L5c) ===
+    # === MT1 (L2) ===
+    "mt_muc_tieu_la": {
+        "vi": "Không có mục tiêu này. Hãy chọn một trong ba thẻ.",
+        "en": "There is no such goal. Please choose one of the three cards.",
+    },
+    "mt_can_chon_nhom": {
+        "vi": "Có nhiều nhóm. Hãy chọn nhóm cần giữ chỗ.",
+        "en": "There are several groups. Please choose the group to keep seats for.",
+    },
+    "mt_nhom_khong_co": {
+        "vi": "Danh sách không có nhóm {nhom}. Hãy chọn một nhóm có sẵn.",
+        "en": "The list has no group {nhom}. Please choose one of the existing groups.",
+    },
+    "mt_khong_co_nhom": {
+        "vi": "Sổ nhập chưa có cột nhóm.",
+        "en": "The input book has no group column.",
+    },
+    "mt_the_can_diem": {
+        "vi": "Chế độ huy chương cần điểm thi nên không dùng được với mục tiêu bốc thăm. Hãy chọn thẻ khác.",
+        "en": "Medal mode needs test scores, so it cannot be used with a lottery goal. Please choose another card.",
+    },
+    "mt_diem_chia_khong_dung": {
+        "vi": "Điểm chia không được dùng với mục tiêu này.",
+        "en": "Divided points are not used with this goal.",
+    },
+    "mt_hoan_tac_khong_hop_le": {
+        "vi": "Không hoàn tác được vì dữ liệu hoàn tác không hợp lệ. Chưa có gì bị đổi.",
+        "en": "Undo is not possible because the undo data is not valid. Nothing was changed.",
+    },
+    "mt_khong_ap_dung": {
+        "vi": "Chưa đổi được mục tiêu. Cài đặt vẫn như cũ. Hãy thử lại.",
+        "en": "The goal could not be changed. Settings are unchanged. Please try again.",
+    },
+    # === end MT1 (L2) ===
+    # === MT1 (L3) ===
+    "mt_cho_it": {
+        "vi": "Có {n} câu lạc bộ chỉ giữ 1–2 chỗ. Số chỗ ít như vậy gần như không đổi được kết quả.",
+        "en": "{n} clubs keep only 1-2 seats. That few seats hardly changes the result.",
+    },
+    "mt_khong_co_khoang_cach": {
+        "vi": "Lần xếp gần nhất chưa thấy nhóm này bị thiệt hơn các nhóm khác, nên có thể chưa cần giữ chỗ.",
+        "en": "The latest allocation shows no disadvantage for this group, so keeping seats may not be needed.",
+    },
+    "mt_uoc_tinh_fa": {
+        "vi": "Chưa ước tính được khi đang dùng chế độ huy chương.",
+        "en": "An estimate is not available in medal mode yet.",
+    },
+    "mt_chua_co_ket_qua": {
+        "vi": "Chưa có lần xếp chính thức nào để báo cáo.",
+        "en": "There is no official allocation to report on yet.",
+    },
+    # === end MT1 (L3) ===
 }
 
 
