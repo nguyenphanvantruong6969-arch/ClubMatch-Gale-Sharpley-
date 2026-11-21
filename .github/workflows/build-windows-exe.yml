@@ -58,7 +58,13 @@ jobs:
 
       - name: Run test suite
         shell: bash
-        run: python -m pytest -q -n auto $(python .github/chia_test.py ${{ matrix.phan }} 6 --windows)
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
+          if [ -n "$TT" ]; then python -m pytest -q $TT || rc=$?; fi
+          exit $rc
 
   build:
     runs-on: windows-latest

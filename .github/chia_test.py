@@ -1,7 +1,11 @@
 """Chia các tệp tests/test_*.py thành N phần cân bằng THỜI GIAN để CI chạy song song.
 
-Dùng: python .github/chia_test.py <phan> <so_phan> [--windows]   (phan tính từ 1)
-      -> in danh sách tệp, cách nhau dấu cách.
+Dùng: python .github/chia_test.py <phan> <so_phan> [--windows] [--song-song | --tuan-tu]   (phan tính từ 1)
+      -> in danh sách tệp của phần đó, cách nhau dấu cách.
+      --song-song: chỉ tệp chạy được với pytest-xdist (-n auto);
+      --tuan-tu:   chỉ tệp NHẠY THỜI GIAN (giao diện Chromium có timeout, test đo tốc độ có ngưỡng giây),
+                   phải chạy một tiến trình — chạy song song thì tranh CPU làm chúng hỏng giả.
+      Không cờ nào: cả hai nhóm (như trước).
 
 Trọng số mỗi tệp (giây ước tính):
 - Có trong `.github/thoi_gian_test.json` (đo thật, tổng thời gian các test của tệp) -> dùng số đó.
@@ -37,6 +41,26 @@ def _bo_qua_tren_windows(t):
         return False
 
 
+# Tệp đo tốc độ có ngưỡng giây: chạy song song thì tranh CPU, hỏng giả (đo thật trên CI 2026-11-21).
+TUAN_TU_THEO_TEN = {
+    "tests/test_hieu_nang.py",
+    "tests/test_xp1_hieu_nang.py",
+    "tests/test_a13_11_stress.py",
+    "tests/test_wharton_quan_ly.py",
+}
+
+
+def nhay_thoi_gian(t):
+    """True nếu tệp phải chạy tuần tự: dùng Chromium (playwright) hoặc đo tốc độ có ngưỡng."""
+    if t.replace("\\", "/") in TUAN_TU_THEO_TEN:
+        return True
+    try:
+        with open(t, encoding="utf-8") as f:
+            return "playwright" in f.read()
+    except OSError:
+        return False
+
+
 def chia(so_phan, windows=False):
     tep = sorted(t.replace("\\", "/") for t in glob.glob(os.path.join("tests", "test_*.py")))
     do = _doc_thoi_gian()
@@ -59,4 +83,10 @@ def chia(so_phan, windows=False):
 
 if __name__ == "__main__":
     k, n = int(sys.argv[1]), int(sys.argv[2])
-    print(" ".join(chia(n, windows="--windows" in sys.argv[3:])[k - 1]))
+    co = sys.argv[3:]
+    ds = chia(n, windows="--windows" in co)[k - 1]
+    if "--song-song" in co:
+        ds = [t for t in ds if not nhay_thoi_gian(t)]
+    elif "--tuan-tu" in co:
+        ds = [t for t in ds if nhay_thoi_gian(t)]
+    print(" ".join(ds))

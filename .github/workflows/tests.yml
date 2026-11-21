@@ -72,7 +72,15 @@ jobs:
       - name: Chay test (kem do phu)
         env:
           COVERAGE_FILE: .coverage.phan${{ matrix.phan }}
-        run: python -m pytest -q -n auto --cov --cov-report= --cov-fail-under=0 $(python .github/chia_test.py ${{ matrix.phan }} 6)
+        # Hai buoc: tep thuong chay song song (-n auto); tep NHAY THOI GIAN (giao dien Chromium co timeout,
+        # test do toc do co nguong giay) chay tuan tu — song song thi tranh CPU, hong gia. Do phu cong don.
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto --cov --cov-report= --cov-fail-under=0 $SS || rc=$?; fi
+          if [ -n "$TT" ]; then python -m pytest -q --cov --cov-append --cov-report= --cov-fail-under=0 $TT || rc=$?; fi
+          exit $rc
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -131,4 +139,10 @@ jobs:
           pip install "pytest>=8.0,<10" "pytest-xdist>=3.5,<4" "pillow>=10.0,<13" "python-docx>=1.1,<2"
       - name: Chay test
         shell: bash
-        run: python -m pytest -q -n auto $(python .github/chia_test.py ${{ matrix.phan }} 6 --windows)
+        run: |
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --tuan-tu)
+          rc=0
+          if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
+          if [ -n "$TT" ]; then python -m pytest -q $TT || rc=$?; fi
+          exit $rc
