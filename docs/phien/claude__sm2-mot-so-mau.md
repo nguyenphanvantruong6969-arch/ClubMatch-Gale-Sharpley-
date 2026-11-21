@@ -71,7 +71,7 @@ Lot L2 — one button, full structure (#2)
 - `CLAUDE_CHI_TIET.md` counts test files (`370 tệp`); each new test file → update the count (CI checks docs).
 
 ## Needs Truong
-- (not blocking) Should custom-vocabulary workspaces (company, dorm…) get a column dictionary written in their own labels? Today they get none (SM2-FIX1). Would be a new item.
+- Resolved (Truong, 2026-11-21): custom-vocabulary workspaces do NOT need a column dictionary in their own labels; SM2-FIX1 behaviour (no dictionary) is final.
 
 ## Files touched
 - L2: so_nhap.py, api_xuat.py, index.html, js/02_van_hanh.js, i18n.js, mau_csv/tao_so_nhap.py + SO_NHAP_CLB.xlsx, du_lieu_test/tao_so_nhap_day_du.py + SO_NHAP_MAU_DAY_DU.xlsx, 2 guides, tests (1 new + 6 updated)
@@ -86,3 +86,4 @@ Lot L2 — one button, full structure (#2)
 | 2026-11-21 | coder | FIX round 1: checker bug 1 (dictionary vocabulary), +2 tests, kiem_nhanh 7/7 | minimal fix |
 | 2026-11-21 | coder | CI round 1: SUA_CO_Y entry for import_hint in test_ws_nhan (deliberate text change) | checker recheck FIX1 = NO BUGS |
 | 2026-11-21 | coder | CI green on 8839a2a → DONE | |
+| 2026-11-21 | coder | Truong: no custom-vocabulary dictionary needed | decision logged |
