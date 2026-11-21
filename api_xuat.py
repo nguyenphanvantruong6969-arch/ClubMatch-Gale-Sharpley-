@@ -1368,6 +1368,13 @@ class XuatKetQuaMixin:
         if any(g or d for g, d in gd.values()):
             for c in clubs:
                 c["gio"], c["dia_diem"] = gd.get(c["club_id"], (None, None))
+        # MT1-X1 (D1): 4 cột FA của CLB đi cùng sổ khi FA bật HOẶC có CLB nào đã khai; không thì sổ y như cũ.
+        fa = {r[0]: r[1:] for r in cur.execute(
+            "SELECT club_id, loai, diem_san, so_toi_thieu, suc_chua_phong FROM clubs")}
+        if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) or any(
+                v is not None for g in fa.values() for v in g):
+            for c in clubs:
+                c.update(zip(so_nhap.KHOA_FA, fa.get(c["club_id"], (None,) * 4)))
         n_ten_doi = so_nhap.ten_khong_trung(clubs)
         hs = {r[0]: {"student_id": r[0], "name": r[1] or "", "reserve_group": r[2],
                      "class_id": r[3], "nv": []}

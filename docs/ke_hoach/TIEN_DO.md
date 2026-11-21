@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| MT1-X1-L1 (Sổ nhập xuất mang cột FA của CLB) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`_du_lieu_so_nhap`), tests/test_mt1_dong_bo_loai_clb.py (bỏ xfail), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py | cổng D1: chỉ khi FA bật hoặc có CLB đã khai; còn "Giữ chỗ" ở L2 |
 | MT1-L5 (tài liệu: hướng dẫn, bản đồ mã) | xong phần tài liệu (chờ checker; bản đánh giá §5 do lead) | 2026-11-20 | HUONG_DAN_SU_DUNG.md, CHANGELOG.md, docs/ke_hoach/TIEN_DO.md | — (tài liệu) | |
 | MT1-L4 (giao diện ba thẻ mục tiêu) | xong (chờ checker) | 2026-11-20 | js/19_muc_tieu.js, js/18_cai_dat.js, js/075_workspace.js, js/03_ket_qua.js, js/08_khoi_dong.js, js/_danh_sach.txt, index.html, i18n.js, style.css, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/phien/anh_mt1/* | tests/test_giao_dien_mt1.py (+ sửa test_giao_dien_ux1_cai_dat.py) | Còn kiểm tay exe Windows (Truong) |
 | MT1-L3 (ước tính + dòng kết quả, chỉ đọc) | xong (chờ checker) | 2026-11-20 | muc_tieu_do.py, api_muc_tieu.py, api_tieu_chi.py, phan_quyen.py, nhat_ky.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_mt1_uoc_tinh.py (+ ca rò rỉ ở tests/test_mt1_api.py) | tách `_giai_trong_bo_nho` khỏi run_thu, hành vi y nguyên |

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1-X1-L1: Sổ nhập xuất ra mang cột FA của CLB (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng)
+
+- `api_xuat.py` (`_du_lieu_so_nhap`): thêm bốn khoá `so_nhap.KHOA_FA` vào từng CLB CHỈ KHI chế độ FA bật HOẶC có CLB đã khai một trong bốn cột; không thì không thêm khoá nào, nên Sổ nhập chế độ thường y như cũ (bất biến 1, 7). Không đổi schema, cột CSV, i18n, giao diện.
+- `tests/test_mt1_dong_bo_loai_clb.py`: bỏ `xfail(strict=True)` của `test_xuat_so_nhap_mang_loai_va_diem_san_hien_tai` (đỏ trước khi sửa, xanh sau).
+- `tests/test_mt1_x1_xuat_so_nhap.py` (mới): chế độ thường không thêm cột và mọi ô mọi sheet bằng đường cũ; FA bật + loại NULL → cột có, ô trống, nạp lại ra NULL; FA tắt nhưng một CLB có loại → cột có, khứ hồi vào CSDL FA bật giữ nguyên (nạp vào CSDL FA tắt thì bước nạp bỏ qua cột Loại, hành vi có sẵn).
+- Ghi chú D3: xuất không truyền `che_do_fa=True` (sẽ đổi tên cột huy chương và Hướng dẫn); có thể là mục riêng sau. Còn lại: L2 (sheet "Giữ chỗ").
+
 ## 2026-11-21 — MT1 (gom): kiểm đồng bộ loại CLB / điểm sàn (giao diện ↔ CSDL ↔ lần chạy ↔ Excel)
 
 - `tests/test_mt1_dong_bo_loai_clb.py` (mới, chỉ backend): (1) `dat_loai_clb` ghi vào CSDL, bảng Quản lý (`list_clubs_admin`), `get_san_sang_huy_chuong` và lần chạy đều đọc đúng giá trị vừa đặt (thiếu loại thì lần chạy bị chặn); (2) nạp lại sổ CÓ cột Loại / Điểm sàn ghi đè giá trị đặt tay; (3) ô Loại để trống xoá về NULL; (4) sổ KHÔNG có các cột đó giữ nguyên giá trị đã đặt.

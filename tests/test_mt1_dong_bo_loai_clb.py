@@ -6,7 +6,6 @@ import os
 import sqlite3
 
 import openpyxl
-import pytest
 
 import cau_hinh_ws as ch
 from api import PipelineAPI
@@ -93,8 +92,6 @@ def test_nap_lai_file_khong_co_cot_loai_giu_nguyen_gia_tri_da_dat(tmp_path):
     assert _loai(api)["THU_2_2"] == ("TU_DO", None)
 
 
-@pytest.mark.xfail(strict=True, reason="LỖ HỔNG ĐÃ ĐO (MT1): export_du_lieu_dau_vao không chọn loai/diem_san, nên Sổ nhập "
-                   "xuất ra thiếu cột Loại, Điểm sàn — nạp vào CSDL trống mất loại. Bỏ xfail khi sửa `_du_lieu_so_nhap`.")
 def test_xuat_so_nhap_mang_loai_va_diem_san_hien_tai(tmp_path):
     api = _api(tmp_path)
     _nap(api, SO_FA)
