@@ -3237,3 +3237,8 @@ svg.thanh-diem { display: block; }
 td :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 34px); }
 /* Danh sách dày (vd .ranking-list: hàng ~22 px): chỉ nới nhẹ, nếu không vùng bấm của nút dưới đè lên nút trên. */
 li :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 20px); }
+/* UX2 — L3 fix2: vùng bấm ::after của nút (≥ 44 px) tràn ra ngoài nút; ô nhập / chọn / nhãn / summary nằm trên nó để
+   cú bấm vào chính ô đó không bị nút bên cạnh cướp (vd ô tick "Kèm CSV" cạnh nút Xuất). Độ ưu tiên 0 (:where). */
+:where(input, select, textarea, summary, label) { position: relative; z-index: 1; }
+/* Nội dung của <details> đang ĐÓNG không có hộp thật nhưng vẫn có toạ độ: không nâng lên, kẻo nó đè lên nút nằm ở đó. */
+details:not([open]) :where(input, select, textarea, label) { position: static; z-index: auto; }
