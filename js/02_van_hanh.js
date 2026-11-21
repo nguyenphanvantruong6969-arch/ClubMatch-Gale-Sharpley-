@@ -483,7 +483,6 @@ function capNhatKhoaVanHanh() {
   el("btnImportAll").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnClearQueue").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnTaiSoMau").disabled = khoa.dangChay || khoa.dangNhap;
-  el("btnTaiSoMauHuyChuong").disabled = khoa.dangChay || khoa.dangNhap; /* UX1A-L5 */
   if (el("btnXuatTuyChon")) el("btnXuatTuyChon").disabled = khoa.dangChay || khoa.dangXuat;
   if (typeof capNhatNutXuatTheoLop === "function") capNhatNutXuatTheoLop();
 
@@ -902,7 +901,6 @@ function initCsvImportHandlers() {
   el("btnImportAll").addEventListener("click", nhapTatCa);
   el("btnClearQueue").addEventListener("click", boHangDoiNhap);
   el("btnTaiSoMau").addEventListener("click", () => taiSoNhapMau("thuong"));
-  el("btnTaiSoMauHuyChuong").addEventListener("click", () => taiSoNhapMau("huy_chuong")); /* UX1A-L5 */
 }
 
 function boHangDoiNhap() {
@@ -956,8 +954,9 @@ function laFileExcel(ten) {
 
 /* "Tai so nhap mau": phan mem tao so (co san cac CLB dang co) trong thu
    muc Tai xuong roi mo thu muc do — giao vien khong phai tu di tim. */
+/* SM2: MỘT nút, sổ luôn đủ cấu trúc. `kieu` "huy_chuong" chỉ còn do lời nhắc sai chế độ (Cài đặt) gọi. */
 function taiSoNhapMau(kieu) {
-  const nut = el(kieu === "huy_chuong" ? "btnTaiSoMauHuyChuong" : "btnTaiSoMau");
+  const nut = el("btnTaiSoMau");
   nut.disabled = true;
   callApi("tao_so_nhap_mau", "", kieu || "thuong").then((res) => {
     nut.disabled = false;
@@ -968,6 +967,7 @@ function taiSoNhapMau(kieu) {
     const phu = res.data.n_ten_doi ? "\n" + t("xuat_kq_ten_doi", { n: res.data.n_ten_doi }) : "";
     const cau = t("so_mau_da_tao", { path: res.data.path, n: res.data.n_clubs }) + phu;
     feedback(el("feedbackImportAll"), cau, false);
+    if (typeof nutDaXong === "function") nutDaXong(nut); /* SM2: dấu ✓ UX2 */
     /* FG-9: thong bao ngan (khong kem duong dan); duong day du o tooltip, nut "Mo thu muc". Van tu mo thu muc nhu truoc. */
     const moThuMuc = () => callApi("mo_thu_muc", res.data.path);
     showToast(t("so_mau_da_tao_ngan", { n: res.data.n_clubs }) + phu, "success",

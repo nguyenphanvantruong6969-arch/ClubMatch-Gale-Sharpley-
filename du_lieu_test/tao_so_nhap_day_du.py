@@ -30,7 +30,6 @@ GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, GOC)
 
 import openpyxl  # noqa: E402
-from openpyxl.styles import Font, PatternFill  # noqa: E402
 
 import so_nhap  # noqa: E402
 
@@ -60,28 +59,11 @@ DEM = ["Văn", "Thị", "Minh", "Đức", "Ngọc", "Gia", "Bảo", "Thu", "Quan
 TEN = ["An", "Bình", "Châu", "Dũng", "Giang", "Hà", "Khoa", "Linh", "Mai", "Nam", "Phúc", "Quỳnh",
        "Sơn", "Trang", "Uyên", "Việt", "Yến", "Long", "Hải", "Thảo"]
 
-# Từ điển cột: (trang, cột, bắt buộc?, chế độ dùng, giá trị hợp lệ / ghi chú)
-TU_DIEN = [
-    ("1. CLB", "Tên CLB", "Bắt buộc", "Mọi chế độ", "Tên hiển thị; không trùng trong cùng buổi."),
-    ("1. CLB", "Buổi", "Bắt buộc nếu trường có nhiều buổi", "Mọi chế độ", "Chọn trong danh sách: Thứ 2 … Chủ nhật."),
-    ("1. CLB", "Chỉ tiêu", "Bắt buộc", "Mọi chế độ", "Số nguyên > 0: số chỗ của CLB."),
-    ("1. CLB", "Suất ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Số chỗ dành cho Nhóm ưu tiên (≤ Chỉ tiêu). Chế độ FA bỏ qua: dùng sheet Giữ chỗ."),
-    ("1. CLB", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Tên nhóm được hưởng Suất ưu tiên (vd. chinh_sach)."),
-    ("1. CLB", "Mã CLB", "Tuỳ chọn", "Mọi chế độ", "Để trống thì phần mềm tự tạo; giữ nguyên khi nạp lại để không mất dữ liệu."),
-    ("1. CLB", "Loại", "Bắt buộc ở chế độ FA", "Chỉ FA", "Tự do / Giới hạn / Tuyển chọn. Mỗi buổi cần ít nhất một CLB Tự do."),
-    ("1. CLB", "Điểm sàn", "Bắt buộc với CLB Tuyển chọn", "Chỉ FA", "Số nguyên 0–10. Dưới điểm sàn hoặc chưa thi thì không được xét CLB đó."),
-    ("1. CLB", "Tối thiểu", "Tuỳ chọn", "Chỉ FA", "CLB Giới hạn / Tuyển chọn: số thành viên ít nhất để CLB mở."),
-    ("1. CLB", "Sức chứa phòng", "Tuỳ chọn", "Chỉ FA", "CLB Tự do: đông hơn số này thì chia nhóm theo số bốc thăm."),
-    ("1. CLB", "Giờ", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất (vd. 14:00–15:30)."),
-    ("1. CLB", "Địa điểm", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất."),
-    ("2. Học sinh", "Mã HS", "Bắt buộc", "Mọi chế độ", "Duy nhất cho mỗi em."),
-    ("2. Học sinh", "Họ tên", "Bắt buộc", "Mọi chế độ", ""),
-    ("2. Học sinh", "Lớp", "Tuỳ chọn", "Mọi chế độ", "Dùng để lọc, sắp, xuất theo lớp và in phiếu cả lớp."),
-    ("2. Học sinh", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Trùng tên với Nhóm ưu tiên của CLB thì em được xét Suất ưu tiên."),
-    ("2. Học sinh", "NV k", "Ít nhất 1", "Mọi chế độ", "Chọn tên CLB trong danh sách thả xuống; NV1 là muốn nhất. Tối đa 10 NV mỗi buổi."),
-    ("2. Học sinh", "Điểm k", "Tuỳ chọn", "Mọi chế độ", "Có điểm (hoặc chữ 'thi') = em đã thi CLB đó; trống = không thi. Tối đa 5 CLB thi mỗi buổi."),
-    ("2. Học sinh", "Huy chương / Điểm quyết tâm k", "Tuỳ chọn", "FA: Huy chương · RB-DA bật điểm quyết tâm: Điểm quyết tâm", "FA: chỉ 60 / 30 / 10, mỗi giá trị tối đa một lần mỗi buổi, không đặt ở CLB Tự do."),
-    ("Giữ chỗ", "Mã CLB, Mã học sinh", "Tuỳ chọn", "Chỉ FA", "Mỗi dòng một chỗ giữ trước; em phải có CLB đó trong nguyện vọng."),
+
+GHI_CHU = [
+    "Chế độ đầy đủ nhất: bật 'Xếp theo loại CLB và huy chương' khi tạo không gian làm việc (cần bật 'Dùng điểm quyết tâm').",
+    "Không gian làm việc thường (RB-DA) vẫn nạp được sổ này: các cột chỉ-FA bị bỏ qua và phần mềm báo một cảnh báo.",
+    "DỮ LIỆU MÔ PHỎNG: tên, lớp, nguyện vọng, điểm, huy chương do máy bịa (du_lieu_test/tao_so_nhap_day_du.py).",
 ]
 
 
@@ -131,38 +113,12 @@ def dung_so(seed: int = SEED_MAC_DINH):
     return clubs, students, giu
 
 
-def _them_tu_dien(wb):
-    ws = wb[so_nhap.SHEET_HD]
-    r = ws.max_row + 2
-    ws.cell(row=r, column=1, value="TỪ ĐIỂN CỘT (sổ mẫu đầy đủ)").font = Font(bold=True, size=12)
-    r += 1
-    tieu_de = ["Trang", "Cột", "Bắt buộc?", "Dùng ở chế độ", "Giá trị hợp lệ / ghi chú"]
-    for j, t in enumerate(tieu_de, 1):
-        o = ws.cell(row=r, column=j, value=t)
-        o.font = Font(bold=True)
-        o.fill = PatternFill("solid", fgColor="E8E2D0")
-    for dong in TU_DIEN:
-        r += 1
-        for j, v in enumerate(dong, 1):
-            ws.cell(row=r, column=j, value=v)
-    r += 2
-    for dong in [
-        "Chế độ đầy đủ nhất: bật 'Xếp theo loại CLB và huy chương' khi tạo không gian làm việc (cần bật 'Dùng điểm quyết tâm').",
-        "Không gian làm việc thường (RB-DA) vẫn nạp được sổ này: các cột chỉ-FA bị bỏ qua và phần mềm báo một cảnh báo.",
-        "DỮ LIỆU MÔ PHỎNG: tên, lớp, nguyện vọng, điểm, huy chương do máy bịa (du_lieu_test/tao_so_nhap_day_du.py).",
-    ]:
-        ws.cell(row=r, column=1, value=dong)
-        r += 1
-    for cot, rong in zip("ABCDE", (14, 30, 30, 34, 90)):
-        ws.column_dimensions[cot].width = max(ws.column_dimensions[cot].width or 0, rong)
-
-
 def ghi(ra: str = MAC_DINH_RA, seed: int = SEED_MAC_DINH) -> str:
     clubs, students, giu = dung_so(seed)
     so_nhap.ghi_so_nhap(ra, clubs, students, luon_co_cot_w=True, co_lop=True, giu_cho=giu,
                         che_do_fa=True)
     wb = openpyxl.load_workbook(ra)
-    _them_tu_dien(wb)
+    so_nhap._ghi_tu_dien_cot(wb, "TỪ ĐIỂN CỘT (sổ mẫu đầy đủ)", GHI_CHU)
     moc = datetime.datetime(2026, 11, 21)          # dấu thời gian cố định: chạy lại ra cùng tệp
     wb.properties.created = wb.properties.modified = moc
     wb.save(ra)

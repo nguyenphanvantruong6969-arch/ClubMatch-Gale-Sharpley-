@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-21 — SM2-L2: MỘT nút "Tải sổ nhập mẫu", sổ luôn đủ cấu trúc
+
+- `so_nhap.py`: `TU_DIEN_COT` + `_ghi_tu_dien_cot(wb, tieu_de, ghi_chu, che_do_fa)` (nguồn duy nhất của từ điển cột; dòng cột thứ ba theo chế độ: FA nói Huy chương, không nói quỹ) và tham số `ghi_so_nhap(..., day_du=False)`: True thì luôn có 4 cột FA, Giờ, Địa điểm, sheet Giữ chỗ (chỉ tiêu đề) và bảng TỪ ĐIỂN CỘT. Mặc định không đổi.
+- `api_xuat.tao_so_nhap_mau` truyền `day_du=True`; chữ ký giữ nguyên, `kieu="huy_chuong"` vẫn ép nhãn Huy chương. `mau_csv/tao_so_nhap.py` (`tao_mau_trong`) cũng `day_du=True` để `mau_csv/SO_NHAP_CLB.xlsx` vẫn trùng sổ phần mềm (T1a); sinh lại tệp đó. `du_lieu_test/tao_so_nhap_day_du.py` dùng lại `_ghi_tu_dien_cot` (bỏ `TU_DIEN` riêng); sinh lại `SO_NHAP_MAU_DAY_DU.xlsx` (từ điển: "em" → "học sinh", theo luật chữ của sheet Hướng dẫn).
+- Giao diện: bỏ nút `btnTaiSoMauHuyChuong` (`index.html`, `js/02_van_hanh.js`); `taiSoNhapMau` luôn dùng `btnTaiSoMau` và hiện dấu ✓ UX2 (`nutDaXong`). Khoá i18n `ux1a_btn_so_mau_huy_chuong` GIỮ vì nút lời nhắc sai chế độ (`ux1bSsTaiSoMau`, js/18_cai_dat.js) còn dùng. Chữ `import_hint` (vi + en). `HUONG_DAN_SU_DUNG.md`, `mau_csv/HUONG_DAN_SO_NHAP.md`.
+- Test mới: `tests/test_sm2_mot_so_mau.py` (6 ca). Test sửa có chủ đích (sổ mẫu nay có Giữ chỗ + cột FA/Giờ): `test_giao_dien_ux1_nhap_so.py` (ca "hai nút" → `test_mot_nut_so_mau_day_du_cau_truc`), `test_fg2_xem_truoc_fa.py` (băm `BAM_SO_MAU_MAC_DINH`, đọc sheet Hướng dẫn theo tên), `test_ws_so_nhap.py` (2 ca), `test_ws_so_nhap_giao_dien.py` (2 ca), `test_so_nhap.py::test_mau_trong_doc_duoc_va_dung_bo_cuc`. `CLAUDE_CHI_TIET.md` (372 tệp test). kiem_nhanh 7/7.
+
 ## 2026-11-21 — SM2-L1: chế độ FA không còn cảnh báo `wharton_chua_dung_het` giả
 
 - `api_nhap.py` (`import_preferences_csv`, chỗ gọi `_soat_ho_so_wharton`): bỏ qua khi `dung_fa_daa(luat)`; huy chương FA soát bằng `fa_daa.kiem_ho_so_huy_chuong` / `kiem_fa_tu_csdl`. Trước: 657 cảnh báo khi nạp `SO_NHAP_MAU_DAY_DU.xlsx`, 434 với `SO_NHAP_FA_MAU_120HS.xlsx`; nay 0.

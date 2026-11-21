@@ -3,7 +3,7 @@
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: IN PROGRESS (L1 done, Sonnet coder). Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
+Status: READY FOR REVIEW (sha: see git log, commit `SM2-L2`); CI pending. Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
@@ -37,17 +37,17 @@ Lot L1 — no false warnings in FA (#3)
 - [x] Fix in `api_nhap.py` at the `_soat_ho_so_wharton` call; same check for health report / Kiểm tra in FA.
 - [x] `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7.
 Lot L2 — one button, full structure (#2)
-- [ ] Test first `tests/test_sm2_mot_so_mau.py`: `tao_so_nhap_mau` in default, DQT and FA workspaces → sheet
+- [x] Test first `tests/test_sm2_mot_so_mau.py`: `tao_so_nhap_mau` in default, DQT and FA workspaces → sheet
       `1. CLB` has every header of `COT_CLB + COT_FA + COT_GIO`, sheet `2. Học sinh` has Lớp, sheet Giữ chỗ
       exists, Hướng dẫn has "TỪ ĐIỂN CỘT"; medal label only in FA; the template filled with 2 clubs + 3 students
       (FA columns empty) imports in a DEFAULT workspace with no new warning; `ghi_so_nhap` default unchanged.
-- [ ] `so_nhap.py`: `TU_DIEN_COT` + `_ghi_tu_dien_cot(wb)` + `day_du` param; `api_xuat.tao_so_nhap_mau`
+- [x] `so_nhap.py`: `TU_DIEN_COT` + `_ghi_tu_dien_cot(wb)` + `day_du` param; `api_xuat.tao_so_nhap_mau`
       passes `day_du=True`; `tao_so_nhap_day_du.py` reuses it (regenerate the xlsx, content must not change
       except formatting).
-- [ ] UI: remove `btnTaiSoMauHuyChuong` (`index.html`, `js/02_van_hanh.js`, its i18n key); the wrong-mode
+- [x] UI: remove `btnTaiSoMauHuyChuong` (`index.html`, `js/02_van_hanh.js`, its i18n key); the wrong-mode
       prompt of UX1A-L5 stays. Update UX1A-L5 tests that use the removed button deliberately (list in CHANGELOG).
       One Chromium check: one sample button, click → `tao_so_nhap_mau` called once, UX2 ✓ shows.
-- [ ] `HUONG_DAN_SU_DUNG.md`, `mau_csv/HUONG_DAN_SO_NHAP.md` (one sample, column dictionary), CHANGELOG, TIEN_DO.
+- [x] `HUONG_DAN_SU_DUNG.md`, `mau_csv/HUONG_DAN_SO_NHAP.md` (one sample, column dictionary), CHANGELOG, TIEN_DO.
 
 ## Acceptance (kiem_nhan)
 - Both lots' tests green; related: `test_so_nhap.py`, `test_so_mau_day_du.py`, `test_a13_8_so_mau.py`,
@@ -56,12 +56,20 @@ Lot L2 — one button, full structure (#2)
 - Invariant 1: `kiem_nhanh.py` 7/7. CI green (Tests). No Windows build needed unless Truong asks.
 
 ## Current state
-- Done: L1 (api_nhap skip in FA; list_wharton_canh_bao drops the code in FA; health report already FA-split). Next: L2.
+- Done: L1 (api_nhap skip in FA; list_wharton_canh_bao drops the code in FA; health report already FA-split).
+- Done: L2 (`ghi_so_nhap(day_du=True)` from `tao_so_nhap_mau` and `mau_csv/tao_so_nhap.tao_mau_trong`; one button; ✓ on success).
+- Next: checker review; coder waits for CI (send_later) and fixes red only.
 
 ## Decisions and gotchas
+- i18n key `ux1a_btn_so_mau_huy_chuong` KEPT: the wrong-mode prompt button `ux1bSsTaiSoMau` (js/18_cai_dat.js) still uses it (plan said remove; removing would break the kept prompt).
+- `mau_csv/SO_NHAP_CLB.xlsx` must equal the app sample (T1a) → `tao_mau_trong` also passes `day_du=True`; regenerated.
+- Sheet Hướng dẫn may not say "em" (T1a/G3): dictionary rows reworded to "học sinh" (so `SO_NHAP_MAU_DAY_DU.xlsx` text changed in 4 cells).
+- FA sample Hướng dẫn may not mention "Điểm quyết tâm"/"quỹ" (FG-2): `_ghi_tu_dien_cot(che_do_fa=bool)` swaps the third-column row per mode; `None` (du_lieu_test script) keeps the combined row.
+- Import warnings are in `data.warnings`, not `errors`.
 - `CLAUDE_CHI_TIET.md` counts test files (`370 tệp`); each new test file → update the count (CI checks docs).
 
 ## Files touched
+- L2: so_nhap.py, api_xuat.py, index.html, js/02_van_hanh.js, i18n.js, mau_csv/tao_so_nhap.py + SO_NHAP_CLB.xlsx, du_lieu_test/tao_so_nhap_day_du.py + SO_NHAP_MAU_DAY_DU.xlsx, 2 guides, tests (1 new + 6 updated)
 - L1: api_nhap.py, api_quan_ly.py, tests/test_sm2_canh_bao_fa.py, CHANGELOG.md, TIEN_DO.md, CLAUDE_CHI_TIET.md
 
 ## Session log (append only)
@@ -69,3 +77,4 @@ Lot L2 — one button, full structure (#2)
 |---|---|---|---|
 | 2026-11-21 | Opus (planner) | Goal, decisions, Plan L1–L2 | no product code |
 | 2026-11-21 | coder | L1 done, kiem_nhanh 7/7 | import warnings live in data.warnings |
+| 2026-11-21 | coder | L2 done, related tests 507 green, kiem_nhanh 7/7 | READY FOR REVIEW |
