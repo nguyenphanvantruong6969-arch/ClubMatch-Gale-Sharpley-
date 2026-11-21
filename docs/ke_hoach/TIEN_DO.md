@@ -217,3 +217,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX2-L1 (nút đang bận + chống bấm đúp, `datNutBan`) | xong, chờ checker | 2026-11-21 | js/00_nen.js, js/02_van_hanh.js, i18n.js, style.css | tests/test_giao_dien_ux2_ban.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L2 (dấu ✓ sau khi lưu/xuất, `nutDaXong`) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 03, 05, 06, 10, 14, style.css | tests/test_giao_dien_ux2_xong.py | chỉ giao diện; kiem_nhanh 7/7 |
 | UX2-L3 (vùng bấm 44 px, vòng focus, lớp trạng thái) | xong, chờ checker | 2026-11-21 | style.css, i18n.js, js/00_nen.js | tests/test_giao_dien_ux2_nut.py | chỉ giao diện; kiem_nhanh 7/7 |
+| UX2-L4 (lỗi ngay tại ô: hạt giống, form CLB, form thêm học sinh, ô điểm) | xong, chờ checker | 2026-11-21 | js/00_nen.js, 02, 04, 05, 06, style.css | tests/test_giao_dien_ux2_loi_o.py | chỉ giao diện; kiem_nhanh 7/7 |

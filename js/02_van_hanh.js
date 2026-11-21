@@ -613,7 +613,8 @@ function runPipelineFlow() {
   const seed = docHatGiong();
   if (seed === null) {
     showToast(t("hat_giong_khong_hop_le"), "error");
-    el("seedInput").focus();
+    baoLoiTaiO(el("seedInput"), t("hat_giong_khong_hop_le")); /* UX2-L4: lỗi ngay tại ô (toast giữ nguyên: ô nằm trong mục Nâng cao) */
+    focusODau([el("seedInput")]);
     return;
   }
 

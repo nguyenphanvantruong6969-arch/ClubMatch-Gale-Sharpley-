@@ -496,6 +496,94 @@ function feedbackErrors(node, errors) {
   ganChiTietKyThuat(node, errors);
 }
 
+/* UX2-L4 (#7): loi NGAY TAI O. Chu luon di qua trErr/t (mot nguon, bat bien 6); khong chuoi moi trong JS.
+   baoLoiTaiO(o, chu, tuyChon): aria-invalid, lop is-loi, <div.loi-o> ngay sau o (hoac sau <label> boc o) noi voi o
+     bang aria-describedby; lac 200 ms (ux2Rung) CHI khi cho phep chuyen dong; go chu vao o thi loi tu xoa.
+     tuyChon.them = [lop cu can giu, vd "is-invalid"], tuyChon.tieuDe = true: giu title cu cua o diem.
+   xoaLoiTaiO(o): go sach moi dau vet (aria-invalid, lop, .loi-o, describedby, ham nghe).
+   focusODau(dsO): dua tro vao o DAU TIEN (theo thu tu tren trang), mo <details> dong boc no.
+   baoLoiForm(goc, errors, bangMaO, tuyChon): bangMaO = {ma_loi: "idO" | (err) => "idO"}; loi co o thi hien tai o, loi
+     khong co o (hoac ma la) thi tuyChon.khac(errors) hoac toast — KHONG BAO GIO im lang. Tra {conO, khac}. */
+let ux2SoLoiO = 0;
+
+function ux2ChoPhepChuyenDong() {
+  return !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    && !document.documentElement.classList.contains("tat-hieu-ung");
+}
+
+function xoaLoiTaiO(o) {
+  if (!o) return;
+  const st = o.__ux2Loi;
+  if (!st) return;
+  if (st.hop && st.hop.parentNode) st.hop.parentNode.removeChild(st.hop);
+  const con = (o.getAttribute("aria-describedby") || "").split(/\s+/).filter((x) => x && x !== st.id);
+  if (con.length) o.setAttribute("aria-describedby", con.join(" "));
+  else o.removeAttribute("aria-describedby");
+  o.removeAttribute("aria-invalid");
+  o.classList.remove("is-loi", "ux2-rung");
+  (st.them || []).forEach((c) => o.classList.remove(c));
+  if (st.tieuDe) o.removeAttribute("title");
+  o.removeEventListener("input", st.ham);
+  o.removeEventListener("change", st.ham);
+  delete o.__ux2Loi;
+}
+
+function baoLoiTaiO(o, chu, tuyChon) {
+  if (!o) return;
+  xoaLoiTaiO(o);
+  const tc = tuyChon || {};
+  ux2SoLoiO += 1;
+  const id = "loi-o-" + ux2SoLoiO;
+  const hop = document.createElement("div");
+  hop.className = "loi-o";
+  hop.id = id;
+  hop.textContent = chu;
+  const moc = o.closest("label") || o;
+  moc.parentNode.insertBefore(hop, moc.nextSibling);
+  const ham = () => xoaLoiTaiO(o);
+  o.__ux2Loi = { id, hop, ham, them: tc.them || [], tieuDe: !!tc.tieuDe };
+  o.setAttribute("aria-invalid", "true");
+  o.setAttribute("aria-describedby", ((o.getAttribute("aria-describedby") || "") + " " + id).trim());
+  o.classList.add("is-loi");
+  (tc.them || []).forEach((c) => o.classList.add(c));
+  if (tc.tieuDe) o.title = chu;
+  o.addEventListener("input", ham);
+  o.addEventListener("change", ham);
+  if (ux2ChoPhepChuyenDong()) {
+    o.classList.remove("ux2-rung");
+    void o.offsetWidth;
+    o.classList.add("ux2-rung");
+    setTimeout(() => o.classList.remove("ux2-rung"), 260);
+  }
+}
+
+function focusODau(dsO) {
+  const co = dsO.filter(Boolean);
+  if (!co.length) return;
+  co.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+  const dau = co[0];
+  const d = dau.closest("details");
+  if (d && !d.open) d.open = true;
+  dau.focus();
+}
+
+function baoLoiForm(goc, errors, bangMaO, tuyChon) {
+  const tc = tuyChon || {};
+  const dsO = [];
+  const khac = [];
+  (errors || []).forEach((e) => {
+    const m = bangMaO && bangMaO[e && e.code];
+    const idO = typeof m === "function" ? m(e) : m;
+    const o = idO ? (goc && goc.querySelector ? goc.querySelector("#" + idO) : null) || el(idO) : null;
+    if (!o) { khac.push(e); return; }
+    baoLoiTaiO(o, trErr(e));
+    dsO.push(o);
+  });
+  focusODau(dsO);
+  if (khac.length) (tc.khac || ((x) => showErrorToast(x)))(khac);
+  return { conO: dsO.length > 0, khac };
+}
+
 function debounce(fn, ms) {
   let timer = null;
   return (...args) => {

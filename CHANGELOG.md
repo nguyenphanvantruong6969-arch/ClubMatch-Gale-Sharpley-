@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L4: lỗi ngay tại ô nhập
+
+- `js/00_nen.js`: `baoLoiTaiO(o, chu, tuyChon)`, `xoaLoiTaiO(o)`, `focusODau(dsO)`, `baoLoiForm(goc, errors, bangMaO, tuyChon)`. Ô lỗi có `aria-invalid="true"`, lớp `is-loi`, `<div.loi-o>` nối bằng `aria-describedby`; gõ chữ vào ô thì lỗi tự xoá; con trỏ về ô sai ĐẦU TIÊN (mở `<details>` đóng bọc nó); lắc `ux2Rung` 200 ms chỉ khi cho phép chuyển động (không `reduce`, không `tat-hieu-ung`). Chữ luôn qua `trErr`/`t` (không chuỗi mới); mã lỗi không có ô → `tuyChon.khac` hoặc toast, không im lặng.
+- Nối vào: ô hạt giống (`02_van_hanh.js`, toast cũ giữ nguyên); form CLB (`05_quan_ly.js`: ô thiếu + bảng `UX2_LOI_CLB` mã backend → ô: `club_id_required`, `capacity_must_be_positive`, `reserve_capacity_negative`, `reserve_capacity_exceeds_capacity`, mã khác → khung phản hồi cũ); form thêm học sinh (`04_nhap_tai_cho.js`: mã/tên/lớp thiếu, `student_id_required`, mã khác → toast); ô điểm (`06_cham_diem.js`, 3 chỗ: giữ `is-invalid` + `title`, thêm `.loi-o` + focus ô đầu).
+- Không gộp vào `04_nhap_tai_cho.js` phần `wh-diem` (kiểm tra sống khi gõ, đã có dòng `.wh-loi` tổng hợp): giữ nguyên hành vi.
+- `style.css`: `.loi-o`, `.is-loi`, `@keyframes ux2Rung` (chỉ trong `prefers-reduced-motion: no-preference`).
+- Test mới: `tests/test_giao_dien_ux2_loi_o.py` (8). Không test cũ phải sửa; 191 test liên quan qua; không đổi `api*.py`, `i18n_errors.py`.
+
 ## 2026-11-21 — UX2-L3: vùng bấm 44 px, một vòng focus, lớp trạng thái (CSS nút)
 
 - `style.css` (khối `/* UX2 — L3 */`): `touch-action: manipulation` cho `button, .btn, [role=button]`; vùng bấm là `::after` trong suốt rộng tối thiểu 44 px quanh tâm nút (kích thước nhìn thấy không đổi; `::before` giữ nguyên cho × của toast, mũi tên panel). Nút chữ trần trong bảng (`td`) chỉ nới tới 34 px, trong danh sách dày (`li`, vd `.ranking-list`) tới 20 px, để hàng liền kề không đè vùng bấm nhau.

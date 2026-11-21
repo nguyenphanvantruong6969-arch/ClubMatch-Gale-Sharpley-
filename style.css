@@ -3242,3 +3242,14 @@ li :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%
 :where(input, select, textarea, summary, label) { position: relative; z-index: 1; }
 /* Nội dung của <details> đang ĐÓNG không có hộp thật nhưng vẫn có toạ độ: không nâng lên, kẻo nó đè lên nút nằm ở đó. */
 details:not([open]) :where(input, select, textarea, label) { position: static; z-index: auto; }
+
+/* UX2 — L4: lỗi ngay tại ô (#7). Chữ lỗi dưới ô, nối bằng aria-describedby; lắc 200 ms chỉ khi cho phép chuyển động. */
+.loi-o { color: var(--rust-text); font-size: 12px; line-height: 1.35; margin-top: 4px; }
+.is-loi { border-color: var(--rust); background: var(--rust-soft); }
+@keyframes ux2Rung { 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-rung { animation: ux2Rung 200ms ease-in-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-rung { animation: none; }
+}

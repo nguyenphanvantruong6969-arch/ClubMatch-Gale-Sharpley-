@@ -62,11 +62,11 @@ Lot L3 ✅ PASSED (checker NO BUGS, head 2a05e8f, 2 fix rounds) — #8 hit area,
       transparent pseudo-element or padding (grep `::after`/`::before` users first; 6 `::after` exist).
 - [x] Remove duplicated per-component `:focus-visible` rules only when the shared one covers them.
 Lot L4 — #7 inline field errors
-- [ ] Test `tests/test_giao_dien_ux2_loi_o.py`: invalid seed, admin add-club form, admin add-student form, a
+- [x] Test `tests/test_giao_dien_ux2_loi_o.py`: invalid seed, admin add-club form, admin add-student form, a
       score input (`06_cham_diem`): input gets `aria-invalid="true"`, class `is-loi`, `aria-describedby` → a
       `.loi-o` text = translated message; focus on the FIRST invalid input; shake 200 ms (`ux2Rung`) only when
       motion allowed; typing clears the error. Non-field errors still toast.
-- [ ] Helpers `baoLoiTaiO(o, chu)`, `xoaLoiTaiO(o)`, `baoLoiForm(goc, errors, bangMaO)` in `js/00_nen.js`;
+- [x] Helpers `baoLoiTaiO(o, chu)`, `xoaLoiTaiO(o)`, `baoLoiForm(goc, errors, bangMaO)` in `js/00_nen.js`;
       reuse in `04_nhap_tai_cho` / `06_cham_diem` existing `aria-invalid` code (unify, keep behaviour).
 Lot L5 — #11 4-phase progress (display only; needs L1)
 - [ ] Static test `tests/test_ux2_tien_trinh.py`: the JS map `UX2_PHA` (Kiểm tra = backup, validate; Xếp =

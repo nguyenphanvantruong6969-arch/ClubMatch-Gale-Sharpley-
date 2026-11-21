@@ -1138,6 +1138,14 @@ function suaClbTuDong(c, tr) {
   el("clubFormName").focus();
 }
 
+/* UX2-L4: bảng mã lỗi backend → id ô nhập của form CLB (mã khác = lỗi chung, hiện ở khung phản hồi). */
+const UX2_LOI_CLB = {
+  club_id_required: "clubFormId",
+  capacity_must_be_positive: "clubFormCapacity",
+  reserve_capacity_negative: "clubFormReserveCapacity",
+  reserve_capacity_exceeds_capacity: "clubFormReserveCapacity",
+};
+
 function initAdminHandlers() {
   el("btnClubFormHuy").addEventListener("click", datLaiFormClb);
   el("btnSaveClub").addEventListener("click", () => {
@@ -1150,8 +1158,16 @@ function initAdminHandlers() {
     const reserveGroup = clbDangSua || rgRaw ? rgRaw : null;
     const buoiRaw = el("clubFormBuoi") ? el("clubFormBuoi").value.trim() : "";
     const buoi = clbDangSua || buoiRaw ? buoiRaw : null;
+    ["clubFormId", "clubFormName", "clubFormCapacity", "clubFormReserveCapacity"].forEach((x) => xoaLoiTaiO(el(x)));
     if (!id || (!name && !clbDangSua) || !capacity) {
       feedback(el("clubFormFeedback"), t("feedback_club_form_required"), true);
+      /* UX2-L4: tô đúng ô còn thiếu (cùng câu cũ, không chuỗi mới) và đưa con trỏ về ô đầu tiên. */
+      const thieu = [];
+      if (!id) thieu.push(el("clubFormId"));
+      if (!name && !clbDangSua) thieu.push(el("clubFormName"));
+      if (!capacity) thieu.push(el("clubFormCapacity"));
+      thieu.forEach((o) => baoLoiTaiO(o, t("feedback_club_form_required")));
+      focusODau(thieu);
       return;
     }
     chayNut(el("btnSaveClub"), () => callApi("create_or_update_club", id, name || null, capacity, reserveCapacity, reserveGroup, buoi), (res) => {
@@ -1162,7 +1178,9 @@ function initAdminHandlers() {
         loadReserveGroupOptions();
         lamMoiSauDoiClb();
       } else {
-        feedbackErrors(el("clubFormFeedback"), res.errors);
+        /* UX2-L4: mã lỗi → ô nhập (bảng đặt cạnh form); mã lạ → khung phản hồi cũ, không im lặng. */
+        baoLoiForm(el("clubFormId").closest("form") || document, res.errors, UX2_LOI_CLB,
+          { khac: (ds) => feedbackErrors(el("clubFormFeedback"), ds) });
       }
     }, { xongKhi: (r) => r && r.ok });
   });

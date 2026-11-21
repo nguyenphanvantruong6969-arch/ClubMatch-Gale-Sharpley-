@@ -236,20 +236,28 @@ function initFallbackHandlers() {
   el("btnCreateStudent").addEventListener("click", () => {
     const id = el("newStudentId").value.trim();
     const name = el("newStudentName").value.trim();
+    ["newStudentId", "newStudentName", "newStudentLop"].forEach((x) => xoaLoiTaiO(el(x)));
     if (!id || !name) {
       showToast(t("toast_need_id_and_name"), "error");
+      /* UX2-L4: tô đúng ô còn trống, con trỏ về ô đầu tiên. */
+      const thieu = [];
+      if (!id) thieu.push(el("newStudentId"));
+      if (!name) thieu.push(el("newStudentName"));
+      thieu.forEach((o) => baoLoiTaiO(o, t("toast_need_id_and_name")));
+      focusODau(thieu);
       return;
     }
     /* A14: có lớp trong danh sách thì em mới cũng phải chọn lớp. */
     const lopMoi = el("newStudentLop").hidden ? null : el("newStudentLop").value;
     if (lopMoi === "") {
       showToast(t("kiosk_lop_nhac"), "error");
-      el("newStudentLop").focus();
+      baoLoiTaiO(el("newStudentLop"), t("kiosk_lop_nhac"));
+      focusODau([el("newStudentLop")]);
       return;
     }
     roiDiNeuDuoc(() => khiBan(el("btnCreateStudent"), () => callApi("create_student_if_missing", id, name, lopMoi)).then((res) => {
       if (!res.ok) {
-        showErrorToast(res.errors);
+        baoLoiForm(document, res.errors, { student_id_required: "newStudentId" }); /* mã lạ → toast như cũ */
         return;
       }
       showToast(res.data.created ? t("toast_student_created") : t("toast_student_exists"), "success");
