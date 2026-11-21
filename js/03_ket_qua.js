@@ -1024,7 +1024,7 @@ function initResultsHandlers() {
       showToast(t("toast_xuat_chua_chon_muc"), "error");
       return;
     }
-    chayXuat(muc);
+    chayXuat(muc, undefined, undefined, el("btnXuatTuyChon"));
   });
 
   /* "Kem CSV" chi co nghia khi dang xuat ket qua. */
@@ -1037,7 +1037,7 @@ function initResultsHandlers() {
     if (!hsDaChon.size) return;
     chayXuat([["xuat_muc_hoc_sinh", "export_hoc_sinh_csv", [Array.from(hsDaChon).sort(), ""],
       (d) => t("xuat_kq_hoc_sinh", { n: d.n_hoc_sinh, n_dong: d.n_dong, path: d.path }),
-      boHsKhongConTonTai]]);
+      boHsKhongConTonTai]], undefined, undefined, el("btnXuatHsDaChon"));
   });
 
   /* A14: lọc / sắp theo lớp, và xuất mỗi lớp một tệp cho giáo viên chủ nhiệm. */
@@ -1064,7 +1064,7 @@ function initResultsHandlers() {
 
   el("btnXuatTheoLop").addEventListener("click", () => {
     chayXuat([["xuat_muc_theo_lop", "export_theo_lop", [""],
-      (d) => t("xuat_kq_theo_lop", { n: d.n_tep, path: d.thu_muc })]]);
+      (d) => t("xuat_kq_theo_lop", { n: d.n_tep, path: d.thu_muc })]], undefined, undefined, el("btnXuatTheoLop"));
   });
 
   /* XP1-L4: xuất PDF hàng loạt. Danh sách: mỗi CLB / mỗi lớp một tệp trong một thư mục. Phiếu giải trình: "Tất cả"
@@ -1159,7 +1159,7 @@ function capNhatChonHs() {
 /* Chay lan luot cac lan xuat; ghi ket qua vao o phan hoi (KHONG tu tat —
    duong dan tep phai doc duoc) va mot toast tom tat. Dung chung cho the
    Ket qua va the 04. */
-function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
+function chayXuat(dsMuc, oPhanHoi, kemMoTep, nutXuat) {
   /* Bam dup se ghi them mot bo tep "(2)": khoa moi nut xuat trong luc xuat. */
   if (khoa.dangXuat) return;
   datKhoa("dangXuat", true);
@@ -1201,6 +1201,7 @@ function chayXuat(dsMuc, oPhanHoi, kemMoTep) {
       veKetQuaXuat(o, dong, coLoi, duongMo, kemMoTep);
       /* GT4: thông báo nổi chỉ nói đã xuất gì (bỏ phần "→ đường dẫn" — đường dẫn đầy đủ nằm ngay dưới nút), cho khỏi che bảng. */
       showToast(coLoi ? (dong[0] || "") : String(dong[0] || "").split(" → ")[0], coLoi ? "error" : "success");
+      if (!coLoi && nutXuat) nutDaXong(nutXuat); /* UX2-L2 */
       if (currentTabName() === "others") veXuatPanel();
     });
 }

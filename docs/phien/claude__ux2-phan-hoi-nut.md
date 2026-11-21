@@ -45,10 +45,10 @@ Lot L1 ✅ PASSED (checker NO BUGS, head 9169da5, 2 fix rounds) — #2 busy stat
       `animation-name` = none with `html.tat-hieu-ung` and with `reducedMotion:"reduce"`).
 - [x] Update tests that assert the old "Đang chạy…" label deliberately; list them in CHANGELOG.
 Lot L2 — #3 ✓ after save / export (needs L1)
-- [ ] Test `tests/test_giao_dien_ux2_xong.py`: success → `.ux2-xong` visible on the same button within 100 ms,
+- [x] Test `tests/test_giao_dien_ux2_xong.py`: success → `.ux2-xong` visible on the same button within 100 ms,
       gone at 1.6 s (shown ≈1.2 s), width stable; `ok:false` → no ✓; under `tat-hieu-ung` ✓ still shows (state,
       not motion) without animation.
-- [ ] `chayNut` option `xongKhi: (res) => res.ok` → `nutDaXong(nut)`; wire save + export buttons (`chayXuat`
+- [x] `chayNut` option `xongKhi: (res) => res.ok` → `nutDaXong(nut)`; wire save + export buttons (`chayXuat`
       in `js/03_ket_qua.js`, save buttons in `05_quan_ly`, `06_cham_diem`, `18_cai_dat`; coder lists them).
 Lot L3 — #8 hit area, #9 focus ring, #1 state layer (CSS button system)
 - [ ] Test `tests/test_giao_dien_ux2_nut.py`: every visible `button, .btn, [role=button]` on each main tab has a

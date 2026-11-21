@@ -3199,3 +3199,14 @@ svg.thanh-diem { display: block; }
 }
 /* Nút bận bớt đệm hai bên để vòng xoay không làm nút rộng ra (min-width đã khoá ở datNutBan). */
 .btn.is-ban, button.is-ban { padding-left: 10px; padding-right: 10px; white-space: nowrap; }
+
+/* UX2 — L2: dấu ✓ sau khi lưu/xuất xong. Là trạng thái (hiện cả khi tắt hiệu ứng); chỉ phần hiện dần là chuyển động. */
+.ux2-xong { display: inline-block; margin-right: 4px; font-weight: 700; font-size: 0.9em; line-height: 1; }
+.btn.is-xong, button.is-xong { padding-left: 6px; padding-right: 6px; white-space: nowrap; }
+@keyframes ux2Xong { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-xong { animation: ux2Xong 160ms var(--ease-out) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-xong { animation: none; }
+}

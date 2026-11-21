@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L2: dấu ✓ sau khi lưu / xuất xong
+
+- `js/00_nen.js`: `nutDaXong(nut)` / `goDauXong(nut)` (✓ là `<span.ux2-xong aria-hidden>` ~1,2 s, min-width khoá, dọn lại cả khi đổi ngôn ngữ hay bấm bận lại); `chayNut` và `khiBan` nhận `tuyChon.xongKhi(ketQua)` (✓ chỉ khi true; API ném lỗi / `ok:false` thì không).
+- Nối ✓ — nút lưu: `btnSaveClub`, `btnWhLuu` (`05_quan_ly.js`), `btnSavePersonScores`, `btnSaveScores` (`06_cham_diem.js`, khiBan). Nút xuất qua `chayXuat(…, nutXuat)` (tham số thứ 4, ✓ khi không có lỗi): `btnXuatTuyChon`, `btnXuatHsDaChon`, `btnXuatTheoLop` (`03_ket_qua.js`), `btnXuatPhanHoi`, `btnXuatDashboard`, `btnXuatKhieuNai`, `btnXuatDiemDanh` (`10_theo_doi.js`), `btnAdminXuatHs` (`05_quan_ly.js`), `btnGtXuatMa` (`14_giai_trinh.js`). Nút trong menu "Khác" và các nút lưu khác chưa nối (ngoài danh sách L2).
+- `style.css`: `.ux2-xong`, `@keyframes ux2Xong` (chỉ hiện dần khi cho phép chuyển động; ✓ vẫn hiện khi tắt hiệu ứng).
+- Test mới: `tests/test_giao_dien_ux2_xong.py` (6). Không test cũ phải sửa; 277 test liên quan qua.
+
 ## 2026-11-21 — UX2-L1: nút đang bận + chống bấm đúp (một hàm `datNutBan`)
 
 - `js/00_nen.js`: hàm mới `datNutBan(nut, bat, khoaNhan)` (giữ nút con thật, khoá min-width, vòng xoay `<span.ux2-xoay>`, `aria-busy`, lớp `is-ban`); `chayNut` và `khiBan` gọi nó (nút có icon không còn mất icon).

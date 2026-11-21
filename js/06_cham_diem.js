@@ -150,7 +150,7 @@ function initScoringHandlers() {
       student_id: input.dataset.studentId,
       score: input.value === "" ? null : input.value,
     }));
-    khiBan(el("btnSavePersonScores"), () => callApi("submit_person_scores", scores)).then((res) => {
+    khiBan(el("btnSavePersonScores"), () => callApi("submit_person_scores", scores), { xongKhi: (r) => r && r.ok }).then((res) => {
       if (!res.ok) {
         feedbackErrors(el("scoringPersonFeedback"), res.errors);
         return;
@@ -192,7 +192,7 @@ function initScoringHandlers() {
       student_id: input.dataset.studentId,
       score: input.value === "" ? null : input.value,
     }));
-    khiBan(el("btnSaveScores"), () => callApi("submit_club_scores", currentScoringClub, scores)).then((res) => {
+    khiBan(el("btnSaveScores"), () => callApi("submit_club_scores", currentScoringClub, scores), { xongKhi: (r) => r && r.ok }).then((res) => {
       if (res.ok) {
         const boQua = res.data.warnings || [];
         if (boQua.length) {

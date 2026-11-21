@@ -104,6 +104,7 @@ function datNutBan(nut, bat, khoaNhan) {
   if (!nut) return;
   const trang = nut.__ux2Ban;
   if (bat) {
+    goDauXong(nut);
     const khoa = khoaNhan || "dang_xu_ly";
     const chu = t(khoa);
     if (trang) {
@@ -143,6 +144,37 @@ function datNutBan(nut, bat, khoaNhan) {
   delete nut.__ux2Ban;
 }
 
+/* UX2-L2 (#3): dau ✓ tren CHINH nut vua luu/xuat xong (thanh cong, khong phai loi). La TRANG THAI, khong phai
+   chuyen dong: van hien khi tat hieu ung (chi hieu ung hien dan moi tat). ~1,2 s roi go, min-width khoa de nut khong nhay.
+   Dung lai khi dang ban (datNutBan(true) go ✓ truoc) va khi doi ngon ngu (applyStaticText ghi de noi dung -> ✓ mat, don dep van chay). */
+const UX2_XONG_MS = 1200;
+
+function goDauXong(nut) {
+  const x = nut && nut.__ux2Xong;
+  if (!x) return;
+  clearTimeout(x.hen);
+  if (x.dau.parentNode) x.dau.parentNode.removeChild(x.dau);
+  nut.style.minWidth = x.minGoc;
+  nut.classList.remove("is-xong");
+  delete nut.__ux2Xong;
+}
+
+function nutDaXong(nut) {
+  if (!nut || nut.__ux2Ban) return;
+  goDauXong(nut);
+  const dau = document.createElement("span");
+  dau.className = "ux2-xong";
+  dau.setAttribute("aria-hidden", "true");
+  dau.textContent = "\u2713";
+  const rong = nut.getBoundingClientRect().width;
+  const x = { dau, minGoc: nut.style.minWidth, hen: 0 };
+  if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
+  nut.insertBefore(dau, nut.firstChild);
+  nut.classList.add("is-xong");
+  x.hen = setTimeout(() => goDauXong(nut), UX2_XONG_MS);
+  nut.__ux2Xong = x;
+}
+
 /* Doi ngon ngu luc nut dang ban: nhan ban theo ngon ngu moi (nut khong co data-i18n khong qua applyStaticText). */
 window.addEventListener("langchange", () => {
   document.querySelectorAll(".is-ban").forEach((n) => {
@@ -159,13 +191,20 @@ window.addEventListener("langchange", () => {
    nhanh thanh cong — mot loi JS giua chung la nut xam vinh vien, phai
    tat app mo lai. Nut dang khoa thi bo qua lan bam (tra Promise khong
    bao gio xong, doan `.then` phia sau khong chay). */
-function khiBan(nut, taoPromise) {
+function khiBan(nut, taoPromise, tuyChon) {
   if (!nut || nut.disabled) return new Promise(() => {});
+  const tc = tuyChon || {};
+  let ket;
   nut.disabled = true;
   datNutBan(nut, true);
   return Promise.resolve()
     .then(taoPromise)
-    .finally(() => { datNutBan(nut, false); nut.disabled = false; });
+    .then((r) => { ket = r; return r; })
+    .finally(() => {
+      datNutBan(nut, false);
+      nut.disabled = false;
+      if (tc.xongKhi && ket !== undefined && tc.xongKhi(ket)) nutDaXong(nut);
+    });
 }
 
 /* SG-9: MOT cho cho moi lan goi API. Truoc day ~68 cho viet `callApi(..).then(..)` tran: loi JS trong
@@ -178,7 +217,7 @@ function khiBan(nut, taoPromise) {
      bo qua lan bam (Promise khong bao gio xong) nen bam dup chi goi API MOT lan.
      Mac dinh nut mo lai ngay khi API tra ve (truoc khiXong, nhu khiBan: khiXong co the khoa nut lai).
      tuyChon.nhan = khoa i18n cua nhan ban ("dang_xu_ly"); tuyChon.giuDenKhiXong = true: giu khoa den het khiXong;
-     tuyChon.sauCung: ham chay trong `finally`. */
+     tuyChon.sauCung: ham chay trong `finally`; tuyChon.xongKhi(ketQua) -> true: hien dau ✓ tren nut (UX2-L2, nutDaXong). */
 function baoLoiGiaoDien(loi) {
   console.error(loi);
   showToast(t("loi_giao_dien_ngoai_du_kien"), "error",
@@ -199,12 +238,15 @@ function chayNut(nut, taoPromise, khiXong, tuyChon) {
   const laNutBam = nut.tagName === "BUTTON";
   nut.disabled = true;
   if (laNutBam) datNutBan(nut, true, tc.nhan);
+  let ket;
   const khoi = () => {
     if (laNutBam) datNutBan(nut, false);
     nut.disabled = false;
+    /* UX2-L2: tuyChon.xongKhi(ketQua) -> true thi hien ✓ tren nut (khong khi API ne loi / tra {ok:false}). */
+    if (laNutBam && tc.xongKhi && ket !== undefined && tc.xongKhi(ket)) nutDaXong(nut);
     if (tc.sauCung) tc.sauCung();
   };
-  const goi = Promise.resolve().then(taoPromise);
+  const goi = Promise.resolve().then(taoPromise).then((r) => { ket = r; return r; });
   if (tc.giuDenKhiXong) return goi.then(khiXong).catch(baoLoiGiaoDien).finally(khoi);
   return goi.finally(khoi).then(khiXong).catch(baoLoiGiaoDien);
 }

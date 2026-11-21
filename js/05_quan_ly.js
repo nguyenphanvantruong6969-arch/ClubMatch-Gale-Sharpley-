@@ -1047,7 +1047,7 @@ function initWhartonQuanLy() {
       } else {
         feedbackErrors(el("whQlSuaPhanHoi"), res.errors);
       }
-    });
+    }, { xongKhi: (r) => r && r.ok });
   });
 
   armTwoStepConfirm(el("btnWhXoaMot"), () => t("confirm_wh_xoa_mot"), () => {
@@ -1164,7 +1164,7 @@ function initAdminHandlers() {
       } else {
         feedbackErrors(el("clubFormFeedback"), res.errors);
       }
-    });
+    }, { xongKhi: (r) => r && r.ok });
   });
 
   el("adminStudentSearch").addEventListener(
@@ -1197,7 +1197,7 @@ function initAdminHandlers() {
     }
     chayXuat([["xuat_muc_hoc_sinh", "export_hoc_sinh_csv", [ids, ""],
       (d) => t("xuat_kq_hoc_sinh", { n: d.n_hoc_sinh, n_dong: d.n_dong, path: d.path })]],
-      el("adminXuatFeedback"));
+      el("adminXuatFeedback"), false, el("btnAdminXuatHs"));
   });
 
   el("adminChonTatCa").addEventListener("change", (ev) => {

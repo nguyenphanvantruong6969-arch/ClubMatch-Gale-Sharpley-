@@ -331,7 +331,7 @@ function khoiTaoPhanHoi() {
   });
   el("btnXuatPhanHoi").addEventListener("click", () => {
     chayXuat([["xuat_muc_phan_hoi", "export_phan_hoi", [""],
-      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("phNhapKetQua"));
+      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("phNhapKetQua"), false, el("btnXuatPhanHoi"));
   });
   napTepForms(el("btnNhapPhanHoi"), el("phTep"), "nhap_phan_hoi_forms", (d) => {
     ketQuaNapForms(d, null);
@@ -412,7 +412,7 @@ function khoiTaoTheoDoi() {
   khoiTaoPhanHoi();
   el("btnXuatDashboard").addEventListener("click", () => {
     chayXuat([["xuat_muc_dashboard", "export_dashboard", [""],
-      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("dbFeedback"));
+      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("dbFeedback"), false, el("btnXuatDashboard"));
   });
   el("v2Buoi").addEventListener("change", (e) => {
     el("v2KetQua").textContent = "";
@@ -460,7 +460,7 @@ function khoiTaoTheoDoi() {
   });
   el("btnXuatKhieuNai").addEventListener("click", () => {
     chayXuat([["xuat_muc_khieu_nai", "export_khieu_nai", [""],
-      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("knFeedback"));
+      (d) => t("xuat_kq_tep_csv", { n: d.n_rows, path: d.path })]], el("knFeedback"), false, el("btnXuatKhieuNai"));
   });
   el("moiDanhSach").addEventListener("click", (e) => {
     const b = e.target.closest("button.moi-tra-loi");
@@ -483,7 +483,7 @@ function khoiTaoTheoDoi() {
   });
   el("btnXuatDiemDanh").addEventListener("click", () => {
     chayXuat([["xuat_muc_diem_danh", "export_diem_danh", [""],
-      (d) => t("xuat_kq_diem_danh", { n: d.n_clb, path: d.path })]], el("diemDanhFeedback"));
+      (d) => t("xuat_kq_diem_danh", { n: d.n_clb, path: d.path })]], el("diemDanhFeedback"), false, el("btnXuatDiemDanh"));
   });
 }
 
