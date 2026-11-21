@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol (lead/coder/checker, lots, prompts): `docs/phien/MT1_X1_GIAO_THUC.md`.
 
-Status: IN PROGRESS (lead, 2026-11-21). Planned by Opus 2026-11-21. Base `origin/claude/mt1-bang-loai-clb` @ `05783a7` (MT1 not yet in main).
+Status: DONE 6ba1b78 CI green 2026-11-21 (Tests run 44859904530; Windows build is manual-only, not run — see N2).
 
 ## Feature / goal
 Item **MT1-X1** (code set by Truong, group MT1, 2026-11-21). `PipelineAPI.export_du_lieu_dau_vao` (api_xuat.py)
@@ -91,9 +91,12 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 - N1 (proposal, not built): before importing a sổ that HAS column Loại, warn that it overwrites types set in the UI
   and that empty cells clear them to NULL (behaviour already pinned by tests in `test_mt1_dong_bo_loai_clb.py`).
   Recommendation: separate lot/item (UI + i18n), after MT1-X1.
+- N2: `Build Windows executable` is workflow_dispatch only (may publish a release), so lead did not start it.
+  Recommendation: Truong runs it by hand on this branch before merging.
 
 ## Final summary (lead, §5 — dữ liệu MÔ PHỎNG)
-- Đã làm L1–L3, checker NO BUGS cả 3 lô; không bỏ phần nào. CI: (chờ đọc).
+- Đã làm L1–L3, checker NO BUGS cả 3 lô + 1 FIX (bản đồ mã 357→360 tệp test). CI xanh:
+  https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44859904530
 - FA (`SO_NHAP_FA_MAU_120HS.xlsx`): đặt THU_2_2 = Giới hạn, điểm sàn 5 qua `dat_loai_clb`; 2 chỗ giữ. Sổ xuất có cột
   Loại/Điểm sàn/Tối thiểu/Sức chứa phòng, nhãn đọc được (Tự do / Giới hạn), sheet "Giữ chỗ" đúng 2 dòng.
 - Nhập vào DB trống, chạy seed 3 cả hai DB: 240 dòng `match_results` trùng khít.
@@ -104,7 +107,7 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: §4 CI gate (L1–L3 passed checker NO BUGS; L3 head 902dcbb)
+- In progress: — (DONE; awaiting Truong for N1, N2 and merge)
 - Tests: none run (planning only; container had no `.venv`).
 - Open problems: —
 
