@@ -30,14 +30,15 @@ jobs:
   # hoa ra chi chay duoc tren Linux khong lam ca truong khong co ban cai.
   # -------------------------------------------------------------------
   test:
-    name: Bo test tren Windows (${{ matrix.phan }}/4)
+    name: Bo test tren Windows (${{ matrix.phan }}/6)
     runs-on: windows-latest
     if: ${{ !inputs.bo_qua_test }}
-    # Chia 4 phan song song (.github/chia_test.py) nhu tests.yml: truoc day mot may chay noi tiep ca bo.
+    # Chia 6 phan song song (.github/chia_test.py): truoc day mot may chay noi tiep ca bo (~72 phut).
+    # 6 phan ~12-13 phut moi phan + build ~2 phut => ca luot ~15-17 phut. Van chay DU moi test.
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4]
+        phan: [1, 2, 3, 4, 5, 6]
     steps:
       - uses: actions/checkout@v4
 
@@ -57,7 +58,7 @@ jobs:
 
       - name: Run test suite
         shell: bash
-        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 4)
+        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 6)
 
   build:
     runs-on: windows-latest
