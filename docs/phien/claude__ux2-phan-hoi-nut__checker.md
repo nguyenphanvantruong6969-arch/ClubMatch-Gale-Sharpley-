@@ -13,3 +13,11 @@ Checked OK: lot tests + sg9/chay/hieu_ung/i18n_sync green (61 passed); diff stay
 invariants 5,6,7 untouched); dblclick and double Enter -> API once; rejected promise restores icon child, minWidth,
 aria-busy=false; width ≤1 px; no old "Đang chạy…" assertions in tests. Not verified: `kiem_nhanh.py` 7/7 (coder's),
 `giao_vien` role, 800-row file (no table change in L1); vi/en width of other khiBan buttons only spot-checked.
+
+## CHECKER REPORT L1 fix1 | reviewed abe72c8..f1eef14
+verdict: 1 BUGS (minor)
+1. js/00_nen.js:datNutBan restore | repro: button `<span id=ic>★</span> <span data-i18n="btn_run_pipeline">`, chayNut
+   pending, `I18N.setLang('en')`, resolve | expected: label "Run allocation". Actual: icon kept but child span stays
+   "Chạy sắp xếp" (detached nodes are skipped by applyStaticText). Fix: after restoring saved nodes, re-translate
+   `[data-i18n]` descendants (and the button itself) with t().
+Original bug (btnRun label/spinner on language switch) FIXED. 59 related tests passed.
