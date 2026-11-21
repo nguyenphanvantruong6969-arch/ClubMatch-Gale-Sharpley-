@@ -21,3 +21,8 @@ verdict: 1 BUGS (minor)
    "Chạy sắp xếp" (detached nodes are skipped by applyStaticText). Fix: after restoring saved nodes, re-translate
    `[data-i18n]` descendants (and the button itself) with t().
 Original bug (btnRun label/spinner on language switch) FIXED. 59 related tests passed.
+
+## CHECKER REPORT L1 fix2 | reviewed 02bb4c6..9169da5
+verdict: NO BUGS. icon + data-i18n child span now "Run allocation" after en switch while busy; button's own
+data-i18n-aria-label still updated; 60 related tests passed. Note (non-blocking): a restored CHILD with
+data-i18n-aria-label is not re-translated; no such button exists in index.html/js today.
