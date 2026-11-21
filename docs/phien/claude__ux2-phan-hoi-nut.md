@@ -32,7 +32,7 @@ error code is truly needed). NOT touched: algorithm, `api*.py` behaviour, CSV, s
   `tests/test_giao_dien_ux2_*.py`). No `alert()`/`confirm()`, no new library, no Agent tool.
 
 ## Plan (written by Opus; ticked by Sonnet). Order = dependency order; each lot = one commit `UX2-L<n>: …`
-Lot L1 — #2 busy state + #13 double-click guard (shared helper; everything else builds on it)
+Lot L1 ✅ PASSED (checker NO BUGS, head 9169da5, 2 fix rounds) — #2 busy state + #13 double-click guard (shared helper; everything else builds on it)
 - [x] Test first `tests/test_giao_dien_ux2_ban.py` (pattern: `test_giao_dien_sg9_nut_ban.py`, slow API via
       `_cham` in `test_giao_dien_chay.py`): during a slow call the button has `disabled`, `aria-busy="true"`,
       class `is-ban`, one `.ux2-xoay` span, label = `t(nhan)`; width changes ≤ 1 px; double click → API called
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: plan + protocol written (Opus). Lead started; Sessions + Needs Truong added.
-- In progress: L1 sent to coder (GO L1). Tests: none yet. Open problems: none.
+- Done so far: L1 passed (9169da5; tests/test_giao_dien_ux2_ban.py 7 tests).
+- In progress: L2 sent to coder (GO L2). Open problems: none.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
