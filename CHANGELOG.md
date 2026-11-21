@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L6: trạng thái rỗng có hướng dẫn + một nút chính
+
+- `js/00_nen.js`: `veTrangThaiRong(hop, {chu, thamSo, huongDan, nut:{nhan, quyen, tab, oId}})` (tham số là KHOÁ i18n; vẽ lại khi `langchange`), `ux2DiToi(tab, oId)` (bấm nút thẻ rồi đưa con trỏ vào ô đích). Mỗi trạng thái rỗng = câu nêu hiện trạng cũ (test cũ vẫn khớp) + hướng dẫn + tối đa MỘT nút `btn btn-primary` (hệ nút L3). Nút mang `data-quyen="quan_tri"`: `giao_vien` chỉ thấy hướng dẫn.
+- Nối vào: `resultsEmptyState`, `clbEmpty` (`03_ket_qua.js`), `adminClubEmptyState` (nút → ô mã {CLB}), `adminStudentEmptyState` (nút → thẻ Nhập nguyện vọng, ô mã học sinh mới) (`05_quan_ly.js`), `scoringPersonEmpty` (`06_cham_diem.js`), `kqRong` (`09_the_xem.js`: chưa có kết quả → thẻ Xếp; chưa có CLB → thẻ Quản lý; không tìm thấy → chỉ hướng dẫn). `index.html`: bỏ `data-i18n` ở 5 hộp (nếu giữ, `applyStaticText` xoá mất nút). `scoringOverviewEmpty` chưa đổi (ngoài danh sách L6).
+- `i18n.js`: `ux2_rong_*` (10 khoá, vi + en; câu không dùng gạch ngang dài, không xưng hô). `style.css`: `.ux2-rong-*`.
+- Lưu ý khi dùng thử: các mục kết quả mặc định ĐÓNG (`MAC_DINH_DONG`) nên hộp rỗng trong đó chỉ thấy sau khi mở mục (hành vi cũ, không đổi).
+- Test mới: `tests/test_giao_dien_ux2_rong.py` (11 + 2 bỏ qua theo vai): chữ + hướng dẫn + đúng một nút theo vai (quan_tri / giao_vien), nút bằng bàn phím → con trỏ vào đúng ô (`clubFormId`, `newStudentId`, `dropZone`), chấm điểm theo người, `kqRong`, đổi ngôn ngữ giữ nút, hộp không còn `data-i18n`, khoá i18n đủ hai tiếng. Không test cũ phải sửa; 224 test liên quan qua.
+
 ## 2026-11-21 — UX2-L5: 4 pha tiến trình (chỉ hiển thị)
 
 - `index.html`: `<ol id="ux2Pha">` 4 pha (Kiểm tra / Xếp / Ghi / Xuất) + dòng ghi chú `#ux2PhaGhiChu` đặt trên `#stepper`. `js/02_van_hanh.js`: bảng `UX2_PHA` (backup, validate | stb_lottery, rbda_cascade | write_results, rollback | export; `unknown` bỏ qua có chủ ý), `ux2TinhPha(steps, ok)` (hàm thuần), `ux2VePha`, `ux2DatPha`; gọi từ `resetSteps` (chưa chạy), `danhDauDangChay` (cả 4 pha "Đang chạy…", `aria-current="step"`, `aria-busy`), `executeRun` sau khi có kết quả (suy từng pha từ `steps`), `loadPipelineTab`, và `reapplyDynamicTextForLangChange` (`07_ngon_ngu.js`).

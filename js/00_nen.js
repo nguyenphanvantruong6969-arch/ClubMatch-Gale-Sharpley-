@@ -496,6 +496,52 @@ function feedbackErrors(node, errors) {
   ganChiTietKyThuat(node, errors);
 }
 
+/* UX2-L6 (#12): trang thai RONG co huong dan + MOT nut chinh (he nut L3). Tham so la KHOA i18n (khong chuoi co dinh) de
+   ve lai theo ngon ngu khi langchange. cfg = {chu, thamSo, huongDan, nut: {nhan, quyen, tab, oId}}:
+   chu = cau neu hien trang (giu cau cu cua trang thai rong, test cu van khop); huongDan = nen lam gi; nut = viec nen lam
+   (nhan = khoa; quyen = "quan_tri" -> nut mang data-quyen, giao_vien khong thay; tab = the can toi; oId = o nhap nhan con tro).
+   Khong co nut thi chi co chu + huong dan. hop KHONG con data-i18n (applyStaticText se xoa nut). */
+function ux2DiToi(tab, oId) {
+  const the = document.querySelector('.nav-item[data-tab="' + tab + '"]');
+  if (the) the.click();
+  setTimeout(() => { const o = oId ? el(oId) : null; if (o) o.focus(); }, 0);
+}
+
+function ux2VeRong(hop) {
+  const cfg = hop && hop.__ux2Rong;
+  if (!cfg) return;
+  clear(hop);
+  const p1 = document.createElement("p");
+  p1.className = "ux2-rong-chu";
+  p1.textContent = t(cfg.chu, cfg.thamSo);
+  hop.appendChild(p1);
+  if (cfg.huongDan) {
+    const p2 = document.createElement("p");
+    p2.className = "ux2-rong-huong";
+    p2.textContent = t(cfg.huongDan);
+    hop.appendChild(p2);
+  }
+  if (cfg.nut) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn btn-primary ux2-rong-nut";
+    if (cfg.nut.quyen) b.setAttribute("data-quyen", cfg.nut.quyen);
+    b.textContent = t(cfg.nut.nhan);
+    b.addEventListener("click", () => ux2DiToi(cfg.nut.tab, cfg.nut.oId));
+    hop.appendChild(b);
+  }
+}
+
+function veTrangThaiRong(hop, cfg) {
+  if (!hop) return;
+  hop.__ux2Rong = cfg;
+  ux2VeRong(hop);
+}
+
+window.addEventListener("langchange", () => {
+  document.querySelectorAll(".empty-state").forEach((h) => { if (h.__ux2Rong) ux2VeRong(h); });
+});
+
 /* UX2-L4 (#7): loi NGAY TAI O. Chu luon di qua trErr/t (mot nguon, bat bien 6); khong chuoi moi trong JS.
    baoLoiTaiO(o, chu, tuyChon): aria-invalid, lop is-loi, <div.loi-o> ngay sau o (hoac sau <label> boc o) noi voi o
      bang aria-describedby; lac 200 ms (ux2Rung) CHI khi cho phep chuyen dong; go chu vao o thi loi tu xoa.

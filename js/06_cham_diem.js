@@ -42,11 +42,18 @@ function loadScoringTab() {
 }
 
 /* Chấm theo NGƯỜI: một ô điểm cho mỗi người. Vẫn chấm mù: chỉ mã và họ tên. */
+/* UX2-L6: giao_vien thay huong dan (nho quan tri nap danh sach), khong thay nut cua quan tri. */
+const UX2_RONG_CHAM_NGUOI = {
+  chu: "scoring_person_empty", huongDan: "ux2_rong_huong_cham_nguoi",
+  nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
+};
+
 function loadScoringPersons() {
   return callApi("get_person_scoring_list").then((res) => {
     const body = el("scoringPersonBody");
     clear(body);
     const rong = !res.ok || !res.data.persons.length;
+    if (rong) veTrangThaiRong(el("scoringPersonEmpty"), UX2_RONG_CHAM_NGUOI);
     el("scoringPersonEmpty").hidden = !rong;
     el("btnSavePersonScores").hidden = rong;
     el("scoringPersonProgress").textContent = rong ? "" : t("scoring_person_progress", {

@@ -390,6 +390,7 @@ function loadAdminClubs() {
     const emptyState = el("adminClubEmptyState");
     clear(body);
     if (!res.ok || !res.data.length) {
+      veTrangThaiRong(emptyState, UX2_RONG_CLB_QL);
       emptyState.hidden = false;
       return;
     }
@@ -502,6 +503,7 @@ function loadAdminStudents() {
     el("adminDemDanhDau").textContent = "";
 
     if (!res.ok || !res.data.rows.length) {
+      veTrangThaiRong(emptyState, UX2_RONG_HS_QL);
       emptyState.hidden = false;
       pagination.hidden = true;
       return;
@@ -1137,6 +1139,16 @@ function suaClbTuDong(c, tr) {
   tr.classList.add("is-editing");
   el("clubFormName").focus();
 }
+
+/* UX2-L6: trang thai rong cua the Quan ly (the nay chi quan tri vao duoc; nut van mang data-quyen cho chac). */
+const UX2_RONG_CLB_QL = {
+  chu: "admin_club_empty", huongDan: "ux2_rong_huong_clb_ql",
+  nut: { nhan: "ux2_rong_nut_dien_form", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
+};
+const UX2_RONG_HS_QL = {
+  chu: "admin_student_empty", huongDan: "ux2_rong_huong_hs_ql",
+  nut: { nhan: "ux2_rong_nut_them_mot", quyen: "quan_tri", tab: "fallback", oId: "newStudentId" },
+};
 
 /* UX2-L4: bảng mã lỗi backend → id ô nhập của form CLB (mã khác = lỗi chung, hiện ở khung phản hồi). */
 const UX2_LOI_CLB = {

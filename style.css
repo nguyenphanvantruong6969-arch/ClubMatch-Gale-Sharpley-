@@ -3280,3 +3280,8 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .ux2-pha li[data-trang-thai="canh_bao"] { border-color: var(--gold); background: var(--gold-soft); }
 .ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-dot { background: var(--gold); }
 .ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-tt { color: var(--gold-text); font-weight: 600; }
+
+/* UX2 — L6: trạng thái rỗng có hướng dẫn + MỘT nút chính (nút dùng hệ nút L3). */
+.empty-state .ux2-rong-chu { margin: 0 0 6px; }
+.empty-state .ux2-rong-huong { margin: 0 0 12px; color: var(--slate); }
+.empty-state .ux2-rong-nut { margin-top: 2px; }

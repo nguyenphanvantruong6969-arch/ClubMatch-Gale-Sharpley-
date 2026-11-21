@@ -75,9 +75,9 @@ Lot L5 ✅ PASSED (checker NO BUGS, head 079ae85, 1 fix round) — #11 4-phase p
 - [x] Chromium test: running → all 4 `aria-current`/running; success → 4 done; validate error → phase 1 error,
       2–4 "not reached"; stepper details unchanged (T3-06 collapse still works).
 Lot L6 — #12 guided empty states
-- [ ] Helper `veTrangThaiRong(hop, {chu, huongDan, nut})`; apply to `resultsEmptyState`, `kqRong`,
+- [x] Helper `veTrangThaiRong(hop, {chu, huongDan, nut})`; apply to `resultsEmptyState`, `kqRong`,
       `adminClubEmptyState`, `adminStudentEmptyState`, `scoringPersonEmpty`, `clbEmpty` (+ others if cheap).
-- [ ] Test: each shows guidance + ONE primary button; click goes to the right tab / focuses the right input;
+- [x] Test: each shows guidance + ONE primary button; click goes to the right tab / focuses the right input;
       a `giao_vien` never sees an admin-only action (respect `data-quyen`).
 Lot L7 — #6 skeleton loading
 - [ ] `hienKhungCho(tbody, soCot, soDong)` shown only if load > 300 ms (no flicker); `aria-busy` on the table;

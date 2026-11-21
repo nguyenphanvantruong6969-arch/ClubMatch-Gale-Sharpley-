@@ -12,6 +12,16 @@
  * 4. TAB 3 — DỮ LIỆU KHÁC (view-others; hàm vẫn tên loadResultsTab)
  * ------------------------------------------------------------------ */
 
+/* UX2-L6: cau hinh trang thai rong (khoa i18n; nut chi cho quan tri vi the Van hanh / Quan ly la cua quan tri). */
+const UX2_RONG_KET_QUA = {
+  chu: "results_empty_state", huongDan: "ux2_rong_huong_ket_qua",
+  nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
+};
+const UX2_RONG_CLB = {
+  chu: "clb_empty", huongDan: "ux2_rong_huong_clb",
+  nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
+};
+
 function loadResultsTab() {
   loadTomTatKetQua();
   if (typeof ux1aVeSauXep === "function") ux1aVeSauXep(); /* UX1A-L2b */
@@ -441,7 +451,10 @@ function veBangNhuCauCLB(ds) {
   const rong = el("clbEmpty");
   clear(body);
   panel.hidden = !ds.length;
-  if (rong) rong.hidden = ds.length > 0;
+  if (rong) {
+    if (!ds.length) veTrangThaiRong(rong, UX2_RONG_CLB);
+    rong.hidden = ds.length > 0;
+  }
   if (!ds.length) {
     veDemMuc("clbPanel", null, null);
     dongDanhSachCLB();
@@ -872,6 +885,7 @@ function loadMatchResults(search) {
     const manh = document.createDocumentFragment();
 
     if (!res.ok || !res.data.length) {
+      veTrangThaiRong(empty, UX2_RONG_KET_QUA);
       empty.hidden = false;
       badge.hidden = true;
       veDemMuc("dsXepPanel", null, null);
