@@ -64,14 +64,16 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 - [x] Test: FA on, empty `giu_cho` → sheet "Giữ chỗ" exists, header only; FA off → no sheet.
 - [x] Implement D2 (+ D4). All new tests green.
 ### L3 — verify + docs
-- [ ] Related tests green: `tests/test_xuat_du_lieu.py`, `tests/test_fa_du_lieu.py`, `tests/test_a13_12_so_nhap.py`,
+- [x] Related tests green: `tests/test_xuat_du_lieu.py`, `tests/test_fa_du_lieu.py`, `tests/test_a13_12_so_nhap.py`,
       `tests/test_mt1_dong_bo_loai_clb.py`, the new test file; `ruff check .`.
-- [ ] D5 cell-value comparison on 3 normal datasets (e.g. `SO_NHAP_DQT_120HS_HOP_LE.xlsx`,
+- [x] D5 cell-value comparison on 3 normal datasets (e.g. `SO_NHAP_DQT_120HS_HOP_LE.xlsx`,
       `SO_NHAP_MAU_120HS_3BUOI.xlsx`, one 800-student sổ) old vs new: identical. Record in branch file.
-- [ ] `kiem_nhanh.py` 7/7 (incl. `trung_khit`) after `git fetch origin main`; `soat-ma` four tiers — REPORT only.
-- [ ] Fix the `export_du_lieu_dau_vao` docstring (mention FA columns + Giữ chỗ gate).
-- [ ] `CHANGELOG.md` entry `MT1-X1` (files, new tests, D3 note); `docs/ke_hoach/TIEN_DO.md` row `MT1-X1`;
+- [x] `kiem_nhanh.py` 7/7 (incl. `trung_khit`) after `git fetch origin main`; `soat-ma` four tiers — REPORT only.
+- [x] Fix the `export_du_lieu_dau_vao` docstring (mention FA columns + Giữ chỗ gate).
+- [x] `CHANGELOG.md` entry `MT1-X1` (files, new tests, D3 note); `docs/ke_hoach/TIEN_DO.md` row `MT1-X1`;
       `docs/ke_hoach/CLAUDE_CHI_TIET.md` code map only if a new helper function was added.
+
+- D5 result (coder + checker independently, f809b3f vs 902dcbb): sheet names + all cells IDENTICAL on DQT_120HS_HOP_LE, MAU_120HS_3BUOI, DQT_800HS_HOP_LE (+ SO_NHAP_TEST by checker).
 
 ## Acceptance (lead checks before DONE)
 - The former xfail test passes without xfail; new round-trip test covers all 5 data kinds.
@@ -92,7 +94,7 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: L3 (L1, L2 passed checker NO BUGS; L2 head 2fd73ce, 74 related tests)
+- In progress: §4 CI gate (L1–L3 passed checker NO BUGS; L3 head 902dcbb)
 - Tests: none run (planning only; container had no `.venv`).
 - Open problems: —
 
