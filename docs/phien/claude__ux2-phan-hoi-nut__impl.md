@@ -19,17 +19,18 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L5 #11 four-phase progress (UX2_PHA)                    PASSED (+fix1 backup warning)
 - [x] L6 #12 guided empty states (veTrangThaiRong)            PASSED (291deb8 + fix1 788709f)
 - [x] L7 #6 skeleton loading (hienKhungCho)                   PASSED (b00b9e3)
-- [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    DONE head fef2862, reported, checker verdict pending
+- [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    DONE fef2862 + fix1 a71baec (only genuinely new rows), reported, checker verdict pending
 - [ ] L9 docs / screenshots / verify (spec: lead's branch file; ONLY lot left)
 
 ## Current state (overwrite each handoff)
-- Done: L1-L8 committed + pushed; last code commit fef2862 (L8). origin/main (MT1) was merged into the branch (75f99ed; only
-  CHANGELOG.md / TIEN_DO.md conflicted, both sides kept). Working tree clean after the handoff push.
-- In progress: nothing. Waiting for lead: checker verdict on L8 and "GO L9".
+- Done: L1-L8 committed + pushed; last code commit a71baec (L8 fix1). origin/main (MT1) merged earlier (75f99ed).
+  Working tree clean after the handoff push.
+- In progress: nothing. Waiting for lead: checker verdict on L8 fix1 and "GO L9" (the only lot left).
 - Tests: related ones only (never the 22-min full suite); redirect pytest output to a scratchpad file.
-  Last (L8): 259 passed (all ux2_*, tien_trinh, chay, t3_l2_van_hanh, khoa_xuat, ux_xuat, xuat_du_lieu, quan_ly_tab_con, a13_8, a14_lop,
-  tro_nang, hieu_ung, wharton_quan_ly, i18n_sync, MT1 UI tests), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
-- Open problems: none known.
+  Last (L8 fix1): 182 passed (all ux2_*, quan_ly_tab_con, a13_8, a14_lop, t3_l0, chay, fa_n2, cham_diem, hieu_ung, ux1_ket_qua),
+  ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
+- Open problems: admin-student rows are rebuilt on every redraw so focus/caret in .lop-sua is lost (pre-existing, told to lead,
+  would be a separate item touching loadAdminStudents).
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -55,12 +56,14 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - Slide-in/accordion (L8): ux2QuanSatBang observes 4 tbody ids (first 20 new data rows, never skeleton rows); details animation is CSS only
   inside @supports(interpolate-size + ::details-content) + no-preference, NOT on .menu-khac; html.tat-hieu-ung does not cover
   ::details-content (own rule). Layout tests must use offsetTop/offsetHeight (transform of the slide-in shifts getBoundingClientRect).
+- Row animation keys (L8 fix1): cumulative per-tbody Set (UX2_KHOA_HANG in 00_nen.js); forgotten when the tbody is emptied for good.
+  A computed animation-name stays after the animation ends: assert on class presence / MutationObserver records, not on name.
 - Merge conflicts in CHANGELOG.md / TIEN_DO.md (other branches append at the same spot): keep BOTH sides, strip markers.
 - Push rejected -> `git fetch origin claude/ux2-phan-hoi-nut && git merge --no-edit FETCH_HEAD` (protocol: never rebase/force).
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Wait for lead: checker verdict on L8 (FIX L8 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
+1. Wait for lead: checker verdict on L8 fix1 (FIX L8 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
 2. On "GO L9": pull + merge origin/main, read the L9 block.
 3. L9 docs + screenshots (HUONG_DAN_SU_DUNG.md section,
    re-shoot docs/ke_hoach/ux/anh/, CLAUDE_CHI_TIET.md code map, kiem_nhanh 7/7, CHANGELOG + TIEN_DO rows).
@@ -84,3 +87,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L6 fix1 (role-aware empty boxes, nav tab names, ux2vai), handoff refreshed (hook fired again) | head 788709f |
 | 2026-11-21 | Sonnet (coder) | L7 skeleton loading built + reported; handoff refreshed (hook fired again) | head b00b9e3 |
 | 2026-11-21 | Sonnet (coder) | L8 smooth transitions built + reported; merged origin/main (MT1); handoff refreshed | head fef2862 |
+| 2026-11-21 | Sonnet (coder) | L8 fix1 (animate only genuinely new rows) reported; handoff refreshed | head a71baec |
