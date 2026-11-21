@@ -224,7 +224,7 @@
       ux1a_cd_xong: "Xong",
       ux1a_ss_con_thieu: "Để dùng Huy chương, hãy chọn loại cho từng {slot_s}:",
       ux1a_ss_dem: "Đã chọn loại: {x}/{y} {slot_s}",
-      ux1a_ss_gt_TU_DO: "Tự do: nhận mọi em, không giới hạn chỗ.",
+      ux1a_ss_gt_TU_DO: "Tự do: nhận mọi {person_l}, không giới hạn chỗ.",
       ux1a_ss_gt_GIOI_HAN: "Giới hạn: có chỉ tiêu, không xét điểm thi.",
       ux1a_ss_gt_TUYEN_CHON: "Tuyển chọn: có điểm sàn, xét điểm thi.",
       ux1a_ss_buoi_co_tu_do: "✓ Đã có {slot_s} Tự do",
