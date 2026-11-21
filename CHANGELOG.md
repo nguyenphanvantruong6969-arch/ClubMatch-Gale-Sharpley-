@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L5: 4 pha tiến trình (chỉ hiển thị)
+
+- `index.html`: `<ol id="ux2Pha">` 4 pha (Kiểm tra / Xếp / Ghi / Xuất) + dòng ghi chú `#ux2PhaGhiChu` đặt trên `#stepper`. `js/02_van_hanh.js`: bảng `UX2_PHA` (backup, validate | stb_lottery, rbda_cascade | write_results, rollback | export; `unknown` bỏ qua có chủ ý), `ux2TinhPha(steps, ok)` (hàm thuần), `ux2VePha`, `ux2DatPha`; gọi từ `resetSteps` (chưa chạy), `danhDauDangChay` (cả 4 pha "Đang chạy…", `aria-current="step"`, `aria-busy`), `executeRun` sau khi có kết quả (suy từng pha từ `steps`), `loadPipelineTab`, và `reapplyDynamicTextForLangChange` (`07_ngon_ngu.js`).
+- Luật: pha có bước `error` → "Lỗi"; khi `!ok` mọi pha sau → "Chưa tới"; lỗi không gắn bước (`unknown`, API ném lỗi, không có bước) → pha ĐANG CHẠY, không có thì pha đầu chưa xong — không im lặng; `rollback` KHÔNG BAO GIỜ làm pha Ghi thành "Xong", chỉ bật dòng "đã hoàn tác" (dùng lại câu `pipeline_rolled_back` của `i18n_errors.py`). Sao lưu hỏng nhưng vẫn chạy (`ok`) → Kiểm tra "Lỗi", các pha sau giữ "Xong"; xuất hỏng sau khi đã ghi → chỉ pha Xuất "Lỗi".
+- Chỉ hiển thị: `run_pipeline` chỉ trả `steps` khi xong nên trong lúc chạy cả 4 pha cùng "đang chạy" (không phần trăm). Ô btnRun vẫn dùng chung `datNutBan` (L1), không khoá mới. Danh sách `#stepper` và T3-06 thu gọn giữ nguyên.
+- `i18n.js`: `ux2_pha_nhan`, `ux2_pha_kiem_tra|xep|ghi|xuat|xong|loi|chua_den` (vi + en); chữ "Chưa chạy"/"Đang chạy…" dùng lại `step_not_run_yet`/`step_running`. `style.css`: `.ux2-pha*`, `@keyframes ux2PhaNhap` (chỉ khi cho phép chuyển động).
+- Test mới: `tests/test_ux2_tien_trinh.py` (3, tĩnh: bảng phủ mọi `"step"` trong `api.py`, đúng thứ tự bất biến 5) và `tests/test_giao_dien_ux2_tien_trinh.py` (5: 8 tình huống `ux2TinhPha`, đang chạy → xong + thu gọn, lỗi kiểm tra thật + hoàn tác, đổi ngôn ngữ, tắt hiệu ứng). Không test cũ phải sửa; 237 test liên quan qua.
+
 ## 2026-11-21 — UX2-L4: lỗi ngay tại ô nhập
 
 - `js/00_nen.js`: `baoLoiTaiO(o, chu, tuyChon)`, `xoaLoiTaiO(o)`, `focusODau(dsO)`, `baoLoiForm(goc, errors, bangMaO, tuyChon)`. Ô lỗi có `aria-invalid="true"`, lớp `is-loi`, `<div.loi-o>` nối bằng `aria-describedby`; gõ chữ vào ô thì lỗi tự xoá; con trỏ về ô sai ĐẦU TIÊN (mở `<details>` đóng bọc nó); lắc `ux2Rung` 200 ms chỉ khi cho phép chuyển động (không `reduce`, không `tat-hieu-ung`). Chữ luôn qua `trErr`/`t` (không chuỗi mới); mã lỗi không có ô → `tuyChon.khac` hoặc toast, không im lặng.

@@ -69,10 +69,10 @@ Lot L4 ✅ PASSED (checker NO BUGS, head 26a1d96, 1 fix round) — #7 inline fie
 - [x] Helpers `baoLoiTaiO(o, chu)`, `xoaLoiTaiO(o)`, `baoLoiForm(goc, errors, bangMaO)` in `js/00_nen.js`;
       reuse in `04_nhap_tai_cho` / `06_cham_diem` existing `aria-invalid` code (unify, keep behaviour).
 Lot L5 — #11 4-phase progress (display only; needs L1)
-- [ ] Static test `tests/test_ux2_tien_trinh.py`: the JS map `UX2_PHA` (Kiểm tra = backup, validate; Xếp =
+- [x] Static test `tests/test_ux2_tien_trinh.py`: the JS map `UX2_PHA` (Kiểm tra = backup, validate; Xếp =
       stb_lottery, rbda_cascade; Ghi = write_results, rollback; Xuất = export) lists phases in invariant-5
       order and covers EVERY `"step": "<name>"` in `api.py` (parse it; `unknown` explicitly ignored).
-- [ ] Chromium test: running → all 4 `aria-current`/running; success → 4 done; validate error → phase 1 error,
+- [x] Chromium test: running → all 4 `aria-current`/running; success → 4 done; validate error → phase 1 error,
       2–4 "not reached"; stepper details unchanged (T3-06 collapse still works).
 Lot L6 — #12 guided empty states
 - [ ] Helper `veTrangThaiRong(hop, {chu, huongDan, nut})`; apply to `resultsEmptyState`, `kqRong`,

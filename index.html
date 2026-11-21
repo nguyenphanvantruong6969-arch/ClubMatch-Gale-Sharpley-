@@ -189,6 +189,15 @@
           <p class="hint-text" id="chonBuoiNhac">Buổi không chọn giữ nguyên kết quả của lần xếp trước.</p>
         </div>
 
+        <!-- UX2-L5: 4 pha (chỉ hiển thị; chạy xong mới biết từng bước). Trạng thái do ux2VePha() ghi, chữ tĩnh do data-i18n. -->
+        <ol class="ux2-pha" id="ux2Pha" data-i18n-aria-label="ux2_pha_nhan" aria-label="Tiến trình xếp">
+          <li data-pha="kiem_tra"><span class="ux2-pha-dot" aria-hidden="true"></span><span class="ux2-pha-ten" data-i18n="ux2_pha_kiem_tra">Kiểm tra</span> <span class="ux2-pha-tt"></span></li>
+          <li data-pha="xep"><span class="ux2-pha-dot" aria-hidden="true"></span><span class="ux2-pha-ten" data-i18n="ux2_pha_xep">Xếp</span> <span class="ux2-pha-tt"></span></li>
+          <li data-pha="ghi"><span class="ux2-pha-dot" aria-hidden="true"></span><span class="ux2-pha-ten" data-i18n="ux2_pha_ghi">Ghi</span> <span class="ux2-pha-tt"></span></li>
+          <li data-pha="xuat"><span class="ux2-pha-dot" aria-hidden="true"></span><span class="ux2-pha-ten" data-i18n="ux2_pha_xuat">Xuất</span> <span class="ux2-pha-tt"></span></li>
+        </ol>
+        <p class="hint-text" id="ux2PhaGhiChu" role="status" hidden></p>
+
         <ol class="stepper" id="stepper">
           <li class="step" data-step="backup">
             <span class="step-dot"></span>

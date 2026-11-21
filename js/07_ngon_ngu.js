@@ -106,6 +106,7 @@ function reapplyDynamicTextForLangChange() {
 
   refreshSidebarStatus();
   if (lastRenderedSteps) renderSteps(lastRenderedSteps);
+  ux2VePha(); /* UX2-L5: chu trang thai cac pha theo ngon ngu moi */
   veRunXong();
   if (lastRenderedTopErrors) showLog(lastRenderedTopErrors);
 

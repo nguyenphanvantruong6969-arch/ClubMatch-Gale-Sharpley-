@@ -3253,3 +3253,26 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 @media (prefers-reduced-motion: reduce) {
   .ux2-rung { animation: none; }
 }
+
+/* UX2 — L5: 4 pha tiến trình (chỉ hiển thị). Nghĩa nằm ở CHỮ trạng thái + aria-current; chấm chỉ phụ trợ. */
+.ux2-pha { list-style: none; margin: 0 0 12px; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.ux2-pha li { flex: 1 1 110px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm); background: var(--paper-raised); font-size: 13px; }
+.ux2-pha-ten { font-weight: 600; }
+.ux2-pha-tt { margin-left: auto; font-size: 12px; color: var(--slate); }
+.ux2-pha-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--hairline); }
+.ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { background: var(--gold); }
+.ux2-pha li[data-trang-thai="xong"] { border-color: var(--moss); }
+.ux2-pha li[data-trang-thai="xong"] .ux2-pha-dot { background: var(--moss); }
+.ux2-pha li[data-trang-thai="xong"] .ux2-pha-tt { color: var(--moss); }
+.ux2-pha li[data-trang-thai="loi"] { border-color: var(--rust); background: var(--rust-soft); }
+.ux2-pha li[data-trang-thai="loi"] .ux2-pha-dot { background: var(--rust); }
+.ux2-pha li[data-trang-thai="loi"] .ux2-pha-tt { color: var(--rust-text); font-weight: 600; }
+.ux2-pha li[data-trang-thai="chua_den"] { opacity: 0.6; }
+@keyframes ux2PhaNhap { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { animation: ux2PhaNhap 1s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { animation: none; }
+}
