@@ -110,3 +110,11 @@ buttons; role flip on the same page (ux2vai) re-renders both ways; 30 lang+vai s
 Custom labels (Dự án / Nhân viên): hints and buttons say "Xếp dự án", "Chưa có dự án nào", "nhân viên"; no hard-coded
 CLB/học sinh in the new strings. Only remaining pytest.skip = "no Chromium" (repo-wide pattern). 84 related tests passed
 (ux2_rong, i18n_sync, ws_nhan, van_phong_tu_nhien).
+
+## CHECKER REPORT L7 | reviewed 450bde4..b00b9e3
+verdict: NO BUGS. test file 3x in a row: 11 passed each (assertions are wait_for_function, no tight timing except >1 s lower
+bound and ±1-4 px layout). Stale-rows reload (30 rows, 1.5 s API): table aria-busy="true", no skeleton, rows kept, busy false
+at the end (acceptable per brief). Empty table + slow API: skeleton rows aria-hidden, 0 focusable, shimmer `ux2Khung`;
+with `tat-hieu-ung` animation none; removed when data arrives. Callers unchanged (`hoi` is local, return values kept).
+Not exercised: real rejected API (callApi not on window; code path `hoi.then(ket, ket)` read only), 800-HS timing.
+Related tests passed.
