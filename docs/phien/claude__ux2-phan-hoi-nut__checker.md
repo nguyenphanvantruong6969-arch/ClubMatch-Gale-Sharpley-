@@ -1,0 +1,15 @@
+# Checker notes: UX2 (claude/ux2-phan-hoi-nut)
+
+## CHECKER REPORT L1 | reviewed d4f7427..9e9bbdc
+verdict: 1 BUG (minor)
+1. js/00_nen.js:datNutBan + data-i18n rewrite | repro: slow run_pipeline (1.5 s), click #btnRun, call
+   `I18N.setLang('en')` while busy | expected: button still shows spinner + "Allocating…" until done.
+   Actual: `applyStaticText` rewrites btnRun text to "Run allocation", spinner span gone, but `aria-busy="true"` and
+   `disabled` remain → looks idle yet locked. Cosmetic/a11y mismatch; no crash, restored OK at end.
+   Suggest: on `langchange`, if `nut.__ux2Ban` and its spans are detached, re-render busy DOM (re-call datNutBan after
+   clearing state), or listen in datNutBan.
+
+Checked OK: lot tests + sg9/chay/hieu_ung/i18n_sync green (61 passed); diff stays in §0 files (no api*/CSV/schema:
+invariants 5,6,7 untouched); dblclick and double Enter -> API once; rejected promise restores icon child, minWidth,
+aria-busy=false; width ≤1 px; no old "Đang chạy…" assertions in tests. Not verified: `kiem_nhanh.py` 7/7 (coder's),
+`giao_vien` role, 800-row file (no table change in L1); vi/en width of other khiBan buttons only spot-checked.
