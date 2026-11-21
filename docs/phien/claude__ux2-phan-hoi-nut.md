@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (CI gate, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: DONE fd1c5a7 CI green 2026-11-21 (PR #25 merged to main 92d40d4; Windows build green). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -102,18 +102,19 @@ Lot L9 ✅ PASSED (checker NO BUGS, head dd8887b) — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1–L9 all passed checker (last code head dd8887b).
-- In progress: CI gate §6 — FIX CI-1 (ux2_nut export-checkbox click fails on CI, suspected L8 details animation). Then §7.
+- Done so far: L1–L9 + CI-1 passed checker; CI green (fd1c5a7, a230b30, main 92d40d4); Windows build green; lead review docs/ke_hoach/ux/UX2_DANH_GIA.md.
+- In progress: none. Coder + checker archived.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
 |---|---|---|---|---|
-| lead | Opus | session_01VfPzNumBTQB5odHhUwJqun | 2026-11-21 | running |
-| coder | Sonnet | session_01VfPzNrAmRdig3chvfTGSSu | 2026-11-21 | running |
-| checker | Sonnet | session_01VfPzNv4Zy4WBo2xtuj4piV | 2026-11-21 | running |
+| lead | Opus | session_01VfPzNumBTQB5odHhUwJqun | 2026-11-21 | done |
+| coder | Sonnet | session_01VfPzNrAmRdig3chvfTGSSu | 2026-11-21 | archived |
+| checker | Sonnet | session_01VfPzNv4Zy4WBo2xtuj4piV | 2026-11-21 | archived |
 
 ## Needs Truong (1 line each + recommendation)
 - L3 hit area: dense table/list buttons and sidebar group headers are 24 px (AA), not 44 px. Recommend: accept; revisit only if teachers mis-tap on the touch kiosk.
+- Review: club form inline errors repeat the same sentence 4× (3 fields + feedback line) and shift the grid. Recommend: small UI item, per-field texts (i18n.js only).
 - Pre-existing (not UX2): docs/ke_hoach/ux/anh/11_cai_dat.png is byte-identical to 02_co_dl_admin.png (chup_luong_chinh.py shoots the Quản lý screen twice). Recommend: fix the script's Cài đặt step in a docs item.
 - Pre-existing (not UX2): admin student table rebuilds rows on every redraw (`loadAdminStudents` clear + recreate), so focus/caret in a row's class input is lost when the table redraws. Recommend: a small separate item to update rows in place.
 
@@ -135,3 +136,13 @@ Lot L9 ✅ PASSED (checker NO BUGS, head dd8887b) — docs, screenshots, verify
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-21 | Opus (planner) | Goal, decisions, Plan L1–L9, protocol | no product code |
+| 2026-11-21 | Opus (lead) | Ran L1–L9 + CI gate + lean final review; children archived | Status DONE |
+
+## Final summary (Tiếng Việt)
+- Xong cả 11 cải tiến UX2 (L1–L9), không bỏ lô nào; L8 bỏ phần "mở theo chiều cao" để ô bên trong bấm được ngay.
+- CI xanh: https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV/actions/runs/44891107572 ; đã gộp vào main qua PR #25.
+- Đánh giá cuối: docs/ke_hoach/ux/UX2_DANH_GIA.md (bận 2,6 ms, ✓ 1,2 s, focus đúng ô lỗi đầu, tắt hiệu ứng được).
+- Truong thử tay 3 bước (bản exe Windows từ workflow "Build Windows executable"):
+  1. Nạp dữ liệu mẫu, bấm "Chạy sắp xếp" hai lần liên tiếp: chỉ chạy một lần, nút ghi "Đang xếp…", 4 pha thành "Xong".
+  2. Quản lý → bấm "Lưu CLB" khi form trống: con trỏ về ô Mã CLB, ô đỏ có dòng lỗi; điền đủ rồi lưu: thấy ✓.
+  3. Bấm nút "Hiệu ứng" để tắt: vòng xoay và chuyển động dừng, chữ vẫn báo đúng trạng thái.
