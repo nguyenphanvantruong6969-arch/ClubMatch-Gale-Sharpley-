@@ -92,6 +92,16 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
   and that empty cells clear them to NULL (behaviour already pinned by tests in `test_mt1_dong_bo_loai_clb.py`).
   Recommendation: separate lot/item (UI + i18n), after MT1-X1.
 
+## Final summary (lead, §5 — dữ liệu MÔ PHỎNG)
+- Đã làm L1–L3, checker NO BUGS cả 3 lô; không bỏ phần nào. CI: (chờ đọc).
+- FA (`SO_NHAP_FA_MAU_120HS.xlsx`): đặt THU_2_2 = Giới hạn, điểm sàn 5 qua `dat_loai_clb`; 2 chỗ giữ. Sổ xuất có cột
+  Loại/Điểm sàn/Tối thiểu/Sức chứa phòng, nhãn đọc được (Tự do / Giới hạn), sheet "Giữ chỗ" đúng 2 dòng.
+- Nhập vào DB trống, chạy seed 3 cả hai DB: 240 dòng `match_results` trùng khít.
+- Thường (`SO_NHAP_DQT_120HS_HOP_LE.xlsx`): không cột mới, không sheet mới; 360 dòng trùng khít.
+- Lưu ý: đặt CLB Tự do duy nhất của buổi sang Giới hạn → chạy báo `fa_thieu_clb_tu_do` (kiểm hợp lệ có sẵn, đúng).
+- Truong thử tay: (1) mở workspace FA, đặt loại 1 CLB + thêm giữ chỗ; (2) Xuất dữ liệu đầu vào, mở xlsx xem
+  sheet "1. CLB" và "Giữ chỗ"; (3) nhập sổ đó vào workspace trống, chạy cùng seed, so kết quả.
+
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
 - In progress: §4 CI gate (L1–L3 passed checker NO BUGS; L3 head 902dcbb)
