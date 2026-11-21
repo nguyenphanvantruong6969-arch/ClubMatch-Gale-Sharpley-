@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1 sửa chữ: mô tả thẻ "Theo năng lực" cho đúng thứ tự xếp thật
+
+- `muc_tieu.py` (`BO_MUC_TIEU["nang_luc"]["cau"]`), `i18n.js` (`mt1_the_nang_luc_mt`, vi + en), `HUONG_DAN_SU_DUNG.md`: câu cũ "CLB không thi bốc thăm công bằng" sai khi đang dùng "Chia 100 điểm" / huy chương, vì `khoa_uu_tien_wharton` xét điểm quyết tâm TRƯỚC số bốc thăm (tầng 2: `(1, -w2, stb, sid)`). Câu mới: điểm thi, rồi điểm quyết tâm (nếu có), cuối cùng bốc thăm.
+- Chỉ đổi chữ hiển thị; không đổi luật xếp, không đổi kết quả. Test: `tests/test_mt1_muc_tieu.py`, `tests/test_i18n_sync.py` (40 ca đạt).
+
 ## 2026-11-20 — MT1 CI-fix2: khối mục tiêu chỉ hiện khi đã có dữ liệu; bỏ phản hồi cũ về muộn
 
 - `js/19_muc_tieu.js`: khối câu hỏi mục tiêu ẩn cho tới khi `get_muc_tieu` trả về (trước đó hiện ba thẻ còn bấm được mà chưa biết thẻ nào bị khoá — khoảng hở cho người dùng bấm nhầm, và cho kiểm tra "thẻ bị khoá" đọc quá sớm khi máy chậm); `lamMoi` bỏ phản hồi `get_muc_tieu` cũ về muộn (đếm lần hỏi, như `viecTiepTheoLanGoi`).

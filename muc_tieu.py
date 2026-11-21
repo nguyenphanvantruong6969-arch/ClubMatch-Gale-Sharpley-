@@ -28,8 +28,8 @@ BO_MUC_TIEU = {
     NANG_LUC: {
         "id": NANG_LUC,
         "tieu_de": {"vi": "Theo năng lực", "en": "By ability"},
-        "cau": {"vi": "CLB có thi chọn theo điểm; CLB không thi bốc thăm công bằng.",
-                "en": "Clubs with a test pick by score; clubs without one use a fair lottery."},
+        "cau": {"vi": "Xếp theo điểm thi, rồi điểm quyết tâm (nếu có), cuối cùng là bốc thăm.",
+                "en": "By test score, then commitment points (if used), then a lottery."},
         "luat": {"priority": "score", "tier_mode": "reserve", "score_scope": "per_slot", "tiers": []},
         "doi_cho": False,
     },
