@@ -575,3 +575,30 @@ def test_giao_vien_khong_thay_cau_hoi_muc_tieu_va_khong_goi_ham(mo_trang):  # no
     assert page.locator("#ux1aCaiDat").is_hidden() and page.locator("#mt1KetQua").is_hidden()
     assert page.locator("#ux1aMtCauHoi").is_hidden()
     assert not loi, loi
+
+
+# ----- 8. Đặt loại CLB tại chỗ phải làm tươi bảng CLB (mục MT1, sửa đồng bộ) -----
+
+def test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai(mo_trang):  # noqa: F811
+    page, api, goc, loi = mo_trang()
+    _nap(api, tep=os.path.join(GOC, "du_lieu_test", "SO_NHAP_FA_MAU_120HS.xlsx"))
+    c = sqlite3.connect(api.db_path)
+    c.execute("UPDATE clubs SET loai = NULL, diem_san = NULL")
+    c.commit()
+    c.close()
+    assert api.update_workspace_config({"rules": {"wharton": True, "fa_daa": True}})["ok"]
+    page.reload()
+    page.wait_for_selector("#dropZone")
+    page.locator('.nav-item[data-tab="admin"]').click()
+    dong = page.locator('.ux1a-ss-dong[data-clb]').first
+    dong.wait_for(state="visible")
+    cid = dong.get_attribute("data-clb")
+    o_loai = page.locator('#adminClubTableBody tr[data-club-id="%s"] td.cot-fa' % cid).first
+    o_loai.wait_for(state="attached")
+    assert o_loai.inner_text().strip() == "—"
+    dong.locator('button[data-loai="TU_DO"]').click()
+    # Không tải lại trang: ô "Loại" của đúng CLB đó phải đổi sang "Tự do".
+    page.wait_for_function(
+        "id => { const td = document.querySelector('#adminClubTableBody tr[data-club-id=\"' + id + '\"] td.cot-fa');"
+        " return td && td.textContent.trim() === 'Tự do'; }", arg=cid, timeout=5000)
+    assert not loi, loi

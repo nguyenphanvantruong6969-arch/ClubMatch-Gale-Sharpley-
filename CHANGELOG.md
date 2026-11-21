@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1 sửa đồng bộ: đặt loại CLB tại chỗ làm tươi bảng CLB và thanh "Việc tiếp theo"
+
+- `js/18_cai_dat.js` (`luu` trong `ux1aVeSanSang`, dùng cho nút Tự do / Giới hạn / Tuyển chọn, ô điểm sàn và ô chọn CLB Tự do của buổi): sau `dat_loai_clb` thành công gọi thêm `loadAdminClubs()` và `capNhatViecTiepTheo()`. Trước đây chỉ khối "còn thiếu" vẽ lại, cột "Loại" của bảng CLB cũ cho tới khi tải lại trang. Không đổi backend, không thêm đường lưu.
+- `tests/test_giao_dien_mt1.py`: ca `test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai` (đỏ trước khi sửa vì ô "Loại" vẫn "—"; xanh sau sửa).
+- Đã chạy: `test_giao_dien_mt1.py` + `test_giao_dien_ux1_cai_dat.py` 42 đạt; `ruff check .` sạch. Chưa chạy cả bộ test.
+
 ## 2026-11-21 — MT1 sửa chữ: mô tả thẻ "Theo năng lực" cho đúng thứ tự xếp thật
 
 - `muc_tieu.py` (`BO_MUC_TIEU["nang_luc"]["cau"]`), `i18n.js` (`mt1_the_nang_luc_mt`, vi + en), `HUONG_DAN_SU_DUNG.md`: câu cũ "CLB không thi bốc thăm công bằng" sai khi đang dùng "Chia 100 điểm" / huy chương, vì `khoa_uu_tien_wharton` xét điểm quyết tâm TRƯỚC số bốc thăm (tầng 2: `(1, -w2, stb, sid)`). Câu mới: điểm thi, rồi điểm quyết tâm (nếu có), cuối cùng bốc thăm.

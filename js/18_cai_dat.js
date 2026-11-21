@@ -110,6 +110,10 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
   const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }
     taiLai();
+    /* MT1: loại / điểm sàn vừa đổi thì bảng CLB (cột "Loại", "Điểm sàn") và thanh "Việc tiếp theo" phải đổi theo ngay,
+       không đợi tải lại trang. Chỉ gọi lại hàm vẽ sẵn có; không thêm đường lưu mới. */
+    if (typeof loadAdminClubs === "function") loadAdminClubs();
+    if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo();
   });
   const nhieuBuoi = new Set(d.clubs.map((c) => c.buoi)).size > 1;
   const tenClb = {};
