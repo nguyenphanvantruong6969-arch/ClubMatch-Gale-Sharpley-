@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: PLANNED (Opus, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L1, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -102,8 +102,18 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: plan + protocol written (Opus).
-- In progress: none. Tests: none yet. Open problems: none.
+- Done so far: plan + protocol written (Opus). Lead started; Sessions + Needs Truong added.
+- In progress: creating coder + checker; next GO L1. Tests: none yet. Open problems: none.
+
+## Sessions
+| Role | Model | Session id | Started | State |
+|---|---|---|---|---|
+| lead | Opus | session_01VfPzNumBTQB5odHhUwJqun | 2026-11-21 | running |
+| coder | Sonnet | (pending) | | |
+| checker | Sonnet | (pending) | | |
+
+## Needs Truong (1 line each + recommendation)
+- (none yet)
 
 ## Decisions and gotchas (keep short)
 - `chayNut` swaps `textContent` today: a button with an icon loses it. L1 fixes by saving child nodes.
