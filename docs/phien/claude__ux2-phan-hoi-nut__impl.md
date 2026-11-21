@@ -23,7 +23,8 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [~] L9 docs / screenshots / verify: content WRITTEN + committed as WIP, verification NOT finished (see Current state)
 
 ## Current state (overwrite each handoff)
-- L9 (lead said GO L9, base 816e92c) is IN PROGRESS. Written and committed (WIP commit, not yet reported "CODER DONE L9"):
+- L9 DONE and reported (full UI sweep 810 passed / 0 failed, ruff clean, kiem_nhanh 7/7, doc tests 94 passed). Awaiting checker verdict.
+- (history) L9 (lead said GO L9, base 816e92c) was IN PROGRESS. Written and committed (WIP commit, not yet reported "CODER DONE L9"):
   HUONG_DAN_SU_DUNG.md new section (end of section 4), docs/ke_hoach/CLAUDE_CHI_TIET.md code-map row + tests/ count 360->369
   (test_a13_12_tai_lieu.py demands the exact count; backticked names must be top-level `function`/def names, so no const / nested names),
   14 screenshots re-shot with docs/ke_hoach/ux/chup_luong_chinh.py into docs/ke_hoach/ux/anh/ (all 14 that script writes changed),
