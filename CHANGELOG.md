@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1 (gom): khối "Để dùng Huy chương" ở Cài đặt dựng lại thành BẢNG đặt loại CLB
+
+- `js/18_cai_dat.js` (`ux1aVeSanSang`): mỗi CLB một dòng, ba nút Tự do / Giới hạn / Tuyển chọn có trạng thái chọn (`aria-pressed`), điểm sàn của Tuyển chọn nhập ngay tại dòng, nhóm theo buổi kèm dấu "Đã có / Cần ít nhất một CLB Tự do", bộ đếm "Đã chọn loại: x/y", ba câu giải thích loại; bỏ ô chọn xổ xuống (trùng với nút Tự do). Sau mỗi lần lưu vẽ lại từ dữ liệu đã lưu và trả tiêu điểm về ô vừa bấm. Vẫn lưu qua `dat_loai_clb`; không đổi backend, CSV hay schema.
+- `i18n.js` (vi + en): `ux1a_ss_con_thieu` đổi chữ; thêm `ux1a_ss_dem`, `ux1a_ss_gt_*`, `ux1a_ss_buoi_*`; bỏ `ux1a_ss_chon_tu_do`, `ux1a_ss_thieu_tu_do`. `style.css`: `.ux1a-ss-*`.
+- Tests: `tests/test_giao_dien_mt1_bang_loai.py` (mới, 6 ca; đỏ trước khi dựng); `tests/test_giao_dien_ux1_cai_dat.py` (ca cũ giả định dòng biến mất và có ô xổ xuống, cập nhật theo bảng). 66 ca liên quan đạt; `ruff` sạch. Chưa chạy cả bộ.
+- Nhánh `claude/mt1-bang-loai-clb` (từ `claude/pensive-turing-s02bgi` @ 6c97791); handoff `docs/phien/claude__mt1-bang-loai-clb.md`.
+
 ## 2026-11-21 — MT1 sửa đồng bộ: đặt loại CLB tại chỗ làm tươi bảng CLB và thanh "Việc tiếp theo"
 
 - `js/18_cai_dat.js` (`luu` trong `ux1aVeSanSang`, dùng cho nút Tự do / Giới hạn / Tuyển chọn, ô điểm sàn và ô chọn CLB Tự do của buổi): sau `dat_loai_clb` thành công gọi thêm `loadAdminClubs()` và `capNhatViecTiepTheo()`. Trước đây chỉ khối "còn thiếu" vẽ lại, cột "Loại" của bảng CLB cũ cho tới khi tải lại trang. Không đổi backend, không thêm đường lưu.

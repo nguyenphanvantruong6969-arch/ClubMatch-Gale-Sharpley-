@@ -125,19 +125,20 @@ def test_huy_chuong_du_lieu_chua_san_sang_sua_tai_cho_den_khi_san_sang(mo_trang)
     _vao_cai_dat(page)
     page.locator("#ux1aHuyChuong").click()
     page.wait_for_selector("#ux1aSanSang .ux1a-ss-dong")
-    assert page.locator("#ux1aSanSang .ux1a-ss-dong[data-clb]").count() == 9
-    assert page.locator("#ux1aSanSang .ux1a-ss-dong[data-buoi]").count() == 3
-    assert "Thứ 4" in page.locator('#ux1aSanSang .ux1a-ss-dong[data-buoi="thu_4"]').inner_text()
-    # một CLB Tự do cho mỗi buổi qua nút chọn; sau đó đặt các CLB còn lại bằng viên thuốc Giới hạn
+    # MT1 (gom): khối là BẢNG; dòng không biến mất khi đặt loại, nút đã chọn sáng (aria-pressed), mỗi buổi một dòng trạng thái
+    assert page.locator("#ux1aSanSang tr.ux1a-ss-dong[data-clb]").count() == 9
+    assert page.locator('#ux1aSanSang tr.ux1a-ss-buoi[data-co-tu-do="false"]').count() == 3
+    assert "Thứ 4" in page.locator('#ux1aSanSang tr.ux1a-ss-buoi[data-buoi="thu_4"]').inner_text()
+    # một CLB Tự do cho mỗi buổi; sau đó đặt các CLB còn lại bằng nút Giới hạn
     for buoi in ("thu_2", "thu_4", "thu_6"):
-        sel = page.locator('#ux1aSanSang select[data-buoi="%s"]' % buoi)
-        sel.select_option(index=1)
-        page.wait_for_function("b => !document.querySelector('#ux1aSanSang select[data-buoi=\"' + b + '\"]')", arg=buoi)
-    while page.locator("#ux1aSanSang .ux1a-vien[data-loai='GIOI_HAN']").count():
-        n = page.locator("#ux1aSanSang .ux1a-vien[data-loai='GIOI_HAN']").count()
-        page.locator("#ux1aSanSang .ux1a-vien[data-loai='GIOI_HAN']").first.click()
+        page.locator('#ux1aSanSang tr.ux1a-ss-dong[data-buoi="%s"] button[data-loai="TU_DO"]' % buoi).first.click()
+        page.wait_for_selector('#ux1aSanSang tr.ux1a-ss-buoi[data-buoi="%s"][data-co-tu-do="true"]' % buoi)
+    chua = '#ux1aSanSang tr.ux1a-ss-dong:not(:has(button[aria-pressed="true"])) button[data-loai="GIOI_HAN"]'
+    while page.locator(chua).count():
+        n = page.locator('#ux1aSanSang button[aria-pressed="true"]').count()
+        page.locator(chua).first.click()
         page.wait_for_function(
-            "n => document.querySelectorAll('#ux1aSanSang .ux1a-vien[data-loai=\"GIOI_HAN\"]').length < n"
+            "n => document.querySelectorAll('#ux1aSanSang button[aria-pressed=\"true\"]').length > n"
             " || !!document.getElementById('ux1aSanSangXong')", arg=n)
     page.wait_for_selector("#ux1aSanSangXong")
     assert not loi, loi

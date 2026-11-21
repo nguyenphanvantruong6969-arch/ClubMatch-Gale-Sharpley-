@@ -107,53 +107,77 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
     hop.append(hang);
     if (ca) return;      /* ít em sai (dưới một nửa): vẫn cho đặt loại CLB tại chỗ bên dưới */
   }
-  const luu = (cid, loai, diemSan) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
+  /* MT1 (gom): BẢNG đặt loại — mỗi CLB một dòng, ba nút loại có trạng thái chọn, điểm sàn của Tuyển chọn ngay tại dòng,
+     nhóm theo buổi kèm dấu "đã có / cần CLB Tự do", bộ đếm. Vẫn lưu qua `dat_loai_clb`; không thêm đường lưu mới.
+     Sau mỗi lần lưu vẽ lại cả khối từ dữ liệu đã lưu, rồi trả tiêu điểm về đúng ô vừa bấm (`hoiPhuc`). */
+  const luu = (cid, loai, diemSan, hoiPhuc) => callApi("dat_loai_clb", cid, loai, diemSan).then((r) => {
     if (!r.ok) { showErrorToast(r.errors); return; }
-    taiLai();
+    const xong = taiLai();
     /* MT1: loại / điểm sàn vừa đổi thì bảng CLB (cột "Loại", "Điểm sàn") và thanh "Việc tiếp theo" phải đổi theo ngay,
        không đợi tải lại trang. Chỉ gọi lại hàm vẽ sẵn có; không thêm đường lưu mới. */
     if (typeof loadAdminClubs === "function") loadAdminClubs();
     if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo();
+    return Promise.resolve(xong).then(() => {
+      const o = hoiPhuc && hop.querySelector(hoiPhuc);
+      if (o) o.focus();
+    });
   });
   const nhieuBuoi = new Set(d.clubs.map((c) => c.buoi)).size > 1;
-  const tenClb = {};
-  d.clubs.forEach((c) => { tenClb[c.club_id] = c.name || c.club_id; });
+  const daDat = d.clubs.filter((c) => c.loai !== null && c.loai !== undefined).length;
+  hop.append(ux1aEl("p", { class: "ux1a-ss-dem", id: "ux1aSsDem", role: "status",
+    text: t("ux1a_ss_dem", { x: daDat, y: d.clubs.length }) }));
+  hop.append(ux1aEl("p", { class: "hint-text ux1a-ss-giai-thich", id: "ux1aSsGiaiThich" },
+    ...["TU_DO", "GIOI_HAN", "TUYEN_CHON"].map((ma) => ux1aEl("span", { class: "ux1a-ss-gt",
+      text: t("ux1a_ss_gt_" + ma) }))));
 
-  d.clubs.filter((c) => c.loai === null).forEach((c) => {
+  const bang = ux1aEl("table", { class: "data-table ux1a-ss-bang" });
+  bang.append(ux1aEl("thead", null, ux1aEl("tr", null,
+    ux1aEl("th", { scope: "col", text: t("gt_th_clb") }),
+    ux1aEl("th", { scope: "col", text: t("th_fa_loai") }),
+    ux1aEl("th", { scope: "col", text: t("th_fa_diem_san") }))));
+  const than = ux1aEl("tbody");
+  let buoiTruoc = null;
+  d.clubs.forEach((c) => {
+    if (c.buoi !== buoiTruoc) {
+      buoiTruoc = c.buoi;
+      const co = !d.buoi_thieu_tu_do.includes(c.buoi);
+      than.append(ux1aEl("tr", { class: "ux1a-ss-buoi", "data-buoi": c.buoi, "data-co-tu-do": co ? "true" : "false" },
+        ux1aEl("td", { colspan: "3" },
+          nhieuBuoi ? ux1aEl("strong", { class: "ux1a-ss-buoi-ten", text: nhanBuoi(c.buoi) + " " }) : null,
+          ux1aEl("span", { class: "ux1a-ss-buoi-tt" + (co ? " is-xong" : " is-thieu"),
+            text: t(co ? "ux1a_ss_buoi_co_tu_do" : "ux1a_ss_buoi_can_tu_do") }))));
+    }
     const vien = ux1aEl("span", { class: "ux1a-vien-nhom", role: "group", "aria-label": c.name });
-    [["TU_DO", "fa_loai_TU_DO"], ["GIOI_HAN", "fa_loai_GIOI_HAN"], ["TUYEN_CHON", "fa_loai_TUYEN_CHON"]].forEach(([ma, khoa]) => {
+    ["TU_DO", "GIOI_HAN", "TUYEN_CHON"].forEach((ma) => {
       const b = ux1aEl("button", { type: "button", class: "ux1a-vien", "data-loai": ma, "data-clb": c.club_id,
-        "aria-pressed": "false", text: t(khoa) });
-      b.addEventListener("click", () => luu(c.club_id, ma, null));
+        "aria-pressed": c.loai === ma ? "true" : "false", text: t("fa_loai_" + ma) });
+      b.addEventListener("click", () => {
+        if (c.loai === ma) return;
+        luu(c.club_id, ma, null, 'tr[data-clb="' + c.club_id + '"] button[data-loai="' + ma + '"]');
+      });
       vien.append(b);
     });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-clb": c.club_id },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: c.name + (nhieuBuoi ? " · " + nhanBuoi(c.buoi) : "") }),
-      vien));
+    let sanO = "—";
+    if (c.loai === "TUYEN_CHON") {
+      const o = ux1aEl("input", { type: "number", class: "text-input ux1a-so", min: "0", max: "10", step: "1",
+        value: c.diem_san === null || c.diem_san === undefined ? "" : String(c.diem_san),
+        "aria-label": t("ux1a_ss_diem_san", { clb: c.name }) });
+      const gui = () => {
+        if (o.value === "") { o.focus(); return; }
+        luu(c.club_id, "TUYEN_CHON", Number(o.value), 'tr[data-clb="' + c.club_id + '"] input[type=number]');
+      };
+      o.addEventListener("keydown", (ev) => { if (ev.key === "Enter") gui(); });
+      sanO = ux1aEl("span", { class: "ux1a-ss-san" + (c.diem_san === null || c.diem_san === undefined ? " is-thieu" : "") },
+        o, ux1aEl("button", { type: "button", class: "btn btn-secondary btn-nho", "data-luu-san": c.club_id,
+          text: t("ws_btn_luu"), onclick: gui }));
+    }
+    than.append(ux1aEl("tr", { class: "ux1a-ss-dong", "data-clb": c.club_id, "data-buoi": c.buoi },
+      ux1aEl("td", { class: "ux1a-ss-ten", text: c.name }),
+      ux1aEl("td", null, vien),
+      ux1aEl("td", null, sanO)));
   });
-
-  d.thieu_diem_san.forEach((cid) => {
-    const o = ux1aEl("input", { type: "number", class: "text-input ux1a-so", min: "0", max: "10", step: "1",
-      "aria-label": t("ux1a_ss_diem_san", { clb: tenClb[cid] }) });
-    const b = ux1aEl("button", { type: "button", class: "btn btn-secondary btn-nho", text: t("ws_btn_luu") });
-    b.addEventListener("click", () => {
-      if (o.value === "") return;
-      luu(cid, "TUYEN_CHON", Number(o.value));
-    });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-diem-san": cid },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: t("ux1a_ss_diem_san", { clb: tenClb[cid] }) }), o, b));
-  });
-
-  d.buoi_thieu_tu_do.forEach((buoi) => {
-    const ds = d.clubs.filter((c) => c.buoi === buoi);
-    const sel = ux1aEl("select", { class: "text-input ux1a-chon-tu-do", "data-buoi": buoi,
-      "aria-label": t("ux1a_ss_chon_tu_do", { buoi: nhanBuoi(buoi) }) },
-      ux1aEl("option", { value: "", text: "—" }),
-      ...ds.map((c) => ux1aEl("option", { value: c.club_id, text: c.name })));
-    sel.addEventListener("change", () => { if (sel.value) luu(sel.value, "TU_DO", null); });
-    hop.append(ux1aEl("div", { class: "ux1a-ss-dong", "data-buoi": buoi },
-      ux1aEl("span", { class: "ux1a-ss-ten", text: t("ux1a_ss_thieu_tu_do", { buoi: nhanBuoi(buoi) }) }), sel));
-  });
+  bang.append(than);
+  hop.append(bang);
 }
 
 function ux1aKiemSanSang(the, quayLai) {

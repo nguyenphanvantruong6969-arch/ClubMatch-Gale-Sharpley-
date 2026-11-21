@@ -3172,6 +3172,21 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .ux1a-vien { border: 1px solid var(--slate); border-radius: 999px; padding: 3px 12px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
 .ux1a-vien:hover { border-color: var(--chart-general); }
 .ux1a-so { width: 72px; }
+/* MT1 (gom): bảng đặt loại CLB trong khối "Để dùng Huy chương" */
+.ux1a-ss-dem { margin: 0 0 6px; font-weight: 600; }
+.ux1a-ss-giai-thich { display: flex; flex-direction: column; gap: 2px; margin: 0 0 10px; }
+.ux1a-ss-bang { width: 100%; border-collapse: collapse; }
+.ux1a-ss-bang th, .ux1a-ss-bang td { text-align: left; padding: 6px 8px; vertical-align: middle; }
+.ux1a-ss-bang .ux1a-ss-dong { display: table-row; padding: 0; }
+.ux1a-ss-bang .ux1a-ss-ten { min-width: 160px; }
+.ux1a-ss-buoi td { padding-top: 12px; border-bottom: 1px solid var(--slate); }
+.ux1a-ss-buoi-tt.is-thieu { color: #B42318; font-weight: 600; }
+.ux1a-ss-buoi-tt.is-xong { color: var(--chart-general); font-weight: 600; }
+.ux1a-vien[aria-pressed="true"] { border-color: var(--chart-general); box-shadow: inset 0 0 0 1px var(--chart-general); font-weight: 700; }
+.ux1a-ss-san { display: inline-flex; align-items: center; gap: 6px; }
+.ux1a-ss-san .ux1a-so { width: 72px; min-width: 0; flex: none; }
+.ux1a-ss-san.is-thieu .ux1a-so { border-color: #B42318; }
+.ux1a-ss-bang td:first-child, .ux1a-ss-buoi-tt { font-family: inherit; }
 .ux1a-san-sang-xong { margin: 0; font-weight: 600; }
 .ux1a-cach-xet { margin: 14px 0 0; }
 .ux1a-sx-dong { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 4px 0; }
