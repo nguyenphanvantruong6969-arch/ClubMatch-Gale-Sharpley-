@@ -103,3 +103,4 @@ bao_cao_hinh/
 
 # Vai cua phien tu dong (hook ban giao doc), rieng tung container
 .claude/phien_vai.json
+junit_*.xml
