@@ -113,9 +113,10 @@ Lot L9 — docs, screenshots, verify
 | checker | Sonnet | session_01VfPzNv4Zy4WBo2xtuj4piV | 2026-11-21 | running |
 
 ## Needs Truong (1 line each + recommendation)
-- (none yet)
+- L3 hit area: dense table/list buttons and sidebar group headers are 24 px (AA), not 44 px. Recommend: accept; revisit only if teachers mis-tap on the touch kiosk.
 
 ## Decisions and gotchas (keep short)
+- Lead L3 (2026-11-21): 44 px everywhere except edge-to-edge rows: .nav-item gets min-height 44; .nav-nhom-nut + dense td/li buttons ≥ 24 px (WCAG 2.5.8 AA) instead of 44 (they would overlap neighbours); .ranking-list li 20 px if 24 overlaps. Focus ring token #173F8C (≥3:1 on --gold).
 - `chayNut` swaps `textContent` today: a button with an icon loses it. L1 fixes by saving child nodes.
 - `applyStaticText` rewrites `[data-i18n]` on language switch: a busy button must not be rewritten mid-call.
 - Screenshot-based docs (`docs/ke_hoach/ux/anh/`) will drift: re-shoot only in L9.
