@@ -24,3 +24,7 @@
 - Branch vs 05783a7: only `api_xuat.py` changed among product files (+18/-1); no solver, priority, run_history, schema, CSV header, i18n or UI change.
 - Related set 74 passed; `ruff` clean; `kiem_nhanh.py` 7/7 incl. `trung_khit` (15 cases = 3 sets × 5 seeds).
 - Docstring, CHANGELOG, TIEN_DO rows present and accurate. Note: `kiem_nhanh` uses 5 seeds, CLAUDE.md invariant 1 mentions 20 — solver untouched, so not a blocker.
+
+## FIX L3 9f54f8c..3b05c35 — verdict: NO BUGS
+- Diff is docs only (CHANGELOG.md, CLAUDE_CHI_TIET.md tests/ row 357→360 + branch/date text); no test or product file touched.
+- `ls tests/test_*.py | wc -l` = 360 = documented count. `tests/test_a13_12_tai_lieu.py`: 8 passed.
