@@ -10,3 +10,11 @@
   loai/diem_san/so_toi_thieu/suc_chua_phong → all round trip; FA on all NULL → empty cells → NULL.
 - Judgement on coder note: FA-off round trip imported into an FA-ON DB is acceptable (importer ignores Loại when FA off is pre-existing UX1A-L5).
 - Observation (not a bug): the second caller (`tao_so_nhap_mau`, ~line 1530) also gets FA values now when FA on / clubs filled; harmless, mẫu is meant to carry them.
+
+## L2 a39687f..2fd73ce — verdict: NO BUGS
+- Related set run in full: 74 passed (coder's "74 expected" confirmed); `ruff check .` clean.
+- Mutation: `api_xuat.py` reverted to a39687f → the 3 new L2 tests go RED; restored → green.
+- Gate D2 correct: `giu_cho` passed only when `dung_fa_daa`; FA off → no sheet; FA on + empty table → header-only sheet.
+- Round trip equal for loai/diem_san/so_toi_thieu/suc_chua_phong and the giu_cho SET; student with no preferences still round-trips.
+- Own edge cases (scratch): header-only sheet imported over a DB holding a reserved seat clears it; export → import → export gives identical cell values on every sheet.
+- `_du_lieu_so_nhap` tuple unchanged (D4); callers (2) unaffected.
