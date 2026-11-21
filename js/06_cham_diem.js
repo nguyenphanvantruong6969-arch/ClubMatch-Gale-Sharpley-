@@ -162,7 +162,7 @@ function initScoringHandlers() {
         const sid = w && w.params && w.params.student_id;
         const input = sid === undefined || sid === null ? null : oTheoMa.get(String(sid));
         if (!input) return;
-        baoLoiTaiO(input, trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
+        baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
       });
       focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
       if (boQua.length) {
@@ -205,7 +205,7 @@ function initScoringHandlers() {
             const sid = w && w.params && w.params.student_id;
             const input = sid === undefined || sid === null ? null : oTheoHs.get(String(sid));
             if (!input) return;
-            baoLoiTaiO(input, trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
+            baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
           });
           focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
           const cau = t("feedback_scores_saved_mot_phan", { n: res.data.n_saved, k: boQua.length });
@@ -222,7 +222,7 @@ function initScoringHandlers() {
           const sid = w && w.params && w.params.student_id;
           const input = sid === undefined || sid === null ? null : oTheoHs.get(String(sid));
           if (!input) return;
-          baoLoiTaiO(input, trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
+          baoLoiTaiO(input, () => trErr(w), { them: ["is-invalid"], tieuDe: true }); /* UX2-L4: giữ is-invalid + title, thêm .loi-o */
         });
         focusODau(Array.from(inputs).filter((i) => i.__ux2Loi)); /* UX2-L4: con trỏ về ô sai đầu tiên */
         feedbackErrors(el("scoringFeedback"), res.errors);

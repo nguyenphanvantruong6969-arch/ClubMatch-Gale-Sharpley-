@@ -243,7 +243,7 @@ function initFallbackHandlers() {
       const thieu = [];
       if (!id) thieu.push(el("newStudentId"));
       if (!name) thieu.push(el("newStudentName"));
-      thieu.forEach((o) => baoLoiTaiO(o, t("toast_need_id_and_name")));
+      thieu.forEach((o) => baoLoiTaiO(o, () => t("toast_need_id_and_name")));
       focusODau(thieu);
       return;
     }
@@ -251,7 +251,7 @@ function initFallbackHandlers() {
     const lopMoi = el("newStudentLop").hidden ? null : el("newStudentLop").value;
     if (lopMoi === "") {
       showToast(t("kiosk_lop_nhac"), "error");
-      baoLoiTaiO(el("newStudentLop"), t("kiosk_lop_nhac"));
+      baoLoiTaiO(el("newStudentLop"), () => t("kiosk_lop_nhac"));
       focusODau([el("newStudentLop")]);
       return;
     }

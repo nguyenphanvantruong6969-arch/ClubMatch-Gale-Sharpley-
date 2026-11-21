@@ -6,7 +6,8 @@
 - Nối vào: ô hạt giống (`02_van_hanh.js`, toast cũ giữ nguyên); form CLB (`05_quan_ly.js`: ô thiếu + bảng `UX2_LOI_CLB` mã backend → ô: `club_id_required`, `capacity_must_be_positive`, `reserve_capacity_negative`, `reserve_capacity_exceeds_capacity`, mã khác → khung phản hồi cũ); form thêm học sinh (`04_nhap_tai_cho.js`: mã/tên/lớp thiếu, `student_id_required`, mã khác → toast); ô điểm (`06_cham_diem.js`, 3 chỗ: giữ `is-invalid` + `title`, thêm `.loi-o` + focus ô đầu).
 - Không gộp vào `04_nhap_tai_cho.js` phần `wh-diem` (kiểm tra sống khi gõ, đã có dòng `.wh-loi` tổng hợp): giữ nguyên hành vi.
 - `style.css`: `.loi-o`, `.is-loi`, `@keyframes ux2Rung` (chỉ trong `prefers-reduced-motion: no-preference`).
-- Test mới: `tests/test_giao_dien_ux2_loi_o.py` (8). Không test cũ phải sửa; 191 test liên quan qua; không đổi `api*.py`, `i18n_errors.py`.
+- fix1 (checker): đổi ngôn ngữ lúc lỗi còn hiện → chữ theo ngôn ngữ mới, KHÔNG xoá lỗi: `baoLoiTaiO` nhận `() => chữ` (các nơi gọi truyền hàm `t(…)`/`trErr(e)`), nghe `langchange` ở `00_nen.js` vẽ lại `.loi-o` + `title`. Bảng điểm CLB bị dựng lại khi đổi ngôn ngữ (`07_ngon_ngu.js`): lỗi trên ô điểm được chụp và vẽ lại sau khi nạp (tuỳ chọn `khongRung`).
+- Test mới: `tests/test_giao_dien_ux2_loi_o.py` (12 sau fix1: +form CLB/hạt giống đổi ngôn ngữ, lỗi theo mã backend, ô điểm cho cả quan_tri và giao_vien). Không test cũ phải sửa; 191 test liên quan qua; không đổi `api*.py`, `i18n_errors.py`.
 
 ## 2026-11-21 — UX2-L3: vùng bấm 44 px, một vòng focus, lớp trạng thái (CSS nút)
 

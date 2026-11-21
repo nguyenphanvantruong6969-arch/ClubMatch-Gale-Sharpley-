@@ -1166,7 +1166,7 @@ function initAdminHandlers() {
       if (!id) thieu.push(el("clubFormId"));
       if (!name && !clbDangSua) thieu.push(el("clubFormName"));
       if (!capacity) thieu.push(el("clubFormCapacity"));
-      thieu.forEach((o) => baoLoiTaiO(o, t("feedback_club_form_required")));
+      thieu.forEach((o) => baoLoiTaiO(o, () => t("feedback_club_form_required")));
       focusODau(thieu);
       return;
     }

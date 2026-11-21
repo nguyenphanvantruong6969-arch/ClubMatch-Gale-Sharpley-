@@ -136,12 +136,16 @@ function reapplyDynamicTextForLangChange() {
       /* Diem da go nhung CHUA LUU nam trong o nhap, khong nam trong
          CSDL. Nap lai tu CSDL la xoa mat cong giao vien vua go. */
       const daGo = {};
+      const daLoi = {}; /* UX2-L4: o dang bao loi: dung lai bang thi ve lai loi (chu theo ngon ngu moi), khong lam mat */
       document.querySelectorAll("#scoringTableBody .score-input").forEach((o) => {
         daGo[o.dataset.studentId] = o.value;
+        if (o.__ux2Loi) daLoi[o.dataset.studentId] = o.__ux2Loi;
       });
       openScoringClub(currentScoringClub).then(() => {
         document.querySelectorAll("#scoringTableBody .score-input").forEach((o) => {
           if (o.dataset.studentId in daGo) o.value = daGo[o.dataset.studentId];
+          const l = daLoi[o.dataset.studentId];
+          if (l) baoLoiTaiO(o, l.fn, { them: l.them, tieuDe: l.tieuDe, khongRung: true });
         });
       });
     }

@@ -499,12 +499,25 @@ function feedbackErrors(node, errors) {
 /* UX2-L4 (#7): loi NGAY TAI O. Chu luon di qua trErr/t (mot nguon, bat bien 6); khong chuoi moi trong JS.
    baoLoiTaiO(o, chu, tuyChon): aria-invalid, lop is-loi, <div.loi-o> ngay sau o (hoac sau <label> boc o) noi voi o
      bang aria-describedby; lac 200 ms (ux2Rung) CHI khi cho phep chuyen dong; go chu vao o thi loi tu xoa.
-     tuyChon.them = [lop cu can giu, vd "is-invalid"], tuyChon.tieuDe = true: giu title cu cua o diem.
+     tuyChon.them = [lop cu can giu, vd "is-invalid"], tuyChon.tieuDe = true: giu title cu cua o diem,
+     tuyChon.khongRung = true: ve lai loi sau khi bang bi dung lai (doi ngon ngu), khong lac lan nua.
+     chu co the la () => chuoi: ve lai theo ngon ngu khi doi ngon ngu (lang change) — KHONG xoa loi.
    xoaLoiTaiO(o): go sach moi dau vet (aria-invalid, lop, .loi-o, describedby, ham nghe).
    focusODau(dsO): dua tro vao o DAU TIEN (theo thu tu tren trang), mo <details> dong boc no.
    baoLoiForm(goc, errors, bangMaO, tuyChon): bangMaO = {ma_loi: "idO" | (err) => "idO"}; loi co o thi hien tai o, loi
      khong co o (hoac ma la) thi tuyChon.khac(errors) hoac toast — KHONG BAO GIO im lang. Tra {conO, khac}. */
 let ux2SoLoiO = 0;
+
+/* Doi ngon ngu luc loi con hien: ve lai chu theo ngon ngu moi (KHONG xoa loi). Cung kieu voi datNutBan. */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll(".is-loi").forEach((o) => {
+    const st = o.__ux2Loi;
+    if (!st || !st.hop.parentNode) return;
+    const chu = st.fn();
+    st.hop.textContent = chu;
+    if (st.tieuDe) o.title = chu;
+  });
+});
 
 function ux2ChoPhepChuyenDong() {
   return !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
@@ -528,10 +541,13 @@ function xoaLoiTaiO(o) {
   delete o.__ux2Loi;
 }
 
-function baoLoiTaiO(o, chu, tuyChon) {
+function baoLoiTaiO(o, chuHoacHam, tuyChon) {
   if (!o) return;
   xoaLoiTaiO(o);
   const tc = tuyChon || {};
+  /* chuHoacHam: chuoi, hoac () => chuoi de CHU THEO NGON NGU khi doi ngon ngu luc loi con hien (langchange ve lai). */
+  const fn = typeof chuHoacHam === "function" ? chuHoacHam : () => chuHoacHam;
+  const chu = fn();
   ux2SoLoiO += 1;
   const id = "loi-o-" + ux2SoLoiO;
   const hop = document.createElement("div");
@@ -541,7 +557,7 @@ function baoLoiTaiO(o, chu, tuyChon) {
   const moc = o.closest("label") || o;
   moc.parentNode.insertBefore(hop, moc.nextSibling);
   const ham = () => xoaLoiTaiO(o);
-  o.__ux2Loi = { id, hop, ham, them: tc.them || [], tieuDe: !!tc.tieuDe };
+  o.__ux2Loi = { id, hop, ham, fn, them: tc.them || [], tieuDe: !!tc.tieuDe };
   o.setAttribute("aria-invalid", "true");
   o.setAttribute("aria-describedby", ((o.getAttribute("aria-describedby") || "") + " " + id).trim());
   o.classList.add("is-loi");
@@ -549,7 +565,7 @@ function baoLoiTaiO(o, chu, tuyChon) {
   if (tc.tieuDe) o.title = chu;
   o.addEventListener("input", ham);
   o.addEventListener("change", ham);
-  if (ux2ChoPhepChuyenDong()) {
+  if (!tc.khongRung && ux2ChoPhepChuyenDong()) {
     o.classList.remove("ux2-rung");
     void o.offsetWidth;
     o.classList.add("ux2-rung");
@@ -576,7 +592,7 @@ function baoLoiForm(goc, errors, bangMaO, tuyChon) {
     const idO = typeof m === "function" ? m(e) : m;
     const o = idO ? (goc && goc.querySelector ? goc.querySelector("#" + idO) : null) || el(idO) : null;
     if (!o) { khac.push(e); return; }
-    baoLoiTaiO(o, trErr(e));
+    baoLoiTaiO(o, () => trErr(e));
     dsO.push(o);
   });
   focusODau(dsO);
