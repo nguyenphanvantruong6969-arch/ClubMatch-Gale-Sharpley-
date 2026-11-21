@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L3, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (lead running L4, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -50,7 +50,7 @@ Lot L2 ✅ PASSED (checker NO BUGS, head 8348237) — #3 ✓ after save / export
       not motion) without animation.
 - [x] `chayNut` option `xongKhi: (res) => res.ok` → `nutDaXong(nut)`; wire save + export buttons (`chayXuat`
       in `js/03_ket_qua.js`, save buttons in `05_quan_ly`, `06_cham_diem`, `18_cai_dat`; coder lists them).
-Lot L3 — #8 hit area, #9 focus ring, #1 state layer (CSS button system)
+Lot L3 ✅ PASSED (checker NO BUGS, head 2a05e8f, 2 fix rounds) — #8 hit area, #9 focus ring, #1 state layer (CSS button system)
 - [x] Test `tests/test_giao_dien_ux2_nut.py`: every visible `button, .btn, [role=button]` on each main tab has a
       hit area ≥ 44×44 px (bounding box, or `elementFromPoint` at centre ±22 px returns the button);
       `touch-action: manipulation`; Tab focus shows the SAME `outline` (width, colour token) on 5 sample
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 passed (9169da5), L2 passed (8348237; 13 buttons wired, 18_cai_dat has no save button).
-- In progress: L3 sent to coder (GO L3). Open problems: none.
+- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f) passed.
+- In progress: L4 sent to coder (GO L4). Open problems: none.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
