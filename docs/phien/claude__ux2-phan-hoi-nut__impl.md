@@ -18,16 +18,18 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L4 #7 inline field errors (baoLoiTaiO...)               PASSED (+fix1 language switch)
 - [x] L5 #11 four-phase progress (UX2_PHA)                    PASSED (+fix1 backup warning)
 - [x] L6 #12 guided empty states (veTrangThaiRong)            PASSED (291deb8 + fix1 788709f)
-- [x] L7 #6 skeleton loading (hienKhungCho)                   DONE head b00b9e3, reported, checker verdict pending
-- [ ] L8 #10 smooth transitions   [ ] L9 docs/screenshots/verify (spec: lead's branch file)
+- [x] L7 #6 skeleton loading (hienKhungCho)                   PASSED (b00b9e3)
+- [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    DONE head fef2862, reported, checker verdict pending
+- [ ] L9 docs / screenshots / verify (spec: lead's branch file; ONLY lot left)
 
 ## Current state (overwrite each handoff)
-- Done: L1-L7 committed + pushed; last code commit b00b9e3 (L7). Working tree clean after the handoff push.
-- In progress: nothing. Waiting for lead: checker verdict on L7 and "GO L8".
+- Done: L1-L8 committed + pushed; last code commit fef2862 (L8). origin/main (MT1) was merged into the branch (75f99ed; only
+  CHANGELOG.md / TIEN_DO.md conflicted, both sides kept). Working tree clean after the handoff push.
+- In progress: nothing. Waiting for lead: checker verdict on L8 and "GO L9".
 - Tests: related ones only (never the 22-min full suite); redirect pytest output to a scratchpad file.
-  Last (L7): 217 passed (ux2_*, tien_trinh, a13_8, a13_12, quan_ly_tab_con, a14_lop, t3_l0, t3_l2_van_hanh, chay, ux1_ket_qua,
-  fa_n2, cham_diem, tro_nang, i18n_sync, khoa_xuat, ux_xuat), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
-- Open problems: none known. 800 HS admin list loads in ~0.4 s locally (no skeleton shown; threshold 300 ms).
+  Last (L8): 259 passed (all ux2_*, tien_trinh, chay, t3_l2_van_hanh, khoa_xuat, ux_xuat, xuat_du_lieu, quan_ly_tab_con, a13_8, a14_lop,
+  tro_nang, hieu_ung, wharton_quan_ly, i18n_sync, MT1 UI tests), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
+- Open problems: none known.
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -50,13 +52,17 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - Skeleton (L7): hienKhungCho(tbody, soCot, soDong, hoi, caoHang): 300 ms delay, only when tbody empty, ONE colspan cell per row
   (per-column bars made columns jump 100-135 px), cleared by hoi.then(ket, ket) (success/error/reject), token compare for double
   loads; tests avoid wall-clock asserts (use the synthetic-table test); admin student row height 55 px.
+- Slide-in/accordion (L8): ux2QuanSatBang observes 4 tbody ids (first 20 new data rows, never skeleton rows); details animation is CSS only
+  inside @supports(interpolate-size + ::details-content) + no-preference, NOT on .menu-khac; html.tat-hieu-ung does not cover
+  ::details-content (own rule). Layout tests must use offsetTop/offsetHeight (transform of the slide-in shifts getBoundingClientRect).
+- Merge conflicts in CHANGELOG.md / TIEN_DO.md (other branches append at the same spot): keep BOTH sides, strip markers.
 - Push rejected -> `git fetch origin claude/ux2-phan-hoi-nut && git merge --no-edit FETCH_HEAD` (protocol: never rebase/force).
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Wait for lead: checker verdict on L7 (FIX L7 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
-2. On "GO L8": `git pull origin claude/ux2-phan-hoi-nut` + `git fetch origin main && git merge --no-edit FETCH_HEAD`, read the L8 block.
-3. L8 smooth transitions (@supports for ::details-content / interpolate-size), L9 docs + screenshots (HUONG_DAN_SU_DUNG.md section,
+1. Wait for lead: checker verdict on L8 (FIX L8 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
+2. On "GO L9": pull + merge origin/main, read the L9 block.
+3. L9 docs + screenshots (HUONG_DAN_SU_DUNG.md section,
    re-shoot docs/ke_hoach/ux/anh/, CLAUDE_CHI_TIET.md code map, kiem_nhanh 7/7, CHANGELOG + TIEN_DO rows).
 4. Each lot: failing test first -> minimal code -> related tests -> ruff -> kiem_nhanh 7/7 -> CHANGELOG + TIEN_DO row `UX2-L<n>` ->
    tick Plan in the lead's branch file only if lead asks (lead ticks) -> commit -> push -> message lead.
@@ -77,3 +83,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L1-L6 built, fixed per checker (L1 x2, L3 x2, L4 x1, L5 x1), all pushed; handoff written at ~400k context | head 291deb8 |
 | 2026-11-21 | Sonnet (coder) | L6 fix1 (role-aware empty boxes, nav tab names, ux2vai), handoff refreshed (hook fired again) | head 788709f |
 | 2026-11-21 | Sonnet (coder) | L7 skeleton loading built + reported; handoff refreshed (hook fired again) | head b00b9e3 |
+| 2026-11-21 | Sonnet (coder) | L8 smooth transitions built + reported; merged origin/main (MT1); handoff refreshed | head fef2862 |
