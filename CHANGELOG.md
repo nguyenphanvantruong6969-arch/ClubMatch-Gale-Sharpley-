@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1-X1-L3 sửa (CI đỏ): số tệp test trong bản đồ mã
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md` ("Bản đồ mã", dòng `tests/`): 357 → 360 tệp `test_*.py`. Nhánh nền `claude/mt1-bang-loai-clb` đã có 359 tệp (con số cũ lỗi thời từ trước), MT1-X1 thêm `tests/test_mt1_x1_xuat_so_nhap.py` thành 360. Test `test_ban_do_ma_so_tep_test_la_so_that` không đổi.
+
 ## 2026-11-21 — MT1-X1-L3: kiểm chứng và tài liệu
 
 - D5 (MÔ PHỎNG, so SHEET + MỌI Ô, không so byte zip): xuất Sổ nhập từ `SO_NHAP_DQT_120HS_HOP_LE.xlsx`, `SO_NHAP_MAU_120HS_3BUOI.xlsx`, `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (nạp vào workspace thường) bằng mã cũ (`f809b3f`, trước L1) và mã mới: cả ba trùng khít (sheet `1. CLB`, `2. Học sinh`, `Hướng dẫn`; không cột FA, không sheet "Giữ chỗ"). `match_results` 3 bộ × 5 seed: `kiem_nhanh.py` `trung_khit` đạt (bộ giải không đụng).
