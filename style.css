@@ -3276,3 +3276,7 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 @media (prefers-reduced-motion: reduce) {
   .ux2-pha li[data-trang-thai="dang"] .ux2-pha-dot { animation: none; }
 }
+/* UX2 — L5 fix1: cảnh báo (sao lưu hỏng nhưng vẫn chạy xong) — màu vàng, KHÔNG đỏ; nghĩa nằm ở chữ "Cảnh báo". */
+.ux2-pha li[data-trang-thai="canh_bao"] { border-color: var(--gold); background: var(--gold-soft); }
+.ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-dot { background: var(--gold); }
+.ux2-pha li[data-trang-thai="canh_bao"] .ux2-pha-tt { color: var(--gold-text); font-weight: 600; }

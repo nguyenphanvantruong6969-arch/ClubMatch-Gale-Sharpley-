@@ -43,9 +43,11 @@ def test_tinh_pha_cac_tinh_huong_that_cua_run_pipeline(api, mo_trang):
     # xuất hỏng nhưng kết quả đã ghi (ok): chỉ pha Xuất lỗi, các pha trước vẫn xong
     s = xong[:-1] + [B("export", "error")]
     assert _tinh(page, s, True) == [["xong", "xong", "xong", "loi"], False]
-    # sao lưu hỏng nhưng vẫn chạy (ok): pha Kiểm tra báo lỗi, các pha sau vẫn xong
+    # sao lưu hỏng nhưng vẫn chạy (ok): pha Kiểm tra CẢNH BÁO, các pha sau vẫn xong
     s = [B("backup", "error"), B("validate", "done")] + xong[2:]
-    assert _tinh(page, s, True) == [["loi", "xong", "xong", "xong"], False]
+    assert _tinh(page, s, True) == [["canh_bao", "xong", "xong", "xong"], False]            # ok + sao lưu hỏng = CẢNH BÁO, không phải lỗi
+    # CSDL bị giữ: sao lưu hỏng và chạy dừng ngay (ok = false) -> vẫn là LỖI
+    assert _tinh(page, [B("backup", "error")], False)[0] == ["loi", "chua_den", "chua_den", "chua_den"]
     assert loi == [], loi
 
 
@@ -107,3 +109,72 @@ def test_pha_khong_dung_chuyen_dong_de_mang_nghia(api, mo_trang):
     page.evaluate("() => { document.documentElement.classList.add('tat-hieu-ung'); ux2DatPha('dang'); }")
     assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-dot', "e => getComputedStyle(e).animationName") == "none"
     assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-tt', "e => e.textContent.trim()") == "Đang chạy…"
+
+
+def test_sao_luu_hong_nhung_chay_van_thanh_cong_hien_canh_bao_va_chi_tiet(api, mo_trang):
+    page, loi = mo_trang()
+    steps = [B("backup", "error", detail={"code": "db_backup_failed", "params": {"detail": "dia day"}}), B("validate", "done"),
+             B("stb_lottery", "done"), B("rbda_cascade", "done"), B("write_results", "done"), B("export", "done")]
+    page.evaluate("(s) => ux2DatPha('xong', s, true)", steps)
+    assert page.evaluate(TT) == ["canh_bao", "xong", "xong", "xong"]
+    assert page.eval_on_selector('#ux2Pha li[data-pha="kiem_tra"] .ux2-pha-tt', "e => e.textContent.trim()") == "Cảnh báo"
+    chu = page.eval_on_selector("#ux2PhaGhiChu", "p => (p.hidden ? '' : p.textContent)")
+    assert "dia day" in chu or len(chu) > 5                                                  # chi tiết bước sao lưu hiện ở dòng ghi chú
+    mau = page.eval_on_selector('#ux2Pha li[data-pha="kiem_tra"]', "l => getComputedStyle(l).borderTopColor")
+    mau_loi = page.evaluate("() => { ux2DatPha('xong', [B1], false); return getComputedStyle(document.querySelector('#ux2Pha li[data-pha=kiem_tra]')).borderTopColor; }".replace("B1", '{step: "backup", status: "error"}'))
+    assert mau != mau_loi                                                                    # khác màu với lỗi (không đỏ)
+    page.evaluate("() => window.I18N.setLang('en')")
+    assert page.eval_on_selector('#ux2Pha li[data-pha="kiem_tra"] .ux2-pha-tt', "e => e.textContent.trim()") == "Error"   # (đang ở trạng thái lỗi vừa dựng)
+    page.evaluate("(s) => ux2DatPha('xong', s, true)", steps)
+    assert page.eval_on_selector('#ux2Pha li[data-pha="kiem_tra"] .ux2-pha-tt', "e => e.textContent.trim()") == "Warning"
+    assert loi == [], loi
+
+
+def test_xung_nhip_khong_chay_khi_tat_hieu_ung_va_khi_giam_chuyen_dong(api, mo_trang):
+    page, _ = mo_trang()
+    page.evaluate("() => ux2DatPha('dang')")
+    sel = '#ux2Pha li[data-pha="xep"] .ux2-pha-dot'
+    assert page.eval_on_selector(sel, "e => getComputedStyle(e).animationName") == "ux2PhaNhap"
+    page.evaluate("() => document.documentElement.classList.add('tat-hieu-ung')")
+    assert page.eval_on_selector(sel, "e => getComputedStyle(e).animationName") == "none"
+
+
+def test_xung_nhip_khong_chay_khi_reduced_motion(api):
+    from playwright.sync_api import sync_playwright
+    import browser_host
+    from _trinh_duyet import CHROMIUM
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, base.GOC, "index.html", open_browser=False)
+        page = br.new_page(bypass_csp=True, reduced_motion="reduce")
+        page.goto(url)
+        page.wait_for_selector("#dropZone")
+        page.evaluate("() => ux2DatPha('dang')")
+        assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-dot', "e => getComputedStyle(e).animationName") == "none"
+        assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-tt', "e => e.textContent.trim()") == "Đang chạy…"
+        br.close()
+
+
+def test_giao_vien_khong_thay_the_van_hanh_nen_khong_co_pha_va_nut_chay(api):
+    """Thẻ Vận hành (có 4 pha + nút Chạy) là việc của quản trị: giao_vien không thấy cả hai (khớp data-quyen của nav-item)."""
+    from playwright.sync_api import sync_playwright
+    import browser_host
+    from _trinh_duyet import CHROMIUM
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    assert api.tao_tai_khoan("quantri", "matkhau-gia-1", "quan_tri")["ok"]
+    assert api.tao_tai_khoan("gv1", "matkhau-gia-1", "giao_vien")["ok"]
+    api.dang_xuat()
+    assert api.dang_nhap("gv1", "matkhau-gia-1")["ok"]
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, base.GOC, "index.html", open_browser=False)
+        page = br.new_page(bypass_csp=True)
+        page.goto(url)
+        page.wait_for_selector("#dropZone", state="attached")
+        page.wait_for_function("document.body.dataset.vai === 'giao_vien'")
+        assert page.is_visible('.nav-item[data-tab="pipeline"]') is False
+        assert page.is_visible("#ux2Pha") is False and page.is_visible("#btnRun") is False
+        br.close()

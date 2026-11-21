@@ -320,10 +320,13 @@ const UX2_PHA = [
 const UX2_PHA_BO_QUA = ["unknown"];
 const UX2_PHA_CHU = {
   cho: "step_not_run_yet", dang: "step_running", xong: "ux2_pha_xong", loi: "ux2_pha_loi", chua_den: "ux2_pha_chua_den",
+  canh_bao: "ux2_pha_canh_bao",
 };
 let ux2PhaTrang = { che: "cho", steps: [], ok: true };
 
-/* Thuan: (steps, ok) -> {pha: [{ma, tt}], hoanTac}. tt = cho | dang | xong | loi | chua_den. */
+/* Thuan: (steps, ok) -> {pha: [{ma, tt}], hoanTac, canhBao}. tt = cho | dang | xong | loi | chua_den | canh_bao.
+   canh_bao: buoc sao luu loi nhung lan chay VAN THANH CONG (api.py: sao luu hong khong chan chay) — khong phai loi;
+   canhBao = chi tiet cua buoc do (de hien o dong ghi chu). Loi xuat tep khi ok van la "loi" (ket qua da ghi). */
 function ux2TinhPha(steps, ok) {
   const cuoi = {};
   (steps || []).forEach((s) => { cuoi[s.step] = s.status; });
@@ -331,7 +334,7 @@ function ux2TinhPha(steps, ok) {
     const that = p.buoc.filter((b) => b !== "rollback");
     const tt = that.map((b) => cuoi[b]);
     let st = "chua_den";
-    if (tt.includes("error")) st = "loi";
+    if (tt.includes("error")) st = (ok && p.ma === "kiem_tra" && cuoi.validate !== "error") ? "canh_bao" : "loi";
     else if (tt.every((x) => x === "done")) st = "xong";
     else if (tt.includes("running")) st = "dang"; /* dung giua chung: sap bi doi thanh loi ben duoi */
     return { ma: p.ma, tt: st };
@@ -345,7 +348,8 @@ function ux2TinhPha(steps, ok) {
     if (iLoi >= 0) pha[iLoi].tt = "loi";
   }
   if (!ok && iLoi >= 0) for (let i = iLoi + 1; i < pha.length; i += 1) pha[i].tt = "chua_den";
-  return { pha, hoanTac: cuoi.rollback === "done" && !ok };
+  const bk = ok && cuoi.backup === "error" ? (steps || []).filter((s) => s.step === "backup" && s.status === "error").pop() : null;
+  return { pha, hoanTac: cuoi.rollback === "done" && !ok, canhBao: bk ? (bk.detail || null) : null };
 }
 
 function ux2VePha() {
@@ -367,8 +371,10 @@ function ux2VePha() {
   hop.setAttribute("aria-busy", tc.che === "dang" ? "true" : "false");
   const ghiChu = el("ux2PhaGhiChu");
   if (ghiChu) {
-    ghiChu.hidden = !kq.hoanTac;
-    ghiChu.textContent = kq.hoanTac ? trErr({ code: "pipeline_rolled_back", params: {} }) : "";
+    const chu = kq.hoanTac ? trErr({ code: "pipeline_rolled_back", params: {} })
+      : (kq.canhBao ? (Array.isArray(kq.canhBao) ? chuLoiBuocGon(kq.canhBao) : trErr(kq.canhBao)) : "");
+    ghiChu.hidden = !chu;
+    ghiChu.textContent = chu;
   }
 }
 
