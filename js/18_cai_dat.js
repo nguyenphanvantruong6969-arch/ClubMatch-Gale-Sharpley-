@@ -126,9 +126,19 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
   const daDat = d.clubs.filter((c) => c.loai !== null && c.loai !== undefined).length;
   hop.append(ux1aEl("p", { class: "ux1a-ss-dem", id: "ux1aSsDem", role: "status",
     text: t("ux1a_ss_dem", { x: daDat, y: d.clubs.length }) }));
+  /* Mục đích từng loại: chữ "i" nhỏ, đưa chuột vào (hoặc focus bằng bàn phím / chạm) thì hiện; chữ luôn nằm trong DOM
+     (aria-label + tooltip) nên trình đọc màn hình đọc được. */
   hop.append(ux1aEl("p", { class: "hint-text ux1a-ss-giai-thich", id: "ux1aSsGiaiThich" },
-    ...["TU_DO", "GIOI_HAN", "TUYEN_CHON"].map((ma) => ux1aEl("span", { class: "ux1a-ss-gt",
-      text: t("ux1a_ss_gt_" + ma) }))));
+    ux1aEl("span", { class: "ux1a-ss-gt-nhan", text: t("ux1a_ss_cac_loai") }),
+    ...["TU_DO", "GIOI_HAN", "TUYEN_CHON"].map((ma) => {
+      const idTip = "ux1aSsTip_" + ma;
+      const chu = t("ux1a_ss_gt_" + ma);
+      return ux1aEl("span", { class: "ux1a-ss-gt" },
+        ux1aEl("span", { class: "ux1a-ss-gt-ten", text: t("fa_loai_" + ma) }),
+        ux1aEl("button", { type: "button", class: "ux1a-i", "data-loai": ma, text: "i",
+          "aria-label": chu, "aria-describedby": idTip }),
+        ux1aEl("span", { class: "ux1a-i-tip", id: idTip, role: "tooltip", text: chu }));
+    })));
 
   const bang = ux1aEl("table", { class: "data-table ux1a-ss-bang" });
   bang.append(ux1aEl("thead", null, ux1aEl("tr", null,

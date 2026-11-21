@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1 (gom): chữ "i" nhỏ giải thích mục đích từng loại CLB
+
+- `js/18_cai_dat.js`, `i18n.js` (vi + en), `style.css`: thay ba dòng giải thích luôn hiện bằng hàng "Các loại: Tự do (i) Giới hạn (i) Tuyển chọn (i)"; đưa chuột vào chữ "i" (hoặc focus bàn phím / chạm) thì hiện mục đích của loại đó. Chữ có trong DOM (`aria-label` + `role="tooltip"`) nên trình đọc màn hình đọc được. Nội dung bám đúng `fa_daa.py` / `uu_tien_wharton` (Tự do không từ chối ai và là chỗ xếp cho em chưa trúng; Giới hạn bỏ điểm thi, xếp theo huy chương rồi bốc thăm; Tuyển chọn lọc điểm sàn rồi xếp theo điểm thi).
+- `tests/test_giao_dien_mt1_bang_loai.py`: ca `test_chu_i_nho_hien_muc_dich_tung_loai_khi_dua_chuot_hoac_focus` (đỏ trước khi dựng). 40 ca liên quan đạt, `ruff` sạch, `soat-ma` kiem_nhanh 7/7.
+
 ## 2026-11-21 — MT1 (gom): khối "Để dùng Huy chương" ở Cài đặt dựng lại thành BẢNG đặt loại CLB
 
 - `js/18_cai_dat.js` (`ux1aVeSanSang`): mỗi CLB một dòng, ba nút Tự do / Giới hạn / Tuyển chọn có trạng thái chọn (`aria-pressed`), điểm sàn của Tuyển chọn nhập ngay tại dòng, nhóm theo buổi kèm dấu "Đã có / Cần ít nhất một CLB Tự do", bộ đếm "Đã chọn loại: x/y", ba câu giải thích loại; bỏ ô chọn xổ xuống (trùng với nút Tự do). Sau mỗi lần lưu vẽ lại từ dữ liệu đã lưu và trả tiêu điểm về ô vừa bấm. Vẫn lưu qua `dat_loai_clb`; không đổi backend, CSV hay schema.

@@ -130,3 +130,27 @@ def test_dat_xong_het_thi_hien_san_sang_va_bang_cai_dat_dong_bo(mo_trang):  # no
     page.wait_for_selector("#ux1aSanSangXong")
     assert api.get_san_sang_huy_chuong()["data"]["san_sang"] is True
     assert not loi, loi
+
+
+def test_chu_i_nho_hien_muc_dich_tung_loai_khi_dua_chuot_hoac_focus(mo_trang):  # noqa: F811
+    page, api, loi = _mo(mo_trang)
+    nut = page.locator("#ux1aSsGiaiThich button.ux1a-i")
+    assert nut.count() == 3
+    muc_dich = {}
+    for i, ma in enumerate(("TU_DO", "GIOI_HAN", "TUYEN_CHON")):
+        n = nut.nth(i)
+        assert n.get_attribute("data-loai") == ma
+        tip = page.locator("#" + n.get_attribute("aria-describedby"))
+        assert tip.get_attribute("role") == "tooltip" and tip.is_hidden()         # chưa chạm vào thì ẩn
+        n.hover()
+        tip.wait_for(state="visible")                                              # đưa chuột vào thì hiện
+        muc_dich[ma] = tip.inner_text()
+        page.mouse.move(0, 0)
+        tip.wait_for(state="hidden")
+    assert "không giới hạn chỗ" in muc_dich["TU_DO"]
+    assert "điểm sàn" in muc_dich["TUYEN_CHON"] and "điểm thi" in muc_dich["TUYEN_CHON"]
+    assert "không xét điểm thi" in muc_dich["GIOI_HAN"]
+    nut.nth(1).focus()                                                             # bàn phím / cảm ứng: focus cũng hiện
+    page.locator("#" + nut.nth(1).get_attribute("aria-describedby")).wait_for(state="visible")
+    assert nut.nth(1).get_attribute("aria-label")                                  # trình đọc màn hình đọc được mục đích
+    assert not loi, loi

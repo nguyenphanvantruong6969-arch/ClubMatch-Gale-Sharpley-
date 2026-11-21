@@ -3174,7 +3174,15 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .ux1a-so { width: 72px; }
 /* MT1 (gom): bảng đặt loại CLB trong khối "Để dùng Huy chương" */
 .ux1a-ss-dem { margin: 0 0 6px; font-weight: 600; }
-.ux1a-ss-giai-thich { display: flex; flex-direction: column; gap: 2px; margin: 0 0 10px; }
+.ux1a-ss-giai-thich { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; margin: 0 0 10px; }
+.ux1a-ss-gt { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+.ux1a-ss-gt-ten { font-weight: 600; }
+.ux1a-i { width: 18px; height: 18px; padding: 0; border: 1px solid var(--slate); border-radius: 50%; background: transparent; color: inherit;
+  font: italic 700 11px/1 serif; cursor: help; display: inline-flex; align-items: center; justify-content: center; }
+.ux1a-i:hover, .ux1a-i:focus-visible { border-color: var(--chart-general); color: var(--chart-general); outline: none; }
+.ux1a-i-tip { display: none; position: absolute; z-index: 20; left: 0; top: calc(100% + 6px); width: 280px; padding: 8px 10px;
+  border-radius: 6px; background: #1F2421; color: #F3F4F1; font-size: 13px; line-height: 1.4; font-weight: 400; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.ux1a-i:hover + .ux1a-i-tip, .ux1a-i:focus + .ux1a-i-tip { display: block; }
 .ux1a-ss-bang { width: 100%; border-collapse: collapse; }
 .ux1a-ss-bang th, .ux1a-ss-bang td { text-align: left; padding: 6px 8px; vertical-align: middle; }
 .ux1a-ss-bang .ux1a-ss-dong { display: table-row; padding: 0; }
