@@ -114,6 +114,7 @@ Lot L9 — docs, screenshots, verify
 
 ## Needs Truong (1 line each + recommendation)
 - L3 hit area: dense table/list buttons and sidebar group headers are 24 px (AA), not 44 px. Recommend: accept; revisit only if teachers mis-tap on the touch kiosk.
+- Pre-existing (not UX2): admin student table rebuilds rows on every redraw (`loadAdminStudents` clear + recreate), so focus/caret in a row's class input is lost when the table redraws. Recommend: a small separate item to update rows in place.
 
 ## Decisions and gotchas (keep short)
 - Lead L6: results empty box uses new ux2_rong_chu_ket_qua (old results_empty_state frozen by test_ws_nhan, left untouched).
