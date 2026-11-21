@@ -86,3 +86,8 @@ OK: real run (120 dataset fixture) -> 4 Xong vi+en, no overflow at 1024 px; vali
 write error+rollback (via ux2TinhPha cases): Ghi is never Xong after rollback, later phases "Chưa tới", rollback note
 shown; reload: pha and stepper both "Chưa chạy" (consistent, not stuck "Đang chạy…"); aria-current only on running
 phase (code). Related tests passed. Not run: giao_vien view, real DB write-failure, pulse under motion switches (CSS read).
+
+## CHECKER REPORT L5 fix1 | reviewed 7b703e4..079ae85
+verdict: NO BUGS. `_backup_db` repro: Kiểm tra "Cảnh báo" (gold), Xếp/Ghi/Xuất Xong, note "Không sao lưu được dữ liệu…";
+text #7A5210 on #F1DFB8 = 5.26:1 (≥4.5); en switch -> "Warning" + English note; next good run (confirm bar -> Run)
+clears warning (Xong, note hidden); no pageerror. Related tests passed.
