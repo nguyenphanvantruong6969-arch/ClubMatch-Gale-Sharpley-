@@ -128,3 +128,16 @@ docs/phien/UX2_GIAO_THUC.md and docs/phien/claude__ux2-phan-hoi-nut.md. Write .c
 protocol §3 step 4. Never edit product code or tests; only docs/phien/claude__ux2-phan-hoi-nut__checker.md.
 Report in GT_GIAO_THUC §7 format.
 ```
+
+## 10. Lean mode for the rest of UX2 (Truong, 2026-11-21) — WINS over §6, §7
+Reason: the job hit a usage limit (L1–L9 = 17 checker reports, ~38 fix commits). From now on:
+- CI gate: read only failed jobs (`get_job_logs` `failed_only`, last ≤ 60 lines). Max **2** FIX rounds per red run,
+  then "Needs Truong". Wait with `send_later` 30 min; between waits send NO status messages.
+- Messages between sessions: one line (`CODER DONE CI-<k> | base <sha> head <sha>`); details live in the
+  `__coder.md` / `__checker.md` files, never pasted into a message.
+- Final review (replaces §7): ONE Playwright script, ONE pass, admin + one `giao_vien` check, measure only
+  click→`aria-busy` latency, ✓ duration, smallest hit area, first-invalid focus, both motion switches. No 800 HS
+  run (checker L8 already measured it). ≤ 3 screenshots. `UX2_DANH_GIA.md` ≤ 30 lines.
+- When CI is green and the review is pushed: archive coder and checker at once, set `Status: DONE`, stop.
+- If the usage limit is near at any point: finish the current commit, update "Current state", stop. A new lead
+  continues next day from the branch file (rule 9 handoff applies again; ignore the "no replacement" line of §2).
