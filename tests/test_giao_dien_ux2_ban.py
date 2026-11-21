@@ -104,3 +104,33 @@ def test_vong_xoay_tinh_khi_giam_chuyen_dong(api):
         page.evaluate("() => { window.__chayThu(() => new Promise(() => {})); }")
         assert page.eval_on_selector(".ux2-xoay", "e => getComputedStyle(e).animationName") == "none"
         br.close()
+
+
+def test_doi_ngon_ngu_luc_ban_giu_vong_xoay_va_tra_nhan_ngon_ngu_moi(api, mo_trang):
+    """FIX L1: applyStaticText không được ghi đè nhãn nút đang bận (btnRun, nút data-i18n khác, nút khiBan)."""
+    api.run_pipeline = _cham(api.run_pipeline, 1.5)
+    page, loi = mo_trang()
+    page.evaluate("""() => {
+      const b = document.createElement('button');
+      b.id = 'ux2Tinh'; b.setAttribute('data-i18n', 'btn_validate'); b.textContent = '...';
+      document.body.appendChild(b); window.I18N.applyStaticText();
+      window.__chayTinh = () => chayNut(b, () => new Promise((r) => { window.__xongTinh = r; }), () => {});
+      const c = document.createElement('button'); c.id = 'ux2Khi'; c.textContent = 'Lưu';
+      document.body.appendChild(c);
+      window.__khi = () => khiBan(c, () => new Promise((r) => { window.__xongKhi = r; }));
+    }""")
+    page.evaluate("() => { window.__chayTinh(); window.__khi(); }")
+    page.click("#btnRun")
+    page.wait_for_function("document.querySelector('#btnRun').getAttribute('aria-busy') === 'true'")
+    page.evaluate("() => window.I18N.setLang('en')")
+    for sel, chu in (("#btnRun", "Allocating…"), ("#ux2Tinh", "Working…"), ("#ux2Khi", "Working…")):
+        st = page.eval_on_selector(sel, "b => ({sp: b.querySelectorAll('.ux2-xoay').length, txt: b.textContent.trim(), dis: b.disabled})")
+        assert st == {"sp": 1, "txt": chu, "dis": True}, (sel, st)
+    page.evaluate("() => { window.__xongTinh(); window.__xongKhi(); }")
+    page.wait_for_function("!document.querySelector('#ux2Tinh').classList.contains('is-ban')")
+    assert page.eval_on_selector("#ux2Tinh", "b => b.textContent.trim()") == page.evaluate("() => window.I18N.t('btn_validate')")
+    assert page.eval_on_selector("#ux2Khi", "b => b.textContent.trim() + b.getAttribute('aria-busy')") == "Lưufalse"
+    page.wait_for_function("!document.querySelector('#runXong').hidden", timeout=20000)
+    page.wait_for_function("!document.querySelector('#btnRun').classList.contains('is-ban')")
+    assert page.eval_on_selector("#btnRun", "b => b.textContent.trim()") == "Run allocation"
+    assert loi == [], loi

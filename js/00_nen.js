@@ -104,8 +104,10 @@ function datNutBan(nut, bat, khoaNhan) {
   if (!nut) return;
   const trang = nut.__ux2Ban;
   if (bat) {
-    const chu = t(khoaNhan || "dang_xu_ly");
+    const khoa = khoaNhan || "dang_xu_ly";
+    const chu = t(khoa);
     if (trang) {
+      trang.khoa = khoa;
       if (trang.chu.parentNode === nut) trang.chu.textContent = chu;
       return;
     }
@@ -116,7 +118,7 @@ function datNutBan(nut, bat, khoaNhan) {
     const nhan = document.createElement("span");
     nhan.className = "ux2-nhan-ban";
     nhan.textContent = chu;
-    nut.__ux2Ban = { con: Array.from(nut.childNodes), xoay, chu: nhan, minGoc: nut.style.minWidth };
+    nut.__ux2Ban = { con: Array.from(nut.childNodes), xoay, chu: nhan, khoa, minGoc: nut.style.minWidth };
     if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
     while (nut.firstChild) nut.removeChild(nut.firstChild);
     nut.append(xoay, nhan);
@@ -127,13 +129,23 @@ function datNutBan(nut, bat, khoaNhan) {
   if (!trang) return;
   if (trang.xoay.parentNode === nut && trang.chu.parentNode === nut) {
     while (nut.firstChild) nut.removeChild(nut.firstChild);
-    trang.con.forEach((n) => nut.appendChild(n));
+    const kd = nut.getAttribute("data-i18n");
+    if (kd) nut.textContent = t(kd); /* nhan tinh: tra theo ngon ngu HIEN TAI (co the da doi luc dang ban) */
+    else trang.con.forEach((n) => nut.appendChild(n));
   }
   nut.style.minWidth = trang.minGoc;
   nut.setAttribute("aria-busy", "false");
   nut.classList.remove("is-ban");
   delete nut.__ux2Ban;
 }
+
+/* Doi ngon ngu luc nut dang ban: nhan ban theo ngon ngu moi (nut khong co data-i18n khong qua applyStaticText). */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll(".is-ban").forEach((n) => {
+    const tr = n.__ux2Ban;
+    if (tr && tr.chu.parentNode === n) tr.chu.textContent = t(tr.khoa);
+  });
+});
 
 /* Khoa nut trong luc yeu cau dang chay, MO LAI du yeu cau thanh cong,
    that bai hay nem loi.
