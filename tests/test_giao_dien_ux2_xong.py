@@ -101,3 +101,13 @@ def test_cac_nut_luu_va_xuat_deu_noi_dau_xong():
         ma = doc(tep)
         for n in nuts:
             assert re.search(r'false, el\("%s"\)|undefined, undefined, el\("%s"\)|true, el\("%s"\)' % (n, n, n), ma), (tep, n)
+
+
+def test_doi_ngon_ngu_don_min_width_ngay_khong_cho_het_hen(api, mo_trang):
+    page, _ = mo_trang()
+    page.evaluate(DAT)
+    page.evaluate("() => { window.__chayX({ok: true}); }")
+    page.wait_for_function(SO_XONG + " === 1")
+    page.evaluate("() => window.I18N.setLang('en')")
+    st = page.eval_on_selector("#ux2X", "b => ({mw: b.style.minWidth, cls: b.classList.contains('is-xong')})")
+    assert st == {"mw": "", "cls": False}

@@ -3009,6 +3009,7 @@
       // destructive action).
       if (elm.classList && elm.classList.contains("is-confirming")) return;
       /* UX2-L1: nut dang ban (datNutBan) giu vong xoay; chi doi chu cua nhan ban sang ngon ngu moi. */
+      if (elm.__ux2Xong && typeof goDauXong === "function") goDauXong(elm); /* UX2-L3: dau ✓ cu bi ghi de, don min-width/lop */
       if (elm.__ux2Ban) {
         elm.__ux2Ban.chu.textContent = t(elm.__ux2Ban.khoa);
         return;

@@ -21,7 +21,7 @@
   --gold-text: #7A5210;
   --rust-text: #9A3A30;
   /* Vong focus ban phim: phai thay ro tren ca giay trang lan thanh ben toi. */
-  --focus-ring: #2F6FD0;
+  --focus-ring: #173F8C; /* UX2-L3: >= 3:1 tren --paper, trang VA --gold (cu #2F6FD0 chi 1,7:1 tren nut vang) */
 
   /* Màu CHUỖI SỐ LIỆU của biểu đồ — tách khỏi --moss/--gold vì hai màu đó
      trượt phép kiểm bảng màu (xanh rêu quá xám, vàng dưới 3:1 trên nền
@@ -580,14 +580,12 @@ html.tat-hieu-ung .status-strip:hover {
   background: var(--gold);
   color: var(--ink);
 }
-.btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
 
 .btn-secondary {
   background: var(--paper);
   color: var(--ink);
   border-color: var(--hairline);
 }
-.btn-secondary:hover:not(:disabled) { background: var(--paper-hover); }
 
 .btn-ghost {
   background: transparent;
@@ -2786,7 +2784,6 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 }
 .nut-i:hover { background: var(--paper-hover); }
 .nut-i[aria-expanded="true"] { background: var(--ink); color: var(--paper-raised); border-color: var(--ink); }
-.nut-i:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .dc-hinh { margin: 22px 0 0; }
 .dc-hinh figcaption { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
 .dc-svg { display: block; width: 100%; height: auto; max-width: 640px; }
@@ -2879,7 +2876,6 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
   color: var(--ink);
   box-shadow: inset 0 2px 0 var(--gold);
 }
-.ql-tab:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 /* A13.5: lỗi chặn gọn ở thẻ Vận hành; hàng nút xử lý hàng loạt ở khối Điểm quyết tâm */
 .log-hang-cuoi { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -3210,3 +3206,32 @@ svg.thanh-diem { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .ux2-xong { animation: none; }
 }
+
+/* UX2 — L3: nút bấm — vùng bấm 44 px (#8), MỘT vòng focus (#9), lớp trạng thái (#1).
+   Vòng focus dùng chung ở khối `:where(button, a, …):focus-visible` phía trên (đã bỏ bản lặp .nut-i/.ql-tab);
+   ở đây chỉ thêm ngoại lệ nền tối.
+   Lớp trạng thái = một lớp `background-image` (không đổi màu nền gốc, không dùng ::before/::after).
+   Vùng bấm = ::after trong suốt rộng tối thiểu 44 px quanh tâm nút (kích thước nhìn thấy không đổi). */
+:where(button, .btn, [role="button"]) { touch-action: manipulation; }
+:where(button, .btn, [role="button"]) { position: relative; }
+:where(button, .btn, [role="button"])::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%);
+}
+.menu-khac-nen-toi :where(button, a, summary):focus-visible, .nav-item:focus-visible { outline-color: #9CC2FF; }
+:root { --ux2-lop-hover: 8%; --ux2-lop-focus: 10%; --ux2-lop-nhan: 12%; }
+.btn:not(:disabled):not([aria-disabled="true"]):not(.is-ban),
+.nut-i:not(:disabled), .menu-khac-muc:not(:disabled) { transition: background-color 150ms ease; }
+@media (hover: hover) {
+  :is(.btn, .nut-i, .menu-khac-muc):hover:not(:disabled):not([aria-disabled="true"]) {
+    background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent), color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent));
+  }
+}
+:is(.btn, .nut-i, .menu-khac-muc):focus-visible:not(:disabled):not([aria-disabled="true"]) {
+  background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-focus), transparent), color-mix(in srgb, currentColor var(--ux2-lop-focus), transparent));
+}
+:is(.btn, .nut-i, .menu-khac-muc):active:not(:disabled):not([aria-disabled="true"]) {
+  background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-nhan), transparent), color-mix(in srgb, currentColor var(--ux2-lop-nhan), transparent));
+}
+/* Nút chữ trần trong bảng dày (hàng ~36 px, vd nút Xoá CLB): vùng bấm lớn tới chiều cao hàng chứ không tới 44 px, để hàng liền kề không chồng nhau. */
+td :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 34px); }
