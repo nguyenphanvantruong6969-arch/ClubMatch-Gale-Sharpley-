@@ -49,3 +49,10 @@ verdict: 1 BUG
 OK: other tabs/vai quan_tri + giao_vien: no stolen inputs; toast-close x clickable and closes; dark ring #9CC2FF 2px on
 .nav-item and menu buttons; focus ring token 2px; state layer tests; 66 related tests passed. Note: `summary.lang-toggle`
 ring is 1px (not a button; pre-existing). Not measured: 800-HS table height (diff has no table-height rule).
+
+## CHECKER REPORT L3 fix2 | reviewed 7f8b2f4..2a05e8f
+verdict: NO BUGS. Repro re-run: details#xuatNangCao CLOSED -> checkbox rects are phantom (unreachable; coder right);
+OPEN -> real click on #xuatKetQua/#xuatKemCsv hits the input, export button counter +0. Side effects: no `.sr-only`
+inside label/summary; sidebar menu box on top (both probe points); no sticky <th> tables contain inputs/labels (only
+`.gt2-bang-cuon`, z-index 1, no controls); no horizontal overflow. 54 related tests passed. Not done: scroll test
+on a real 800-HS table (no sticky header with controls exists).
