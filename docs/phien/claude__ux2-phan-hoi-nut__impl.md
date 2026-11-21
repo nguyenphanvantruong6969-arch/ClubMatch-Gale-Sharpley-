@@ -23,15 +23,13 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L9 docs / screenshots / verify                           DONE head dd8887b, reported (810 UI tests passed), checker verdict pending
 
 ## Current state (overwrite each handoff)
-- ALL nine lots (L1-L9) are built, pushed and reported. Last commit before this handoff: dd8887b ("CODER DONE L9" sent to the lead).
-  L1-L8 PASSED by the checker; L9 awaits the checker/lead.
+- All lots L1-L9 built, pushed, reported. CI gate fix CI-1 (lead's message) DONE and reported: head 21de7b7 (merge) / fix commit before it.
+  CI-1 = `<details>` open animation no longer animates height / clips content (it made controls non-hit-testable for ~20-36 ms after open;
+  CI's real-mouse test missed). Now fade + 4 px slide only, no overflow, inside `@supports selector(::details-content)` + no-preference.
 - In progress: nothing. Working tree clean after the handoff push.
-- Last verification (L9): full UI sweep tests/test_giao_dien_*.py + tests/test_*ux2*.py = 810 passed / 0 failed (23m13s);
-  doc/i18n tests 94 passed; ruff clean; kiem_nhanh.py --co-so origin/main --so-seed 20 = 7/7.
-- Lead's remaining work per UX2_GIAO_THUC: section 6 CI gate (tests.yml + Windows build; I cannot read GitHub Actions from here) and
-  section 7 final user-view review. If CI is red the lead will send "FIX ..." with the failing logs: reproduce locally with the failing test file,
-  write/adjust the test first, minimal fix, related tests, report "CODER DONE FIX ...".
-- Open note for the lead (told already): admin-student rows are rebuilt on redraw so focus/caret in .lop-sua is lost (pre-existing; separate item).
+- Last verification (CI-1): test_giao_dien_ux2_chuyen_canh.py + test_giao_dien_ux2_nut.py x3 = 32 passed each; 187 related tests passed;
+  ruff clean; kiem_nhanh.py --co-so origin/main --so-seed 20 = 7/7. Earlier full UI sweep (L9): 810 passed.
+- Waiting for the lead: next CI run result; the lead sends "FIX ..." with failing logs if anything is red.
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -59,6 +57,9 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
   ::details-content (own rule). Layout tests must use offsetTop/offsetHeight (transform of the slide-in shifts getBoundingClientRect).
 - Row animation keys (L8 fix1): cumulative per-tbody Set (UX2_KHOA_HANG in 00_nen.js); forgotten when the tbody is emptied for good.
   A computed animation-name stays after the animation ends: assert on class presence / MutationObserver records, not on name.
+- CI-1 lesson: interactive content must never be clipped/hidden by an animation (hit-test!). Test such animations by sampling
+  elementFromPoint from frame 0 (rAF/8 ms) with CDP `Emulation.setCPUThrottlingRate`, not only by waiting. Real export checkboxes are
+  DISABLED on an empty DB (use a run or a synthetic enabled control when you need a real click).
 - Merge conflicts in CHANGELOG.md / TIEN_DO.md (other branches append at the same spot): keep BOTH sides, strip markers.
 - Push rejected -> `git fetch origin claude/ux2-phan-hoi-nut && git merge --no-edit FETCH_HEAD` (protocol: never rebase/force).
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
@@ -91,3 +92,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L9 docs + 14 screenshots + code map written, WIP-committed; full UI sweep running; handoff (hook fired mid-L9) | WIP, see git log |
 | 2026-11-21 | Sonnet (coder) | handoff refreshed again (hook); full UI sweep still running, nothing else changed | head 21c488c |
 | 2026-11-21 | Sonnet (coder) | All lots done; handoff refreshed after L9 report (hook fired again) | head dd8887b |
+| 2026-11-21 | Sonnet (coder) | CI-1 fixed (details animation no longer clips content) + reported; handoff refreshed (hook) | head 21de7b7 |
