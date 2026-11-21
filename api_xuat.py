@@ -1420,6 +1420,11 @@ class XuatKetQuaMixin:
         Sổ nhập CLB. Kéo sổ này vào ô nạp của một CSDL trống là dựng lại y
         nguyên — test `test_xuat_du_lieu.py` canh điều đó.
 
+        MT1-X1: sổ mang thêm bốn cột FA của CLB (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng) khi chế độ FA bật
+        hoặc có CLB đã khai một trong bốn cột, và sheet "Giữ chỗ" khi FA bật (rỗng = chỉ có tiêu đề). Chế độ
+        thường (FA tắt, không CLB nào có giá trị FA) cho sổ y như trước. Không truyền `che_do_fa` (tên cột huy chương
+        và Hướng dẫn không đổi). Nạp vào CSDL FA TẮT thì bước nạp bỏ qua cột Loại và sheet "Giữ chỗ".
+
         Lượt thi một CLB mà em KHÔNG xếp nguyện vọng thì sổ không chứa được
         (điểm luôn nằm cạnh một NV) — đếm vào `n_thi_ngoai_nv` để giao diện
         nói ra. Thuật toán không bao giờ xếp em vào CLB em không chọn, nên

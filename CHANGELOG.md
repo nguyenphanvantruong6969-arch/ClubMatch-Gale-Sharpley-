@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-21 — MT1-X1-L3: kiểm chứng và tài liệu
+
+- D5 (MÔ PHỎNG, so SHEET + MỌI Ô, không so byte zip): xuất Sổ nhập từ `SO_NHAP_DQT_120HS_HOP_LE.xlsx`, `SO_NHAP_MAU_120HS_3BUOI.xlsx`, `SO_NHAP_DQT_800HS_HOP_LE.xlsx` (nạp vào workspace thường) bằng mã cũ (`f809b3f`, trước L1) và mã mới: cả ba trùng khít (sheet `1. CLB`, `2. Học sinh`, `Hướng dẫn`; không cột FA, không sheet "Giữ chỗ"). `match_results` 3 bộ × 5 seed: `kiem_nhanh.py` `trung_khit` đạt (bộ giải không đụng).
+- `api_xuat.py`: docstring `export_du_lieu_dau_vao` nêu cột FA, cổng sheet "Giữ chỗ", và việc không truyền `che_do_fa` (D3: có thể thành mục riêng sau). Không đổi hành vi.
+
 ## 2026-11-21 — MT1-X1-L2: Sổ nhập xuất ra mang sheet "Giữ chỗ"; khứ hồi đủ năm loại dữ liệu
 
 - `api_xuat.py` (`export_du_lieu_dau_vao`): đọc bảng `giu_cho` (ORDER BY club_id, student_id) trong cùng khối `_ket_noi_doc()` và truyền `giu_cho=` cho `ghi_so_nhap` CHỈ KHI FA bật; FA tắt thì không có sheet (bước nạp bỏ qua sheet đó). Bảng rỗng + FA bật → sheet chỉ có tiêu đề (nạp lại = không giữ chỗ nào). `_du_lieu_so_nhap` giữ nguyên bộ trả về 4 giá trị (D4). Không đổi schema, CSV, i18n, giao diện.
