@@ -106,16 +106,41 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
   sheet "1. CLB" và "Giữ chỗ"; (3) nhập sổ đó vào workspace trống, chạy cùng seed, so kết quả.
 
 ## Current state (overwrite each handoff)
-- Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: — (DONE; awaiting Truong for N1, N2 and merge)
-- Tests: none run (planning only; container had no `.venv`).
-- Open problems: —
+- MT1-X1: DONE (L1–L3 + 1 CI fix, checker NO BUGS). Fast-forwarded into `claude/mt1-bang-loai-clb` @ b655582.
+- After that, on Truong's request (outside the item registry): CI speed-up. Tests CI 42–75 min -> ~13 min,
+  all green (last run 44872731948 @ ac54309). Not yet < 10 min; floor with free runners ~11–12 min.
+- Tests: CI full suite green (lint, 6 Linux + 9 Windows shards, coverage >= 85 %); local `-n 4` 7093 passed.
+- Open problems: CI CHANGES ARE ONLY ON THIS BRANCH (after b655582), not yet in `claude/mt1-bang-loai-clb`.
+
+## Next steps
+1. Truong decides on < 10 min options: (a) add Windows Defender exclusion step himself (agent was blocked),
+   (b) larger paid runners, (c) Windows runs only Windows-relevant tests per push (full set on build/main).
+2. Fast-forward the CI commits into `claude/mt1-bang-loai-clb` when Truong approves (ff possible).
+3. First run of `build-windows-exe.yml` (12 Windows shards, untested) after MT1 reaches `main` (it overwrites
+   release `ban-moi-nhat`).
+4. Refresh timings when shards drift: download job logs, take lines `THOI_GIAN_TEP_JSON {...}`
+   (Linux -> `.github/thoi_gian_test.json`, Windows -> `.github/thoi_gian_test_windows.json`).
+
+## Decisions (CI work, 2026-11-21)
+- `pytest-xdist` added to requirements-dev.txt only (Truong approved); NOT in requirements-build.txt.
+- Timing-sensitive files (all playwright UI files + `test_hieu_nang`, `test_xp1_hieu_nang`, `test_a13_11_stress`,
+  `test_wharton_quan_ly`) run serially (`chia_test.py --tuan-tu`); under xdist they failed falsely (30 s
+  threshold measured 42–67 s, Chromium timeouts). No threshold lowered, no test skipped.
+- Serial step accepts pytest exit 5 only (all files skipped on Windows = no playwright).
+- Linux `--lf` rerun step now only runs when the shard has old failures (`.github/test_hong_cu.py`);
+  before it re-ran the whole shard (8–16 min wasted).
+- GitHub ran ~15 jobs at once; more shards -> queueing. Chosen: 6 Linux + 9 Windows + lint.
+- Disabling Windows Defender in CI was blocked by the permission system; left for Truong.
 
 ## Files touched
-- docs/phien/claude__mt1-xuat-so-nhap-loai.md: this file.
-- docs/phien/MT1_X1_GIAO_THUC.md: lead/coder/checker protocol.
+- MT1-X1: api_xuat.py, tests/test_mt1_x1_xuat_so_nhap.py (new), tests/test_mt1_dong_bo_loai_clb.py (xfail
+  removed), docs/ke_hoach/CLAUDE_CHI_TIET.md (360 test files), CHANGELOG.md, docs/ke_hoach/TIEN_DO.md.
+- CI: .github/workflows/tests.yml, .github/workflows/build-windows-exe.yml, .github/chia_test.py,
+  .github/test_hong_cu.py (new), .github/do_thoi_gian_test.py (new), .github/thoi_gian_test.json (new),
+  .github/thoi_gian_test_windows.json (new), requirements-dev.txt, .gitignore, CHANGELOG.md.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-21 | Opus (plan) | Verified export/import paths; wrote Plan L1–L3 + protocol | giu_cho also missing, medals OK |
+| 2026-11-21 | Opus (lead) | Ran coder+checker L1–L3, CI fix, §5 check, DONE; merged ff to base; CI speed-up 42–75 -> 13 min | CI work outside registry, Truong asked; see Next steps |
