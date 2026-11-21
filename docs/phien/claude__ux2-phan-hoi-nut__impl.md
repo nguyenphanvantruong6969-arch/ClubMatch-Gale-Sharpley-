@@ -20,28 +20,18 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L6 #12 guided empty states (veTrangThaiRong)            PASSED (291deb8 + fix1 788709f)
 - [x] L7 #6 skeleton loading (hienKhungCho)                   PASSED (b00b9e3)
 - [x] L8 #10 smooth transitions (ux2QuanSatBang, ux2Abre)    PASSED (fef2862 + fix1 a71baec)
-- [~] L9 docs / screenshots / verify: content WRITTEN + committed as WIP, verification NOT finished (see Current state)
+- [x] L9 docs / screenshots / verify                           DONE head dd8887b, reported (810 UI tests passed), checker verdict pending
 
 ## Current state (overwrite each handoff)
-- L9 DONE and reported (full UI sweep 810 passed / 0 failed, ruff clean, kiem_nhanh 7/7, doc tests 94 passed). Awaiting checker verdict.
-- (history) L9 (lead said GO L9, base 816e92c) was IN PROGRESS. Written and committed (WIP commit, not yet reported "CODER DONE L9"):
-  HUONG_DAN_SU_DUNG.md new section (end of section 4), docs/ke_hoach/CLAUDE_CHI_TIET.md code-map row + tests/ count 360->369
-  (test_a13_12_tai_lieu.py demands the exact count; backticked names must be top-level `function`/def names, so no const / nested names),
-  14 screenshots re-shot with docs/ke_hoach/ux/chup_luong_chinh.py into docs/ke_hoach/ux/anh/ (all 14 that script writes changed),
-  CHANGELOG.md UX2-L9 entry, TIEN_DO.md row UX2-L9, Plan L9 ticked in the lead's branch file.
-- RUNNING when this handoff was written (background, started ~08:50 machine time): full UI sweep
-  `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers .venv/bin/python -m pytest -q tests/test_giao_dien_*.py tests/test_*ux2*.py`
-  -> output in the scratchpad file full.txt (ends with a line "done"). It takes ~20+ min. A fresh session may have lost that file:
-  then just rerun it. The L9 spec says: run it ONCE and report.
-- Lead confirmed (09:02): continue L9 from this file; report "CODER DONE L9 | base 816e92c head <sha>" with sweep pass/fail counts and the list of the 14 re-shot PNGs
-  (01_trang_dau, 02_co_dl_admin, 02_co_dl_chua_co_cho, 02_co_dl_fallback, 02_co_dl_others, 02_co_dl_results, 03_tra_cuu_HS004, 05_sau_chon_tep,
-  06_sau_nhap, 07_sau_chay, 08_tieu_chi, 09_gvcn_ket_qua_lop, 10_ws_menu, 11_cai_dat).
-- Still TO DO for L9: (1) read the sweep result and fix real failures (test first); (2) `.venv/bin/ruff check .`;
-  (3) `.claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so origin/main --so-seed 20` must be 7/7; (4) tests/test_a13_12_tai_lieu.py,
-  test_vi_du_huong_dan.py, test_giao_dien_tieng_viet_sach.py (docs tests, were green); (5) amend CHANGELOG line "kết quả trong báo cáo L9"
-  with the numbers; (6) push; (7) send "CODER DONE L9 | base 816e92c head <sha>" to the lead with: sweep result, list of 14 re-shot PNGs.
-- Earlier lots: L1-L8 all PASSED by the checker. Open note for lead: admin-student rows are rebuilt on redraw so focus/caret in .lop-sua
-  is lost (pre-existing; separate item if wanted).
+- ALL nine lots (L1-L9) are built, pushed and reported. Last commit before this handoff: dd8887b ("CODER DONE L9" sent to the lead).
+  L1-L8 PASSED by the checker; L9 awaits the checker/lead.
+- In progress: nothing. Working tree clean after the handoff push.
+- Last verification (L9): full UI sweep tests/test_giao_dien_*.py + tests/test_*ux2*.py = 810 passed / 0 failed (23m13s);
+  doc/i18n tests 94 passed; ruff clean; kiem_nhanh.py --co-so origin/main --so-seed 20 = 7/7.
+- Lead's remaining work per UX2_GIAO_THUC: section 6 CI gate (tests.yml + Windows build; I cannot read GitHub Actions from here) and
+  section 7 final user-view review. If CI is red the lead will send "FIX ..." with the failing logs: reproduce locally with the failing test file,
+  write/adjust the test first, minimal fix, related tests, report "CODER DONE FIX ...".
+- Open note for the lead (told already): admin-student rows are rebuilt on redraw so focus/caret in .lop-sua is lost (pre-existing; separate item).
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -74,10 +64,11 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Finish L9 verification exactly as listed under Current state (sweep result, ruff, kiem_nhanh, docs tests), then report to the lead.
-2. After that wait for the checker verdict on L9 (FIX L9 -> test first, minimal fix, related tests, report "CODER DONE L9 fixN").
-4. Each lot: failing test first -> minimal code -> related tests -> ruff -> kiem_nhanh 7/7 -> CHANGELOG + TIEN_DO row `UX2-L<n>` ->
-   tick Plan in the lead's branch file only if lead asks (lead ticks) -> commit -> push -> message lead.
+1. Do nothing until the lead sends a message (checker verdict on L9, or "FIX ..." from the CI gate).
+2. On "FIX ...": `git pull origin claude/ux2-phan-hoi-nut` + `git fetch origin main && git merge --no-edit FETCH_HEAD`, reproduce with the named test file
+   (`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers .venv/bin/python -m pytest -q <file> > scratchpad/o.txt 2>&1`), test first, minimal fix, related tests, ruff,
+   kiem_nhanh 7/7, CHANGELOG line, commit, merge-push (never rebase/force), report "CODER DONE FIX ..." with base/head shas.
+3. Never skip, disable or weaken a test to get green.
 
 ## Files touched (whole job so far; L9 adds HUONG_DAN_SU_DUNG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, docs/ke_hoach/ux/anh/*.png x14)
 - js/00_nen.js: all shared helpers above + langchange listeners
@@ -99,3 +90,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L8 fix1 (animate only genuinely new rows) reported; handoff refreshed | head a71baec |
 | 2026-11-21 | Sonnet (coder) | L9 docs + 14 screenshots + code map written, WIP-committed; full UI sweep running; handoff (hook fired mid-L9) | WIP, see git log |
 | 2026-11-21 | Sonnet (coder) | handoff refreshed again (hook); full UI sweep still running, nothing else changed | head 21c488c |
+| 2026-11-21 | Sonnet (coder) | All lots done; handoff refreshed after L9 report (hook fired again) | head dd8887b |
