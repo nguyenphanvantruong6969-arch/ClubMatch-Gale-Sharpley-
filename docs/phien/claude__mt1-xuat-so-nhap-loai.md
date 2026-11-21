@@ -82,8 +82,8 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 | Role | Model | Session id |
 |---|---|---|
 | lead | Opus | session_01YVAyu39d3wUuWKN81tKqwC |
-| coder | Sonnet | (pending) |
-| checker | Sonnet | (pending) |
+| coder | Sonnet | session_01YVAytzncT6kRaDK668vPPe |
+| checker | Sonnet | session_01YVAyu1PMW4F6Ch9P1bfJHS |
 
 ## Needs Truong
 - N1 (proposal, not built): before importing a sổ that HAS column Loại, warn that it overwrites types set in the UI
@@ -92,7 +92,7 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: —
+- In progress: L1 (GO sent to coder)
 - Tests: none run (planning only; container had no `.venv`).
 - Open problems: —
 
