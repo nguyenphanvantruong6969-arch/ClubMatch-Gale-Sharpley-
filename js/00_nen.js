@@ -112,7 +112,7 @@ function datNutBan(nut, bat, khoaNhan) {
       if (trang.chu.parentNode === nut) trang.chu.textContent = chu;
       return;
     }
-    const rong = nut.getBoundingClientRect().width;
+    const rong = nut.offsetWidth /* bo qua transform (:active scale) */;
     const xoay = document.createElement("span");
     xoay.className = "ux2-xoay";
     xoay.setAttribute("aria-hidden", "true");
@@ -166,7 +166,7 @@ function nutDaXong(nut) {
   dau.className = "ux2-xong";
   dau.setAttribute("aria-hidden", "true");
   dau.textContent = "\u2713";
-  const rong = nut.getBoundingClientRect().width;
+  const rong = nut.offsetWidth /* bo qua transform (:active scale) */;
   const x = { dau, minGoc: nut.style.minWidth, hen: 0 };
   if (rong > 0) nut.style.minWidth = Math.ceil(rong) + "px";
   nut.insertBefore(dau, nut.firstChild);

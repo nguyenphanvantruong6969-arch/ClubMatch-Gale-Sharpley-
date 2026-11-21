@@ -3220,8 +3220,6 @@ svg.thanh-diem { display: block; }
 }
 .menu-khac-nen-toi :where(button, a, summary):focus-visible, .nav-item:focus-visible { outline-color: #9CC2FF; }
 :root { --ux2-lop-hover: 8%; --ux2-lop-focus: 10%; --ux2-lop-nhan: 12%; }
-.btn:not(:disabled):not([aria-disabled="true"]):not(.is-ban),
-.nut-i:not(:disabled), .menu-khac-muc:not(:disabled) { transition: background-color 150ms ease; }
 @media (hover: hover) {
   :is(.btn, .nut-i, .menu-khac-muc):hover:not(:disabled):not([aria-disabled="true"]) {
     background-image: linear-gradient(color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent), color-mix(in srgb, currentColor var(--ux2-lop-hover), transparent));
@@ -3235,3 +3233,5 @@ svg.thanh-diem { display: block; }
 }
 /* Nút chữ trần trong bảng dày (hàng ~36 px, vd nút Xoá CLB): vùng bấm lớn tới chiều cao hàng chứ không tới 44 px, để hàng liền kề không chồng nhau. */
 td :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 34px); }
+/* Danh sách dày (vd .ranking-list: hàng ~22 px): chỉ nới nhẹ, nếu không vùng bấm của nút dưới đè lên nút trên. */
+li :where(button:not(.btn), [role="button"]:not(.btn))::after { height: max(100%, 20px); }

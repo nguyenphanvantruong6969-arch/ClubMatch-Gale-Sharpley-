@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-L3: vùng bấm 44 px, một vòng focus, lớp trạng thái (CSS nút)
+
+- `style.css` (khối `/* UX2 — L3 */`): `touch-action: manipulation` cho `button, .btn, [role=button]`; vùng bấm là `::after` trong suốt rộng tối thiểu 44 px quanh tâm nút (kích thước nhìn thấy không đổi; `::before` giữ nguyên cho × của toast, mũi tên panel). Nút chữ trần trong bảng (`td`) chỉ nới tới 34 px, trong danh sách dày (`li`, vd `.ranking-list`) tới 20 px, để hàng liền kề không đè vùng bấm nhau.
+- MỘT vòng focus: `--focus-ring` đổi `#2F6FD0` → `#173F8C` (≥ 3:1 trên `--paper`, trắng VÀ `--gold`; cũ chỉ 1,7:1 trên nút vàng); gỡ bản lặp `.nut-i:focus-visible`, `.ql-tab:focus-visible`; nền tối (`.menu-khac-nen-toi`, `.nav-item`) dùng `#9CC2FF`.
+- Lớp trạng thái hover 8 % / focus 10 % / nhấn 12 % (`--ux2-lop-*`) bằng `background-image` + `color-mix(currentColor)` — không đổi màu nền gốc; không có lớp khi `:disabled`. Gỡ `.btn-primary:hover{filter}` và `.btn-secondary:hover{background}` cũ (lớp mới thay).
+- `i18n.js`: `applyStaticText` dọn dấu ✓ cũ (min-width/lớp `is-xong`) khi đổi ngôn ngữ. `js/00_nen.js`: `datNutBan`/`nutDaXong` đo `offsetWidth` (bỏ qua `scale` của `:active`).
+- Ngoại lệ có chủ đích (báo lead): hàng thanh bên `.nav-item` (cao 40 px) và `.nav-nhom-nut` (cao 23 px) xếp sát toàn chiều rộng — không nới thành 44 px để khỏi chồng hàng / kéo dài thanh bên; test loại hai lớp này.
+- Test mới: `tests/test_giao_dien_ux2_nut.py` (10: vùng bấm 5 thẻ, nút nhỏ, một vòng focus + tương phản, không vòng khi bấm chuột, lớp trạng thái, CSS tĩnh) + 1 test dọn ✓ khi đổi ngôn ngữ. Không test cũ phải sửa.
+
 ## 2026-11-21 — UX2-L2: dấu ✓ sau khi lưu / xuất xong
 
 - `js/00_nen.js`: `nutDaXong(nut)` / `goDauXong(nut)` (✓ là `<span.ux2-xong aria-hidden>` ~1,2 s, min-width khoá, dọn lại cả khi đổi ngôn ngữ hay bấm bận lại); `chayNut` và `khiBan` nhận `tuyChon.xongKhi(ketQua)` (✓ chỉ khi true; API ném lỗi / `ok:false` thì không).

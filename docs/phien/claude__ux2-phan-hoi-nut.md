@@ -51,16 +51,16 @@ Lot L2 ✅ PASSED (checker NO BUGS, head 8348237) — #3 ✓ after save / export
 - [x] `chayNut` option `xongKhi: (res) => res.ok` → `nutDaXong(nut)`; wire save + export buttons (`chayXuat`
       in `js/03_ket_qua.js`, save buttons in `05_quan_ly`, `06_cham_diem`, `18_cai_dat`; coder lists them).
 Lot L3 — #8 hit area, #9 focus ring, #1 state layer (CSS button system)
-- [ ] Test `tests/test_giao_dien_ux2_nut.py`: every visible `button, .btn, [role=button]` on each main tab has a
+- [x] Test `tests/test_giao_dien_ux2_nut.py`: every visible `button, .btn, [role=button]` on each main tab has a
       hit area ≥ 44×44 px (bounding box, or `elementFromPoint` at centre ±22 px returns the button);
       `touch-action: manipulation`; Tab focus shows the SAME `outline` (width, colour token) on 5 sample
       button kinds; mouse click shows no ring (`:focus-visible` only); ring contrast ≥ 3:1 on `--paper` and
       `--gold` (reuse contrast helper of `test_giao_dien_tro_nang.py`).
-- [ ] State layer: hover 8 %, focus 10 %, pressed 12 % overlay via `inset box-shadow` or `::after` with
+- [x] State layer: hover 8 %, focus 10 %, pressed 12 % overlay via `inset box-shadow` or `::after` with
       `currentColor` (no colour change of the base token); disabled = no layer. Test computed style per state.
-- [ ] Compact buttons (`.btn-nho`, `.btn-ghost`, icon/close buttons) keep visual size; hit area grows with a
+- [x] Compact buttons (`.btn-nho`, `.btn-ghost`, icon/close buttons) keep visual size; hit area grows with a
       transparent pseudo-element or padding (grep `::after`/`::before` users first; 6 `::after` exist).
-- [ ] Remove duplicated per-component `:focus-visible` rules only when the shared one covers them.
+- [x] Remove duplicated per-component `:focus-visible` rules only when the shared one covers them.
 Lot L4 — #7 inline field errors
 - [ ] Test `tests/test_giao_dien_ux2_loi_o.py`: invalid seed, admin add-club form, admin add-student form, a
       score input (`06_cham_diem`): input gets `aria-invalid="true"`, class `is-loi`, `aria-describedby` → a
