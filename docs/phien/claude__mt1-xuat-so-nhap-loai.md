@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol (lead/coder/checker, lots, prompts): `docs/phien/MT1_X1_GIAO_THUC.md`.
 
-Status: PLANNED (Opus, 2026-11-21). Base `origin/claude/mt1-bang-loai-clb` @ `05783a7` (MT1 not yet in main).
+Status: IN PROGRESS (lead, 2026-11-21). Planned by Opus 2026-11-21. Base `origin/claude/mt1-bang-loai-clb` @ `05783a7` (MT1 not yet in main).
 
 ## Feature / goal
 Item **MT1-X1** (code set by Truong, group MT1, 2026-11-21). `PipelineAPI.export_du_lieu_dau_vao` (api_xuat.py)
@@ -77,6 +77,13 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 - The former xfail test passes without xfail; new round-trip test covers all 5 data kinds.
 - Normal-mode export: sheet names + cell values identical to before on 3 datasets; `test_xuat_du_lieu.py` green.
 - No schema, CSV contract, i18n or UI change. No new library. CI green (lint, shards, coverage ≥ 85 %).
+
+## Sessions
+| Role | Model | Session id |
+|---|---|---|
+| lead | Opus | session_01YVAyu39d3wUuWKN81tKqwC |
+| coder | Sonnet | (pending) |
+| checker | Sonnet | (pending) |
 
 ## Needs Truong
 - N1 (proposal, not built): before importing a sổ that HAS column Loại, warn that it overwrites types set in the UI
