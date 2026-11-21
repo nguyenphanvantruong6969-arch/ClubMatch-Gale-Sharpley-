@@ -14,11 +14,15 @@
 
 /* UX2-L6: cau hinh trang thai rong (khoa i18n; nut chi cho quan tri vi the Van hanh / Quan ly la cua quan tri). */
 const UX2_RONG_KET_QUA = {
-  chu: "results_empty_state", huongDan: "ux2_rong_huong_ket_qua",
+  /* Cau neu hien trang ngan (khong chi ten the): ten the that nam o huong dan + nut, lay tu nav. Cau cu results_empty_state
+     van con trong i18n.js (anh chup chuoi mac dinh cua ws_nhan). */
+  chu: "ux2_rong_chu_ket_qua", huongDan: "ux2_rong_huong_ket_qua",
+  gv: { huongDan: "ux2_rong_huong_ket_qua_gv" },
   nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
 };
 const UX2_RONG_CLB = {
   chu: "clb_empty", huongDan: "ux2_rong_huong_clb",
+  gv: { huongDan: "ux2_rong_huong_clb_gv" },
   nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
 };
 

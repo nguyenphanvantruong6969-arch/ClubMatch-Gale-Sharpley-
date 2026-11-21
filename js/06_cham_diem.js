@@ -45,6 +45,7 @@ function loadScoringTab() {
 /* UX2-L6: giao_vien thay huong dan (nho quan tri nap danh sach), khong thay nut cua quan tri. */
 const UX2_RONG_CHAM_NGUOI = {
   chu: "scoring_person_empty", huongDan: "ux2_rong_huong_cham_nguoi",
+  gv: { chu: "ux2_rong_chu_cham_nguoi_gv", huongDan: "ux2_rong_huong_cham_nguoi_gv" },
   nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" },
 };
 

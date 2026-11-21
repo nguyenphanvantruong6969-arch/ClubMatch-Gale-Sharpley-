@@ -382,6 +382,7 @@
     const vai = phien && phien.co_tai_khoan && phien.dang_nhap ? phien.vai : "";
     if (document.body.dataset.vai === vai) return;
     document.body.dataset.vai = vai;
+    window.dispatchEvent(new Event("ux2vai")); /* UX2-L6: hop rong ve lai theo vai */
     if (vai !== "giao_vien") return;
     const dangMo = document.querySelector(".nav-item.is-active");
     if (dangMo && dangMo.dataset.quyen === "quan_tri") {

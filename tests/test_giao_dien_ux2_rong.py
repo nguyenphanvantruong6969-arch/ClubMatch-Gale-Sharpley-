@@ -53,6 +53,21 @@ def _mo_muc(page, id_):
         page.wait_for_timeout(200)
 
 
+def _kiem_giao_vien(page):
+    """giao_vien: thẻ Vận hành / Quản lý bị ẩn; hộp rỗng KHÔNG có nút nhìn thấy và nhờ quản trị viên (không chỉ tới thẻ họ không có)."""
+    assert page.is_visible('.nav-item[data-tab="pipeline"]') is False and page.is_visible('.nav-item[data-tab="admin"]') is False
+    _mo_tab(page, "others")
+    _mo_muc(page, "dsXepPanel")
+    page.wait_for_function("!document.getElementById('resultsEmptyState').hidden")
+    tt = _thong_tin(page, "#resultsEmptyState")
+    assert tt["nut"] == 0 and tt["tong"] == 0
+    assert "quản trị viên" in tt["huong"] and "Chưa có kết quả" in tt["chu"]
+    assert "thẻ" not in tt["chu"] and "Xếp" not in tt["chu"]                 # không bảo đi tới thẻ họ không thấy
+    n = page.eval_on_selector("#clbEmpty", "h => h.__ux2Rong ? h.textContent : null")
+    if n:                                                                        # hộp CLB chỉ có nội dung khi đã hiện một lần
+        assert "quản trị viên" in n and "Quản lý" not in n
+
+
 def _thong_tin(page, sel):
     return page.eval_on_selector(sel, """h => ({
         an: h.hidden,
@@ -80,7 +95,8 @@ def test_trang_thai_rong_co_chu_huong_dan_va_dung_mot_nut_theo_quyen(trong):
 def test_the_quan_ly_rong_co_nut_dua_con_tro_den_o_dung(trong):
     page, vai, loi = trong
     if vai != "quan_tri":
-        pytest.skip("thẻ Quản lý chỉ của quản trị")
+        _kiem_giao_vien(page)
+        return
     _mo_tab(page, "admin")
     page.wait_for_function("!document.getElementById('adminClubEmptyState').hidden")
     tt = _thong_tin(page, "#adminClubEmptyState")
@@ -103,7 +119,8 @@ def test_the_quan_ly_rong_co_nut_dua_con_tro_den_o_dung(trong):
 def test_nut_chua_co_ket_qua_di_sang_the_van_hanh_va_focus_vung_tha(trong):
     page, vai, loi = trong
     if vai != "quan_tri":
-        pytest.skip("nút này chỉ cho quản trị")
+        _kiem_giao_vien(page)
+        return
     _mo_tab(page, "others")
     _mo_muc(page, "dsXepPanel")
     page.wait_for_function("!document.getElementById('resultsEmptyState').hidden")
@@ -123,10 +140,10 @@ def test_cham_diem_theo_nguoi_rong_giao_vien_chi_thay_huong_dan(trong):
     # hộp có thể nằm trong khung ẩn: kiểm nội dung đã vẽ, không phụ thuộc hiển thị
     n = page.eval_on_selector("#scoringPersonEmpty", "h => ({ huong: (h.querySelector('.ux2-rong-huong') || {}).textContent || '', nut: h.querySelectorAll('button').length })")
     assert n["huong"]
-    assert n["nut"] == 1                                                    # nút có trong DOM, nhưng...
     if vai == "giao_vien":
-        assert page.eval_on_selector("#scoringPersonEmpty button", "b => getComputedStyle(b).display") == "none"   # ...bị data-quyen ẩn
+        assert n["nut"] == 0 and "quản trị viên" in n["huong"]               # không nút; nhờ quản trị viên nạp danh sách
     else:
+        assert n["nut"] == 1
         assert page.eval_on_selector("#scoringPersonEmpty button", "b => getComputedStyle(b).display") != "none"
 
 
@@ -183,3 +200,42 @@ def test_moi_cau_hinh_rong_dung_khoa_i18n_co_du_hai_ngon_ngu():
     assert len(khoa) >= 8
     for k in khoa:
         assert len(re.findall(r"\b%s:" % k, i18n)) == 2, k
+
+
+def test_doi_vai_ve_lai_hop_rong_khong_can_doi_ngon_ngu(trong):
+    page, vai, loi = trong
+    if vai != "quan_tri":
+        return
+    _mo_tab(page, "others")
+    _mo_muc(page, "dsXepPanel")
+    page.wait_for_function("!document.getElementById('resultsEmptyState').hidden")
+    assert _thong_tin(page, "#resultsEmptyState")["nut"] == 1
+    page.evaluate("() => { document.body.dataset.vai = 'giao_vien'; window.dispatchEvent(new Event('ux2vai')); }")
+    tt = _thong_tin(page, "#resultsEmptyState")
+    assert tt["tong"] == 0 and "quản trị viên" in tt["huong"]
+    page.evaluate("() => { document.body.dataset.vai = 'quan_tri'; window.dispatchEvent(new Event('ux2vai')); }")
+    assert _thong_tin(page, "#resultsEmptyState")["nut"] == 1
+    with open(os.path.join(GOC, "js/16_tai_khoan.js"), encoding="utf-8") as f:
+        assert 'new Event("ux2vai")' in f.read()                               # ganVai() thật sự phát sự kiện khi đổi vai
+
+
+def test_cau_huong_dan_dung_dung_ten_the_cua_thanh_ben_ca_tieng_anh(trong):
+    page, vai, loi = trong
+    if vai != "quan_tri":
+        return
+    page.evaluate("() => window.I18N.setLang('en')")
+    ten = page.evaluate("() => Object.fromEntries(['pipeline', 'admin', 'fallback'].map((t) => [t, document.querySelector('.nav-item[data-tab=' + t + ']').innerText.trim()]))")
+    xep, nhap = ten["pipeline"], ten["fallback"]
+    assert xep == "Run allocation"
+    _mo_tab(page, "others")
+    _mo_muc(page, "dsXepPanel")
+    page.wait_for_function("!document.getElementById('resultsEmptyState').hidden")
+    chu = page.inner_text("#resultsEmptyState")
+    assert chu.startswith("No results yet.") and '"%s"' % xep in chu                               # nút nêu đúng tên thẻ thật trên thanh bên
+    assert '"Allocation"' not in chu
+    _mo_tab(page, "admin")
+    page.wait_for_function("!document.getElementById('adminClubEmptyState').hidden")
+    page.click("#qlTabHs")
+    page.wait_for_function("!document.getElementById('adminStudentEmptyState').hidden")
+    hs = page.inner_text("#adminStudentEmptyState")
+    assert '"%s"' % nhap in hs and '"%s"' % xep in hs

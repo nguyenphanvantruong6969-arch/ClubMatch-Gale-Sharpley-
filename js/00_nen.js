@@ -500,6 +500,7 @@ function feedbackErrors(node, errors) {
    ve lai theo ngon ngu khi langchange. cfg = {chu, thamSo, huongDan, nut: {nhan, quyen, tab, oId}}:
    chu = cau neu hien trang (giu cau cu cua trang thai rong, test cu van khop); huongDan = nen lam gi; nut = viec nen lam
    (nhan = khoa; quyen = "quan_tri" -> nut mang data-quyen, giao_vien khong thay; tab = the can toi; oId = o nhap nhan con tro).
+   gv = cau cho giao_vien (the Van hanh / Quan ly an voi ho: bao nho quan tri, khong nut). Ten the lay tu nav (ux2TenThe).
    Khong co nut thi chi co chu + huong dan. hop KHONG con data-i18n (applyStaticText se xoa nut). */
 function ux2DiToi(tab, oId) {
   const the = document.querySelector('.nav-item[data-tab="' + tab + '"]');
@@ -507,26 +508,35 @@ function ux2DiToi(tab, oId) {
   setTimeout(() => { const o = oId ? el(oId) : null; if (o) o.focus(); }, 0);
 }
 
+/* Ten cac the dung trong cau huong dan: LAY TU nav (cung khoa nav_*) de khong bao gio lech ten the that. */
+function ux2TenThe(them) {
+  return Object.assign({ the_xep: t("nav_pipeline"), the_quan_ly: t("nav_admin"), the_nhap: t("nav_fallback") }, them || {});
+}
+
 function ux2VeRong(hop) {
   const cfg = hop && hop.__ux2Rong;
   if (!cfg) return;
   clear(hop);
+  /* giao_vien khong thay the Van hanh / Quan ly: cfg.gv = {chu?, huongDan} thay cau chi cho the do va BO nut. */
+  const gv = document.body.dataset.vai === "giao_vien" && cfg.gv ? cfg.gv : null;
+  const tham = ux2TenThe(cfg.thamSo);
   const p1 = document.createElement("p");
   p1.className = "ux2-rong-chu";
-  p1.textContent = t(cfg.chu, cfg.thamSo);
+  p1.textContent = t((gv && gv.chu) || cfg.chu, tham);
   hop.appendChild(p1);
-  if (cfg.huongDan) {
+  const huong = (gv && gv.huongDan) || cfg.huongDan;
+  if (huong) {
     const p2 = document.createElement("p");
     p2.className = "ux2-rong-huong";
-    p2.textContent = t(cfg.huongDan);
+    p2.textContent = t(huong, tham);
     hop.appendChild(p2);
   }
-  if (cfg.nut) {
+  if (cfg.nut && !gv) {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "btn btn-primary ux2-rong-nut";
     if (cfg.nut.quyen) b.setAttribute("data-quyen", cfg.nut.quyen);
-    b.textContent = t(cfg.nut.nhan);
+    b.textContent = t(cfg.nut.nhan, tham);
     b.addEventListener("click", () => ux2DiToi(cfg.nut.tab, cfg.nut.oId));
     hop.appendChild(b);
   }
@@ -538,9 +548,10 @@ function veTrangThaiRong(hop, cfg) {
   ux2VeRong(hop);
 }
 
-window.addEventListener("langchange", () => {
+/* Ve lai khi doi ngon ngu VA khi doi vai (dang nhap / dang xuat): ganVai() ban "ux2vai". */
+["langchange", "ux2vai"].forEach((ev) => window.addEventListener(ev, () => {
   document.querySelectorAll(".empty-state").forEach((h) => { if (h.__ux2Rong) ux2VeRong(h); });
-});
+}));
 
 /* UX2-L4 (#7): loi NGAY TAI O. Chu luon di qua trErr/t (mot nguon, bat bien 6); khong chuoi moi trong JS.
    baoLoiTaiO(o, chu, tuyChon): aria-invalid, lop is-loi, <div.loi-o> ngay sau o (hoac sau <label> boc o) noi voi o
