@@ -44,7 +44,7 @@ Lot L1 ✅ PASSED (checker NO BUGS, head 9169da5, 2 fix rounds) — #2 busy stat
 - [x] CSS `.ux2-xoay` 14 px ring, `@keyframes ux2Xoay`; static under both motion switches (test computed
       `animation-name` = none with `html.tat-hieu-ung` and with `reducedMotion:"reduce"`).
 - [x] Update tests that assert the old "Đang chạy…" label deliberately; list them in CHANGELOG.
-Lot L2 — #3 ✓ after save / export (needs L1)
+Lot L2 ✅ PASSED (checker NO BUGS, head 8348237) — #3 ✓ after save / export (needs L1)
 - [x] Test `tests/test_giao_dien_ux2_xong.py`: success → `.ux2-xong` visible on the same button within 100 ms,
       gone at 1.6 s (shown ≈1.2 s), width stable; `ok:false` → no ✓; under `tat-hieu-ung` ✓ still shows (state,
       not motion) without animation.
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 passed (9169da5; tests/test_giao_dien_ux2_ban.py 7 tests).
-- In progress: L2 sent to coder (GO L2). Open problems: none.
+- Done so far: L1 passed (9169da5), L2 passed (8348237; 13 buttons wired, 18_cai_dat has no save button).
+- In progress: L3 sent to coder (GO L3). Open problems: none.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
