@@ -4,7 +4,7 @@
 > Language: English (cheaper in tokens). Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > File name = branch name with "/" replaced by "__" (see `.claude/hooks/handoff_khi_day_ngu_canh.py`).
 
-Status: IN PROGRESS (lead running L9, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
+Status: IN PROGRESS (CI gate, 2026-11-21). Protocol: docs/phien/UX2_GIAO_THUC.md
 
 ## Feature / goal
 New item **UX2 — positive interaction feedback** (asked by Truong 2026-11-21; new item like UX1/XP1, tracked in
@@ -89,7 +89,7 @@ Lot L8 ✅ PASSED (checker NO BUGS, head a71baec, 1 fix round) — #10 smooth tr
       height via `::details-content` + `interpolate-size` inside `@supports` (fallback: instant).
 - [x] Test: animation/transition present with effects on; none with `tat-hieu-ung` / reduced motion; accordion
       content still visible and readable after open (no clipped text).
-Lot L9 — docs, screenshots, verify
+Lot L9 ✅ PASSED (checker NO BUGS, head dd8887b) — docs, screenshots, verify
 - [x] `HUONG_DAN_SU_DUNG.md` short section; re-shoot changed `docs/ke_hoach/ux/anh/` screens; code map in
       `CLAUDE_CHI_TIET.md`; `kiem_nhanh.py` 7/7; CHANGELOG + TIEN_DO rows per lot.
 
@@ -102,8 +102,8 @@ Lot L9 — docs, screenshots, verify
 - Feedback latency: `aria-busy` set ≤ 100 ms after click (measured in L1 test).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (9169da5), L2 (8348237), L3 (2a05e8f), L4 (26a1d96), L5 (079ae85), L6 (788709f), L7 (b00b9e3), L8 (a71baec) passed.
-- In progress: L9 sent to coder (GO L9). Then CI gate §6 and lead review §7.
+- Done so far: L1–L9 all passed checker (last code head dd8887b).
+- In progress: CI gate §6 — FIX CI-1 (ux2_nut export-checkbox click fails on CI, suspected L8 details animation). Then §7.
 
 ## Sessions
 | Role | Model | Session id | Started | State |
@@ -114,6 +114,7 @@ Lot L9 — docs, screenshots, verify
 
 ## Needs Truong (1 line each + recommendation)
 - L3 hit area: dense table/list buttons and sidebar group headers are 24 px (AA), not 44 px. Recommend: accept; revisit only if teachers mis-tap on the touch kiosk.
+- Pre-existing (not UX2): docs/ke_hoach/ux/anh/11_cai_dat.png is byte-identical to 02_co_dl_admin.png (chup_luong_chinh.py shoots the Quản lý screen twice). Recommend: fix the script's Cài đặt step in a docs item.
 - Pre-existing (not UX2): admin student table rebuilds rows on every redraw (`loadAdminStudents` clear + recreate), so focus/caret in a row's class input is lost when the table redraws. Recommend: a small separate item to update rows in place.
 
 ## Decisions and gotchas (keep short)
