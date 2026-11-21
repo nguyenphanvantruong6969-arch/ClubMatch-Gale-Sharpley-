@@ -7,7 +7,7 @@ Status: PLANNED (Opus, 2026-11-21). Protocol: docs/phien/SM2_GIAO_THUC.md (lean,
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
-33-item registry). Follows SO-MAU (`du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx`, `tao_so_nhap_day_du.py`).
+33-item registry). Branch base: `origin/claude/ux2-phan-hoi-nut` (Truong, option A: plan not on main). Follows SO-MAU (`du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx`, `tao_so_nhap_day_du.py`).
 (1) Stop the false `wharton_chua_dung_het` import warnings in FA workspaces (657 on the full sample, 434 on
 `SO_NHAP_FA_MAU_120HS.xlsx`); (2) replace the two in-app buttons "Tải sổ mẫu" / "Tải sổ mẫu huy chương" with ONE
 button whose workbook always has the full structure + the column dictionary.
