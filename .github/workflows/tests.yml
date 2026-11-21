@@ -45,6 +45,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
       - name: Cai goi
         run: pip install -r requirements-dev.txt
       # Test giao dien chay trinh duyet THAT. Khong co Chromium thi chung tu
@@ -61,8 +62,13 @@ jobs:
           restore-keys: pytest-lf-${{ github.head_ref || github.ref_name }}-${{ matrix.phan }}-
       - name: Chay lai test hong lan truoc (nhanh)
         run: |
-          # exit 5 = khong co test hong nao de chay lai (lan dau, hoac lan truoc xanh): bo qua
-          python -m pytest -q --lf --lfnf=none $(python .github/chia_test.py ${{ matrix.phan }} 4) || [ $? -eq 5 ]
+          # Chi chay khi danh sach test hong cu CO tep thuoc phan nay. Truoc day: khi cac test hong cu
+          # khong nam trong phan nay, pytest --lf chay LAI CA PHAN (mat 8-16 phut moi lan, vo ich).
+          TEP=$(python .github/chia_test.py ${{ matrix.phan }} 4)
+          HONG=$(python .github/test_hong_cu.py $TEP)
+          if [ -z "$HONG" ]; then echo "Khong co test hong cu trong phan nay: bo qua"; exit 0; fi
+          # exit 5 = khong co test nao de chay lai: bo qua
+          python -m pytest -q --lf --lfnf=none $HONG || [ $? -eq 5 ]
       - name: Chay test (kem do phu)
         env:
           COVERAGE_FILE: .coverage.phan${{ matrix.phan }}
@@ -103,17 +109,18 @@ jobs:
           python -m coverage report
 
   test-windows:
-    name: Bo test (Windows ${{ matrix.phan }}/2)
+    name: Bo test (Windows ${{ matrix.phan }}/4)
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2]
+        phan: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
       # Khong cai playwright tren Windows: test giao dien da chay o Linux.
       # O day bat loai loi CHI Windows moi co: duong dan gach nguoc, tep
       # mo chua dong nen khong xoa duoc, ten tep danh rieng (CON, NUL...).
@@ -124,4 +131,4 @@ jobs:
           pip install "pytest>=8.0,<10" "pillow>=10.0,<13" "python-docx>=1.1,<2"
       - name: Chay test
         shell: bash
-        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 2)
+        run: python -m pytest -q $(python .github/chia_test.py ${{ matrix.phan }} 4)
