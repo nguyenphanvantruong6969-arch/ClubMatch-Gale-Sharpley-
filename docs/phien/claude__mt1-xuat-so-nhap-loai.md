@@ -57,12 +57,12 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 - [x] Add test: FA OFF but one club has `loai` set → columns present, round trip keeps it.
 - [x] Implement D1. Red test now green.
 ### L2 — reserved seats + full round trip
-- [ ] Failing test: FA DB from `SO_NHAP_FA_MAU_120HS.xlsx`; set `so_toi_thieu`, `suc_chua_phong` on two clubs
+- [x] Failing test: FA DB from `SO_NHAP_FA_MAU_120HS.xlsx`; set `so_toi_thieu`, `suc_chua_phong` on two clubs
       (via `dat_loai_clb` if it takes them, else direct UPDATE in the test), add 2–3 `giu_cho` pairs with
       `fa_daa.thay_giu_cho` on valid (club, student) pairs; export; import into an EMPTY FA DB; assert equal
       `loai, diem_san, so_toi_thieu, suc_chua_phong` per club AND equal `giu_cho` set.
-- [ ] Test: FA on, empty `giu_cho` → sheet "Giữ chỗ" exists, header only; FA off → no sheet.
-- [ ] Implement D2 (+ D4). All new tests green.
+- [x] Test: FA on, empty `giu_cho` → sheet "Giữ chỗ" exists, header only; FA off → no sheet.
+- [x] Implement D2 (+ D4). All new tests green.
 ### L3 — verify + docs
 - [ ] Related tests green: `tests/test_xuat_du_lieu.py`, `tests/test_fa_du_lieu.py`, `tests/test_a13_12_so_nhap.py`,
       `tests/test_mt1_dong_bo_loai_clb.py`, the new test file; `ruff check .`.
@@ -92,7 +92,7 @@ cell-for-cell identical to today (invariants 1, 7). Measured failing test, curre
 
 ## Current state (overwrite each handoff)
 - Done so far: branch created, plan + protocol written (Opus). No product code yet.
-- In progress: L2 (L1 passed checker NO BUGS, head 2ea9193)
+- In progress: L3 (L1, L2 passed checker NO BUGS; L2 head 2fd73ce, 74 related tests)
 - Tests: none run (planning only; container had no `.venv`).
 - Open problems: —
 
