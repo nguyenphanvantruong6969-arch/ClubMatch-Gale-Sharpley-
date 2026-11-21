@@ -129,7 +129,7 @@ def _mo_nang_cao(page):
 
 def test_details_nang_cao_mo_theo_chieu_cao_roi_tra_overflow_va_chu_doc_duoc(api, mo):
     page, loi = mo()
-    ho_tro = page.evaluate("() => CSS.supports('interpolate-size: allow-keywords') && CSS.supports('selector(::details-content)')")
+    ho_tro = page.evaluate("() => CSS.supports('selector(::details-content)')")
     _mo_nang_cao(page)
     ten = page.evaluate("() => getComputedStyle(document.getElementById('xuatNangCao'), '::details-content').animationName")
     if ho_tro:
@@ -171,12 +171,13 @@ def test_menu_khac_khong_bi_hoat_anh_chieu_cao_de_hop_nut_khong_bi_cat(api, mo):
 def test_css_chuyen_canh_nam_trong_supports_va_no_preference_de_lui_ve_tuc_thi():
     with open(os.path.join(GOC, "style.css"), encoding="utf-8") as f:
         css = f.read()
+    import re
     i = css.index("/* UX2 — L8")
     khoi = css[i:]
-    assert "@supports (interpolate-size: allow-keywords) and selector(::details-content)" in khoi
+    assert "@supports selector(::details-content)" in khoi
+    assert "overflow" not in re.sub(r"/\*.*?\*/", "", khoi[khoi.index("@supports"):], flags=re.S)     # nội dung <details> KHÔNG bị cắt khi mở
     j = khoi.index("@supports")
     assert "prefers-reduced-motion: no-preference" in khoi[j:j + 200]
-    import re
     khong_chu_thich = re.sub(r"/\*.*?\*/", "", khoi, flags=re.S)
     assert "::details-content" not in khong_chu_thich[:khong_chu_thich.index("@supports")]   # ngoài @supports không có gì động tới ::details-content
     assert ".menu-khac" not in khoi[j:]                                       # hộp nút trôi tuyệt đối không bị cắt
@@ -296,4 +297,32 @@ def test_o_nhap_trong_hang_55px_khi_ve_lai_khong_co_hieu_ung_truot_de_len_o(api,
     assert len(page.evaluate("() => window.__vao")) == 0
     st = page.eval_on_selector("#adminStudentTableBody tr .lop-sua", "o => ({ op: getComputedStyle(o.closest('tr')).opacity, tf: getComputedStyle(o.closest('tr')).transform })")
     assert st == {"op": "1", "tf": "none"}
+    assert loi == [], loi
+
+
+def test_o_nhap_trong_details_bam_duoc_tu_khung_hinh_dau_tien_ca_khi_cpu_cham(api, mo):
+    """FIX CI-1: hoạt ảnh mở KHÔNG được cắt nội dung (bản mở theo chiều cao làm ô nhập trượt hit-test trong ~30 ms đầu).
+    Lấy mẫu elementFromPoint ngay từ khung hình đầu và mỗi 8 ms trong 400 ms, với CPU thường và CPU bị bóp 6 lần: ô LUÔN là phần tử trúng."""
+    page, loi = mo()
+    cdp = page.context.new_cdp_session(page)
+    for ty_le in (1, 6):
+        cdp.send("Emulation.setCPUThrottlingRate", {"rate": ty_le})
+        page.locator('.nav-item[data-tab="others"]').click()
+        page.wait_for_selector("#xuatNangCao > summary")
+        page.evaluate("() => { document.getElementById('xuatNangCao').open = false; }")
+        page.wait_for_timeout(400)
+        mau = page.evaluate("""() => new Promise((xong) => { const d = document.getElementById('xuatNangCao'); const c = document.getElementById('xuatKetQua'); const ra = [];
+            const t0 = performance.now(); d.open = true;
+            const doc = () => { const r = c.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+                ra.push(e === c || (e && e.closest('label') === c.closest('label'))); if (performance.now() - t0 < 400) setTimeout(doc, 8); else xong(ra); };
+            doc(); })""")
+        assert len(mau) > 10 and all(mau), (ty_le, mau.count(False), len(mau))
+    cdp.send("Emulation.setCPUThrottlingRate", {"rate": 1})
+    # bấm chuột THẬT vào ô (đang bật) NGAY sau khi mở: ô tick tự dựng trong một <details class="nang-cao"> (ô Xuất thật bị khoá khi chưa có kết quả)
+    page.evaluate("""() => { const d = document.createElement('details'); d.className = 'nang-cao'; d.id = 'ux2Ck'; d.style.cssText = 'position:fixed;left:300px;top:300px;z-index:60;background:#fff;padding:8px';
+        d.innerHTML = '<summary>Mở</summary><label><input type="checkbox" id="ux2CkO"> ô thử</label>'; document.body.appendChild(d); }""")
+    page.click("#ux2Ck > summary")
+    r = page.eval_on_selector("#ux2CkO", "e => { const b = e.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; }")
+    page.mouse.click(r[0], r[1])                                              # không chờ hoạt ảnh
+    assert page.eval_on_selector("#ux2CkO", "e => e.checked") is True
     assert loi == [], loi

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — UX2-CI1: `<details>` mở nhẹ, KHÔNG cắt nội dung (sửa test đỏ trên CI)
+
+- Lỗi (CI run 44887663728, shard 1/6): `test_giao_dien_ux2_nut.py::test_bam_chuot_vao_o_tick_xuat_khong_kich_nut_xuat[quan_tri|giao_vien]`: bấm chuột thật vào ô tick ngay sau khi mở mục "Nâng cao" không bật ô. Chẩn đoán: hoạt ảnh mở của L8 (`block-size` 0 → auto + `overflow: hidden` trên `::details-content`) cắt phần nội dung chưa mở tới khỏi hit-test; đo `elementFromPoint` tại tâm ô: ô chỉ trúng sau ~20 đến 36 ms. Máy CI chậm thì cú bấm đầu rơi vào khoảng đó. Đây là lỗi SẢN PHẨM (bấm ô trong ~30 ms đầu bị hụt), không chỉ lỗi test.
+- Sửa ở CSS (`style.css`, khối L8): `ux2Abre` giờ chỉ mờ dần + trượt xuống 4 px, KHÔNG đổi chiều cao, KHÔNG `overflow`, bỏ `interpolate-size`; `@supports selector(::details-content)` + `no-preference`; `html.tat-hieu-ung ::details-content` vẫn tắt riêng. Ô nhập bấm được từ khung hình đầu tiên. (Chuyển cảnh `<details>` không còn "theo chiều cao" như L8 mô tả ở trên; dòng đó nay chỉ còn ý "mở nhẹ".)
+- Test: `test_o_nhap_trong_details_bam_duoc_tu_khung_hinh_dau_tien_ca_khi_cpu_cham` (lấy mẫu `elementFromPoint` ngay khung hình đầu và mỗi 8 ms trong 400 ms với CPU thường và CPU bóp 6 lần qua CDP + bấm chuột thật vào ô tick NGAY sau khi mở): THẤT BẠI với CSS cũ (1/50 mẫu hụt), qua với CSS mới. Test tĩnh cập nhật: `@supports selector(::details-content)`, không có `overflow` trong khối. Test CI-1 gốc và cả hai tệp `ux2_chuyen_canh` + `ux2_nut` chạy 3 lần: 32 qua mỗi lần; 187 test liên quan qua.
+
 ## 2026-11-21 — UX2-L9: tài liệu, ảnh chụp, kiểm chứng cả mục UX2
 
 - `HUONG_DAN_SU_DUNG.md`: mục mới "Phần mềm báo lại thế nào khi bấm, khi sai, khi chờ" (cuối §4): nút bận + chống bấm đúp, dấu ✓, lỗi ngay tại ô, bốn pha (gồm "Cảnh báo" khi sao lưu hỏng mà vẫn chạy xong), hộp rỗng có nút theo vai, khung chờ, hiệu ứng trượt, nút "Hiệu ứng" tắt mọi chuyển động. Tài liệu vận hành; không có kết luận cho báo cáo khoa học.

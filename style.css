@@ -3347,13 +3347,13 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 @media (prefers-reduced-motion: reduce) {
   .ux2-vao { animation: none; }
 }
-/* <details> mở theo chiều cao: CHỈ khi trình duyệt có ::details-content VÀ interpolate-size (WebView2 cũ: bỏ qua hết = mở tức thì).
-   Chỉ các mục "nâng cao" / "chi tiết" — KHÔNG đụng .menu-khac (hộp nút trôi tuyệt đối sẽ bị cắt). Overflow ẩn chỉ trong lúc chạy
-   hoạt ảnh (keyframes), xong thì trả về visible nên vòng focus / chữ không bị cắt. */
-@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+/* <details> mở nhẹ (mờ dần + trượt xuống 4 px): CHỈ khi trình duyệt có ::details-content (WebView2 cũ: bỏ qua hết = mở tức thì).
+   KHÔNG animate chiều cao và KHÔNG cắt (overflow) nội dung: bản đầu mở theo chiều cao nên vùng chưa mở tới bị cắt khỏi hit-test và
+   cú bấm vào ô nhập trong ~30 ms đầu trượt (CI máy chậm: test bấm ô tick ngay sau khi mở bị hụt). Giờ ô nhập bấm được từ khung hình
+   đầu tiên. Chỉ các mục "nâng cao" / "chi tiết" (không đụng .menu-khac). */
+@supports selector(::details-content) {
   @media (prefers-reduced-motion: no-preference) {
-    :root { interpolate-size: allow-keywords; }
-    @keyframes ux2Abre { from { block-size: 0; opacity: 0.2; overflow: hidden; } to { block-size: auto; opacity: 1; overflow: hidden; } }
+    @keyframes ux2Abre { from { opacity: 0.2; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
     :is(.nang-cao, .ux1a-nang-cao, .wh-thao-tac, .mt1-chi-tiet, .chi-tiet-ky-thuat)[open]::details-content { animation: ux2Abre 180ms ease-out; }
   }
   /* "Hiệu ứng" tắt: html.tat-hieu-ung *::before/::after không phủ ::details-content, nên tắt riêng ở đây. */
