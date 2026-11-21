@@ -117,12 +117,14 @@ jobs:
           python -m coverage report
 
   test-windows:
-    name: Bo test (Windows ${{ matrix.phan }}/6)
+    name: Bo test (Windows ${{ matrix.phan }}/12)
     runs-on: windows-latest
+    # 12 phan: tren may Windows, -n auto gan nhu khong tang toc (nghen doc ghi tep), nen chia nhieu may hon.
+    # 6 Linux + 12 Windows + lint = 19 job, duoi gioi han 20 job dong thoi.
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4, 5, 6]
+        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -140,9 +142,11 @@ jobs:
       - name: Chay test
         shell: bash
         run: |
-          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --song-song)
-          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --tuan-tu)
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --tuan-tu)
           rc=0
           if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
-          if [ -n "$TT" ]; then python -m pytest -q $TT || rc=$?; fi
+          # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
+          # khong cai playwright). Do KHONG phai test hong.
+          if [ -n "$TT" ]; then python -m pytest -q $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
           exit $rc

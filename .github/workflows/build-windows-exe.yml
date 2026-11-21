@@ -30,15 +30,15 @@ jobs:
   # hoa ra chi chay duoc tren Linux khong lam ca truong khong co ban cai.
   # -------------------------------------------------------------------
   test:
-    name: Bo test tren Windows (${{ matrix.phan }}/6)
+    name: Bo test tren Windows (${{ matrix.phan }}/12)
     runs-on: windows-latest
     if: ${{ !inputs.bo_qua_test }}
-    # Chia 6 phan song song (.github/chia_test.py): truoc day mot may chay noi tiep ca bo (~72 phut).
-    # 6 phan ~12-13 phut moi phan + build ~2 phut => ca luot ~15-17 phut. Van chay DU moi test.
+    # Chia 12 phan song song (.github/chia_test.py): truoc day mot may chay noi tiep ca bo (~72 phut).
+    # Do that tren CI: may Windows ~72 phut-may cho ca bo => 12 phan ~6-7 phut + build ~2 phut. Van chay DU moi test.
     strategy:
       fail-fast: false
       matrix:
-        phan: [1, 2, 3, 4, 5, 6]
+        phan: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - uses: actions/checkout@v4
 
@@ -59,11 +59,13 @@ jobs:
       - name: Run test suite
         shell: bash
         run: |
-          SS=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --song-song)
-          TT=$(python .github/chia_test.py ${{ matrix.phan }} 6 --windows --tuan-tu)
+          SS=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --song-song)
+          TT=$(python .github/chia_test.py ${{ matrix.phan }} 12 --windows --tuan-tu)
           rc=0
           if [ -n "$SS" ]; then python -m pytest -q -n auto $SS || rc=$?; fi
-          if [ -n "$TT" ]; then python -m pytest -q $TT || rc=$?; fi
+          # Ma 5 = khong co test nao chay: tren Windows ca nhom nay co the la tep giao dien (tu bo qua vi
+          # khong cai playwright). Do KHONG phai test hong.
+          if [ -n "$TT" ]; then python -m pytest -q $TT || { e=$?; [ $e -eq 5 ] || rc=$e; }; fi
           exit $rc
 
   build:
