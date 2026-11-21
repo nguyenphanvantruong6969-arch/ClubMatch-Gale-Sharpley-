@@ -496,6 +496,33 @@ function feedbackErrors(node, errors) {
   ganChiTietKyThuat(node, errors);
 }
 
+/* UX2-L8 (#10): hang moi cua bang truot vao (<= 20 hang dau, 180 ms, tre xep chong toi da 19 ms nen tong <= 200 ms). CHI trang
+   tri: hang bam duoc ngay (khong pointer-events, khong cho); khong lam gi voi khung cho L7 (hang .ux2-khung-hang) va khong
+   hoat hoa tu hang thu 21 (bang 800 dong). Tat hieu ung / giam chuyen dong thi khong gan lop (ux2ChoPhepChuyenDong). */
+const UX2_VAO_TOI_DA = 20;
+
+function ux2QuanSatBang(dsId) {
+  dsId.forEach((id) => {
+    const tb = el(id);
+    if (!tb || tb.__ux2Quan || typeof MutationObserver === "undefined") return;
+    tb.__ux2Quan = new MutationObserver((cacBanGhi) => {
+      if (!ux2ChoPhepChuyenDong()) return;
+      const hang = [];
+      cacBanGhi.forEach((m) => m.addedNodes.forEach((n) => {
+        if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) hang.push(n);
+      }));
+      hang.slice(0, UX2_VAO_TOI_DA).forEach((tr, i) => {
+        tr.style.animationDelay = Math.min(i, 19) + "ms";
+        tr.classList.add("ux2-vao");
+        const bo = () => { tr.classList.remove("ux2-vao"); tr.style.animationDelay = ""; };
+        tr.addEventListener("animationend", bo, { once: true });
+        setTimeout(bo, 500);
+      });
+    });
+    tb.__ux2Quan.observe(tb, { childList: true });
+  });
+}
+
 /* UX2-L7 (#6): khung cho (skeleton) cho bang dang tai. CHI hien neu tai lau hon UX2_KHUNG_TRE_MS (nhanh thi khong chen
    gi: khong nhap nhay) va chi khi tbody dang TRONG (bang con du lieu cu thi cu de du lieu cu). Hang khung aria-hidden,
    bang aria-busy true -> false. `hoi` (promise cua lan tai) duoc gan then(ket, ket): go khung ca khi THANH CONG lan LOI /

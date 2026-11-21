@@ -3337,3 +3337,25 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 @media (prefers-reduced-motion: reduce) {
   .ux2-khung { animation: none; }
 }
+
+/* UX2 — L8: chuyển cảnh mượt (#10), CHỈ trang trí. Mọi thứ nằm trong no-preference; "Hiệu ứng" tắt thì animation:none!important
+   (khối html.tat-hieu-ung) lo phần còn lại. */
+@keyframes ux2Vao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .ux2-vao { animation: ux2Vao 180ms var(--ease-out) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ux2-vao { animation: none; }
+}
+/* <details> mở theo chiều cao: CHỈ khi trình duyệt có ::details-content VÀ interpolate-size (WebView2 cũ: bỏ qua hết = mở tức thì).
+   Chỉ các mục "nâng cao" / "chi tiết" — KHÔNG đụng .menu-khac (hộp nút trôi tuyệt đối sẽ bị cắt). Overflow ẩn chỉ trong lúc chạy
+   hoạt ảnh (keyframes), xong thì trả về visible nên vòng focus / chữ không bị cắt. */
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root { interpolate-size: allow-keywords; }
+    @keyframes ux2Abre { from { block-size: 0; opacity: 0.2; overflow: hidden; } to { block-size: auto; opacity: 1; overflow: hidden; } }
+    :is(.nang-cao, .ux1a-nang-cao, .wh-thao-tac, .mt1-chi-tiet, .chi-tiet-ky-thuat)[open]::details-content { animation: ux2Abre 180ms ease-out; }
+  }
+  /* "Hiệu ứng" tắt: html.tat-hieu-ung *::before/::after không phủ ::details-content, nên tắt riêng ở đây. */
+  html.tat-hieu-ung ::details-content { animation: none !important; transition: none !important; }
+}

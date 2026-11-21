@@ -85,9 +85,9 @@ Lot L7 ✅ PASSED (checker NO BUGS, head b00b9e3) — #6 skeleton loading
 - [x] Test: slow API → skeleton after 400 ms, gone after data; fast API → never inserted (MutationObserver);
       shimmer off under both motion switches.
 Lot L8 — #10 smooth transitions
-- [ ] New list rows slide in (≤ 20 rows, 180 ms, no stagger beyond 200 ms total); `<details>` accordions open by
+- [x] New list rows slide in (≤ 20 rows, 180 ms, no stagger beyond 200 ms total); `<details>` accordions open by
       height via `::details-content` + `interpolate-size` inside `@supports` (fallback: instant).
-- [ ] Test: animation/transition present with effects on; none with `tat-hieu-ung` / reduced motion; accordion
+- [x] Test: animation/transition present with effects on; none with `tat-hieu-ung` / reduced motion; accordion
       content still visible and readable after open (no clipped text).
 Lot L9 — docs, screenshots, verify
 - [ ] `HUONG_DAN_SU_DUNG.md` short section; re-shoot changed `docs/ke_hoach/ux/anh/` screens; code map in

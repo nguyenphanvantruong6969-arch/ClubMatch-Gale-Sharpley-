@@ -151,7 +151,8 @@ def test_khung_khong_lam_nhay_bo_cuc_120_hs(api, mo):
         const th = Array.from(t.querySelectorAll('thead th')).filter((c) => c.offsetParent !== null).map((c) => Math.round(c.getBoundingClientRect().left));
         const r = t.querySelector('thead').getBoundingClientRect();
         const h = document.querySelector('#adminStudentTableBody tr');
-        return { th, top: Math.round(r.top), hangDau: h ? Math.round(h.getBoundingClientRect().top) : null, cao: h ? Math.round(h.getBoundingClientRect().height) : null }; }"""
+        /* offsetTop / offsetHeight: bố cục THẬT, không dính transform của hiệu ứng trượt vào (L8) */
+        return { th, top: Math.round(r.top), hangDau: h ? h.offsetTop : null, cao: h ? h.offsetHeight : null }; }"""
     _vao_hs(page)
     page.wait_for_function(SO_KHUNG + " > 0", timeout=3000)
     giua = page.evaluate(do)
