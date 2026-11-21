@@ -17,17 +17,16 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - [x] L3 #8 #9 #1 hit area / one focus ring / state layer     PASSED (+fix1 nav-item 44px, fix2 controls above ::after)
 - [x] L4 #7 inline field errors (baoLoiTaiO...)               PASSED (+fix1 language switch)
 - [x] L5 #11 four-phase progress (UX2_PHA)                    PASSED (+fix1 backup warning)
-- [x] L6 #12 guided empty states (veTrangThaiRong)            DONE head 291deb8, reported, NOT yet checked
+- [x] L6 #12 guided empty states (veTrangThaiRong)            DONE 291deb8 + fix1 788709f (role-aware, nav tab names), reported, checker verdict pending
 - [ ] L7 #6 skeleton loading   [ ] L8 #10 smooth transitions   [ ] L9 docs/screenshots/verify (spec: lead's branch file)
 
 ## Current state (overwrite each handoff)
-- Done: L1-L6 committed + pushed; last commit 291deb8 (L6). Working tree clean after that push.
-- In progress: nothing. Waiting for lead: checker verdict on L6 and "GO L7".
-- Tests: run only related ones (never the 22-min full suite). Typical command:
-  `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers .venv/bin/python -m pytest -q tests/test_giao_dien_ux2_*.py tests/test_ux2_tien_trinh.py tests/test_i18n_sync.py ... > scratchpad/o.txt 2>&1`
-  (redirect to a file; `| tail` hides progress and a hang looks like nothing). Last result L6: 224 passed, 2 skipped, ruff clean,
-  `.claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7.
-- Open problems: none known. scoringOverviewEmpty deliberately left unchanged (not in lead's L6 list).
+- Done: L1-L6 committed + pushed; last code commit 788709f (L6 fix1). Working tree clean after the handoff push.
+- In progress: nothing. Waiting for lead: checker verdict on L6 fix1 and "GO L7".
+- Tests: related ones only (never the 22-min full suite); redirect pytest output to a file in the scratchpad.
+  Last (L6 fix1): 203 passed (ux2_*, tien_trinh, i18n_sync, van_phong, ws_nhan, a13_12_tkb, a14_lop, t2_ket_qua, t3_l3,
+  gt3_phan_quyen, ux1_ket_qua, khoa_xuat), ruff clean, kiem_nhanh.py --co-so origin/main --so-seed 20 7/7.
+- Open problems: none known. scoringOverviewEmpty left unchanged (not in lead's L6 list).
 
 ## Decisions and gotchas (keep short)
 - Helpers live in js/00_nen.js: datNutBan (busy), nutDaXong/goDauXong (check mark), baoLoiTaiO/xoaLoiTaiO/focusODau/baoLoiForm
@@ -43,11 +42,15 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 - Result panels default closed (MAC_DINH_DONG); admin student list is in the "Học sinh" sub-tab (#qlTabHs): tests must open them.
 - Closed <details> content keeps phantom coordinates; elementFromPoint there hits whatever is underneath.
 - giao_vien: Vận hành tab (4 phases, btnRun) is data-quyen quan_tri -> invisible to that role.
+- ws_nhan FREEZES default UI strings (tests/du_lieu_ws/chuoi_truoc_khi_co_nhan.json): never edit an existing i18n value; add new ux2_ keys.
+  test_van_phong_tu_nhien bans long dashes, address forms (en "you"), ALL CAPS, internal words in UI strings.
+- Empty states (L6): cfg.gv = role text for giao_vien (no button, "ask an administrator"); tab names come from ux2TenThe() = nav
+  labels ({the_xep}/{the_quan_ly}/{the_nhap}); redraw on `langchange` AND `ux2vai` (ganVai in 16_tai_khoan.js dispatches it).
 - Push rejected -> `git fetch origin claude/ux2-phan-hoi-nut && git merge --no-edit FETCH_HEAD` (protocol: never rebase/force).
 - Stop hook "uncommitted changes": commit a clearly labelled WIP and push; only report "CODER DONE" when tests are green.
 
 ## Next steps (ordered)
-1. Wait for lead: checker verdict on L6 (FIX L6 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
+1. Wait for lead: checker verdict on L6 fix1 (FIX L6 -> test first, minimal fix, related tests, report "CODER DONE L6 fixN").
 2. On "GO L7": `git pull origin claude/ux2-phan-hoi-nut` + `git fetch origin main && git merge --no-edit FETCH_HEAD`, read the L7 block
    (hienKhungCho(tbody, soCot, soDong), only if load > 300 ms, aria-busy on table, results / admin student / run history / admin club
    tables; shimmer off under tat-hieu-ung and reduced motion; MutationObserver test for no flicker on fast API).
@@ -70,3 +73,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-21 | Sonnet (coder) | L1-L6 built, fixed per checker (L1 x2, L3 x2, L4 x1, L5 x1), all pushed; handoff written at ~400k context | head 291deb8 |
+| 2026-11-21 | Sonnet (coder) | L6 fix1 (role-aware empty boxes, nav tab names, ux2vai), handoff refreshed (hook fired again) | head 788709f |
