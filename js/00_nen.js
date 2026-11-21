@@ -496,22 +496,47 @@ function feedbackErrors(node, errors) {
   ganChiTietKyThuat(node, errors);
 }
 
-/* UX2-L8 (#10): hang moi cua bang truot vao (<= 20 hang dau, 180 ms, tre xep chong toi da 19 ms nen tong <= 200 ms). CHI trang
+/* UX2-L8 (#10): hang MOI cua bang truot vao (<= 20 hang, 180 ms, tre xep chong toi da 19 ms nen tong <= 200 ms). CHI trang
    tri: hang bam duoc ngay (khong pointer-events, khong cho); khong lam gi voi khung cho L7 (hang .ux2-khung-hang) va khong
-   hoat hoa tu hang thu 21 (bang 800 dong). Tat hieu ung / giam chuyen dong thi khong gan lop (ux2ChoPhepChuyenDong). */
+   hoat hoa tu hang thu 21 (bang 800 dong). Tat hieu ung / giam chuyen dong thi khong gan lop (ux2ChoPhepChuyenDong).
+   "MOI" = khoa hang chua tung xuat hien trong bang nay (tap khoa TICH LUY theo tung tbody): ve lai cung du lieu (tai lai, tim
+   kiem, sap xep, doi ngon ngu, loc roi bo loc) -> 0 hang truot, KHONG nhap nhay; them mot CLB / hoc sinh -> dung hang do;
+   do bang trong lan dau -> toi da 20 hang dau. Tbody bi lam trong han (khong con hang du lieu) thi quen tap khoa de lan do
+   day tiep theo la "lan dau". Khoa moi bang (UX2_KHOA_HANG): ket qua = ma hoc sinh + ten CLB (mot em nhieu buoi = nhieu hang),
+   hoc sinh quan ly = data-student-id, CLB quan ly = data-club-id, lich su chay = ma lan chay (cot dau). */
 const UX2_VAO_TOI_DA = 20;
+const UX2_KHOA_HANG = {
+  resultsTableBody: (tr) => (tr.cells[1] ? tr.cells[1].textContent.trim() : "") + "|" + (tr.cells[5] ? tr.cells[5].textContent.trim() : ""),
+  adminStudentTableBody: (tr) => { const o = tr.querySelector("[data-student-id]"); return o ? o.dataset.studentId : ""; },
+  adminClubTableBody: (tr) => tr.dataset.clubId || "",
+  historyTableBody: (tr) => (tr.cells[0] ? tr.cells[0].textContent.trim() : ""),
+};
 
 function ux2QuanSatBang(dsId) {
   dsId.forEach((id) => {
     const tb = el(id);
     if (!tb || tb.__ux2Quan || typeof MutationObserver === "undefined") return;
+    const khoaCua = UX2_KHOA_HANG[id] || ((tr) => (tr.cells[0] ? tr.cells[0].textContent.trim() : ""));
+    const daThay = new Set();
+    tb.__ux2DaThay = daThay;
     tb.__ux2Quan = new MutationObserver((cacBanGhi) => {
-      if (!ux2ChoPhepChuyenDong()) return;
       const hang = [];
-      cacBanGhi.forEach((m) => m.addedNodes.forEach((n) => {
-        if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) hang.push(n);
-      }));
-      hang.slice(0, UX2_VAO_TOI_DA).forEach((tr, i) => {
+      let coGo = false;
+      cacBanGhi.forEach((m) => {
+        m.addedNodes.forEach((n) => { if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) hang.push(n); });
+        m.removedNodes.forEach((n) => { if (n.nodeName === "TR" && !n.classList.contains("ux2-khung-hang")) coGo = true; });
+      });
+      if (coGo && !tb.querySelector("tr:not(.ux2-khung-hang)")) daThay.clear(); /* bang bi lam trong han: lan do ke tiep la lan dau */
+      const moi = [];
+      hang.forEach((tr) => {
+        if (!tr.isConnected) return;
+        const k = khoaCua(tr);
+        if (k !== "" && daThay.has(k)) return;
+        if (k !== "") daThay.add(k);
+        moi.push(tr);
+      });
+      if (!ux2ChoPhepChuyenDong()) return;
+      moi.slice(0, UX2_VAO_TOI_DA).forEach((tr, i) => {
         tr.style.animationDelay = Math.min(i, 19) + "ms";
         tr.classList.add("ux2-vao");
         const bo = () => { tr.classList.remove("ux2-vao"); tr.style.animationDelay = ""; };

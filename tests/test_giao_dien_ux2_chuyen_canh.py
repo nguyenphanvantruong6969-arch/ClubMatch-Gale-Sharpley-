@@ -180,3 +180,120 @@ def test_css_chuyen_canh_nam_trong_supports_va_no_preference_de_lui_ve_tuc_thi()
     khong_chu_thich = re.sub(r"/\*.*?\*/", "", khoi, flags=re.S)
     assert "::details-content" not in khong_chu_thich[:khong_chu_thich.index("@supports")]   # ngoài @supports không có gì động tới ::details-content
     assert ".menu-khac" not in khoi[j:]                                       # hộp nút trôi tuyệt đối không bị cắt
+
+
+# ---------- FIX L8 vòng 1: chỉ hàng THẬT SỰ MỚI mới trượt vào; vẽ lại cùng dữ liệu thì bảng đứng yên ----------
+def _vao_hs_xong(page, n):
+    _vao_hs(page)
+    page.wait_for_function("n => document.querySelectorAll('#adminStudentTableBody tr').length >= n", arg=n)
+    page.wait_for_timeout(450)                                               # đợi hoạt ảnh lần đầu xong rồi mới xoá sổ ghi
+    page.evaluate("() => { window.__vao = []; }")
+
+
+def _so_vao(page):
+    page.wait_for_timeout(350)
+    return len(page.evaluate("() => window.__vao"))
+
+
+def test_ve_lai_cung_du_lieu_khong_hang_nao_truot_tai_lai_sap_xep_doi_ngon_ngu_tim_kiem(api, mo):
+    _them_hs(api, 25)
+    page, loi = mo()
+    page.evaluate(GHI)
+    _vao_hs_xong(page, 25)
+    page.evaluate("() => { loadAdminStudents(); }")                           # tải lại y nguyên
+    page.wait_for_function("document.querySelectorAll('#adminStudentTableBody tr').length >= 25")
+    assert _so_vao(page) == 0
+    page.evaluate("() => { window.__vao = []; }")
+    page.select_option("#adminSapXep", index=1)                               # đổi thứ tự sắp
+    page.wait_for_timeout(500)
+    assert page.evaluate("() => document.querySelectorAll('#adminStudentTableBody tr').length") >= 25
+    assert _so_vao(page) == 0
+    page.evaluate("() => { window.__vao = []; window.I18N.setLang('en'); }")  # đổi ngôn ngữ (vẽ lại cả bảng)
+    page.wait_for_timeout(600)
+    assert _so_vao(page) == 0
+    page.evaluate("() => { window.__vao = []; }")
+    page.fill("#adminStudentSearch", "HS000")                                 # lọc: tập con của dữ liệu đã thấy
+    page.wait_for_timeout(900)
+    n_loc = page.evaluate("() => document.querySelectorAll('#adminStudentTableBody tr').length")
+    assert 0 < n_loc < 25
+    assert _so_vao(page) == 0
+    page.evaluate("() => { window.__vao = []; }")
+    page.fill("#adminStudentSearch", "")                                      # bỏ lọc: các hàng quay lại cũng KHÔNG trượt lại
+    page.wait_for_function("n => document.querySelectorAll('#adminStudentTableBody tr').length >= n", arg=25)
+    assert _so_vao(page) == 0
+    assert loi == [], loi
+
+
+def test_them_mot_hoc_sinh_dung_hang_do_truot_vao(api, mo):
+    _them_hs(api, 12)
+    page, loi = mo()
+    page.evaluate(GHI)
+    page.evaluate("""() => { window.__chu = []; new MutationObserver((ms) => ms.forEach((m) => { if (m.target.classList && m.target.classList.contains('ux2-vao')) window.__chu.push(m.target.textContent); }))
+        .observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true }); }""")
+    _vao_hs_xong(page, 12)
+    page.evaluate("() => { window.__chu = []; }")
+    api.create_student_if_missing("HS9999", "Em Mới Thêm")
+    page.evaluate("() => { loadAdminStudents(); }")
+    page.wait_for_function("document.querySelectorAll('#adminStudentTableBody tr').length >= 13")
+    page.wait_for_timeout(300)
+    assert len(page.evaluate("() => window.__vao")) == 1
+    chu = page.evaluate("() => window.__chu")
+    assert len(chu) == 1 and "HS9999" in chu[0]                              # đúng hàng vừa thêm
+    assert loi == [], loi
+
+
+def test_them_mot_clb_dung_hang_do_truot_vao_va_bang_rong_roi_co_du_lieu_la_lan_dau(api, mo):
+    page, loi = mo()
+    page.evaluate(GHI)
+    page.locator('.nav-item[data-tab="admin"]').click()
+    page.wait_for_selector("#adminClubEmptyState:not([hidden])")               # bảng CLB trống
+    api.create_or_update_club("clb_x", "CLB X", 10, 0, "")
+    page.evaluate("() => { loadAdminClubs(); }")
+    page.wait_for_selector("#adminClubTableBody tr")
+    page.wait_for_timeout(300)
+    assert len(page.evaluate("() => window.__vao")) == 1                      # trống -> có 1 hàng: là lần đầu
+    page.wait_for_timeout(400)
+    page.evaluate("() => { window.__vao = []; loadAdminClubs(); }")
+    page.wait_for_timeout(600)
+    assert len(page.evaluate("() => window.__vao")) == 0                      # tải lại cùng dữ liệu: đứng yên
+    api.create_or_update_club("clb_y", "CLB Y", 10, 0, "")
+    page.evaluate("() => { window.__vao = []; loadAdminClubs(); }")
+    page.wait_for_function("document.querySelectorAll('#adminClubTableBody tr').length >= 2")
+    page.wait_for_timeout(300)
+    assert len(page.evaluate("() => window.__vao")) == 1                      # thêm CLB Y: chỉ hàng Y
+    assert loi == [], loi
+
+
+def test_details_noi_dung_dai_khong_bi_cat_sau_khi_mo(api, mo):
+    page, loi = mo()
+    page.evaluate("""() => { const d = document.createElement('details'); d.className = 'nang-cao'; d.id = 'ux2Dai';
+        d.innerHTML = '<summary>Dài</summary><div id="ux2DaiNd">' + Array.from({ length: 40 }, (_, i) => '<p>Dòng chữ dài số ' + i + ' để thử việc không bị cắt.</p>').join('') + '</div>';
+        document.body.appendChild(d); }""")
+    page.click("#ux2Dai > summary")
+    page.wait_for_timeout(600)
+    st = page.evaluate("""() => { const nd = document.getElementById('ux2DaiNd'); const d = document.getElementById('ux2Dai');
+        const dc = getComputedStyle(d, '::details-content');
+        return { sh: nd.scrollHeight, ch: nd.clientHeight, cao: nd.getBoundingClientRect().height, ovf: dc.overflowY, hdc: parseFloat(dc.height) || 0, ten: dc.animationName }; }""")
+    assert st["sh"] == st["ch"] and st["ovf"] == "visible"                  # nội dung dài không bị cắt, overflow đã trả về visible
+    assert abs(st["hdc"] - st["cao"]) <= 2 or st["hdc"] == 0                  # vùng nội dung cao đủ chứa hết chữ
+    assert page.evaluate("() => { const r = document.querySelector('#ux2DaiNd p:last-child').getBoundingClientRect(); return r.height > 8 && r.bottom <= document.documentElement.scrollHeight + 2; }")
+    assert loi == [], loi
+
+
+def test_o_nhap_trong_hang_55px_khi_ve_lai_khong_co_hieu_ung_truot_de_len_o(api, mo):
+    """Con trỏ / focus trong ô lớp của hàng 55 px: vẽ lại cùng dữ liệu KHÔNG gắn hiệu ứng trượt lên hàng đó (hàng bị dựng lại như
+    hành vi cũ của bảng; L8 không được làm tệ thêm: không transform / opacity phủ lên ô vừa dựng lại)."""
+    _them_hs(api, 6)
+    page, loi = mo()
+    page.evaluate(GHI)
+    _vao_hs_xong(page, 6)
+    assert page.eval_on_selector("#adminStudentTableBody tr", "r => r.offsetHeight") == 55
+    page.click("#adminStudentTableBody tr .lop-sua")
+    page.keyboard.type("10A")
+    page.evaluate("() => { loadAdminStudents(); }")
+    page.wait_for_function("document.querySelectorAll('#adminStudentTableBody tr').length >= 6")
+    page.wait_for_timeout(350)
+    assert len(page.evaluate("() => window.__vao")) == 0
+    st = page.eval_on_selector("#adminStudentTableBody tr .lop-sua", "o => ({ op: getComputedStyle(o.closest('tr')).opacity, tf: getComputedStyle(o.closest('tr')).transform })")
+    assert st == {"op": "1", "tf": "none"}
+    assert loi == [], loi
