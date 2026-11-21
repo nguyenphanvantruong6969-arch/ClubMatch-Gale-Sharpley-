@@ -118,3 +118,15 @@ at the end (acceptable per brief). Empty table + slow API: skeleton rows aria-hi
 with `tat-hieu-ung` animation none; removed when data arrives. Callers unchanged (`hoi` is local, return values kept).
 Not exercised: real rejected API (callApi not on window; code path `hoi.then(ket, ket)` read only), 800-HS timing.
 Related tests passed.
+
+## CHECKER REPORT L8 | reviewed 4b8c532..fef2862
+verdict: 1 BUG
+1. js/00_nen.js:ux2QuanSatBang | repro: admin > Học sinh, 30 rows; call `loadAdminStudents()` again with identical data (what a
+   search keystroke / sort change / language switch does) | expected: no animation (rows are not new). Actual: every
+   re-render adds `.ux2-vao` to the first ≤20 rows (20 rows sliding right after the identical reload; 10 after the
+   language switch; also after sort) -> table flickers on each redraw. Fix: animate only genuinely new rows (keep a
+   Set of row keys per tbody, e.g. first-cell text / data id, from the previous render; add `.ux2-vao` only to rows whose
+   key is new, and skip when the new body has the same keys), or only on the first populate of an empty tbody.
+OK: merge 75f99ed vs origin/main side differs only by UX2 files + CHANGELOG/TIEN_DO; typing in the search box keeps
+focus and text; no animation under tat-hieu-ung (L7 offsetTop change is a metric change, not a loosening: it measures
+the same layout shift). 126 related tests passed (ux2 chuyen_canh/khung, mt1, mt1_bang_loai, ux1_cai_dat, i18n_sync, ws_nhan).
