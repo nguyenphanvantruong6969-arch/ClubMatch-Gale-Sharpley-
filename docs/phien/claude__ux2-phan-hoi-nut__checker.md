@@ -26,3 +26,13 @@ Original bug (btnRun label/spinner on language switch) FIXED. 59 related tests p
 verdict: NO BUGS. icon + data-i18n child span now "Run allocation" after en switch while busy; button's own
 data-i18n-aria-label still updated; 60 related tests passed. Note (non-blocking): a restored CHILD with
 data-i18n-aria-label is not re-translated; no such button exists in index.html/js today.
+
+## CHECKER REPORT L2 | reviewed 0eec401..8348237
+verdict: NO BUGS (2 notes)
+(a) width: all 13 wired buttons, vi+en, ✓ on: +0..+1 px (ceil of minWidth), back to original after; ≤1 px OK.
+(b) NOTE: 18_cai_dat has NO save button wired (its saves are radio/toggle `dat_loai_clb`, `update_workspace_config`; no
+    khiBan/chayNut there). CHANGELOG admits "other save buttons not wired". Plan line says coder lists them: listed OK.
+(c) ✓ + setLang('en') + 2nd click inside 1.2 s: no stale ✓, no stale minWidth (ends ''), text correct. Cosmetic: after
+    lang switch `is-xong` padding/minWidth(vi px) stay up to 1.2 s.
+(d) chayXuat callers without nutXuat (04, 09, 03 others) unchanged path. Related tests: ux2 xong/ban, sg9, chay,
+    i18n_sync, hieu_ung = 69 passed; xuat tests also run.
