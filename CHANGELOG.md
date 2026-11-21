@@ -4,6 +4,7 @@
 
 - `.github/workflows/tests.yml`: Linux 4 → 6 và Windows 2 → 6 phần song song (`chia_test.py`), thêm `cache: pip` (Windows + Linux). Bước chạy lại test hỏng (`--lf`) trên Linux chỉ chạy khi phần đó thật sự có test hỏng cũ (`.github/test_hong_cu.py` mới) — trước đây pytest chạy lại CẢ PHẦN khi test hỏng cũ nằm ở phần khác (mất 8–16 phút mỗi phần).
 - `.github/workflows/build-windows-exe.yml`: job test chia 6 phần song song (trước: 72 phút nối tiếp; mục tiêu cả lượt ~15–17 phút) thay vì chạy nối tiếp cả bộ; job build vẫn chờ cả 4 phần xanh. Không bỏ/giảm test nào.
+- `pytest-xdist` (Truong đồng ý 2026-11-21, chỉ cho test — không vào `requirements-build.txt`): mọi phần CI chạy `-n auto` (4 nhân/máy). `chia_test.py` chia theo thời gian đo (`.github/thoi_gian_test.json`, tạo bằng `.github/do_thoi_gian_test.py`; thiếu thì ước theo kích thước); `--windows` coi 108 tệp giao diện (bị bỏ qua trên Windows) gần 0.
 
 ## 2026-11-21 — MT1-X1-L3 sửa (CI đỏ): số tệp test trong bản đồ mã
 
