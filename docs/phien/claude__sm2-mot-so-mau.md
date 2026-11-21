@@ -3,7 +3,7 @@
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
-Status: PLANNED (Opus, 2026-11-21). Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
+Status: IN PROGRESS (L1 done, Sonnet coder). Protocol: docs/phien/SM2_GIAO_THUC.md (lean, size M-lite)
 
 ## Feature / goal
 Item **SM2 — one sample workbook** (approved by Truong 2026-11-21; tracked in `TIEN_DO.md`, not in the
@@ -31,11 +31,11 @@ button whose workbook always has the full structure + the column dictionary.
 
 ## Plan (Opus writes; Sonnet ticks)
 Lot L1 — no false warnings in FA (#3)
-- [ ] Test first `tests/test_sm2_canh_bao_fa.py`: FA workspace (`rules: fa_daa, wharton`) imports
+- [x] Test first `tests/test_sm2_canh_bao_fa.py`: FA workspace (`rules: fa_daa, wharton`) imports
       `SO_NHAP_MAU_DAY_DU.xlsx` and `SO_NHAP_FA_MAU_120HS.xlsx` → 0 warnings with code `wharton_chua_dung_het`;
       a DQT-only workspace importing a workbook with a blank fund still warns exactly as before (regression).
-- [ ] Fix in `api_nhap.py` at the `_soat_ho_so_wharton` call; same check for health report / Kiểm tra in FA.
-- [ ] `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7.
+- [x] Fix in `api_nhap.py` at the `_soat_ho_so_wharton` call; same check for health report / Kiểm tra in FA.
+- [x] `kiem_nhanh.py --co-so origin/main --so-seed 20` 7/7.
 Lot L2 — one button, full structure (#2)
 - [ ] Test first `tests/test_sm2_mot_so_mau.py`: `tao_so_nhap_mau` in default, DQT and FA workspaces → sheet
       `1. CLB` has every header of `COT_CLB + COT_FA + COT_GIO`, sheet `2. Học sinh` has Lớp, sheet Giữ chỗ
@@ -56,15 +56,16 @@ Lot L2 — one button, full structure (#2)
 - Invariant 1: `kiem_nhanh.py` 7/7. CI green (Tests). No Windows build needed unless Truong asks.
 
 ## Current state
-- Done: plan only. Next: coder L1.
+- Done: L1 (api_nhap skip in FA; list_wharton_canh_bao drops the code in FA; health report already FA-split). Next: L2.
 
 ## Decisions and gotchas
 - `CLAUDE_CHI_TIET.md` counts test files (`370 tệp`); each new test file → update the count (CI checks docs).
 
 ## Files touched
-- (none yet)
+- L1: api_nhap.py, api_quan_ly.py, tests/test_sm2_canh_bao_fa.py, CHANGELOG.md, TIEN_DO.md, CLAUDE_CHI_TIET.md
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-21 | Opus (planner) | Goal, decisions, Plan L1–L2 | no product code |
+| 2026-11-21 | coder | L1 done, kiem_nhanh 7/7 | import warnings live in data.warnings |

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — SM2-L1: chế độ FA không còn cảnh báo `wharton_chua_dung_het` giả
+
+- `api_nhap.py` (`import_preferences_csv`, chỗ gọi `_soat_ho_so_wharton`): bỏ qua khi `dung_fa_daa(luat)`; huy chương FA soát bằng `fa_daa.kiem_ho_so_huy_chuong` / `kiem_fa_tu_csdl`. Trước: 657 cảnh báo khi nạp `SO_NHAP_MAU_DAY_DU.xlsx`, 434 với `SO_NHAP_FA_MAU_120HS.xlsx`; nay 0.
+- `api_quan_ly.py` (`list_wharton_canh_bao`, thẻ Quản lý): ở FA bỏ mã `wharton_chua_dung_het`, các lỗi khác giữ nguyên. Báo cáo sức khoẻ (`api.py`) đã tách nhánh FA từ trước, không sửa.
+- Test mới: `tests/test_sm2_canh_bao_fa.py` (3 ca, gồm ca hồi quy không FA vẫn cảnh báo). `CLAUDE_CHI_TIET.md` (371 tệp test). kiem_nhanh 7/7.
+
 ## 2026-11-21 — Sổ mẫu đầy đủ (dữ liệu mẫu, không đổi mã sản phẩm)
 
 - `du_lieu_test/tao_so_nhap_day_du.py` sinh `du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx` bằng `so_nhap.ghi_so_nhap` (nguồn duy nhất của định dạng): 12 CLB, ba buổi, đủ bốn cột FA (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng), Giờ, Địa điểm; 120 học sinh mô phỏng có Lớp, điểm thi (CLB Tuyển chọn), huy chương 60/30/10; sheet Giữ chỗ (3 dòng); sheet Hướng dẫn thêm bảng "Từ điển cột".

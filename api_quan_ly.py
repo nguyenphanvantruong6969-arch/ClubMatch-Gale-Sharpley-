@@ -971,9 +971,12 @@ class QuanLyMixin:
                 ho_so = self._ho_so_wharton_tat_ca(cur, luat)
                 ten = {r[0]: r[1] for r in cur.execute("SELECT student_id, name FROM students")}
             ra = []
+            # SM2-L1: FA dùng huy chương (soát bằng `fa_daa`), quỹ không phải tiêu hết.
+            bo_ma = {"wharton_chua_dung_het"} if dung_fa_daa(luat) else set()
             for sid in sorted(set(ho_so["loi"]) | set(ho_so["vang_thi"])):
-                if ho_so["loi"].get(sid):
-                    ma = list(dict.fromkeys(e["code"] for e in ho_so["loi"][sid]))
+                ma = list(dict.fromkeys(e["code"] for e in ho_so["loi"].get(sid) or []
+                                        if e["code"] not in bo_ma))
+                if ma:
                     ra.append({"student_id": sid, "name": ten.get(sid, sid),
                                "loai": "chua_hop_le", "ma_loi": ma})
                 if ho_so["vang_thi"].get(sid):
