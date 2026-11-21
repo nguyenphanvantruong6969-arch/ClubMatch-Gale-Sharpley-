@@ -32,6 +32,9 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
   `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers .venv/bin/python -m pytest -q tests/test_giao_dien_*.py tests/test_*ux2*.py`
   -> output in the scratchpad file full.txt (ends with a line "done"). It takes ~20+ min. A fresh session may have lost that file:
   then just rerun it. The L9 spec says: run it ONCE and report.
+- Lead confirmed (09:02): continue L9 from this file; report "CODER DONE L9 | base 816e92c head <sha>" with sweep pass/fail counts and the list of the 14 re-shot PNGs
+  (01_trang_dau, 02_co_dl_admin, 02_co_dl_chua_co_cho, 02_co_dl_fallback, 02_co_dl_others, 02_co_dl_results, 03_tra_cuu_HS004, 05_sau_chon_tep,
+  06_sau_nhap, 07_sau_chay, 08_tieu_chi, 09_gvcn_ket_qua_lop, 10_ws_menu, 11_cai_dat).
 - Still TO DO for L9: (1) read the sweep result and fix real failures (test first); (2) `.venv/bin/ruff check .`;
   (3) `.claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so origin/main --so-seed 20` must be 7/7; (4) tests/test_a13_12_tai_lieu.py,
   test_vi_du_huong_dan.py, test_giao_dien_tieng_viet_sach.py (docs tests, were green); (5) amend CHANGELOG line "kết quả trong báo cáo L9"
@@ -94,3 +97,4 @@ schema change (invariants 1, 6, 7). I do lots L1..L9 on lead's "GO L<n>" / "FIX"
 | 2026-11-21 | Sonnet (coder) | L8 smooth transitions built + reported; merged origin/main (MT1); handoff refreshed | head fef2862 |
 | 2026-11-21 | Sonnet (coder) | L8 fix1 (animate only genuinely new rows) reported; handoff refreshed | head a71baec |
 | 2026-11-21 | Sonnet (coder) | L9 docs + 14 screenshots + code map written, WIP-committed; full UI sweep running; handoff (hook fired mid-L9) | WIP, see git log |
+| 2026-11-21 | Sonnet (coder) | handoff refreshed again (hook); full UI sweep still running, nothing else changed | head 21c488c |
