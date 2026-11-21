@@ -68,3 +68,9 @@ fix clears everything; repeated submit -> 1 `.loi-o`; no shake under `tat-hieu-u
 focus first invalid, `.loi-o` does not cover btnSaveClub; capacity 0 -> inline "Quota must be more than 0."
 (mapped code exists in i18n_errors + api_quan_ly); no api*/i18n_errors change; 82 related tests passed.
 Not exercised by me: giao_vien score input, 800 HS table row shift.
+
+## CHECKER REPORT L4 fix1 | reviewed 1b8d0a7..26a1d96
+verdict: NO BUGS. Score tab, row1 "abc" (error) + row2 "55" (unsaved valid): after setLang en / 2 quick switches / vi,
+row1 keeps the typed INVALID value + exactly 1 `.loi-o` with text in the current language (also title); row2 keeps
+55 (no error); fixing row1 clears the error; removing the errored row then switching language: no exception, other
+row intact. Club form text refresh covered by the new test. Related tests passed.
