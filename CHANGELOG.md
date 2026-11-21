@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-21 — Sổ mẫu đầy đủ (dữ liệu mẫu, không đổi mã sản phẩm)
+
+- `du_lieu_test/tao_so_nhap_day_du.py` sinh `du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx` bằng `so_nhap.ghi_so_nhap` (nguồn duy nhất của định dạng): 12 CLB, ba buổi, đủ bốn cột FA (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng), Giờ, Địa điểm; 120 học sinh mô phỏng có Lớp, điểm thi (CLB Tuyển chọn), huy chương 60/30/10; sheet Giữ chỗ (3 dòng); sheet Hướng dẫn thêm bảng "Từ điển cột".
+- Kiểm: nạp ở workspace bật FA rồi chạy xếp: 120/120 em có chỗ. Workspace thường: các cột FA và Giữ chỗ bị bỏ qua kèm cảnh báo; chạy bị chặn vì cột huy chương được đọc như điểm quyết tâm (giống sổ `SO_NHAP_FA_MAU_120HS.xlsx` sẵn có).
+- Test mới: `tests/test_so_mau_day_du.py` (2 ca). `HUONG_DAN_SU_DUNG.md` (mục cột FA), `CLAUDE_CHI_TIET.md` (370 tệp test).
+
 ## 2026-11-21 — UX2-CI1: `<details>` mở nhẹ, KHÔNG cắt nội dung (sửa test đỏ trên CI)
 
 - Lỗi (CI run 44887663728, shard 1/6): `test_giao_dien_ux2_nut.py::test_bam_chuot_vao_o_tick_xuat_khong_kich_nut_xuat[quan_tri|giao_vien]`: bấm chuột thật vào ô tick ngay sau khi mở mục "Nâng cao" không bật ô. Chẩn đoán: hoạt ảnh mở của L8 (`block-size` 0 → auto + `overflow: hidden` trên `::details-content`) cắt phần nội dung chưa mở tới khỏi hit-test; đo `elementFromPoint` tại tâm ô: ô chỉ trúng sau ~20 đến 36 ms. Máy CI chậm thì cú bấm đầu rơi vào khoảng đó. Đây là lỗi SẢN PHẨM (bấm ô trong ~30 ms đầu bị hụt), không chỉ lỗi test.

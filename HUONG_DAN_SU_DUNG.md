@@ -1174,6 +1174,11 @@ Trang **Giữ chỗ** (tuỳ chọn): mỗi dòng một cặp *Mã CLB*, *Mã h�
 CLB nào trong ngày được đưa vào CLB Tự do ít người nhất.
 
 Không gian làm việc chưa bật chế độ này thì các cột trên bị bỏ qua (có một cảnh báo), dòng CLB vẫn được nạp.
+
+**Sổ mẫu đầy đủ:** `du_lieu_test/SO_NHAP_MAU_DAY_DU.xlsx` điền sẵn MỌI cột phần mềm đọc được (Loại, Điểm sàn,
+Tối thiểu, Sức chứa phòng, Giờ, Địa điểm, Lớp, Huy chương, sheet Giữ chỗ) cho 120 học sinh mô phỏng, ba buổi.
+Sheet **Hướng dẫn** có bảng *Từ điển cột*: cột nào bắt buộc, dùng ở chế độ nào, giá trị hợp lệ. Sinh lại bằng
+`python du_lieu_test/tao_so_nhap_day_du.py`.
 Bật rồi thì ở thẻ **Quản lý**, bảng CLB có thêm các cột Loại, Điểm sàn, Tối thiểu, Sức chứa phòng, Giữ chỗ.
 
 ### Huy chương (thẻ Nhập nguyện vọng, bước 3)
