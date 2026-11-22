@@ -1,0 +1,1339 @@
+ma,ngay,tac_gia,gop_nhanh,so_tep_doi,tieu_de
+3a70029,2026-11-21,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #27 from nguyenphanvantruong6969-arch/claude/sm2-mot-so-mau
+69edbdd,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,SM2: log Truong decision (no custom-vocabulary dictionary)
+b4a1dab,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,SM2: Status DONE 8839a2a CI green
+8839a2a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,SM2-CI1: record deliberate import_hint text change in UI-string snapshot test
+28c70c2,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,SM2: checker recheck of FIX1 (no bugs)
+3a7c44f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,SM2-FIX1: column dictionary only for default school vocabulary (checker bug 1)
+ff08a62,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,SM2: checker verdict (1 vocabulary bug)
+cd00b62,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,SM2: branch file READY FOR REVIEW 4376750
+4376750,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,21,"SM2-L2: one sample-workbook button, workbook always has full structure + column dictionary"
+b3dd75a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,7,SM2-L1: no false wharton_chua_dung_het warnings in FA workspaces
+04f10b2,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,SM2: base branch = claude/ux2-phan-hoi-nut (Truong option A: plans stay off main until reviewed)
+4e4dc11,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+dfbafed,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,"UX2: lead final review (UX2_DANH_GIA.md, 3 screenshots), Status DONE"
+2e0bc1f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,"SM2: plan (branch file + lean protocol), TIEN_DO row"
+657ef8e,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,7,SO-MAU: full sample workbook (every column + column dictionary) and its test
+92d40d4,2026-11-21,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #25 from nguyenphanvantruong6969-arch/claude/ux2-phan-hoi-nut
+a230b30,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,CLAUDE.md rule 12: punctuation
+bb380e9,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,"Process: lean protocol template (_GIAO_THUC_GON.md), UX2 lean mode §10, CLAUDE.md rule 12 pointer"
+fd1c5a7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: CI-1 report
+b252032,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff after CI-1
+21de7b7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+c827295,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX2-CI1: details mở nhẹ không cắt nội dung (sửa test bấm ô tick đỏ trên CI)
+d12fbb7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L9 passed; CI gate started
+9e7e664,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L9 report
+640e644,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff after L9 (all lots done)
+dd8887b,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,"UX2-L9: kiểm chứng xong (810 test UI qua, ruff sạch, kiem_nhanh 7/7)"
+ca7bb6e,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff refreshed (L9 verification pending)
+21c488c,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,20,"UX2-L9 (WIP, kiểm chứng chưa xong): hướng dẫn, bản đồ mã, 14 ảnh chụp lại, handoff"
+816e92c,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L8 passed
+be7c736,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+6011a77,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L8 fix1 report
+8365b24,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: Needs Truong — pre-existing caret loss in admin student table
+cb1cb09,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff refreshed after L8 fix1
+a71baec,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX2-L8 fix1: chỉ hàng thật sự mới trượt vào (khoá hàng tích luỹ theo bảng)
+80369da,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L8 report
+000329b,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff refreshed after L8
+fef2862,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,8,"UX2-L8: chuyển cảnh mượt (hàng trượt vào, details mở theo chiều cao)"
+75f99ed,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge origin/main into claude/ux2-phan-hoi-nut (giữ cả hai phía CHANGELOG/TIEN_DO)
+4b8c532,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L7 passed
+873ea82,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+0a491e5,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L7 report
+0854b27,2026-11-21,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #23 from nguyenphanvantruong6969-arch/claude/mt1-bang-loai-clb
+eae3919,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff refreshed after L7
+b00b9e3,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,9,UX2-L7: khung chờ (skeleton) cho bảng đang tải
+450bde4,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L6 passed
+b76ed35,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L6 fix1 report
+e029c64,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff refreshed after L6 fix1
+788709f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,8,"UX2-L6 fix1: hộp rỗng theo vai (giao_vien nhờ quản trị viên), tên thẻ lấy từ nav"
+72f46a6,2026-11-21,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #24 from nguyenphanvantruong6969-arch/claude/mt1-xuat-so-nhap-loai
+61c471f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+21e5e5c,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L6 report
+44d85cb,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: coder handoff file (impl)
+291deb8,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,12,UX2-L6: trạng thái rỗng có hướng dẫn + một nút chính
+d1dd055,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L5 passed
+3c7b1b3,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L5 fix1 report
+079ae85,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,UX2-L5 fix1: sao lưu hỏng nhưng chạy thành công = Cảnh báo (không phải Lỗi)
+1f75987,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L5 report
+0690c2f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: handoff — PRs #23, #24 opened"
+7b703e4,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,10,UX2-L5: 4 pha tiến trình (chỉ hiển thị)
+bd4fb51,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: handoff note on PR recommendation
+5727cc5,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L4 passed
+fae13d3,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L4 fix1 report
+26a1d96,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,8,UX2-L4 fix1: chữ lỗi tại ô theo ngôn ngữ khi đổi ngôn ngữ
+a15a5c1,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L4 report
+1b8d0a7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,10,UX2-L4: lỗi ngay tại ô nhập (baoLoiTaiO/xoaLoiTaiO/baoLoiForm)
+8bb0a2a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L3 passed
+c6ba2b0,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L3 fix2 report
+2a05e8f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX2-L3 fix2: ô nhập nằm trên vùng bấm ::after của nút (không bị cướp cú bấm)
+c7f551e,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L3 report
+7f8b2f4,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux2-phan-hoi-nut' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux2-phan-hoi-nut
+f1a32c2,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,"UX2-L3 fix1: nav-item 44 px, nhóm/bảng/danh sách ≥ 24 px (test)"
+aec445d,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead decision on L3 hit-area exemptions
+f4055dc,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,"UX2-L3 (WIP, test rộng đang chạy lại): sửa chồng vùng bấm trong danh sách dày, đo offsetWidth, tài liệu"
+69c1112,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: handoff (state, next steps, CI decisions)"
+ae10c26,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"UX2-L3 (WIP, chưa báo xong): vùng bấm 44 px, vòng focus, lớp trạng thái"
+44e7677,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: status L3
+3179d40,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L2 passed
+e717f68,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L2 report
+8348237,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,11,UX2-L2: dấu ✓ sau khi lưu / xuất xong (nutDaXong)
+ac54309,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,CI: CI-measured per-file timings (Linux + Windows); Windows 9 shards to fit ~15 concurrent jobs
+0eec401,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead marks L1 passed
+5f31ebd,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L1 fix2 report
+9169da5,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX2-L1 fix2: dịch lại con [data-i18n] sau khi khôi phục nút bận
+02bb4c6,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L1 fix1 report
+f1eef14,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"UX2-L1 fix1: đổi ngôn ngữ lúc nút bận giữ vòng xoay, trả nhãn đúng ngôn ngữ"
+abe72c8,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2 checker: L1 report
+9e9bbdc,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,8,UX2-L1: nút đang bận + chống bấm đúp (datNutBan)
+6bcafff,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,CI: per-OS measured timings (thoi_gian_test_windows.json); each job prints per-file times from JUnit for re-balancing
+d4f7427,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX2: lead records coder/checker session ids
+4f9f878,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX2: lead start, Sessions table + Needs Truong list"
+6d38c70,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,CI: Windows 12 shards (xdist gives little on Windows runners); serial step accepts exit 5 when all its files skip on Windows
+9a6d55e,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,CI: measured per-file timings (thoi_gian_test.json); shard weights account for xdist speed-up
+5bad470,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"CI: timing-sensitive tests (Chromium UI + speed thresholds) run serially, rest under xdist; coverage appended"
+192cef3,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"UX2: plan (branch file + lead/coder/checker protocol), TIEN_DO + CHANGELOG rows"
+d366cf0,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"CI: pytest-xdist -n auto in every shard (Truong approved; test-only, not in build reqs)"
+56c0084,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"CI: chia_test balances by measured time (thoi_gian_test.json, size fallback); --windows weighs playwright-skipped files ~0"
+f3607d7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,CI: tests.yml Linux and Windows in 6 parallel shards each
+c5ab69a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,"CI: build-windows-exe tests in 6 parallel shards (target ~15-17 min total, all tests kept)"
+86180d3,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,CI: Windows tests 4 shards + pip cache; Linux --lf step only reruns its own failures; build-exe tests sharded
+b655582,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: Status DONE, CI green"
+6ba1b78,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: checker verdict FIX L3 (no bugs)
+3b05c35,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,MT1-X1-L3 fix: bản đồ mã đếm đúng 360 tệp test
+9f54f8c,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: lead §5 final check (FA 240 rows, normal 360 rows identical)"
+8c83d0f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: lead ticks L3 (checker NO BUGS), D5 result"
+829205e,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: checker verdict L3 (no bugs)
+902dcbb,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,MT1-X1-L3: kiểm chứng D5 (3 bộ trùng khít) + docstring export_du_lieu_dau_vao
+bb2ba9b,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: lead ticks L2 (checker NO BUGS)
+a8d9506,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: checker verdict L2 (no bugs)
+2fd73ce,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,MT1-X1-L2: sheet Giữ chỗ + khứ hồi đầy đủ (cổng D2)
+a39687f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: lead ticks L1 (checker NO BUGS)
+220e1b2,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: checker verdict L1 (no bugs)
+2ea9193,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,MT1-X1-L1: Sổ nhập xuất mang cột FA của CLB (cổng D1)
+f809b3f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-X1: record coder/checker session ids
+fc740df,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1-X1: lead starts, Status IN PROGRESS, Sessions table"
+ebdaa1a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,MT1-X1-KH: plan + lead/coder/checker protocol for Sổ nhập export of FA club fields and Giữ chỗ
+05783a7,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,MT1: test đồng bộ loại CLB / điểm sàn; ghi lại lỗ hổng xuất Sổ nhập thiếu cột Loại
+d3e236a,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,5,MT1: chữ i nhỏ giải thích mục đích từng loại CLB (hover/focus)
+87c59e0,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: bỏ xưng hô cấm trong câu giải thích loại Tự do (soat-ma chu_cam)
+70439b4,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,8,"MT1: dựng lại khối đặt loại CLB thành bảng (trạng thái chọn, điểm sàn tại dòng, buổi cần CLB Tự do, bộ đếm)"
+6c97791,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,3,MT1: đặt loại CLB tại chỗ làm tươi bảng CLB và thanh Việc tiếp theo
+c8e069f,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,4,"MT1: sửa mô tả thẻ 'Theo năng lực' cho đúng thứ tự xếp (điểm thi, điểm quyết tâm, bốc thăm)"
+a843a9f,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1: DONE — CI green, final summary"
+264ce63,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1: branch file state (CI nearly green, Needs Truong: exe build)"
+49950fa,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: CI-fix2 NO BUGS
+a2b2b34,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,"MT1 CI-fix2: khối mục tiêu ẩn tới khi có dữ liệu, bỏ phản hồi cũ về muộn"
+4ab12fc,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: CI-fix1 NO BUGS
+37e4bca,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,4,MT1 CI-fix1: đăng ký mã mt_ ở ảnh chụp lỗi; danh sách cảnh báo đợi thanh Việc tiếp theo
+51ba743,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,"MT1: §5 lead review (MT1_DANH_GIA.md), branch file update"
+dc7650f,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: fix3 NO BUGS
+b1e1101,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,9,MT1 fix3: rời Cơ hội như nhau trả lại Chia 100 điểm; câu hỏi đầu chạy theo thẻ
+6c4950d,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,6,"MT1: §5 review screenshots (2 problems found, fixes in progress)"
+c9c5dbf,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L4 fix2 NO BUGS
+dd81704,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,4,MT1-L4 fix2: Dành chỗ nhiều nhóm chỉ ở trạng thái chờ cho tới khi bấm nhóm
+298dc0f,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,5,"MT1: §5 review screenshots (WIP), Needs Truong: default Chia 100 on data without points"
+8ef42f6,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: tick L5; CI gate starts
+a1a4b90,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,2,MT1-L5 fix1: hướng dẫn nói đúng khi nào có nút Về mục tiêu mẫu
+4a02546,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/mt1-bo-muc-tieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/mt1-bo-muc-tieu
+6764bcb,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L5 verdict
+86aabfe,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: coder handoff file after L5
+6eed91a,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,"MT1-L5: hướng dẫn ""Chọn mục tiêu"", CHANGELOG, TIEN_DO"
+80bc0d3,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L4 fix1b NO BUGS
+3b9ee61,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: tick L4
+a282118,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/mt1-bo-muc-tieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/mt1-bo-muc-tieu
+558f012,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L4 fix1 NO BUGS
+89f63ce,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: coder handoff file after L4 fix1b
+da5d291,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,5,MT1-L4 fix1b: câu cảnh báo không có khoảng cách theo lời lead
+3a92d7d,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: coder handoff file after L4 fix1
+954d0e5,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,9,"MT1-L4 fix1: dòng 0/0 nói kết quả, ghi chú ở trình tạo workspace, thông báo cũ bị thay, câu cảnh báo rõ hơn"
+71105f6,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L4 addendum
+57586df,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/mt1-bo-muc-tieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/mt1-bo-muc-tieu
+29b01ec,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L4 verdict 2 BUGS
+5e06589,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: coder handoff file updated after L4
+3715bd8,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,7,"MT1-L4: giao diện ba thẻ mục tiêu (câu hỏi thứ hai ở Cài đặt, dòng kết quả), ảnh trước/sau"
+3176b3c,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,15,"MT1-L4 (WIP, chưa soát): giao diện ba thẻ mục tiêu + handoff"
+a563622,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: tick L3
+b8ce6f4,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L3 fix2 NO BUGS
+859d9c3,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1-L3 fix2: test rò rỉ bỏ cột thời gian của dấu vân tay
+e02b83c,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L3 fix1 verdict
+7da70ad,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,MT1-L3 fix1: báo cáo không so sánh khi thiếu chỗ giữ ban đầu
+6159eb2,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L3 verdict 1 BUG
+f45708a,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,12,"MT1-L3: ước tính và dòng kết quả của thẻ mục tiêu (chỉ đọc, ẩn số 1–4)"
+2734cf7,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: tick L2; record co_hoi/wharton deviation
+50ae468,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L2 verdict NO BUGS
+bd93958,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,14,"MT1-L2: API ba thẻ mục tiêu (get/chon/hoan_tac, một giao dịch, chỉ quản trị)"
+0a89219,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1: tick L1
+84756ad,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,MT1 checker: L1 verdict NO BUGS
+6909f06,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,5,"MT1-L1: danh mục ba thẻ mục tiêu (muc_tieu.py, phần thuần)"
+016f613,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1: sessions table (coder, checker)"
+4984882,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,1,"MT1: lead started; status, sessions, needs-Truong filled"
+4373a46,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,2,MT1: branch is created by the planning session; lead prompt updated
+4dab8bf,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,"MT1 plan rev. 2: UI-first, 3 goal cards, click budget, UI contract (docs only)"
+d96a248,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,3,MT1: plan and protocol for default goal presets (docs only)
+5a711d9,2026-11-20,Claude Code (theo yêu cầu và duyệt của Truong),,4,"MT0: research on goal-adjustable allocation (simulation + memo, no production code)"
+30cd849,2026-11-20,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #21 from nguyenphanvantruong6969-arch/claude/ux1-tich-hop
+2d1a547,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-tich-hop' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-tich-hop
+4beb03e,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I: coder handoff
+49fe99f,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I: checker handoff
+a9266db,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1I-I4: Status DONE (CI green f8ee571, Windows build green), final summary"
+f8ee571,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I4: checker verdict I4 fix1 (NO BUGS)
+b0b357c,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,2,UX1I-I4 fix1: bản đồ mã ghi đúng 353 tệp test và hàm PDF mới
+147fdbb,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,12,UX1I-I4: user-view review UX1_DANH_GIA_TICH_HOP.md + screenshots + measuring script (simulated data)
+6a631ce,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I3: lot passed (checker NO BUGS after fix1)
+0619ab5,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I3: checker verdict I3 fix1 (NO BUGS)
+b2f7f8b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX1I-I3 fix1: cột Buổi của Báo cáo tổng hợp không in mã __mac_dinh__
+d97bc8f,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1I-I3: checker round 1 (1 low bug), Needs Truong 4-5"
+3014ac3,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I3: checker verdict I3 (1 low bug)
+5f27391,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,11,"UX1I-I3: phiếu PDF đủ cột Huy chương, giáo viên in phiếu lớp và báo cáo tổng hợp PDF"
+944b111,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,UX1I-I3: merge origin/claude/ux1-b-phieu
+91d5f1a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I2: lot passed (checker NO BUGS)
+c9b9c89,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I2: checker verdict I2 (NO BUGS)
+9a4faca,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,8,UX1I-I2: gộp menu Xuất PDF của XP1 vào menu Xuất… của A
+c618629,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder handoff final (UX1B done)
+b510dbf,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1B: Status DONE eac69df, CI green; final summary"
+4f4a79b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I: state after I2 merge
+66766a9,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge origin/claude/xp1-xuat-pdf (f7f1db6) into claude/ux1-tich-hop (UX1I-I2)
+f7f1db6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"XP1 lead: Status DONE (CI green aec7351), L5 ticked, final summary"
+eac69df,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,6,UX1B §6: user review UX1_DANH_GIA_B.md + screenshots (simulated data)
+4e8a813,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: state after review fixes R1
+385f5f6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict R1 fix2 (no bugs)
+f58df43,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+4d74fa8,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,5,"UX1B R1 fix2: mức vào được FA lấy từ dòng bị từ chối đã lưu, an toàn với chỗ giữ riêng"
+cb7ed01,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict R1 (1 bug)
+0185d9d,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,10,"UX1B R1: mức vào được ở chế độ FA, một câu lý do MEDAL, sửa nhãn báo cáo tổng hợp"
+775f669,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX1B CI-1: chữ dự phòng nhóm Cài đặt và quản lý khớp i18n.js
+898e430,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L5 fix3 verdict
+aec7351,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+0a62915,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,4,XP1 lead: final user-view review (XP1_DANH_GIA.md + 3 PDF screenshots)
+71e2a86,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1B: tick L8-B, start CI gate"
+b17aec5,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+dd521f4,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L8-B (no bugs)
+bffe50d,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder handoff refresh after L8-B
+b960b60,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,11,"UX1B-L8-B: tài liệu phiếu và báo cáo tổng hợp, ảnh phiếu, bảng Sau, bản đồ mã"
+90ee9aa,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: tick L5c
+62bb1bc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+45c27a3,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L5c fix1 (no bugs)
+be0b460,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder handoff refresh after L5c fix1
+f3ff065,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,11,"UX1B-L5c fix1: chỉ gộp khi cả sổ sai, bỏ ví dụ rỗng, giữ dòng đỏ riêng tư"
+4fab482,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+e106932,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L5c (1 bug)
+d14255b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder handoff log row
+903bffa,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder handoff file
+276616b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,24,"UX1B-L5c: năm đề xuất của UX1_DANH_GIA_A §4 (cảnh báo huy chương gộp, sửa tại chỗ, Sau khi xếp, khung tra cứu, tên nhóm)"
+81f26e9,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,5,"XP1-L5 fix3: cột STT đủ rộng, đếm em không đếm lượt, tiêu đề viết hoa chữ đầu"
+2f5f18b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+4259688,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L5 fix verdict
+c68076a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,2,XP1-L5 fix2: tạm dừng đo độ phủ trong đoạn bấm giờ hiệu năng
+78e3bff,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: tick L7
+b17809f,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L7 fix2 (no bugs)
+fc5e9fc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX1B-L7 fix2: bộ chọn ô bảng giải trình theo vị trí cuối
+4e76429,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L7 fix1 (1 stale selector)
+79c8e45,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,6,UX1B-L7 fix1: lý do MEDAL không nói bằng điểm ở CLB không thi; phản hồi học sinh bỏ seed
+89a11b4,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L7 (1 minor bug)
+823e560,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,15,"UX1B-L7: nội dung phiếu giải trình (tóm tắt, điểm đã thi + SVG, việc tiếp theo, huy chương)"
+8f37d9d,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I1: lot passed (checker NO BUGS)
+6d16bb6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I-I1: checker verdict I1 (NO BUGS)
+dac41dd,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-tich-hop' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-tich-hop
+58bc378,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,2,UX1I-I1: CHANGELOG/TIEN_DO sau khi gộp nhánh A
+5f8380d,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I: state after I1 merge
+5f9767a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge remote-tracking branch 'origin/claude/ux1-a-giao-dien' into claude/ux1-tich-hop
+90a4da1,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1I: coder/checker sessions
+ae8d4dd,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1I: lead started, Sessions table"
+11b6ce4,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: tick L4-B
+a4ac26f,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B checker: verdict L4-B (no bugs)
+0f73c43,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,12,UX1B-L4-B: Báo cáo tổng hợp (HTML) và khối chọn lớp ở thẻ Kết quả
+dc4cff7,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,2,"UX1 tích hợp: giao thức I1–I4 (A + XP1, rồi B) và tệp nhánh"
+768cbcb,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branches 'claude/ux1-a-giao-dien' and 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+e5ea720,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-b-phieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-b-phieu
+217b9bc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: coder ready state
+0100cd7,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1B: child sessions in Sessions table
+0626c27,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1B: lead session started, Sessions table"
+1c0b48c,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,"XP1-L5 fix: ngưỡng hiệu năng theo nền tảng, nhãn đúng trong hướng dẫn"
+7e657e9,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L5 verdict
+380f532,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 lead: Needs Truong Windows build publishes release
+7125881,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+300f7bc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+2b42e89,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"XP1 lead: L4 passed checker, CI green 56e55ff"
+9fb4344,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,8,"XP1-L5: hướng dẫn Xuất PDF hàng loạt, kiểm phông trong bản đóng gói, đo hiệu năng 800 em"
+9f72266,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L4 verdict
+56e55ff,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+fb6bccc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+50a699a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"XP1 lead: L3 passed checker, CI green a5b610e"
+25582fd,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,8,"XP1-L4: menu Xuất PDF… (danh sách theo CLB/lớp, phiếu giải trình theo lớp) chỉ cho quản trị"
+72bf59a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L3 verdict
+ce4e507,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-a-giao-dien' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+a5b610e,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+952e0e6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+d32ebcf,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+a32e5d5,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"XP1 lead: L2 passed checker, CI green b5987b6"
+7217c8c,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,10,XP1-L3: danh sách thành viên PDF theo CLB và theo lớp
+a1523b8,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L2 verdict
+b5987b6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,2,"XP1-L2 fix: bản đồ mã ghi 342 tệp test, thêm xuat_pdf.py"
+0bc2026,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: note team B re-scope (§10); waiting
+396509b,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"CLAUDE.md: quy tắc 12, chiến lược triển khai (Opus lập kế hoạch, lead/coder/checker; luôn trả tên nhánh + prompt)"
+d6216bf,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,7,XP1-L2: phiếu PDF một học sinh (student_ids) và nút Lưu PDF ở khung tra cứu
+efa49a5,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/xp1-xuat-pdf' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/xp1-xuat-pdf
+bbe051c,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,15,"XP1-L2: phiếu giải trình PDF theo lớp, có loại CLB"
+2524332,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1: thêm PDF phiếu một em (thay UX1B-L6); ghi thứ tự gộp A → B → XP1
+80168bc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,"UX1B: đổi phạm vi (bỏ L6 và loại CLB của L7 sang XP1, thêm L5c), nhánh từ UX1A dd43bdc, prompt lead"
+1863f34,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 lead: L1 passed checker
+01fc2af,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L1 fix1 verdict
+d56c913,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,3,"XP1-L1 fix1: ca mức byte luôn chạy, bỏ pypdf khỏi requirements-dev"
+1d949ea,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 lead: Needs Truong pypdf
+031c0d6,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 checker: L1 verdict
+446c362,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,10,"XP1-L1: lõi PDF (xuat_pdf.py, phông Be Vietnam Pro TTF, reportlab)"
+1444d12,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,XP1 lead: session ids
+afac17e,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge remote-tracking branch 'origin/claude/ux1-a-giao-dien' into claude/xp1-xuat-pdf
+d6b43fb,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"XP1 lead: Status, Sessions, Needs Truong in branch file"
+dd43bdc,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A: Status DONE, CI green 9fbdfdf; waiting for team B"
+9fbdfdf,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/ux1-a-giao-dien' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/ux1-a-giao-dien
+90886a7,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,7,UX1A: user-perspective review UX1_DANH_GIA_A.md + screenshots
+567e0c5,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A checker: L2b fix3+fix4 verdict NO BUGS (local, push after CI)"
+46a048a,2026-11-19,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L2b fix2 NO BUGS
+0f0b813,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,2,XP1: giao thức 3 phiên (lead/coder/checker) và prompt
+8c85921,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,2,XP1: kế hoạch xuất PDF hàng loạt (tệp bàn giao + TIEN_DO)
+66f9ffb,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,4,UX1A-L2b fix4: một lần gọi get_data_health_report lúc khởi động; SUA_CO_Y khớp câu health_oversubscribed_buoi
+5f3e238,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,6,"UX1A-L2b fix3: sửa CI #1013 (lỗi JS 'rules', nhãn nhật ký dat_loai_clb, văn phong, import_hint)"
+d2aeaee,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,2,"UX1A-L2b fix2: huy_chuong_sai trong get_san_sang_huy_chuong, ẩn hành động vô nghĩa, Hoàn tác dễ đọc"
+83e1e3d,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,7,"UX1A-L2b fix2 (WIP): Sẵn sàng nói đúng khi huy chương sai, ẩn hành động vô nghĩa, Hoàn tác dễ đọc"
+64bc133,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A: tick L8-A; all lots done, CI gate"
+3d421e2,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L8-A fix1 NO BUGS
+56ff91d,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file: L8-A fix1
+326dbc6,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,2,UX1A-L8-A fix1: số em chưa có chỗ của sổ mẫu = 32; poster vào Needs Truong
+46d81a5,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L8-A verdict (1 doc bug)
+d09138d,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file: L8-A done
+ad569c2,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,32,"UX1A-L8-A: tài liệu, ảnh chụp, bảng Sau đo được"
+c2c7a30,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L5b
+d9605ec,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L5b verdict NO BUGS
+9e4758e,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file: L5b done
+4cae05b,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,3,UX1A-L5b: ô huy chương nhận Vàng/Bạc/Đồng ở lớp đọc
+a657f10,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,6,"UX1A-L5b (WIP): Vàng/Bạc/Đồng ở lớp đọc, sổ mẫu huy chương, ẩn nút khi không có workspace"
+1ec7b23,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L5
+576ad3f,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L5 verdict NO BUGS
+3dc890a,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file: L5 done
+764c85c,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,6,"UX1A-L5: cảnh báo medium, sổ huy chương sai chế độ + nút bật, hai sổ mẫu"
+478e28e,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file: L5 state
+1dad3c6,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,12,"UX1A-L5 (WIP): cảnh báo medium, sổ huy chương sai chế độ, nút bật, hai sổ mẫu"
+bc71013,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L3
+2a226e0,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L3 fix1 NO BUGS
+5673dc4,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A coder handoff file
+3ba1efe,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,6,"UX1A-L3 fix1: xoá dòng lỗi nạp sổ cũ, nút phụ Xuất ở trạng thái Xử lý"
+441b0f9,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A checker: L3 verdict (1 minor bug, 1 observation)"
+e812cf3,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,4,"UX1A-L3 (WIP 2): sửa test theo menu Xuất…, CHANGELOG/TIEN_DO"
+e8436b6,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,14,"UX1A-L3 (WIP): tra cứu lên đầu Kết quả, menu Xuất…, thông báo nạp sổ một lần"
+275a459,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L2b
+c2aff36,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L2b verdict NO BUGS; condense file
+e3d0382,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,3,"UX1A-L2b (WIP 3): CHANGELOG/TIEN_DO, nhóm điều hướng theo thuộc tính"
+835a04c,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,14,"UX1A-L2b (WIP 2): sửa test cũ theo ba thẻ, sửa trùng id wzLoi"
+c690e84,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,14,"UX1A-L2b (WIP): trang Cài đặt ba thẻ, sửa tại chỗ, hành động sau khi xếp"
+7bb6a9b,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L2
+89efe2a,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L2 verdict NO BUGS
+0ded385,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,12,"UX1A-L2: thanh bên 4 nhóm, mục Nâng cao trong Cài đặt"
+ab1bd16,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A: tick L1
+02f0a62,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,UX1A checker: L1 verdict NO BUGS
+ebf24cd,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,11,UX1A-L1: thanh Việc tiếp theo (#viecTiepTheo)
+016ae66,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A: sessions table (coder, checker)"
+cd4f64a,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,"UX1A: create branch, lead session in Sessions table"
+407e62c,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,5,"UX1: two-team automation protocol and branch files (A screens/settings, B slip/PDF/report)"
+228666f,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,3,"UX1: redesign L2b settings (one question, three cards, instant save + undo)"
+169fbb1,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,6,"UX1: settings screen audit (§7) and plan L2b (one live settings screen, one Save)"
+548f094,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,4,UX1: keep default config; plan L5 one-click medal mode + L5b medal words (audit §6b)
+224c558,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,4,UX1: medal/club-type check (audit §6) and plan update (slip shows medal + type in FA mode)
+e788b19,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,2,UX1: implementation plan (lots L1-L9) and handoff file for claude/ux1-giao-dien
+c21a334,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,7,UX1a: re-shoot audit on the merged GT4 UI
+efce9d1,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt-tich-hop' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt-tich-hop
+f2c4e54,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,15,"UX1a: audit of user interaction (click counts, issues, plan UX1b/UX1c)"
+e60b9b8,2026-11-18,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #20 from nguyenphanvantruong6969-arch/claude/gt-tich-hop
+2b97c6f,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4 test fix: wait for the tab colour transition before comparing
+89d5921,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,17,"GT4 fix 2: checker's minor notes (L2, L3, L5, L6, L7) + gate"
+293864d,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,14,"GT4 fix: B1-B3, OL1, OL2 and CI test failures"
+2d6eecf,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4 checker: handoff state
+1bb36eb,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4 checker: L3-L7 verdicts
+975ec84,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT4 checker: L1, L2 verdicts"
+0781521,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4 checker: L0 verdict
+3362065,2026-11-18,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4 checker: start verdict file
+0325e70,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT4: writer handoff (L0-L7 READY, waiting for checker)"
+7e20748,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L7 READY
+cc7aa23,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,16,GT4-L7: redesign criteria / trial / comparison panels (R8)
+074776a,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L6 READY
+f59862a,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,13,"GT4-L6: readable audit log viewer (labels vi/en, select, refused-only, date filter, own tab) (R7)"
+ef58a92,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L5 READY
+6ecf9cb,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,16,"GT4-L5: student screen labels/countdown/lang, results row click + jump link, 4-step helper, mo_tep (R9)"
+aed4044,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L4 READY
+bceb2f5,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,15,"GT4-L4: explanations that cannot be misread (R5, R6)"
+342d073,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L3 READY
+d824937,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,16,"GT4-L3: account setup (retype/show password, next-steps card, warning) and exe password recovery (R2, R4, D4-4, D4-5)"
+a2ecd98,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L2 READY
+8316d81,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,8,GT4-L2: controls match the role; vao_che_do_hoc_sinh = quan_tri (D4-1)
+7989f5d,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L1 READY
+5605535,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,7,"GT4-L1: nhat ky khong giu ma tra cuu, ghi luot xem giai trinh (R1, D4-2, D4-3)"
+8682ee0,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: ledger L0 READY
+9546761,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,5,GT4-L0: giai trinh chi doc lan chay chinh thuc (R0)
+68d0a84,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT4: writer session id in ledger
+eb53631,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,3,GT4: L7 becomes a real design pass (root cause of the criteria/trial layout); checker design bar
+827eb8f,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT4: review of gt-tich-hop (R0-R10), lot plan L0-L8, writer + checker prompts"
+c9e3830,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: Status DONE 572685d CI green; final summary
+572685d,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,2,GT integration CI fix: CA_MAU.md kept LF on Windows (.gitattributes); code map no longer quotes attribute _che_do_hs as a function
+b30faa2,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,9,GT-I4 fix: tab name 'Quản lý' in demo/video scripts; test that quoted tab names exist; rebuild evidence pack
+50c5d08,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I4
+f45c9e5,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,Writer handoff (impl) after I4
+4661b7b,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,14,"I4: ca mau giai trinh + goi minh chung (docx/pdf), dien cac buoc sau tich hop"
+250b5c5,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT integration: I3 ticked, Needs Truong 2-4"
+cb98db2,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I3
+d9a3f50,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,4,"I3: nhat ky thao tac cho run_thu, ap_dung_tieu_chi, ma tra cuu, phieu (test khoa hanh vi)"
+2d0a068,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I2 fix3
+cbcc10b,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,5,"I2 fix3: bo tra loi phien cu, dong lop phu do hoi phien khi che_do_hs false"
+ddc7a42,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt-tich-hop' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt-tich-hop
+24587e8,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I2 fix1
+5131111,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,Writer handoff (impl) for gt-tich-hop
+2abdd09,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,I2 fix1b: reload test ends with admin reaching a tab
+fa490c3,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt-tich-hop' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt-tich-hop
+c3a5519,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,6,I2 fix1: reopen student overlay after page reload while backend lock is on
+24c030e,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I2
+67b2faf,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,17,I2: student mode locked in backend when accounts ON; admin login to leave
+d31c346,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I1
+9f5962d,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,5,I1: classify GT1/GT2 PipelineAPI methods in QUYEN
+4970006,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: checker verdict I0
+d4447a5,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,I0: merge gt3-quyen-tai-lieu (GT1+GT2+GT3 integrated; shared-file conflicts resolved)
+c9ce2c5,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge origin/claude/gt2-tieu-chi into gt-tich-hop (I0)
+6f02b5e,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: GT2 DONE, integration started on claude/gt-tich-hop"
+75d94bc,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT integration: record writer/checker sessions
+64882ac,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT integration: branch handoff file, GT1 merged"
+a38fef8,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge remote-tracking branch 'origin/claude/gt1-giai-trinh' into claude/gt-tich-hop
+65d20a7,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: Status DONE 8965d2b CI green + final summary (lead)
+8bf5f5c,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: log GT2 progress (CI gate)
+8965d2b,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2 CI fix1: rebuild run_history without loai_chay in the old-DB fixture (no DROP COLUMN)
+05f4743,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: Needs Truong L4 note (lead)
+f37097b,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT2: tick L4, start CI gate (lead)"
+8da5a98,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L4: checker verdict fix1 (NO BUGS)
+a41f7bc,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+98ebaaa,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,8,"GT2-L4 fix1: adopt merges only active trial keys onto saved rules, verifies effective equality"
+105ef63,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: checker 3 session (lead)
+5dfcdcf,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: checker 2 handoff
+31ced0d,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L4: checker verdict (1 minor bug)
+20f396d,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,10,"GT2-L4: adopt a trial's criteria (ap_dung_tieu_chi, UI confirm bar, tests, docs)"
+0f157e0,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: tick L3 (lead)
+4937e51,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+e555aee,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L3: checker verdict (NO BUGS)
+0380ce3,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: writer 4 session (lead)
+9947e41,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: writer 3 handoff (L3 done)
+1cca309,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,11,"GT2-L3: compare two runs (UI, exports, tests, docs); fix index placeholder, GT2 codes in test_ws_nhan"
+1af9990,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: log GT2 progress (L3)
+e92d544,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT2-L3 (backend): so_sanh_lan_chay, list_lan_chay, export HTML/CSV"
+5ae7003,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: tick L2 (lead)
+00cee82,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L2: checker verdict fix1 (NO BUGS)
+e36fc60,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+3312805,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,4,GT2-L2 fix1: trial FA decision on effective rules; criteria-only keys
+37612b7,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT2: checker 2 session, L2 fix note (lead)"
+b34457c,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: checker handoff
+4df1c97,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L2: checker verdict
+9613648,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: writer 3 session (lead)
+3f5957c,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,13,"GT2-L2 (WIP): trial runs, loai_chay + ket_qua_thu, run_thu; handoff"
+7162a5e,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: tick L1 (lead)
+092ec62,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L1: checker verdict fix2 NO BUGS
+48ad9d8,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+f4c574e,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,2,GT2-L1 fix2: restore commitment-score box when ranking becomes usable again
+3772978,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L1: checker verdict fix1
+9b67a95,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,4,GT2-L1 fix1: auto-disable commitment-score box when ranking cannot use it
+d3d07b8,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+ca93b50,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2-L1: checker verdict
+c7dd144,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: writer 2 session (lead)
+e4991a3,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: writer handoff file
+4738551,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt2-tieu-chi' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt2-tieu-chi
+ecf2130,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,14,"GT2-L1: tiêu chí xếp bằng lời thường (tieu_chi.py, get_tieu_chi, khung Tiêu chí xếp)"
+1ff5794,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: record writer/checker sessions (lead)
+c4f9574,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT2: branch handoff file (lead)
+9f515fd,2026-11-17,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: record GT2 lead session in branch file
+7c2300d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: lead 2 hourly GT2 watch scheduled
+2555e2b,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: lead handoff to lead 2 (§9 watch)
+f9744db,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: Status DONE c66889d CI green; final summary
+c66889d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: checker verdict CI-fix2
+8c033b4,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,2,GT3 CI fix2: decode recovery.py output as UTF-8 in test
+18e8535,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: checker verdict CI-fix1
+1c79f2f,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT3 CI fix1: recovery.py UTF-8 console, gate account check cached with short lock wait"
+b43ec10,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: tick L4; Needs Truong list; start CI gate
+2eeb745,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L4: checker verdict fix1
+0b52a14,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt3-quyen-tai-lieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into HEAD
+2474f3d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT3-L4 fix1: sample-sheet docs use FA-on workspace, real-run values, test"
+9b95e0f,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: writer 4 session recorded, FIX L4"
+99de458,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt3-quyen-tai-lieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt3-quyen-tai-lieu
+4b5f87b,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L4: checker verdict
+ffc1b57,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: writer 3 archived, L4 under review"
+86826b4,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: writer 3 handoff
+6d36d68,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt3-quyen-tai-lieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into HEAD
+6674e67,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,14,"GT3-L4: evidence docs (docs/giai_trinh), svg flow diagram, doc tests"
+fa8f3ec,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: checker 2 session recorded
+e3e3202,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: checker handoff (tester)
+8ee111c,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: tick L3, GO L4"
+96095d0,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L3: checker verdict fix1
+ff12579,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT3-L3 fix1: audit row to pre-call db, bounded lock wait, case-insensitive actor filter"
+deee200,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L3: checker verdict
+7fcba6a,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,3,GT3-L3: allow gt3_ error codes in test_ws_nhan allowlist; related run green
+32d1bcd,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: writer 3 session recorded
+385afc1,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,16,"GT3-L3: audit log (append-only nhat_ky_thao_tac, single hook in the permission gate, viewer + CSV); writer handoff"
+656c12a,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: tick L2, GO L3"
+1fb4347,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L2: checker verdict fix1
+5208c6d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,GT3-L2 fix1: permission gate fails closed when the account table cannot be read
+2f2d353,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: lead note for L3 (audit giao_vien writes too)
+b61e5f0,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L2: checker verdict
+22fb361,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,2,GT3-L2: permission gate keeps no __wrapped__ marker on write methods (fixes test_a13_11_stress N4); signature preserved
+0554e0b,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,11,"GT3-L2: permission gate (phan_quyen.py QUYEN map, central enforcement, UI hides admin tabs for teachers)"
+9f70aff,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT3: tick L1, GO L2"
+72961fc,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L1: checker verdict fix1
+e62e24a,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,GT3-L1 fix1: NFC normalisation for account names and passwords
+daacf29,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt3-quyen-tai-lieu' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt3-quyen-tai-lieu
+88e2190,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3-L1: checker verdict
+7754e53,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: writer 2 session recorded
+95fad10,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: writer handoff file
+53e453a,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,18,"GT3-L1: accounts and login (quan_tri / giao_vien), recovery clear option, login UI"
+1e39ae5,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: record writer/checker session ids
+a923c79,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT3: branch handoff file (lead)
+0f40c79,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT1: Status DONE, CI green 499edf1, final summary"
+499edf1,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: writer 3 handoff file
+a3a9cf9,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GT1 CI fix1: chữ giao diện theo luật văn phong, role=dialog chỉ khi mở, gt1_* vào danh sách mã mới"
+5c166ce,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: tick L4
+22df9c2,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L4: checker re-check fix1 NO BUGS
+5facef0,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt1-giai-trinh' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt1-giai-trinh
+c5621e7,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,4,GT1-L4 fix1: phản hồi tra cứu về muộn không hiện thẻ em trước cho em sau (luotHs)
+22561a3,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT1: lead state (FIX L4, checker 2)"
+dadb8c4,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: tester handoff
+183a478,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L4: checker verdict
+f4132a3,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,15,"GT1-L4: mã tra cứu + chế độ học sinh tự tra cứu (ma_tra_cuu, tra_cuu_hoc_sinh, lớp phủ)"
+807499d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: tick L3
+d5f1096,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt1-giai-trinh' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt1-giai-trinh
+c3d16cb,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L3: checker verdict
+fbb26a5,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT1: lead state (L3 in review, writer 3)"
+0eedd17,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: writer 2 handoff file
+35a16d2,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,11,"GT1-L3: phiếu giải trình in (export_phieu_giai_trinh, phieu_giai_trinh.py, nút In phiếu)"
+47b5751,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: tick L2
+9d6a2b3,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L2: checker verdict fix1
+2d2c947,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,4,GT1-L2 fix1: lần tìm về muộn không vẽ lại danh sách sau khi chọn em
+54462fb,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L2: checker verdict
+0a57c37,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,11,GT1-L2: khung Tra cứu một học sinh (thẻ Kết quả)
+de39b20,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: tick L1
+76864f5,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L1: checker verdict fix1
+2ccfd01,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,8,"GT1-L1 fix1: NO_CHOICES, gt1_lan_chay_cu, gt1_khong_tim_thay_lan_chay"
+3a6afd0,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge branch 'claude/gt1-giai-trinh' of https://github.com/nguyenphanvantruong6969-arch/TESTING-DEV into claude/gt1-giai-trinh
+a80f54a,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1-L1: checker verdict
+1d4556f,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT1: lead state (L1 in review, writer 2)"
+54e8c0d,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: writer handoff file
+6fda292,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,9,"GT1-L1: động cơ giải trình một học sinh (giai_trinh.py, get_giai_trinh_hoc_sinh)"
+a75a02b,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,GT1: record writer/checker sessions
+fe5917f,2026-11-16,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GT1: lead handoff file (goal, plan, sessions)"
+5926107,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,8,"GT-KH: plan answering the jury feedback (3 teams: explanation, criteria trials, roles + evidence)"
+35609f7,2026-11-15,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #19 from nguyenphanvantruong6969-arch/claude/fa-sc-sua
+7186043,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: CI shards skip the per-shard coverage floor; the combined job enforces 85 %
+0b7321c,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-SC: CI in parallel (Linux 4 shards + coverage combine, Windows 2 shards, last-failed first)"
+8fc0137,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: fix race in test_kiosk_co_lop_bat_buoc_chon_truoc_khi_luu (wait for the save to reach the DB)
+41a20ff,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: drill helper mo_kiosk states wharton explicitly (fixes test_F1_script_do_tat_wharton_ro_rang)
+5ee4cdf,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: record Truong approval of L5 invariant-3 wording and fingerprint scope
+aee944b,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-SC: tick L5, summary (lead)"
+91f3da8,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: checker verdict L5
+98b8b09,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-SC-L5: TIEN_DO, Needs Truong, mã lỗi mới trong test_ws_nhan, docstring dấu vân tay"
+adc42d8,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,12,FA-SC-L5: khoá thứ tự bốc thăm theo ngày (bảng stb_buoi); handoff writer
+68af423,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: L5 sessions table
+61eedb1,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: Lot L5 spec (per-day lottery lock)
+9082f04,2026-11-15,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-SC: record Truong decisions D-SC2, D-SC3, D-SC7, own-score (2026-11-15)"
+c772d0e,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-SC: tick L4, final summary (lead)"
+0c81390,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: checker verdict L4 (NO BUGS)
+db28790,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-SC-L4: phiếu xác nhận theo lớp (PHIEU_XAC_NHAN_LOP/, mặc định TẮT)"
+fc67d48,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: writer L4 session id (lead)
+8268a06,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: tick L3 (lead)
+35e4938,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC checker: L3 verdict NO BUGS
+7c3d3b3,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,5,"FA-SC-L3: báo cáo theo CLB (BAO_CAO_CLB/, mặc định TẮT)"
+fa62f77,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: writer L3 session id (lead)
+f160909,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: tick L2 (lead)
+b1d956b,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC checker: L2 verdict NO BUGS
+bca5941,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,10,"FA-SC-L2: sheet ""Cần xử lý"" trong BANG_DIEM.xlsx (mặc định TẮT)"
+3f44c3d,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-SC: new Sonnet lead, writer L2 session id (lead)"
+684b897,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-SC: tick L1, L2 spec note (lead)"
+76b2c45,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: checker verdict L1 (no bugs)
+cc2d9a4,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,11,FA-SC-L1: danh sách học sinh của trường làm đầu vào bộ chuyển đổi (mặc định TẮT)
+b0614a3,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SC: record session ids (lead)
+a5bd7b1,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-SC: branch setup, lot specs L1-L4 (lead)"
+222edb7,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-SC: proposed fix plan and per-day lottery prototype (docs, drills)"
+41b70ab,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,24,"FA-SC steps 3-5: drills on fake data, remedy tables, incident runbook"
+84940b8,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-SC step 1: human-error catalogue memo (docs only)
+7c405a4,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-SC: record D-SC1 approval (Truong 2026-11-14)
+d8c4061,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-SC (proposed): extend Fable brief with student-journey scenarios S8-S29 and per-row solution format
+13959d3,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-SC (proposed): Fable brief for human-error and crisis scenarios, branch handoff"
+726b8d4,2026-11-14,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #18 from nguyenphanvantruong6969-arch/claude/forms-gop
+8920bef,2026-11-14,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #17 from nguyenphanvantruong6969-arch/claude/sg-sua
+413ec36,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-6: rebuild clubs table in test fixture instead of DROP COLUMN (CI SQLite 3.45)
+828614e,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,"SG-INT: handoff — gate results so far, next steps (CI read, report, SG GREEN, PR to main)"
+d46ccc7,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-INT: SG-12 test count 47 (checker nit)
+a790b14,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-INT checker: INTEGRATION PASS review + Log line
+7d448de,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-INT: report draft (gate results pending)
+cb50a38,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,5,"SG-INT: fold MANH_A/B/C into CHANGELOG and TIEN_DO, test count 293, SG_STATUS.md, tick handoff"
+9ff4ddb,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-INT: test both SG-6 (time/room) and SG-10 (free club) kept after merge
+35111d5,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),co,,"SG-INT: merge claude/sg-b (SG-2, SG-6, SG-8, SG-11b)"
+de43b90,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-2 row end hash
+2165a9f,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-B: person B DONE (SG-2, SG-6, SG-8, SG-11b)"
+837e560,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-2 checker r3: PASS review + Log line
+8733855,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),co,,"SG-INT: merge claude/sg-c (SG-5, SG-7, SG-9, SG-12)"
+f66ab1d,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-2 FIX-2 to checker r3
+38dd60e,2026-11-14,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-C: person C DONE (SG-5, SG-7, SG-9, SG-12)"
+616c189,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-2 FIX-2: status log
+690322f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,"SG-2 FIX-2: put the turn-off hint in the button row, not a log line"
+6aa59c0,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b DONE; SG-2 reopened (FIX-2 regression)
+fbd9740,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-C: SG-12 checker r3 PASS
+0992109,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 checker r3
+6fc7a43,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-11b checker r2: correct session id in Log and review
+7b4458c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-11b checker r2: PASS review + Log line
+8723309,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b to checker r2
+748d2a9,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-12 FIX-2: READY log
+488a20b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,"SG-12 FIX-2: casefold option refusal only for plain generation (nghiem_chuan), gold test asserts B (batches pending)"
+286b56b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 FIX-2
+dff2363,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b READY (FIX-1)
+29bfa1e,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,4,"SG-11b FIX-1: Esc at document level, menu-first Esc, focus return, aria-modal with role"
+84236b2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b FIX-1 to coder
+493b8ff,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-12 checker r2: FIX-2
+501c24f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-11b checker: FIX-1 review + Log line
+4a2edaa,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 checker r2
+4eb366b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b to checker r1
+49c3351,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b READY
+ead60df,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-12 FIX-1: READY log
+ca5bf76,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,6,"SG-12 FIX-1: map-first tim_clb, case-insensitive option collision, title-collision test, ruff-clean conv_snap (batches pending)"
+e99f6a1,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 FIX-1
+f1ae45a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,SG-11b: focus trap for workspace chooser dialog (M4)
+6c2fb38,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-12 checker: log correction
+e389b52,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-12 checker: review FIX-1
+5ab87d0,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-11b assigned to coder
+93d3d55,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 DONE
+71cbfa8,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 checker r1
+2b9eaee,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-B: SG-8 checker round 2 PASS
+3f3f943,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,5,"SG-12: READY (status, snapshot recipe, handoff file removed)"
+334672d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 to checker r2
+f6939af,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,5,"SG-12: phieu CLB gets no MAP (bo bieu mau regression), m8 tests back to default mode"
+6f0c934,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-12: regenerate chi-thi outputs in default (plain) mode + MAP
+92b7f1c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,17,SG-12: opt-in giu_ma marker replaces global coded-mode fixture (WIP)
+10cd320,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 FIX-1 READY (status)
+5e47810,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,5,SG-8 FIX-1: read rounds saved before SG-8; English UI test asserts a real sentence
+653954e,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-A: person A DONE (SG-1, SG-3, SG-4, SG-10, SG-11a)"
+d3da5b9,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 FIX-1 to coder
+bea7e63,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 coder 2
+9663436,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-11a review round 0: PASS
+1be392a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-12: handoff log row
+a050c69,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-12: record related-batch result in handoff
+2857546,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-B: SG-8 checker review FIX-1
+51c2d25,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,25,"SG-12: plain titles in student forms + MAP_*.json (WIP handoff, verification pending)"
+b97e926,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 to checker r1
+190d6a8,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-11a to checker
+bca7728,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 READY (status)
+03974ec,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,8,"SG-8: step-1 messages (NOI_DUNG, Loại, checks) as i18n codes, vi + en"
+cb4f8d6,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-11a: status log hash
+debf971,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-11a: status log
+e729ff1,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-12 assigned
+103aef6,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,7,"SG-11a: UI hygiene (M6 color-scheme, M7 results at 1024px, L1 gold-text, L4 scoring width, L5 export hint)"
+2ad6081,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 DONE
+f84ad66,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-9 checker round 2: PASS
+f98de0e,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-A: SG-10 DONE, SG-11a assigned to coder"
+b3570ac,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-8 assigned to coder
+620d2d6,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 DONE
+9329f3f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 checker r2
+e676654,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-10 review round 1: PASS
+aa40a8d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-10 to checker round 2
+144fbe6,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-6 review round 2: PASS (checker)
+e5747dc,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 FIX-1 READY
+c266cae,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,"SG-9 FIX-1: provable .catch (no unhandledrejection, one toast) and busy flags reset in sauCung"
+5e4e5e6,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 FIX-1
+bf5b921,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 to checker r2
+770fa7d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-10 FIX-1: log READY
+d7f5bac,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,8,"SG-10 FIX-1: Theo CLB, ti_le_choi và xuất tệp không in chỉ tiêu cho CLB Tự do"
+b36b154,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-C: SG-9 checker PASS
+f3a056b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-10 fix round 1
+a782b14,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 READY after FIX-1
+b83651d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-6 FIX-1: fragment
+c9e1c15,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-10 review: FIX-1
+f270dd2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 checker r1
+e608eea,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-10 to checker
+297d653,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,4,"SG-6 FIX-1: carry gio/dia_diem through step-1 reader and step-4 converter, real-route tests"
+c838080,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 READY hash corrected after rebase
+60ad733,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 READY
+98908e1,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,9,"SG-9: one busy/error wrapper (chayNut/chayTai) for every API call in tabs 05,10,11,12,13"
+40d90a5,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 FIX-1 to coder
+ad09778,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-10: log hash fix
+396ae76,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-10: log READY
+4dad18a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,6,"SG-10: CLB Tự do không hiện % lấp đầy, chỗ còn trống bỏ CLB Tự do"
+9c657d8,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-A: SG-4 DONE, SG-10 assigned to coder"
+d6fd6bd,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-6 review: FIX-1 (checker)
+a1b6ecb,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-9 assigned
+1bf5e85,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-7 DONE
+4bd6226,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 to checker r1
+f660d28,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-4 review round 1: PASS
+9c442cd,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-4 to checker round 2
+decbd06,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-C: SG-7 checker PASS
+3bb8a7c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-7 checker r1
+e761f43,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-4 FIX-1: Log READY
+17eaf11,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-4 FIX-1: en text uses {person_l} mid-sentence
+b14a900,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-4 fix round 1
+c7649a2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: fix READY hash in log
+58aae13,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 READY fix round 1
+194305f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-6: fragment line for SG-2 FIX-1
+55fd02f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-2 FIX-1: regenerate sample workbook after guide sentence change
+3516dba,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-B: SG-2 regression found, pre-check fix to SG-6 coder"
+af6c3e3,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-7 status: correct coder session id
+943dcca,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-7 READY b4800ad
+b4800ad,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,9,SG-7: one grouped-warning helper for step 4 and import panel
+98d47ce,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-4 review round 0: FIX-1
+9709a20,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-7 assigned
+eb6ef50,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 DONE
+9200773,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-4 to checker
+50838df,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 READY hash
+aad4846,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-6: READY, status and fragment"
+34c30a3,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-C: SG-5 checker r2 PASS
+b39d2bb,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-4: Log READY
+53025b1,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,8,SG-4: khiếu nại gõ tay dùng khop_ma_hoc_sinh; tách hai mã lỗi
+84573e7,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 checker r2
+a959972,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-A: SG-3 DONE, SG-4 assigned to coder"
+c7ff951,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-3 review round 0: PASS
+c7f04f9,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,18,"SG-6: keep club time and room (WIP, verification pending)"
+a4d950a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-5 FIX-1: OS-independent content digest for fa_daa modes; skip only nt byte hash
+8f2973c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 FIX-1
+d7c9c19,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-6 assigned to coder
+dc0451b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-2 DONE
+db30efb,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-3 table row CHECKING
+75310cc,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-3 to checker
+9d39a64,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,"SG-5 checker: FIX-1 (review file, log)"
+c564cc4,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 checker r1
+7121ce2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 row
+298229c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 to checker
+c70048f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-2: checker review PASS
+6450508,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-3: log READY hash
+f2e7702,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,8,SG-3: FA stores original-list rank; fallback placements NULL and shown separately
+9d28ee2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-2 to checker r1
+1c9e759,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"SG-A: SG-1 DONE, SG-3 assigned to coder"
+b9c4f32,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-5: re-pin posix hashes of the --fa-daa outputs (intended change)
+f6c567d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-5: fix READY hash
+4ee966c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-5: log READY
+7b7109a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,7,SG-5: medal description line; swap question only for days with >=3 medal clubs; no false warnings at import
+513ed9f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-2: status log hash
+26b2952,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-2: status log
+d9da2c5,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,20,"SG-2: warn about empty commitment points at preview, toggle in features dialog, fix guide sentence"
+bd6d821,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: SG-5 assigned
+39de078,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-1 review round 1: PASS
+7f7b5ca,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-C: status file for person C
+8f50465,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: record SG-1 checker r2 session
+bff4ceb,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-1 to checker round 2
+5c8ee63,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: snapshot recipe
+55a7ced,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: SG-2 assigned to coder
+a0dfd51,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-1 FIX-1: status log READY
+95de0b9,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,"SG-1 FIX-1: so_nv1 counts first club within its session, shared helper with demand table"
+daca446,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-B: status file for person B
+0e16678,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-1 fix round 1
+798eb2f,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-KH: guard against sessions opened on an old branch (it-ui-b incident)
+618e28b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-1 review: FIX-1
+d926ba0,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-1 to checker
+b632ad4,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-1: status log READY
+9934af2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,7,SG-1: block FA run when a selective club has applicants but no scores (C3)
+5b474dd,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: SG-1 assigned to coder
+ffb6ce2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-A: status file for person A
+ba4b207,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,SG-KH: fix section reference in SG_SONG_SONG.md
+4bcc617,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,SG-KH: each person runs one Opus lead with a Sonnet coder and a Sonnet checker
+98709f1,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,8,"SG-KH: parallel split SG-1..SG-12 for three people (A/B/C), empty marker blocks in shared files"
+3fb9c5a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,SG-KH: base claude/sg-sua on forms-gop now that FG is merged there
+7f65e6d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,SG-KH: Truong approved D1-D3; three-role loop runbook (manager / coder / checker)
+d670e4e,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,"SG-KH: fix plan SG-1..SG-12 after Fable's whole-kiosk UI audit, handoff for claude/sg-sua"
+909f8df,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge claude/fg-sua into claude/forms-gop: FG-1…FG-9 (FG GREEN)
+d73b479,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG: status file trimmed to 150 lines
+90b2dbf,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FG GREEN: vòng xanh lượt 2 đạt, báo cáo hoàn tất"
+9d5862b,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"DOC-FABLE: brief for a whole-kiosk UI and small-bug audit (four personas, one visual report)"
+2e0e06a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: green loop round 2 local + CI green, Windows build re-run"
+58d868b,2026-11-13,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #16 from nguyenphanvantruong6969-arch/claude/forms-gop
+d34e7a7,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FIX-1: ghi Log
+eddf198,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,3,"FIX-1: cập nhật bản đồ mã, khoá dict nạp tuần 3, băm vàng FG-7 theo hệ điều hành"
+0840081,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: green loop round 1 red, FIX-1 next"
+fdfc3f7,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG FINISH: ghi Log
+b7c8380,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FG FINISH: báo cáo, sổ sách, chạy thử người mới"
+1e2adb9,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-9 reviewed GO, wave gate 3 green, FINISH next"
+15ebc55,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-9: ghi Log
+39eb6a5,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,10,"FG-9: thanh bên bỏ số thứ tự, nút Mở thư mục ở thông báo Tải sổ nhập mẫu"
+0d857d5,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-8 reviewed GO, FG-9 next"
+b345d0a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-8: ghi Log
+cd0b2df,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,11,"FG-8: chữ gợi ý cảnh báo, ô wizard khoá theo FA, nhóm Sau khi công bố kết quả, ẩn Chưa chia buổi"
+dda3384,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-7 reviewed GO, FG-8 next"
+49328f0,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-7: FIX1 log
+d754dbd,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,2,FG-7: in thư mục ra tuyệt đối ở mọi chế độ (chỉ stdout)
+6131243,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-7: log hash
+c42de59,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG-7: log (code is in 8c8202c, whose message reads 'FG-7: log' by a shell-chain slip)"
+8c8202c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,4,FG-7: log
+f36e410,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-2 reviewed GO, FG-1 FIX1 GO, wave gate 2 green, FG-7 next"
+32d65ba,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-1: FIX1 log
+13e93f3,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-1: tiêu đề hộp thoại không dùng gạch ngang
+0668955,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-2: ghi Log
+9db3039,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,12,"FG-2: xem trước sổ ở workspace FA cảnh báo gom theo mã, mẫu sổ FA, sổ mẫu 120 em"
+3c0b1f3,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-6 reviewed GO, FG-2 next"
+ebc9869,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-6: ghi hash vào Log
+f91d1af,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,15,"FG-6: kết quả nạp Forms một đơn vị mỗi số, danh sách thay tường chữ, tệp rỗng có mã riêng"
+2eeddd0,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-5 reviewed GO, FG-6 next"
+684edcd,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-5: ghi hash vào Log
+e90555a,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FG-5: khớp mềm mã học sinh (hoa/thường, khoảng trắng) ở hai đường nạp Forms"
+e3e93a4,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-4 reviewed GO, wave gate 1 green, FG-5 next"
+e099a3c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),co,,"FG: wave gate 1, merge origin/claude/forms-gop (bookkeeping conflicts, both kept)"
+5e38fbc,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-4: Log DONE
+06cb12d,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,5,FG-4: ghi hash vào Log
+81cdfb8,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-3 reviewed GO, FG-4 next"
+ed411f7,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-3: ghi hash vào Log
+f2dc276,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,6,FG-3: nạp lại cùng tệp Forms không thêm dòng/khiếu nại; đếm trùng
+9b888a2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: FG-1 reviewed GO, FG-3 next"
+c1de264,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,5,"GIAM-MAY-RUI-KH: plan FA-CT1, FA-CT2, FA-D7L and Sonnet start prompt"
+c2c1854,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG-1: worker log
+79f2de2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,6,FG-1: tính năng sau khi xếp bật/tắt từ menu không gian làm việc
+2f4cb69,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: STEP0 reviewed, FG-1 next"
+7bbbf1c,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG-STEP0: worker log (per-item RED / GONE-ON-HEAD, re-read notes)"
+63b6e73,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,12,"FG-STEP0: acceptance tests for FG-1..FG-9 (red on HEAD by design, no production code)"
+24846d2,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,FG: STEP0 decision
+a0557b3,2026-11-13,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FG: status file, lock, BASE f5e8a41"
+f5e8a41,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,DOC-FABLE: priority rule in Fable brief (important things first)
+87b766f,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,3,DOC-FABLE: add Fable research role to CLAUDE.md rule 11
+072ca75,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,4,DOC-FABLE: project context file and Fable research brief
+ac47f39,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,3,FA-BC: IT-UI GREEN (CI Tests + Windows build green on d60d221)
+7555285,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,3,"FG-KH: autonomous runbook FG_TU_DONG.md (Opus lead + Sonnet workers, own branch)"
+4d5bcfe,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,2,FG-KH: fix plan FG-1..FG-9 after novice walkthrough (D1-D4 approved)
+24f5137,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-BC: IT-UI report 2026-11-12 (4/4 items, round 2 green; Windows build pending)"
+d60d221,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FIX-1: code-map rows no longer backtick names the doc-test cannot see
+e1a2ba5,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,5,INTEGRATE-2: fold FA-M8/M9/M10 fragments; code-map test count 263
+d06d2d8,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),co,,INTEGRATE-2: merge worker C (FA-M8) from claude/it-ui-c
+f809e2b,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),co,,"INTEGRATE-2: merge worker B (FA-M9, FA-M10) from claude/it-ui-b"
+0c366de,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: IT-UI status refresh (C GREEN, B blocked on A-owned count, both unmerged)"
+ac8196c,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M10: handoff STATUS BLOCKED (waited for A's code-map count)
+0bbe563,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C STATUS: GREEN (green loop round 2, CI + Windows build green)"
+a38da40,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M10: green loop round 1 result (single failure = A-owned code-map count)
+b31ffb4,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C lead review of FIX-1 (pass), green loop round 2"
+b641d89,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FIX-1: i18n cb_bo_ghi dùng ""tệp nén""; số tệp test 254→257 trong CLAUDE_CHI_TIET"
+58e75ee,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C green loop round 1 results, FIX-1"
+fbbb823,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FIX-1: handoff log
+e7c5a1f,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,3,"FIX-1: natural-language wording for B's i18n strings (no caps emphasis, dashes, bare column names)"
+5f3de9b,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C lead review of FA-M8 (pass), green loop round 1"
+89060f3,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M10: handoff done line
+b43953c,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,8,"FA-M10: API ba nút sau khi xếp + bước 5 giao diện, test, mảnh MANH_B"
+959eca9,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-M8: khôi phục hai tệp mẫu bị ghi lại do chạy thử (chỉ nhiễu dấu thời gian)
+14a4435,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M8: ghi nhật ký phiên (CODER DONE)
+57f4631,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,10,"FA-M8: bước 3 Tạo bộ biểu mẫu (API, giao diện, test, mảnh C)"
+cf38ab5,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M9: handoff done line
+934d031,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,11,"FA-M9: API nạp tệp Forms/List + bước 4 giao diện, test, mảnh MANH_B"
+855f4ec,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C lead review of FA-M8-THUAN (pass), FA-M8 next"
+c6058ba,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M8-THUAN: ghi mã commit vào nhật ký phiên
+c9550fa,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-M8-THUAN: bộ biểu mẫu một lần bấm (R3 R8 R9), hàm thuần + test"
+69e3d00,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-M9-THUAN: handoff log (coder done lines, plan ticks)"
+194d5de,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-M10-THUAN: danh_sach_chua_dang_ky.chua_dang_ky callable + tests
+568bd20,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-M9-THUAN: nhan_dien_tep, doan_bien_the, chuyen_fa_daa_du_lieu + tests"
+2a03404,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker C handoff, BASE 5196217"
+396e5bb,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M9: handoff for worker B (claude/it-ui-b)
+5196217,2026-11-12,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: IT-UI paused by Truong; next step recorded in IT_UI_STATUS
+1c52030,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,INTEGRATE-FIX1: handoff log
+9ac0998,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,INTEGRATE-FIX1: sửa nghĩa đường A/B trong hướng dẫn mục 16
+0d74662,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,INTEGRATE: record commit hash in handoff
+739736e,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,7,"INTEGRATE: fold FA-M7 (+G0) bookkeeping, user guide section, report; FA-M8/M9/M10 not done (B/C blocked)"
+47ab08b,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),co,,INTEGRATE: merge claude/it-ui-a (G0 + FA-M7) into claude/forms-gop
+bfb0bb3,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: IT_UI_STATUS — Phase 3, B/C BLOCKED, integrate A alone"
+c4ef825,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: worker A GREEN; B/C never pushed after 4 h -> BLOCKED; integrate A alone
+b65188a,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker A green loop GREEN on claude/it-ui-a, WAITING_B/C"
+85f422d,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker A green loop round 2 results (local green, CI Linux infra failure)"
+5ead67e,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: FIX-1 log
+db76ea9,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-KH: FIX-1 forms_thieu_email viết tự nhiên, không gạch ngang"
+8f45df3,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: worker A FIX-1 delegated
+ffcc967,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: worker A green loop round 1 results
+80aa188,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker A DONE_M7, green loop round 1"
+ffb8e83,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M7-FIX1: handoff log
+414a94c,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,3,FA-M7-FIX1: nap_de_thi giữ loai của CLB bước 1 trong de_thi.json
+4db0c03,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M7: handoff log
+d5a303e,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,11,"FA-M7: CLB nhập một lần, đề thi một tệp Excel (nap_phieu_clb, tai_mau_de_thi, nap_de_thi, so_de_thi.py, bước 1–2 của thẻ Chuẩn bị đợt)"
+55d5721,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker A lead review of G0 (pass), FA-M7 next"
+d731a3d,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M7 G0: handoff log
+c7b5d1d,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,23,"FA-M7 G0: forms_dot, FormsMixin + stubs, kiosk.spec, tab Chuẩn bị đợt, marker blocks, error codes"
+b8484e9,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: worker A handoff, BASE fe37349"
+fe37349,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-KH: PROMPT_A/B/C run as Opus lead + Sonnet coders with a green loop
+0466f8a,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,3,"FA-KH: CHU_TRI role — Opus delegates every task to Sonnet, then loops until green"
+ff543af,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,6,FA-KH: no-human-input runbook for FA-M7..FA-M10 (SOLO / DIEU_PHOI)
+d083aeb,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-KH: three parallel worker prompts for FA-M7..FA-M10
+0a04b1a,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-KH: plan FA-M7..FA-M10 (all IT steps in the kiosk UI, paths A and B)"
+30e8630,2026-11-11,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #15 from nguyenphanvantruong6969-arch/claude/fa-gaps
+f769432,2026-11-11,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #14 from nguyenphanvantruong6969-arch/claude/keen-ride-72sa7t
+a8e8f32,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: forms-gop report 2026-11-11 and handoff update
+fa7d2e0,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,17,"FA-M6b: one ""after results"" form (3 feedback questions + appeal branch) and one kiosk import button"
+56fa911,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,9,FA-M2b: one registration form for all days (--fa-daa --mot-bieu-mau)
+d12835a,2026-11-11,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: plan for FA-M2b (one registration form) and FA-M6b (one after-results form)
+9264f31,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: handoff at context limit (solo)
+3f4f21f,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: record draft PR #15
+e9dde74,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-BC: final report
+b01e4ad,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: wave 4 reviewed (GO)
+a8ff2c4,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-KH: wave 3 reviewed (GO)
+ed03abd,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: handoff update (solo)
+5c9aa9c,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: coverage + next step (all items coded)
+8069c08,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-14: fix changelog entry text
+fc7afa8,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,GAP-14: D1 compensation decision memo (no code; waiting for Truong)
+0bc53b1,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,10,"GAP-13: stable improvement cycles in measurement mode (fa_vong_doi_cho, read-only API, sim table)"
+9a93289,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,6,GAP-12: simulation with calculating student and per-type old/new tables (--day-du)
+2d9c07d,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,"GAP-KH: wave 2 reviewed (GO), status update"
+b0d832e,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-4: round-2 'no choice' label without dashes (test_van_phong_tu_nhien)
+cd1d694,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,9,GAP-11: FA registration Power Fx formulas for the path-A kit (DangKyFA.txt)
+5f87432,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: spec wave 4 (GAP-11..14)
+6b0ce75,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,12,"GAP-8: read-only admin dashboard (chi_so_dashboard, panel, dashboard.xlsx)"
+18fb8d7,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,15,"GAP-7: next-term capacity suggestion (goi_y_chi_tieu, teacher limit table, export)"
+3243c3a,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,7,GAP-10: reminder flow guide + not-registered lists per class
+6587a64,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,7,"GAP-9: two-grader deviation report (do_lech_cham, lech CLI)"
+98646f4,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,3,GAP-5: Forms import drops out-of-domain codes (MIEN_PHAN_HOI)
+ad00ba4,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,GAP-5: neutral wording for feedback panel (chu_cam); GAP-3..6 changelog + progress rows
+8c4b37d,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: solo lock wave 2
+f85c3e7,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: handoff update (solo)
+9b2d588,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: record GAP-3 related suite result
+db043db,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,3,GAP-KH: context stop (solo)
+e76bf48,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,20,"GAP-4, GAP-5, GAP-6: round 2, feedback, week-3 survey (WIP, related suite running)"
+513711a,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,14,"GAP-3: appeals backend + UI (WIP, related suite running)"
+9bb9deb,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-KH: spec wave 2
+7f14caa,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-KH: wave 1 reviewed (GO)
+628cfb2,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,GAP-2: waitlist invites on a released seat (D4 order)
+541f945,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,11,"GAP-2: waitlist invites backend + UI (WIP, related suite running)"
+bb49d11,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,6,"GAP-1: attendance of the first 3 meetings, 2/3 unexcused releases the seat"
+a10eee5,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,17,"GAP-1: attendance backend + UI (WIP, related suite running)"
+c6e0405,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,9,GAP-0: append-only adjustment log fa_dieu_chinh + pure replay vi_tri_hien_tai
+4489dbb,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-KH: spec wave 1
+cc556a8,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,3,GAP-KH: setup
+60f75a5,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: small-fix report 2026-11-10
+9ce1be3,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P7/SM-3: kiem_nhanh --so-seed N>5 runs N deterministic seeds
+2794310,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,SM-2: UI test waits on a real condition instead of 800 ms (5/5 passed)
+229acb0,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P5: lottery record html and xlsx share one base name
+51eb613,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P6: missing-day reason warnings in weekday order
+73b7db7,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P4: lottery record lists days in weekday order
+62d4afb,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-P3: results screen shows one notice for days without reasons
+1b54051,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,SM-1: lottery record xlsx strips characters openpyxl rejects
+1808c1f,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: lock small-fix run
+19a8f8e,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,"GAP-KH: SOLO mode in START_HERE.md (one session, no human input)"
+fb5815b,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,3,GAP-KH: START_HERE.md router with two short prompts (son/father)
+f10a755,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,GAP-KH: detailed v2 of the father/son gap-filling instruction
+56143b7,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,GAP-KH: father/son instruction to fill all remaining FA-DAA vision gaps
+04d1786,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,FA-KH: LATEST_INSTRUCTION.md for the 7 pre-merge small fixes (friend's run)
+1d2aa20,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: handoff after review night 5, PR #14 and CI fixes (loop done)"
+40947ae,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-CI1: simulation CLI test reads the script output as UTF-8 (Windows cp1252 default)
+20332d0,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,"AI-LOG: full diary = plain-language part + every detail grouped by phase (Word, 21 pages)"
+c43d4d9,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,"AI-LOG: plain-language AI diary (Word, 4 pages) for human readers"
+4adc3eb,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,"AI-LOG: Word version of the AI diary (A4, 13 pages)"
+1300e4a,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,"AI-LOG: AI diary from repo data only (father prompts, son summaries)"
+9644288,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,"AI-LOG: father sessions with verbatim prompts, sons nested"
+e6052ec,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,AI-LOG: AI log of Truong's account prompts
+c6e5e6a,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,FA-CI3: Windows CI installs python-docx so the .docx tests run there (Truong's choice)
+a7e91e4,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,3,FA-CI2: T3-19 UI test waits for the club table itself (was counting the stale class table)
+45d6c7a,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-CI1: UTF-8 console output on Windows for two scripts; lottery-record wording passes the style test
+f25fd8f,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-SOAT: soat-ma four tiers on night 5 + fixes (report only); review-5 fixes recorded
+399aafd,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P2: on-site default medals saved even if the operator switches student mid-save
+32cb8c8,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-P1: lottery record Excel keeps user text as text (no formula cells)
+bb7a8f1,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,"FA-SOAT: review night 5 (needs fix: FA-P1, FA-P2 trung; 5 small items listed)"
+b93b3d0,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: night 5 report 2026-11-10
+d9482a7,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,10,FA-9b: Excel version of the witnessed lottery record
+fff8df5,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-O1: sort result reasons by day order (chu_nhat after thu_2)
+662e57b,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-O0: RUNNING lock night 5
+54d1a11,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-SOAT: review night 4 (GO), release night 5 (FA-O1 + FA-9b)"
+9beca3e,2026-11-10,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SOAT: RUNNING lock review night 4
+89e3e5c,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: handoff note - Truong decisions after night 4 (Excel lottery record approved for night 5)
+1198ef5,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: night 4 report 2026-11-09
+6c7bf4d,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,FA-10: simulation tables old mode vs FA-DAA and D1 two-term (measure only)
+cf90452,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,10,FA-9: witnessed lottery record export and button
+0d811dc,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,14,"FA-N3, FA-N4: dedicated FA/points error; single-variant retake warning"
+5ad2e48,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-N2: on-site entry saves default medals and follows re-rank
+24dc9a1,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-N1: per-day export of reasons after a partial run
+62879ab,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-N0: RUNNING lock night 4
+99d4724,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: handoff note - Microsoft scope answer
+8003e9a,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: handoff note - vision coverage estimate
+9f740c2,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: handoff note - self-review/self-fix loop (Next steps 5)
+837e913,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: chained auto plan after night 4 (Opus review, then Sonnet night 5)"
+910f997,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: handoff note - night-4 schedule prompt given to Truong
+a827350,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,"FA-KH: Opus handoff at ~400k context (night 4 released, not started)"
+48467a9,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-SOAT3: night-3 review (GO, FA-N1..N4 listed, nothing fixed), plan section 7 and night-4 protocol"
+c962bb8,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: night 3 report 2026-11-09
+5bf7a8d,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-UI-5: user guide section for club types and medals
+0c8e5f8,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,9,FA-UI-4: reason sentences in the results table and export buttons for reasons and demand table
+2560fa2,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,10,"FA-UI-3: on-site medal step (gold/silver/bronze per day, D2 defaults, swap, Selective note)"
+c284398,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,"FA-UI-2: FA columns in the admin club table, only when FA is on"
+f3b6273,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-UI-1: workspace wizard switch for club types and medals (rules.fa_daa)
+831201d,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-S10: plan section 4 D8 table, path B medal row matches D12"
+2a74651,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-S11: converter writes EMAIL_MA_HS.csv; ghep_ket_qua_email.py builds the KetQua import file
+89af3f7,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S6: registration form generator reads club type from the club workbook; FREE clubs out of the gold question
+61f6cf9,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S4: quiz times accept datetime and ISO; one warning per file with the unreadable count
+149d745,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-S2: --bo-cau keyed by (club, variant, item); old CLB-SO form only for single-variant clubs"
+fc9170a,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S5: warn when a quiz file's variant differs from the assigned one (score kept)
+6973664,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S1: retake replaces attempt 1 only when flagged and on the retake variant; order-independent first attempt
+2f41281,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S3: D11 equating reports without shifting when either side is small
+c6ac99f,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,"FA-S7, FA-S9: export reasons of the latest run only; rollback test for fa_nhom/fa_ly_do"
+e970ef5,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,5,FA-S8: club CSV import ignores FA columns and keeps the row when FA is off
+e51a102,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: night-3 RUNNING lock
+19f6dd2,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-SOAT2: night-2 review (GO, fix list FA-S1..S11, nothing fixed), plan section 6 and night-3 protocol"
+5024e78,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: fix stale D2/D11/D12 lines in the branch handoff
+3e7d8a7,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: night 2 report 2026-11-09
+58bc370,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,"FA-M6: after-allocation docs FA_SAU_XEP.md (TH, docs only)"
+cd1fe46,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,12,FA-M5: Power Apps spec v2 (path A) + FA columns in the T4M build kit (TH)
+a61d703,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,8,"FA-M4: quiz variants, item analysis, D11 equating with admin gate (TH)"
+7c48eae,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,6,FA-M3: converter FA mode --fa-daa (TH)
+cde4384,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-M2: add >3 clubs case so the min(3, n) mutation is caught"
+1efa8d1,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,7,"FA-M2: path B registration Forms generator (--fa-daa, TH)"
+bfdc371,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,7,FA-M1: club setup form guide + converter chuyen_phieu_clb (TH)
+34450ac,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-M: night 2 RUNNING lock
+50cfa5d,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,3,"FA-SOAT: night-1 review report (GO), release night 2 (FA-M1..FA-M6) in CHAY_DEM_FA_DAA.md, handoff updated, RUNNING lock removed"
+f9b9031,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,3,FA-SOAT: treat DAA as an acronym in the natural-wording test (night-1 error messages turned it red)
+33d4fa9,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-SOAT: RUNNING lock (Opus review night 1)
+a80e626,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-BC: night report 2026-11-09
+1037920,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,18,"FA-4..FA-8: FA-DAA wrapper, minimum members, reasons and waitlist, demand table, property tests"
+702b09e,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,11,"FA-3: one-fund medals (kiem_ho_so_huy_chuong, diem_huy_chuong_hieu_luc, submit_huy_chuong)"
+8ae3e8e,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,12,FA-2: precheck kiem_truoc_fa wired into the run and the data health report
+3c22e0b,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,15,"FA-1: data model for FA-DAA (rules.fa_daa, club type columns, giu_cho, So nhap/CSV optional columns)"
+087090b,2026-11-09,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-0: RUNNING lock (night 1)
+5c4c645,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,2,FA-KH: night run writes and pushes its own report file docs/phien/bao_cao_dem/<date>.md
+c8d81a8,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,8,FA-M3 (part): path B medal placement with gold and silver/bronze-swap questions; all 6 placements tested
+4a59947,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-KH: Truong decisions - invariant-2 exception for default medals, D11 no-block equating, path B gold override"
+71d37e0,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,4,"FA-KH: apply council review (D1 reason, D3, D4, D5/FA-9 witnessed record, D9, D11, D12)"
+1cfac87,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,1,FA-KH: auto night-run setup prompt (scheduled task) and self-disable rule
+74ea6be,2026-11-08,Claude Code (theo yêu cầu và duyệt của Truong),,6,FA-KH: FA-DAA implementation plan and night-run instructions (docs only)
+bcfd93a,2026-11-06,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #13 from nguyenphanvantruong6969-arch/claude/upbeat-shannon-g5nnms
+ee81851,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: sửa CI PR #13
+28c83dc,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-NC: sửa CI đỏ PR #13 (số tệp test trong bản đồ mã, wharton tường minh ở demo_t4m, bỏ qua bk34 khi thiếu docx)"
+fe44472,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-NC vòng 5: soát K2 (T4M-BK3/4) đạt; vòng 5 xong
+979213b,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T4M-BK3, BK4: bảng flow DaLam_<ClubId> và lệnh gộp tao_bo_dung_t4m.py (bộ dựng cho IT)"
+1fb6d2e,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao: nhận K1 (T4M-BK1/2), mở K2"
+0e8d0ec,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T4M-BK1: sửa theo soát Opus: subactions cho site script, id cho addSPField, nhãn Nhan, bỏ xfail"
+91e6d3a,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,2,Soát K1 (T4M-BK1/2): trả lại 2 lỗi chặn; sửa quyết định 1 của §9 (Buoi khác chữ Thu)
+1fb93d0,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,10,"T4M-BK1, BK2: bộ dựng list (site script, CSV mẫu, bảng kiểm cột) và công thức Power Fx cho IT"
+c00038d,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: K1 (T4M-BK1/2) đang chạy
+35f18e7,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-BK0: tra cứu cách tạo list, dán công thức, nhân flow (KQ §8); prompt K1, K2"
+7906ac3,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),co,,"Gộp main (T3-L4, T3-L5) vào nhánh trước PR; CHANGELOG giữ cả hai bên"
+78d608c,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T4M-NC vòng 5: kế hoạch bộ dựng sẵn cho IT (T4M-BK, chờ Truong duyệt)"
+8d2a278,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: hướng mặc định là bộ dựng sẵn cho IT (theo câu trả lời 05/11)
+5fa4cc1,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: Truong muốn dựng hệ thống thật trên Microsoft (đề xuất T4M-BK)
+5d6654d,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: ghi yêu cầu dựng lại trang mô phỏng (chờ Truong trả lời)
+a6de03f,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao: vòng 4 xong, chuyển phiên (~400k ngữ cảnh)"
+c338943,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: vòng 4 xong
+baadf98,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,2,T4M-NC vòng 4: soát D1 (Q5a/b/c); sửa ghi chú HDT làm đỏ test cũ
+befdb1f,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-Q5a/b/c: CHANGELOG, TIEN_DO, bàn giao (D1 xong, chờ Opus soát)"
+7e274d4,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,7,"T4M-Q5a/b/c: bộ chuyển đổi đọc THIk/WPk, dữ liệu giả và demo --day-du"
+df2896f,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao: D2 đã soát, chờ D1"
+9c4f9bf,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-M6: soát D2; R37 không tính cảnh báo vắng thi hợp lệ
+7e31127,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,8,"T4M-M6: đặc tả app Top 7, tick chọn thi, điểm quyết tâm (chỉ tài liệu)"
+75d2093,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T4M-NC vòng 4: kế hoạch Top 7, tick chọn thi, điểm quyết tâm"
+060b0b7,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,8,T4M-DEMO-B: demo_t4m.py --moi-clb (cách B) và câu hỏi cổng thi cho GĐ2
+ba28d70,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,7,T4M-NC vòng 3: soát C1 (Q4a/b/c) và C2 (M5)
+f341694,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: C1 báo DONE (chưa soát); vòng 3 chỉ còn soát
+d887988,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: ghi tệp C1 vào Files touched
+0b2bbc8,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T4M-Q4a/b/c: cổng thi, mỗi CLB một biểu mẫu (--moi-clb, tệp xuất một CLB, --bai-thi)"
+3b4ef49,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao: C2 báo DONE (chưa soát), C1 đang chạy"
+c4371e4,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,5,T4M-M5: màn Thi tuyển (đặc tả app §10) và flow Đã làm; chỉ tài liệu
+790eb4d,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao phiên (quy tắc 9): vòng 3 C1, C2 đang chạy; phiên mới tự kiểm C1/C2"
+b906705,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-NC: Truong duyệt cổng thi (Q4a-c, M5, mức 5a); kế hoạch §7"
+ece1179,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-NC: thiết kế cổng thi (T4M_CONG_THI.md), đề xuất Q4a-c, M5"
+fe37cd4,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: vòng 2 xong, soát đạt (R1-R3); chờ GĐ2"
+8711ae1,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T4M-M3: so nguyện vọng theo giá trị thô, cảnh báo mã CLB lạ ở dòng đầu (sửa sau soát)"
+d9d69fc,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,7,"T4M-M3: công cụ đối chiếu hai lần xuất List (doi_chieu_lists.py), test trước, hướng dẫn bước 8"
+d9d4810,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,2,T4M-M4: soát đạt; sửa tham chiếu DLP (NC-14)
+dc8e65f,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-M1: soát đạt; thêm dòng kiểm 5.5, 5.6 vào HDT §9 cho R10, R12"
+d8d47c7,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,T4M-M4: hướng dẫn flow gửi Excel theo lớp cho GVCN (chỉ tài liệu)
+d78dcc4,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,T4M-M1: đặc tả sửa app ECA sang Top 3 mỗi ngày (chỉ tài liệu)
+76760fb,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-NC: Truong duyệt vòng 2 (D1-D5 nguyên tắc, M1/M3/M4, K2-b); kế hoạch §6"
+22de187,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: chuỗi tự chạy xong, soát đạt; chờ Truong duyệt D1-D5, M1-M4, K2"
+bf30863,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T4M-DO: sửa số CLB có đề thi (10), ghi chú phương pháp, thêm test Tầng 1"
+3df9591,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: soát Q1b, S3 đạt; S4 trả lại (đếm CLB có đề sai)"
+b6d406d,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: gỡ dấu xung đột còn sót
+4f7c4e2,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,6,T4M-Q1b-b: --co-so cho --chi-thi; cập nhật hướng dẫn vận hành bước 4-5
+a89b0cc,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: STATUS T4M-GD4-V0 DONE (ce342ee)
+ce342ee,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-GD4-V0 (S3): nháp v0 kiến trúc Microsoft T4M_MICROSOFT.md, chỉ tài liệu"
+f240afd,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,8,"T4M-DO: đo mô phỏng có/không bài thi tuyển (3 bộ x 20 seed), chỉ bảng số"
+7f9a6bd,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,7,T4M-Q1b: --chi-thi chép Lớp từ Lists vào Sổ nhập; bỏ workaround trong demo
+65929af,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-NC: soát S1 đạt; Q1b thêm lọc --co-so
+c34c2ad,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-VH: hướng dẫn vận hành một đợt xếp CLB (S1, chỉ tài liệu)"
+37227a7,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: soát S0, S2 đạt; thêm T4M-Q1b (cột Lớp); mở S1, S3, S4"
+5416cf3,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao: STATUS T4M-DEMO DONE
+0e65a25,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-GOI-TK: ghi STATUS vào tệp bàn giao
+a724902,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-NC: phiên con báo DONE/BLOCKED về phiên điều phối (Truong yêu cầu)
+34ccd56,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-GOI-TK (S2): thiết kế gói nhiều buổi (tiếng Nhật), chỉ tài liệu"
+40ff8ee,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,3,T4M-NC: kế hoạch tự chạy S1-S4 kèm prompt (Truong duyệt 06/11)
+4c7ad66,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,8,T4M-DEMO: chạy thử trọn chuỗi bằng một lệnh (Lists giả + Forms chỉ-thi giả -> Sổ nhập -> xếp CLB -> Excel theo lớp)
+7c6bbfa,2026-11-06,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-NC: soát T4M-Q1..Q3 đạt; Truong duyệt T4M-DEMO
+6947ec2,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,12,"T4M-Q1..Q3: chế độ chỉ thi của mẫu Microsoft Forms (Email làm khoá, tách theo buổi, ghi chú giáo viên)"
+a50d218,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: Truong duyệt T4M-Q1..Q3, giao phiên Sonnet"
+dda62a5,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T4M-NC P5: đường thu điểm thi trên Microsoft (Forms Quiz, Power Apps), NC-27, câu phỏng vấn mới"
+62a0dc7,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,1,T4M-NC GĐ3: ghi chú điểm thi đến từ tệp xuất bài thi riêng (P5)
+bb34f14,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,3,"T4M-NC: quyết định thi tuyển theo RB-DA (Truong 05/11), thêm NC-23..26 và prompt P5"
+ec5a580,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T4M-NC GĐ3: hướng dẫn thử Microsoft, bộ sinh tệp xuất Lists giả, test"
+12b886a,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,4,T4M-NC: phiếu phỏng vấn GĐ2 (T4M_PHIEU_PHONG_VAN.md); P3 chuyển sang phiên Sonnet riêng
+c035000,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4M-NC: kế hoạch giao Sonnet P3 (sửa: mô hình rộng, hai người đọc) và phiếu phỏng vấn GĐ2"
+b3481d5,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao phiên (quy tắc 9): T4M-NC sau GĐ1 + P4, chờ GĐ2 phỏng vấn IT"
+fc183e4,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-NC GĐ1 + P4: kết quả đọc tài liệu Microsoft/PowerSchool, hợp đồng nhập kiosk; T4-K2 tạm dừng"
+fd4d2ee,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,4,"Z-CLAUDE-GON: CLAUDE.md gọn 40% (tiếng Anh, gộp trùng, dời chi tiết sang CLAUDE_CHI_TIET.md); chờ Truong duyệt"
+e6b3cf8,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T4M-NC: gọn prompt P1-P4 (luật chung một chỗ, tiếng Anh, đọc đúng mục)"
+cf11999,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T4M-NC: kế hoạch nghiên cứu hệ sinh thái Microsoft của trường (22 câu NC, prompt P1-P4)"
+835f72c,2026-11-05,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #12 from nguyenphanvantruong6969-arch/claude/kind-maxwell-yhrnml
+2324aaa,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,5,"Tiêu đề thẻ Quản lý chỉ ghi ""Quản lý""; sửa test giao diện"
+ceeeef8,2026-11-05,Claude Code (theo yêu cầu và duyệt của Truong),,7,"Điểm chuẩn cùng nền các thẻ khác; thẻ 05 chỉ ghi ""Quản lý"""
+b1f290c,2026-11-05,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #11 from nguyenphanvantruong6969-arch/claude/gallant-mendel-uki8j2
+b17ac78,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T3-L4: thứ tự tệp Tải bảng theo màn hình, bỏ dòng nhắc chết Chưa có lớp nào, Điểm chuẩn gọn"
+b9d4e19,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3-L4: kế hoạch lô 4 (thứ tự tệp xuất, bỏ dòng nhắc chết, Điểm chuẩn gọn)"
+89745d4,2026-11-05,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #10 from nguyenphanvantruong6969-arch/claude/gallant-mendel-uki8j2
+1f5903d,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,T3-L3 fix: test chưa có lớp kiểm hành vi thật thay vì ép trạng thái (CI chập chờn)
+384065a,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,T3-L2 fix3: test node đọc đầu ra UTF-8 (CI Windows)
+ab44681,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3: chốt bốn lô, ghi việc tiếp theo cần Truong"
+cfd617a,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,7,"T3 tester: soát L3, ảnh sau_L3, ghi chú bàn giao"
+1d5a384,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T3-L3 fix: 13 ca test UI theo cấu trúc L3 (a13_10, a13_12, a14, t2, wharton); CHANGELOG, TIEN_DO"
+ca81585,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3-L3 fix: test_giao_dien_a14_lop theo cấu trúc mới (bỏ cột Thứ tự, ẩn Theo lớp, 25 khoá)"
+badc3b1,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: giao thức: lệnh test im lặng vẫn in tên ca hỏng (-rf)
+ad4f227,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,33,"T3-L3: tên thẻ, thẻ Kết quả gọn, tải bảng, Điểm chuẩn một bảng, chữ Sổ nhập, wizard từ mẫu (chưa soát xong test UI liên quan)"
+7ac6beb,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,3,T3-L2 fix2: test bảng lỗi dùng buổi chữ tự đặt (giao diện đổi mã buổi sang nhãn)
+529cb0d,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T3 tester: re-check L2 fix1, ảnh 01/04/07 thay mới"
+d104e69,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3-L2: bàn giao impl (fix1 xong)
+a1258c3,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,8,"T3-L2 fix1: nhãn nút xoá phiếu, nhãn buổi trong cảnh báo, dòng lần chạy gọn, cột Thao tác ẩn chữ, test tập mã buổi"
+fab9f82,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3 tester: bàn giao (200k)
+9dd8e14,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,7,T3-L2 tester: ảnh chụp sau L2 và ghi chú bàn giao
+a8b4407,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T3-L2: CHANGELOG, TIEN_DO, CLAUDE_CHI_TIET, test tĩnh T3-21/23/28, dọn CSS .fill-row, bàn giao impl"
+643f9f5,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,10,"T3-L2: T3-21 gộp thẻ Mức lấp đầy vào bảng Theo từng CLB (cột thanh + cột Lưu ý, sắp xếp ở đầu bảng)"
+1332688,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,11,"T3-L2: T3-23 khung xuất: một nút chính + Tuỳ chọn khác thu gọn, T3-28 bỏ Lịch tuần, tỉ lệ chọi dấu phẩy"
+d4f245c,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,7,T3-L2: T3-29 điểm quyết tâm mặc định chỉ hồ sơ có vấn đề + bàn giao impl
+5c9b23a,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T3-L2: T3-32 hàng học sinh mới cạnh ô tìm + cuộn tới phiếu, T3-33 lớp hiện dạng chữ, T3-34 menu ⋯ ba nút phụ, T3-35 bỏ mã thô, chấm Chưa lưu nổi hơn"
+8135256,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T3-L2: T3-24 ba ô tóm tắt (NV1 và suất dự trữ chuyển xuống mục chi tiết), T3-25 tiêu đề cột, T3-20 mục 'Chi tiết để kiểm tra'"
+7b07e51,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3-L2: ghi trạng thái bàn giao impl
+d62f9b0,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T3-L2: T3-15 dòng workspace: Mở + menu ⋯, bỏ cột Loại khi một loại, ẩn mã thư mục"
+fa08ec8,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,14,"T3-L2: T3-06 dòng kết quả gọn, T3-10 một nút chính theo trạng thái, T3-12 chân thanh bên + menu ⋯"
+75265e8,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,8,"T3-L2: T3-02 cảnh báo gọn + nút tới Điểm quyết tâm, T3-03 ẩn nút khi chưa có tệp, T3-04 một nút kiểm tra"
+a96194d,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,12,"T3-L2: T3-14 nhãn buổi (Thứ 2..) qua i18n, T3-07 bỏ hai ô Từ/đến"
+ad1481d,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3: L1 xong, bắt đầu L2"
+555847d,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3-L1 tester: kiểm lại fix1, thay ảnh 06"
+4aa7ab4,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T3-L1 fix1 (WIP, chưa push): chữ Excel trong test, th_ti_le_choi, placeholder biểu mẫu CLB"
+74e4d26,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,7,T3-L1 tester: ảnh chụp sau L1 và ghi chú bàn giao
+61d83e2,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3: giao thức thêm ba tầng test (máy con, tester, CI)"
+b765f21,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,3,CI-HUY: huỷ lượt CI cũ khi có commit mới trên cùng nhánh (trừ main)
+7d1e130,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3: bàn giao impl 1 (trạng thái L1, môi trường test, bẫy chữ ghim)"
+380adc6,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3: giao thức mới: ngưỡng con 200k, impl mới mỗi lô, test im lặng, bớt push tệp điều phối"
+7dc40eb,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: L1 sang bước soát
+0fd4981,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T3-L1: chữ và hiển thị nhỏ (T3-05, 08, 09, 13, 30, 36-40, 43, bảng 5.1-5.3)"
+69bafb2,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T3-L1 (WIP, chưa push): sửa test cũ theo chữ mới"
+04eb106,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,21,"T3-L1 (WIP, chưa push): đổi chữ, mục Nâng cao, dải số liệu, chữ Excel"
+2947617,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: L0 fixci1 đã push
+75ed1e3,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,5,T3-L0 fixci1: cập nhật test theo quyết định B3 và B2
+7f7a845,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: giao thức: test liên quan chọn bằng grep định danh đã đổi
+246d7bf,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3-HT: test hook chạy được trên Windows (giữ PATH, git init một lần)"
+5a1b9ad,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: giao thức thêm quy tắc đếm tệp test
+76d79e3,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3-HT: đếm lại số tệp test trong bản đồ mã (184 tệp, 3.384 ca)"
+6b5357b,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3: L0 xong (PR #10), giao L1"
+a9b56b4,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3-L0 tester: soát lại fix1, không còn lỗi"
+e8944b2,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,6,"T3-L0 fix1: ô suất dự trữ mặc định trống, câu B3 không dùng chữ tab"
+9151962,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: L0 vòng sửa 1
+6bd191b,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3-L0 tester: cập nhật kết luận soát (2 lỗi)
+c34b3ce,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,4,"T3-L0 tester: ảnh chụp sau L0, tệp bàn giao tester"
+f5751c3,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: L0 sang bước soát
+661bccb,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,14,"T3-L0: sửa CLB không mất dữ liệu (B1), chặn chạy khi trống (B2), câu lỗi điểm quyết tâm (B3)"
+7e90e14,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,T3: ghi phiên impl vào tệp điều phối
+639b4e7,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,7,"T3-HT: giao thức tự động T3, hook bàn giao theo vai, kế hoạch bốn lô"
+5a41dc8,2026-11-04,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #9 from nguyenphanvantruong6969-arch/claude/peaceful-ride-3pmleb
+a16bf16,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,2,Sửa test giao diện A14 chập chờn trên CI (đọc ô bằng textContent)
+3c67776,2026-11-04,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #8 from nguyenphanvantruong6969-arch/claude/epic-knuth-801pkw
+aa48425,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao phiên: PR #8 sửa CI (baac5d0), chờ CI chạy lại"
+baac5d0,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,4,"PR #8 sửa CI: nap_rb nạp lop_hoc_sinh trước mô-đun chính (T4-K1), kỳ vọng dòng ghi RAW_PHIEU mới"
+930afcd,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao phiên: đã gộp main và mở PR #8 (chưa có T4-K2), chờ CI"
+aac38df,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),co,,"Gộp main vào claude/epic-knuth-801pkw: giữ T1b đầy đủ cặp (kèm luật C1 của main: đổi nhãn cặp trùng là cặp mới), test A14 lấy bản main, sổ mẫu sinh lại, đếm lại 181 tệp / 3.360 ca"
+5a88060,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao phiên: ghi kết quả soát thiết kế T4 vòng 5 (5 điểm mơ hồ chặn K2)
+24e42f6,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao phiên (quy tắc 9): điều phối T4-K1 xong, chờ soát thiết kế vòng 5 rồi T4-K2"
+00372e0,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,9,"T4 sửa vòng 4: khối 100 hàng, đối soát khi chốt, trạng thái đợt, huỷ xuất, sơ đồ b1 b2 c vẽ lại"
+85d22ce,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,14,"T4-K1 sửa vòng 1: chuan_hoa_lop sang lop_hoc_sinh.py (gói skill chạy ngoài kho), báo cáo lớp phiếu giữ trống, .gs khớp mã chuẩn hoá và đếm mã không khớp"
+c50d5c0,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao nhánh: cập nhật docs/phien cho T4 (CON-4)
+ca9e161,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,11,"T4 sửa vòng 3b: quy ước cài đặt cho K2 (mục 7.7), vòng đời trigger tách đóng form và kết thúc lô, dọn hàng dở đầu lô, thoi_gian_nop, xuất riêng khỏi chốt"
+aafa4e4,2026-11-04,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #7 from nguyenphanvantruong6969-arch/claude/a14-chot-tai-lieu
+fff0f41,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,10,"T4-K1: cột lop tuỳ chọn (hoc_sinh -> RAW -> cột Lớp của Sổ), chamTheoCLB(ghiLop) mặc định tắt"
+804d205,2026-11-04,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A14: chốt tài liệu sau khi merge PR #6 (TIEN_DO, bàn giao, CHANGELOG)"
+373eaf0,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"TIEN_DO: T4-K1, T4-K2 không tạm dừng; làm sau T1/T2 và T3 (thiết kế T4 tiếp tục song song)"
+fb72a8b,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"TIEN_DO: T4-K1, T4-K2 tạm dừng; giao phiên cha thay cho Con-4 (Con-4 chỉ thiết kế)"
+78cb0e7,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,4,Z-SOAT-2: soat-ma tìm ruff trên PATH khi Python không có mô-đun ruff
+c45c8a2,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A14-B10: hai test A14 dựng CSDL cũ bằng _bo_cot (PRAGMA + CREATE TABLE), bỏ DROP COLUMN"
+3e9b0bc,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"TIEN_DO: đăng ký T4-K1, T4-K2 (Truong duyệt 03/11/2026)"
+40f893a,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4: mục 11.3 ghi ràng buộc xuất theo phần với skill xu-li-raw-forms (đánh số phiếu liên tục, không cắt ngang phiếu, mỗi lần xuất một thư mục)"
+94af893,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,2,T4-K3: CLAUDE_CHI_TIET đếm 179 tệp test
+7e64cc4,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,5,"T4-K3: skill xu-li-raw-forms đọc thư mục nhiều phần CSV (ghép theo số phần, từ chối khi thiếu phần, tiêu đề lệch, lẫn bộ xuất, phiếu ở hai phần)"
+48ff9c3,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T4 sửa vòng 3 (tài liệu): bắt buộc tắt sửa phản hồi, khớp luật giữ phiếu đầu khi xuất, ngoại lệ ngưỡng một nửa, tính lại xuất khi hạn mức 3 phút"
+b044c4c,2026-11-03,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #6 from nguyenphanvantruong6969-arch/claude/a14-giao-dien
+10a530e,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,15,"T4 sửa vòng 2: khoá bằng ID phản hồi, vòng đời trigger, ghi dở, thông lượng, gán lại mã, xuất theo phần"
+0d28de0,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"T3 sửa vòng 2: NULL thay cho mã buổi mặc định, xếp đủ 43 phát hiện vào lô, quyết định cách nhãn buổi tới JS, số chỗ gọi"
+7461c0b,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,2,"T3 sửa vòng 1: lỗi sản phẩm (mất dữ liệu CLB, khoá seed), gốc lỗi tên buổi, đường ra điểm quyết tâm, bổ sung vi phạm chữ"
+3373196,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,11,"T4 sửa vòng 1: V1 gọn (phieu duy nhất, raw_key bằng băm, xuất tệp riêng), thay đổi kho cho Lớp, ngân sách ô và trigger tính lại, vẽ lại sơ đồ"
+bfb340f,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,12,T3: nghiên cứu debloat giao diện
+d0a99a3,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,11,T4: mô hình hệ sinh thái thu thập dữ liệu (bản đề xuất để duyệt)
+353d1c4,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A14 sửa CI: test A5 dựng CSDL cũ bằng CREATE TABLE, không phụ thuộc phiên bản SQLite"
+8ed0a66,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao nhánh: vòng 1-3 xong, chờ Opus"
+cebfa2c,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,4,T2 sửa vòng 3: ảnh chụp Sổ theo chữ Hướng dẫn mới; bàn giao nhánh
+71c6266,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14: CHANGELOG ghi kỳ vọng sửa ở test_giao_dien_upload
+bf9890f,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14: test_giao_dien_upload sửa ô theo vị trí vì sổ ví dụ có cột Lớp (thay đổi đã duyệt)
+0e56a1b,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,7,T2 vòng 2: sinh lại sáu sổ DQT theo chữ Hướng dẫn mới
+6c6293f,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,8,"T2 sửa vòng 2: tràn ngang (G1), số thẻ tài liệu (G2), chữ sheet Hướng dẫn (G3)"
+36859d4,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),co,,"Merge A14 phần A (c3cd884); CLAUDE_CHI_TIET đặt lại số thật (177 tệp, 3.315 ca)"
+c3cd884,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,10,"A14 sửa C2: kỳ vọng test cũ (bố cục sổ mẫu), tài liệu mẫu có cột Lớp mô phỏng, CHANGELOG C1/C2, bàn giao"
+0a550b7,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,2,T1/T2 vòng 1: test_ws_nhan cho phép đúng các thay đổi chuỗi có chủ ý
+3c8c9f8,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,17,"A14 sửa C2 (đang làm): script them_lop_vao_mau.py, Sổ/CSV mẫu có cột Lớp mô phỏng, test mới; kỳ vọng test cũ và tài liệu cập nhật ở commit sau"
+c10dda9,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,T1/T2 vòng 1: cập nhật số tệp và ca test trong CLAUDE_CHI_TIET
+1bb608f,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,3,A14 sửa C1: cho ghi lại / nhân bản cấu hình đã lưu có nhãn trùng khi không đổi cặp trùng; vẫn từ chối cặp trùng mới hoặc bị đổi
+712a139,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,27,"T1/T2 sửa vòng 1: nhãn trùng (F1-F3), sổ mẫu khớp phần mềm (F4), số thẻ cũ (F5), khoá mồ côi, số ít/nhiều, Theo CLB nhóm theo buổi, nhớ lớp/CLB (F6-F8)"
+47a9788,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao nhánh: T1a, T1b, T2 xong"
+6a070da,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,28,"T2 gộp thẻ 02/06/07 thành Kết quả (Theo lớp, CLB, mã học sinh) và Dữ liệu khác"
+dcf5011,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,7,T1a sổ mẫu chính có cột Lớp; T1b nhãn trùng cũ không chặn lưu cấu hình
+87c65fc,2026-11-03,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Bàn giao nhánh: kế hoạch T1 (sổ mẫu có Lớp, nhãn trùng cũ) và T2 (gộp thẻ Kết quả)"
+856ecdb,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A14 sửa B8: chữ thẻ 06/07 theo luật văn phong (bỏ gạch ngang, STT, lựa chọn rỗng, ô trống); test_diem_chuan so bảy tên trang"
+0a0c2bf,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,A14: sửa kỳ vọng tiêu đề Sổ mẫu có cột Lớp trong test_ws_so_nhap_giao_dien (thay đổi đã duyệt)
+ed9b6b4,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,"A14: CLAUDE_CHI_TIET số tệp/ca thật của nhánh gộp (176 tệp, 3.279 ca)"
+4ac09eb,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge A14 phần A (07ad358)
+07ad358,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A14 sửa A6: tài liệu (CHANGELOG phần A, số tệp/ca thật, tiêu đề sổ, TIEN_DO, bàn giao)"
+a64252b,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14 sửa A5: di_tru_schema chụp sao lưu một lần trước bước sửa đầu tiên; lỗi ghi sao lưu không làm hỏng việc mở workspace
+4afeb3e,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,6,"A14 sửa A2–A4: sắp tự nhiên chỉ số ASCII; chuan_hoa_lop NFC + bỏ Cf/Cc; kiểu và độ dài lớp (lop_sai_kieu, lop_qua_dai, canh_bao_lop_bi_cat)"
+548ca75,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A14 sửa B7: CHANGELOG (số ca thật, B1–B7, duyệt ngoại lệ tệp xuất), sổ đăng ký, bàn giao, js/_danh_sach.txt + test thứ tự tệp JS"
+e73bfd5,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,A14 sửa B6: _trinh_duyet tìm Chromium ở chrome-linux64 và tệp chromium chạy được; test cho bộ tìm
+94f9057,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,8,"A14 sửa A1: từ chối nhãn hai danh từ trùng nhau; khứ hồi Sổ cũ trùng không đảo Lớp/Nhóm, kèm cảnh báo"
+3c51945,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,A14 sửa B5: dòng nhắc thẻ 07 gọi đúng tên thẻ và mục trên thanh bên bằng chỗ giữ (vi + en)
+e538ed2,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A14 sửa B4: bỏ _khoa_lop_xuat, dùng _khoa_lop_tu_nhien của A; test không trùng tên hàm giữa mixin và lớp '10²' (xanh khi có bản sửa isdecimal của A)"
+d9661d4,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A14 sửa B3: tên tệp lớp dài được cắt (~100 ký tự, ≤200 byte) trước khi khử trùng"
+845655c,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A14 sửa B2: ô lớp ở kiosk tính là chưa lưu (dấu Chưa lưu, nhắc hai lần khi rời, chặn xuất em khi chưa lưu)"
+12b1f1c,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,A14 sửa B1: export_theo_lop báo kết quả cũ (cờ ket_qua_cu + dòng cảnh báo trong tệp lớp và trang Theo lớp)
+48ca102,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14 phần B: test chỗ giữ cohort được điền thật trên mọi thẻ
+2730c98,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge A14 phần A (7ca14f5)
+241757d,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14 phần B: cập nhật bàn giao
+b166b96,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,12,"A14 phần B: hai thẻ xem 06/07, đổi ngôn ngữ vẽ lại ô lớp, export_theo_lop dọn thư mục dở"
+7ca14f5,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,7,A14: sửa kỳ vọng test cũ do Sổ mẫu có cột Lớp và class_id ở entry state; bàn giao
+7ed8135,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A14 B: backend hai thẻ xem (get_thoi_khoa_bieu lọc lớp, class_id ở danh sách CLB) + test"
+2bab4c9,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge A14 phần A (bản mới)
+e34c23f,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,A14: thêm 4 mã lỗi mới vào MA_MOI_SAU_ANH_CHUP
+8f2e70b,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14 phần B: cập nhật bàn giao sau soát mã
+ae2ce4e,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,1,A14 phần B: test ô lọc lớp lần mở đầu và giữ lựa chọn Chưa có lớp
+24ec02d,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A14 phần B: sửa trùng tên hàm sắp lớp, ô lọc lớp, test giao diện khớp API của A"
+45356d8,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge A14 phần A (API lớp)
+ddd6035,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A14: submit_test_selection/create_student_if_missing nhận class_id (phải có trong list_classes), get_student_entry_state có class_id"
+0f077dd,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,15,"A14 phần A: nhập CSV/Sổ có lớp, API lớp, báo cáo, tài liệu, sổ đăng ký"
+a01a9f8,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A14 phần B: CHANGELOG, TIEN_DO, HUONG_DAN_SU_DUNG"
+b41c881,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,9,"A14 phần B: giao diện lớp (Quản lý, Kết quả, kiosk, workspace), i18n, test, bàn giao"
+261ee79,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,4,A14 B: sửa kỳ vọng trang Theo lớp trong test cũ
+01c2561,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge nen A14 (phien A)
+6c015e6,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,2,A14 phần B: xuất theo lớp (api_xuat) + test
+fbc82c9,2026-11-02,Claude Code (theo yêu cầu và duyệt của Truong),,9,"A14 nền: students.class_id, chuan_hoa_lop, danh từ cohort"
+ddf029a,2026-11-01,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #4 from nguyenphanvantruong6969-arch/claude/wharton-mac-dinh-bat
+a05fc1e,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao phiên (quy tắc 9): phiên 2 nhận bàn giao
+2176ee7,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao phiên (quy tắc 9): xác nhận lại
+74ab5bb,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,Bàn giao phiên (quy tắc 9)
+01ea7cd,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.13: ban giao cuoi (Truong da duyet)
+94d3e53,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.13: ghi Truong da duyet thay doi HS024 va 4 ca test (01/11/2026)
+5ec2807,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.13: cap nhat ban giao cuoi phien
+a19731c,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A13.13 nhom B: chinh 4 test theo bo vi du co diem (hash vi_du_day_du, canh bao csv_wp_bo_qua), TIEN_DO, ban giao"
+a27a9e9,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,35,"A13.13 nhom B: them diem quyet tam MO PHONG vao bo vi du (script seed co dinh), skill, NHAP_TAY, bo_sach tat ro rang, gop nhanh demo; ban giao"
+f133fd5,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge remote-tracking branch 'origin/claude/demo-wharton-va-duong-dan' into claude/wharton-mac-dinh-bat
+14737b7,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,32,"A13.13: sua nhom A sau CI toan bo (fixture api tat Wharton), sua cau VI thong bao, CLAUDE_CHI_TIET, CHANGELOG"
+ea9965b,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),co,,Merge remote-tracking branch 'origin/claude/sleepy-sagan-ly5fx0' into claude/wharton-mac-dinh-bat
+64e47f5,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,3,Tài liệu dữ liệu tả .claude/settings.json và hook bàn giao; sửa test gương
+79c8946,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,15,"A13.13 (tiep): CSDL demo bat Wharton + --tat-wharton, va duong dan cung do_do_dai_nguyen_vong.py"
+4fe6f56,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,2,Sửa test tài liệu: bản đồ mã đọc ở CLAUDE_CHI_TIET.md sau khi rút gọn CLAUDE.md
+4804e6b,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.13: sua test giao dien wizard (mac dinh bat), cap nhat ban giao va CHANGELOG"
+cf7c66c,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.13: bo test kiem nhan do phien cha thiet ke (nhom A-G)
+5a11935,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,8,"A13.13: sua test giao dien va stress (tat Wharton ro rang), thong bao EN khong xung ho cam"
+02e466b,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,46,"A13.13 (tiep): sua test cu, script du_lieu_test, thong bao, tai lieu, CHANGELOG/TIEN_DO"
+faa9f07,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,6,A13.13 (dang lam): mac dinh workspace truong hoc BAT diem Wharton
+cee2940,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,2,Quy tắc 11: phiên Opus tạo tệp bàn giao của nhánh mới
+5fd624b,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,8,"Bàn giao theo nhánh (docs/phien), hook ngưỡng 400k, rút gọn CLAUDE.md, vai trò mô hình"
+2367a8c,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,2,CLAUDE.md: thêm quy tắc 10 NO SUBAGENT
+0d91afb,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,3,Chỉ chạy test liên quan thay vì toàn bộ bộ test
+4ad4bac,2026-11-01,Claude Code (theo yêu cầu và duyệt của Truong),,4,"Cơ chế bàn giao giữa các phiên: TRANG_THAI_PHIEN.md, quy tắc 9, hook Stop"
+43465d2,2026-10-29,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,"A13.6–A13.12: dữ liệu mẫu, soát mã, sửa lỗi, stress test, Điểm chuẩn mới (#3)"
+b045b42,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.12: cập nhật số tệp / ca test (164 / 3.059)
+2f4228d,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,"A13.12: CHANGELOG ghi kết quả kiểm (phủ 92,98 %, kiem_nhanh 7/7)"
+e1f6d56,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,4,A13.12 (CI Windows): chan_doan so mục trùng sau khi chuẩn hoá \r\n; script in tiếng Việt reconfigure stdout/stderr utf-8; kiem_nhanh dùng errors=replace; test giả lập cp1252 / CRLF
+2f313ec,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.12: ws_v_cong_thuc viết lại không còn ' - ' đứng riêng (test_van_phong_tu_nhien)
+4d02c6d,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13.12 (1.4, Truong giữ giới hạn): câu lỗi so_nhap_cot_lech_nhom nói cách sửa; ghi vào HUONG_DAN và báo cáo; test"
+a7c4709,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13.12: CHANGELOG, TIEN_DO, sổ đăng ký, số tệp / ca test thật (163 / 3.054)"
+533fdd6,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.12: bảng xử lý cho BAO_CAO_SOAT_NHAP (39 mục) và Tầng 4 của BAO_CAO_SOAT_MA_A13
+047b2cb,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.12 (4.1): CLAUDE.md bản đồ mã theo TÊN HÀM (không số dòng), thêm nhóm Điểm quyết tâm, số tệp test thật; DOI_CHIEU_KHO_MA.md mục cập nhật 28/10/2026; test canh"
+dd94e50,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,7,"A13.12 (soát nhập Quản lý, workspace): toast xoá CLB nêu số điểm và tệp sao lưu (3.2), đồng bộ trang (3.3), không điền lại chữ cũ sau thao tác đổi dữ liệu (3.4), tìm TKB không khớp giữ ô tìm (3.6), chi tiết điểm chuẩn bỏ phản hồi cũ (3.9), lưu/xoá CLB làm mới bảng tải (3.10), tạo workspace mở lỗi không đẻ trùng (4.8), wizard chặn nhãn công thức (4.10)"
+15eabd9,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.12 (soát nhập kiosk): ô tự điền 100 không gửi (2.2) và không báo 'Chưa lưu' giả (1.8/2.4); mốc 'đã lưu' theo bản chụp lúc bấm (1.7/2.3); xoá em dọn sạch (1.9/2.6); chọn em xoá dòng thông báo cũ (2.5); đồng bộ trang (1.6). Bốn test cũ sửa có duyệt (Truong chọn A).
+a6738ca,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,10,"A13.12 (soát nhập backend): kẹp trang (1.6/3.3), create_student_if_missing chuẩn hoá + từ chối mã rỗng (3.1), delete_club sao lưu + báo số xoá (3.2), delete_workspace kiểm trong khoá + dựng lại mặc định (4.1, 4.2), tier chặn lưu/đọc chấm điểm (4.3, 4.4), mã không băm được (4.5), export_workspace chỗ lùi trung tính (4.6), keyword/1000 bản/số âm dạng chuỗi (2.7-2.9), một bản đọc ô (1.10)"
+c8f986e,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.12 (soát nhập 1.4, 1.5): cột phụ bên phải nhóm cuối không làm cả sổ bị từ chối; chữ số Unicode ở ô điểm quyết tâm không làm ghi_so_nhap sụp"
+173e017,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,6,"A13.12 (soát nhập 1.1, 1.2): F5 không tắt máy chủ dự phòng (báo đóng chỉ đánh dấu, tắt khi vắng ping/kết nối sống); lỗi HTTP trả {code, params} (4 mã mới http_*)"
+1ab2174,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.12 (4.2): skill xu-li-raw-forms tả đúng bố cục sổ mẫu (có cột Điểm quyết tâm), HUONG_DAN: 'điểm của em khác'; test canh"
+8021916,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,"A13.12: test giữ đổi ngôn ngữ vẽ lại fallback_phu_buoi / btn_remove_ranked (đã đúng ở mã hiện tại, đột biến bỏ renderRankingList làm test đỏ)"
+9a19068,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.12 (4.3): thêm test canh khoá dc_*
+56cc766,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.12 (4.3): xoá khoá i18n chết dc_cot_buoi (dc_tooltip_so đã xoá ở A13.10) + test canh khoá dc_*
+f1292c8,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.12 (4.5): test rollback thật tại _ghi_nhat_ky_wharton(""khoa"") (4 bảng nguyên vẹn) + ca biên tổng 99/100/101"
+daff982,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,9,"A13.11: sửa kỳ vọng 2 test cũ theo N2 (Truong chọn A); lỗi xuất không lộ đường dẫn máy (error_exporting_*, so_nhap_mau_loi, export_workspace)"
+77b1cb9,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A13.11: CHANGELOG, TIEN_DO, sổ đăng ký, cập nhật VAN_DE_STRESS_TEST"
+43f3f89,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,12,A13.10: EN dùng 'commitment points' cho toàn giao diện và thông báo lỗi (thay 'preference points')
+5088334,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.10: CHANGELOG ghi kết quả kiểm sau rebase
+86f7c65,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.10: bảng màu tối của khối Điểm chuẩn qua biến --dcd-* (sửa 4 ca WCAG), ghi kết quả kiểm vào CHANGELOG"
+525868e,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,10,"A13.10: làm lại cột Đơn và chỗ (nhãn mức bằng chữ, đơn vị, thanh chung thang); cập nhật test, hướng dẫn, ảnh sau"
+f035dfb,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,14,"A13.10 (2/2): thiết kế lại màn Điểm chuẩn (bảng hai cột có thanh, Đơn / chỗ thanh tỉ lệ màu, một biểu đồ beeswarm), sáng/tối, reduced-motion; ảnh sau; CHANGELOG, TIEN_DO, sổ đăng ký"
+adebb76,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,15,"A13.10 (1/2): đổi nhãn hiển thị Tầng 1/2 thành Xét điểm thi / Xét điểm quyết tâm (VI/EN, Excel, hướng dẫn); ảnh trước"
+02c3089,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,6,"A13.11 (N1): xuat_duong_la_thu_muc chỉ mang tên thư mục, không lộ đường dẫn máy; kết quả đo lại s3/s5/s6/s8"
+49c7319,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,9,A13.11 (N3): mọi hàm gặp CSDL bận báo csdl_dang_ban (chờ <= 3 s); chạy xếp dừng ngay khi không sao lưu được; giao diện nói rõ 'CSDL đang bận'
+2fb9680,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.11 (N4): xếp hàng các lời gọi đọc — mở thẻ Kết quả ở 5.000x100 từ ~3,7 s xuống ~0,7 s"
+442725f,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13.11 (N2): nạp Sổ / CSV ghi MỘT dòng tóm tắt vào wharton_nhat_ky thay vì một dòng mỗi em
+902cb6b,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,6,A13.11 (N1): đường xuất là thư mục có sẵn bị từ chối bằng xuat_duong_la_thu_muc
+a2d8b4b,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,18,"Stress test: báo cáo đầy đủ trên đỉnh A13.9, kết quả JSON 8 nhóm, cập nhật VAN_DE (còn/hết, commit sửa)"
+c27ff32,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Stress test: s5 dùng chuỗi tìm khớp thật và nhận biết trạng thái rỗng
+167be48,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"Stress test: s8 chờ kết nối treo ≥ 60 s (--cho-treo), s2 coi xem trước có lỗi là từ chối và lưu ca sổ nhận nhưng pipeline từ chối"
+1fcef81,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Stress test: danh sách vấn đề sơ bộ (VAN_DE_STRESS_TEST.md)
+6687607,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,11,"Stress test: 8 script đo (chưa chạy bản đầy đủ), chưa có báo cáo"
+32cbf0f,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13.9: sửa hai test cũ (Truong chọn 1A, 2A), cập nhật CHANGELOG"
+542922f,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.9: CHANGELOG, TIEN_DO, sổ đăng ký"
+ae51607,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,A13.9: bỏ dòng trống thừa cuối tệp test
+30f6d82,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.9 (stress 9): skill sinh-du-lieu-clb tự sinh tên khi > 20 CLB, ≤ 20 giữ nguyên từng byte"
+bc36bb7,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13.9 (stress 8): sổ nhập 0 học sinh / 0 CLB nạp được kèm cảnh báo mới
+4a94376,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.9 (stress 7): nhập zip workspace ≤ 1.000 tệp, giải nén ≤ 200 MB, từ chối tên trùng và tên có NUL"
+bf67701,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.9 (stress 6): xuất ra đường tuyệt đối không ghi đè, trùng tên thành 'x (2).ext'"
+1066456,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.9 (stress 4): loi_ung_dung.txt có trần ~1 MB giữ phần cuối, bỏ mục trùng liên tiếp"
+1dac117,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.9 (stress 2, 3, 5): browser_host — timeout kết nối 45 s, so token trên byte (403 thay vì TypeError), loi_ngoai_du_kien chỉ trả tên kiểu ngoại lệ"
+814b5d4,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,12,"A13.9 (stress 1): CSDL đang bận báo csdl_dang_ban, không phải ws_cau_hinh_hong; đọc cấu hình chờ khoá 2,5 s"
+0f13771,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.8 (lỗi 1.1): chấm điểm thất bại vẫn hiện thông báo liệt kê hết ô sai, CHANGELOG"
+3b80854,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,7,A13.8 (lỗi 1.1): submit_club_scores trả lỗi khi không lưu được dòng nào vì ô điểm sai
+f004c35,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A13.8: CHANGELOG, TIEN_DO, sổ đăng ký, cột 'Đã sửa ở commit' trong báo cáo soát"
+709784e,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.8: sửa cảnh báo ruff F811 ở test giao diện
+953cb71,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.8: bỏ {detail} khỏi mã xuat_diem_chuan_loi (luật văn phong)
+90c3d5e,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,"A13.8 (lỗi 2.6, 2.7, 2.8): sổ mẫu chỉ có cột Điểm quyết tâm khi bật được; chỗ chèn ghi chú bằng dòng đánh dấu; test hai bản làm tròn"
+d4dc297,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.8 (lỗi 2.5): ngữ cảnh điểm chuẩn đọc trong một giao dịch
+a710a31,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.8 (lỗi 2.4): phóng điểm hàng loạt trong một giao dịch, bỏ qua em vừa sửa điểm"
+7bec6a0,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,4,"A13.8 (lỗi 3.1, 3.3, 3.4): chỉ ẩn tab khi wharton_chua_bat, tắt tính năng không gọi API điểm quyết tâm, khoảng cách dòng chú thích"
+2a2b2ea,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.8 (lỗi 2.2): docstring điểm chuẩn/nhật ký đúng thực tế (không xác thực) + hướng dẫn cần người giám sát máy
+1127db5,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13.8 (lỗi 2.3): xuất sổ kết quả báo lỗi đọc điểm chuẩn thay vì trang trống
+04740a5,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,11,A13.8 (lỗi 2.1 + 3.2): điểm quyết tâm khoá thì em đã có điểm không đổi được nguyện vọng / ô tick
+77fa953,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,7,Z-SOAT: skill soat-ma (soát mã trước khi push) + test + dòng quy tắc trong CLAUDE.md
+5ddd516,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: danh sách sửa đầy đủ và quyết định của Truong
+2ce3af7,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Soát mã A13: báo cáo Tầng 4 (vệ sinh, i18n, tài liệu, test yếu)"
+4b4ac50,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,"Soát mã: báo cáo hệ thống nhập (Sổ nhập, kiosk, Quản lý, chấm điểm mù + workspace)"
+8ad399d,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: chỉnh một câu ở Tầng 3
+2277bdd,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: báo cáo Tầng 3 (giao diện) và quyết định vòng sửa
+93ccb49,2026-10-28,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: bổ sung vòng 6+7 và bốn khía cạnh cho Tầng 1–2
+1ec06c1,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: báo cáo Tầng 2 (backend)
+6265d54,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,1,Soát mã A13: báo cáo Bước 0 và Tầng 1 (lõi thuật toán)
+088573d,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,12,"A13.7: sổ nhập mẫu luôn có cột Điểm quyết tâm (luon_co_cot_w), hai kỳ vọng test cũ sửa có duyệt"
+2df59ce,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,17,"A13.6: dữ liệu mẫu có Điểm quyết tâm (6 sổ, script sinh lại, kỹ năng sinh điểm)"
+54a5cf4,2026-10-27,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,A13: Điểm quyết tâm (vòng 1–5) (#1)
+cb53cc0,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13.5: tài liệu
+6ed3718,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.5: đóng vai lần 2 và sửa lỗi chặn
+eb203a7,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.5: thông báo tự đóng và khoá xuất khi chưa có kết quả (toàn ứng dụng)
+bfd3762,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,7,"A13.5: (dở dang) thông báo tự đóng và khoá xuất khi chưa có kết quả, phần backend"
+a22b6df,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13.5: tab con Quản lý, lỗi chặn gọn, nút xử lý hàng loạt"
+6ddbf3b,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,9,A13.5: (dở dang) test cũ thêm bước bấm sang tab con Quản lý
+9b2e2cd,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13.5: (dở dang) tab con Quản lý và test lỗi chặn gọn chưa chạy
+7dd208f,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,7,A13.5: phóng điểm quyết tâm theo tỉ lệ và danh sách cần sửa
+7c562fa,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.5: ghi việc vòng 5 vào sổ
+e0331d8,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.5: sửa chữ tiếng Việt còn sót khi đổi ngôn ngữ ở khối Điểm quyết tâm
+d85fe2c,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.4: tài liệu và báo cáo đóng vai người dùng
+d54ba04,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.4: sửa 3 ca lỗi sau hồi quy toàn bộ (COLLATE buổi, chữ điểm quyết tâm, tiêu đề Sổ hai hàng)"
+aa60ebe,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13.4: tài liệu (bản nháp): CHANGELOG, hướng dẫn điểm chuẩn, Sổ nhập hai hàng"
+38fa804,2026-10-27,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.4: test giao diện bổ sung cho Điểm quyết tâm gọn hơn
+d797f5a,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,11,"A13.4: biểu đồ và khối điểm chuẩn, dọn gọn giao diện Điểm quyết tâm"
+3921407,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.4: tính điểm chuẩn từng CLB và trang Điểm chuẩn trong tệp xuất
+54a21bb,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,26,"A13.4: Sổ nhập hai hàng tiêu đề, đổi tên hiển thị thành Điểm quyết tâm"
+46c69c5,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13.4: ghi thay đổi Sổ nhập và tên hiển thị vào sổ
+4c448ae,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,6,A13.3: tài liệu
+dd4a5f3,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13.3: tên đọc được cho hai ô gõ chữ xác nhận (trợ năng)
+17497bd,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,9,A13.3: khối Điểm Wharton trong tab Quản lý
+a562b80,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13.3: API quản lý điểm Wharton (bảng, cảnh báo, sửa, xoá, khoá)"
+fbf0bd1,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,12,"A13.3: bảng nhật ký và khoá điểm Wharton, ghi nhật ký ở mọi cửa"
+9cd0c68,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,4,A13.3: sửa tự điền trong bộ nhớ ở kiosk và cảnh báo nạp tệp (cách A)
+a8b077d,2026-10-25,Claude Code (theo yêu cầu và duyệt của Truong),,4,A13 (vòng 2): pipeline tự điền quỹ một CLB trong bộ nhớ (cách A)
+1011f35,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,3,"A13 (vòng 2): hoàn tác js/07_ngon_ngu.js (ngoài phạm vi), vẽ lại Bước 3 khi đổi ngôn ngữ ở js/04"
+fb35974,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,6,A13 (vòng 2): tài liệu
+034cf04,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,12,A13 (vòng 2): màn kiosk điểm Wharton và công tắc workspace
+06e7a79,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,5,A13 (vòng 2): API kiosk và nối điểm Wharton vào pipeline
+85b59a9,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,12,"A13 (vòng 2): đọc dữ liệu, dấu vân tay, nạp CSV và Sổ nhập có điểm Wharton"
+99785d8,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13 (vòng 2): bảng wharton_bids, dọn khi xoá, khoá luật wharton"
+44d8645,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13 (vòng 2): ghi thay đổi hợp đồng cột vào sổ
+f938792,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13: tài liệu vòng 1 (CHANGELOG, TIEN_DO, sổ đăng ký)"
+20e5bd2,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,5,"A13: kiểm hồ sơ, tự điền và điểm hiệu lực Wharton"
+c011f69,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,2,A13: khoá ưu tiên Wharton và nối vào run_rbda
+b5da8ce,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,3,A13: đăng ký mục Điểm Wharton trong sổ
+e08af78,2026-10-24,Claude Code (theo yêu cầu và duyệt của Truong),,392,Chuyển toàn bộ nội dung từ RB-STUFF-AFTER-UP sang TESTING-DEV

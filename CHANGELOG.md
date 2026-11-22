@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-22 — GT-LS (ngoài sổ, Truong yêu cầu 22/11/2026): báo cáo lịch sử thay đổi kèm commit và sơ đồ luồng xử lý
+
+- Trả lời góp ý vòng 2 của hội đồng ("bổ sung bằng chứng kỹ thuật và làm rõ vai trò của AI"). Chỉ tài liệu và script; không đổi mã sản phẩm, kết quả xếp không đổi.
+- Mới: `docs/giai_trinh/tao_lich_su.py` (đọc git, dựng `LICH_SU_THAY_DOI.md`, `LICH_SU_COMMIT.csv` 1.338 dòng, `LICH_SU_THAY_DOI.pdf`; mã commit trích tay được kiểm bằng `git show`), `ve_so_do_xu_ly.py` + `so_do_xu_ly.svg` (luồng xử lý, điểm quyết định, nhánh không đủ chỗ).
+- Phát hiện khi làm: bản clone trong phiên là shallow (915 commit, 17 điểm cắt) nên "commit đầu tiên của tệp" sai; đã `git fetch --unshallow` (1.338 commit, một commit gốc `e08af78`). Lịch sử trước 24/10/2026 nằm ở kho cũ `RB-STUFF-AFTER-UP`, không có trong kho này (ghi ở mục 7 của báo cáo).
+- Test mới: `tests/test_gt_lich_su.py` (4 ca: SVG hợp lệ và dựng lại đúng, mã commit có thật, báo cáo không lộ thư điện tử).
+
 ## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
 
 - CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.
