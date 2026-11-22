@@ -91,12 +91,12 @@ def test_mot_buoi_thi_an_nhan_chua_chia_buoi(mo, de):  # noqa: F811
     page, api, loi = mo(_dung)
     page.wait_for_selector("#khieuNaiPanel:not([hidden])")
     nhan = page.evaluate("() => t('buoi_chua_chia', { session_l: 'buổi' })")
-    assert nhan.startswith("Chưa chia")
+    assert nhan.startswith("Một")
     cac_nhan = page.evaluate("() => [...document.querySelectorAll('#knBuoi option')].map((o) => o.textContent)")
-    assert all(not x.startswith("Chưa chia") for x in cac_nhan), cac_nhan
+    assert all(not x.startswith("Một") for x in cac_nhan), cac_nhan
     assert api.gui_khieu_nai("s1", _buoi(api), "x")["ok"]
     page.reload()
     page.locator('[data-tab="others"]').click()
     page.wait_for_selector("#knDanhSach li")
-    assert "Chưa chia" not in page.locator("#knDanhSach").inner_text()
+    assert "Một buổi chung" not in page.locator("#knDanhSach").inner_text()
     assert not loi, loi

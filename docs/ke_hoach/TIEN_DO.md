@@ -247,3 +247,8 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX4-L3 (form CLB 3 ô + Thêm tuỳ chọn, Mã tự điền, Học sinh chọn mới hiện nút) | xong, chờ CI | 2026-11-22 | index.html, style.css, i18n.js, js/00_nen.js, js/05_quan_ly.js | tests/test_giao_dien_ux4_l3.py | chờ Truong duyệt ảnh |
 | UX4-L4 (Cách xếp: một câu hỏi, Tuỳ chỉnh thêm, Thử cách xếp này; chữ Điểm quyết tâm/Điểm chuẩn) | xong, chờ Truong duyệt ảnh + checker | 2026-11-22 | index.html, style.css, i18n.js, js/05_quan_ly.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js | tests/test_giao_dien_ux4_l4.py | MILESTONE 2 |
 | UX5B-L1 (kiểm kê + bảng từ ngữ + bản đồ lựa chọn) | xong, chờ Truong duyệt từ ngữ (MILESTONE 1) | 2026-11-22 | docs/ke_hoach/ux/UX5B_TU_NGU.md, docs/ke_hoach/ux/anh/ux5b/ | — | chưa có mã |
+| UX5A-L1 (đo + bảng từ ngữ + bản đồ lựa chọn: thẻ Kết quả, Chi tiết và xuất tệp) | xong, chờ Truong duyệt từ ngữ | 2026-11-22 | docs/ke_hoach/ux/UX5A_TU_NGU.md | — | MILESTONE 1 |
+| UX5A-L2 (thẻ Kết quả: một vàng, nếp Báo cáo và phiếu in, chữ) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js | tests/test_giao_dien_ux5a_l2.py | |
+| UX5A-L3 (thẻ Chi tiết và xuất tệp: một vàng, chữ, gợi ý gọn, ẩn nút hàng đã chọn) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js, js/03_ket_qua.js | tests/test_giao_dien_ux5a_l3.py | |
+| UX5A-L4 (giáo viên + test Hick/Von Restorff/từ cấm cho hai thẻ) | xong, chờ checker | 2026-11-22 | tests/test_giao_dien_ux5a_l4.py | tests/test_giao_dien_ux5a_l4.py | |
+| UX5A giai đoạn 2 (soát mã, đo lại, sửa lỗi menu bị đè) | xong, chờ Truong | 2026-11-22 | style.css, tests | tests/test_giao_dien_ux5a_loi.py | báo cáo docs/ke_hoach/BAO_CAO_SOAT_MA_UX5A.md |

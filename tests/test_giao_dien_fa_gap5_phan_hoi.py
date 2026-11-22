@@ -33,6 +33,7 @@ def test_cham_ba_cau_roi_gui(mo):  # noqa: F811
     page.fill("#phMa", "s1")
     page.locator('button.ph-hai-long[data-gia-tri="4"]').click()
     page.locator('button.ph-hieu[data-gia-tri="1"]').click()
+    page.locator("#phThemY > summary").click()          # UX5A-L2 (O1): câu "khó nhất" nằm trong nếp "Thêm ý kiến"
     page.locator('button.ph-kho[data-gia-tri="huy_chuong"]').click()
     assert page.locator('button.ph-hai-long[data-gia-tri="4"]').get_attribute("aria-pressed") == "true"
     page.locator("#btnGuiPhanHoi").click()

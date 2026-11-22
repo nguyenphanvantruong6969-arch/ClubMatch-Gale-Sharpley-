@@ -3010,7 +3010,7 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 .tk-thanh-ben { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; min-width: 0; }
 /* UX3: dòng 1 = tên + vai (cắt bằng "…", có title); dòng 2 = hai nút cùng cỡ. Chỉ còn một nút thì nút chiếm cả dòng. */
 .tk-thanh-ben #tkHuyHieu { grid-column: 1 / -1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tk-thanh-ben .btn { min-width: 0; width: 100%; padding-left: 6px; padding-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; justify-content: center; }
+.tk-thanh-ben .btn { min-width: 0; min-height: 44px; width: 100%; padding-left: 6px; padding-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; justify-content: center; }
 .tk-thanh-ben .btn:only-of-type { grid-column: 1 / -1; }
 .tk-thanh-ben[hidden] { display: none; }
 
@@ -3344,6 +3344,8 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   .ux2-khung { animation: none; }
 }
 
+/* UX5A (lỗi giai đoạn 2): khung đang mở menu "⋯" phải nổi trên các khung bên dưới, không bị đè. */
+.panel:has(details.menu-khac[open]) { position: relative; z-index: 70; }
 /* UX2 — L8: chuyển cảnh mượt (#10), CHỈ trang trí. Mọi thứ nằm trong no-preference; "Hiệu ứng" tắt thì animation:none!important
    (khối html.tat-hieu-ung) lo phần còn lại. */
 @keyframes ux2Vao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -3409,3 +3411,10 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }
 #ux1aNangCao > summary { display: block; cursor: pointer; }
 #ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }
+
+/* UX5A: nếp gập ít dùng của thẻ Kết quả / Chi tiết (Hick) */
+.ux5a-hop-rong { width: min(360px, 90vw); }
+.ux5a-hop-rong .hint-text { margin: 6px 10px 4px; }
+.nhom-tieu-de { margin: 28px 0 10px; font-size: 16px; font-weight: 600; color: var(--ink); }
+.ux5a-goi-y-fa { margin: 6px 10px 4px; }
+#xuatNangCao > summary { margin-bottom: 8px; }

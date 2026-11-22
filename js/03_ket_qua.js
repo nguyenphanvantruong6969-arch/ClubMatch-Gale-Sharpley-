@@ -1164,6 +1164,10 @@ function capNhatChonHs() {
   el("hsDaChonDem").textContent = n ? t("hs_da_chon_dem", { n }) : t("hs_chua_chon");
   el("btnXuatHsDaChon").disabled = n === 0;
   el("btnBoChonHs").disabled = n === 0;
+  /* UX5A-L3: việc trên hàng đã chọn chỉ hiện sau khi chọn (ẩn, không chỉ tắt). */
+  el("btnXuatHsDaChon").hidden = n === 0;
+  el("btnBoChonHs").hidden = n === 0;
+  el("xuatHocSinhNhan").hidden = n === 0;
   /* O thu tu cua muc Xuat: tu danh dau khi vua chon em DAU TIEN — nguoi
      dung vua chon hoc sinh la de xuat — va khoa lai khi khong con em nao. */
   const oHs = el("xuatHocSinh");

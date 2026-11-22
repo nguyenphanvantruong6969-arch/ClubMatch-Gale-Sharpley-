@@ -257,6 +257,11 @@ SUA_CO_Y = {
     ("ui", "ql_tab_du_lieu"): [("Xoá dữ liệu", "Làm lại từ đầu"), ("Delete data", "Start over")],
     ("ui", "danger_zone_title"): [("Vùng nguy hiểm: xoá dữ liệu để làm lại", "Làm lại từ đầu"),
                                   ("Danger zone: delete data to start over", "Start over")],
+    # UX5A-L3: chủ ý đổi chữ thẻ Chi tiết và xuất tệp (bỏ "suất", "Chọi"); docs/ke_hoach/ux/UX5A_TU_NGU.md.
+    ("ui", 'fill_sap_xep_choi'): [('Chọi cao nhất', 'Nhiều học sinh muốn nhất'), ('Most competitive', 'Most students wanting it')],
+    ("ui", 'xuat_opt_dau_vao'): [('Dữ liệu đầu vào hiện tại: một Sổ nhập CLB nạp lại được', 'Dữ liệu đầu vào hiện tại, một Sổ nhập CLB để nạp lại'), ('Current input data: one Club Input Workbook that can be imported again', 'Current input data, one workbook that can be loaded again')],
+    ("ui", 'xuat_opt_ket_qua'): [('Kết quả sắp xếp: một tệp Excel (danh sách học sinh, từng CLB, học sinh chưa có chỗ, thống kê)', 'Kết quả xếp, một tệp Excel (danh sách học sinh, từng CLB, học sinh chưa có chỗ, thống kê)'), ('Placement results: one Excel file (student list, each club, students without a place, statistics)', 'Placement result, one Excel file (students, each club, students without a place, statistics)')],
+    ("ui", 'xuat_title'): [('Xuất dữ liệu', 'Tải kết quả về máy'), ('Export data', 'Save results')],
     # UX4-L3: chủ ý đổi chữ (Học sinh, form CLB, Buổi); chuỗi đã điền nhãn mặc định.
     ("ui", 'admin_reserve_assign_title'): [('Gán nhóm ưu tiên và xuất hồ sơ học sinh', 'Học sinh và nhóm ưu tiên'), ('Priority groups and student profile export', 'Students and priority groups')],
     ("ui", 'btn_admin_xuat_hs'): [('Xuất CSV học sinh đã đánh dấu', 'Xuất danh sách học sinh đã chọn (CSV)'), ('Export ticked students as CSV', 'Export the selected students (CSV)')],

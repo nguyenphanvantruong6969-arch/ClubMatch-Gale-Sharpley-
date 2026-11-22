@@ -152,7 +152,7 @@ def test_r4_khung_tra_cuu_o_tim_to_o_dau_va_ma_tra_cuu_gap(mo_trang):  # noqa: F
     page.wait_for_selector("#gtTim", state="visible")
     assert page.locator("#gtTim").bounding_box()["height"] >= 44
     assert page.locator("#gtBuocHuongDan").is_hidden() and page.locator("#btnGtTaoMa").is_hidden()
-    assert page.locator("#gtMaFold > summary").inner_text().strip() == "Mã tra cứu…"
+    assert page.locator("#gtMaFold > summary").inner_text().strip() == "Mã tra cứu cho học sinh tự xem…"   # UX5A-L2
     assert page.get_attribute("#gtTim", "placeholder") != page.get_attribute("#kqTimKiem", "placeholder")
     assert page.locator("#gtTim").bounding_box()["y"] < page.locator("#gtMaFold").bounding_box()["y"]
     page.locator("#gtMaFold > summary").click()

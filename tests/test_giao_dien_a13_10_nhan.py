@@ -94,6 +94,8 @@ def test_nhan_moi_en_co_mat_nhan_cu_het(mo):
     page, loi = mo()
     page.evaluate("window.I18N.setLang('en')")
     page.wait_for_function("() => document.querySelector('#adminDiemChuanBlock h2').textContent === 'Cut-off points'")
+    # Chữ tĩnh (h2) đổi ngay, còn bảng Tổng quan vẽ lại sau khi gọi lại API: chờ cả bảng, không thì chụp chữ lúc bảng còn tiếng Việt.
+    page.wait_for_function("() => document.querySelector('#adminDiemChuanBlock').textContent.includes('By test score')")
     chu = _chu_nhin_thay(page)
     assert "By test score" in chu and "By commitment points" in chu, chu   # UX4-L4
     assert not CU_EN.search(chu), CU_EN.search(chu)
