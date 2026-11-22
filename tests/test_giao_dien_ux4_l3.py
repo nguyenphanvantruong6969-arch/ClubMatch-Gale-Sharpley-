@@ -41,7 +41,7 @@ def test_form_clb_chi_hien_ba_o_cong_nut_luu_va_them_tuy_chon(trang):
     page, api, loi = trang
     assert page.evaluate(JS_DEM, "#clubForm") == [
         "clubFormName", "clubFormCapacity", "clubFormBuoi", "clubFormThemTuyChon", "btnSaveClub"]
-    assert page.locator("label:has(#clubFormCapacity) .club-field-label").inner_text().strip() == "Số chỗ"
+    assert page.locator("label:has(#clubFormCapacity) .club-field-label").inner_text().strip() == "Chỉ tiêu"
     assert page.locator("#clubFormThemTuyChon").inner_text().strip() == "Thêm tuỳ chọn"
     page.click("#clubFormThemTuyChon")
     assert page.evaluate(JS_DEM, "#clubForm") == [
@@ -49,7 +49,7 @@ def test_form_clb_chi_hien_ba_o_cong_nut_luu_va_them_tuy_chon(trang):
         "clubFormReserveCapacity", "clubFormReserveGroup", "btnSaveClub"]
     nhan = page.locator("#clubFormThem .club-field-label").all_inner_texts()
     assert [x.strip() for x in nhan] == ["Mã CLB (tự điền theo tên, có thể sửa)",
-                                         "Chỗ dành riêng cho nhóm ưu tiên",
+                                         "Suất ưu tiên",
                                          "Nhóm được dành chỗ (để trống nếu không có)"]
 
 

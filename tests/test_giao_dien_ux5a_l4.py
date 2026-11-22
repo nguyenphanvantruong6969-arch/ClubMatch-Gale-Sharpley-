@@ -11,7 +11,7 @@ from _ux5a_chung import GOC, JS_CHU, JS_DO, JS_VANG, dem, mo_ux5a  # noqa: F401
 
 VAI = ["quan_tri", "giao_vien"]
 TAB = {"results": "btnKqTaiBang", "others": "btnXuatTuyChon"}
-TU_CAM = re.compile(r"[Ss]uất|Chọi|cấu hình|[Qq]uỹ|\d{4}-\d\d-\d\d[ T]\d\d:|CLB nguyện vọng 1|\btier\b|reserve")
+TU_CAM = re.compile(r"Chọi|cấu hình|[Qq]uỹ|\d{4}-\d\d-\d\d[ T]\d\d:|CLB nguyện vọng 1|\btier\b|reserve")
 # Tổng điều khiển thấy được khi nếp gập đóng (không tính thead/tbody): tối đa theo số đo UX5A-L1 sau thiết kế.
 NGAN_SACH_THE = {("results", "quan_tri"): 10, ("results", "giao_vien"): 9,
                  ("others", "quan_tri"): 21, ("others", "giao_vien"): 19}

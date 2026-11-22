@@ -535,8 +535,8 @@
             </table>
           </div>
           <div class="fill-legend">
-            <span class="legend-swatch is-general"></span><span data-i18n="legend_general">Chỗ thường</span>
-            <span class="legend-swatch is-reserve"></span><span data-i18n="legend_reserve">Vào bằng chỗ dành riêng</span>
+            <span class="legend-swatch is-general"></span><span data-i18n="legend_general">Suất thường</span>
+            <span class="legend-swatch is-reserve"></span><span data-i18n="legend_reserve">Vào bằng suất ưu tiên</span>
             <span class="legend-swatch is-trong"></span><span data-i18n="legend_trong">Còn trống</span>
           </div>
           <div id="clbEmpty" class="empty-state" hidden></div>
@@ -562,20 +562,20 @@
         <div class="panel-head">
           <div class="panel-head-trai">
             <button class="panel-toggle" type="button" aria-expanded="true" aria-controls="duTruPanelBody" data-i18n-aria-label="aria_thu_gon_muc"></button>
-            <h2 data-i18n="du_tru_title">Chỗ dành riêng đã dùng</h2>
+            <h2 data-i18n="du_tru_title">Suất ưu tiên đã dùng</h2>
             <span class="panel-dem" id="duTruPanelDem"></span>
           </div>
         </div>
         <div class="panel-body" id="duTruPanelBody">
           <p class="bieu-do-tieu-diem" id="duTruTieuDiem"></p>
-          <p class="hint-text" data-i18n="du_tru_desc">Chỗ dành riêng không ai dùng sẽ thành chỗ thường.</p>
+          <p class="hint-text" data-i18n="du_tru_desc">Suất ưu tiên không ai dùng sẽ thành suất thường, và phần ưu tiên dành cho nhóm đó không còn tác dụng.</p>
           <div class="scroll-x">
             <table class="data-table" id="duTruTable">
               <thead><tr>
                 <th class="cot-buoi-clb" data-i18n="th_buoi">Buổi</th>
                 <th data-i18n="th_name_short">Tên</th>
                 <th data-i18n="th_reserve_group">Nhóm ưu tiên</th>
-                <th class="num" data-i18n="ux4_cho_rieng_cot">Chỗ dành riêng</th>
+                <th class="num" data-i18n="ux4_cho_rieng_cot">Suất ưu tiên</th>
                 <th class="num" data-i18n="th_nhom_dang_ky">Học sinh thuộc nhóm đã đăng ký</th>
                 <th class="num" data-i18n="th_da_dung">Đã dùng</th>
                 <th class="num" data-i18n="th_con_thua">Còn thừa</th>
@@ -583,7 +583,7 @@
               <tbody id="duTruBody"></tbody>
             </table>
           </div>
-          <div id="duTruEmpty" class="empty-state" hidden data-i18n="du_tru_khong_co">Chưa {slot_l} nào dành riêng chỗ cho nhóm ưu tiên.</div>
+          <div id="duTruEmpty" class="empty-state" hidden data-i18n="du_tru_khong_co">Chưa câu lạc bộ nào đặt suất ưu tiên.</div>
         </div>
       </div>
 
@@ -981,8 +981,8 @@
         <div class="admin-form-grid" id="clubForm">
           <label class="club-field"><span class="club-field-label" data-i18n="th_name_short">Tên</span>
             <input type="text" id="clubFormName" class="text-input" data-i18n-placeholder="placeholder_club_name" placeholder="Tên CLB"></label>
-          <label class="club-field"><span class="club-field-label" data-i18n="ux4_so_cho">Số chỗ</span>
-            <input type="number" id="clubFormCapacity" class="text-input text-input-sm" data-i18n-placeholder="ux4_so_cho" placeholder="Số chỗ" min="1"></label>
+          <label class="club-field"><span class="club-field-label" data-i18n="ux4_so_cho">Chỉ tiêu</span>
+            <input type="number" id="clubFormCapacity" class="text-input text-input-sm" data-i18n-placeholder="ux4_so_cho" placeholder="Chỉ tiêu" min="1"></label>
           <label class="club-field"><span class="club-field-label" data-i18n="th_buoi">Buổi</span>
             <select id="clubFormBuoi" class="text-input"></select></label>
           <label class="club-field" id="clubFormBuoiMoiNhan" hidden><span class="club-field-label" data-i18n="ux4_buoi_ten_moi">Tên buổi mới</span>
@@ -993,7 +993,7 @@
             <div class="admin-form-grid">
               <label class="club-field"><span class="club-field-label" data-i18n="ux4_ma_clb">Mã CLB (tự điền theo tên, có thể sửa)</span>
                 <input type="text" id="clubFormId" class="text-input text-input-sm" data-i18n-placeholder="ux4_ma_clb_vd" placeholder="Tự điền từ tên"></label>
-              <label class="club-field"><span class="club-field-label" data-i18n="ux4_cho_rieng">Chỗ dành riêng cho nhóm ưu tiên</span>
+              <label class="club-field"><span class="club-field-label" data-i18n="ux4_cho_rieng">Suất ưu tiên</span>
                 <input type="number" id="clubFormReserveCapacity" class="text-input text-input-sm" data-i18n-placeholder="ux4_cho_rieng_ngan" placeholder="0" min="0"></label>
               <label class="club-field"><span class="club-field-label" data-i18n="ux4_nhom_duoc_cho">Nhóm được dành chỗ (để trống nếu không có)</span>
                 <input type="text" id="clubFormReserveGroup" class="text-input text-input-sm" data-i18n-placeholder="ux4_nhom_duoc_cho_ngan" placeholder="Để trống nếu không có" list="reserveGroupOptions"></label>
@@ -1009,8 +1009,8 @@
           <thead><tr>
             <th data-i18n="th_club_id">Mã CLB</th>
             <th data-i18n="th_name_short">Tên</th>
-            <th data-i18n="ux4_so_cho">Số chỗ</th>
-            <th data-i18n="ux4_cho_rieng_cot">Chỗ dành riêng</th>
+            <th data-i18n="ux4_so_cho">Chỉ tiêu</th>
+            <th data-i18n="ux4_cho_rieng_cot">Suất ưu tiên</th>
             <th data-i18n="th_reserve_group">Nhóm ưu tiên</th>
             <th class="cot-buoi" data-i18n="ux4_cot_buoi">Buổi sinh hoạt</th>
             <th><span class="sr-only" data-i18n="th_thao_tac"></span></th>
@@ -1029,7 +1029,7 @@
             <thead><tr>
               <th data-i18n="th_buoi">Buổi</th>
               <th class="num" data-i18n="th_so_clb">Số CLB</th>
-              <th class="num" data-i18n="ux4_so_cho">Số chỗ</th>
+              <th class="num" data-i18n="ux4_so_cho">Chỉ tiêu</th>
               <th class="num" data-i18n="th_em_muon_buoi">Học sinh chọn buổi này</th>
               <th class="num" data-i18n="th_ti_le_choi">Học sinh trên mỗi chỗ</th>
               <th><span class="sr-only" data-i18n="th_muc"></span></th>

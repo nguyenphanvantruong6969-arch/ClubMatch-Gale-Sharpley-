@@ -174,9 +174,9 @@
       th_muc_lap_day: "Mức lấp đầy",
       th_luu_y: "Lưu ý",
       th_da_xep: "Đã xếp",
-      du_tru_title: "Chỗ dành riêng đã dùng",
-      du_tru_desc: "Chỗ dành riêng không ai dùng sẽ thành chỗ thường.",
-      du_tru_khong_co: "Chưa {slot_l} nào dành riêng chỗ cho nhóm ưu tiên.",
+      du_tru_title: "Suất ưu tiên đã dùng",
+      du_tru_desc: "Suất ưu tiên không ai dùng sẽ thành suất thường, và phần ưu tiên dành cho nhóm đó không còn tác dụng.",
+      du_tru_khong_co: "Chưa {slot_l} nào đặt suất ưu tiên.",
       th_nhom_dang_ky: "{person} thuộc nhóm đã đăng ký",
       th_da_dung: "Đã dùng",
       th_con_thua: "Còn thừa",
@@ -192,7 +192,7 @@
       th_so_nguyen_vong: "Số nguyện vọng",
       th_da_khai: "Các {slot_sl} đã chọn",
       chua_khai_gi: "Chưa chọn nguyện vọng nào",
-      dem_suat: "{n} chỗ dành riêng chưa dùng",
+      dem_suat: "{n} suất chưa dùng",
       dem_cho: "{n} chỗ đã xếp",
       tom_tat_title: "Tóm tắt lần xếp",
       tom_tat_lan_chay: "Lần chạy gần nhất: {luc}",
@@ -203,8 +203,8 @@
       kpi_cho_trong: "Chỗ còn trống",
       kpi_cho_trong_phu: "trên tổng {n} chỗ",
       kpi_chua_co_cho: "{person} chưa có chỗ nào",
-      du_tru_tieu_diem: "Chỗ dành riêng chưa ai dùng: {thua}/{tong}",
-      kpi_du_tru_thua: "Chỗ dành riêng chưa ai dùng",
+      du_tru_tieu_diem: "Suất ưu tiên bỏ phí: {thua}/{tong}",
+      kpi_du_tru_thua: "Suất ưu tiên bỏ phí",
       kpi_du_tru_thua_phu: "Chính sách ưu tiên chưa dùng hết",
       kpi_can_xu_ly: "Cần xử lý",
       kpi_on: "Ổn",
@@ -307,8 +307,8 @@
       tt_ti_le: "Tỉ lệ",
       tt_luy_ke: "Cộng dồn tới đây",
       nv_tieu_diem: "{p1}% chỗ đã xếp là nguyện vọng 1 · {p3}% nằm trong 3 nguyện vọng đầu",
-      legend_general: "Chỗ thường",
-      legend_reserve: "Vào bằng chỗ dành riêng",
+      legend_general: "Suất thường",
+      legend_reserve: "Vào bằng suất ưu tiên",
       results_list_title: "Chi tiết để kiểm tra",
       placeholder_results_search: "Tìm theo mã hoặc tên {person_l}…",
       ket_qua_cu_banner: "Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ \"Xếp {slot_sl}\" trước khi xuất hoặc công bố.",
@@ -613,7 +613,7 @@
 
       ux4_tc_kd_priority: "Đã chọn điểm và nhóm nhưng nhóm chỉ giữ chỗ riêng: kết quả giống chỉ xét điểm.",
 
-      ux4_so_cho: "Số chỗ",
+      ux4_so_cho: "Chỉ tiêu",
 
       ux4_buoi_chung: "Một {session_l} chung",
 
@@ -629,11 +629,11 @@
 
       ux4_ma_clb_vd: "Tự điền từ tên",
 
-      ux4_cho_rieng: "Chỗ dành riêng cho nhóm ưu tiên",
+      ux4_cho_rieng: "Suất ưu tiên",
 
       ux4_cho_rieng_ngan: "0",
 
-      ux4_cho_rieng_cot: "Chỗ dành riêng",
+      ux4_cho_rieng_cot: "Suất ưu tiên",
 
       ux4_nhom_duoc_cho: "Nhóm được dành chỗ (để trống nếu không có)",
 
@@ -976,8 +976,8 @@
       dc_don_chu: "{don} đơn · {cho} chỗ",
       dc_tang1: "Theo điểm thi",
       dc_tang2: "Theo điểm quyết tâm",
-      dc_thuong: "Chỗ thường",
-      dc_du_tru: "Chỗ dành riêng",
+      dc_thuong: "Suất thường",
+      dc_du_tru: "Suất ưu tiên",
       dc_tang1_cell: "{thi} điểm thi · {qt} điểm quyết tâm",
       dc_con_cho: "Chưa cần điểm (còn {n} chỗ trống)",
       dc_khong_ai: "Không có ai ở mục này",
@@ -1729,9 +1729,9 @@
       th_muc_lap_day: "Fill level",
       th_luu_y: "Note",
       th_da_xep: "Placed",
-      du_tru_title: "Kept places used",
-      du_tru_desc: "Kept places nobody uses become normal places.",
-      du_tru_khong_co: "No {slot_l} keeps places for a priority group yet.",
+      du_tru_title: "Priority seats used",
+      du_tru_desc: "Priority seats nobody uses become regular seats, and the priority meant for that group is lost.",
+      du_tru_khong_co: "No {slot_l} has priority seats yet.",
       th_nhom_dang_ky: "Group members who applied",
       th_da_dung: "Used",
       th_con_thua: "Unused",
@@ -1747,7 +1747,7 @@
       th_so_nguyen_vong: "Preferences entered",
       th_da_khai: "{slot_p} ranked",
       chua_khai_gi: "No preferences yet",
-      dem_suat: "{n} kept places unused",
+      dem_suat: "{n} unused seats",
       dem_cho: "{n} placements",
       tom_tat_title: "Run summary",
       tom_tat_lan_chay: "Latest run: {luc}",
@@ -1758,8 +1758,8 @@
       kpi_cho_trong: "Empty seats",
       kpi_cho_trong_phu: "out of {n} seats",
       kpi_chua_co_cho: "{person_p} with no place",
-      du_tru_tieu_diem: "Kept places nobody used: {thua}/{tong}",
-      kpi_du_tru_thua: "Kept places nobody used",
+      du_tru_tieu_diem: "Priority seats unused: {thua}/{tong}",
+      kpi_du_tru_thua: "Priority seats unused",
       kpi_du_tru_thua_phu: "Priority policy not fully used",
       kpi_can_xu_ly: "Needs action",
       kpi_on: "OK",
@@ -1862,8 +1862,8 @@
       tt_ti_le: "Share",
       tt_luy_ke: "Cumulative",
       nv_tieu_diem: "{p1}% of placements are a first choice · {p3}% are within the top 3",
-      legend_general: "Normal places",
-      legend_reserve: "Filled from kept places",
+      legend_general: "Regular seats",
+      legend_reserve: "Admitted on a priority seat",
       results_list_title: "Details for checking",
       placeholder_results_search: "Search by {person_l} ID or name…",
       ket_qua_cu_banner: "Data was edited after the last run, so the results below may be out of date. Run again in the \"Allocation\" tab before exporting or publishing.",
@@ -2168,7 +2168,7 @@
 
       ux4_tc_kd_priority: "Score and group is selected but the groups only keep places: same as exam score only.",
 
-      ux4_so_cho: "Places",
+      ux4_so_cho: "Quota",
 
       ux4_buoi_chung: "One shared {session_l}",
 
@@ -2184,11 +2184,11 @@
 
       ux4_ma_clb_vd: "Filled in from the name",
 
-      ux4_cho_rieng: "Places kept for the priority group",
+      ux4_cho_rieng: "Priority seats",
 
       ux4_cho_rieng_ngan: "0",
 
-      ux4_cho_rieng_cot: "Kept places",
+      ux4_cho_rieng_cot: "Priority seats",
 
       ux4_nhom_duoc_cho: "Group the places are kept for (leave blank if none)",
 
@@ -2531,8 +2531,8 @@
       dc_don_chu: "{don} applications · {cho} places",
       dc_tang1: "By test score",
       dc_tang2: "By commitment points",
-      dc_thuong: "Normal places",
-      dc_du_tru: "Kept places",
+      dc_thuong: "Regular places",
+      dc_du_tru: "Priority places",
       dc_tang1_cell: "{thi} test points · {qt} commitment points",
       dc_con_cho: "No points needed ({n} places free)",
       dc_khong_ai: "Nobody in this group",

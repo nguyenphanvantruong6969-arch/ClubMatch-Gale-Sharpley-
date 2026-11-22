@@ -10,7 +10,7 @@ import pytest
 from _ux5a_chung import GOC, JS_CHU, JS_DO, JS_VANG, dem, mo_ux5a  # noqa: F401
 
 VAI = ["quan_tri", "giao_vien"]
-TU_CAM = re.compile(r"[Ss]uất|Chọi|cấu hình|[Qq]uỹ|\d{4}-\d\d-\d\d[ T]\d\d:|CLB nguyện vọng 1|\btier\b|reserve")
+TU_CAM = re.compile(r"Chọi|cấu hình|[Qq]uỹ|\d{4}-\d\d-\d\d[ T]\d\d:|CLB nguyện vọng 1|\btier\b|reserve")
 
 
 @pytest.mark.parametrize("vai", VAI)
@@ -94,7 +94,7 @@ def test_khong_con_chu_kho_khi_mo_het_nep(mo_ux5a, vai):  # noqa: F811
     chu = page.evaluate(JS_CHU, "#view-others")
     kho = [d for d in chu.split("\n") if TU_CAM.search(d)]
     assert not kho, kho
-    assert "chỗ dành riêng" in chu.lower()
+    assert "chỉ tiêu" in chu.lower()
     assert not loi, loi
 
 
