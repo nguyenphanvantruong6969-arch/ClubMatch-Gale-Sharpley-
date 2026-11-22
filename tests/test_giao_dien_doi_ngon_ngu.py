@@ -32,6 +32,7 @@ SO_VI_DU = os.path.join(MAU, "vi_du_day_du", "SO_NHAP_CLB_vi_du.xlsx")
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from _so_nhap_mau import CHO_SAN_SANG, tha_va_nhap  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 def _cap_chuoi_vi_en():
@@ -151,7 +152,7 @@ def test_nut_dang_cho_xac_nhan_duoc_nha_ra(trang):
     xoá thật. Test kiểm tra cả hai."""
     page, loi, api = trang
     page.locator('[data-tab="admin"]').click()
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     page.wait_for_selector("#btnResetAll")
     nut = page.locator("#btnResetAll")
     nhan_goc_vi = nut.inner_text()

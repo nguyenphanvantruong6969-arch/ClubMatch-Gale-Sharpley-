@@ -54,6 +54,7 @@ def _clb(api):
 def _vao(page):
     """Mở Cài đặt, đợi cả hai câu hỏi vẽ xong."""
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aChia100", state="visible")
     page.wait_for_selector('#ux1aCaiDatThan .ux1a-the[aria-checked="true"]')
     page.wait_for_selector("#ux1aMtNangLuc", state="visible")
@@ -590,6 +591,7 @@ def test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai(mo_trang):  # 
     page.reload()
     page.wait_for_selector("#dropZone")
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     dong = page.locator('.ux1a-ss-dong[data-clb]').first
     dong.wait_for(state="visible")
     cid = dong.get_attribute("data-clb")

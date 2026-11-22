@@ -101,6 +101,9 @@ def _chon(page):
 
 
 def _tab(page, ten):
+    # UX4-L2: wh, dc, db, du_lieu nằm trong menu "Thêm ▾": mở menu trước khi trả nút của chúng
+    if ten in ("wh", "dc", "db", "du_lieu") and page.locator("#qlThemMenu").is_hidden():
+        page.click("#qlNutThem")
     return page.locator(TAB + '[data-ql-tab="%s"]' % ten)
 
 
@@ -108,14 +111,14 @@ def _tab(page, ten):
 
 def test_tat_co_ba_tab_con_va_noi_dung_cu_day_du(mo):
     page, api, loi, _ = mo(bat=False)
-    assert _tab_hien(page) == ["clb", "hs", "du_lieu"]
+    assert _tab_hien(page) == ["clb", "hs", "cach_xep", "du_lieu"]      # UX4-L2: thêm Cách xếp
     assert _chon(page) == ["clb"] and _vung_hien(page) == ["clb"]
-    # tab CLB: biểu mẫu và bảng CLB
-    for sel in ("#clubFormId", "#btnSaveClub", "#adminClubTableBody"):
+    # tab CLB: biểu mẫu và bảng CLB (Mã CLB nay nằm trong "Thêm tuỳ chọn")
+    for sel in ("#clubFormName", "#btnSaveClub", "#adminClubTableBody"):
         assert page.locator(sel).is_visible(), sel
     _tab(page, "hs").click()
     assert _vung_hien(page) == ["hs"]
-    for sel in ("#adminStudentSearch", "#btnBulkAssign", "#adminStudentTableBody"):
+    for sel in ("#adminStudentSearch", "#adminStudentTableBody"):     # UX4-L3: nút Gán chỉ hiện khi đã chọn em
         assert page.locator(sel).is_visible(), sel
     _tab(page, "du_lieu").click()
     assert _vung_hien(page) == ["du_lieu"]
@@ -130,7 +133,7 @@ def test_tat_co_ba_tab_con_va_noi_dung_cu_day_du(mo):
 
 def test_bat_co_nam_tab_con_dung_thu_tu(mo):
     page, api, loi, _ = mo()
-    assert _tab_hien(page) == ["clb", "hs", "wh", "dc", "du_lieu"]
+    assert _tab_hien(page) == ["clb", "hs", "cach_xep", "wh", "dc", "du_lieu"]
     _tab(page, "wh").click()
     assert _vung_hien(page) == ["wh"]
     assert page.locator("#adminWhartonBlock").is_visible() and page.locator("#whQlBody tr").count()
@@ -142,7 +145,7 @@ def test_bat_co_nam_tab_con_dung_thu_tu(mo):
 
 def test_bam_tab_chi_mot_vung_hien_va_aria_selected_dung(mo):
     page, api, loi, _ = mo()
-    for ten in ("hs", "wh", "dc", "du_lieu", "clb"):
+    for ten in ("hs", "cach_xep", "wh", "dc", "du_lieu", "clb"):
         _tab(page, ten).click()
         assert _chon(page) == [ten]
         assert _vung_hien(page) == [ten]
@@ -155,18 +158,19 @@ def test_bam_tab_chi_mot_vung_hien_va_aria_selected_dung(mo):
 
 
 def test_phim_mui_ten_home_end_chuyen_tab(mo):
+    # UX4-L2: mũi tên chỉ đi giữa ba tab của dải; mục trong "Thêm ▾" chọn bằng chuột
     page, api, loi, _ = mo()
     _tab(page, "clb").focus()
     page.keyboard.press("ArrowRight")
     assert _chon(page) == ["hs"] and _vung_hien(page) == ["hs"]
     page.keyboard.press("ArrowRight")
-    assert _chon(page) == ["wh"]
+    assert _chon(page) == ["cach_xep"]
     page.keyboard.press("End")
-    assert _chon(page) == ["du_lieu"]
+    assert _chon(page) == ["cach_xep"]
     page.keyboard.press("ArrowRight")                      # quay vòng về đầu
     assert _chon(page) == ["clb"]
     page.keyboard.press("ArrowLeft")                       # quay vòng về cuối
-    assert _chon(page) == ["du_lieu"]
+    assert _chon(page) == ["cach_xep"]
     page.keyboard.press("Home")
     assert _chon(page) == ["clb"]
     # chỉ tab đang chọn nằm trong thứ tự Tab của bàn phím
@@ -179,7 +183,8 @@ def test_phim_mui_ten_bo_qua_tab_dang_an(mo):
     page, api, loi, _ = mo(bat=False)
     _tab(page, "hs").focus()
     page.keyboard.press("ArrowRight")
-    assert _chon(page) == ["du_lieu"]                      # nhảy qua hai tab điểm đang ẩn
+    assert _chon(page) == ["cach_xep"]                     # UX4-L2: tab kế trong dải là Cách xếp
+    assert page.locator("#qlTabWh").is_hidden() and page.locator("#qlTabDc").is_hidden()
     assert not loi, loi
 
 
@@ -207,7 +212,7 @@ def test_tab_da_nho_khong_con_ton_tai_thi_mo_tab_dau(mo):
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#adminClubTableBody tr")
     page.wait_for_timeout(300)
-    assert _tab_hien(page) == ["clb", "hs", "du_lieu"]
+    assert _tab_hien(page) == ["clb", "hs", "cach_xep", "du_lieu"]
     assert _chon(page) == ["clb"] and _vung_hien(page) == ["clb"]
     assert not loi, loi
 
@@ -225,5 +230,5 @@ def test_tieng_anh_ten_tab_doi_theo(mo):
     page.evaluate("window.I18N.setLang('en')")
     page.wait_for_function("document.documentElement.lang === 'en'")
     chu = page.eval_on_selector_all(TAB + ":not([hidden])", "ns => ns.map(n => n.textContent.trim())")
-    assert chu[2:] == ["Commitment points", "Cut-off points", "Delete data"]
+    assert chu[2:] == ["How to rank", "Commitment points", "Cut-off points", "Start over"]
     assert not loi, loi

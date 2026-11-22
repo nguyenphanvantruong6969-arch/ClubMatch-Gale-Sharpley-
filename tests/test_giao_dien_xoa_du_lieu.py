@@ -28,6 +28,7 @@ GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from _so_nhap_mau import CHO_SAN_SANG, clb, ghi_so  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 @pytest.fixture
@@ -54,7 +55,7 @@ def trang(api_co_du_lieu):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+        tab_ql(page, "du_lieu")
         page.wait_for_selector("#btnResetAll")
         yield page, loi, api_co_du_lieu
         br.close()
@@ -155,7 +156,7 @@ def test_moi_o_so_tren_man_hinh_cap_nhat_ngay_sau_khi_xoa(trang):
 
     page.locator('[data-tab="admin"]').click()
 
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetStudents")
     nut.click()
     page.wait_for_function(
@@ -193,7 +194,7 @@ def test_em_da_tim_truoc_khi_xoa_khong_con_tren_man_hinh(trang):
 
     page.locator('[data-tab="admin"]').click()
 
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetAll")
     nut.click()
     page.wait_for_function(
@@ -262,7 +263,7 @@ def test_the_van_hanh_sach_het_sau_khi_xoa_toan_bo(trang, tmp_path):
 
     page.locator('[data-tab="admin"]').click()
 
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetAll")
     nut.click()
     page.wait_for_function(
@@ -315,7 +316,7 @@ def test_khong_xoa_duoc_khi_dang_nhap_tep(trang, tmp_path):
 
     page.locator('[data-tab="admin"]').click()
 
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetAll")
     nut.click()
     page.wait_for_function(

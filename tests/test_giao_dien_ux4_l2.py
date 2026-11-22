@@ -22,7 +22,7 @@ SO_120 = os.path.join(GOC, "du_lieu_test", "SO_NHAP_DQT_120HS_HOP_LE.xlsx")
 
 # Nút/ô nhìn thấy và bật trong #view-admin, trừ hàng bảng (tbody) và dải tab (đếm riêng).
 JS_DEM = """() => {
-  const vis = e => e.getClientRects().length > 0 && getComputedStyle(e).visibility !== 'hidden';
+  const vis = e => e.checkVisibility({checkVisibilityCSS: true, contentVisibilityAuto: true});
   const root = document.getElementById('view-admin');
   const q = 'button, select, input:not([type=hidden]), textarea, summary, a[href]';
   return Array.from(root.querySelectorAll(q)).filter(e => vis(e) && !e.disabled

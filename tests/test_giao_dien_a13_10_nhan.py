@@ -22,6 +22,7 @@ from _wharton import bat_wharton, chen_bids, dung_clb  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 CU_VI = re.compile(r"[Tt]ầng\s*[12]\b")
 CU_EN = re.compile(r"\b[Tt]ier\s*[12]\b")
@@ -56,7 +57,7 @@ def mo(api):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.locator('#qlTabs [data-ql-tab="dc"]').click()
+        tab_ql(page, "dc")
         # T3-31: Điểm chuẩn là MỘT bảng; chi tiết (bảng + biểu đồ chấm) mở khi bấm "Xem chi tiết" ở một CLB.
         page.locator("#adminDiemChuanBlock:not([hidden]) .dc-chi-tiet-nut").first.click()
         page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcChiTiet:not([hidden])")

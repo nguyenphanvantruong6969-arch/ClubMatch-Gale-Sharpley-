@@ -26,6 +26,7 @@ import browser_host  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 @pytest.fixture
@@ -170,12 +171,12 @@ def test_4_the_04_tieu_de_va_dem_danh_dau(trang):
     mo_the(page, "admin")
     page.locator('#qlTabs [data-ql-tab="hs"]').click()
     page.wait_for_selector(".admin-row-checkbox")
-    assert "xuất hồ sơ" in page.text_content('[data-i18n="admin_reserve_assign_title"]')
+    assert "nhóm ưu tiên" in page.text_content('[data-i18n="admin_reserve_assign_title"]')   # UX4-L3: đổi tiêu đề
     assert page.text_content("#adminDemDanhDau") == ""
     page.locator('.admin-row-checkbox[data-student-id="HS02"]').check()
-    assert page.text_content("#adminDemDanhDau") == "Đã đánh dấu 1 học sinh"
+    assert page.text_content("#adminDemDanhDau") == "Đã chọn 1 học sinh"   # UX4-L3
     page.check("#adminChonTatCa")
-    assert page.text_content("#adminDemDanhDau") == "Đã đánh dấu 6 học sinh"
+    assert page.text_content("#adminDemDanhDau") == "Đã chọn 6 học sinh"   # UX4-L3
     page.click("#btnAdminXuatHs")
     page.wait_for_function(
         "() => document.getElementById('adminXuatFeedback').textContent.includes('Hồ sơ 6 học sinh')")
@@ -276,7 +277,7 @@ def test_xoa_du_lieu_thi_tap_hoc_sinh_da_chon_duoc_don(trang):
     assert "1 học sinh" in page.text_content("#xuatHocSinhDem")
 
     mo_the(page, "admin")
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetStudents")
     nut.click()
     nut.click()                                   # xác nhận hai bước

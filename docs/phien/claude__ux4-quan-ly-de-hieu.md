@@ -52,12 +52,12 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
       string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel (incl. which ONE control is gold): controls visible
       now (count) → visible after redesign (count) → where each hidden one goes. Keep sector placeholders
       (`{person_l}` etc.). **MILESTONE 1: Truong approves words + choice map before any code.**
-- [ ] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
+- [x] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
       "Danh sách CLB", "Học sinh", "Cách xếp"; "Thêm ▾" holds Điểm quyết tâm*, Điểm chuẩn*, Làm lại từ đầu
       (* only when the feature is on, as now). "Tiêu chí xếp" + "Thử cấu hình" leave the "Nâng cao" fold and live in
       "Cách xếp". Each sub-tab: one-line purpose + live status line (e.g. "3 CLB · 30 chỗ · 1 buổi"). Keep ids and
       remember-tab (`localStorage`, try/catch; old saved values still open the right panel).
-- [ ] **L3 CLB + Học sinh (MUST).** CLB form shows 3 fields: Tên, Số chỗ, Buổi (dropdown of existing sessions +
+- [x] **L3 CLB + Học sinh (MUST).** CLB form shows 3 fields: Tên, Số chỗ, Buổi (dropdown of existing sessions +
       "Thêm buổi mới…", via `get_danh_sach_buoi`) + one "Lưu CLB" button. Mã CLB auto-filled from the name (editable,
       UI only; backend validation unchanged) and Chỗ dành riêng / Nhóm ưu tiên live under "Thêm tuỳ chọn".
       Label the session column. Học sinh: assign/export buttons hidden until ≥ 1 row ticked ("Đã chọn n học sinh").
@@ -108,7 +108,8 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Teacher role never sees this tab (unchanged).
 
 ## Current state
-- L1 done (2026-11-22, Sonnet): `docs/ke_hoach/ux/UX4_TU_NGU.md` written, WAITING for Truong's approval (5 decisions D1–D5 in §0; default = recommended). No code yet. Next: L2.
+- L1 approved by Truong (D1–D5 default). L2 + L3 done and committed (2026-11-22, Sonnet); tests ux4_l2/l3 green, ~30 old test files updated on purpose (see CHANGELOG). Next: L4 (Cách xếp: fold "Tuỳ chỉnh thêm", trial panel, score-panel wording), then soat-ma, 3 screenshots, MILESTONE 2.
+- Deviation from L1 sheet: MT1 impact-line prefix "Với lựa chọn này:" skipped (MT1 tests assert exact text).
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -117,3 +118,4 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 | 2026-11-22 | Opus | Plan revised for Hick's law (budgets, 3 tabs + Thêm, one-question rules panel) | replaces "6 sub-tabs" idea |
 | 2026-11-22 | Opus | Added Von Restorff rule (one gold per panel, red isolated, badge on default) | |
 | 2026-11-22 | Sonnet | L1 wording sheet + choice map (measured counts with Chromium) | Found MT1 three-card question overlaps L4 (D1) |
+| 2026-11-22 | Sonnet | L1 approved; L2 + L3 implemented, ~30 old tests migrated | `tab_ql` helper in tests/_trinh_duyet.py |

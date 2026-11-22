@@ -3388,10 +3388,16 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 }
 .ql-them-menu .ql-tab[aria-selected="true"] { box-shadow: none; border-color: var(--hairline); font-weight: 600; }
 .ql-mo-ta { margin: 0 0 4px; }
-.ql-tt { margin: 0 0 14px; font-weight: 600; color: var(--ink); }
-.ql-tt:empty { display: none; }
+.ql-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }   /* giữ chỗ để bố cục không nhảy khi dữ liệu về */
 .btn-canh-bao {
   background: transparent; color: var(--gold-text); border: 2px solid var(--gold-text); font-weight: 600;
 }
 .btn-canh-bao:hover { background: var(--gold-soft); }
 .ux1a-nang-cao { margin-top: 0; }
+.club-them { grid-column: 1 / -1; }
+.club-them > summary { list-style: none; display: inline-block; cursor: pointer; }
+.club-them > summary::-webkit-details-marker { display: none; }
+.club-them[open] > summary { margin-bottom: 10px; }
+.ql-thanh-chon { align-items: center; margin: 10px 0; }
+.ql-thanh-chon[hidden] { display: none; }
+.club-field[hidden] { display: none; }

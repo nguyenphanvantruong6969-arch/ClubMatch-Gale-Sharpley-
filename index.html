@@ -966,20 +966,27 @@
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="admin_club_form_title">Thêm hoặc sửa CLB</h2></div>
         <div class="admin-form-grid" id="clubForm">
-          <label class="club-field"><span class="club-field-label" data-i18n="th_club_id">Mã CLB</span>
-            <input type="text" id="clubFormId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_club_id" placeholder="Mã CLB (ví dụ: clb_01)"></label>
           <label class="club-field"><span class="club-field-label" data-i18n="th_name_short">Tên</span>
             <input type="text" id="clubFormName" class="text-input" data-i18n-placeholder="placeholder_club_name" placeholder="Tên CLB"></label>
-          <label class="club-field"><span class="club-field-label" data-i18n="th_capacity">Chỉ tiêu</span>
-            <input type="number" id="clubFormCapacity" class="text-input text-input-sm" data-i18n-placeholder="placeholder_capacity" placeholder="Chỉ tiêu" min="1"></label>
-          <label class="club-field"><span class="club-field-label" data-i18n="th_reserve_capacity">Suất ưu tiên</span>
-            <input type="number" id="clubFormReserveCapacity" class="text-input text-input-sm" data-i18n-placeholder="placeholder_reserve_capacity" placeholder="Suất ưu tiên" min="0"></label>
-          <label class="club-field"><span class="club-field-label" data-i18n="th_reserve_group">Nhóm ưu tiên</span>
-            <input type="text" id="clubFormReserveGroup" class="text-input text-input-sm" data-i18n-placeholder="placeholder_reserve_group" placeholder="Nhóm ưu tiên (để trống nếu không có)" list="reserveGroupOptions"></label>
-          <datalist id="reserveGroupOptions"></datalist>
+          <label class="club-field"><span class="club-field-label" data-i18n="ux4_so_cho">Số chỗ</span>
+            <input type="number" id="clubFormCapacity" class="text-input text-input-sm" data-i18n-placeholder="ux4_so_cho" placeholder="Số chỗ" min="1"></label>
           <label class="club-field"><span class="club-field-label" data-i18n="th_buoi">Buổi</span>
-            <input type="text" id="clubFormBuoi" class="text-input" data-i18n-placeholder="placeholder_buoi" placeholder="Buổi sinh hoạt (ví dụ: thu_3)" list="buoiOptions"></label>
-          <datalist id="buoiOptions"></datalist>
+            <select id="clubFormBuoi" class="text-input"></select></label>
+          <label class="club-field" id="clubFormBuoiMoiNhan" hidden><span class="club-field-label" data-i18n="ux4_buoi_ten_moi">Tên buổi mới</span>
+            <input type="text" id="clubFormBuoiMoi" class="text-input" data-i18n-placeholder="ux4_buoi_ten_moi_vd" placeholder="Ví dụ: Thứ ba"></label>
+          <!-- UX4-L3: Mã, Chỗ dành riêng, Nhóm gập trong "Thêm tuỳ chọn" (id giữ nguyên; tự mở khi sửa CLB hoặc khi có lỗi ở các ô này) -->
+          <details class="club-them" id="clubFormThem">
+            <summary class="btn btn-secondary" id="clubFormThemTuyChon" data-i18n="ux4_them_tuy_chon">Thêm tuỳ chọn</summary>
+            <div class="admin-form-grid">
+              <label class="club-field"><span class="club-field-label" data-i18n="ux4_ma_clb">Mã CLB (tự điền theo tên, có thể sửa)</span>
+                <input type="text" id="clubFormId" class="text-input text-input-sm" data-i18n-placeholder="ux4_ma_clb_vd" placeholder="Tự điền từ tên"></label>
+              <label class="club-field"><span class="club-field-label" data-i18n="ux4_cho_rieng">Chỗ dành riêng cho nhóm ưu tiên</span>
+                <input type="number" id="clubFormReserveCapacity" class="text-input text-input-sm" data-i18n-placeholder="ux4_cho_rieng_ngan" placeholder="0" min="0"></label>
+              <label class="club-field"><span class="club-field-label" data-i18n="ux4_nhom_duoc_cho">Nhóm được dành chỗ (để trống nếu không có)</span>
+                <input type="text" id="clubFormReserveGroup" class="text-input text-input-sm" data-i18n-placeholder="ux4_nhom_duoc_cho_ngan" placeholder="Để trống nếu không có" list="reserveGroupOptions"></label>
+              <datalist id="reserveGroupOptions"></datalist>
+            </div>
+          </details>
           <button class="btn btn-primary" id="btnSaveClub" data-i18n="btn_save_club">Lưu CLB</button>
           <button class="btn" id="btnClubFormHuy" type="button" hidden data-i18n="btn_cancel">Huỷ</button>
         </div>
@@ -989,16 +996,16 @@
           <thead><tr>
             <th data-i18n="th_club_id">Mã CLB</th>
             <th data-i18n="th_name_short">Tên</th>
-            <th data-i18n="th_capacity">Chỉ tiêu</th>
-            <th data-i18n="th_reserve_capacity">Suất ưu tiên</th>
+            <th data-i18n="ux4_so_cho">Số chỗ</th>
+            <th data-i18n="ux4_cho_rieng_cot">Chỗ dành riêng</th>
             <th data-i18n="th_reserve_group">Nhóm ưu tiên</th>
-            <th class="cot-buoi" data-i18n="th_buoi">Buổi</th>
+            <th class="cot-buoi" data-i18n="ux4_cot_buoi">Buổi sinh hoạt</th>
             <th><span class="sr-only" data-i18n="th_thao_tac"></span></th>
           </tr></thead>
           <tbody id="adminClubTableBody"></tbody>
         </table>
         <div id="adminClubEmptyState" class="empty-state" hidden></div>
-        <p class="hint-text" data-i18n="buoi_hint_form">Hai CLB cùng buổi là trùng giờ, mỗi học sinh chỉ vào được một. Để trống nếu trường chỉ có một buổi.</p>
+        <p class="hint-text" data-i18n="buoi_hint_form">Hai CLB cùng buổi thì trùng giờ, mỗi học sinh chỉ vào được một. Chọn "Một buổi chung" nếu trường chỉ có một buổi.</p>
       </div>
 
       <div class="panel" id="taiBuoiPanel" hidden>
@@ -1009,7 +1016,7 @@
             <thead><tr>
               <th data-i18n="th_buoi">Buổi</th>
               <th class="num" data-i18n="th_so_clb">Số CLB</th>
-              <th class="num" data-i18n="th_tong_cho">Chỉ tiêu</th>
+              <th class="num" data-i18n="ux4_so_cho">Số chỗ</th>
               <th class="num" data-i18n="th_em_muon_buoi">Học sinh chọn buổi này</th>
               <th class="num" data-i18n="th_ti_le_choi">Học sinh trên mỗi chỗ</th>
               <th><span class="sr-only" data-i18n="th_muc"></span></th>
@@ -1028,20 +1035,26 @@
         <div class="panel-head"><h2 data-i18n="admin_reserve_assign_title">Gán nhóm ưu tiên và xuất hồ sơ học sinh</h2></div>
         <div class="search-row">
           <input type="text" id="adminStudentSearch" class="text-input" data-i18n-placeholder="placeholder_admin_student_search" placeholder="Tìm học sinh theo mã hoặc tên…">
-          <input type="text" id="bulkReserveGroupInput" class="text-input text-input-sm" data-i18n-placeholder="placeholder_reserve_group_apply" placeholder="Nhóm ưu tiên cần gán" list="reserveGroupOptions">
-          <button class="btn btn-secondary" id="btnBulkAssign" data-i18n="btn_bulk_assign">Gán cho học sinh đã đánh dấu</button>
-          <button class="btn btn-secondary" id="btnAdminXuatHs" data-i18n="btn_admin_xuat_hs">Xuất CSV học sinh đã đánh dấu</button>
-          <span class="chon-hs-dem" id="adminDemDanhDau"></span>
-        </div>
-        <!-- A14: lọc và sắp theo lớp. Danh sách lớp nạp từ list_classes (js/04 napOChonLop). -->
-        <div class="search-row" id="adminLopHang">
+          <!-- A14: lọc theo lớp; danh sách lớp nạp từ list_classes (js/04 napOChonLop). -->
           <label class="lop-nhan" for="adminLopLoc" data-i18n="lop_loc_nhan">Lọc theo {cohort_l}</label>
           <select id="adminLopLoc" class="text-input text-input-sm"></select>
-          <label class="lop-nhan" for="adminSapXep" data-i18n="lop_sap_nhan">Sắp xếp</label>
-          <select id="adminSapXep" class="text-input text-input-sm">
-            <option value="student_id" data-i18n="lop_sap_theo_ma">Theo mã {person_l}</option>
-            <option value="class_id" data-i18n="lop_sap_theo_lop">Theo {cohort_l}</option>
-          </select>
+          <details class="club-them" id="adminHsThem">
+            <summary class="btn btn-secondary" id="adminHsThemTuyChon" data-i18n="ux4_them_tuy_chon">Thêm tuỳ chọn</summary>
+            <div class="search-row" id="adminLopHang">
+              <label class="lop-nhan" for="adminSapXep" data-i18n="lop_sap_nhan">Sắp xếp</label>
+              <select id="adminSapXep" class="text-input text-input-sm">
+                <option value="student_id" data-i18n="lop_sap_theo_ma">Theo mã {person_l}</option>
+                <option value="class_id" data-i18n="lop_sap_theo_lop">Theo {cohort_l}</option>
+              </select>
+            </div>
+          </details>
+        </div>
+        <!-- UX4-L3: chỉ hiện khi đã chọn ≥ 1 em (js/05_quan_ly.js capNhatThanhChonHs); nút vàng = Gán -->
+        <div class="search-row ql-thanh-chon" id="adminThanhChon" hidden>
+          <span class="chon-hs-dem" id="adminDemDanhDau" role="status"></span>
+          <input type="text" id="bulkReserveGroupInput" class="text-input text-input-sm" data-i18n-placeholder="ux4_gan_nhom_ph" placeholder="Gán vào nhóm nào? (ví dụ: khối 10)" list="reserveGroupOptions">
+          <button class="btn btn-primary" id="btnBulkAssign" data-i18n="btn_bulk_assign">Gán nhóm ưu tiên cho học sinh đã chọn</button>
+          <button class="btn btn-secondary" id="btnAdminXuatHs" data-i18n="btn_admin_xuat_hs">Xuất danh sách học sinh đã chọn (CSV)</button>
         </div>
         <div class="save-feedback xuat-ket-qua" id="adminXuatFeedback"></div>
         <p class="hint-text xuat-canh-bao" data-i18n="xuat_canh_bao_diem">Tệp xuất có điểm chấm và số bốc thăm. Không gửi các tệp này cho giáo viên chấm điểm.</p>

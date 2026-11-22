@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-22 — UX4-L2 + L3: thẻ Quản lý dễ hiểu (luật Hick + Von Restorff), chỉ giao diện và chữ
+
+- L2 (cấu trúc): dải tab còn 4 mục "Danh sách CLB · Học sinh · Cách xếp · Thêm ▾"; Điểm quyết tâm*, Điểm chuẩn*, Bảng điều khiển* và "Làm lại từ đầu" nằm trong "Thêm ▾" (id và `data-ql-tab` giữ nguyên; `rbda_ql_tab_con` cũ vẫn mở đúng khung). Khung Cài đặt (thẻ MT1) và Tiêu chí/Thử chuyển vào tab Cách xếp, bỏ mục gập "Nâng cao" (`#ux1aNangCao` thành `div`). Mỗi tab con có một dòng mục đích và một dòng trạng thái (`#qlTtClb`, `#qlTtHs`, `#qlTtCachXep`, `#qlTtDuLieu`). Nút thanh "Việc tiếp theo" đổi từ vàng sang kiểu cảnh báo (`.btn-canh-bao`); "Lưu tiêu chí" và hai nút xoá điểm quyết tâm của tất cả thành nút thường (đỏ chỉ còn ở "Làm lại từ đầu").
+- L3 (CLB + Học sinh): form CLB còn Tên, Số chỗ, Buổi (ô thả xuống: "Một buổi chung", các buổi đã có, "Thêm buổi mới…") và "Lưu CLB"; Mã (tự điền từ tên, không ghi đè mã đã có), Chỗ dành riêng, Nhóm gập trong "Thêm tuỳ chọn" (tự mở khi sửa CLB hoặc khi có lỗi ở các ô đó). Cột buổi có nhãn "Buổi sinh hoạt". Học sinh: nút Gán (vàng) và Xuất chỉ hiện khi đã chọn ≥ 1 em ("Đã chọn n học sinh"); "Sắp xếp" vào "Thêm tuỳ chọn". Nút ở trạng thái rỗng dẫn tới ô Tên.
+- File: index.html, style.css, i18n.js, js/00_nen.js, js/03_ket_qua.js, js/05_quan_ly.js, js/09_the_xem.js, js/18_cai_dat.js, js/19_ux1b_gv.js. Không đổi backend/API/schema; `kiem_nhanh.py` 7/7 (so với nhánh gốc 7e9d673 vì máy không có `origin/main`).
+- Test mới: `tests/test_giao_dien_ux4_l2.py` (7 ca), `tests/test_giao_dien_ux4_l3.py` (7 ca); trợ giúp `tab_ql` trong `tests/_trinh_duyet.py`.
+- Test cũ sửa có chủ đích (cấu trúc/chữ mới, đi qua "Thêm ▾" hoặc "Thêm tuỳ chọn" hoặc tab Cách xếp): test_giao_dien_quan_ly_tab_con, ux1_dieu_huong, ux1_cai_dat, mt1, mt1_bang_loai, ux1b_l5c, gt2_thu, gt2_tieu_chi, gt4_tieu_chi, fa_gap8_dashboard, a13_8_quan_ly, a13_10_diem_chuan, a13_10_nhan, a13_12_ql_diem_chuan, a14_lop, diem_chuan, diem_quyet_tam_gon, doi_ngon_ngu, loi_chan_gon, sg9_nut_ban, t3_l0, t3_l1, t3_l2_van_hanh, ux2_chuyen_canh, ux2_loi_o, ux2_rong, ux_xuat, wharton_quan_ly, xoa_du_lieu, test_khoi_dong_backend; `test_ws_nhan.py` (`SUA_CO_Y`, chú thích UX4).
+- Đã có từ trước (không do UX4): `tests/test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px` đỏ ở nhánh gốc 7e9d673 (`tkNutMoHop` 216×36).
+- Khác bảng từ ngữ L1: dòng trạng thái Học sinh chỉ ghi "{n} học sinh" (số "đã có nhóm" cần thêm API); thêm dòng trạng thái cho "Làm lại từ đầu".
+
 ## 2026-11-22 — UX3-L3: nhóm menu "Nhập tay" → "Nhập thủ công"
 
 - `ux1a_nhom_nhap_tay` (vi) và chữ dự phòng trong index.html; bảng nhóm trong HUONG_DAN_SU_DUNG.md. Tiếng Anh giữ "Manual entry". Áp cho cả vai giáo viên và quản trị (cùng một nhãn).

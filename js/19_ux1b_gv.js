@@ -51,6 +51,7 @@ ux1bNapLop();
    và dòng gộp cảnh báo huy chương. Giáo viên không có thẻ này nên nút chỉ hiện cho quản trị (backend vẫn kiểm quyền). */
 function ux1bMoCaiDat() {
   switchTab("admin");
+  if (typeof datTabConQl === "function") datTabConQl("cach_xep", { luu: true });   /* UX4-L2: khung Cài đặt nằm trong tab Cách xếp */
   viecChoRoiLam(() => { const p = el("ux1aCaiDat"); return p && !p.hidden; }, () => {
     el("ux1aCaiDat").scrollIntoView({ block: "start" });
   });

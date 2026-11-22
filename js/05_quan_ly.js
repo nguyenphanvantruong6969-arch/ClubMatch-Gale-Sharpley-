@@ -69,19 +69,36 @@ function mucTai(tiLe) {
   return { lop: "is-con-trong", nhan: t("tai_buoi_con_trong") };
 }
 
+/* UX4-L3: ô Buổi là danh sách thả xuống: "Một buổi chung" (để trống), các buổi đã có, "Thêm buổi mới…". */
+const BUOI_MOI = "__moi__";
+let qlDsBuoi = [];
+let qlIdClbCo = new Set();
+
+function veOBuoiClb(giu) {
+  const sel = el("clubFormBuoi");
+  if (!sel) return;
+  const truoc = giu === undefined ? sel.value : giu;
+  clear(sel);
+  const them = (v, chu) => { const o = document.createElement("option"); o.value = v; o.textContent = chu; sel.appendChild(o); };
+  them("", t("ux4_buoi_chung"));
+  qlDsBuoi.forEach((b) => them(b, nhanBuoi(b)));
+  if (truoc && truoc !== BUOI_MOI && !qlDsBuoi.includes(truoc)) them(truoc, nhanBuoi(truoc));   /* CLB đang sửa có buổi chưa có trong danh sách */
+  them(BUOI_MOI, t("ux4_buoi_them_moi"));
+  sel.value = Array.from(sel.options).some((o) => o.value === truoc) ? truoc : "";
+  capNhatOBuoiMoi();
+}
+
+function capNhatOBuoiMoi() {
+  const sel = el("clubFormBuoi");
+  const moi = !!sel && sel.value === BUOI_MOI;
+  el("clubFormBuoiMoiNhan").hidden = !moi;
+}
+
 function loadBuoiOptions() {
   chayTai(callApiDocChung("get_danh_sach_buoi"), (res) => {
-    const list = el("buoiOptions");
-    if (!list) return;
-    clear(list);
-    if (!res.ok) return;
-    res.data.ds_buoi
-      .filter((b) => b !== res.data.buoi_mac_dinh)
-      .forEach((b) => {
-        const opt = document.createElement("option");
-        opt.value = b;
-        list.appendChild(opt);
-      });
+    if (!el("clubFormBuoi")) return;
+    qlDsBuoi = res.ok ? res.data.ds_buoi.filter((b) => b !== res.data.buoi_mac_dinh) : [];
+    veOBuoiClb();
   });
 }
 
@@ -392,6 +409,7 @@ function loadAdminClubs() {
     const emptyState = el("adminClubEmptyState");
     clear(body);
     if (!res.ok || !res.data.length) {
+      qlIdClbCo = new Set();
       qlTt.clb = res.ok ? { n: 0, cho: 0, b: 0 } : null;
       veTtQl();
       veTrangThaiRong(emptyState, UX2_RONG_CLB_QL);
@@ -400,6 +418,7 @@ function loadAdminClubs() {
     }
     emptyState.hidden = true;
     const nhieuBuoi = new Set(res.data.map((c) => c.buoi || BUOI_MAC_DINH)).size > 1;
+    qlIdClbCo = new Set(res.data.map((c) => c.club_id));
     qlTt.clb = { n: res.data.length, cho: res.data.reduce((a, c) => a + (Number(c.capacity) || 0), 0),
       b: new Set(res.data.map((c) => c.buoi || BUOI_MAC_DINH)).size };
     veTtQl();
@@ -510,6 +529,7 @@ function loadAdminStudents() {
     clear(body);
     el("adminChonTatCa").checked = false; // trang moi -> chua em nao duoc tick
     el("adminDemDanhDau").textContent = "";
+    el("adminThanhChon").hidden = true;
 
     if (!res.ok || !res.data.rows.length) {
       if (res.ok && !search) { qlTt.hs = 0; veTtQl(); }
@@ -557,7 +577,8 @@ function loadAdminStudents() {
 /* So em dang danh dau o the 04 — dung chung cho nut Gan va nut Xuat. */
 function demDanhDauAdmin() {
   const n = document.querySelectorAll(".admin-row-checkbox:checked").length;
-  el("adminDemDanhDau").textContent = n ? t("admin_dem_danh_dau", { n }) : "";
+  el("adminDemDanhDau").textContent = n ? t("ux4_da_chon", { n }) : "";
+  el("adminThanhChon").hidden = !n;      /* UX4-L3: nút gán/xuất chỉ hiện khi đã chọn ≥ 1 em */
 }
 
 /* ------------------------------------------------------------------ *
@@ -1124,11 +1145,25 @@ function initWhartonQuanLy() {
    lặng lẽ xoá suất dự trữ, nhãn và buổi. */
 let clbDangSua = false;
 
+/* UX4-L3: Mã CLB tự điền từ tên (bỏ dấu, chữ thường, gạch dưới); người dùng sửa tay thì thôi tự đổi. */
+let maClbTuSua = false;
+function maTuTenClb(ten) {
+  let g = String(ten || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "d")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 40).replace(/_+$/, "");
+  if (!g) return "";
+  let m = g, i = 2;
+  while (qlIdClbCo.has(m)) { m = g + "_" + i; i += 1; }   /* không để mã trùng ghi đè một CLB đã có */
+  return m;
+}
+
 function datLaiFormClb() {
   clbDangSua = false;
   el("clubFormId").value = "";
   el("clubFormId").readOnly = false;
-  if (el("clubFormBuoi")) el("clubFormBuoi").value = "";
+  maClbTuSua = false;
+  el("clubFormThem").open = false;
+  el("clubFormBuoiMoi").value = "";
+  veOBuoiClb("");
   el("clubFormName").value = "";
   el("clubFormCapacity").value = "";
   el("clubFormReserveCapacity").value = "";
@@ -1145,7 +1180,8 @@ function suaClbTuDong(c, tr) {
   el("clubFormCapacity").value = c.capacity;
   el("clubFormReserveCapacity").value = c.reserve_capacity || 0;
   el("clubFormReserveGroup").value = c.reserve_group || "";
-  if (el("clubFormBuoi")) el("clubFormBuoi").value = c.buoi || "";
+  veOBuoiClb(c.buoi || "");
+  el("clubFormThem").open = true;                 /* UX4-L3: đang sửa thì hiện luôn Mã, Chỗ dành riêng, Nhóm */
   el("btnClubFormHuy").hidden = false;
   document.querySelectorAll("#adminClubTableBody tr.is-editing").forEach((r) => r.classList.remove("is-editing"));
   tr.classList.add("is-editing");
@@ -1155,7 +1191,7 @@ function suaClbTuDong(c, tr) {
 /* UX2-L6: trang thai rong cua the Quan ly (the nay chi quan tri vao duoc; nut van mang data-quyen cho chac). */
 const UX2_RONG_CLB_QL = {
   chu: "admin_club_empty", huongDan: "ux2_rong_huong_clb_ql",
-  nut: { nhan: "ux2_rong_nut_dien_form", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
+  nut: { nhan: "ux2_rong_nut_dien_form", quyen: "quan_tri", tab: "admin", oId: "clubFormName" },
 };
 const UX2_RONG_HS_QL = {
   chu: "admin_student_empty", huongDan: "ux2_rong_huong_hs_ql",
@@ -1172,6 +1208,12 @@ const UX2_LOI_CLB = {
 
 function initAdminHandlers() {
   el("btnClubFormHuy").addEventListener("click", datLaiFormClb);
+  el("clubFormBuoi").addEventListener("change", capNhatOBuoiMoi);
+  el("clubFormId").addEventListener("input", (ev) => { if (ev.isTrusted !== false) maClbTuSua = true; });
+  el("clubFormName").addEventListener("input", () => {
+    if (clbDangSua || maClbTuSua) return;
+    el("clubFormId").value = maTuTenClb(el("clubFormName").value);
+  });
   el("btnSaveClub").addEventListener("click", () => {
     const id = el("clubFormId").value.trim();
     const name = el("clubFormName").value.trim();
@@ -1180,14 +1222,15 @@ function initAdminHandlers() {
     const reserveCapacity = clbDangSua ? (rcRaw || 0) : (rcRaw === "" ? null : rcRaw);
     const rgRaw = el("clubFormReserveGroup").value.trim();
     const reserveGroup = clbDangSua || rgRaw ? rgRaw : null;
-    const buoiRaw = el("clubFormBuoi") ? el("clubFormBuoi").value.trim() : "";
+    const chonBuoi = el("clubFormBuoi") ? el("clubFormBuoi").value : "";
+    const buoiRaw = (chonBuoi === BUOI_MOI ? el("clubFormBuoiMoi").value : chonBuoi).trim();
     const buoi = clbDangSua || buoiRaw ? buoiRaw : null;
     ["clubFormId", "clubFormName", "clubFormCapacity", "clubFormReserveCapacity"].forEach((x) => xoaLoiTaiO(el(x)));
     if (!id || (!name && !clbDangSua) || !capacity) {
       feedback(el("clubFormFeedback"), t("feedback_club_form_required"), true);
       /* UX2-L4: tô đúng ô còn thiếu (cùng câu cũ, không chuỗi mới) và đưa con trỏ về ô đầu tiên. */
       const thieu = [];
-      if (!id) thieu.push(el("clubFormId"));
+      if (!id && name) thieu.push(el("clubFormId"));   /* UX4-L3: Mã tự điền theo tên; chỉ tô khi có tên mà vẫn không ra mã */
       if (!name && !clbDangSua) thieu.push(el("clubFormName"));
       if (!capacity) thieu.push(el("clubFormCapacity"));
       thieu.forEach((o) => baoLoiTaiO(o, () => t("feedback_club_form_required")));

@@ -113,7 +113,7 @@ def test_bo_ten_thuat_toan_khoi_giao_dien_va_doi_ten_tab_xoa(api, mo):
     assert page.title() == "Sắp xếp Câu lạc bộ" and "RB-DA" not in page.title()
     assert page.inner_text('.nav-item[data-tab="pipeline"]').strip().endswith("Xếp CLB")
     page.locator('[data-tab="admin"]').click()
-    assert page.inner_text("#qlTabDuLieu").strip() == "Xoá dữ liệu"
+    assert page.text_content("#qlTabDuLieu").strip() == "Làm lại từ đầu"   # UX4-L2
 
 
 # ---------------------------------------------------------------- T3-36

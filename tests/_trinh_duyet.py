@@ -55,3 +55,10 @@ CHROMIUM = _tim()
 def mo_gap_ma(page):
     """UX1B-L5c: các nút về mã tra cứu nằm trong gập "Mã tra cứu…" (#gtMaFold); mở ra trước khi bấm."""
     page.evaluate("() => { const d = document.getElementById('gtMaFold'); if (d) d.open = true; }")
+
+
+def tab_ql(page, ma):
+    """UX4-L2: bấm tab con của thẻ Quản lý. wh, dc, db, du_lieu nằm trong menu "Thêm ▾": mở menu trước khi bấm."""
+    if ma in ("wh", "dc", "db", "du_lieu") and page.locator("#qlThemMenu").is_hidden():
+        page.click("#qlNutThem")
+    page.locator('#qlTabs [data-ql-tab="%s"]' % ma).click()

@@ -21,6 +21,7 @@ from _wharton import bat_wharton, chen_bids, dung_clb  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 @pytest.fixture
@@ -53,7 +54,7 @@ def mo(api):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.locator('#qlTabs [data-ql-tab="dc"]').click()
+        tab_ql(page, "dc")
         page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcQlTongQuan tbody tr")
         page.locator('#dcQlTongQuan .dc-chi-tiet-nut[data-club-id="A"]').click()
         page.wait_for_selector("#dcChiTiet:not([hidden]) svg[data-bieu-do]")

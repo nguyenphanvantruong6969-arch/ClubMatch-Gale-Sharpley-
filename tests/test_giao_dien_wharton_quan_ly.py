@@ -30,6 +30,7 @@ from test_wharton_pipeline import _nap_bo_vao_api, _trang_thai_stb  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 DAU_VIET = re.compile(
     "[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", re.I)
@@ -76,7 +77,7 @@ def mo(tmp_path, api):
         page.locator('[data-tab="admin"]').click()
         page.wait_for_selector("#btnResetAll", state="attached")
         if bat:
-            page.locator('#qlTabs [data-ql-tab="wh"]').click()
+            tab_ql(page, "wh")
             page.wait_for_selector("#adminWhartonBlock:not([hidden]) #btnWhXemTatCa")
             # T3-29: mặc định chỉ hiện hồ sơ có vấn đề; các test cũ muốn thấy cả bảng nên bỏ lọc.
             page.locator("#btnWhXemTatCa").click()

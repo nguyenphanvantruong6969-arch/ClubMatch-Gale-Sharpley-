@@ -366,7 +366,7 @@
       xuat_canh_bao_diem: "Tệp xuất có {score_l} chấm và số bốc thăm. Không gửi các tệp này cho giáo viên chấm {score_l}.",
       btn_xuat_hs_da_chon: "Xuất CSV {person_l} đã chọn",
       btn_bo_chon_hs: "Bỏ chọn",
-      btn_admin_xuat_hs: "Xuất CSV {person_l} đã đánh dấu",
+      btn_admin_xuat_hs: "Xuất danh sách {person_l} đã chọn (CSV)",
       aria_chon_tat_ca_dang_hien: "Chọn tất cả {person_l} đang hiện",
       aria_chon_tat_ca_trang: "Chọn tất cả {person_l} trên trang này",
       hs_da_chon_dem: "Đã chọn {n} {person_l}",
@@ -555,7 +555,7 @@
 
       ux4_tt_clb: "{n} {slot_sl} · {cho} chỗ · {b} {session_l}",
 
-      ux4_mo_hs: "Tìm {person_l}, chọn nhiều em rồi gán nhóm ưu tiên hoặc xuất danh sách.",
+      ux4_mo_hs: "Tìm {person_l}, chọn nhiều {person_l} rồi gán nhóm ưu tiên hoặc xuất danh sách.",
 
       ux4_tt_hs: "{n} {person_l}",
 
@@ -566,6 +566,38 @@
       ux4_mo_lam_lai: "Dùng khi bắt đầu một đợt mới. Mỗi nút đều tự sao lưu trước khi xoá.",
 
       ux4_tt_lam_lai: "Hiện có {hs} {person_l} và {clb} {slot_sl}.",
+
+      ux4_so_cho: "Số chỗ",
+
+      ux4_buoi_chung: "Một {session_l} chung",
+
+      ux4_buoi_them_moi: "Thêm {session_l} mới…",
+
+      ux4_buoi_ten_moi: "Tên {session_l} mới",
+
+      ux4_buoi_ten_moi_vd: "Ví dụ: Thứ ba",
+
+      ux4_them_tuy_chon: "Thêm tuỳ chọn",
+
+      ux4_ma_clb: "Mã {slot_sl} (tự điền theo tên, có thể sửa)",
+
+      ux4_ma_clb_vd: "Tự điền từ tên",
+
+      ux4_cho_rieng: "Chỗ dành riêng cho nhóm ưu tiên",
+
+      ux4_cho_rieng_ngan: "0",
+
+      ux4_cho_rieng_cot: "Chỗ dành riêng",
+
+      ux4_nhom_duoc_cho: "Nhóm được dành chỗ (để trống nếu không có)",
+
+      ux4_nhom_duoc_cho_ngan: "Để trống nếu không có",
+
+      ux4_cot_buoi: "{session} sinh hoạt",
+
+      ux4_da_chon: "Đã chọn {n} {person_l}",
+
+      ux4_gan_nhom_ph: "Gán vào nhóm nào? (ví dụ: khối 10)",
       admin_desc: "Sửa danh sách {slot_sl} và {person_l}, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới.",
       admin_club_form_title: "Thêm hoặc sửa {slot_sl}",
       placeholder_club_id: "Mã {slot_sl} (ví dụ: clb_01)",
@@ -580,11 +612,11 @@
       th_reserve_capacity: "Suất ưu tiên",
       th_reserve_group: "Nhóm ưu tiên",
       admin_club_empty: "Chưa có {slot_sl} nào. Thêm {slot_sl} đầu tiên bằng biểu mẫu ở trên.",
-      admin_reserve_assign_title: "Gán nhóm ưu tiên và xuất hồ sơ {person_l}",
+      admin_reserve_assign_title: "{person_p} và nhóm ưu tiên",
       placeholder_admin_student_search: "Tìm {person_l} theo mã hoặc tên…",
       placeholder_reserve_group_apply: "Nhóm ưu tiên cần gán",
-      btn_bulk_assign: "Gán cho {person_l} đã đánh dấu",
-      th_current_reserve_group: "Nhóm ưu tiên hiện tại",
+      btn_bulk_assign: "Gán nhóm ưu tiên cho {person_l} đã chọn",
+      th_current_reserve_group: "Nhóm ưu tiên",
       admin_student_empty: "Chưa có {person_l} nào. Thêm ở thẻ \"Nhập nguyện vọng\" hoặc nạp tệp từ Microsoft Forms.",
       btn_prev_page: "‹ Trước",
       btn_next_page: "Sau ›",
@@ -684,7 +716,7 @@
       recovery_kg_da_duoc: "Đã ghi được vào thư mục. Hãy đóng rồi mở lại chương trình.",
 
       /* --- Nhiều buổi sinh hoạt trong tuần --- */
-      buoi_chua_chia: "Chưa chia {session_l}",
+      buoi_chua_chia: "Một {session_l} chung",
       buoi_ma_thu_2: "Thứ 2",
       buoi_ma_thu_3: "Thứ 3",
       buoi_ma_thu_4: "Thứ 4",
@@ -694,7 +726,7 @@
       buoi_ma_chu_nhat: "Chủ nhật",
       th_buoi: "{session}",
       placeholder_buoi: "{session} sinh hoạt (ví dụ: thu_3)",
-      buoi_hint_form: "Hai {slot_sl} cùng {session_l} là trùng giờ, mỗi {person_l} chỉ vào được một. Để trống nếu trường chỉ có một {session_l}.",
+      buoi_hint_form: "Hai {slot_sl} cùng {session_l} thì trùng giờ, mỗi {person_l} chỉ vào được một. Chọn \"Một {session_l} chung\" nếu trường chỉ có một {session_l}.",
       /* GT2 — khung Tiêu chí xếp (js/15_tieu_chi.js) */
       gt2_tc_tieu_de: "Tiêu chí xếp",
       gt2_tc_mo_ta: "Thứ tự dưới đây là cách phần mềm xếp những người cùng đăng ký một suất. Chỉ chọn được trong các lựa chọn có sẵn.",
@@ -769,7 +801,7 @@
       th_tong_cho: "Chỉ tiêu",
       th_em_muon_buoi: "{person} chọn {session_l} này",
       th_ti_le_choi: "{person} trên mỗi chỗ",
-      ti_le_choi_giai_thich: "Tỉ lệ chọi tính theo số {person_l}, không theo số nguyện vọng, vì mỗi {person_l} chỉ nhận một chỗ mỗi {session_l}.",
+      ti_le_choi_giai_thich: "Số {person_l} trên mỗi chỗ tính theo số {person_l}, không tính theo số nguyện vọng, vì mỗi {person_l} chỉ nhận một chỗ mỗi {session_l}.",
       tai_buoi_qua_tai: "Quá tải",
       tai_buoi_vua_du: "Vừa đủ",
       tai_buoi_con_trong: "Còn trống",
@@ -1841,7 +1873,7 @@
       xuat_canh_bao_diem: "Exported files contain {score_pl} and lottery numbers. Do not send them to the scoring teachers.",
       btn_xuat_hs_da_chon: "Export selected {person_pl} as CSV",
       btn_bo_chon_hs: "Clear selection",
-      btn_admin_xuat_hs: "Export ticked {person_pl} as CSV",
+      btn_admin_xuat_hs: "Export the selected {person_pl} (CSV)",
       aria_chon_tat_ca_dang_hien: "Select all {person_pl} shown",
       aria_chon_tat_ca_trang: "Select all {person_pl} on this page",
       hs_da_chon_dem: "{n} {person_l}(s) selected",
@@ -2041,6 +2073,38 @@
       ux4_mo_lam_lai: "Use this to begin a new round. Each button backs up first.",
 
       ux4_tt_lam_lai: "There are {hs} {person_pl} and {clb} {slot_pl}.",
+
+      ux4_so_cho: "Places",
+
+      ux4_buoi_chung: "One shared {session_l}",
+
+      ux4_buoi_them_moi: "Add a new {session_l}…",
+
+      ux4_buoi_ten_moi: "Name of the new {session_l}",
+
+      ux4_buoi_ten_moi_vd: "e.g. Tuesday",
+
+      ux4_them_tuy_chon: "More options",
+
+      ux4_ma_clb: "{slot} ID (filled in from the name, can be edited)",
+
+      ux4_ma_clb_vd: "Filled in from the name",
+
+      ux4_cho_rieng: "Places kept for the priority group",
+
+      ux4_cho_rieng_ngan: "0",
+
+      ux4_cho_rieng_cot: "Kept places",
+
+      ux4_nhom_duoc_cho: "Group the places are kept for (leave blank if none)",
+
+      ux4_nhom_duoc_cho_ngan: "Leave blank if none",
+
+      ux4_cot_buoi: "Meets on ({session_l})",
+
+      ux4_da_chon: "{n} {person_pl} selected",
+
+      ux4_gan_nhom_ph: "Which group? (e.g. grade 10)",
       admin_desc: "Edit the list of {slot_pl} and {person_pl}, choose how places are given out, or start over. Pick a section below.",
       admin_club_form_title: "Add or edit {slot_la}",
       placeholder_club_id: "{slot} ID (e.g. club_01)",
@@ -2055,11 +2119,11 @@
       th_reserve_capacity: "Priority seats",
       th_reserve_group: "Priority group",
       admin_club_empty: "No {slot_pl} yet. Add the first one with the form above.",
-      admin_reserve_assign_title: "Priority groups and {person_l} profile export",
+      admin_reserve_assign_title: "{person_p} and priority groups",
       placeholder_admin_student_search: "Search {person_pl} by ID or name…",
       placeholder_reserve_group_apply: "Priority group to apply",
-      btn_bulk_assign: "Assign to ticked {person_pl}",
-      th_current_reserve_group: "Current priority group",
+      btn_bulk_assign: "Give the selected {person_pl} a priority group",
+      th_current_reserve_group: "Priority group",
       admin_student_empty: "No {person_pl} yet. Add them on the \"Enter preferences\" tab or import a Microsoft Forms file.",
       btn_prev_page: "‹ Prev",
       btn_next_page: "Next ›",
@@ -2159,7 +2223,7 @@
       recovery_kg_da_duoc: "The folder is writable now. Close the program and open it again.",
 
       /* --- Multiple sessions per week --- */
-      buoi_chua_chia: "No {session_l} set",
+      buoi_chua_chia: "One shared {session_l}",
       buoi_ma_thu_2: "Mon",
       buoi_ma_thu_3: "Tue",
       buoi_ma_thu_4: "Wed",
@@ -2169,7 +2233,7 @@
       buoi_ma_chu_nhat: "Sun",
       th_buoi: "{session}",
       placeholder_buoi: "{session} (e.g. thu_3)",
-      buoi_hint_form: "Two {slot_pl} in the same {session_l} clash, so {person_la} can join only one. Leave it blank if the school has a single {session_l}.",
+      buoi_hint_form: "Two {slot_pl} in the same {session_l} clash, so {person_la} can join only one. Choose \"One shared {session_l}\" if the school has only one {session_l}.",
       /* GT2 — Allocation criteria panel (js/15_tieu_chi.js) */
       gt2_tc_tieu_de: "Allocation criteria",
       gt2_tc_mo_ta: "The order below is how the software ranks people who apply for the same place. Only the options provided can be chosen.",
@@ -2244,7 +2308,7 @@
       th_tong_cho: "Quota",
       th_em_muon_buoi: "{person_p} wanting it",
       th_ti_le_choi: "{person_p} per place",
-      ti_le_choi_giai_thich: "Applicants per seat counts {person_pl}, not preferences, because each {person_l} gets at most one seat per {session_l}.",
+      ti_le_choi_giai_thich: "Applicants per place counts {person_pl}, not preferences, because each {person_l} gets at most one place per {session_l}.",
       tai_buoi_qua_tai: "Oversubscribed",
       tai_buoi_vua_du: "About right",
       tai_buoi_con_trong: "Room to spare",

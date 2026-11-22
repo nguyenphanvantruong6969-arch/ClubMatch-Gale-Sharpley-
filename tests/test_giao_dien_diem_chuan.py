@@ -22,6 +22,7 @@ from _wharton import bat_wharton, chen_bids, dung_clb  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 DAU_VIET = re.compile(
     "[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", re.I)
@@ -77,7 +78,7 @@ def mo(tmp_path, api):
 
 def _cho_quan_ly(page, clb="A"):
     """Mở tab Điểm chuẩn rồi bấm "Xem chi tiết" của một CLB (T3-31: biểu đồ chấm nằm trong chi tiết)."""
-    page.locator('#qlTabs [data-ql-tab="dc"]').click()
+    tab_ql(page, "dc")
     page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcQlTongQuan tbody tr")
     assert page.locator("#dcChiTiet").is_hidden()          # mặc định chỉ có bảng
     page.locator('#dcQlTongQuan .dc-chi-tiet-nut[data-club-id="%s"]' % clb).click()
@@ -202,7 +203,7 @@ def test_khoi_quan_ly_canh_bao_cu_khi_du_lieu_doi(mo):
 
 def test_chua_chay_khong_co_bieu_do_va_nhac_chay(mo):
     page, api, loi, _ = mo(chay=False)
-    page.locator('#qlTabs [data-ql-tab="dc"]').click()
+    tab_ql(page, "dc")
     page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcQlRong:not([hidden])")
     assert page.locator("#dcChiTiet").is_hidden() and page.locator("#dcQlTongQuan").is_hidden()
     assert not loi, loi
@@ -215,7 +216,7 @@ def test_t3_22_the_chi_tiet_va_xuat_tep_khong_con_diem_chuan(mo):
     page.wait_for_selector("#clbPanel")
     assert page.locator("#dcKqPanel, #btnDcKqMo, #dcKqBody, #dcKqTongQuan").count() == 0
     assert "Điểm chuẩn" not in page.locator("#view-others").inner_text()
-    assert page.locator('#qlTabs [data-ql-tab="dc"]').count() == 1       # lối vào duy nhất vẫn còn
+    assert tab_ql(page, "dc").count() == 1       # lối vào duy nhất vẫn còn
     assert not loi, loi
 
 
@@ -232,7 +233,7 @@ def test_t3_31_dong_chi_tiet_va_ba_nut_xem_chi_tiet(mo):
 
 def test_tat_tinh_nang_hai_phan_khong_hien(mo):
     page, api, loi, _ = mo(bat=False, chay=True, tab="admin")
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     page.wait_for_selector("#btnResetAll")
     assert page.locator("#adminDiemChuanBlock").is_hidden()
     page.locator('[data-tab="others"]').click()

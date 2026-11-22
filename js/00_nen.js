@@ -698,6 +698,8 @@ function xoaLoiTaiO(o) {
 
 function baoLoiTaiO(o, chuHoacHam, tuyChon) {
   if (!o) return;
+  const dt = o.closest("details");          /* UX4-L3: lỗi ở ô nằm trong "Thêm tuỳ chọn" thì mở ra cho người dùng thấy */
+  if (dt && !dt.open) dt.open = true;
   xoaLoiTaiO(o);
   const tc = tuyChon || {};
   /* chuHoacHam: chuoi, hoac () => chuoi de CHU THEO NGON NGU khi doi ngon ngu luc loi con hien (langchange ve lai). */
