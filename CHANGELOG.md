@@ -5,7 +5,7 @@
 - Từ giao diện: trả `ux4_so_cho`, `ux4_cho_rieng`, `ux4_cho_rieng_cot`, `dc_thuong`, `dc_du_tru` và họ `du_tru_*`, `dem_suat`, `kpi_du_tru_thua`, `legend_*` về chữ cũ; bỏ 7 dòng đổi chữ tương ứng trong `tests/test_ws_nhan.py`; `index.html` đồng bộ chữ dự phòng với `i18n.js` (26 chỗ).
 - Lỗi thật: nút "mở tính năng" ở khung lỗi chạy không mở tab "Cách xếp" (`wsMoTinhNangDangMo`, js/075_workspace.js); nút `tkNutMoHop` cao 36 px (nay ≥ 44 px, style.css); quy tắc `.panel:has(details.menu-khac[open])` đặt trước khối UX2-L8.
 - Test cập nhật: `test_giao_dien_ux1_tiep_theo.py` (nút "Xử lý" là nút cảnh báo từ UX4), `test_giao_dien_ux4_l3.py`, `test_giao_dien_ux5a_l3.py`/`l4.py` (bỏ cấm chữ "suất"), số tệp test trong `CLAUDE_CHI_TIET.md`.
-- Còn mở, chờ Truong: `test_giao_dien_fg8_cau_chu.py` ("Một buổi chung") và `test_ux1i_i2_xp1_trong_menu.py` ("Xuất tệp khác ▾").
+- Test cập nhật theo chữ mới của UX4/UX5A (chưa có lệnh trả chữ, Truong có thể đổi ý): `test_giao_dien_fg8_cau_chu.py` ("Một buổi chung"), `test_ux1i_i2_xp1_trong_menu.py` ("Xuất tệp khác ▾").
 
 ## 2026-11-22 — UX5A giai đoạn 2: soát tổng thể, đo lại, sửa lỗi
 
