@@ -71,7 +71,7 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 coded (head cd6564f), in review
+- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 PASS | MT2 DONE (L1-L4 PASS), awaiting Truong's review
 
 ## Sessions
 | Role | Session id | Model | Notes |
@@ -83,10 +83,13 @@ pipeline, invariants 1, 2, 8).
 - L2 ruling (checker): chia_100 + GIOI_HAN mixes point scales (tier by tick); accepted. L3 must not offer the test tick for GIOI_HAN clubs, or document it. Health-report type checks via kiem_loai_tu_csdl are MANDATORY in L3; add a test for non-blocking type warnings (F4).
 
 ## Needs Truong
-- (none yet; lead appends one line each)
+- Confirm the two-fund scale rule for GIOI_HAN under Chia 100 điểm (students may carry fund-1 vs fund-2 points in one club; accepted by checker, documented).
+- Confirm trial runs and estimates stay refused (mt_thu_chua_ho_tro_loai) while the switch is ON.
+- Decide whether a compact type picker is wanted later (28 controls when the switch is ON).
+- Optional, not done: Settings-cards sentence saying whether types are on (plan item 6); F6 error-toast test; F7 phone overflow (pre-existing); SO_DANG_KY lists dependency MT1 with no registry row; HUONG_DAN §17 omits the capacity check for GIOI_HAN/TUYEN_CHON.
 
 ## Current state
-- Planned only. No code.
+- MT2 L1-L4 coded, reviewed, PASS. Branch pushed; no PR created. Next: Truong tries the switch and answers "Needs Truong".
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
