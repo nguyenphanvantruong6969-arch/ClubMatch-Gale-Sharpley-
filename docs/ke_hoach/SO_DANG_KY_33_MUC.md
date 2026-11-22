@@ -42,6 +42,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | G3 | Bảo vệ người đã công bố (nâng cấp 3) | Viết mới · L | G1, A3 | – | R | O | R | O | – | O | O | O | R | – | R |
 | G4 | Gom lô nhỏ theo cửa sổ thời gian (nâng cấp 4) | Viết mới · M–L | G1, G3 | – | – | R | O | – | R | R | R | – | – | R | R |
 | G5 | Đổi nguyện vọng và dòng liên tục (nâng cấp 5–6) | Viết mới · XL | — | – | – | – | – | – | O | – | – | – | – | R | – |
+| MT2 | Chia CLB theo loại (Tự do / Giới hạn / Tuyển chọn) bằng một công tắc, ghép với chỉ xếp và chia 100 điểm, không cần huy chương (thêm 22/11/2026) | Sửa mã · L | MT1 | – | – | – | – | – | – | – | – | O | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
@@ -741,6 +742,15 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Khác nhau theo ngành:**
   - VL (Việc làm tự do): Nếu việc phải giao ngay.
   - LG (Logistics): Điều phối tức thời (taxi, giao hàng): đã đánh giá là không nên bán bằng chương trình này.
+
+## MT2 — Chia CLB theo loại bằng một công tắc (thêm 22/11/2026)
+- **Mức / quy mô:** Sửa mã / L
+- **Tệp:** rbda_priority_pipeline.py, cau_hinh_ws.py, fa_daa.py, api.py, api_quan_ly.py, api_tieu_chi.py, tieu_chi.py, phan_quyen.py, i18n_errors.py, js/18_cai_dat.js, index.html
+- **Hiện trạng:** loại CLB chỉ dùng được trong chế độ Huy chương (`rules.fa_daa`).
+- **Thay đổi:** khoá `rules.chia_loai` (mặc định tắt; hiệu lực = bật HOẶC `fa_daa`). Bật: lớp `chay_fa_daa` chạy không cần huy chương, điểm phụ là rỗng (chỉ xếp) hoặc điểm quyết tâm (chia 100). Tắt: loại bị bỏ qua, không xoá. Công tắc ở Quản lý › Câu lạc bộ.
+- **Rủi ro:** hàm lựa chọn mới phải qua kiểm thay thế được / tổng cầu (bất biến 8); đã đo 0 cặp phá vỡ trên dữ liệu mô phỏng. Chạy thử / ước tính từ chối khi bật (`mt_thu_chua_ho_tro_loai`). Chia 100 điểm + CLB Giới hạn so điểm hai quỹ trong một CLB.
+- **Kiểm nhận:** mặc định tắt trùng khít 3 bộ × 20 seed; tests/test_mt2_l1_cau_hinh.py, test_mt2_l2_chay.py, test_mt2_l3_backend.py, test_giao_dien_mt2.py.
+- **Phụ thuộc:** MT1 · **Ngành:** TS tuỳ chọn (O).
 
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 

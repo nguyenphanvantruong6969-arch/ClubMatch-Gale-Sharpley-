@@ -49,6 +49,7 @@ from rbda_priority_pipeline import (
     default_reserve_eligible_fn,
     diem_wharton_hieu_luc,
     doc_stb_buoi,
+    dung_chia_loai,
     dung_fa_daa,
     dung_wharton,
     generate_stb_lottery,
@@ -612,6 +613,11 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 # --- Điểm Wharton (A13): chỉ khi workspace bật; đặt SAU các mục sẵn có ------
                 # Cùng hai hàm mà lần chạy xếp dùng, trên dữ liệu đang lưu: hồ sơ sai sẽ CHẶN
                 # lần chạy nên là "high"; vắng thi chỉ làm em bị xét như không thi: "medium".
+                if dung_chia_loai(luat) and not bat_fa:
+                    # MT2: "Chia CLB theo loại" không kèm huy chương: cùng `kiem_loai_tu_csdl` với lần chạy xếp (mỗi buổi
+                    # một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn/điểm thi). Lỗi chặn "high", cảnh báo "medium".
+                    for e in fa_daa.kiem_loai_tu_csdl(cur):
+                        warn("medium" if e["code"] in fa_daa.MA_CANH_BAO else "high", e["code"], **e["params"])
                 if bat_fa:
                     # FA-DAA: cùng hàm kiểm mà lần chạy xếp dùng. Lỗi chặn là "high", cảnh báo
                     # (giữ chỗ không dùng được) là "medium".
@@ -1077,6 +1083,19 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
             # là cảnh báo và đi vào chi tiết của bước này.
             diem_wharton, canh_bao_wharton = None, []
             fa_bat = dung_fa_daa(luat)
+            loai_bat = dung_chia_loai(luat) and not fa_bat      # MT2: loại CLB không kèm huy chương
+            huy_chuong = {}
+            if loai_bat:
+                # MT2: kiểm loại CLB (mỗi buổi một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn).
+                # Lỗi chặn thì dừng ở đây, trước khi bốc hay khoá số: không ghi gì.
+                with self._ket_noi_doc() as cur_fa:
+                    loi_loai = fa_daa.kiem_loai_tu_csdl(cur_fa)
+                    fa_clb, fa_cap, _ = fa_daa.doc_du_lieu_fa(cur_fa)
+                canh_bao_wharton = [e for e in loi_loai if e["code"] in fa_daa.MA_CANH_BAO]
+                loi_loai = fa_daa.chi_loi_chan(loi_loai)
+                if loi_loai:
+                    steps_log.append({"step": "validate", "status": "error", "detail": loi_loai})
+                    return _fail_co_buoc(steps_log, loi_loai)
             if fa_bat:
                 # FA-DAA (FA-2): kiểm kiểu CLB, giữ chỗ (và, từ FA-3, hồ sơ huy chương) THAY cho hồ
                 # sơ 100 điểm. Lỗi chặn thì dừng ở đây, trước khi bốc hay khoá số: không ghi gì.
@@ -1102,7 +1121,8 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 diem_wharton, thong_bao = diem_wharton_hieu_luc(
                     preferences, w1_dien, w2_dien, tested_scores)
                 loi_wharton += [e for e in thong_bao if e["code"] != "wharton_vang_thi"]
-                canh_bao_wharton = [e for e in thong_bao if e["code"] == "wharton_vang_thi"]
+                canh_bao_wharton = canh_bao_wharton + [
+                    e for e in thong_bao if e["code"] == "wharton_vang_thi"]
                 if loi_wharton:
                     n_em = len({e["params"].get("student_id") for e in loi_wharton})
                     loi_wharton = [err("wharton_ho_so_chua_hop_le", n=n_em)] + loi_wharton
@@ -1329,14 +1349,20 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
             # voi dung du lieu do. Co test canh su trung khit ay tren ba bo
             # du lieu x 20 seed (tests/test_nhieu_buoi.py).
             kq_fa = None
-            if fa_bat:
+            if fa_bat or loai_bat:
                 # FA-DAA (FA-4): lớp bọc chuẩn bị đầu vào trong bộ nhớ và xử lý sau (dự phòng, nhóm
                 # phòng); lõi DA không đổi. Hai chốt bên dưới chạy trên ĐẦU VÀO ĐÃ CHUẨN BỊ ấy.
                 kq_fa = fa_daa.chay_fa_daa(
                     students, clubs, tested_scores, applicants, preferences, stb_lottery,
                     fa_clb, fa_cap, huy_chuong, seed=seed, chi_buoi=chi_buoi_chuan,
                     tier_rank=tham_so["tier_rank"], bo_qua_du_tru=tham_so["bo_qua_du_tru"],
-                    stb_buoi_da_khoa=stb_buoi_da_khoa)
+                    stb_buoi_da_khoa=stb_buoi_da_khoa,
+                    diem_wharton=diem_wharton if loai_bat else None)
+                if loai_bat:
+                    # MT2: điểm hiệu lực {club: {sid: điểm}} -> {sid: {club: điểm}} cho `ly_do_ket_qua`.
+                    for _cid, _m in (diem_wharton or {}).items():
+                        for _sid, _d in _m.items():
+                            huy_chuong.setdefault(_sid, {})[_cid] = _d
                 result = kq_fa.ket_qua
                 clubs_ck, scores_ck, app_ck, prefs_ck, reserve_ck = (
                     kq_fa.clubs, kq_fa.tested_scores, kq_fa.applicants, kq_fa.preferences,

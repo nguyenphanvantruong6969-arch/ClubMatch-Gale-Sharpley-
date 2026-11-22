@@ -27,12 +27,14 @@ from rbda_priority_pipeline import (
     WHARTON_TU_DIEN_MOT_CLB,
     diem_wharton_hieu_luc,
     doc_du_lieu_wharton,
+    dung_chia_loai,
     dung_fa_daa,
     dung_wharton,
     khoa_uu_tien_wharton,
     kiem_ho_so_wharton,
     load_wharton_kem_doc_them,
     loi_suc_chua,
+    luat_xep_cua,
     sap_buoi,
     tu_dien_wharton_mot_clb,
 )
@@ -167,7 +169,7 @@ class QuanLyMixin:
                         c["gio"], c["dia_diem"] = gd.get(c["club_id"], ("", ""))
                 # FA-UI-2: thuộc tính FA chỉ khi bật (tắt: phản hồi như cũ, bảng như cũ).
                 try:
-                    fa_bat = dung_fa_daa(self._luat_nghiem())
+                    fa_bat = dung_chia_loai(self._luat_nghiem())      # MT2: hiện cột loại khi chia theo loại (hoặc Huy chương)
                 except Exception:
                     fa_bat = False
                 if fa_bat:
@@ -221,6 +223,41 @@ class QuanLyMixin:
                         "thieu_diem_san": thieu_diem,
                         "huy_chuong_sai": len(hs_sai), "huy_chuong_sai_vd": str(hs_sai[0]) if hs_sai else "",
                         "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem or hs_sai)})
+        except Exception as e:
+            return _fail(err("error_reading_club_list", detail=str(e)))
+
+    def get_san_sang_loai(self):
+        """MT2 (chỉ ĐỌC): những gì còn thiếu để chạy "Chia CLB theo loại", KHÔNG xét huy chương. Cùng hình dạng với
+        `get_san_sang_huy_chuong` (để dùng lại bảng đặt loại): {clubs, thieu_loai, buoi_thieu_tu_do, thieu_diem_san,
+        san_sang, canh_bao: [mã cảnh báo không chặn]}; các khoá huy chương luôn 0. Dùng `fa_daa.kiem_loai_tu_csdl`,
+        đúng hàm kiểm của lần chạy xếp."""
+        try:
+            with self._ket_noi_doc() as cur:
+                rows = cur.execute(
+                    "SELECT club_id, name, buoi, loai, diem_san, capacity FROM clubs "
+                    "ORDER BY COALESCE(buoi, '') COLLATE THU_TU_BUOI, club_id").fetchall()
+                loi = fa_daa.kiem_loai_tu_csdl(cur)
+            clubs = [dict(r, buoi=r["buoi"] or BUOI_MAC_DINH) for r in rows]
+            chan = fa_daa.chi_loi_chan(loi)
+            co_tu_do = {c["buoi"] for c in clubs if c["loai"] == fa_daa.TU_DO}
+            thieu_loai = [c["club_id"] for c in clubs if c["loai"] is None]
+            thieu_buoi = [b for b in sorted({c["buoi"] for c in clubs}) if b not in co_tu_do]
+            thieu_diem = [c["club_id"] for c in clubs
+                          if c["loai"] == fa_daa.TUYEN_CHON and c["diem_san"] is None]
+            return _ok({"clubs": clubs, "thieu_loai": thieu_loai, "buoi_thieu_tu_do": thieu_buoi,
+                        "thieu_diem_san": thieu_diem, "n_hoc_sinh": 0, "huy_chuong_ca_so": False,
+                        "huy_chuong_sai": 0, "huy_chuong_sai_vd": "",
+                        "canh_bao": [e["code"] for e in loi if e["code"] in fa_daa.MA_CANH_BAO],
+                        "san_sang": bool(clubs) and not chan})
+        except Exception as e:
+            return _fail(err("error_reading_club_list", detail=str(e)))
+
+    def get_chia_loai(self):
+        """MT2: công tắc "Chia CLB theo loại" (chỉ ĐỌC): `chia_loai` đã lưu, `fa_daa`, và `hieu_luc` (bật HOẶC fa_daa)."""
+        try:
+            luat = self._luat_nghiem()
+            return _ok({"chia_loai": luat_xep_cua(luat)["chia_loai"], "fa_daa": dung_fa_daa(luat),
+                        "hieu_luc": dung_chia_loai(luat)})
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 

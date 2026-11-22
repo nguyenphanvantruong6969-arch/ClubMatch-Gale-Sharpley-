@@ -197,7 +197,7 @@
   }
 
   function veDoiMatKhau(hop) {
-    hop.appendChild(mot("p", { class: "hint-text", text: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }) }));
+    hop.appendChild(mot("p", { class: "hint-text", text: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }), title: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }) }));
     const cu = oNhap("tkMkCu", t("tk_mk_cu"), "password", "current-password");
     const kep = oMatKhauKep("tkMkMoi", t("tk_mk_moi"), "new-password", "tkMkHien");
     const moi = kep.mk, moi2 = kep.mk2;
@@ -367,7 +367,7 @@
     if (!hop) return;
     hop.textContent = "";
     if (phien && phien.co_tai_khoan && phien.dang_nhap) {
-      hop.appendChild(mot("span", { id: "tkHuyHieu", class: "db-status", text: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }) }));
+      hop.appendChild(mot("span", { id: "tkHuyHieu", class: "db-status", text: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }), title: t("tk_dang_la", { ten: phien.ten, vai: tenVai(phien.vai) }) }));
       hop.appendChild(mot("button", { type: "button", class: "btn btn-secondary", id: "tkNutDangXuat", text: t("tk_dang_xuat"),
         onclick: () => callApi("dang_xuat").then(() => capNhat().then(() => veManDangNhap())) }));
     }

@@ -38,13 +38,13 @@
     <!-- UX1A-L2: 4 nhóm; các nút .nav-item (data-tab) giữ nguyên, js/01_khung.js (capNhatNhomDieuHuong) ẩn nhóm rỗng -->
     <div class="nav-group">
       <div class="nav-nhom" data-nhom="nap_xep">
-        <button type="button" class="nav-nhom-nut" data-nhom-nut="nap_xep" data-i18n="ux1a_nhom_nap_xep">1. Nạp &amp; xếp</button>
+        <button type="button" class="nav-nhom-nut" data-nhom-nut="nap_xep"><span class="nav-nhom-so"></span><span data-i18n="ux1a_nhom_nap_xep">Nạp &amp; xếp</span></button>
         <button class="nav-item is-active" data-tab="pipeline" data-quyen="quan_tri">
           <span data-i18n="nav_pipeline">Xếp CLB</span>
         </button>
       </div>
       <div class="nav-nhom" data-nhom="nhap_tay">
-        <button type="button" class="nav-nhom-nut" data-nhom-nut="nhap_tay" data-i18n="ux1a_nhom_nhap_tay">2. Nhập tay</button>
+        <button type="button" class="nav-nhom-nut" data-nhom-nut="nhap_tay"><span class="nav-nhom-so"></span><span data-i18n="ux1a_nhom_nhap_tay">Nhập thủ công</span></button>
         <button class="nav-item" data-tab="fallback">
           <span data-i18n="nav_fallback">Nhập nguyện vọng</span>
         </button>
@@ -53,7 +53,7 @@
         </button>
       </div>
       <div class="nav-nhom" data-nhom="ket_qua">
-        <button type="button" class="nav-nhom-nut" data-nhom-nut="ket_qua" data-i18n="ux1a_nhom_ket_qua">3. Kết quả &amp; phiếu</button>
+        <button type="button" class="nav-nhom-nut" data-nhom-nut="ket_qua"><span class="nav-nhom-so"></span><span data-i18n="ux1a_nhom_ket_qua">Kết quả &amp; phiếu</span></button>
         <button class="nav-item" data-tab="results">
           <span data-i18n="nav_results">Kết quả</span>
         </button>
@@ -977,6 +977,15 @@
       </div>
 
       <div role="tabpanel" id="qlPanelClb" data-ql-tab="clb" aria-labelledby="qlTabClb">
+      <!-- MT2: công tắc "Chia CLB theo loại" (js/18_cai_dat.js, mt2VeChiaLoai). Tắt = bỏ qua loại, không xoá. -->
+      <div class="panel" id="mt2ChiaLoai" data-quyen="quan_tri" hidden>
+        <label class="mt2-cong-tac">
+          <input type="checkbox" id="mt2CongTac" role="switch">
+          <span class="mt2-cong-tac-ten" data-i18n="mt2_cong_tac">Chia CLB theo loại</span>
+        </label>
+        <p class="hint-text" id="mt2GhiChu" data-i18n="mt2_ghi_chu"></p>
+        <div class="ux1a-san-sang" id="mt2Bang" hidden></div>
+      </div>
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="admin_club_form_title">Thêm hoặc sửa CLB</h2></div>
         <div class="admin-form-grid" id="clubForm">

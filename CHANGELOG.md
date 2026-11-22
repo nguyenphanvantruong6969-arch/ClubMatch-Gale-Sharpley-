@@ -1,5 +1,70 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
+
+- CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.
+- Sửa: `style.css` `.tk-thanh-ben .btn { min-height: 44px }`. Không đổi test, không đổi logic.
+- Kiểm: 79 ca giao diện (ux2_nut, ux2_khung, gt3, gt4, ux1_dieu_huong, ux3_thanh_ben, mt2) đạt với Chromium thật, không bỏ qua.
+
+## 2026-11-22 — MT2-FIX-R1-FIX: đếm lại số tệp test trong tài liệu
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 378 → 379 tệp `test_*.py` (thêm `tests/test_mt2_r1_nap_loai.py`) để `test_ban_do_ma_so_tep_test_la_so_that` đạt. Không thêm/bớt tệp test.
+
+## 2026-11-22 — MT2-FIX-R1: Sổ nhập / CSV nạp cột Loại khi "Chia CLB theo loại" bật
+
+- Lỗi (checker, tái hiện): `chia_loai` bật, `fa_daa` tắt → cột Loại / Điểm sàn bị bỏ qua khi nạp (`fa_cot_bo_qua`), lần chạy sau bị chặn vì thiếu loại. Nguyên nhân: `api_nhap.py` cổng cột FA bằng `dung_fa_daa`.
+- Sửa: `dung_chia_loai` thay `dung_fa_daa` ở (a) `import_clubs_csv` (đường duy nhất ghi cột CLB; Sổ nhập đi qua đó): cả bốn cột Loại, Điểm sàn, Tối thiểu, Sức chứa phòng, vì lớp loại dùng cả bốn khi chạy; (b) sheet "Giữ chỗ" khi nạp; (c) xem trước `_canh_bao_fa_xem_truoc`: chỉ kiểm loại, hồ sơ huy chương chỉ khi `fa_daa`; (d) câu nhắc "chế độ huy chương tắt" không còn bắn chỉ vì có cột Loại khi chia loại bật (cột Huy chương vẫn nhắc); (e) `api_xuat.py`: Sổ xuất mang cột loại và sheet Giữ chỗ khi chia loại bật, để nạp lại được. Việc của huy chương (chuẩn hoá Vàng/Bạc/Đồng, soát hồ sơ huy chương) vẫn chỉ theo `fa_daa`. Tắt và `fa_daa` cũ: đúng như trước. Không thêm cột (bất biến 7).
+- Test mới: `tests/test_mt2_r1_nap_loai.py` (6 ca: Sổ FA mẫu 8/8 loại bằng workspace Huy chương, CSV, TẮT / fa_daa cũ giữ hành vi cũ, xem trước, xuất rồi nạp lại, chạy không còn thiếu loại).
+
+## 2026-11-22 — MT2-L4: tài liệu "Chia CLB theo loại"
+
+- Mục MT2 (L1 khoá `chia_loai`, L2 pipeline, L3 công tắc giao diện, L4 tài liệu). Tệp tài liệu: `HUONG_DAN_SU_DUNG.md` (mục 17 mới + mục lục), `docs/ke_hoach/SO_DANG_KY_33_MUC.md` (dòng và mục MT2), `docs/ke_hoach/CLAUDE_CHI_TIET.md` (đếm lại số tệp test: 378, để `test_ban_do_ma_so_tep_test_la_so_that` đạt). Không đổi cột Sổ nhập / CSV (bất biến 7).
+- Câu nói "thẻ Cài đặt cho biết chia loại đang bật hay tắt" (mục 6 của thiết kế) KHÔNG làm: cần chữ theo trạng thái động, không phải đổi chữ nhỏ; công tắc đã có ghi chú riêng và chế độ Huy chương hiện "đang bật vì Huy chương".
+- Test mới ở L4: không (chỉ sửa số đếm trong tài liệu). Mọi số đo trong tài liệu là dữ liệu MÔ PHỎNG.
+
+## 2026-11-22 — MT2-L3 FIX 1: chữ chú thích loại "Giới hạn" ở bảng MT2 không nhắc huy chương
+
+- Checker F5: chữ "i" của Giới hạn nói "xếp theo huy chương" dù chế độ chia loại không có huy chương. `ux1aVeSanSang` nhận `tuyChon.khoaGt` {loại: khoá chữ}; MT2 dùng `mt2_gt_GIOI_HAN` (vi + en: điểm quyết tâm nếu có, rồi bốc thăm). Khoá cũ `ux1a_ss_gt_GIOI_HAN` giữ cho chế độ Huy chương.
+- Test mới: `test_chu_i_cua_gioi_han_khong_nhac_huy_chuong` (tests/test_giao_dien_mt2.py; 7 ca, chạy thật với Chromium, không bỏ qua).
+
+## 2026-11-22 — MT2-L3: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ
+
+- Giao diện: khối `#mt2ChiaLoai` (index.html) đầu thẻ con "Câu lạc bộ": MỘT công tắc `#mt2CongTac` (mặc định TẮT), bật thì hiện bảng đặt loại `#mt2Bang` (dùng lại `ux1aVeSanSang`, thêm tuỳ chọn `giuBang` / `khoaConThieu`; lưu vẫn qua `dat_loai_clb`), tắt thì ẩn (loại vẫn nằm trong `clubs.loai`). Lưu `rules.chia_loai` qua `update_workspace_config` (chỉ quản trị); bấm đúp bị chặn; lỗi backend đưa công tắc về trạng thái thật. Chế độ Huy chương: công tắc khoá ở BẬT, bảng chỉ vẽ ở Cài đặt (không trùng id). Chữ mới `mt2_*` (vi + en, i18n.js); ghi chú nói rõ CLB Giới hạn bỏ qua điểm thi (phán quyết checker L2).
+- Backend: `get_san_sang_loai` (đọc, không xét huy chương, dùng `fa_daa.kiem_loai_tu_csdl`); `get_data_health_report` chạy `kiem_loai_tu_csdl` khi chia loại bật mà không Huy chương (lỗi chặn "high" nên thanh "Việc tiếp theo" chỉ vào cảnh báo; cảnh báo "medium"); `list_clubs_admin` gửi cột loại khi `dung_chia_loai`.
+- Test mới: `tests/test_mt2_l3_backend.py` (7 ca, gồm F4: cảnh báo không chặn hiện ở sức khoẻ và ở bước validate; bật→tắt→bật giữ `loai`; giáo viên bị chặn), `tests/test_giao_dien_mt2.py` (6 ca Chromium: mặc định tắt/ngân sách điều khiển, XSS tên CLB, lưu + cột Loại, bấm đúp, lỗi backend, Huy chương khoá). `kiem_nhanh` 7/7; trùng khít 60 ca.
+
+## 2026-11-22 — MT2-L2: "Chia CLB theo loại" chạy trong pipeline, không cần huy chương
+
+- `api.py` (`run_pipeline`): khi `dung_chia_loai` bật mà `fa_daa` tắt → kiểm loại CLB bằng `fa_daa.kiem_loai_tu_csdl` (mỗi buổi một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn; lỗi chặn trước khi bốc/khoá/ghi), rồi chạy `fa_daa.chay_fa_daa` với `diem_wharton` hiệu lực: rỗng (chỉ xếp: điểm thi rồi bốc thăm) hoặc điểm quyết tâm hai quỹ (`chia_100`). Hai chốt `sanity_check_result` / `verify_stability` vẫn chạy trên đầu vào đã chuẩn bị; một giao dịch như cũ. `fa_daa` bật: đường cũ, không đổi.
+- `fa_daa.chay_fa_daa(..., diem_wharton=None)` (mặc định = lấy từ huy chương, như cũ). Khoá ưu tiên không đọc hạng nguyện vọng (bất biến 2).
+- Chạy thử / ước tính (`_giai_trong_bo_nho`) từ chối khi bật: mã mới `mt_thu_chua_ho_tro_loai` (cuối `i18n_errors.py`, đã sinh lại `i18n_loi.js`) — đường đó không qua lớp loại nên sẽ cho số sai.
+- Đo bất biến 8 (dữ liệu MÔ PHỎNG, 30 em, 3 CLB, 12 seed × 2 chế độ): 0 cặp phá vỡ. Lý do lý thuyết: mỗi CLB dùng một thứ tự ưu tiên cố định theo từng em (điểm thi, điểm quyết tâm, bốc thăm) + chỉ tiêu, lọc điểm sàn chỉ loại cặp không hợp lệ → hàm chọn thay thế được; giữ chỗ dùng suất dự trữ mềm hai lượt.
+- Test mới: `tests/test_mt2_l2_chay.py` (15 ca; gồm F1 dấu vân tay `fa_clb` khi bật, F2 `_luat_ap_dung` mang `chia_loai`). `kiem_nhanh` 7/7; trùng khít 3 bộ × 20 seed (60 ca).
+
+## 2026-11-22 — MT2-L1: khoá luật `chia_loai` ("Chia CLB theo loại") — cấu hình + công tắc
+
+- `rules.chia_loai` (bool, mặc định False) trong `LUAT_XEP_MAC_DINH` và `MAC_DINH_TRUONG_HOC`; kiểm bool trong `cau_hinh_ws._chuan_hoa`. Hiệu lực = `dung_chia_loai(rules)` = `chia_loai` HOẶC `fa_daa` (workspace Huy chương cũ chạy y nguyên). Không cần `wharton`.
+- `_luat_de_ghi_hoac_bam` bỏ khoá khi False: chuỗi `run_history.luat_xep` và dấu vân tay của workspace cũ (kể cả `fa_daa`) giữ từng byte. Phần `fa_clb` của dấu vân tay nay theo `dung_chia_loai` (với `fa_daa` bật thì như cũ).
+- `get_chia_loai` (api_quan_ly.py, quản trị) trả `{chia_loai, fa_daa, hieu_luc}` cho giao diện; `tieu_chi.py` / `api_tieu_chi.py` biết khoá mới. Thuật toán chưa đổi (L2).
+- Test mới: `tests/test_mt2_l1_cau_hinh.py` (18 ca). `kiem_nhanh.py` 7/7.
+
+## 2026-11-22 — UX3-L3: nhóm menu "Nhập tay" → "Nhập thủ công"
+
+- `ux1a_nhom_nhap_tay` (vi) và chữ dự phòng trong index.html; bảng nhóm trong HUONG_DAN_SU_DUNG.md. Tiếng Anh giữ "Manual entry". Áp cho cả vai giáo viên và quản trị (cùng một nhãn).
+- Test sửa có chủ đích: `tests/test_giao_dien_ux3_thanh_ben.py` (nhãn mới).
+
+## 2026-11-22 — UX3-L2: sau khi xoá dữ liệu không còn hiện số liệu cũ
+
+- Thẻ Nhập nguyện vọng vẫn hiện "Trang 1/15 · 120 học sinh" sau "Xoá toàn bộ học sinh": `.pagination-row { display:flex }` đè thuộc tính `hidden`. Thêm `.pagination-row[hidden] { display: none; }` (style.css) — áp cho cả phân trang thẻ Quản lý và điểm quyết tâm (vốn cũng không ẩn được).
+- Khung "Tra cứu một học sinh" (thẻ Kết quả) vẫn giữ phiếu của em đã xoá. `noiNutXoa` (js/05_quan_ly.js) phát sự kiện `duLieuDaXoa`; js/14_giai_trinh.js nghe và bỏ phiếu đang xem, ô tìm, danh sách, danh sách lớp.
+- Test mới: `tests/test_giao_dien_ux3_xoa_du_lieu.py` (2 ca, đỏ trước khi sửa).
+
+## 2026-11-22 — UX3: thanh bên — đánh số nhóm theo nhóm đang hiện, khối tài khoản gọn
+
+- Giáo viên không thấy nhóm "Nạp & xếp" nên menu từng bắt đầu ở "2. Nhập tay". Số nhóm nay do `capNhatNhomDieuHuong` (js/01_khung.js) điền vào `<span class="nav-nhom-so">` theo các nhóm đang hiện; chuỗi `ux1a_nhom_nap_xep/nhap_tay/ket_qua` (vi + en, i18n.js) bỏ tiền tố số. Quản trị vẫn thấy 1/2/3 như cũ.
+- Khối tài khoản ở chân thanh bên (cả hai vai): dòng 1 tên + vai (cắt "…", có `title`), dòng 2 hai nút cùng cỡ (style.css `.tk-thanh-ben`, js/16_tai_khoan.js `veThanhBen`).
+- Test mới: `tests/test_giao_dien_ux3_thanh_ben.py` (4 ca). Không đụng backend/thuật toán.
+
 ## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
 
 - CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.

@@ -231,6 +231,19 @@ def kiem_fa_tu_csdl(cur) -> list:
             + kiem_ho_so_huy_chuong(prefs, huy, clubs))
 
 
+def kiem_loai_tu_csdl(cur) -> list:
+    """MT2: kiểm riêng phần "loại CLB" (không kiểm hồ sơ huy chương) trên dữ liệu đang lưu — dùng khi
+    `chia_loai` bật mà `fa_daa` tắt. Cùng `kiem_truoc_fa` với đường Huy chương: mỗi buổi cần một CLB
+    TU_DO, mọi CLB có loại, TUYEN_CHON có điểm sàn và điểm thi, giữ chỗ hợp lệ."""
+    clubs, students, prefs = doc_clubs_va_nguyen_vong(cur)
+    _, cap, _ = doc_du_lieu_fa(cur)
+    diem: dict = {}
+    for cid, sid, d in cur.execute("SELECT club_id, student_id, score FROM club_scores "
+                                   "ORDER BY club_id, student_id"):
+        diem.setdefault(cid, {})[sid] = d
+    return kiem_truoc_fa(clubs, cap, students, prefs, diem)
+
+
 # ---------------------------------------------------------------------------
 # FA-3 · huy chương, MỘT quỹ (A13; V§6)
 # ---------------------------------------------------------------------------
@@ -317,7 +330,7 @@ def chay_fa_daa(students: dict, clubs: dict, tested_scores: dict, applicants: di
                 preferences: dict, stb_lottery: dict, fa_clb: dict, giu_cho, huy_chuong: dict,
                 seed: int = 0, chi_buoi=None, tier_rank=None, bo_qua_du_tru: bool = False,
                 max_rounds: int = 1000, buoc_fallback: bool = True,
-                stb_buoi_da_khoa=None) -> KetQuaFA:
+                stb_buoi_da_khoa=None, diem_wharton=None) -> KetQuaFA:
     """Chạy FA-DAA: chuẩn bị đầu vào trong bộ nhớ, gọi `run_rbda_nhieu_buoi` (lõi KHÔNG đổi), rồi
     xử lý sau. Không sửa đối số nào.
 
@@ -332,6 +345,10 @@ def chay_fa_daa(students: dict, clubs: dict, tested_scores: dict, applicants: di
 
     `buoc_fallback=False` chỉ để đo/kiểm (tắt bước 5). `fa_clb` {club_id: {loai, diem_san, ...}},
     `giu_cho` [(club_id, student_id)], `huy_chuong` {student_id: {club_id: 60|30|10}}.
+
+    MT2: `diem_wharton` {club_id: {student_id: điểm}} (mặc định None = lấy từ `huy_chuong`, như cũ) là
+    điểm HIỆU LỰC dùng làm tiêu chí thứ hai khi `chia_loai` bật mà `fa_daa` tắt: điểm quyết tâm hai quỹ
+    (`diem_wharton_hieu_luc`) hoặc rỗng (chế độ chỉ xếp: chỉ còn điểm thi và bốc thăm). Không đọc hạng.
     """
     import rbda_priority_pipeline as rp
 
@@ -389,7 +406,8 @@ def chay_fa_daa(students: dict, clubs: dict, tested_scores: dict, applicants: di
             students, clubs_fa, tested_fa, app_fa, prefs_fa, stb_lottery, reserve_fn,
             seed=seed, max_rounds=max_rounds, chi_buoi=chi_buoi, tier_rank=tier_rank,
             bo_qua_du_tru=bo_qua_du_tru,
-            diem_wharton=diem_huy_chuong_hieu_luc(prefs_fa, huy_chuong),
+            diem_wharton=(diem_wharton if diem_wharton is not None
+                          else diem_huy_chuong_hieu_luc(prefs_fa, huy_chuong)),
             stb_buoi_da_khoa=stb_buoi_da_khoa)
 
     ket = chay()

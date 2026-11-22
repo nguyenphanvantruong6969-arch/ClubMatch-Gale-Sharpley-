@@ -26,6 +26,7 @@
 14. [Điểm quyết tâm (tuỳ chọn)](#14-điểm-quyết-tâm-tuỳ-chọn)
 15. [Xếp theo loại CLB và huy chương (tuỳ chọn)](#15-xếp-theo-loại-clb-và-huy-chương-tuỳ-chọn)
 16. [Chuẩn bị đợt](#16-chuẩn-bị-đợt)
+17. [Chia CLB theo loại (tuỳ chọn)](#17-chia-clb-theo-loại-tuỳ-chọn)
 
 ---
 
@@ -99,7 +100,7 @@ Bên trái là **bốn nhóm** (mỗi nhóm bấm một lần để vào thẻ �
 | Nhóm | Thẻ | Dùng để |
 |---|---|---|
 | **1. Nạp & xếp** | **Xếp CLB** | Nạp tệp, xem cảnh báo, chạy sắp xếp, xuất kết quả |
-| **2. Nhập tay** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
+| **2. Nhập thủ công** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
 | | **Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
 | **3. Kết quả & phiếu** | **Kết quả** | Ô tìm to ở đầu trang để tra cứu một em (các việc về mã tra cứu gập vào **Mã tra cứu…**, chỉ quản trị), khối **Theo lớp và báo cáo** (chọn lớp, **Xuất theo lớp**, **Báo cáo tổng hợp**), rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Bảng không có điểm hay số bốc thăm |
 | | **Chi tiết và xuất tệp** | Tóm tắt, xuất tệp (hai nút chính + menu **Xuất…**), mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ, khung **Sau khi xếp** (chế độ huy chương) |
@@ -1240,6 +1241,42 @@ và không bao giờ ghi đè tệp cũ. (1) "Xuất KETQUA_NHAP_LIST.csv": ghé
 vào List KetQua; cần đã nạp tệp ở bước 4. (2) "Ai chưa đăng ký": chọn tệp CSV danh sách lớp (có cột student_id và class_id); phần mềm ghi
 một tệp cho mỗi lớp còn em chưa đăng ký, kèm bảng tổng hợp tỉ lệ từng lớp, để gửi giáo viên chủ nhiệm. (3) "Đối chiếu hai lần xuất List"
 (chỉ đường A): chọn tệp CSV List lần trước và lần này; báo cáo Excel liệt kê học sinh mới, học sinh rút, học sinh đổi nguyện vọng, lớp hoặc cơ sở.
+
+## 17. Chia CLB theo loại (tuỳ chọn)
+
+Mặc định **TẮT**: không bật thì phần mềm chạy y hệt như trước, kết quả không đổi một dòng nào. Khi bật, mỗi CLB có một **loại**
+(Tự do, Giới hạn hoặc Tuyển chọn, như mục 15) và phần mềm xếp theo loại đó. Khác mục 15, chế độ này **không cần huy chương**: ghép được
+với cả hai cách xét còn lại (chỉ xếp thứ tự nguyện vọng, hoặc chia 100 điểm).
+
+### Bật và tắt ở đâu
+
+Thẻ **Quản lý** → mục **Câu lạc bộ**, khối đầu trang có một công tắc **Chia CLB theo loại**. Bật thì hiện bảng đặt loại: mỗi CLB một dòng,
+ba nút loại; CLB Tuyển chọn nhập thêm điểm sàn ngay tại dòng. Chỉ quản trị viên thấy và đổi được; giáo viên không.
+Tắt thì bảng ẩn đi và loại bị **bỏ qua** khi xếp, nhưng loại đã đặt **không bị xoá**: bật lại là thấy nguyên như cũ.
+Khi đang dùng chế độ Huy chương (mục 15), công tắc tự bật và bị khoá; muốn tắt thì đổi cách xét ở Cài đặt.
+
+### Khi bật, phần mềm xếp thế nào
+
+| Loại | Cách xếp |
+|---|---|
+| Tự do | Nhận mọi em đăng ký, không từ chối. Em chưa trúng nơi nào ở một buổi được xếp vào CLB Tự do ít người nhất. |
+| Giới hạn | Có chỉ tiêu. **Không xét điểm thi**: nếu CLB này có điểm thi thì điểm đó bị bỏ qua. Xếp theo điểm quyết tâm (nếu đang dùng) rồi bốc thăm. |
+| Tuyển chọn | Có chỉ tiêu và điểm sàn. Em không thi hoặc dưới điểm sàn bị loại khỏi CLB này; người còn lại xếp theo điểm thi, rồi điểm quyết tâm (nếu có), rồi bốc thăm. |
+
+Thứ tự nguyện vọng của em không bao giờ làm đổi thứ tự ưu tiên của CLB. Số bốc thăm giữ nguyên quy tắc cũ (khoá sau lần chạy đầu).
+
+### Phần mềm chặn gì trước khi chạy
+
+Khi bật, mục *Cảnh báo dữ liệu* và thanh "Việc tiếp theo" báo (và lần chạy bị chặn, không ghi gì) nếu: có buổi chưa có CLB Tự do; có CLB chưa chọn loại;
+CLB Tuyển chọn thiếu điểm sàn hoặc chưa có em nào có điểm thi. Giữ chỗ cho em không đăng ký CLB đó chỉ là cảnh báo, không chặn.
+
+### Giới hạn đã biết
+
+- **Chạy thử và ước tính mục tiêu chưa hỗ trợ**: khi công tắc bật, các nút đó báo lỗi `mt_thu_chua_ho_tro_loai` thay vì cho số sai. Hãy tắt công tắc để thử, hoặc dùng lần xếp chính thức.
+- **Chia 100 điểm + CLB Giới hạn**: điểm của một em ở CLB Giới hạn lấy theo quỹ của em (quỹ 1 nếu em tick thi CLB đó, quỹ 2 nếu không). Hai quỹ không cùng thang
+  nên trong cùng một CLB Giới hạn có thể so điểm của hai quỹ. Vì CLB Giới hạn không xét điểm thi, nên tránh cho học sinh tick thi CLB Giới hạn.
+- Sổ nhập CLB và các tệp CSV **không đổi cột**: cột loại và điểm sàn đã có sẵn từ mục 15.
+- Kiểm chứng tính ổn định của chế độ này mới đo trên dữ liệu **mô phỏng** (không phải khảo sát thật).
 
 ---
 

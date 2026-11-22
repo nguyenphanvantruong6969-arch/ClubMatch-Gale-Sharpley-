@@ -1565,5 +1565,9 @@ window.I18N_ERROR_MESSAGES = {
   "mt_chua_co_ket_qua": {
     "vi": "Chưa có lần xếp chính thức nào để báo cáo.",
     "en": "There is no official allocation to report on yet."
+  },
+  "mt_thu_chua_ho_tro_loai": {
+    "vi": "Chạy thử và ước tính chưa hỗ trợ chế độ chia CLB theo loại. Hãy tắt \"Chia CLB theo loại\" trong Quản lý, hoặc dùng lần xếp chính thức.",
+    "en": "Trial runs and estimates do not support splitting clubs by type yet. Turn off \"Split clubs by type\" in Manage, or use the official allocation."
   }
 };

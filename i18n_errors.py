@@ -1671,6 +1671,12 @@ MESSAGES = {
         "en": "There is no official allocation to report on yet.",
     },
     # === end MT1 (L3) ===
+    # === MT2 ===
+    "mt_thu_chua_ho_tro_loai": {
+        "vi": "Chạy thử và ước tính chưa hỗ trợ chế độ chia CLB theo loại. Hãy tắt \"Chia CLB theo loại\" trong Quản lý, hoặc dùng lần xếp chính thức.",
+        "en": "Trial runs and estimates do not support splitting clubs by type yet. Turn off \"Split clubs by type\" in Manage, or use the official allocation.",
+    },
+    # === end MT2 ===
 }
 
 

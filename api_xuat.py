@@ -27,6 +27,7 @@ from nhan_ws import dien as dien_nhan
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
 from rbda_priority_pipeline import (
+    dung_chia_loai,
     dung_fa_daa,
     BUOI_MAC_DINH, dau_van_tay_du_lieu, diem_theo_nguoi, dung_wharton, khoa_sap_buoi,
     loc_chinh_thuc,
@@ -1371,7 +1372,7 @@ class XuatKetQuaMixin:
         # MT1-X1 (D1): 4 cột FA của CLB đi cùng sổ khi FA bật HOẶC có CLB nào đã khai; không thì sổ y như cũ.
         fa = {r[0]: r[1:] for r in cur.execute(
             "SELECT club_id, loai, diem_san, so_toi_thieu, suc_chua_phong FROM clubs")}
-        if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) or any(
+        if dung_chia_loai(self._cfg_ws(nghiem=True)["rules"]) or any(     # MT2-R1: chia theo loại cũng mang cột loại
                 v is not None for g in fa.values() for v in g):
             for c in clubs:
                 c.update(zip(so_nhap.KHOA_FA, fa.get(c["club_id"], (None,) * 4)))
@@ -1438,7 +1439,7 @@ class XuatKetQuaMixin:
                 # MT1-X1 (D2): sheet "Giữ chỗ" chỉ khi FA bật (FA tắt thì bước nạp bỏ qua sheet); bảng rỗng = sheet chỉ có tiêu đề.
                 giu_cho = ([tuple(r) for r in cur.execute(
                     "SELECT club_id, student_id FROM giu_cho ORDER BY club_id, student_id")]
-                    if dung_fa_daa(self._cfg_ws(nghiem=True)["rules"]) else None)
+                    if dung_chia_loai(self._cfg_ws(nghiem=True)["rules"]) else None)
             so_nhap.ghi_so_nhap(path, clubs, students, cfg=self._cfg_ws(nghiem=True),
                                 co_lop=any(x.get("class_id") for x in students),   # A14
                                 giu_cho=giu_cho)
