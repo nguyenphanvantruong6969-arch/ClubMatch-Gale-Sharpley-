@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — UX3-L2: sau khi xoá dữ liệu không còn hiện số liệu cũ
+
+- Thẻ Nhập nguyện vọng vẫn hiện "Trang 1/15 · 120 học sinh" sau "Xoá toàn bộ học sinh": `.pagination-row { display:flex }` đè thuộc tính `hidden`. Thêm `.pagination-row[hidden] { display: none; }` (style.css) — áp cho cả phân trang thẻ Quản lý và điểm quyết tâm (vốn cũng không ẩn được).
+- Khung "Tra cứu một học sinh" (thẻ Kết quả) vẫn giữ phiếu của em đã xoá. `noiNutXoa` (js/05_quan_ly.js) phát sự kiện `duLieuDaXoa`; js/14_giai_trinh.js nghe và bỏ phiếu đang xem, ô tìm, danh sách, danh sách lớp.
+- Test mới: `tests/test_giao_dien_ux3_xoa_du_lieu.py` (2 ca, đỏ trước khi sửa).
+
 ## 2026-11-22 — UX3: thanh bên — đánh số nhóm theo nhóm đang hiện, khối tài khoản gọn
 
 - Giáo viên không thấy nhóm "Nạp & xếp" nên menu từng bắt đầu ở "2. Nhập tay". Số nhóm nay do `capNhatNhomDieuHuong` (js/01_khung.js) điền vào `<span class="nav-nhom-so">` theo các nhóm đang hiện; chuỗi `ux1a_nhom_nap_xep/nhap_tay/ket_qua` (vi + en, i18n.js) bỏ tiền tố số. Quản trị vẫn thấy 1/2/3 như cũ.

@@ -241,3 +241,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | SM2-FIX1 (từ điển cột chỉ ở từ vựng trường; checker lỗi 1) | xong, chờ CI | 2026-11-21 | so_nhap.py | tests/test_sm2_mot_so_mau.py (+2 ca) | kiem_nhanh 7/7 |
 | SM2 (L1 + L2 + FIX1 + CI1) | xong, CI xanh, checker không còn lỗi | 2026-11-21 | xem các dòng SM2 ở trên | tests/test_sm2_*.py | chờ Truong duyệt, PR sau |
 | UX3 (thanh bên: số nhóm theo nhóm hiện + khối tài khoản) | xong, chờ CI | 2026-11-22 | index.html, i18n.js, js/01_khung.js, js/16_tai_khoan.js, style.css | tests/test_giao_dien_ux3_thanh_ben.py | chờ Truong thử tay |
+| UX3-L2 (xoá dữ liệu: phân trang + phiếu tra cứu cũ) | xong, chờ CI | 2026-11-22 | style.css, js/05_quan_ly.js, js/14_giai_trinh.js | tests/test_giao_dien_ux3_xoa_du_lieu.py | chờ Truong thử tay |

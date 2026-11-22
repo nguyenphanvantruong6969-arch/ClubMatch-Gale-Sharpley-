@@ -1665,6 +1665,8 @@ html.tat-hieu-ung .status-strip:hover {
   border-top: 1px solid var(--hairline);
 }
 
+.pagination-row[hidden] { display: none; }   /* UX3: display:flex đè thuộc tính hidden -> sau khi xoá dữ liệu vẫn hiện "Trang 1/15" */
+
 .pagination-label {
   font-family: var(--font-body);
   font-variant-numeric: tabular-nums;

@@ -1343,6 +1343,8 @@ function initAdminHandlers() {
           loadHealthReport();
           refreshDashboardStats();
           refreshSidebarStatus();
+          /* UX3: báo các thẻ khác (vd. khung tra cứu ở Kết quả) bỏ phần đang giữ của học sinh đã xoá. */
+          window.dispatchEvent(new Event("duLieuDaXoa"));
         });
       }
     );

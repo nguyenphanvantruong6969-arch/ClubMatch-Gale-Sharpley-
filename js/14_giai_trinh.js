@@ -469,6 +469,19 @@
     window.I18N.setLang(window.I18N.getLang() === "vi" ? "en" : "vi");
   });
 
+  /* UX3: xoá dữ liệu ở thẻ Quản lý -> bỏ phiếu đang xem, danh sách tìm và danh sách lớp (nạp lại khi cần). */
+  window.addEventListener("duLieuDaXoa", () => {
+    luotTim += 1;
+    dangXem = null;
+    daNapLop = false;
+    el("gtTim").value = "";
+    el("gtDs").textContent = "";
+    el("gtKetQua").textContent = "";
+    el("gtIn").hidden = true;
+    el("gtLop").textContent = "";
+    el("gtLop").hidden = true;
+  });
+
   el("gtTim").addEventListener("input", tim);
   el("gtTim").addEventListener("focus", () => { napLop(); if (!el("gtDs").children.length) tim(); });
   el("gtLop").addEventListener("change", tim);
