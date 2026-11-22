@@ -71,7 +71,7 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 PASS | MT2 DONE (L1-L4 PASS) | STRESS PASS | R1 code PASS; R1-FIX (doc count 379, head fb17724) + N1 rerun in review, then PR
+- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 PASS | MT2 DONE (L1-L4 PASS) | STRESS PASS | R1 + R1-FIX PASS | PR #28 opened (not merged)
 
 ## Sessions
 | Role | Session id | Model | Notes |
@@ -89,7 +89,7 @@ pipeline, invariants 1, 2, 8).
 - Optional, not done: Settings-cards sentence saying whether types are on (plan item 6); F6 error-toast test; F7 phone overflow (pre-existing); SO_DANG_KY lists dependency MT1 with no registry row; HUONG_DAN §17 omits the capacity check for GIOI_HAN/TUYEN_CHON.
 
 ## Current state
-- MT2 L1-L4 coded, reviewed, PASS. Branch pushed; no PR created. Next: Truong tries the switch and answers "Needs Truong".
+- MT2 L1-L4 + R1 coded, reviewed, PASS; stress PASS. PR #28 open, awaiting Truong. Next: Truong tries the switch and answers "Needs Truong".
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
