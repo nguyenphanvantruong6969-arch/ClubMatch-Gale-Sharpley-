@@ -67,7 +67,7 @@ def test_chu_giao_dien_dung_chu_cua_so_nhap_khong_con_du_tru(mo):
         page.wait_for_selector("#view-%s.is-active" % tab)
         chu = page.locator("#view-%s" % tab).inner_text()
         assert not re.search(r"dự trữ|Nhãn dự|Tổng chỗ", chu, re.I), (tab, re.findall(r"[^\n]*(?:dự trữ|Tổng chỗ)[^\n]*", chu, re.I))
-    assert "Chỉ tiêu" in page.locator("#view-admin").inner_text()
+    assert "Số chỗ" in page.locator("#view-admin").inner_text()
     assert not loi, loi
 
 
