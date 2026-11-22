@@ -24,7 +24,7 @@
 | A | `claude/ux5a-ket-qua-de-hieu` | group **Kết quả & phiếu**: tabs `results`, `others` | `docs/phien/claude__ux5a-ket-qua-de-hieu.md` |
 | B | `claude/ux5b-nap-xep-nhap-tay` | groups **Nạp & xếp** (`pipeline`) and **Nhập thủ công** (`fallback`, `scoring`) | `docs/phien/claude__ux5b-nap-xep-nhap-tay.md` |
 - Max 4 lots each; L1 words+choice map (stop point) → L2 structure → L3 detail → L4 teacher view + tests. Optional parts
-  may be dropped without asking. Max 2 FIX rounds per review, then "Needs Truong" + `git revert` of that lot.
+  may be dropped without asking. Max 4 FIX rounds per review, then "Needs Truong" + `git revert` of that lot.
 
 ## 2. Roles (per track)
 | Role | Model | Does | Never |
@@ -35,25 +35,28 @@
 ## 3. Auto-check loop (Truong, 2026-11-22: explicit OK to spawn sessions; overrides CLAUDE.md rule 10 for UX5 only)
 After L4 (milestone 2) the CODER starts the checker itself, then waits:
 1. Coder: `get_session` (no id) -> own `session_id`; push all commits; note `base`/`head` shas.
-2. Coder: `create_session` (NOT the Agent tool): `source_url` = this repo, `source_revision` = own branch,
-   `outcome_branch` = own branch, `model` = sonnet, `title` = `UX5X checker round <n>`, `prompt` = checker prompt (§4)
-   with `<base> <head> <coder_session_id> <round>` filled in. Then END the turn (do not poll or sleep).
-3. Checker: reviews, writes `docs/phien/claude__ux5X-...__checker.md`, commits + pushes it to the branch, then
+2. Coder: **if no checker session exists yet** for this track, `create_session` (NOT the Agent tool): `source_url` = this
+   repo, `source_revision` = own branch, `outcome_branch` = own branch, `model` = sonnet, `title` = `UX5X checker`,
+   `prompt` = checker prompt (§4) with `<base> <head> <coder_session_id>` filled in. Write the checker's `session_id` into
+   the branch file ("Current state") so it survives a restart. **If a checker already exists** (id in the branch file):
+   do NOT create another; `send_message` to it: `ROUND <n>: re-check <base>..<head>` (it keeps its context).
+   Then END the turn (do not poll or sleep).
+3. Checker: reviews, writes/updates `docs/phien/claude__ux5X-...__checker.md`, commits + pushes it to the branch, then
    `send_message` to the coder session id: `PASS` or `FIX: <n> items (see __checker.md)`. The checker never edits product code.
 4. Coder wakes on that message: on `FIX`, fix only the listed items, run the related tests, commit `UX5X-FIX<round>: ...`,
-   push, spawn a NEW checker (round + 1) as in step 2. On `PASS`: update "Current state", append a TIEN_DO row, push,
-   report `DONE` to Truong. Stop.
-- **Max 2 FIX rounds.** After round 2 still `FIX`: `git revert` the offending lot, write "Needs Truong" in the branch
+   push, then message the SAME checker (step 2, "already exists"). On `PASS`: update "Current state", append a TIEN_DO
+   row, push, report `DONE` to Truong. Stop.
+- **Max 4 FIX rounds.** After round 4 still `FIX`: `git revert` the offending lot, write "Needs Truong" in the branch
   file, stop and report to Truong.
 - Milestone 1 (words approval) is NOT looped: the coder still stops and waits for Truong.
 - Messages stay one line; details live in the `__checker.md` file.
 
 ## 4. Checker prompt (filled in by the coder; X = `a` or `b`)
-You are the UX5X checker (Sonnet), round <round>, on branch `claude/ux5X-...` (checked out for you). Read CLAUDE.md,
+You are the UX5X checker (Sonnet), on branch `claude/ux5X-...` (checked out for you). Read CLAUDE.md,
 `docs/phien/UX5_GIAO_THUC.md`, `docs/phien/claude__ux4-quan-ly-de-hieu.md` ("Design rule" sections), your branch file.
 Review `git diff <base>..<head>` only. Run `tests/test_giao_dien_ux5X_*.py` + `tests/test_ws_nhan.py` +
 `tests/test_i18n_sync.py`. Screenshots (<= 5, deviceScaleFactor 1): each owned tab as admin, plus the teacher view of each
 owned tab a teacher can open. Count visible enabled controls per panel yourself; check the acceptance list, approved words
 used exactly, no id removed, EN mirrors VI, `git diff --stat` shows no backend file. Write findings to
 `docs/phien/claude__ux5X-...__checker.md`, commit and push it, then `send_message` to session `<coder_session_id>` with one
-line `PASS` or `FIX: <n> items (see __checker.md)`. Never edit product code. Reply in Vietnamese.
+line `PASS` or `FIX: <n> items (see __checker.md)`. Never edit product code. You stay alive between rounds: on a later `ROUND <n>` message from the coder, re-check only the new commits, update the same `__checker.md`, and answer the same way. Reply in Vietnamese.
