@@ -58,7 +58,7 @@ def test_giao_vien_danh_so_tu_1(mo):
     dang_nhap(api, "giao_vien")
     mo_trang()
     page.wait_for_function("document.querySelector('.nav-nhom[data-nhom=nap_xep]').hidden")
-    assert nhan_nhom(page) == ["1. Nhập tay", "2. Kết quả & phiếu"]
+    assert nhan_nhom(page) == ["1. Nhập thủ công", "2. Kết quả & phiếu"]
     assert not loi, loi
 
 
@@ -66,7 +66,7 @@ def test_quan_tri_giu_1_2_3_ca_khi_doi_ngon_ngu(mo):
     page, api, mo_trang, loi = mo
     dang_nhap(api, "quan_tri")
     mo_trang()
-    assert nhan_nhom(page) == ["1. Nạp & xếp", "2. Nhập tay", "3. Kết quả & phiếu", "Cài đặt và quản lý"]
+    assert nhan_nhom(page) == ["1. Nạp & xếp", "2. Nhập thủ công", "3. Kết quả & phiếu", "Cài đặt và quản lý"]
     page.evaluate("window.I18N && I18N.setLang ? I18N.setLang('en') : null")
     if page.evaluate("document.documentElement.lang") == "en":
         assert nhan_nhom(page)[:3] == ["1. Load & run", "2. Manual entry", "3. Results & slips"]

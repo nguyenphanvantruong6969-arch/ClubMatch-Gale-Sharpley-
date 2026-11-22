@@ -99,7 +99,7 @@ Bên trái là **bốn nhóm** (mỗi nhóm bấm một lần để vào thẻ �
 | Nhóm | Thẻ | Dùng để |
 |---|---|---|
 | **1. Nạp & xếp** | **Xếp CLB** | Nạp tệp, xem cảnh báo, chạy sắp xếp, xuất kết quả |
-| **2. Nhập tay** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
+| **2. Nhập thủ công** | **Nhập nguyện vọng** | Gõ tay cho em không nộp được qua biểu mẫu |
 | | **Nhập điểm** | Giáo viên nhập điểm vòng thi (chấm mù) |
 | **3. Kết quả & phiếu** | **Kết quả** | Ô tìm to ở đầu trang để tra cứu một em (các việc về mã tra cứu gập vào **Mã tra cứu…**, chỉ quản trị), khối **Theo lớp và báo cáo** (chọn lớp, **Xuất theo lớp**, **Báo cáo tổng hợp**), rồi xem ai vào CLB nào: theo lớp, theo CLB hoặc theo mã. Bảng không có điểm hay số bốc thăm |
 | | **Chi tiết và xuất tệp** | Tóm tắt, xuất tệp (hai nút chính + menu **Xuất…**), mức lấp đầy, nguyện vọng, số bốc thăm, danh sách đầy đủ, khung **Sau khi xếp** (chế độ huy chương) |

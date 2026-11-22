@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — UX3-L3: nhóm menu "Nhập tay" → "Nhập thủ công"
+
+- `ux1a_nhom_nhap_tay` (vi) và chữ dự phòng trong index.html; bảng nhóm trong HUONG_DAN_SU_DUNG.md. Tiếng Anh giữ "Manual entry". Áp cho cả vai giáo viên và quản trị (cùng một nhãn).
+- Test sửa có chủ đích: `tests/test_giao_dien_ux3_thanh_ben.py` (nhãn mới).
+
 ## 2026-11-22 — UX3-L2: sau khi xoá dữ liệu không còn hiện số liệu cũ
 
 - Thẻ Nhập nguyện vọng vẫn hiện "Trang 1/15 · 120 học sinh" sau "Xoá toàn bộ học sinh": `.pagination-row { display:flex }` đè thuộc tính `hidden`. Thêm `.pagination-row[hidden] { display: none; }` (style.css) — áp cho cả phân trang thẻ Quản lý và điểm quyết tâm (vốn cũng không ẩn được).

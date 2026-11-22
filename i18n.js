@@ -275,7 +275,7 @@
       so_nhap_da_nap: "Đã nạp sổ",
       /* UX1A-L2: nhóm điều hướng */
       ux1a_nhom_nap_xep: "Nạp & xếp",
-      ux1a_nhom_nhap_tay: "Nhập tay",
+      ux1a_nhom_nhap_tay: "Nhập thủ công",
       ux1a_nhom_ket_qua: "Kết quả & phiếu",
       ux1a_nhom_cai_dat: "Cài đặt và quản lý",
       ux1a_nang_cao: "Nâng cao: tiêu chí xếp, thử cấu hình",
