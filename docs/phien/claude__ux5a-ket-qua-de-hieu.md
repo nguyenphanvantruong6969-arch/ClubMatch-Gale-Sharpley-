@@ -38,7 +38,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 
 ## Current state
 - L1 done (2026-11-22): `docs/ke_hoach/ux/UX5A_TU_NGU.md` written (measured with real Chromium, 6 decisions D1–D6 with defaults).
-- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2, L3, L4 done (base edf7526, head 29d70d2). Checker session: `session_01TGThn68PrGbUVp59Ctd4ZX` (waiting for PASS/FIX; max 4 FIX rounds). Then PHASE 2 (whole-UX5A debug: soat-ma, ruff, related tests, re-measure L1 numbers, manual Chromium walk, fix bugs with regression tests).
+- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2, L3, L4 done (base edf7526, head 29d70d2). Checker session: `session_01TGThn68PrGbUVp59Ctd4ZX` (waiting for PASS/FIX; max 4 FIX rounds). Checker round 1: PASS (docs/phien/..__checker.md). PHASE 2 done: see docs/ke_hoach/BAO_CAO_SOAT_MA_UX5A.md. Open: 12 pre-existing red UI tests from UX4 (not UX5A). UX5A complete.
 - Env: `.venv` created locally from `requirements-dev.txt` (gitignored). Measure script is in the session scratchpad only.
 
 ## Session log (append only)
@@ -49,3 +49,4 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 | 2026-11-22 | Sonnet | L2 Kết quả tab | tests ux5a_l2 green; t3_l3 failure pre-exists (UX4) |
 | 2026-11-22 | Sonnet | L3 Chi tiết và xuất tệp tab | tests ux5a_l3 + ws_nhan green |
 | 2026-11-22 | Sonnet | L4 teacher view + tests | ux5a_l4 13 green |
+| 2026-11-22 | Sonnet | Checker PASS; phase 2 debug (menu stacking bug fixed, tests ux5a_loi) | 98 UX5A tests green x2 |

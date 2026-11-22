@@ -3415,3 +3415,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .ux5a-hop-rong .hint-text { margin: 6px 10px 4px; }
 .nhom-tieu-de { margin: 28px 0 10px; font-size: 16px; font-weight: 600; color: var(--ink); }
 .ux5a-goi-y-fa { margin: 6px 10px 4px; }
+/* UX5A (lỗi giai đoạn 2): khung đang mở menu "⋯" phải nổi trên các khung bên dưới, không bị đè. */
+.panel:has(details.menu-khac[open]) { position: relative; z-index: 70; }
+#xuatNangCao > summary { margin-bottom: 8px; }

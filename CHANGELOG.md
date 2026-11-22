@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5A giai đoạn 2: soát tổng thể, đo lại, sửa lỗi
+
+- Lỗi tìm khi kiểm tay bằng Chromium: menu "Báo cáo và phiếu in ▾" bị khung bên dưới đè; dòng "Chọn thêm tệp để xuất" dính sát hàng nút. Sửa trong `style.css` (`.panel:has(details.menu-khac[open])` nổi lên; margin cho `summary`).
+- Hai test cũ do UX5A đổi: `test_giao_dien_xp1_xuat_pdf.py` (nhãn menu), `test_giao_dien_fa_gap5_phan_hoi.py` (câu "khó nhất" nay trong nếp "Thêm ý kiến").
+- Test mới: `tests/test_giao_dien_ux5a_loi.py` (7 ca: menu không bị đè × 2 vai, menu xuất, khoảng cách, tiếng Anh × 4).
+- Báo cáo: `docs/ke_hoach/BAO_CAO_SOAT_MA_UX5A.md` (số đo trước/sau, 12 test đỏ có sẵn từ UX4, điểm còn mở). `kiem_nhanh.py` 7/7.
+
 ## 2026-11-22 — UX5A-L4: thẻ Kết quả + Chi tiết cho giáo viên, bài test Hick / Von Restorff / từ cấm
 
 - Không đổi mã sản phẩm: lô này khoá hành vi bằng test, cho cả quản trị lẫn giáo viên. Giáo viên: không thấy phần `data-quyen="quan_tri"`, không có nút chết, vẫn tới tra cứu, "Theo lớp", "Xuất theo lớp", báo cáo (≤ 2 lần bấm).

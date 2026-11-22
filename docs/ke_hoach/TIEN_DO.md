@@ -250,3 +250,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX5A-L2 (thẻ Kết quả: một vàng, nếp Báo cáo và phiếu in, chữ) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js | tests/test_giao_dien_ux5a_l2.py | |
 | UX5A-L3 (thẻ Chi tiết và xuất tệp: một vàng, chữ, gợi ý gọn, ẩn nút hàng đã chọn) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js, js/03_ket_qua.js | tests/test_giao_dien_ux5a_l3.py | |
 | UX5A-L4 (giáo viên + test Hick/Von Restorff/từ cấm cho hai thẻ) | xong, chờ checker | 2026-11-22 | tests/test_giao_dien_ux5a_l4.py | tests/test_giao_dien_ux5a_l4.py | |
+| UX5A giai đoạn 2 (soát mã, đo lại, sửa lỗi menu bị đè) | xong, chờ Truong | 2026-11-22 | style.css, tests | tests/test_giao_dien_ux5a_loi.py | báo cáo docs/ke_hoach/BAO_CAO_SOAT_MA_UX5A.md |
