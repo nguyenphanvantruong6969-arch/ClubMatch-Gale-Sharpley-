@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — ST (chuẩn bị thử nghiệm): sổ nhập đổi chế độ + giao thức stress test
+
+- `du_lieu_test/tao_so_nhap_doi_che_do.py` → `du_lieu_test/SO_NHAP_DOI_CHE_DO_150HS.xlsx` (DỮ LIỆU MÔ PHỎNG, 150 em, 2 buổi × 7 CLB: 1 Tự do, 3 Giới hạn, 3 Tuyển chọn). Một sổ hợp lệ cho Chỉ xếp / Chia 100 / Huy chương và bật/tắt chia loại: huy chương 60/30/10 nằm trọn trong một quỹ (= 100). Nạp khi workspace đang ở chế độ Huy chương. Đã kiểm bằng API thật: 0 cảnh báo nhập, 8 lần đổi chế độ + 3 lần bật/tắt chia loại đều chạy được.
+- `docs/phien/ST_GIAO_THUC.md`: giao thức stress test hai nhánh con (`-st-a` backend, `-st-b` giao diện), chỉ báo lỗi, không sửa mã sản phẩm. Không đổi mã sản phẩm, không thêm test vào `tests/`.
+
 ## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
 
 - CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.
