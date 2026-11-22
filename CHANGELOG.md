@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
+
+- CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.
+- Sửa: `style.css` `.tk-thanh-ben .btn { min-height: 44px }`. Không đổi test, không đổi logic.
+- Kiểm: 79 ca giao diện (ux2_nut, ux2_khung, gt3, gt4, ux1_dieu_huong, ux3_thanh_ben, mt2) đạt với Chromium thật, không bỏ qua.
+
 ## 2026-11-22 — MT2-FIX-R1-FIX: đếm lại số tệp test trong tài liệu
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 378 → 379 tệp `test_*.py` (thêm `tests/test_mt2_r1_nap_loai.py`) để `test_ban_do_ma_so_tep_test_la_so_that` đạt. Không thêm/bớt tệp test.
