@@ -71,7 +71,7 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 GO sent
+- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 coded (head cd6564f), in review
 
 ## Sessions
 | Role | Session id | Model | Notes |
