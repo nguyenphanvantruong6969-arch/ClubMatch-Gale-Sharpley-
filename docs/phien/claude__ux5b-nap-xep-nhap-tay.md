@@ -21,7 +21,7 @@ those two must be tidy under `body[data-vai="giao_vien"]` too (admin-only contro
 4. Keep sector vocabulary placeholders; keep ids; keep `data-quyen` semantics.
 
 ## Plan (ticked by Sonnet)
-- [ ] **L1 Audit + words + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX5B_TU_NGU.md`: (1) per tab, count of
+- [x] **L1 Audit + words + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX5B_TU_NGU.md`: (1) per tab, count of
       visible enabled controls NOW (admin and teacher) + number of `.btn-primary` visible; (2) table of changed strings:
       key | old VI | new VI | new EN | why; (3) choice map: which ONE control is gold per panel, which go under
       "Thêm ▾" / `<details>`. **MILESTONE 1: Truong approves before code.**
@@ -40,9 +40,11 @@ those two must be tidy under `body[data-vai="giao_vien"]` too (admin-only contro
   (invariant 5); default results byte-identical; `kiem_nhanh.py` 7/7; `test_i18n_sync.py`, `test_ws_nhan.py` green.
 
 ## Current state
-- Planned only (2026-11-22). No code yet.
+- L1 done (2026-11-22): `docs/ke_hoach/ux/UX5B_TU_NGU.md`. WAITING for Truong to approve words + D1–D6 (MILESTONE 1). No code yet; do not start L2 before approval.
+- Test env: venv at scratchpad (`pip install -r requirements-dev.txt`), no `.venv` in the checkout.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-22 | Sonnet | Plan + protocol for Track B | split from UX5A by Truong |
+| 2026-11-22 | Sonnet | L1 audit (Chromium measurements), words table, choice map | stop at MILESTONE 1 |

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5B-L1: kiểm kê + bảng từ ngữ + bản đồ lựa chọn (Xếp CLB, Nhập nguyện vọng, Nhập điểm)
+
+- Chỉ tài liệu: `docs/ke_hoach/ux/UX5B_TU_NGU.md` (số ô và số nút vàng đo bằng Chromium thật, vai quản trị và giáo viên; bảng từ ngữ; bản đồ lựa chọn; sáu quyết định D1–D6) và ba ảnh hiện trạng trong `docs/ke_hoach/ux/anh/ux5b/`. Chưa sửa mã. Chờ Truong duyệt (MILESTONE 1).
+- Phát hiện chính: Nhập nguyện vọng có 3 nút vàng cùng một màn (27 ô; giáo viên 2 vàng, 23 ô); Xếp CLB có 2 vàng khi có tệp chờ; giáo viên thấy ô điểm quyết tâm nhưng không có nút Lưu.
+
 ## 2026-11-22 — UX4-L4: tab Cách xếp (một câu hỏi, "Tuỳ chỉnh thêm", "Thử cách xếp này")
 
 - Câu hỏi MT1 thành "Khi CLB hết chỗ, ai được xét trước?" với ba thẻ "Điểm bài thi cao hơn · Bốc thăm · Dành chỗ cho một nhóm" (quyết định D1: không dựng bộ thẻ thứ hai; vẫn lưu qua `chon_muc_tieu` có Hoàn tác). Nút "Thay đổi…" ẩn (id giữ), thay bằng mục gập "Tuỳ chỉnh thêm" (`#ux1aNangCao` lại là `<details>`, chỉ chứa bảng Tiêu chí). Thẻ mặc định "Chia 100 điểm" mang nhãn "Đề xuất".
