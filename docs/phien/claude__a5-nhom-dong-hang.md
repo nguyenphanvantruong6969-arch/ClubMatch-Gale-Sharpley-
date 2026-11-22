@@ -66,9 +66,8 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
   - [ ] Hints: tiers textarea placeholder/hint and club "nhóm ưu tiên" field hint explain `a|b`; keys prefix `a5_`.
   - [ ] One Chromium test file `tests/test_a5_giao_dien.py`, one shared page fixture: JS error on a label in
         two lines; review shows `a = b`.
-- [ ] **L4 docs (must; Truong asked)** — user guide section on `a|b` (both modes) with the explicit warning
-      "nhóm điểm cao hơn có thể lấy hết suất dự trữ"; registry A5 note (small part done, rest open);
-      CHANGELOG.md + TIEN_DO.md final row. Simulated-data wording only.
+- [ ] **L4 docs (must; Truong asked)** — guide section on `a|b` (both modes) with the warning "nhóm điểm cao hơn
+      có thể lấy hết suất dự trữ"; registry A5 note (small part done); CHANGELOG + TIEN_DO. Simulated data only.
 
 ## Acceptance (kiem_nhan)
 1. Single-label cells and `tiers` without `|`: every `match_results` row byte-identical, 3 datasets × 20 seeds.
@@ -85,9 +84,8 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
   `default_reserve_eligible_fn` needs no extra normalising. `xay_tier_rank` uses `chuan_hoa_tim_kiem` (keep it).
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
-
 ## Current state (overwrite)
-- Done: planning only. Next: lead starts per `A5_GIAO_THUC.md` §7.
+- Done: planning only. Next: lead starts per `A5_GIAO_THUC.md` §6.
 
 ## Sessions
 | Role | Session id | Model | State |
@@ -95,9 +93,6 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 
 ## Needs Truong
 - (none)
-
-## Files touched
-- docs/phien/claude__a5-nhom-dong-hang.md, docs/phien/A5_GIAO_THUC.md: planning.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |

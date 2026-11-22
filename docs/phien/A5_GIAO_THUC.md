@@ -14,6 +14,7 @@
 | Branch | Lots (all must-ship) | Branch file |
 |---|---|---|
 | `claude/a5-nhom-dong-hang` | L1 core → L2 backend → L3 UI → L4 docs | `docs/phien/claude__a5-nhom-dong-hang.md` |
+- Spec + tests per lot = its Plan block; done = boxes ticked + Acceptance.
 - Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push.
 - New error codes appended at END of `i18n_errors.py` (prefix `a5_`), then `python tao_i18n_js.py`; UI keys `a5_`.
 
@@ -23,7 +24,7 @@
 | lead | Sonnet `claude-sonnet-5-5` | branch file (Status, Sessions, Needs Truong), creates coder + checker, loop, CI gate, final check | product code |
 | coder | Sonnet `claude-sonnet-5-5` | test first, code, related tests, `soat-ma`, CHANGELOG/TIEN_DO, commit+push | marks own lot passed |
 | checker | Sonnet `claude-sonnet-5-5` | reviews one lot diff, runs related tests + own edge cases, verdict | edits product code/tests |
-- Budget rules `_GIAO_THUC_GON.md` §3 apply to all. Near the usage limit: update "Current state", stop.
+- `_GIAO_THUC_GON.md` §3 budget applies to all. Near usage limit: update "Current state", stop.
 
 ## 3. Loop per lot
 1. lead → coder `GO L<n>`.
@@ -41,30 +42,21 @@
    NO BUGS → lead ticks the lot and pushes. Push next lot only after CI of the previous push was read.
 
 ## 4. CI gate (after L4; repeat until green)
-Lead reads `tests.yml` and `Build Windows executable (rbda-kiosk)` for the head commit (`mcp__github__actions_list`,
-`mcp__github__get_job_logs` `failed_only`, ≤ 60 lines; load via ToolSearch); wait with `send_later` 30 min, never
-poll. Red → FIX → coder → checker → push. Never skip/weaken a test. Green → `Status: DONE <sha> CI green <date>`.
+`tests.yml` + `Build Windows executable (rbda-kiosk)` on head (`mcp__github__actions_list`, `get_job_logs`
+`failed_only` ≤ 60 lines); wait via `send_later` 30 min, never poll. Red → FIX loop. Never skip/weaken a test.
+Green → `Status: DONE <sha> CI green <date>`.
 
 ## 5. Final check by the lead (≤ 3 screenshots, scale 1)
-Simulated data `du_lieu_test/SO_NHAP_MAU_120HS_3BUOI.xlsx`, seed 3, in Chromium as admin: (a) set two student
-labels + one club `a|b` with reserve seats, run, confirm both labels fill the pool by score; (b) strict tiers
-`a|b` then `c`, confirm order; (c) type a label in two lines → error. Write ≤ 10-line Vietnamese summary in the
-branch file (done/skipped, CI link, 3 steps Truong tries by hand incl. Windows exe). No report conclusions.
+`du_lieu_test/SO_NHAP_MAU_120HS_3BUOI.xlsx`, seed 3, Chromium, admin: (a) club `a|b` with reserve → both labels
+fill the pool by score; (b) tiers `a|b` then `c` → order; (c) label in two lines → error. ≤ 10-line Vietnamese
+summary in the branch file (done/skipped, CI link, 3 manual steps incl. Windows exe). No report conclusions.
 
-## 6. Prompts (lead uses child prompts verbatim; replace <LEAD_ID>)
-**Coder:**
+## 6. Prompts (lead pastes verbatim; <LEAD_ID> = its session id)
+Lead prompt: in Truong's planning reply. Child sessions: repo https://github.com/nguyenphanvantruong6969-arch/ClubMatch-Gale-Sharpley-,
+source_revision `claude/a5-nhom-dong-hang`, model §2, permission_mode auto.
 ```
-You are CODER for A5 on branch claude/a5-nhom-dong-hang. Lead session id: <LEAD_ID>. Read CLAUDE.md,
-docs/phien/A5_GIAO_THUC.md and docs/phien/claude__a5-nhom-dong-hang.md. Write .claude/phien_vai.json
-{"vai":"impl","coord_id":"<LEAD_ID>"}, set up the venv (python3 -m venv .venv && .venv/bin/pip install -q -r
-requirements-dev.txt), then wait for "GO L<n>" or "FIX" and follow protocol §3 step 2. Never ask Truong; blocked
-parts go under "Needs Truong". Report in GT_GIAO_THUC §7 format.
+You are CODER for A5 on branch claude/a5-nhom-dong-hang. Lead: <LEAD_ID>. Read CLAUDE.md, docs/phien/A5_GIAO_THUC.md, docs/phien/claude__a5-nhom-dong-hang.md. Write .claude/phien_vai.json {"vai":"impl","coord_id":"<LEAD_ID>"}; python3 -m venv .venv && .venv/bin/pip install -q -r requirements-dev.txt. Wait for "GO L<n>" or "FIX", follow §3 step 2. Never ask Truong; blocked parts go under "Needs Truong". Report in GT_GIAO_THUC §7 format.
 ```
-**Checker:**
 ```
-You are CHECKER for A5 on branch claude/a5-nhom-dong-hang. Lead session id: <LEAD_ID>. Read CLAUDE.md,
-docs/phien/A5_GIAO_THUC.md and docs/phien/claude__a5-nhom-dong-hang.md. Write .claude/phien_vai.json
-{"vai":"tester","coord_id":"<LEAD_ID>"}, set up the venv, then wait for "REVIEW L<n> <base>..<head>" and follow
-protocol §3 step 4. Never edit product code or tests; only docs/phien/claude__a5-nhom-dong-hang__checker.md.
-Report in GT_GIAO_THUC §7 format.
+You are CHECKER for A5 on branch claude/a5-nhom-dong-hang. Lead: <LEAD_ID>. Read CLAUDE.md, docs/phien/A5_GIAO_THUC.md, docs/phien/claude__a5-nhom-dong-hang.md. Write .claude/phien_vai.json {"vai":"tester","coord_id":"<LEAD_ID>"}; set up the venv. Wait for "REVIEW L<n> <base>..<head>", follow §3 step 4. Never edit product code or tests; only docs/phien/claude__a5-nhom-dong-hang__checker.md. Report in GT_GIAO_THUC §7 format.
 ```
