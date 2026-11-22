@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — UX3: thanh bên — đánh số nhóm theo nhóm đang hiện, khối tài khoản gọn
+
+- Giáo viên không thấy nhóm "Nạp & xếp" nên menu từng bắt đầu ở "2. Nhập tay". Số nhóm nay do `capNhatNhomDieuHuong` (js/01_khung.js) điền vào `<span class="nav-nhom-so">` theo các nhóm đang hiện; chuỗi `ux1a_nhom_nap_xep/nhap_tay/ket_qua` (vi + en, i18n.js) bỏ tiền tố số. Quản trị vẫn thấy 1/2/3 như cũ.
+- Khối tài khoản ở chân thanh bên (cả hai vai): dòng 1 tên + vai (cắt "…", có `title`), dòng 2 hai nút cùng cỡ (style.css `.tk-thanh-ben`, js/16_tai_khoan.js `veThanhBen`).
+- Test mới: `tests/test_giao_dien_ux3_thanh_ben.py` (4 ca). Không đụng backend/thuật toán.
+
 ## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
 
 - CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.

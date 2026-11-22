@@ -274,9 +274,9 @@
       ux1a_xuat_menu: "Xuất…",
       so_nhap_da_nap: "Đã nạp sổ",
       /* UX1A-L2: nhóm điều hướng */
-      ux1a_nhom_nap_xep: "1. Nạp & xếp",
-      ux1a_nhom_nhap_tay: "2. Nhập tay",
-      ux1a_nhom_ket_qua: "3. Kết quả & phiếu",
+      ux1a_nhom_nap_xep: "Nạp & xếp",
+      ux1a_nhom_nhap_tay: "Nhập tay",
+      ux1a_nhom_ket_qua: "Kết quả & phiếu",
       ux1a_nhom_cai_dat: "Cài đặt và quản lý",
       ux1a_nang_cao: "Nâng cao: tiêu chí xếp, thử cấu hình",
       /* UX1A-L1: thanh "Việc tiếp theo" */
@@ -1729,9 +1729,9 @@
       ux1a_xuat_menu: "Export…",
       so_nhap_da_nap: "Book loaded",
       /* UX1A-L2: navigation groups */
-      ux1a_nhom_nap_xep: "1. Load & run",
-      ux1a_nhom_nhap_tay: "2. Manual entry",
-      ux1a_nhom_ket_qua: "3. Results & slips",
+      ux1a_nhom_nap_xep: "Load & run",
+      ux1a_nhom_nhap_tay: "Manual entry",
+      ux1a_nhom_ket_qua: "Results & slips",
       ux1a_nhom_cai_dat: "Settings and management",
       ux1a_nang_cao: "Advanced: ranking criteria, trial configuration",
       /* UX1A-L1: "Next step" bar */

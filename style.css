@@ -3005,7 +3005,11 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 .gt2-ad-ds { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 6px; }
 .gt2-ad-ds li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 /* GT3-L1: khối tài khoản ở thanh bên */
-.tk-thanh-ben { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.tk-thanh-ben { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; min-width: 0; }
+/* UX3: dòng 1 = tên + vai (cắt bằng "…", có title); dòng 2 = hai nút cùng cỡ. Chỉ còn một nút thì nút chiếm cả dòng. */
+.tk-thanh-ben #tkHuyHieu { grid-column: 1 / -1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tk-thanh-ben .btn { min-width: 0; width: 100%; padding-left: 6px; padding-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; justify-content: center; }
+.tk-thanh-ben .btn:only-of-type { grid-column: 1 / -1; }
 .tk-thanh-ben[hidden] { display: none; }
 
 /* GT3-L2: vai giáo viên không thấy phần chỉ dành cho quản trị (cổng thật nằm ở backend). Chưa có tài khoản / quản trị: không đổi gì. */

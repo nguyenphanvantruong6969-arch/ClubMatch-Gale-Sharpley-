@@ -60,6 +60,12 @@ function capNhatNhomDieuHuong() {
     if (nhom.hidden === coThe) nhom.hidden = !coThe;
     nhom.classList.toggle("is-active", !!nhom.querySelector(".nav-item.is-active"));
   });
+  /* UX3: đánh số theo các nhóm ĐANG HIỆN (giáo viên không thấy nhóm "Nạp & xếp" -> bắt đầu từ 1). Chỉ ghi khi đổi. */
+  let so = 0;
+  document.querySelectorAll(".nav-nhom-so").forEach((o) => {
+    const chu = o.closest(".nav-nhom").hidden ? "" : `${++so}. `;
+    if (o.textContent !== chu) o.textContent = chu;
+  });
 }
 
 function currentTabName() {
