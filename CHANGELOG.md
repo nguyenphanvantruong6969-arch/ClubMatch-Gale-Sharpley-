@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — GT-LS (tiếp): báo cáo Word tổng hợp ba kho, lời văn đơn giản
+
+- Mới: `docs/giai_trinh/tao_bao_cao_tong_hop.py` dựng `BAO_CAO_MINH_CHUNG_TONG_HOP.docx` (19 trang): tóm tắt trả lời từng yêu cầu của hội đồng, ba kho mã trên một dòng thời gian, sơ đồ luồng xử lý, dữ liệu đầu vào, thuật toán bằng lời thường, xử lý khi không đủ chỗ, vai trò AI, bộ dữ liệu thử, demo chỉnh quy tắc, lịch sử theo giai đoạn, danh sách điều cần Truong xác nhận, phụ lục commit theo yêu cầu.
+- Số liệu và mã commit của hai kho rbda-kiosk và DU-AN-PHAN-2GALESHARPLEY chép từ hai báo cáo sự việc do chính hai kho lập (ghi rõ tên kho); kho này đọc trực tiếp từ git. Chỉ tài liệu và script, không đổi mã sản phẩm.
+
 ## 2026-11-22 — GT-LS (ngoài sổ, Truong yêu cầu 22/11/2026): báo cáo lịch sử thay đổi kèm commit và sơ đồ luồng xử lý
 
 - Trả lời góp ý vòng 2 của hội đồng ("bổ sung bằng chứng kỹ thuật và làm rõ vai trò của AI"). Chỉ tài liệu và script; không đổi mã sản phẩm, kết quả xếp không đổi.

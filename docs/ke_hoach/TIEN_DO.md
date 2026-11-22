@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| GT-LS-2 (ngoài sổ, Truong yêu cầu 22/11/2026) | xong | 2026-11-22 | docs/giai_trinh/tao_bao_cao_tong_hop.py, BAO_CAO_MINH_CHUNG_TONG_HOP.docx, CHANGELOG.md | — (tài liệu) | Báo cáo Word gộp ba kho |
 | GT-LS (ngoài sổ, Truong yêu cầu 22/11/2026) | xong | 2026-11-22 | docs/giai_trinh/tao_lich_su.py, ve_so_do_xu_ly.py, so_do_xu_ly.svg, LICH_SU_THAY_DOI.md/.pdf, LICH_SU_COMMIT.csv, CHANGELOG.md | tests/test_gt_lich_su.py (4 ca) | Báo cáo lịch sử thay đổi + sơ đồ luồng xử lý; chỉ tài liệu |
 | MT1-X1-L3 (kiểm chứng D5 + tài liệu) | xong (chờ checker) | 2026-11-21 | api_xuat.py (docstring), CHANGELOG.md | — (so ô 3 bộ dữ liệu: trùng khít) | mục MT1-X1 trọn vẹn sau CI xanh |
 | MT1-X1-L2 (sheet "Giữ chỗ" + khứ hồi đầy đủ) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`export_du_lieu_dau_vao`), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py (+3 ca) | cổng D2: chỉ khi FA bật; bảng rỗng = sheet chỉ có tiêu đề |
