@@ -19,7 +19,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
    when it is not their next step, and that the teacher still reaches "Theo {cohort_l}", lookups and per-class exports.
 
 ## Plan (ticked by Sonnet)
-- [ ] **L1 Audit + words + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX5A_TU_NGU.md`: (1) per tab, count of
+- [x] **L1 Audit + words + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX5A_TU_NGU.md`: (1) per tab, count of
       visible enabled controls NOW (admin and teacher) + number of `.btn-primary` visible; (2) table of changed strings:
       key | old VI | new VI | new EN | why; (3) choice map: which ONE control is gold per panel, which go under
       "Thêm ▾" / `<details>`. **MILESTONE 1: Truong approves before code.**
@@ -37,9 +37,12 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 - Default results byte-identical (no backend change); `kiem_nhanh.py` 7/7; `test_i18n_sync.py`, `test_ws_nhan.py` green.
 
 ## Current state
-- Planned only (2026-11-22). No code yet.
+- L1 done (2026-11-22): `docs/ke_hoach/ux/UX5A_TU_NGU.md` written (measured with real Chromium, 6 decisions D1–D6 with defaults).
+- **STOPPED at MILESTONE 1: waiting for Truong to approve words + choice map. No product code yet.**
+- Env: `.venv` created locally from `requirements-dev.txt` (gitignored). Measure script is in the session scratchpad only.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-22 | Sonnet | Plan + protocol for Track A | split from UX5B by Truong |
+| 2026-11-22 | Sonnet | L1 audit + words + choice map | measured admin+teacher, both tabs; stop point |

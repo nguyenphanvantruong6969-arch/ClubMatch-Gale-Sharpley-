@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5A-L1: đo thẻ Kết quả + Chi tiết và xuất tệp, bảng từ ngữ, bản đồ lựa chọn (chưa có mã)
+
+- Tài liệu `docs/ke_hoach/ux/UX5A_TU_NGU.md`: số điều khiển nhìn thấy hiện nay (quản trị và giáo viên, nếp đóng/mở), sáu quyết định D1–D6 kèm mặc định, bảng từ ngữ VI/EN, bản đồ lựa chọn (một nút vàng mỗi thẻ).
+- Không đổi mã, không đổi backend. Chờ Truong duyệt (MILESTONE 1) trước khi làm L2.
+
 ## 2026-11-22 — UX4-L4: tab Cách xếp (một câu hỏi, "Tuỳ chỉnh thêm", "Thử cách xếp này")
 
 - Câu hỏi MT1 thành "Khi CLB hết chỗ, ai được xét trước?" với ba thẻ "Điểm bài thi cao hơn · Bốc thăm · Dành chỗ cho một nhóm" (quyết định D1: không dựng bộ thẻ thứ hai; vẫn lưu qua `chon_muc_tieu` có Hoàn tác). Nút "Thay đổi…" ẩn (id giữ), thay bằng mục gập "Tuỳ chỉnh thêm" (`#ux1aNangCao` lại là `<details>`, chỉ chứa bảng Tiêu chí). Thẻ mặc định "Chia 100 điểm" mang nhãn "Đề xuất".
