@@ -100,3 +100,16 @@ L3 checker focus: UI switch default OFF, Hick/Von Restorff budgets, teacher role
 - Limit (a) from L2 (GIOI_HAN test tick): the new note `mt2_ghi_chu` says a Limited club ignores exam scores, which is enough for L3; the tick itself is still offered. Accepted.
 
 After F5 the checker needs only: i18n key test + `kiem_nhanh` + the 6 UI tests; then L3 PASS.
+
+## L3-FIX — range 33d232f..b364d17 — VERDICT: PASS (L3 now PASS)
+
+| Check | Result |
+|---|---|
+| F5 | new key `mt2_gt_GIOI_HAN` (vi + en) used only via `tuyChon.khoaGt` from `mt2VeChiaLoai`; Settings/Medal mode still use `ux1a_ss_gt_GIOI_HAN` (old key unchanged; Settings UI tests green) |
+| New UI assertion | `test_chu_i_cua_gioi_han_khong_nhac_huy_chuong` passes; mutation (remove `khoaGt`) makes it red |
+| Playwright | `playwright` importable here; `test_giao_dien_mt2.py` 7/7 unskipped (-rs shows no skips); with `test_mt2_l3_backend`, `ux1_cai_dat`, `fa_cai_dat`, `ux1b_l5c`, `ws_nhan`: 88 passed |
+| Engine | diff touches no `.py` file other than the test; no engine change, default byte-identical (`trung_khit` 15 cases pass) |
+| kiem_nhanh 5/5 vs 7/7 | full run here is 7/7 (ruff, chu_cam, ma_loi_js, i18n_loi_khop, i18n_khoa, trung_khit, khong_sua_nhat_ky); none failing. The coder's "5/5" was a subset (`--chi`), not a failure |
+| Wording | EN says "commitment points"; no banned words (`chu_cam` pass) |
+
+No new findings. F6, F7, F8 stay as minor/info. L4 (docs, optional): Settings-cards sentence, `SO_DANG_KY_33_MUC.md` row, `HUONG_DAN_SU_DUNG.md`, CHANGELOG/TIEN_DO; checker will verify invariant 7 (no column change) and the run_pipeline-level rank-permutation test if added.
