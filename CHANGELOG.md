@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-22 — Sổ ví dụ của hướng dẫn chạy được ở workspace mặc định
+
+- Lỗi: `du_lieu_test/vi_du_huong_dan/SO_NHAP_VIDU.xlsx` (bộ 10 em mà `HUONG_DAN_SU_DUNG.md` dùng xuyên suốt) thiếu cột "Điểm quyết tâm", dù `VIDU_03_xep_hang_nguyen_vong.csv` có `wp_1`, `wp_2` từ A13.13. Workspace mặc định bật điểm quyết tâm, nên làm đúng 5 bước của hướng dẫn thì bị chặn ở bước kiểm (`wharton_ho_so_chua_hop_le`, 9 em).
+- Nguyên nhân: `mau_csv/tao_so_nhap.py` `tao_du_lieu_test_mot` không truyền `luon_co_cot_w` (chú thích nói có, mã thì không). Sửa: truyền `luon_co_cot_w=True` khi có ít nhất một nguyện vọng mang `diem_w`. `bo_sach` và `TEST` không có cột `wp` nên sổ của chúng không đổi (không sinh lại).
+- Sinh lại MỘT tệp: `SO_NHAP_VIDU.xlsx`. Hướng dẫn không phải sửa chữ: nó vốn đã nói bộ ví dụ có điểm quyết tâm hợp lệ, 0 cảnh báo, và in bảng kết quả này.
+- Test mới: `tests/test_vi_du_huong_dan_mac_dinh.py` (2 ca, đỏ trước khi sửa): sổ có cột Điểm quyết tâm; nạp ở workspace mặc định ra 4 CLB · 1 buổi · 10 em, 0 cảnh báo, chạy seed 42 ra đúng bảng `KET_QUA_DUNG` của `test_vi_du_huong_dan.py`. Test liên quan (10 tệp, 387 ca) xanh. `CLAUDE_CHI_TIET.md` (373 tệp test).
+
 ## 2026-11-22 — Tài liệu bộ ví dụ: bỏ câu "0 cảnh báo" đã cũ (chỉ tài liệu)
 
 - `mau_csv/vi_du_day_du/GIAI_THICH.md`, `mau_csv/vi_du_ca_tuan/GIAI_THICH.md`, `mau_csv/HUONG_DAN_CSV.md`: hai bộ ví dụ nạp 0 lỗi nhưng bảng sức khoẻ dữ liệu nay báo `health_oversubscribed_buoi` mỗi buổi (vi_du_day_du: 3 cảnh báo, 15 chỗ / 23–24 em; vi_du_ca_tuan: 6 cảnh báo, 48 chỗ / 52–55 em). Số đo lại ở workspace mặc định, seed 42; chạy xếp vẫn thành công (23/24 và 60/60 em có chỗ, đúng như tài liệu). Không đổi mã, dữ liệu hay test.

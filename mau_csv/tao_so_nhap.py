@@ -127,7 +127,8 @@ def tao_du_lieu_test_mot(thu_muc, tien_to, duoi, ten) -> str:
     clubs, students = _tu_ba_tep(thu_muc, TEN_BA_TEP, duoi, tien_to + "_")
     p = os.path.join(thu_muc, ten)
     # có cột wp trong CSV thì sổ có cột Điểm quyết tâm; có class_id thì sổ có cột Lớp (A14)
-    so_nhap.ghi_so_nhap(p, clubs, students, co_lop=any(s.get("class_id") for s in students))
+    so_nhap.ghi_so_nhap(p, clubs, students, co_lop=any(s.get("class_id") for s in students),
+                        luon_co_cot_w=any("diem_w" in x for s in students for x in s["nv"]))
     return p
 
 
