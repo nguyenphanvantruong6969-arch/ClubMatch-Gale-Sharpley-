@@ -108,9 +108,25 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Teacher role never sees this tab (unchanged).
 
 ## Current state
-- L1–L4 done (2026-11-22, Sonnet). Tests ux4_l2/l3/l4 green (79 with ws_nhan + i18n_sync); ~34 old test files migrated (CHANGELOG). kiem_nhanh 7/7 (compare base 7e9d673; no origin/main here). Soat report: `docs/phien/claude__ux4-quan-ly-de-hieu__soat.md`. Screenshots: `docs/phien/anh_ux4/sau_*.png`. Waiting: Truong approves screenshots; MILESTONE 2 checker (prompt in UX4_GIAO_THUC.md §4).
-- Deviations from L1 sheet: no "Với lựa chọn này:" prefix; HS status line "{n} học sinh" only; Điểm quyết tâm/Điểm chuẩn got wording only (no Hick restructure).
-- Known pre-existing red: tests/test_giao_dien_ux2_nut.py (tkNutMoHop 216x36) also fails on base 7e9d673.
+- L1–L4 all done and pushed (head d2a8190, base 7e9d673). Truong was sent 3 "after" screenshots (`docs/phien/anh_ux4/sau_*.png`) and must approve them.
+- Tests: ux4_l2/l3/l4 green; with test_ws_nhan + test_i18n_sync 79 pass; ~34 old UI test files migrated on purpose (list in CHANGELOG). kiem_nhanh 7/7 (compared to 7e9d673; no origin/main locally). Soat report: `docs/phien/claude__ux4-quan-ly-de-hieu__soat.md` (short form).
+- Full suite NOT run locally (CI does).
+
+## Decisions and gotchas
+- D1: reuse MT1 three-card question (retitled "Khi CLB hết chỗ, ai được xét trước?"); no second card set. D2: delete-all wharton buttons are `.btn-secondary` (red only in "Làm lại từ đầu"). D3: Cài đặt panel lives in Cách xếp tab. D4: dashboard under "Thêm ▾". D5: backend labels overridden in UI by code (`ux4_tc_*`), `tieu_chi.py` untouched.
+- Deviations from L1 sheet: no "Với lựa chọn này:" prefix; HS status line only "{n} học sinh"; extra status line for "Làm lại từ đầu"; Điểm quyết tâm/Điểm chuẩn got wording only (no Hick restructure, optional part).
+- Closed `<details>` content still has client rects in Chromium: tests count visibility with `checkVisibility()`.
+- `tab_ql(page, ma)` in tests/_trinh_duyet.py opens "Thêm ▾" for wh/dc/db/du_lieu.
+- Pre-existing red (also on base 7e9d673): tests/test_giao_dien_ux2_nut.py (tkNutMoHop 216x36). Flaky once: test_giao_dien_a13_10_nhan EN test (re-render race), green on rerun.
+- Backend business name for new Mã CLB is auto slug; collisions get `_2`, `_3`.
+
+## Next steps (ordered)
+1. Truong approves/rejects screenshots (5-second test).
+2. Truong pastes the checker prompt from `docs/phien/UX4_GIAO_THUC.md` §4 in a new session (base 7e9d673, head d2a8190); max 2 FIX rounds, then "Needs Truong".
+3. After PASS: watch CI (coverage ≥ 85 %, full suite); optional leftover: Hick budgets for Điểm quyết tâm/Điểm chuẩn panels; remove unused key `ux1a_nang_cao` from i18n.js.
+
+## Files touched
+index.html, style.css, i18n.js, js/00_nen.js, js/03_ket_qua.js, js/05_quan_ly.js, js/09_the_xem.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js, js/19_ux1b_gv.js; tests: new test_giao_dien_ux4_l2/l3/l4.py, helper in _trinh_duyet.py, ~34 migrated; docs: ke_hoach/ux/UX4_TU_NGU.md, CHANGELOG.md, TIEN_DO.md, phien/anh_ux4/*.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -121,3 +137,4 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 | 2026-11-22 | Sonnet | L1 wording sheet + choice map (measured counts with Chromium) | Found MT1 three-card question overlaps L4 (D1) |
 | 2026-11-22 | Sonnet | L1 approved; L2 + L3 implemented, ~30 old tests migrated | `tab_ql` helper in tests/_trinh_duyet.py |
 | 2026-11-22 | Sonnet | L4 implemented, soat-ma (report only), 3 after-screenshots | |
+| 2026-11-22 | Sonnet | Handoff at ~400k tokens; no new work | Next: Truong approves screenshots, then checker |
