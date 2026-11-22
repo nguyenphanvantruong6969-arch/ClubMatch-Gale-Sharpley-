@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-22 — Tài liệu bộ ví dụ: bỏ câu "0 cảnh báo" đã cũ (chỉ tài liệu)
+
+- `mau_csv/vi_du_day_du/GIAI_THICH.md`, `mau_csv/vi_du_ca_tuan/GIAI_THICH.md`, `mau_csv/HUONG_DAN_CSV.md`: hai bộ ví dụ nạp 0 lỗi nhưng bảng sức khoẻ dữ liệu nay báo `health_oversubscribed_buoi` mỗi buổi (vi_du_day_du: 3 cảnh báo, 15 chỗ / 23–24 em; vi_du_ca_tuan: 6 cảnh báo, 48 chỗ / 52–55 em). Số đo lại ở workspace mặc định, seed 42; chạy xếp vẫn thành công (23/24 và 60/60 em có chỗ, đúng như tài liệu). Không đổi mã, dữ liệu hay test.
+
 ## 2026-11-21 — SM2-CI1: ảnh chụp chữ giao diện ghi nhận đổi chữ `import_hint` có chủ đích
 
 - CI run 44911841737 (Linux 5/6, Windows 8/9): `tests/test_ws_nhan.py::test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup` đỏ vì `import_hint` (vi + en) đổi ở SM2-L2. Thêm mục `("ui", "import_hint")` vào `SUA_CO_Y` (cách các mục trước ghi chữ đổi có chủ đích); mọi chuỗi khác vẫn phải trùng ảnh chụp.

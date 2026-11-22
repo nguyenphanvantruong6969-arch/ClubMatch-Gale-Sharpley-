@@ -11,7 +11,7 @@ Thả cả ba tệp vào phần mềm theo đúng thứ tự đánh số rồi b
 |---|---|
 | Trường | 6 buổi (`thu_2` → `thu_7`), 18 câu lạc bộ (3 buổi/ngày), 60 học sinh |
 | Sức chứa | 48 chỗ mỗi buổi (15 hoặc 18 chỗ mỗi câu lạc bộ), 288 chỗ cả tuần |
-| Nhập vào | **0 cảnh báo** ở cả ba tệp, **0 cảnh báo** ở bảng sức khoẻ dữ liệu |
+| Nhập vào | **0 lỗi** khi nạp. Bảng sức khoẻ dữ liệu có **6 cảnh báo** (mức trung bình), mỗi buổi một: buổi có 48 chỗ mà 52–55 em muốn vào, nên ít nhất 4–7 em không có chỗ buổi đó. Cảnh báo không chặn việc chạy |
 | Chạy thử | 60/60 em có ít nhất một câu lạc bộ; 287 suất được xếp; không câu lạc bộ nào vượt chỉ tiêu |
 
 > Mọi tên học sinh trong bộ này là **tên bịa**, ghép máy từ bảng họ/đệm/tên.

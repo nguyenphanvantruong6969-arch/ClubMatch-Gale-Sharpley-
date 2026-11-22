@@ -45,7 +45,7 @@ thêm một cột và đổi cách đặt tên cột nguyện vọng — xem **m
 
 > 📅 **Trường sinh hoạt cả tuần?** Mở **`vi_du_ca_tuan/`** — cùng ba tệp đó
 > nhưng trải trên 6 buổi (`thu_2`→`thu_7`), 18 câu lạc bộ, 60 học sinh, cũng
-> **0 cảnh báo** khi nhập. `GIAI_THICH.md` của nó nói rõ cái gì đổi khi số buổi
+> **0 lỗi** khi nhập (bảng sức khoẻ dữ liệu báo mỗi buổi thiếu vài chỗ, không chặn chạy). `GIAI_THICH.md` của nó nói rõ cái gì đổi khi số buổi
 > tăng, cái gì không đổi, và chia chỉ tiêu theo buổi thế nào cho khỏi chật.
 
 ---

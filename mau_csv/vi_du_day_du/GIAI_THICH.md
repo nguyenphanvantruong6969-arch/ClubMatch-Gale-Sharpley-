@@ -13,7 +13,7 @@ rồi **Chạy phân bổ** là ra kết quả ngay. Phần dưới giải thíc
 | | |
 |---|---|
 | Trường | 3 buổi (`thu_2`, `thu_4`, `thu_6`), 9 câu lạc bộ, 24 học sinh |
-| Nhập vào | **0 cảnh báo** ở cả ba tệp, **0 cảnh báo** ở bảng sức khoẻ dữ liệu |
+| Nhập vào | **0 lỗi** khi nạp. Bảng sức khoẻ dữ liệu có **3 cảnh báo** (mức trung bình), mỗi buổi một: buổi có 15 chỗ mà 23–24 em muốn vào, nên ít nhất 8–9 em không có chỗ buổi đó. Cảnh báo không chặn việc chạy |
 | Chạy thử | 23 / 24 em có ít nhất một câu lạc bộ; không câu lạc bộ nào vượt sức chứa |
 
 > Toàn bộ tên học sinh là **tên bịa**. Không có dữ liệu học sinh thật nào trong
