@@ -30,17 +30,30 @@
 | Role | Model | Does | Never |
 |---|---|---|---|
 | Coder | Sonnet | L1–L4, tests first, CI gate (`kiem_nhanh.py` 7/7, related tests, `ruff check .`), CHANGELOG + TIEN_DO row `UX5A-L<n>`/`UX5B-L<n>`, commit `UX5A-L<n>: ...`, push | edit backend; run full suite |
-| Checker | Sonnet | At milestone 2: diff review, lot tests, 3 screenshots admin + 2 teacher (deviceScaleFactor 1), write `__checker.md` | edit product code |
+| Checker | Sonnet | Spawned by the coder after L4 (§3): diff review, lot tests, 3 screenshots admin + 2 teacher (deviceScaleFactor 1), write `__checker.md` | edit product code |
 
-## 3. Messages (one line)
-- Coder → Truong: `MILESTONE 1 READY: docs/ke_hoach/ux/UX5A_TU_NGU.md` (or `UX5B_...`), then WAIT for approval.
-- Coder → Truong: `MILESTONE 2 READY | base <sha> head <sha>` → Truong pastes the checker prompt below.
-- Checker → Truong: `PASS` or `FIX: <n> items (see __checker.md)`.
+## 3. Auto-check loop (Truong, 2026-11-22: explicit OK to spawn sessions; overrides CLAUDE.md rule 10 for UX5 only)
+After L4 (milestone 2) the CODER starts the checker itself, then waits:
+1. Coder: `get_session` (no id) -> own `session_id`; push all commits; note `base`/`head` shas.
+2. Coder: `create_session` (NOT the Agent tool): `source_url` = this repo, `source_revision` = own branch,
+   `outcome_branch` = own branch, `model` = sonnet, `title` = `UX5X checker round <n>`, `prompt` = checker prompt (§4)
+   with `<base> <head> <coder_session_id> <round>` filled in. Then END the turn (do not poll or sleep).
+3. Checker: reviews, writes `docs/phien/claude__ux5X-...__checker.md`, commits + pushes it to the branch, then
+   `send_message` to the coder session id: `PASS` or `FIX: <n> items (see __checker.md)`. The checker never edits product code.
+4. Coder wakes on that message: on `FIX`, fix only the listed items, run the related tests, commit `UX5X-FIX<round>: ...`,
+   push, spawn a NEW checker (round + 1) as in step 2. On `PASS`: update "Current state", append a TIEN_DO row, push,
+   report `DONE` to Truong. Stop.
+- **Max 2 FIX rounds.** After round 2 still `FIX`: `git revert` the offending lot, write "Needs Truong" in the branch
+  file, stop and report to Truong.
+- Milestone 1 (words approval) is NOT looped: the coder still stops and waits for Truong.
+- Messages stay one line; details live in the `__checker.md` file.
 
-## 4. Checker prompt (Truong pastes at milestone 2; replace X by `a` or `b`)
-You are the UX5X checker (Sonnet). Read CLAUDE.md, `docs/phien/UX5_GIAO_THUC.md`, `docs/phien/claude__ux4-quan-ly-de-hieu.md`
-("Design rule" sections), your branch file. Review `git diff <base>..<head>` only. Run `tests/test_giao_dien_ux5X_*.py` +
-`tests/test_ws_nhan.py` + `tests/test_i18n_sync.py`. Screenshots (≤ 5): each owned tab as admin, plus the teacher view of
-each owned tab that a teacher can open. Count visible enabled controls per panel yourself; check acceptance list, approved
-words used exactly, no id removed, EN mirrors VI, `git diff --stat` shows no backend file. Write findings to
-`docs/phien/claude__ux5X-...__checker.md`, reply one line `PASS` / `FIX: <n>`. Reply in Vietnamese to Truong.
+## 4. Checker prompt (filled in by the coder; X = `a` or `b`)
+You are the UX5X checker (Sonnet), round <round>, on branch `claude/ux5X-...` (checked out for you). Read CLAUDE.md,
+`docs/phien/UX5_GIAO_THUC.md`, `docs/phien/claude__ux4-quan-ly-de-hieu.md` ("Design rule" sections), your branch file.
+Review `git diff <base>..<head>` only. Run `tests/test_giao_dien_ux5X_*.py` + `tests/test_ws_nhan.py` +
+`tests/test_i18n_sync.py`. Screenshots (<= 5, deviceScaleFactor 1): each owned tab as admin, plus the teacher view of each
+owned tab a teacher can open. Count visible enabled controls per panel yourself; check the acceptance list, approved words
+used exactly, no id removed, EN mirrors VI, `git diff --stat` shows no backend file. Write findings to
+`docs/phien/claude__ux5X-...__checker.md`, commit and push it, then `send_message` to session `<coder_session_id>` with one
+line `PASS` or `FIX: <n> items (see __checker.md)`. Never edit product code. Reply in Vietnamese.
