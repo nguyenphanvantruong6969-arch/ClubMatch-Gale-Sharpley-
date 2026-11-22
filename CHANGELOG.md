@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-L4: tài liệu "Chia CLB theo loại"
+
+- Mục MT2 (L1 khoá `chia_loai`, L2 pipeline, L3 công tắc giao diện, L4 tài liệu). Tệp tài liệu: `HUONG_DAN_SU_DUNG.md` (mục 17 mới + mục lục), `docs/ke_hoach/SO_DANG_KY_33_MUC.md` (dòng và mục MT2), `docs/ke_hoach/CLAUDE_CHI_TIET.md` (đếm lại số tệp test: 378, để `test_ban_do_ma_so_tep_test_la_so_that` đạt). Không đổi cột Sổ nhập / CSV (bất biến 7).
+- Câu nói "thẻ Cài đặt cho biết chia loại đang bật hay tắt" (mục 6 của thiết kế) KHÔNG làm: cần chữ theo trạng thái động, không phải đổi chữ nhỏ; công tắc đã có ghi chú riêng và chế độ Huy chương hiện "đang bật vì Huy chương".
+- Test mới ở L4: không (chỉ sửa số đếm trong tài liệu). Mọi số đo trong tài liệu là dữ liệu MÔ PHỎNG.
+
 ## 2026-11-22 — MT2-L3 FIX 1: chữ chú thích loại "Giới hạn" ở bảng MT2 không nhắc huy chương
 
 - Checker F5: chữ "i" của Giới hạn nói "xếp theo huy chương" dù chế độ chia loại không có huy chương. `ux1aVeSanSang` nhận `tuyChon.khoaGt` {loại: khoá chữ}; MT2 dùng `mt2_gt_GIOI_HAN` (vi + en: điểm quyết tâm nếu có, rồi bốc thăm). Khoá cũ `ux1a_ss_gt_GIOI_HAN` giữ cho chế độ Huy chương.
