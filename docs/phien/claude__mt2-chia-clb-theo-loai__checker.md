@@ -69,3 +69,34 @@ No blocking finding. L2 may start; carry F1 and F2 into the L2 test list. For L2
 | note | info | `chia_100` ly_do | `huy_chuong` dict is reused to carry points to `ly_do_ket_qua`; reasons may use the word medal | check wording in L3/L4 |
 
 L3 checker focus: UI switch default OFF, Hick/Von Restorff budgets, teacher role cannot see/call the write paths, OFF -> ON -> OFF keeps `clubs.loai`, readiness via `kiem_loai_tu_csdl` (limit b), XSS (club names with `<img onerror>`), API error rendering (`ok=false`), double-click, i18n vi/en.
+
+## L3 — range e50c4b6..58b7749 — VERDICT: FIX (one small user-facing text defect, F5; everything else PASS)
+
+### Evidence
+| Check | Result |
+|---|---|
+| `test_mt2_l3_backend.py` + `test_giao_dien_mt2.py` + L1/L2 files | 40 passed + 6 UI passed. NOTE: the UI file is silently SKIPPED without python `playwright`; I installed it (`pip install playwright`, `RBDA_TEST_CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`) and ran it for real: 6/6 |
+| Wider UI + backend regression (ws_nhan, gt3 phan_quyen + UI, all `*ux1*`, `giao_dien_mt1*`, `giao_dien_fa*`) | 287 passed, 0 skipped |
+| `kiem_nhanh.py --co-so e50c4b6` | 7/7 (default byte-identical, no engine change in L3) |
+| Teacher role | `update_workspace_config` and `dat_loai_clb` return `gt3_khong_du_quyen` for a teacher (test); panel has `data-quyen="quan_tri"`. `get_chia_loai`/`get_san_sang_loai` are read-only |
+| OFF -> ON -> OFF -> ON keeps `clubs.loai` | backend test + UI test (GIOI_HAN pressed again after re-enable) |
+| Health report type checks (limit b) | `get_data_health_report` runs `kiem_loai_tu_csdl` when ON and not `fa_daa`; blocking = high, warnings = medium; F4 covered by `test_canh_bao_khong_chan_...` |
+| XSS | club name `<img src=x onerror=...>` shown as text, `window.__xss` undefined |
+| Double click / backend `ok=false` | switch disabled while saving; on failure it returns to the saved state (UI tests) |
+| Medal mode | switch checked + disabled, no duplicate table (id clash avoided) |
+| Mutations (reverted, status clean) | health block off: red. list column `dung_chia_loai`->`dung_fa_daa`: red. `san_sang` always true: red. remove `cb.disabled=true`: red. remove `d.fa_daa` guard: red. remove `showErrorToast`: **no test red** (F6, minor) |
+| Hick / Von Restorff (screenshots at 1280 px, DSF 1) | OFF: exactly 1 visible control in the block, 0 gold buttons (test). ON: 28 visible controls = 1 switch + 3 type buttons x 8 clubs + 3 info icons; 0 gold buttons inside the block (the page's single gold "Việc tiếp theo" button is outside it) |
+
+### Findings
+| # | Level | Where | Issue | Path | Fix |
+|---|---|---|---|---|---|
+| F5 | MUST FIX (small) | `i18n.js` `ux1a_ss_gt_GIOI_HAN` shown in the MT2 table | Tooltip says "xếp theo huy chương rồi bốc thăm" (EN: "ordered by medal, then a lottery") although MT2 modes have no medals | switch ON in "Chỉ xếp" or "Chia 100 điểm", hover the "i" next to "Giới hạn": text claims medals | In the MT2 call (`ux1aVeSanSang` option) use a neutral key, e.g. `mt2_gt_GIOI_HAN`: "Có chỉ tiêu, không xét điểm thi: xếp theo điểm quyết tâm (nếu có) rồi bốc thăm." plus the EN twin; keep the old key for Medal mode. Add one UI assertion that the tooltip text has no "huy chương" in MT2 mode |
+| F6 | minor | `mt2KhoiTaoChiaLoai` | No test asserts the error toast text on `ok=false` | mutation survived | optional assertion on `#toast`/error element |
+| F7 | minor (info) | layout | At 390 px the whole admin page already overflows (OFF: scrollWidth 631); ON widens it to 896 because of the table | kiosk is a desktop Windows app, so not blocking | none now |
+| F8 | info for Truong | Hick budget | The plan says "<= 7 controls", but the per-club type table is data entry (8 clubs x 3 buttons). Reading the budget as "choices outside the table" it holds | accept; Truong may want a compact picker later | none |
+
+### Rulings
+- Settings-cards sentence (plan item 6 last sentence): NOT required for L3. The switch has its own note and Medal mode shows "on because Medal mode". Move to L4 as optional.
+- Limit (a) from L2 (GIOI_HAN test tick): the new note `mt2_ghi_chu` says a Limited club ignores exam scores, which is enough for L3; the tick itself is still offered. Accepted.
+
+After F5 the checker needs only: i18n key test + `kiem_nhanh` + the 6 UI tests; then L3 PASS.
