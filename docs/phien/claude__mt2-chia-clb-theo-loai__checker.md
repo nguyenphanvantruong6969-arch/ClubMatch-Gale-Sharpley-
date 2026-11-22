@@ -113,3 +113,20 @@ After F5 the checker needs only: i18n key test + `kiem_nhanh` + the 6 UI tests; 
 | Wording | EN says "commitment points"; no banned words (`chu_cam` pass) |
 
 No new findings. F6, F7, F8 stay as minor/info. L4 (docs, optional): Settings-cards sentence, `SO_DANG_KY_33_MUC.md` row, `HUONG_DAN_SU_DUNG.md`, CHANGELOG/TIEN_DO; checker will verify invariant 7 (no column change) and the run_pipeline-level rank-permutation test if added.
+
+## L4 — range 781edd6..cd6564f — VERDICT: PASS (docs only; 2 minor notes)
+
+| Check | Result |
+|---|---|
+| Scope | `git diff --name-only`: CHANGELOG, HUONG_DAN_SU_DUNG, CLAUDE_CHI_TIET, SO_DANG_KY_33_MUC, TIEN_DO, branch file. No `.py/.js/.html/.csv/.xlsx`: invariant 7 untouched, default behaviour untouched |
+| HUONG_DAN section 17 vs code | table of the three types matches `chay_fa_daa` / `kiem_truoc_fa` (Tự do never rejects + fallback; Giới hạn drops test score, points then lottery; Tuyển chọn floor, score, points, lottery). Blocking list matches `fa_thieu_clb_tu_do`, `fa_clb_thieu_loai`, `fa_clb_thieu_diem_san`, `fa_clb_tuyen_chon_chua_co_diem`; reservations are warning-only. Known limits (trial/estimate refusal, two-fund scale in Giới hạn) match my L2 rulings. Table of contents entry present |
+| SO_DANG_KY row | 12 sector cells, TS = O, same shape as neighbouring rows; MT2 section lists the right files and acceptance |
+| CLAUDE_CHI_TIET | `ls tests/test_*.py | wc -l` = 378: the coder's 372->378 edit is correct and makes `test_a13_12_tai_lieu.py` pass |
+| Tests / lint | doc tests (`a13_12_tai_lieu`, `*tai_lieu*`, `*huong_dan*`): 66 passed; `ruff check .` clean; `kiem_nhanh.py` 7/7 |
+| Academic integrity | stability numbers are labelled SIMULATED (HUONG_DAN limits, SO_DANG_KY risk, CHANGELOG); no report conclusions or interpretation drafted |
+| Settings-cards sentence | recorded in CHANGELOG as not done (dynamic text); consistent with my L3 ruling (optional) |
+
+Minor notes (not blocking): (1) SO_DANG_KY lists dependency "MT1" but that registry has no MT1 row; (2) section 17 does not mention the capacity (`fa_clb_thieu_suc_chua`) check for Giới hạn / Tuyển chọn clubs. Optional one-line fixes.
+
+### MT2 overall (checker summary, all numbers SIMULATED)
+L1, L2, L3 (+FIX 1), L4: PASS. Open minor items: F6 (error toast untested), F7 (phone overflow, pre-existing), F8 (28-control table, Truong may want a compact picker), the two L4 notes. Items for Truong (not for the checker): confirm the two-fund scale rule for Giới hạn under Chia 100 điểm, and that trial runs / estimates stay refused while the switch is ON. The checker never edited product code or tests.
