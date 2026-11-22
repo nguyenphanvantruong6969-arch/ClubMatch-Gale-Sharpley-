@@ -72,7 +72,8 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#gt2TieuChiPanel", state="attached")
         page.click('button.nav-item[data-tab="admin"]')
-        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
+        page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)
         page.wait_for_selector("#gt2TcDanhSach li")
         return page
 
@@ -160,11 +161,11 @@ def test_the_so_sanh_hai_the_lan_tom_tat_chenh_lech_va_danh_sach_gap(mo):
     page.wait_for_selector("#gt2ThuKetQua table")
     the = page.locator("#gt2ThuKetQua .gt2-the-lan")
     assert the.count() == 2
-    assert "Chính thức số" in the.nth(0).inner_text() or "Chính thức số" in the.nth(1).inner_text()
-    assert "Chạy thử số" in the.nth(0).inner_text() + the.nth(1).inner_text()
+    assert "Xếp chính thức lần" in the.nth(0).inner_text() or "Xếp chính thức lần" in the.nth(1).inner_text()   # UX4-L4
+    assert "Thử lần" in the.nth(0).inner_text() + the.nth(1).inner_text()   # UX4-L4
     for i in (0, 1):
         assert the.nth(i).locator("ol").count() >= 1 and the.nth(i).locator("h5").count() >= 1       # hai tầng tách riêng
-    chinh = [the.nth(i) for i in (0, 1) if "Chính thức" in the.nth(i).inner_text()][0]
+    chinh = [the.nth(i) for i in (0, 1) if "chính thức" in the.nth(i).inner_text()][0]
     assert chinh.locator("ol").count() == 2
     tom_tat = page.locator("#gt2SsKetLuan").inner_text()
     assert "học sinh đổi CLB" in tom_tat and "→" in tom_tat and "%" in tom_tat
@@ -209,7 +210,7 @@ def test_canh_bao_vang_khi_cau_hinh_vo_nghia(mo):
     page.select_option("#gt2TcPriority", "score+tier")
     page.select_option("#gt2TcTierMode", "strict")
     page.fill("#gt2TcTiers", "")
-    assert canh.is_visible() and "danh sách nhóm" in canh.inner_text()                     # "nhóm đứng trước điểm" mà danh sách rỗng
+    assert canh.is_visible() and "chưa có nhóm nào" in canh.inner_text()                     # "nhóm đứng trước điểm" mà danh sách rỗng
     page.select_option("#gt2TcTierMode", "reserve")
     assert not canh.is_visible()
     assert not loi, loi

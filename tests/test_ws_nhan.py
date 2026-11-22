@@ -257,6 +257,14 @@ SUA_CO_Y = {
     ("ui", "ql_tab_du_lieu"): [("Xoá dữ liệu", "Làm lại từ đầu"), ("Delete data", "Start over")],
     ("ui", "danger_zone_title"): [("Vùng nguy hiểm: xoá dữ liệu để làm lại", "Làm lại từ đầu"),
                                   ("Danger zone: delete data to start over", "Start over")],
+    # UX4-L3: chủ ý đổi chữ (Học sinh, form CLB, Buổi); chuỗi đã điền nhãn mặc định.
+    ("ui", 'admin_reserve_assign_title'): [('Gán nhóm ưu tiên và xuất hồ sơ học sinh', 'Học sinh và nhóm ưu tiên'), ('Priority groups and student profile export', 'Students and priority groups')],
+    ("ui", 'btn_admin_xuat_hs'): [('Xuất CSV học sinh đã đánh dấu', 'Xuất danh sách học sinh đã chọn (CSV)'), ('Export ticked students as CSV', 'Export the selected students (CSV)')],
+    ("ui", 'btn_bulk_assign'): [('Gán cho học sinh đã đánh dấu', 'Gán nhóm ưu tiên cho học sinh đã chọn'), ('Assign to ticked students', 'Give the selected students a priority group')],
+    ("ui", 'buoi_chua_chia'): [('Chưa chia buổi', 'Một buổi chung'), ('No session set', 'One shared session')],
+    ("ui", 'buoi_hint_form'): [('Hai CLB cùng buổi là trùng giờ, mỗi học sinh chỉ vào được một. Để trống nếu trường chỉ có một buổi.', 'Hai CLB cùng buổi thì trùng giờ, mỗi học sinh chỉ vào được một. Chọn "Một buổi chung" nếu trường chỉ có một buổi.'), ('Two clubs in the same session clash, so a student can join only one. Leave it blank if the school has a single session.', 'Two clubs in the same session clash, so a student can join only one. Choose "One shared session" if the school has only one session.')],
+    ("ui", 'th_current_reserve_group'): [('Nhóm ưu tiên hiện tại', 'Nhóm ưu tiên'), ('Current priority group', 'Priority group')],
+    ("ui", 'ti_le_choi_giai_thich'): [('Tỉ lệ chọi tính theo số học sinh, không theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.', 'Số học sinh trên mỗi chỗ tính theo số học sinh, không tính theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.'), ('Applicants per seat counts students, not preferences, because each student gets at most one seat per session.', 'Applicants per place counts students, not preferences, because each student gets at most one place per session.')],
 }
 
 

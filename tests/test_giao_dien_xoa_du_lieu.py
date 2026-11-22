@@ -78,7 +78,7 @@ def test_nhan_hien_ra_bang_tieng_viet_khong_phai_khoa_i18n(trang):
         assert "_" not in chu, "hien ra khoa i18n thay vi cau chu: %r" % chu
 
     khoi = page.locator('[data-i18n="danger_zone_title"]')
-    assert "Vùng nguy hiểm" in khoi.inner_text()
+    assert "Làm lại từ đầu" in khoi.inner_text()   # UX4-L2: đổi tên khung
     an_toan = page.locator('[data-i18n="danger_zone_safety"]').inner_text()
     # Canh hai LỜI HỨA, không canh tên bảng trong cơ sở dữ liệu: câu này
     # từng ghi thẳng "run_history" và đã được viết lại thành "nhật ký các

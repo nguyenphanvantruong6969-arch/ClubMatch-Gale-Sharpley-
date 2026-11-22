@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-22 — UX4-L4: tab Cách xếp (một câu hỏi, "Tuỳ chỉnh thêm", "Thử cách xếp này")
+
+- Câu hỏi MT1 thành "Khi CLB hết chỗ, ai được xét trước?" với ba thẻ "Điểm bài thi cao hơn · Bốc thăm · Dành chỗ cho một nhóm" (quyết định D1: không dựng bộ thẻ thứ hai; vẫn lưu qua `chon_muc_tieu` có Hoàn tác). Nút "Thay đổi…" ẩn (id giữ), thay bằng mục gập "Tuỳ chỉnh thêm" (`#ux1aNangCao` lại là `<details>`, chỉ chứa bảng Tiêu chí). Thẻ mặc định "Chia 100 điểm" mang nhãn "Đề xuất".
+- Ba ô chọn cũ (`gt2TcPriority/TierMode/ScoreScope`) giữ nguyên giá trị gửi đi; nhãn và tiêu đề đọc dễ hiểu theo mã (`gt2TcChu` + khoá `ux4_tc_*`, không sửa `tieu_chi.py`); ô không áp dụng thì ẩn (`gt2TcAnHien`): chọn "điểm" thì ẩn cách dùng nhóm + danh sách nhóm, chọn "nhóm" thì ẩn phạm vi điểm. Lưu đi cùng ba giá trị như trước (test so payload).
+- Thử cách xếp: nút vàng duy nhất "Thử cách xếp này" (tự so với lần chính thức gần nhất như trước); hai ô chọn lần chạy, So sánh/Xuất và danh sách "Dùng cách xếp này" vào mục gập "So sánh với lần khác"; ba bước hướng dẫn ẩn. Tên lần chạy "Xếp chính thức lần {id} (dd/mm/yyyy HH:mm)" / "Thử lần {id} (...)".
+- Chữ tuỳ chọn: Điểm quyết tâm (giờ khoá dd/mm/yyyy, "Tự cộng cho đủ 100", "Có thi / Không thi", nút "Giải thích" thay chữ "i"), Điểm chuẩn ("Theo điểm thi / Theo điểm quyết tâm", "Chưa có ai", "Chưa cần điểm (còn n chỗ trống)"). Chưa làm ngân sách Hick cho hai khung này (tuỳ chọn).
+- File: index.html, style.css, i18n.js, js/05_quan_ly.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js. Không đổi backend; `kiem_nhanh.py` 7/7.
+- Test mới: `tests/test_giao_dien_ux4_l4.py` (9 ca: ngân sách Hick, một nút vàng, ô ẩn theo lựa chọn, nhãn, payload lưu 4 tổ hợp, chữ cấm + bất biến 2, ngày giờ). Test cũ sửa có chủ đích: gt2_thu, gt2_tieu_chi, gt4_tieu_chi (mở hai mục gập; tên lần chạy; "Không dùng"), mt1 (tên thẻ, câu hỏi), ux1_cai_dat ("Đề xuất", `ux1aMoNangCao`), ux1_dieu_huong, a13_10_diem_chuan, a13_10_nhan, diem_chuan (nhãn mới, "Chưa có ai"), wharton_quan_ly ("Đã khoá từ", "Kind of points"), xoa_du_lieu; `test_ws_nhan.py` (`SUA_CO_Y`, UX4).
+- Bỏ qua so với bảng L1: dòng "Với lựa chọn này:" trước dòng tác động của MT1 (nhiều test MT1 so đúng chữ); `test_a13_10_nhan::test_nhan_moi_en_...` có lúc chớp đỏ (vẽ lại bảng sau khi đổi ngôn ngữ), chạy lại thì xanh.
+
 ## 2026-11-22 — UX4-L2 + L3: thẻ Quản lý dễ hiểu (luật Hick + Von Restorff), chỉ giao diện và chữ
 
 - L2 (cấu trúc): dải tab còn 4 mục "Danh sách CLB · Học sinh · Cách xếp · Thêm ▾"; Điểm quyết tâm*, Điểm chuẩn*, Bảng điều khiển* và "Làm lại từ đầu" nằm trong "Thêm ▾" (id và `data-ql-tab` giữ nguyên; `rbda_ql_tab_con` cũ vẫn mở đúng khung). Khung Cài đặt (thẻ MT1) và Tiêu chí/Thử chuyển vào tab Cách xếp, bỏ mục gập "Nâng cao" (`#ux1aNangCao` thành `div`). Mỗi tab con có một dòng mục đích và một dòng trạng thái (`#qlTtClb`, `#qlTtHs`, `#qlTtCachXep`, `#qlTtDuLieu`). Nút thanh "Việc tiếp theo" đổi từ vàng sang kiểu cảnh báo (`.btn-canh-bao`); "Lưu tiêu chí" và hai nút xoá điểm quyết tâm của tất cả thành nút thường (đỏ chỉ còn ở "Làm lại từ đầu").

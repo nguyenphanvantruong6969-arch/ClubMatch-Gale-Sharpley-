@@ -45,7 +45,8 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
+        page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)
         page.wait_for_selector("#gt2TcDanhSach li")
         return page, api, loi
 
@@ -63,7 +64,7 @@ def test_hien_thu_tu_mac_dinh_bang_loi_thuong(mo):
     page, api, loi = mo()
     t1 = _chu(page, "tang_1")
     assert "Điểm bài thi của CLB (cao trước)" == t1[0]
-    assert "Nhóm ưu tiên – giữ suất riêng" == t1[1]
+    assert "Nhóm ưu tiên: giữ một số chỗ riêng" == t1[1]   # UX4-L4: bỏ chữ "suất"
     assert "Số bốc thăm (nhỏ trước)" == t1[-1]
     assert "Phần mềm không dùng thứ hạng nguyện vọng" in page.locator("#gt2TcGhiChu").inner_text()
     # không lộ mã nội bộ
@@ -143,7 +144,8 @@ def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
         page.reload()
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
+        page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)
         page.wait_for_selector("#gt2TcDanhSach li")
     # UX1A-L2b: không còn ô tick; chọn rồi chọn lại giá trị cũ thì cờ điểm quyết tâm đã lưu được giữ nguyên.
     assert api.get_workspace_config()["data"]["config"]["rules"]["wharton"] is True

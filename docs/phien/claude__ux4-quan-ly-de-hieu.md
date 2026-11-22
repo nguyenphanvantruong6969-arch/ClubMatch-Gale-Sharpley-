@@ -61,7 +61,7 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
       "Thêm buổi mới…", via `get_danh_sach_buoi`) + one "Lưu CLB" button. Mã CLB auto-filled from the name (editable,
       UI only; backend validation unchanged) and Chỗ dành riêng / Nhóm ưu tiên live under "Thêm tuỳ chọn".
       Label the session column. Học sinh: assign/export buttons hidden until ≥ 1 row ticked ("Đã chọn n học sinh").
-- [ ] **L4 Cách xếp (MUST) + score panels (OPTIONAL).** Replace the three selects with ONE question
+- [x] **L4 Cách xếp (MUST) + score panels (OPTIONAL).** Replace the three selects with ONE question
       "Khi CLB hết chỗ, ai được xét trước?" and ≤ 3 cards (pattern of `js/18_cai_dat.js`): "Điểm bài thi cao hơn"
       (default), "Học sinh thuộc nhóm ưu tiên", "Cả hai". Each card maps to existing `priority` values; tier_mode,
       score_scope and the group list appear only when they apply, under "Tuỳ chỉnh thêm". Live sentence
@@ -108,8 +108,9 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Teacher role never sees this tab (unchanged).
 
 ## Current state
-- L1 approved by Truong (D1–D5 default). L2 + L3 done and committed (2026-11-22, Sonnet); tests ux4_l2/l3 green, ~30 old test files updated on purpose (see CHANGELOG). Next: L4 (Cách xếp: fold "Tuỳ chỉnh thêm", trial panel, score-panel wording), then soat-ma, 3 screenshots, MILESTONE 2.
-- Deviation from L1 sheet: MT1 impact-line prefix "Với lựa chọn này:" skipped (MT1 tests assert exact text).
+- L1–L4 done (2026-11-22, Sonnet). Tests ux4_l2/l3/l4 green (79 with ws_nhan + i18n_sync); ~34 old test files migrated (CHANGELOG). kiem_nhanh 7/7 (compare base 7e9d673; no origin/main here). Soat report: `docs/phien/claude__ux4-quan-ly-de-hieu__soat.md`. Screenshots: `docs/phien/anh_ux4/sau_*.png`. Waiting: Truong approves screenshots; MILESTONE 2 checker (prompt in UX4_GIAO_THUC.md §4).
+- Deviations from L1 sheet: no "Với lựa chọn này:" prefix; HS status line "{n} học sinh" only; Điểm quyết tâm/Điểm chuẩn got wording only (no Hick restructure).
+- Known pre-existing red: tests/test_giao_dien_ux2_nut.py (tkNutMoHop 216x36) also fails on base 7e9d673.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -119,3 +120,4 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 | 2026-11-22 | Opus | Added Von Restorff rule (one gold per panel, red isolated, badge on default) | |
 | 2026-11-22 | Sonnet | L1 wording sheet + choice map (measured counts with Chromium) | Found MT1 three-card question overlaps L4 (D1) |
 | 2026-11-22 | Sonnet | L1 approved; L2 + L3 implemented, ~30 old tests migrated | `tab_ql` helper in tests/_trinh_duyet.py |
+| 2026-11-22 | Sonnet | L4 implemented, soat-ma (report only), 3 after-screenshots | |

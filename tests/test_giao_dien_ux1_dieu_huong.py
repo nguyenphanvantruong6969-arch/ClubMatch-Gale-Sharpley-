@@ -93,8 +93,10 @@ def test_tieu_chi_va_thu_nam_trong_tab_cach_xep_khong_con_muc_gap(mo):
     assert page.evaluate("!!document.querySelector('#qlPanelCachXep #gt2TieuChiPanel')")
     assert page.evaluate("!!document.querySelector('#qlPanelCachXep #gt2ThuPanel')")
     assert page.locator("#qlTabClb").is_visible()   # chỉnh sửa CLB nằm trước
-    assert page.locator("#ux1aNangCao summary").count() == 0
+    assert page.locator("#ux1aNangCao > summary").inner_text().strip() == "Tuỳ chỉnh thêm"   # UX4-L4: không còn chữ "Nâng cao"
     page.click("#qlTabCachXep")
+    assert page.locator("#gt2TieuChiPanel").is_hidden()       # gập sẵn trong "Tuỳ chỉnh thêm"
+    page.click("#ux1aNangCao > summary")
     assert page.locator("#gt2TieuChiPanel").is_visible()
     assert not loi, loi
 

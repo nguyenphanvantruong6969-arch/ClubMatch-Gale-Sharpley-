@@ -1085,7 +1085,7 @@
         <div class="panel-head">
           <h2 data-i18n="wh_ql_title">Điểm quyết tâm</h2>
           <div class="panel-actions">
-            <button class="nut-i" id="btnWhThongTin" type="button" aria-expanded="false" aria-controls="whQlMoTa" data-i18n-aria-label="wh_ql_giai_thich" aria-label="Giải thích về điểm quyết tâm">i</button>
+            <button class="nut-i nut-i-chu" id="btnWhThongTin" type="button" aria-expanded="false" aria-controls="whQlMoTa" data-i18n-aria-label="wh_ql_giai_thich" aria-label="Giải thích về điểm quyết tâm" data-i18n="ux4_giai_thich">Giải thích</button>
           </div>
         </div>
         <p class="hint-text" id="whQlMoTa" hidden data-i18n="wh_ql_desc">Xem, sửa và xoá điểm quyết tâm mà từng học sinh đã chia. Sau khi chạy xếp, điểm được khoá để kết quả không đổi âm thầm.</p>
@@ -1214,7 +1214,7 @@
         <div class="panel-head">
           <h2 data-i18n="dc_title">Điểm chuẩn</h2>
           <div class="panel-actions">
-            <button class="nut-i" id="btnDcThongTin" type="button" aria-expanded="false" aria-controls="dcThongTin" data-i18n-aria-label="dc_giai_thich" aria-label="Giải thích về điểm chuẩn">i</button>
+            <button class="nut-i nut-i-chu" id="btnDcThongTin" type="button" aria-expanded="false" aria-controls="dcThongTin" data-i18n-aria-label="dc_giai_thich" aria-label="Giải thích về điểm chuẩn" data-i18n="ux4_giai_thich">Giải thích</button>
           </div>
         </div>
         <p class="hint-text" id="dcThongTin" hidden data-i18n="dc_mo_ta">Điểm thấp nhất đã được nhận ở từng câu lạc bộ, tách theo hai cách xét (xét điểm thi và xét điểm quyết tâm) và theo suất thường hay suất ưu tiên. Xét điểm quyết tâm tính theo điểm quyết tâm. Xét điểm thi tính theo điểm thi, kèm điểm quyết tâm của người nhận cuối. CLB còn chỗ ghi 0 điểm. Chỉ dành cho quản trị.</p>
@@ -1252,7 +1252,8 @@
         <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
         <div class="panel-body" id="ux1aCaiDatThan"></div>
       </div>
-            <div class="ux1a-nang-cao" id="ux1aNangCao">
+            <details class="ux1a-nang-cao" id="ux1aNangCao">
+        <summary class="btn btn-secondary" data-i18n="ux4_tuy_chinh_them">Tuỳ chỉnh thêm</summary>
       <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
       <div class="panel gt-ui" id="gt2TieuChiPanel">
         <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tiêu chí xếp</h2></div>
@@ -1295,11 +1296,13 @@
         </div>
       </div>
 
+      </details>
+
       <!-- GT2-L3: thử cấu hình — chạy thử, so hai lần chạy (js/15_tieu_chi.js). Không đổi kết quả chính thức. -->
       <div class="panel gt-ui" id="gt2ThuPanel">
         <div class="panel-head"><h2 data-i18n="gt2_thu_tieu_de">Thử cấu hình</h2></div>
         <div class="panel-body">
-          <ol class="gt-buoc gt2-buoc" id="gt2ThuBuoc" data-i18n-aria-label="gt2_thu_buoc_aria" aria-label="Các bước thử cấu hình">
+          <ol class="gt-buoc gt2-buoc" id="gt2ThuBuoc" hidden data-i18n-aria-label="gt2_thu_buoc_aria" aria-label="Các bước thử cấu hình">
             <li data-i18n="gt2_thu_buoc_1">Chạy thử</li>
             <li data-i18n="gt2_thu_buoc_2">Chọn hai lần để so sánh</li>
             <li data-i18n="gt2_thu_buoc_3">So sánh, xuất tệp</li>
@@ -1311,6 +1314,8 @@
           </div>
           <div id="gt2ThuPhanHoi" class="save-feedback" role="status"></div>
           <p class="hint-text" id="gt2ThuChuaCo" hidden data-i18n="gt2_thu_chua_co">Chưa có lần chạy nào để so sánh. Hãy chạy xếp chính thức rồi chạy thử.</p>
+          <details class="club-them" id="gt2ThuSoSanhKhac">
+            <summary class="btn btn-secondary" data-i18n="ux4_so_sanh_khac">So sánh với lần khác</summary>
           <div class="gt2-hai-o" id="gt2ThuChon" hidden>
             <div class="club-field">
               <label for="gt2ThuA" data-i18n="gt2_thu_lan_a">Lần thứ nhất</label>
@@ -1327,7 +1332,6 @@
             <button class="btn btn-secondary" id="gt2ThuXuatCsv" type="button" data-i18n="gt2_thu_xuat_csv">Xuất danh sách đổi chỗ (CSV)</button>
           </div>
           <div id="gt2ThuXuat" class="save-feedback" role="status"></div>
-          <div id="gt2ThuKetQua" class="gt2-ket-qua"></div>
           <div id="gt2ThuApDung" class="gt2-ap-dung" hidden>
             <h3 data-i18n="gt2_ad_tieu_de">Dùng tiêu chí của một lần chạy thử</h3>
             <p class="hint-text" data-i18n="gt2_ad_ghi_chu">Nút dưới đây chỉ lưu tiêu chí của lần thử vào cấu hình. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.</p>
@@ -1335,8 +1339,9 @@
             <div id="gt2ThuApDungXacNhan" class="run-confirm-bar" hidden></div>
             <div id="gt2ThuApDungPhanHoi" class="save-feedback" role="status"></div>
           </div>
+          </details>
+          <div id="gt2ThuKetQua" class="gt2-ket-qua"></div>
         </div>
-      </div>
       </div>
       </div>
       <div role="tabpanel" id="qlPanelDb" data-ql-tab="db" aria-labelledby="qlTabDb" hidden>

@@ -3401,3 +3401,11 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .ql-thanh-chon { align-items: center; margin: 10px 0; }
 .ql-thanh-chon[hidden] { display: none; }
 .club-field[hidden] { display: none; }
+.nut-i.nut-i-chu { width: auto; height: auto; padding: 4px 12px; border-radius: 14px; font-size: 12.5px; }
+.ux4-de-xuat { display: inline-block; margin-top: 6px; padding: 1px 8px; border: 1px solid var(--gold-text); border-radius: 10px;
+  color: var(--gold-text); font-size: 11.5px; font-weight: 600; }
+.gt-buoc[hidden], .gt2-buoc[hidden] { display: none; }
+#ux1aNangCao { margin: 0 0 16px; }
+#ux1aNangCao[open] > summary { margin-bottom: 12px; }
+#ux1aNangCao > summary { display: block; cursor: pointer; }
+#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }

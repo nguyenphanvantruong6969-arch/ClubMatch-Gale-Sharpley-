@@ -178,7 +178,7 @@ def test_khoi_quan_ly_dung_so_lieu_cua_api(mo):
     # xét điểm quyết tâm, suất thường = 65
     o = bang.locator('tbody tr').nth(0).locator("td").nth(0)
     assert o.inner_text().strip() == "65"
-    assert bang.locator("tbody tr").nth(0).locator("td").nth(1).inner_text().strip() == "—"
+    assert bang.locator("tbody tr").nth(0).locator("td").nth(1).inner_text().strip() == "Chưa có ai"   # UX4-L4
     assert page.locator("#dcBang p").inner_text().strip() == "Đã nhận %d trên %d chỗ, có %d đơn." % (
         a["so_nhan"], a["suc_chua"], a["so_don"])
     # chọn CLB khác thì vẽ lại: C không ai xin
@@ -216,7 +216,7 @@ def test_t3_22_the_chi_tiet_va_xuat_tep_khong_con_diem_chuan(mo):
     page.wait_for_selector("#clbPanel")
     assert page.locator("#dcKqPanel, #btnDcKqMo, #dcKqBody, #dcKqTongQuan").count() == 0
     assert "Điểm chuẩn" not in page.locator("#view-others").inner_text()
-    assert tab_ql(page, "dc").count() == 1       # lối vào duy nhất vẫn còn
+    assert page.locator('#qlTabs [data-ql-tab="dc"]').count() == 1       # lối vào duy nhất vẫn còn
     assert not loi, loi
 
 

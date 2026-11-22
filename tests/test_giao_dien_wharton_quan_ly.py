@@ -292,7 +292,7 @@ def test_sau_khi_chay_xep_khoi_khoa_man_sua_va_buoc_3_kiosk_chi_doc_roi_mo_khoa(
     stb = _trang_thai_stb(api)
     page.locator('[data-tab="admin"]').click()              # mở lại thẻ: đọc trạng thái mới
     page.wait_for_function(
-        "() => document.getElementById('whQlKhoa').textContent.startsWith('Đang khoá từ')")
+        "() => document.getElementById('whQlKhoa').textContent.startsWith('Đã khoá từ')")
     _mo_thao_tac_khac(page)
     assert page.locator("#btnWhMoKhoa").is_visible()
     # màn sửa chỉ đọc
@@ -359,7 +359,7 @@ def test_tieng_anh_chu_cua_khoi_doi_theo_va_khong_con_chu_co_dau(mo):
         goc.querySelectorAll('input, select').forEach(n => n.remove());
         return goc.innerText;
     }""")
-    assert "Total" in van_ban and "Fund" in van_ban
+    assert "Total" in van_ban and "Kind of points" in van_ban   # UX4-L4: "Fund" thành "Kind of points"
     assert not DAU_VIET.search(van_ban), van_ban
     assert not loi, loi
 

@@ -72,12 +72,12 @@ def test_bang_co_hai_cot_diem_chuan_rieng_bang_so_khong_thanh(mo):
     page, loi = mo()
     th = page.locator("#dcQlTongQuan thead th")
     chu = [x.strip() for x in th.all_inner_texts()]
-    assert [c.lower() for c in chu[:4]] == ["clb", "xét điểm thi", "xét điểm quyết tâm", "đơn và chỗ"], chu
+    assert [c.lower() for c in chu[:4]] == ["clb", "theo điểm thi", "theo điểm quyết tâm", "đơn và chỗ"], chu
     assert page.locator('#dcQlTongQuan th[data-tang="1"]').count() == 1
     assert page.locator('#dcQlTongQuan th[data-tang="2"]').count() == 1
     a = page.locator('#dcQlTongQuan tr[data-club-id="A"]')
     # A không thi: ô điểm thi là "—", ô điểm quyết tâm là số 65 (không còn thanh)
-    assert a.locator('td[data-tang="1"]').inner_text().strip() == "—"
+    assert a.locator('td[data-tang="1"]').inner_text().strip() == "Chưa có ai"   # UX4-L4
     assert a.locator('td[data-tang="2"]').inner_text().strip() == "65"
     assert page.locator("#dcQlTongQuan svg").count() == 0
     assert not loi, loi
@@ -179,8 +179,8 @@ def test_khoi_diem_chuan_cung_nen_voi_cac_the_khac_ca_khi_he_dieu_hanh_dung_che_
 def test_ngon_ngu_en_nhan_moi_o_bang_va_bieu_do(mo):
     page, loi = mo()
     page.evaluate("window.I18N.setLang('en')")
-    page.wait_for_function("() => document.querySelector('#dcQlTongQuan th[data-tang=\"1\"]').textContent.trim() === 'Exam-based'")
-    assert page.locator('#dcQlTongQuan th[data-tang="2"]').text_content().strip() == "Commitment points"
+    page.wait_for_function("() => document.querySelector('#dcQlTongQuan th[data-tang=\"1\"]').textContent.trim() === 'By test score'")
+    assert page.locator('#dcQlTongQuan th[data-tang="2"]').text_content().strip() == "By commitment points"   # UX4-L4
     page.wait_for_function("() => document.querySelector('svg[data-bieu-do=chi-tiet] text.dc-chuan-nhan').textContent.includes('Cut-off 65')")
     chu = page.locator("#adminDiemChuanBlock").inner_text()
     assert not re.search(r"[Tt]ầng|\b[Tt]ier\b|Wharton", chu), chu

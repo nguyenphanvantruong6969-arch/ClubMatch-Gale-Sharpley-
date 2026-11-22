@@ -86,7 +86,7 @@ def test_phu_de_moi_va_khong_con_chu_nang_cao(trang):
         assert goc.locator(".ql-mo-ta").inner_text().strip()             # dòng mục đích
         assert goc.locator(".ql-tt").inner_text().strip()                # dòng trạng thái
         assert "Nâng cao" not in page.locator("#view-admin").inner_text()
-    assert page.locator("#ux1aNangCao summary").count() == 0
+    assert page.locator("#ux1aNangCao > summary").inner_text().strip() == "Tuỳ chỉnh thêm"   # L4: mục gập mới, không còn chữ "Nâng cao"
 
 
 def test_dong_trang_thai_ban_clb_va_hoc_sinh(trang):
@@ -107,8 +107,10 @@ def test_khung_cai_dat_va_tieu_chi_nam_trong_tab_cach_xep(trang):
     assert page.evaluate("!!document.querySelector('#qlPanelCachXep #gt2ThuPanel')")
     assert page.locator("#ux1aCaiDat").is_hidden() and page.locator("#gt2TieuChiPanel").is_hidden()
     _mo_tab(page, "cach_xep")
-    page.wait_for_selector("#gt2TcDanhSach li")
-    assert page.locator("#gt2TieuChiPanel").is_visible() and page.locator("#gt2ThuPanel").is_visible()
+    page.wait_for_selector("#gt2TcDanhSach li", state="attached")
+    assert page.locator("#gt2ThuPanel").is_visible() and page.locator("#gt2TieuChiPanel").is_hidden()   # L4: tiêu chí gập trong "Tuỳ chỉnh thêm"
+    page.click("#ux1aNangCao > summary")
+    assert page.locator("#gt2TieuChiPanel").is_visible()
     page.wait_for_selector("#ux1aChia100", state="visible")
     # nút "Thay đổi…" cũ mở ĐÚNG tab Cách xếp và cuộn tới khung tiêu chí
     _mo_tab(page, "clb")

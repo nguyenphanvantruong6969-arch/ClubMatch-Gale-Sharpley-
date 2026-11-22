@@ -665,7 +665,7 @@ function veKhoaWh() {
   whQl.khoa = !!d.is_locked;
   const chu = el("whQlKhoa");
   chu.textContent = whQl.khoa
-    ? t("wh_ql_dang_khoa", { luc: (d.locked_at || "").replace("T", " ") })
+    ? t("wh_ql_dang_khoa", { luc: dinhDangGio(d.locked_at || "") })
     : t("wh_ql_dang_mo");
   chu.classList.toggle("is-khoa", whQl.khoa);
   el("btnWhMoKhoa").hidden = !whQl.khoa;
@@ -819,7 +819,7 @@ function dongBangWharton(r) {
       hang.dataset.buoi = buoi;
       const tenQuy = document.createElement("span");
       tenQuy.className = "wh-ql-quy-ten";
-      tenQuy.textContent = t("wh_quy_ngan", { q: quy });
+      tenQuy.textContent = t(Number(quy) === 1 ? "ux4_wh_loai_1" : Number(quy) === 2 ? "ux4_wh_loai_2" : "wh_quy_ngan", { q: quy });
       hang.appendChild(tenQuy);
       q[quy].forEach((c) => {
         const o = document.createElement("span");
@@ -1583,7 +1583,7 @@ function dcSo(x) {
 
 /* Chữ trong một ô của bảng hai tầng x hai mức. */
 function dcChuoiMuc(muc, tang) {
-  if (!muc) return "—";
+  if (!muc) return t("ux4_dc_trong");
   if (muc.con_cho) return t("dc_con_cho", { n: muc.con_cho });
   if (tang === 1) return t("dc_tang1_cell", { thi: dcSo(muc.diem_thi), qt: dcSo(muc.diem_quyet_tam) });
   return dcSo(muc.diem_quyet_tam);
@@ -1655,7 +1655,7 @@ function veTongQuanDiemChuan(goc, ds, chiTiet) {
       if (m) {
         o.textContent = m.con_cho ? dcChuoiMuc(m, 2) : dcSo(tang === 1 ? m.diem_thi : m.diem_quyet_tam);
       } else {
-        o.textContent = "—";
+        o.textContent = t("ux4_dc_trong");
         o.title = t("dc_khong_ai");
       }
     });
