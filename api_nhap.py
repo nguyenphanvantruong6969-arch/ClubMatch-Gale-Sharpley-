@@ -22,6 +22,7 @@ from rbda_priority_pipeline import (
     sap_buoi,
     BUOI_MAC_DINH,
     doc_du_lieu_wharton,
+    dung_chia_loai,
     dung_fa_daa,
     dung_wharton,
     gom_theo_buoi,
@@ -381,7 +382,7 @@ class NhapDuLieuMixin:
         `n` = số mục trong nhóm, `vd` = mục đầu tiên. Cột FA vắng trong sổ thì lấy giá trị đang
         lưu của CLB (đúng điều nạp sổ sẽ làm). Có lỗi CHẶN thì thêm một dòng nói lần chạy sẽ bị
         chặn tới khi sửa. Không chặn nạp. Không FA -> []."""
-        if not dung_fa_daa(self._luat_nghiem()):
+        if not dung_chia_loai(self._luat_nghiem()):      # MT2-R1: loại CLB cũng cần soát khi chia theo loại
             return []
         with self._ket_noi_doc() as cur:
             fa_clb, cap_db, _ = fa_daa.doc_du_lieu_fa(cur)
@@ -403,8 +404,9 @@ class NhapDuLieuMixin:
                     w = int(w.strip())
                 huy.setdefault(s["student_id"], {})[x["club_id"]] = w
         cap = du_lieu["giu_cho"] if "giu_cho" in du_lieu else cap_db
-        loi = (fa_daa.kiem_truoc_fa(clubs, cap, students, prefs)
-               + fa_daa.kiem_ho_so_huy_chuong(prefs, huy, clubs))
+        loi = fa_daa.kiem_truoc_fa(clubs, cap, students, prefs)
+        if dung_fa_daa(self._luat_nghiem()):             # hồ sơ huy chương: chỉ chế độ Huy chương (MT2-R1)
+            loi += fa_daa.kiem_ho_so_huy_chuong(prefs, huy, clubs)
         nhom: dict = {}
         for e in loi:
             nhom.setdefault(e["code"], []).append(e)
@@ -470,7 +472,8 @@ class NhapDuLieuMixin:
             # UX1A-L5: sổ có cột Huy chương / Loại mà chế độ huy chương đang TẮT: nói rõ trước khi bấm Nhập
             # (chỉ thông điệp; không đổi gì được lưu hay cách chạy).
             if not du_lieu["loi"] and not dung_fa_daa(self._luat_nghiem()):
-                co_loai = any("loai" in c for c in du_lieu["clubs"])
+                co_loai = (not dung_chia_loai(self._luat_nghiem())      # MT2-R1: chia theo loại thì cột Loại được nạp
+                           and any("loai" in c for c in du_lieu["clubs"]))
                 if du_lieu.get("co_cot_huy_chuong") or co_loai:
                     kq["canh_bao"].append(err("so_nhap_canh_bao_huy_chuong_che_do_tat"))
             # Workspace chưa bật điểm Wharton mà sổ có cột "Điểm W k": nói trước khi bấm Nhập
@@ -563,7 +566,7 @@ class NhapDuLieuMixin:
                 # FA-1: sheet "Giữ chỗ" (có sheet = bản đầy đủ). Sau cả CLB lẫn học sinh để
                 # kiểm được mã. FA tắt: bỏ qua kèm cảnh báo, không ghi gì.
                 if "giu_cho" in du_lieu:
-                    if dung_fa_daa(self._luat_nghiem()):
+                    if dung_chia_loai(self._luat_nghiem()):      # MT2-R1: giữ chỗ dùng được khi chia theo loại
                         with self._ket_noi_ghi() as cur:
                             bo = fa_daa.thay_giu_cho(cur, du_lieu["giu_cho"])
                         if bo:
@@ -731,7 +734,7 @@ class NhapDuLieuMixin:
 
             # FA-1: bốn cột FA tuỳ chọn. Không có cột nào -> đường cũ, không đọc cấu hình thêm.
             cot_fa = [k for k in so_nhap.KHOA_FA if k in fieldnames]
-            fa_bat = bool(cot_fa) and dung_fa_daa(self._luat_nghiem())
+            fa_bat = bool(cot_fa) and dung_chia_loai(self._luat_nghiem())   # MT2-R1: loại / điểm sàn nạp khi chia theo loại
             n_fa_bo_qua = 0
 
             with self._ket_noi_ghi() as cur:

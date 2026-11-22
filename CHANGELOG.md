@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-FIX-R1: Sổ nhập / CSV nạp cột Loại khi "Chia CLB theo loại" bật
+
+- Lỗi (checker, tái hiện): `chia_loai` bật, `fa_daa` tắt → cột Loại / Điểm sàn bị bỏ qua khi nạp (`fa_cot_bo_qua`), lần chạy sau bị chặn vì thiếu loại. Nguyên nhân: `api_nhap.py` cổng cột FA bằng `dung_fa_daa`.
+- Sửa: `dung_chia_loai` thay `dung_fa_daa` ở (a) `import_clubs_csv` (đường duy nhất ghi cột CLB; Sổ nhập đi qua đó): cả bốn cột Loại, Điểm sàn, Tối thiểu, Sức chứa phòng, vì lớp loại dùng cả bốn khi chạy; (b) sheet "Giữ chỗ" khi nạp; (c) xem trước `_canh_bao_fa_xem_truoc`: chỉ kiểm loại, hồ sơ huy chương chỉ khi `fa_daa`; (d) câu nhắc "chế độ huy chương tắt" không còn bắn chỉ vì có cột Loại khi chia loại bật (cột Huy chương vẫn nhắc); (e) `api_xuat.py`: Sổ xuất mang cột loại và sheet Giữ chỗ khi chia loại bật, để nạp lại được. Việc của huy chương (chuẩn hoá Vàng/Bạc/Đồng, soát hồ sơ huy chương) vẫn chỉ theo `fa_daa`. Tắt và `fa_daa` cũ: đúng như trước. Không thêm cột (bất biến 7).
+- Test mới: `tests/test_mt2_r1_nap_loai.py` (6 ca: Sổ FA mẫu 8/8 loại bằng workspace Huy chương, CSV, TẮT / fa_daa cũ giữ hành vi cũ, xem trước, xuất rồi nạp lại, chạy không còn thiếu loại).
+
 ## 2026-11-22 — MT2-L4: tài liệu "Chia CLB theo loại"
 
 - Mục MT2 (L1 khoá `chia_loai`, L2 pipeline, L3 công tắc giao diện, L4 tài liệu). Tệp tài liệu: `HUONG_DAN_SU_DUNG.md` (mục 17 mới + mục lục), `docs/ke_hoach/SO_DANG_KY_33_MUC.md` (dòng và mục MT2), `docs/ke_hoach/CLAUDE_CHI_TIET.md` (đếm lại số tệp test: 378, để `test_ban_do_ma_so_tep_test_la_so_that` đạt). Không đổi cột Sổ nhập / CSV (bất biến 7).

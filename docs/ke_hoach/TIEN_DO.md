@@ -249,3 +249,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | MT2-L3-FIX1 (chữ chú thích Giới hạn, F5) | xong, chờ checker | 2026-11-22 | js/18_cai_dat.js, i18n.js, CHANGELOG.md | tests/test_giao_dien_mt2.py (+1 ca) | UI 7/7 + mt1 bảng loại 7/7, không skip |
 | MT2-L4 (tài liệu: HUONG_DAN mục 17, SO_DANG_KY MT2, đếm tệp test) | xong, chờ checker | 2026-11-22 | HUONG_DAN_SU_DUNG.md, docs/ke_hoach/SO_DANG_KY_33_MUC.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, CHANGELOG.md | tests/test_a13_12_tai_lieu.py (đạt) | câu Cài đặt (mục 6) bỏ qua, xem CHANGELOG |
 | MT2 (L1–L4) | xong, chờ checker L4 | 2026-11-22 | xem các dòng MT2-L1..L4 | tests/test_mt2_*.py, tests/test_giao_dien_mt2.py | số đo mô phỏng; chờ Truong duyệt |
+| MT2-FIX-R1 (nạp/xuất cột Loại khi chia loại bật) | xong, chờ checker | 2026-11-22 | api_nhap.py, api_xuat.py, CHANGELOG.md | tests/test_mt2_r1_nap_loai.py | kiem_nhanh 7/7; trùng khít 3×20 |
