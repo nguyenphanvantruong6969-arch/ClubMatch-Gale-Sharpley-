@@ -71,7 +71,7 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 PASS | MT2 DONE (L1-L4 PASS) | STRESS PASS | R1 + R1-FIX PASS | PR #28 opened (not merged)
+- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 PASS (L3-FIX checker PASS) | L4 PASS | MT2 DONE (L1-L4 PASS) | STRESS PASS | R1 + R1-FIX PASS | PR #28 opened; CI-1 fix (tkNutMoHop 44px, UX3 CSS) pushed, CI rerun pending
 
 ## Sessions
 | Role | Session id | Model | Notes |
