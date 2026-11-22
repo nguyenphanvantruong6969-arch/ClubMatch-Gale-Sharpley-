@@ -83,7 +83,7 @@ pipeline, invariants 1, 2, 8).
 - L2 ruling (checker): chia_100 + GIOI_HAN mixes point scales (tier by tick); accepted. L3 must not offer the test tick for GIOI_HAN clubs, or document it. Health-report type checks via kiem_loai_tu_csdl are MANDATORY in L3; add a test for non-blocking type warnings (F4).
 
 ## Needs Truong
-- Confirm the two-fund scale rule for GIOI_HAN under Chia 100 điểm (students may carry fund-1 vs fund-2 points in one club; accepted by checker, documented).
+- RESOLVED (Truong, 2026-11-22): GIOI_HAN clubs have no exam, so nobody has a test score there and every student uses fund 2 (same scale); only the point fund decides. No scale mixing in normal use. DQ1 (one fund) NOT needed for this. Optional: non-blocking warning if a GIOI_HAN club has test scores; HUONG_DAN §17 'known limit' wording may be softened to say it only arises if a GIOI_HAN club has exam scores.
 - Confirm trial runs and estimates stay refused (mt_thu_chua_ho_tro_loai) while the switch is ON.
 - Decide whether a compact type picker is wanted later (28 controls when the switch is ON).
 - Optional, not done: Settings-cards sentence saying whether types are on (plan item 6); F6 error-toast test; F7 phone overflow (pre-existing); SO_DANG_KY lists dependency MT1 with no registry row; HUONG_DAN §17 omits the capacity check for GIOI_HAN/TUYEN_CHON.
