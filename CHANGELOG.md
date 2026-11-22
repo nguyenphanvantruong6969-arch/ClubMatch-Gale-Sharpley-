@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-FIX-R1-FIX: đếm lại số tệp test trong tài liệu
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 378 → 379 tệp `test_*.py` (thêm `tests/test_mt2_r1_nap_loai.py`) để `test_ban_do_ma_so_tep_test_la_so_that` đạt. Không thêm/bớt tệp test.
+
 ## 2026-11-22 — MT2-FIX-R1: Sổ nhập / CSV nạp cột Loại khi "Chia CLB theo loại" bật
 
 - Lỗi (checker, tái hiện): `chia_loai` bật, `fa_daa` tắt → cột Loại / Điểm sàn bị bỏ qua khi nạp (`fa_cot_bo_qua`), lần chạy sau bị chặn vì thiếu loại. Nguyên nhân: `api_nhap.py` cổng cột FA bằng `dung_fa_daa`.
