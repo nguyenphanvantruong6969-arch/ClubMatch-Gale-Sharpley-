@@ -3365,3 +3365,47 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   /* "Hiệu ứng" tắt: html.tat-hieu-ung *::before/::after không phủ ::details-content, nên tắt riêng ở đây. */
   html.tat-hieu-ung ::details-content { animation: none !important; transition: none !important; }
 }
+
+/* UX4: thẻ Quản lý. Hick: dải tab ≤ 4 mục, mục ít dùng gom vào "Thêm ▾". Von Restorff: một nút vàng mỗi khung,
+   nút của thanh Việc tiếp theo là kiểu cảnh báo (viền, không nền vàng). */
+.ql-them { position: relative; }
+.ql-tab-them[aria-expanded="true"] { background: var(--paper-hover); color: var(--ink); }
+.ql-tab-them.is-chon {
+  background: var(--paper-raised);
+  border-color: var(--hairline);
+  color: var(--ink);
+  box-shadow: inset 0 2px 0 var(--gold);
+}
+.ql-them-menu {
+  position: absolute; top: 100%; left: 0; z-index: 20; min-width: 220px;
+  display: flex; flex-direction: column; gap: 2px; padding: 6px;
+  background: var(--paper-raised); border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.ql-them-menu[hidden] { display: none; }
+.ql-them-menu .ql-tab {
+  margin-bottom: 0; text-align: left; border: 1px solid transparent; border-radius: var(--radius-sm);
+}
+.ql-them-menu .ql-tab[aria-selected="true"] { box-shadow: none; border-color: var(--hairline); font-weight: 600; }
+.ql-mo-ta { margin: 0 0 4px; }
+.ql-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }   /* giữ chỗ để bố cục không nhảy khi dữ liệu về */
+.btn-canh-bao {
+  background: transparent; color: var(--gold-text); border: 2px solid var(--gold-text); font-weight: 600;
+}
+.btn-canh-bao:hover { background: var(--gold-soft); }
+.ux1a-nang-cao { margin-top: 0; }
+.club-them { grid-column: 1 / -1; }
+.club-them > summary { list-style: none; display: inline-block; cursor: pointer; }
+.club-them > summary::-webkit-details-marker { display: none; }
+.club-them[open] > summary { margin-bottom: 10px; }
+.ql-thanh-chon { align-items: center; margin: 10px 0; }
+.ql-thanh-chon[hidden] { display: none; }
+.club-field[hidden] { display: none; }
+.nut-i.nut-i-chu { width: auto; height: auto; padding: 4px 12px; border-radius: 14px; font-size: 12.5px; }
+.ux4-de-xuat { display: inline-block; margin-top: 6px; padding: 1px 8px; border: 1px solid var(--gold-text); border-radius: 10px;
+  color: var(--gold-text); font-size: 11.5px; font-weight: 600; }
+.gt-buoc[hidden], .gt2-buoc[hidden] { display: none; }
+#ux1aNangCao { margin: 0 0 16px; }
+#ux1aNangCao[open] > summary { margin-bottom: 12px; }
+#ux1aNangCao > summary { display: block; cursor: pointer; }
+#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }

@@ -211,16 +211,16 @@
       ux1a_the_chi_xep_tt: "Chỉ xếp thứ tự",
       ux1a_the_chi_xep_mt: "NV1, NV2, NV3…",
       ux1a_the_chia_100_tt: "Chia 100 điểm",
-      ux1a_the_chia_100_mt: "cho các nguyện vọng (mặc định)",
+      ux1a_the_chia_100_mt: "cho các nguyện vọng",
       ux1a_the_huy_chuong_tt: "Huy chương",
       ux1a_the_huy_chuong_mt: "Vàng · Bạc · Đồng (60 · 30 · 10)",
-      ux1a_cd_tieu_de: "Cài đặt · {ten}",
+      ux1a_cd_tieu_de: "Cách xếp · {ten}",
       ux1a_cd_cach_xet: "Cách xét khi đông:",
       ux1a_cd_thay_doi: "Thay đổi…",
-      mt1_cau_hoi: "Khi một {slot_s} đông người, trường ưu tiên điều gì?",
-      mt1_the_nang_luc_tt: "Theo năng lực",
+      mt1_cau_hoi: "Khi {slot_s} hết chỗ, ai được xét trước?",
+      mt1_the_nang_luc_tt: "Điểm bài thi cao hơn",
       mt1_the_nang_luc_mt: "Xếp theo điểm thi, rồi điểm quyết tâm (nếu có), cuối cùng là bốc thăm.",
-      mt1_the_co_hoi_tt: "Cơ hội như nhau",
+      mt1_the_co_hoi_tt: "Bốc thăm",
       mt1_the_co_hoi_mt: "Mọi {person_l} có cơ hội như nhau: bốc thăm, không xét điểm thi.",
       mt1_the_danh_cho_tt: "Dành chỗ cho một nhóm",
       mt1_the_danh_cho_mt: "Giữ một số chỗ ở mỗi {slot_s} cho một nhóm (vd. khối 10, hoàn cảnh khó khăn).",
@@ -366,7 +366,7 @@
       xuat_canh_bao_diem: "Tệp xuất có {score_l} chấm và số bốc thăm. Không gửi các tệp này cho giáo viên chấm {score_l}.",
       btn_xuat_hs_da_chon: "Xuất CSV {person_l} đã chọn",
       btn_bo_chon_hs: "Bỏ chọn",
-      btn_admin_xuat_hs: "Xuất CSV {person_l} đã đánh dấu",
+      btn_admin_xuat_hs: "Xuất danh sách {person_l} đã chọn (CSV)",
       aria_chon_tat_ca_dang_hien: "Chọn tất cả {person_l} đang hiện",
       aria_chon_tat_ca_trang: "Chọn tất cả {person_l} trên trang này",
       hs_da_chon_dem: "Đã chọn {n} {person_l}",
@@ -433,18 +433,18 @@
       wharton_khoa_nv_ghi_chu: "Điểm quyết tâm đang khoá và học sinh này đã có điểm, nên nguyện vọng và ô chọn thi được giữ nguyên. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần đổi.",
       /* A13.5: tab con của thẻ Quản lý, xử lý hàng loạt điểm quyết tâm, lỗi chặn gọn, khoá xuất. */
       ql_tab_nhom_aria: "Các mục của thẻ Quản lý",
-      ql_tab_clb: "{slot_p}",
+      ql_tab_clb: "Danh sách {slot_sl}",
       ql_tab_hs: "{person_p}",
       ql_tab_wh: "Điểm quyết tâm",
       ql_tab_dc: "Điểm chuẩn",
-      ql_tab_du_lieu: "Xoá dữ liệu",
+      ql_tab_du_lieu: "Làm lại từ đầu",
       wh_hl_tai: "Tải danh sách cần sửa",
       wh_hl_tai_xong: "Đã lưu danh sách {n} {person_pl} cần sửa: {path}",
-      wh_hl_phong: "Phóng cho đủ 100 theo tỉ lệ",
-      wh_hl_phong_hoi: "Phần mềm sẽ đổi điểm quyết tâm thay {person_pl} chia thiếu hoặc thừa, giữ tỉ lệ các điểm đã đặt để mỗi quỹ đủ 100. Dữ liệu được sao lưu trước và mỗi thay đổi đều ghi nhật ký. Gõ {can_go} để xác nhận.",
-      wh_hl_phong_xn: "Xác nhận phóng điểm",
-      aria_wh_go_phong: "Gõ chữ xác nhận để phóng điểm",
-      wh_hl_bo_qua_tieu_de: "Chưa phóng được {n} {person_pl}, cần sửa tay:",
+      wh_hl_phong: "Tự cộng cho đủ 100 (giữ tỉ lệ)",
+      wh_hl_phong_hoi: "Phần mềm sẽ sửa điểm quyết tâm của các {person_pl} chia thiếu hoặc thừa, giữ nguyên tỉ lệ các điểm đã đặt để mỗi nhóm điểm cộng lại đủ 100. Dữ liệu được sao lưu trước và mỗi thay đổi đều ghi nhật ký. Gõ {can_go} để xác nhận.",
+      wh_hl_phong_xn: "Xác nhận tự cộng",
+      aria_wh_go_phong: "Gõ chữ xác nhận để tự cộng điểm",
+      wh_hl_bo_qua_tieu_de: "Chưa tự cộng được cho {n} {person_pl}, cần sửa tay:",
       wh_hl_ly_do_tong_0: "chưa đặt điểm nào ở quỹ này",
       wh_hl_ly_do_loi_khac: "còn lỗi khác, cần sửa tay",
       wh_hl_ly_do_da_doi: "điểm vừa được sửa trong lúc phóng, giữ nguyên điểm mới",
@@ -467,7 +467,7 @@
       btn_wh_xem_nhat_ky: "Xem nhật ký",
       wh_nk_chon_em: "Mở một {person_l} ở bảng trên để xem nhật ký của {person_l} đó.",
       wh_ql_desc: "Xem, sửa và xoá điểm quyết tâm mà từng {person_l} đã chia. Sau khi chạy xếp, điểm được khoá để kết quả không đổi âm thầm.",
-      wh_ql_dang_khoa: "Đang khoá từ {luc}",
+      wh_ql_dang_khoa: "Đã khoá từ {luc} để kết quả không bị đổi",
       wh_ql_dang_mo: "Đang mở, có thể sửa điểm",
       btn_wh_mo_khoa: "Mở khoá sửa điểm quyết tâm",
       wh_mo_khoa_hoi: "Mở khoá để sửa điểm. Kết quả đã xếp không tự đổi, lần chạy xếp tiếp theo sẽ khoá lại. Gõ {can_go} để xác nhận.",
@@ -479,12 +479,12 @@
       wh_cb_vang_thi: "Vắng thi",
       wh_cb_rong: "Không có hồ sơ nào cần xử lý.",
       wh_tim_placeholder: "Tìm {person_l} theo mã hoặc tên…",
-      wh_loc_quy: "Quỹ",
+      wh_loc_quy: "Loại điểm",
       wh_loc_buoi: "{session}",
       wh_loc_clb: "{slot}",
       wh_loc_tat_ca: "Tất cả",
-      wh_quy_1: "Quỹ 1, đã thi",
-      wh_quy_2: "Quỹ 2, không thi",
+      wh_quy_1: "Điểm cho {slot_sl} có thi",
+      wh_quy_2: "Điểm cho {slot_sl} không thi",
       wh_quy_ngan: "Quỹ {q}",
       wh_loc_chi_loi: "Chỉ hồ sơ có vấn đề",
       wh_dem_can_xu_ly: "{n} hồ sơ cần xử lý",
@@ -546,7 +546,101 @@
       toast_student_deleted: "Đã xoá {person_l} {student_id}.",
 
       admin_title: "Quản lý",
-      admin_desc: "Thêm hoặc sửa {slot_sl}, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của {person_l} chỉ được hưởng suất khi cùng nhãn với {slot_sl}.",
+
+      ux4_ql_tab_cach_xep: "Cách xếp",
+
+      ux4_ql_tab_them: "Thêm ▾",
+
+      ux4_mo_clb: "Thêm {slot_sl} mới, hoặc sửa số chỗ và {session_l} của {slot_sl} đã có.",
+
+      ux4_tt_clb: "{n} {slot_sl} · {cho} chỗ · {b} {session_l}",
+
+      ux4_mo_hs: "Tìm {person_l}, chọn nhiều {person_l} rồi gán nhóm ưu tiên hoặc xuất danh sách.",
+
+      ux4_tt_hs: "{n} {person_l}",
+
+      ux4_mo_cach_xep: "Chọn ai được xét trước khi {slot_sl} hết chỗ, rồi thử xem kết quả đổi thế nào. Kết quả chính thức chỉ đổi ở lần xếp tiếp theo.",
+
+      ux4_tt_cach_xep: "Đang dùng: {cach}",
+
+      ux4_mo_lam_lai: "Dùng khi bắt đầu một đợt mới. Mỗi nút đều tự sao lưu trước khi xoá.",
+
+      ux4_tt_lam_lai: "Hiện có {hs} {person_l} và {clb} {slot_sl}.",
+
+      ux4_tuy_chinh_them: "Tuỳ chỉnh thêm",
+
+      ux4_so_sanh_khac: "So sánh với lần khác",
+
+      ux4_de_xuat: "Đề xuất",
+
+      ux4_giai_thich: "Giải thích",
+
+      ux4_dc_trong: "Chưa có ai",
+
+      ux4_wh_loai_1: "Có thi",
+
+      ux4_wh_loai_2: "Không thi",
+
+      ux4_tc_tt_priority: "Khi {slot_sl} hết chỗ, ai được xét trước?",
+
+      ux4_tc_tt_tier_mode: "Nhóm ưu tiên được xét thế nào?",
+
+      ux4_tc_tt_score_scope: "Điểm bài thi tính thế nào?",
+
+      ux4_tc_tt_tiers: "Các nhóm ưu tiên (nhóm đầu được xét trước)",
+
+      ux4_tc_priority_score: "Điểm bài thi cao hơn",
+
+      ux4_tc_priority_tier: "Học sinh thuộc nhóm ưu tiên",
+
+      ux4_tc_priority_score_tier: "Cả hai",
+
+      ux4_tc_tier_mode_reserve: "Giữ một số chỗ riêng cho nhóm",
+
+      ux4_tc_tier_mode_strict: "Nhóm luôn được xét trước",
+
+      ux4_tc_score_scope_per_slot: "Mỗi {slot_sl} một bài thi riêng",
+
+      ux4_tc_score_scope_per_person: "Một điểm chung cho mọi {slot_sl}",
+
+      ux4_tc_chu_du_tru: "Nhóm ưu tiên: giữ một số chỗ riêng",
+
+      ux4_tc_kd_tiers: "Danh sách nhóm chưa dùng: các nhóm chỉ đang giữ chỗ riêng nên không đứng trước điểm.",
+
+      ux4_tc_kd_priority: "Đã chọn điểm và nhóm nhưng nhóm chỉ giữ chỗ riêng: kết quả giống chỉ xét điểm.",
+
+      ux4_so_cho: "Số chỗ",
+
+      ux4_buoi_chung: "Một {session_l} chung",
+
+      ux4_buoi_them_moi: "Thêm {session_l} mới…",
+
+      ux4_buoi_ten_moi: "Tên {session_l} mới",
+
+      ux4_buoi_ten_moi_vd: "Ví dụ: Thứ ba",
+
+      ux4_them_tuy_chon: "Thêm tuỳ chọn",
+
+      ux4_ma_clb: "Mã {slot_sl} (tự điền theo tên, có thể sửa)",
+
+      ux4_ma_clb_vd: "Tự điền từ tên",
+
+      ux4_cho_rieng: "Chỗ dành riêng cho nhóm ưu tiên",
+
+      ux4_cho_rieng_ngan: "0",
+
+      ux4_cho_rieng_cot: "Chỗ dành riêng",
+
+      ux4_nhom_duoc_cho: "Nhóm được dành chỗ (để trống nếu không có)",
+
+      ux4_nhom_duoc_cho_ngan: "Để trống nếu không có",
+
+      ux4_cot_buoi: "{session} sinh hoạt",
+
+      ux4_da_chon: "Đã chọn {n} {person_l}",
+
+      ux4_gan_nhom_ph: "Gán vào nhóm nào? (ví dụ: khối 10)",
+      admin_desc: "Sửa danh sách {slot_sl} và {person_l}, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới.",
       admin_club_form_title: "Thêm hoặc sửa {slot_sl}",
       placeholder_club_id: "Mã {slot_sl} (ví dụ: clb_01)",
       placeholder_club_name: "Tên {slot_sl}",
@@ -560,11 +654,11 @@
       th_reserve_capacity: "Suất ưu tiên",
       th_reserve_group: "Nhóm ưu tiên",
       admin_club_empty: "Chưa có {slot_sl} nào. Thêm {slot_sl} đầu tiên bằng biểu mẫu ở trên.",
-      admin_reserve_assign_title: "Gán nhóm ưu tiên và xuất hồ sơ {person_l}",
+      admin_reserve_assign_title: "{person_p} và nhóm ưu tiên",
       placeholder_admin_student_search: "Tìm {person_l} theo mã hoặc tên…",
       placeholder_reserve_group_apply: "Nhóm ưu tiên cần gán",
-      btn_bulk_assign: "Gán cho {person_l} đã đánh dấu",
-      th_current_reserve_group: "Nhóm ưu tiên hiện tại",
+      btn_bulk_assign: "Gán nhóm ưu tiên cho {person_l} đã chọn",
+      th_current_reserve_group: "Nhóm ưu tiên",
       admin_student_empty: "Chưa có {person_l} nào. Thêm ở thẻ \"Nhập nguyện vọng\" hoặc nạp tệp từ Microsoft Forms.",
       btn_prev_page: "‹ Trước",
       btn_next_page: "Sau ›",
@@ -574,7 +668,7 @@
       toast_club_deleted: "Đã xoá {slot_sl} {club_id}.",
       toast_club_deleted_removed: "Đã xoá {slot_sl} {club_id}, kèm {n_scores} điểm đã chấm và {n_tests} ô tick thi. Bản sao lưu: {backup_name}.",
 
-      danger_zone_title: "Vùng nguy hiểm: xoá dữ liệu để làm lại",
+      danger_zone_title: "Làm lại từ đầu",
       danger_zone_desc: "Nạp tệp chỉ thêm {person_l} mới, không xoá {person_l} cũ. Muốn làm lại với bộ dữ liệu khác, hãy xoá ở đây trước, nếu không {person_l} cũ vẫn chiếm chỗ.",
       danger_zone_safety: "Cả hai nút đều tự sao lưu dữ liệu trước khi xoá. Lịch sử các lần sắp xếp được giữ lại.",
       btn_reset_students: "Xoá toàn bộ {person_l} (giữ {slot_sl})",
@@ -664,7 +758,7 @@
       recovery_kg_da_duoc: "Đã ghi được vào thư mục. Hãy đóng rồi mở lại chương trình.",
 
       /* --- Nhiều buổi sinh hoạt trong tuần --- */
-      buoi_chua_chia: "Chưa chia {session_l}",
+      buoi_chua_chia: "Một {session_l} chung",
       buoi_ma_thu_2: "Thứ 2",
       buoi_ma_thu_3: "Thứ 3",
       buoi_ma_thu_4: "Thứ 4",
@@ -674,52 +768,52 @@
       buoi_ma_chu_nhat: "Chủ nhật",
       th_buoi: "{session}",
       placeholder_buoi: "{session} sinh hoạt (ví dụ: thu_3)",
-      buoi_hint_form: "Hai {slot_sl} cùng {session_l} là trùng giờ, mỗi {person_l} chỉ vào được một. Để trống nếu trường chỉ có một {session_l}.",
+      buoi_hint_form: "Hai {slot_sl} cùng {session_l} thì trùng giờ, mỗi {person_l} chỉ vào được một. Chọn \"Một {session_l} chung\" nếu trường chỉ có một {session_l}.",
       /* GT2 — khung Tiêu chí xếp (js/15_tieu_chi.js) */
-      gt2_tc_tieu_de: "Tiêu chí xếp",
-      gt2_tc_mo_ta: "Thứ tự dưới đây là cách phần mềm xếp những người cùng đăng ký một suất. Chỉ chọn được trong các lựa chọn có sẵn.",
+      gt2_tc_tieu_de: "Tuỳ chỉnh chi tiết",
+      gt2_tc_mo_ta: "Danh sách dưới đây là thứ tự phần mềm dùng để chọn khi nhiều {person_l} cùng muốn một chỗ. Chỉ chọn được trong các lựa chọn có sẵn.",
       gt2_tc_nhom_goi_y: "Mỗi dòng một nhóm, nhóm đầu được ưu tiên nhất",
-      gt2_tc_luu: "Lưu tiêu chí",
-      gt2_tc_da_luu: "Đã lưu tiêu chí. Có hiệu lực từ lần xếp chính thức tiếp theo.",
+      gt2_tc_luu: "Lưu tuỳ chỉnh",
+      gt2_tc_da_luu: "Đã lưu. Áp dụng từ lần xếp chính thức tiếp theo.",
       gt2_tc_khong_dung: "Chưa dùng:",
       gt2_tc_wharton_tat: "Điểm quyết tâm tự tắt vì cách xếp đang chọn không dùng được điểm này.",
       gt2_tc_wharton_tat_fa: "Điểm quyết tâm tự tắt vì cách xếp đang chọn không dùng được điểm này. Chế độ huy chương đang bật cần điểm quyết tâm nên lưu sẽ bị từ chối; hãy chọn lại cách xếp theo điểm.",
-      gt2_thu_tieu_de: "Thử cấu hình",
-      gt2_thu_mo_ta: "Chạy thử dùng đúng các lựa chọn đang hiện ở khung Tiêu chí xếp phía trên. Kết quả thử không được công bố và không thay kết quả chính thức.",
-      gt2_thu_chay: "Chạy thử",
+      gt2_thu_tieu_de: "Thử cách xếp khác",
+      gt2_thu_mo_ta: "Thử xếp lại bằng các lựa chọn đang hiện ở trên. Kết quả thử không được công bố và không thay kết quả chính thức.",
+      gt2_thu_chay: "Thử cách xếp này",
       gt2_thu_da_chay: "Đã chạy thử xong. Kết quả chính thức không đổi.",
-      gt2_thu_chua_co: "Chưa có lần chạy nào để so sánh. Hãy chạy xếp chính thức rồi chạy thử.",
+      gt2_thu_chua_co: "Chưa có kết quả nào để so sánh. Hãy chạy xếp chính thức trước, rồi bấm \"Thử cách xếp này\".",
       gt2_thu_lan_a: "Lần thứ nhất",
       gt2_thu_lan_b: "Lần thứ hai",
-      gt2_thu_lan_thu: "Chạy thử số {id}",
-      gt2_thu_lan_chinh_thuc: "Chính thức số {id}",
+      gt2_thu_lan_thu: "Thử lần {id}",
+      gt2_thu_lan_chinh_thuc: "Xếp chính thức lần {id}",
       gt2_thu_so_sanh: "So sánh",
       gt2_thu_xuat_html: "Xuất trang so sánh",
       gt2_thu_xuat_csv: "Xuất danh sách đổi chỗ (CSV)",
       gt2_thu_da_xuat: "Đã lưu: {path}",
-      gt2_ad_tieu_de: "Dùng tiêu chí của một lần chạy thử",
-      gt2_ad_nut: "Dùng tiêu chí này cho lần chạy chính thức",
-      gt2_tc_thu_tu: "Thứ tự xếp hiện tại",
-      gt2_tc_chon: "Chọn cách xếp",
-      gt2_thu_buoc_aria: "Các bước thử cấu hình",
+      gt2_ad_tieu_de: "Dùng cách xếp của một lần thử",
+      gt2_ad_nut: "Dùng cách xếp này cho lần xếp chính thức",
+      gt2_tc_thu_tu: "Thứ tự đang dùng",
+      gt2_tc_chon: "Đổi cách xếp",
+      gt2_thu_buoc_aria: "Các bước thử cách xếp",
       gt2_thu_buoc_1: "Chạy thử",
       gt2_thu_buoc_2: "Chọn hai lần để so sánh",
       gt2_thu_buoc_3: "So sánh, xuất tệp",
-      gt2_ad_ghi_chu: "Nút dưới đây chỉ lưu tiêu chí của lần thử vào cấu hình. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.",
-      gt2_canh_khong_nhom: "Chưa có nhóm nào nên thực chất chỉ bốc thăm. Hãy nhập danh sách nhóm ở khung Tiêu chí xếp, hoặc chọn cách xếp khác.",
-      gt2_canh_nhom_rong: "Đã chọn nhóm đứng trước điểm nhưng danh sách nhóm đang trống nên cách này chưa có tác dụng.",
+      gt2_ad_ghi_chu: "Nút dưới đây chỉ lưu cách xếp của lần thử. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.",
+      gt2_canh_khong_nhom: "Chưa có nhóm nào nên thực chất chỉ bốc thăm. Hãy nhập danh sách nhóm ở mục \"Tuỳ chỉnh thêm\", hoặc chọn cách xếp khác.",
+      gt2_canh_nhom_rong: "Đã chọn \"Nhóm luôn được xét trước\" nhưng chưa có nhóm nào nên cách này chưa có tác dụng.",
       gt2_ss_hien_ds: "Hiện danh sách ({n})",
       gt2_ss_an_ds: "Ẩn danh sách ({n})",
       gt2_ss_buoi_mac_dinh: "Mặc định",
-      gt2_ad_hoi: "Lưu tiêu chí của chạy thử số {id} làm tiêu chí đang dùng? Thứ tự sẽ là:",
-      gt2_ad_xac_nhan: "Lưu tiêu chí này",
-      gt2_ad_huy: "Không lưu",
-      gt2_ad_da_luu: "Đã lưu tiêu chí. Kết quả chính thức chưa đổi. Hãy chạy xếp chính thức để áp dụng.",
+      gt2_ad_hoi: "Dùng cách xếp của lần thử {id} từ nay? Thứ tự sẽ là:",
+      gt2_ad_xac_nhan: "Dùng cách xếp này",
+      gt2_ad_huy: "Không dùng",
+      gt2_ad_da_luu: "Đã lưu. Kết quả chính thức chưa đổi; hãy chạy xếp chính thức để áp dụng.",
       gt2_ss_co_doi: "Có {n} suất đổi câu lạc bộ giữa hai lần này.",
       gt2_ss_khong_doi: "Hai lần cho cùng kết quả: không suất nào đổi chỗ.",
       gt2_ss_tong: "Tổng quan",
       gt2_ss_chi_so: "Chỉ số",
-      gt2_ss_n: "Số suất xét",
+      gt2_ss_n: "Số {person_l} được xét",
       gt2_ss_da_xep: "Đã có chỗ",
       gt2_ss_chua_xep: "Chưa có chỗ",
       gt2_ss_pct_da_xep: "Tỉ lệ đã có chỗ (%)",
@@ -749,7 +843,7 @@
       th_tong_cho: "Chỉ tiêu",
       th_em_muon_buoi: "{person} chọn {session_l} này",
       th_ti_le_choi: "{person} trên mỗi chỗ",
-      ti_le_choi_giai_thich: "Tỉ lệ chọi tính theo số {person_l}, không theo số nguyện vọng, vì mỗi {person_l} chỉ nhận một chỗ mỗi {session_l}.",
+      ti_le_choi_giai_thich: "Số {person_l} trên mỗi chỗ tính theo số {person_l}, không tính theo số nguyện vọng, vì mỗi {person_l} chỉ nhận một chỗ mỗi {session_l}.",
       tai_buoi_qua_tai: "Quá tải",
       tai_buoi_vua_du: "Vừa đủ",
       tai_buoi_con_trong: "Còn trống",
@@ -866,7 +960,7 @@
       ws_r_ss_per_person: "Mỗi người một điểm duy nhất",
       /* Điểm chuẩn từng {slot_l} (A13.4): chỉ hiện khi bật điểm quyết tâm và đã có kết quả. */
       dc_title: "Điểm chuẩn",
-      dc_mo_ta: "Điểm thấp nhất đã được nhận ở từng {slot_l}, tách theo hai cách xét (xét điểm thi và xét điểm quyết tâm) và theo suất thường hay suất ưu tiên. Xét điểm quyết tâm tính theo điểm quyết tâm. Xét điểm thi tính theo điểm thi, kèm điểm quyết tâm của người nhận cuối. {slot_sl} còn chỗ ghi 0 điểm. Chỉ dành cho quản trị.",
+      dc_mo_ta: "Điểm thấp nhất đã được nhận ở từng {slot_l}, tách theo hai cách xét (theo điểm thi và theo điểm quyết tâm) và theo chỗ thường hay chỗ dành riêng. {slot_sl} còn chỗ trống thì ghi \"chưa cần điểm\". Chỉ dành cho quản trị.",
       dc_giai_thich: "Giải thích về điểm chuẩn",
       dc_cu: "Dữ liệu đã đổi sau lần chạy gần nhất, nên điểm chuẩn có thể đã cũ. Hãy chạy lại để cập nhật.",
       dc_chua_co_ket_qua: "Chưa có kết quả. Hãy chạy sắp xếp trước.",
@@ -876,12 +970,12 @@
       dc_cot_ten: "{slot_sl}",
       dc_cot_don: "Đơn và chỗ",
       dc_don_chu: "{don} đơn · {cho} chỗ",
-      dc_tang1: "Xét điểm thi",
-      dc_tang2: "Xét điểm quyết tâm",
-      dc_thuong: "Suất thường",
-      dc_du_tru: "Suất ưu tiên",
+      dc_tang1: "Theo điểm thi",
+      dc_tang2: "Theo điểm quyết tâm",
+      dc_thuong: "Chỗ thường",
+      dc_du_tru: "Chỗ dành riêng",
       dc_tang1_cell: "{thi} điểm thi · {qt} điểm quyết tâm",
-      dc_con_cho: "0 (còn {n} chỗ)",
+      dc_con_cho: "Chưa cần điểm (còn {n} chỗ trống)",
       dc_khong_ai: "Không có ai ở mục này",
       dc_cham_tieu_de: "Điểm quyết tâm của từng {person_l} xin vào {ten}, mỗi chấm một {person_l}",
       dc_duoc: "Được nhận",
@@ -1669,13 +1763,13 @@
       ux1a_the_chia_100_mt: "across their choices (default)",
       ux1a_the_huy_chuong_tt: "Medals",
       ux1a_the_huy_chuong_mt: "Gold · Silver · Bronze (60 · 30 · 10)",
-      ux1a_cd_tieu_de: "Settings · {ten}",
+      ux1a_cd_tieu_de: "How to rank · {ten}",
       ux1a_cd_cach_xet: "Order used when a place is oversubscribed:",
       ux1a_cd_thay_doi: "Change…",
-      mt1_cau_hoi: "When a {slot_l} has more applicants than places, what does the school put first?",
-      mt1_the_nang_luc_tt: "By ability",
+      mt1_cau_hoi: "When a {slot_l} runs out of places, who is considered first?",
+      mt1_the_nang_luc_tt: "Higher exam score",
       mt1_the_nang_luc_mt: "By test score, then commitment points (if used), then a lottery.",
-      mt1_the_co_hoi_tt: "Equal chance",
+      mt1_the_co_hoi_tt: "Lottery",
       mt1_the_co_hoi_mt: "Everyone has the same chance: a lottery, test scores are not used.",
       mt1_the_danh_cho_tt: "Seats kept for a group",
       mt1_the_danh_cho_mt: "Keep some seats in every {slot_l} for one group (e.g. grade 10, disadvantaged).",
@@ -1821,7 +1915,7 @@
       xuat_canh_bao_diem: "Exported files contain {score_pl} and lottery numbers. Do not send them to the scoring teachers.",
       btn_xuat_hs_da_chon: "Export selected {person_pl} as CSV",
       btn_bo_chon_hs: "Clear selection",
-      btn_admin_xuat_hs: "Export ticked {person_pl} as CSV",
+      btn_admin_xuat_hs: "Export the selected {person_pl} (CSV)",
       aria_chon_tat_ca_dang_hien: "Select all {person_pl} shown",
       aria_chon_tat_ca_trang: "Select all {person_pl} on this page",
       hs_da_chon_dem: "{n} {person_l}(s) selected",
@@ -1892,14 +1986,14 @@
       ql_tab_hs: "{person_p}",
       ql_tab_wh: "Commitment points",
       ql_tab_dc: "Cut-off points",
-      ql_tab_du_lieu: "Delete data",
+      ql_tab_du_lieu: "Start over",
       wh_hl_tai: "Download the list to fix",
       wh_hl_tai_xong: "Saved the list of {n} {person_pl} to fix: {path}",
-      wh_hl_phong: "Scale to 100 by ratio",
-      wh_hl_phong_hoi: "The app will change the commitment points for {person_pl} whose split is short or over, keeping the ratio of the points already placed so each fund adds up to 100. The data is backed up first and every change is logged. Type {can_go} to confirm.",
-      wh_hl_phong_xn: "Confirm scaling",
-      aria_wh_go_phong: "Type the confirmation word to scale the points",
-      wh_hl_bo_qua_tieu_de: "Couldn't scale {n} {person_pl}, they need editing by hand:",
+      wh_hl_phong: "Fill up to 100 (keep the proportions)",
+      wh_hl_phong_hoi: "The software will fix the commitment points of {person_pl} who split too little or too much, keeping the proportions, so each group adds up to 100. Data is backed up first and every change is logged. Type {can_go} to confirm.",
+      wh_hl_phong_xn: "Confirm",
+      aria_wh_go_phong: "Type the confirmation word to fill the points",
+      wh_hl_bo_qua_tieu_de: "Could not fill up {n} {person_pl}, fix by hand:",
       wh_hl_ly_do_tong_0: "no points placed in this fund",
       wh_hl_ly_do_loi_khac: "has other problems and needs editing by hand",
       wh_hl_ly_do_da_doi: "points were edited while scaling ran; the new points were kept",
@@ -1922,7 +2016,7 @@
       btn_wh_xem_nhat_ky: "View the change log",
       wh_nk_chon_em: "Open a {person_l} in the table above to see that {person_l}'s change log.",
       wh_ql_desc: "View, edit and delete the commitment points each {person_l} has split. After an allocation run the points are locked so the results can't change quietly.",
-      wh_ql_dang_khoa: "Locked since {luc}",
+      wh_ql_dang_khoa: "Locked since {luc} so the results do not change",
       wh_ql_dang_mo: "Unlocked, points can be edited",
       btn_wh_mo_khoa: "Unlock commitment points",
       wh_mo_khoa_hoi: "Unlock to edit the points. Existing results don't change by themselves, and the next allocation run locks them again. Type {can_go} to confirm.",
@@ -1934,12 +2028,12 @@
       wh_cb_vang_thi: "Missed the test",
       wh_cb_rong: "No profile needs attention.",
       wh_tim_placeholder: "Search {person_pl} by ID or name…",
-      wh_loc_quy: "Fund",
+      wh_loc_quy: "Kind of points",
       wh_loc_buoi: "{session}",
       wh_loc_clb: "{slot}",
       wh_loc_tat_ca: "All",
-      wh_quy_1: "Fund 1, tested",
-      wh_quy_2: "Fund 2, not tested",
+      wh_quy_1: "Points for {slot_pl} with a test",
+      wh_quy_2: "Points for {slot_pl} without a test",
       wh_quy_ngan: "Fund {q}",
       wh_loc_chi_loi: "Only profiles with problems",
       wh_dem_can_xu_ly: "{n} profile(s) need attention",
@@ -2001,7 +2095,101 @@
       toast_student_deleted: "Deleted {person_l} {student_id}.",
 
       admin_title: "Manage",
-      admin_desc: "Add or edit {slot_pl}, quotas and priority seats. A priority group only gets those seats in a {slot_l} with the same label.",
+
+      ux4_ql_tab_cach_xep: "How to rank",
+
+      ux4_ql_tab_them: "More ▾",
+
+      ux4_mo_clb: "Add a new {slot_l}, or change the places and {session_l} of an existing one.",
+
+      ux4_tt_clb: "{n} {slot_pl} · {cho} places · {b} {session_l}",
+
+      ux4_mo_hs: "Find {person_pl}, tick several, then give them a priority group or export the list.",
+
+      ux4_tt_hs: "{n} {person_pl}",
+
+      ux4_mo_cach_xep: "Choose who is considered first when a {slot_l} runs out of places, then try it out. The official result changes only at the next run.",
+
+      ux4_tt_cach_xep: "In use: {cach}",
+
+      ux4_mo_lam_lai: "Use this to begin a new round. Each button backs up first.",
+
+      ux4_tt_lam_lai: "There are {hs} {person_pl} and {clb} {slot_pl}.",
+
+      ux4_tuy_chinh_them: "Fine-tune",
+
+      ux4_so_sanh_khac: "Compare with another run",
+
+      ux4_de_xuat: "Suggested",
+
+      ux4_giai_thich: "Explain",
+
+      ux4_dc_trong: "No one yet",
+
+      ux4_wh_loai_1: "With a test",
+
+      ux4_wh_loai_2: "No test",
+
+      ux4_tc_tt_priority: "When a {slot_l} runs out of places, who is considered first?",
+
+      ux4_tc_tt_tier_mode: "How is the priority group treated?",
+
+      ux4_tc_tt_score_scope: "How are exam scores counted?",
+
+      ux4_tc_tt_tiers: "Priority groups (the first is considered first)",
+
+      ux4_tc_priority_score: "Higher exam score",
+
+      ux4_tc_priority_tier: "{person_pl} in a priority group",
+
+      ux4_tc_priority_score_tier: "Both",
+
+      ux4_tc_tier_mode_reserve: "Keep some places for the group",
+
+      ux4_tc_tier_mode_strict: "The group is always considered first",
+
+      ux4_tc_score_scope_per_slot: "A separate test for each {slot_l}",
+
+      ux4_tc_score_scope_per_person: "One shared score for all {slot_pl}",
+
+      ux4_tc_chu_du_tru: "Priority group: some places kept",
+
+      ux4_tc_kd_tiers: "The group list is not used: the groups only keep places, so they do not rank before the score.",
+
+      ux4_tc_kd_priority: "Score and group is selected but the groups only keep places: same as exam score only.",
+
+      ux4_so_cho: "Places",
+
+      ux4_buoi_chung: "One shared {session_l}",
+
+      ux4_buoi_them_moi: "Add a new {session_l}…",
+
+      ux4_buoi_ten_moi: "Name of the new {session_l}",
+
+      ux4_buoi_ten_moi_vd: "e.g. Tuesday",
+
+      ux4_them_tuy_chon: "More options",
+
+      ux4_ma_clb: "{slot} ID (filled in from the name, can be edited)",
+
+      ux4_ma_clb_vd: "Filled in from the name",
+
+      ux4_cho_rieng: "Places kept for the priority group",
+
+      ux4_cho_rieng_ngan: "0",
+
+      ux4_cho_rieng_cot: "Kept places",
+
+      ux4_nhom_duoc_cho: "Group the places are kept for (leave blank if none)",
+
+      ux4_nhom_duoc_cho_ngan: "Leave blank if none",
+
+      ux4_cot_buoi: "Meets on ({session_l})",
+
+      ux4_da_chon: "{n} {person_pl} selected",
+
+      ux4_gan_nhom_ph: "Which group? (e.g. grade 10)",
+      admin_desc: "Edit the list of {slot_pl} and {person_pl}, choose how places are given out, or start over. Pick a section below.",
       admin_club_form_title: "Add or edit {slot_la}",
       placeholder_club_id: "{slot} ID (e.g. club_01)",
       placeholder_club_name: "{slot} name",
@@ -2015,11 +2203,11 @@
       th_reserve_capacity: "Priority seats",
       th_reserve_group: "Priority group",
       admin_club_empty: "No {slot_pl} yet. Add the first one with the form above.",
-      admin_reserve_assign_title: "Priority groups and {person_l} profile export",
+      admin_reserve_assign_title: "{person_p} and priority groups",
       placeholder_admin_student_search: "Search {person_pl} by ID or name…",
       placeholder_reserve_group_apply: "Priority group to apply",
-      btn_bulk_assign: "Assign to ticked {person_pl}",
-      th_current_reserve_group: "Current priority group",
+      btn_bulk_assign: "Give the selected {person_pl} a priority group",
+      th_current_reserve_group: "Priority group",
       admin_student_empty: "No {person_pl} yet. Add them on the \"Enter preferences\" tab or import a Microsoft Forms file.",
       btn_prev_page: "‹ Prev",
       btn_next_page: "Next ›",
@@ -2029,7 +2217,7 @@
       toast_club_deleted: "Deleted {slot_l} {club_id}.",
       toast_club_deleted_removed: "Deleted {slot_l} {club_id}, with {n_scores} saved score(s) and {n_tests} test tick(s). Backup: {backup_name}.",
 
-      danger_zone_title: "Danger zone: delete data to start over",
+      danger_zone_title: "Start over",
       danger_zone_desc: "Importing a file only adds {person_pl}. It doesn't remove existing ones. To start over with a different set, delete here first, or the old {person_pl} will keep taking seats.",
       danger_zone_safety: "Both buttons back up the data before deleting. The allocation history is kept.",
       btn_reset_students: "Delete all {person_pl} (keep {slot_pl})",
@@ -2119,7 +2307,7 @@
       recovery_kg_da_duoc: "The folder is writable now. Close the program and open it again.",
 
       /* --- Multiple sessions per week --- */
-      buoi_chua_chia: "No {session_l} set",
+      buoi_chua_chia: "One shared {session_l}",
       buoi_ma_thu_2: "Mon",
       buoi_ma_thu_3: "Tue",
       buoi_ma_thu_4: "Wed",
@@ -2129,52 +2317,52 @@
       buoi_ma_chu_nhat: "Sun",
       th_buoi: "{session}",
       placeholder_buoi: "{session} (e.g. thu_3)",
-      buoi_hint_form: "Two {slot_pl} in the same {session_l} clash, so {person_la} can join only one. Leave it blank if the school has a single {session_l}.",
+      buoi_hint_form: "Two {slot_pl} in the same {session_l} clash, so {person_la} can join only one. Choose \"One shared {session_l}\" if the school has only one {session_l}.",
       /* GT2 — Allocation criteria panel (js/15_tieu_chi.js) */
-      gt2_tc_tieu_de: "Allocation criteria",
-      gt2_tc_mo_ta: "The order below is how the software ranks people who apply for the same place. Only the options provided can be chosen.",
+      gt2_tc_tieu_de: "Detailed settings",
+      gt2_tc_mo_ta: "The list below is the order the software uses when several {person_pl} want the same place. Only the options provided can be chosen.",
       gt2_tc_nhom_goi_y: "One group per line, the first group has the highest priority",
-      gt2_tc_luu: "Save criteria",
-      gt2_tc_da_luu: "Criteria saved. They apply from the next official allocation.",
+      gt2_tc_luu: "Save changes",
+      gt2_tc_da_luu: "Saved. Applies from the next official run.",
       gt2_tc_khong_dung: "Not in use:",
       gt2_tc_wharton_tat: "The commitment score is switched off because the chosen ranking cannot use it.",
       gt2_tc_wharton_tat_fa: "The commitment score is switched off because the chosen ranking cannot use it. Medal mode is on and needs that score, so saving will be refused; pick a score-based ranking again.",
-      gt2_thu_tieu_de: "Trial settings",
-      gt2_thu_mo_ta: "A trial uses exactly the options shown in the Allocation criteria box above. Trial results are not published and do not replace the official results.",
-      gt2_thu_chay: "Run a trial",
+      gt2_thu_tieu_de: "Try another way to rank",
+      gt2_thu_mo_ta: "Try the allocation again with the choices shown above. A trial is not published and does not replace the official result.",
+      gt2_thu_chay: "Try this way",
       gt2_thu_da_chay: "Trial finished. The official results are unchanged.",
-      gt2_thu_chua_co: "There is no run to compare yet. Run the official allocation, then run a trial.",
+      gt2_thu_chua_co: "There is nothing to compare yet. Run the official allocation first, then press \"Try this way\".",
       gt2_thu_lan_a: "First run",
       gt2_thu_lan_b: "Second run",
       gt2_thu_lan_thu: "Trial {id}",
-      gt2_thu_lan_chinh_thuc: "Official {id}",
+      gt2_thu_lan_chinh_thuc: "Official run {id}",
       gt2_thu_so_sanh: "Compare",
       gt2_thu_xuat_html: "Export comparison page",
       gt2_thu_xuat_csv: "Export changed places (CSV)",
       gt2_thu_da_xuat: "Saved: {path}",
-      gt2_ad_tieu_de: "Use the criteria of a trial",
-      gt2_ad_nut: "Use these criteria for the official run",
-      gt2_tc_thu_tu: "Current order",
-      gt2_tc_chon: "Choose how to rank",
-      gt2_thu_buoc_aria: "Steps for trying a setup",
+      gt2_ad_tieu_de: "Use the way of ranking from a trial",
+      gt2_ad_nut: "Use this way for the official run",
+      gt2_tc_thu_tu: "Order in use",
+      gt2_tc_chon: "Change how to rank",
+      gt2_thu_buoc_aria: "Steps for trying another way to rank",
       gt2_thu_buoc_1: "Run a trial",
       gt2_thu_buoc_2: "Pick two runs to compare",
       gt2_thu_buoc_3: "Compare, export",
-      gt2_ad_ghi_chu: "The button below only saves the criteria of the trial into the settings. The official result changes only when an administrator runs the official allocation next.",
-      gt2_canh_khong_nhom: "No priority groups are listed, so this is effectively just a lottery. Enter the groups in the Allocation criteria box, or choose another way to rank.",
-      gt2_canh_nhom_rong: "Group before score is selected but the group list is empty, so this choice has no effect yet.",
+      gt2_ad_ghi_chu: "The button below only saves the trial's way of ranking. The official result changes only at the next official run.",
+      gt2_canh_khong_nhom: "There are no groups yet, so this is really just a lottery. Enter the groups under \"Fine-tune\", or choose another way.",
+      gt2_canh_nhom_rong: "\"The group is always considered first\" is chosen but there are no groups yet, so it has no effect.",
       gt2_ss_hien_ds: "Show the list ({n})",
       gt2_ss_an_ds: "Hide the list ({n})",
       gt2_ss_buoi_mac_dinh: "Default",
-      gt2_ad_hoi: "Save the criteria of trial {id} as the criteria in use? The order will be:",
-      gt2_ad_xac_nhan: "Save these criteria",
-      gt2_ad_huy: "Do not save",
-      gt2_ad_da_luu: "Criteria saved. The official results have not changed. Run the official allocation to apply them.",
+      gt2_ad_hoi: "Use the way from trial {id} from now on? The order will be:",
+      gt2_ad_xac_nhan: "Use this way",
+      gt2_ad_huy: "Don't use",
+      gt2_ad_da_luu: "Saved. The official result is unchanged; run the official allocation to apply it.",
       gt2_ss_co_doi: "{n} places changed club between these two runs.",
       gt2_ss_khong_doi: "The two runs give the same result: no place changed.",
       gt2_ss_tong: "Overview",
       gt2_ss_chi_so: "Measure",
-      gt2_ss_n: "Places considered",
+      gt2_ss_n: "{person_pl} considered",
       gt2_ss_da_xep: "Placed",
       gt2_ss_chua_xep: "Not placed",
       gt2_ss_pct_da_xep: "Placed (%)",
@@ -2204,7 +2392,7 @@
       th_tong_cho: "Quota",
       th_em_muon_buoi: "{person_p} wanting it",
       th_ti_le_choi: "{person_p} per place",
-      ti_le_choi_giai_thich: "Applicants per seat counts {person_pl}, not preferences, because each {person_l} gets at most one seat per {session_l}.",
+      ti_le_choi_giai_thich: "Applicants per place counts {person_pl}, not preferences, because each {person_l} gets at most one place per {session_l}.",
       tai_buoi_qua_tai: "Oversubscribed",
       tai_buoi_vua_du: "About right",
       tai_buoi_con_trong: "Room to spare",
@@ -2321,7 +2509,7 @@
       ws_r_ss_per_person: "One score per person",
       /* Cut-off points per {slot_l} (A13.4): only when commitment points are on and results exist. */
       dc_title: "Cut-off points",
-      dc_mo_ta: "The lowest points accepted at each {slot_l}, split by method (exam-based and commitment points) and by regular or priority places. Commitment points uses commitment points. Exam-based uses the test {score_l}, with the commitment points of the last person accepted. A {slot_l} with free places shows 0. For administrators only.",
+      dc_mo_ta: "The lowest points accepted in each {slot_l}, split by the two ways of judging (by test score and by commitment points) and by normal or kept places. A {slot_l} with free places shows \"no points needed\". Admins only.",
       dc_giai_thich: "About cut-off points",
       dc_cu: "The data changed after the latest run, so the cut-off points may be out of date. Run again to refresh them.",
       dc_chua_co_ket_qua: "No results yet. Run the allocation first.",
@@ -2331,12 +2519,12 @@
       dc_cot_ten: "{slot}",
       dc_cot_don: "Applications and places",
       dc_don_chu: "{don} applications · {cho} places",
-      dc_tang1: "Exam-based",
-      dc_tang2: "Commitment points",
-      dc_thuong: "Regular places",
-      dc_du_tru: "Priority places",
+      dc_tang1: "By test score",
+      dc_tang2: "By commitment points",
+      dc_thuong: "Normal places",
+      dc_du_tru: "Kept places",
       dc_tang1_cell: "{thi} test points · {qt} commitment points",
-      dc_con_cho: "0 ({n} places left)",
+      dc_con_cho: "No points needed ({n} places free)",
       dc_khong_ai: "Nobody in this group",
       dc_cham_tieu_de: "Commitment points of each {person_l} who applied to {ten}, one dot per {person_l}",
       dc_duoc: "Accepted",

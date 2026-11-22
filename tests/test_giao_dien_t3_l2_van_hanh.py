@@ -11,6 +11,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 import browser_host  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from _wharton import bat_wharton, dung_clb, dung_hs, tat_wharton  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -259,7 +260,7 @@ def test_diem_quyet_tam_mac_dinh_chi_hien_ho_so_co_van_de_co_dem_va_xem_tat_ca(a
     assert api.submit_wharton("HS1", {}, {"A": 50, "B": 50})["ok"]   # HS1 hợp lệ; HS2 thi A mà chưa chia điểm
     page, loi = mo()
     _mo_tab(page, "admin")
-    page.locator('#qlTabWh').click()
+    tab_ql(page, "wh")
     page.wait_for_selector("#whQlBody tr")
     assert page.is_checked("#whLocChiLoi")
     assert page.locator("#whQlBody tr").evaluate_all("rs => rs.map(r => r.dataset.studentId)") == ["HS2"]

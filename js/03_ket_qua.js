@@ -23,7 +23,7 @@ const UX2_RONG_KET_QUA = {
 const UX2_RONG_CLB = {
   chu: "clb_empty", huongDan: "ux2_rong_huong_clb",
   gv: { huongDan: "ux2_rong_huong_clb_gv" },
-  nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" },
+  nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormName" },
 };
 
 function loadResultsTab() {

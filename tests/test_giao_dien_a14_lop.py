@@ -161,6 +161,7 @@ def test_quan_ly_loc_sap_va_sua_lop(mo):
     page, api, loi = mo({"HS1": "10A10", "HS2": "10A2"})
     _sang_quan_ly_hs(page)
     assert [h[0] for h in _hang_quan_ly(page)] == ["HS1", "HS2", "HS3"]
+    page.click("#adminHsThemTuyChon")   # UX4-L3: Sắp xếp nằm trong "Thêm tuỳ chọn"
     page.select_option("#adminSapXep", "class_id")
     page.wait_for_function("() => document.querySelector('#adminStudentTableBody tr td:nth-child(2)').textContent === 'HS2'")
     assert [h[0] for h in _hang_quan_ly(page)] == ["HS2", "HS1", "HS3"]      # tự nhiên, trống cuối
