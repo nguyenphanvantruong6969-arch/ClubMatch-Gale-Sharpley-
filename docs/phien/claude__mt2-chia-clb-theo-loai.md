@@ -71,14 +71,14 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 pending | L2 pending | L3 pending | L4 pending (optional)
+- L1 GO sent | L2 pending | L3 pending | L4 pending (optional)
 
 ## Sessions
 | Role | Session id | Model | Notes |
 |---|---|---|---|
 | LEAD | session_01YVAyu3BTRoD9jYgVDEJ86g | Sonnet | this branch file only |
-| CODER | (pending) | Sonnet | |
-| CHECKER | (pending) | Sonnet | |
+| CODER | session_01YVAytzKYmkQsmVJ6CvbkXT | Sonnet | |
+| CHECKER | session_01YVAyu1qB1UHaWqW9cvwFqw | Sonnet | |
 
 ## Needs Truong
 - (none yet; lead appends one line each)
