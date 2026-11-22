@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-L1: khoá luật `chia_loai` ("Chia CLB theo loại") — cấu hình + công tắc
+
+- `rules.chia_loai` (bool, mặc định False) trong `LUAT_XEP_MAC_DINH` và `MAC_DINH_TRUONG_HOC`; kiểm bool trong `cau_hinh_ws._chuan_hoa`. Hiệu lực = `dung_chia_loai(rules)` = `chia_loai` HOẶC `fa_daa` (workspace Huy chương cũ chạy y nguyên). Không cần `wharton`.
+- `_luat_de_ghi_hoac_bam` bỏ khoá khi False: chuỗi `run_history.luat_xep` và dấu vân tay của workspace cũ (kể cả `fa_daa`) giữ từng byte. Phần `fa_clb` của dấu vân tay nay theo `dung_chia_loai` (với `fa_daa` bật thì như cũ).
+- `get_chia_loai` (api_quan_ly.py, quản trị) trả `{chia_loai, fa_daa, hieu_luc}` cho giao diện; `tieu_chi.py` / `api_tieu_chi.py` biết khoá mới. Thuật toán chưa đổi (L2).
+- Test mới: `tests/test_mt2_l1_cau_hinh.py` (18 ca). `kiem_nhanh.py` 7/7.
+
 ## 2026-11-22 — UX3-L3: nhóm menu "Nhập tay" → "Nhập thủ công"
 
 - `ux1a_nhom_nhap_tay` (vi) và chữ dự phòng trong index.html; bảng nhóm trong HUONG_DAN_SU_DUNG.md. Tiếng Anh giữ "Manual entry". Áp cho cả vai giáo viên và quản trị (cùng một nhãn).

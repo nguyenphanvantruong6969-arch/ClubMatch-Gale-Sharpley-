@@ -27,12 +27,14 @@ from rbda_priority_pipeline import (
     WHARTON_TU_DIEN_MOT_CLB,
     diem_wharton_hieu_luc,
     doc_du_lieu_wharton,
+    dung_chia_loai,
     dung_fa_daa,
     dung_wharton,
     khoa_uu_tien_wharton,
     kiem_ho_so_wharton,
     load_wharton_kem_doc_them,
     loi_suc_chua,
+    luat_xep_cua,
     sap_buoi,
     tu_dien_wharton_mot_clb,
 )
@@ -221,6 +223,15 @@ class QuanLyMixin:
                         "thieu_diem_san": thieu_diem,
                         "huy_chuong_sai": len(hs_sai), "huy_chuong_sai_vd": str(hs_sai[0]) if hs_sai else "",
                         "san_sang": bool(clubs) and not (thieu_loai or thieu_buoi or thieu_diem or hs_sai)})
+        except Exception as e:
+            return _fail(err("error_reading_club_list", detail=str(e)))
+
+    def get_chia_loai(self):
+        """MT2: công tắc "Chia CLB theo loại" (chỉ ĐỌC): `chia_loai` đã lưu, `fa_daa`, và `hieu_luc` (bật HOẶC fa_daa)."""
+        try:
+            luat = self._luat_nghiem()
+            return _ok({"chia_loai": luat_xep_cua(luat)["chia_loai"], "fa_daa": dung_fa_daa(luat),
+                        "hieu_luc": dung_chia_loai(luat)})
         except Exception as e:
             return _fail(err("error_reading_club_list", detail=str(e)))
 

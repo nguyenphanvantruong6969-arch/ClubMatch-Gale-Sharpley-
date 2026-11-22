@@ -243,3 +243,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX3 (thanh bên: số nhóm theo nhóm hiện + khối tài khoản) | xong, chờ CI | 2026-11-22 | index.html, i18n.js, js/01_khung.js, js/16_tai_khoan.js, style.css | tests/test_giao_dien_ux3_thanh_ben.py | chờ Truong thử tay |
 | UX3-L2 (xoá dữ liệu: phân trang + phiếu tra cứu cũ) | xong, chờ CI | 2026-11-22 | style.css, js/05_quan_ly.js, js/14_giai_trinh.js | tests/test_giao_dien_ux3_xoa_du_lieu.py | chờ Truong thử tay |
 | UX3-L3 ("Nhập tay" → "Nhập thủ công") | xong, chờ CI | 2026-11-22 | i18n.js, index.html, HUONG_DAN_SU_DUNG.md | tests/test_giao_dien_ux3_thanh_ben.py | — |
+| MT2-L1 (khoá `chia_loai` + công tắc + `get_chia_loai`) | xong, chờ checker | 2026-11-22 | rbda_priority_pipeline.py, cau_hinh_ws.py, api_quan_ly.py, tieu_chi.py, api_tieu_chi.py, phan_quyen.py, CHANGELOG.md | tests/test_mt2_l1_cau_hinh.py | kiem_nhanh 7/7; thuật toán chưa đổi |

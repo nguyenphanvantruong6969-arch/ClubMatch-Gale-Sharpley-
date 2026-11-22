@@ -49,7 +49,7 @@ list_wharton_admin list_wharton_canh_bao list_workspaces luu_diem_danh mo_tep mo
 preview_import_csv search_students submit_club_scores submit_huy_chuong submit_person_scores
 submit_preferences submit_test_selection tai_mau_de_thi tao_so_nhap_mau xem_truoc_so_nhap xlsx_to_csv_text
 xuat_ket_qua_list
-get_san_sang_huy_chuong
+get_san_sang_huy_chuong get_chia_loai
 get_giai_trinh_hoc_sinh export_phieu_giai_trinh
 export_bao_cao_tong_hop export_phieu_giai_trinh_pdf export_bao_cao_tong_hop_pdf
 """.split()  # I1: GT1 tra cứu / phiếu

@@ -383,7 +383,7 @@ class TieuChiMixin:
         đã lưu, để không xoá danh sách nhóm đã nhập; priority đã lưu giữ nguyên nếu vẫn cho cùng kết quả."""
         moi = {k: (list(v) if k == "tiers" else v) for k, v in da_luu.items()}
         co_dinh = thu["priority"] == "tier"
-        for k in ("priority", "wharton", "fa_daa"):
+        for k in ("priority", "wharton", "fa_daa", "chia_loai"):
             moi[k] = thu[k]
         if not co_dinh:
             moi["tier_mode"], moi["score_scope"] = thu["tier_mode"], thu["score_scope"]
