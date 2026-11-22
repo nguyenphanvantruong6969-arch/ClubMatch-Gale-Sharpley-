@@ -613,6 +613,11 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                 # --- Điểm Wharton (A13): chỉ khi workspace bật; đặt SAU các mục sẵn có ------
                 # Cùng hai hàm mà lần chạy xếp dùng, trên dữ liệu đang lưu: hồ sơ sai sẽ CHẶN
                 # lần chạy nên là "high"; vắng thi chỉ làm em bị xét như không thi: "medium".
+                if dung_chia_loai(luat) and not bat_fa:
+                    # MT2: "Chia CLB theo loại" không kèm huy chương: cùng `kiem_loai_tu_csdl` với lần chạy xếp (mỗi buổi
+                    # một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn/điểm thi). Lỗi chặn "high", cảnh báo "medium".
+                    for e in fa_daa.kiem_loai_tu_csdl(cur):
+                        warn("medium" if e["code"] in fa_daa.MA_CANH_BAO else "high", e["code"], **e["params"])
                 if bat_fa:
                     # FA-DAA: cùng hàm kiểm mà lần chạy xếp dùng. Lỗi chặn là "high", cảnh báo
                     # (giữ chỗ không dùng được) là "medium".

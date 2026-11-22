@@ -977,6 +977,15 @@
       </div>
 
       <div role="tabpanel" id="qlPanelClb" data-ql-tab="clb" aria-labelledby="qlTabClb">
+      <!-- MT2: công tắc "Chia CLB theo loại" (js/18_cai_dat.js, mt2VeChiaLoai). Tắt = bỏ qua loại, không xoá. -->
+      <div class="panel" id="mt2ChiaLoai" data-quyen="quan_tri" hidden>
+        <label class="mt2-cong-tac">
+          <input type="checkbox" id="mt2CongTac" role="switch">
+          <span class="mt2-cong-tac-ten" data-i18n="mt2_cong_tac">Chia CLB theo loại</span>
+        </label>
+        <p class="hint-text" id="mt2GhiChu" data-i18n="mt2_ghi_chu"></p>
+        <div class="ux1a-san-sang" id="mt2Bang" hidden></div>
+      </div>
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="admin_club_form_title">Thêm hoặc sửa CLB</h2></div>
         <div class="admin-form-grid" id="clubForm">

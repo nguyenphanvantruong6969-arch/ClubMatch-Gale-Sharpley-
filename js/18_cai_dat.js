@@ -79,14 +79,18 @@ function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
 
 /* ---- Sửa tại chỗ: Huy chương cần dữ liệu CLB sẵn sàng ------------------------------------ */
 
-function ux1aVeSanSang(hop, d, taiLai, quayLai) {
+function ux1aVeSanSang(hop, d, taiLai, quayLai, tuyChon) {
+  /* MT2: `tuyChon.giuBang` = vẽ bảng đặt loại cả khi đã sẵn sàng (công tắc "Chia CLB theo loại" cần sửa loại bất cứ lúc nào);
+     `tuyChon.khoaConThieu` = câu đầu khi còn thiếu (không nhắc Huy chương). Không truyền: đúng như cũ. */
+  tuyChon = tuyChon || {};
   hop.textContent = "";
   hop.hidden = false;
   if (d.san_sang) {
     hop.append(ux1aEl("p", { class: "ux1a-san-sang-xong", id: "ux1aSanSangXong", text: t("ux1a_ss_san_sang") }));
-    return;
+    if (!tuyChon.giuBang) return;
+  } else {
+    hop.append(ux1aEl("p", { class: "ux1a-ss-dau", text: t(tuyChon.khoaConThieu || "ux1a_ss_con_thieu") }));
   }
-  hop.append(ux1aEl("p", { class: "ux1a-ss-dau", text: t("ux1a_ss_con_thieu") }));
   /* Dữ liệu huy chương đã nạp không phải huy chương (vd. điểm quyết tâm của sổ cũ) hoặc đặt ở CLB Tự do: nói MỘT dòng,
      không tự đổi dữ liệu; cách sửa là nạp lại sổ có cột Huy chương. UX1B-L5c: kèm hai nút làm việc đó (tải sổ mẫu,
      quay lại Chia 100 điểm) và ẩn các nút loại CLB cho tới khi dữ liệu học sinh hợp lệ (đặt loại xong vẫn không chạy được). */
@@ -188,6 +192,49 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai) {
   });
   bang.append(than);
   hop.append(bang);
+}
+
+/* MT2: công tắc "Chia CLB theo loại" ở thẻ Quản lý › Câu lạc bộ. Lưu qua update_workspace_config (chỉ khoá chia_loai);
+   bảng đặt loại dùng lại ux1aVeSanSang + dat_loai_clb. Tắt: ẩn bảng, loại đã đặt vẫn nằm trong CSDL. */
+let mt2DangLuu = false;
+
+function mt2VeChiaLoai() {
+  const khung = el("mt2ChiaLoai"), cb = el("mt2CongTac"), bang = el("mt2Bang");
+  if (!khung || !cb) return Promise.resolve();
+  return callApi("get_chia_loai").then((r) => {
+    if (!r.ok) { khung.hidden = true; return; }
+    khung.hidden = false;
+    const d = r.data;
+    cb.checked = d.hieu_luc === true;
+    cb.disabled = d.fa_daa === true || mt2DangLuu;
+    el("mt2GhiChu").textContent = t(d.fa_daa ? "mt2_do_huy_chuong" : "mt2_ghi_chu");
+    /* Huy chương: bảng đặt loại đã nằm ở Cài đặt (#ux1aSanSang) — không vẽ hai bảng trùng id. */
+    if (!d.hieu_luc || d.fa_daa) { bang.hidden = true; bang.textContent = ""; return; }
+    return callApi("get_san_sang_loai").then((s) => {
+      if (!s.ok) { bang.hidden = true; return; }
+      ux1aVeSanSang(bang, s.data, mt2VeChiaLoai, null, { giuBang: true, khoaConThieu: "mt2_con_thieu" });
+    });
+  });
+}
+
+function mt2KhoiTaoChiaLoai() {
+  const cb = el("mt2CongTac");
+  if (!cb || cb.dataset.daNoi) return;
+  cb.dataset.daNoi = "1";
+  cb.addEventListener("change", () => {
+    if (mt2DangLuu) return;
+    mt2DangLuu = true;
+    cb.disabled = true;      /* chặn bấm đúp */
+    callApi("update_workspace_config", { rules: { chia_loai: cb.checked } }).then((r) => {
+      if (!r.ok) showErrorToast(r.errors);
+      mt2DangLuu = false;
+      /* Vẽ lại từ cấu hình ĐÃ LƯU (lỗi thì công tắc trở về trạng thái thật), rồi cập nhật bảng CLB và thanh việc tiếp theo. */
+      mt2VeChiaLoai();
+      if (typeof loadAdminClubs === "function") loadAdminClubs();
+      if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo();
+      if (typeof loadHealthReport === "function") loadHealthReport();
+    });
+  });
 }
 
 function ux1aKiemSanSang(the, quayLai) {

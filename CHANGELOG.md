@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-L3: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ
+
+- Giao diện: khối `#mt2ChiaLoai` (index.html) đầu thẻ con "Câu lạc bộ": MỘT công tắc `#mt2CongTac` (mặc định TẮT), bật thì hiện bảng đặt loại `#mt2Bang` (dùng lại `ux1aVeSanSang`, thêm tuỳ chọn `giuBang` / `khoaConThieu`; lưu vẫn qua `dat_loai_clb`), tắt thì ẩn (loại vẫn nằm trong `clubs.loai`). Lưu `rules.chia_loai` qua `update_workspace_config` (chỉ quản trị); bấm đúp bị chặn; lỗi backend đưa công tắc về trạng thái thật. Chế độ Huy chương: công tắc khoá ở BẬT, bảng chỉ vẽ ở Cài đặt (không trùng id). Chữ mới `mt2_*` (vi + en, i18n.js); ghi chú nói rõ CLB Giới hạn bỏ qua điểm thi (phán quyết checker L2).
+- Backend: `get_san_sang_loai` (đọc, không xét huy chương, dùng `fa_daa.kiem_loai_tu_csdl`); `get_data_health_report` chạy `kiem_loai_tu_csdl` khi chia loại bật mà không Huy chương (lỗi chặn "high" nên thanh "Việc tiếp theo" chỉ vào cảnh báo; cảnh báo "medium"); `list_clubs_admin` gửi cột loại khi `dung_chia_loai`.
+- Test mới: `tests/test_mt2_l3_backend.py` (7 ca, gồm F4: cảnh báo không chặn hiện ở sức khoẻ và ở bước validate; bật→tắt→bật giữ `loai`; giáo viên bị chặn), `tests/test_giao_dien_mt2.py` (6 ca Chromium: mặc định tắt/ngân sách điều khiển, XSS tên CLB, lưu + cột Loại, bấm đúp, lỗi backend, Huy chương khoá). `kiem_nhanh` 7/7; trùng khít 60 ca.
+
 ## 2026-11-22 — MT2-L2: "Chia CLB theo loại" chạy trong pipeline, không cần huy chương
 
 - `api.py` (`run_pipeline`): khi `dung_chia_loai` bật mà `fa_daa` tắt → kiểm loại CLB bằng `fa_daa.kiem_loai_tu_csdl` (mỗi buổi một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn; lỗi chặn trước khi bốc/khoá/ghi), rồi chạy `fa_daa.chay_fa_daa` với `diem_wharton` hiệu lực: rỗng (chỉ xếp: điểm thi rồi bốc thăm) hoặc điểm quyết tâm hai quỹ (`chia_100`). Hai chốt `sanity_check_result` / `verify_stability` vẫn chạy trên đầu vào đã chuẩn bị; một giao dịch như cũ. `fa_daa` bật: đường cũ, không đổi.

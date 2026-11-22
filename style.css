@@ -3365,3 +3365,7 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   /* "Hiệu ứng" tắt: html.tat-hieu-ung *::before/::after không phủ ::details-content, nên tắt riêng ở đây. */
   html.tat-hieu-ung ::details-content { animation: none !important; transition: none !important; }
 }
+
+/* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
+.mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.mt2-cong-tac-ten { font-weight: 600; }
