@@ -33,9 +33,23 @@ Budgets (checked by a test that counts VISIBLE, enabled controls: buttons, selec
   priority group is used). Actions on selected rows appear only after a row is selected.
 - Never remove a capability: everything hidden stays reachable in ≤ 2 clicks and keeps its element id.
 
+## Design rule: Von Restorff / isolation effect (Truong, 2026-11-22)
+The one thing that looks different is the thing users notice and remember, so difference is RESERVED for what
+matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks the one to take.
+- **One gold (`.btn-primary`) per visible panel** = the next step (e.g. "Lưu CLB", "Thử cách xếp này"). All other
+  buttons `.btn-secondary`/link style. Today one screen shows 4 gold buttons ("Xem cảnh báo", "Lưu CLB",
+  "Lưu tiêu chí", "Chạy thử"): none stands out.
+- The global banner action is an ALERT style (outlined, warning colour), not gold, so it never competes.
+- **Red (`.btn-danger`) only inside "Làm lại từ đầu"**, isolated, with the two-step confirm kept.
+- The default/recommended card carries one small badge "Đề xuất"; the selected card has a clearly different border
+  + check mark (not colour alone, WCAG 1.4.1).
+- After a save/run, the changed row/status line is highlighted briefly (respect `prefers-reduced-motion` and
+  `html.tat-hieu-ung`); meaning also in text.
+- Never use accent colour for decoration (headings, icons, counts).
+
 ## Plan (written by Opus; ticked by Sonnet)
 - [ ] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
-      string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel: controls visible
+      string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel (incl. which ONE control is gold): controls visible
       now (count) → visible after redesign (count) → where each hidden one goes. Keep sector placeholders
       (`{person_l}` etc.). **MILESTONE 1: Truong approves words + choice map before any code.**
 - [ ] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
@@ -75,6 +89,8 @@ Budgets (checked by a test that counts VISIBLE, enabled controls: buttons, selec
 
 ## Acceptance (both milestones)
 - Truong opens the tab cold and can say what each sub-tab is for (5-second test) — his verdict decides.
+- Playwright "Von Restorff" test per sub-tab: ≤ 1 visible `.btn-primary` inside `#view-admin` panels; `.btn-danger`
+  only inside the "Làm lại từ đầu" panel; banner button is not `.btn-primary`.
 - Playwright "Hick budget" test per sub-tab: visible enabled controls within the budgets above; sub-tab strip ≤ 4.
 - Saving a card in "Cách xếp" sends exactly the same `priority/tier_mode/score_scope` values the old selects sent
   for the same choice (test compares payloads), so stored config and results are unchanged.
@@ -99,3 +115,4 @@ Budgets (checked by a test that counts VISIBLE, enabled controls: buttons, selec
 |---|---|---|---|
 | 2026-11-22 | Opus | Audit of Quản lý tab, plan + protocol | UX3-L3 rename "Nhập thủ công" shipped separately |
 | 2026-11-22 | Opus | Plan revised for Hick's law (budgets, 3 tabs + Thêm, one-question rules panel) | replaces "6 sub-tabs" idea |
+| 2026-11-22 | Opus | Added Von Restorff rule (one gold per panel, red isolated, badge on default) | |
