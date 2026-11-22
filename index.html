@@ -90,7 +90,7 @@
     <!-- UX1A: thanh "Việc tiếp theo" (js/17_viec_tiep_theo.js) -->
     <div class="viec-tiep-theo" id="viecTiepTheo" data-quyen="quan_tri" hidden>
       <span class="viec-tiep-theo-cau" id="viecTiepTheoCau" role="status" aria-live="polite"></span>
-      <button class="btn btn-primary" type="button" id="viecTiepTheoNut"></button>
+      <button class="btn btn-canh-bao" type="button" id="viecTiepTheoNut"></button>
       <button class="btn btn-secondary" type="button" id="viecTiepTheoNut2" data-i18n="ux1a_nut_xuat" hidden>Xuất kết quả</button>
     </div>
 
@@ -940,43 +940,29 @@
         <p class="view-desc" data-i18n="admin_desc">Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.</p>
       </header>
 
-      <!-- UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay (js/18_cai_dat.js); chỉ có nghĩa khi có workspace -->
-      <div class="panel" id="ux1aCaiDat" data-quyen="quan_tri" hidden>
-        <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
-        <div class="panel-body" id="ux1aCaiDatThan"></div>
-      </div>
 
-      <!-- GAP-8 (V§11): bảng điều khiển quản trị, chỉ đọc; chỉ hiện khi FA-DAA bật (js/10_theo_doi.js taiDashboard). -->
-      <div class="panel" id="dashboardPanel" hidden>
-        <div class="panel-head">
-          <div class="panel-head-trai">
-            <h2 data-i18n="db_tieu_de">Bảng điều khiển</h2>
-          </div>
-          <div class="panel-actions">
-            <button class="btn btn-secondary" id="btnXuatDashboard" type="button" data-i18n="btn_xuat_dashboard">Xuất bảng điều khiển (Excel)</button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <table class="data-table" id="dbBang">
-            <thead><tr><th data-i18n="db_cot_chi_so">Chỉ số</th><th data-i18n="db_cot_gia_tri">Giá trị</th>
-              <th data-i18n="db_cot_muc_tieu">Mục tiêu</th><th data-i18n="db_cot_dat">Đạt</th></tr></thead>
-            <tbody id="dbBangBody"></tbody>
-          </table>
-          <div id="dbFeedback" class="save-feedback" role="status"></div>
-        </div>
-      </div>
 
       <!-- Tab con của thẻ Quản lý (A13.5). Hai tab điểm (wh, dc) chỉ hiện khi bật điểm quyết tâm:
            js/05_quan_ly.js (capNhatTabConQl) bỏ thuộc tính hidden khi khối tương ứng hiện. -->
       <div class="ql-tabs" id="qlTabs" role="tablist" data-i18n-aria-label="ql_tab_nhom_aria" aria-label="Các mục của thẻ Quản lý">
-        <button type="button" role="tab" class="ql-tab" id="qlTabClb" data-ql-tab="clb" aria-controls="qlPanelClb" aria-selected="true" tabindex="0" data-i18n="ql_tab_clb">Câu lạc bộ</button>
+        <button type="button" role="tab" class="ql-tab" id="qlTabClb" data-ql-tab="clb" aria-controls="qlPanelClb" aria-selected="true" tabindex="0" data-i18n="ql_tab_clb">Danh sách CLB</button>
         <button type="button" role="tab" class="ql-tab" id="qlTabHs" data-ql-tab="hs" aria-controls="qlPanelHs" aria-selected="false" tabindex="-1" data-i18n="ql_tab_hs">Học sinh</button>
-        <button type="button" role="tab" class="ql-tab" id="qlTabWh" data-ql-tab="wh" aria-controls="qlPanelWh" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_wh">Điểm quyết tâm</button>
-        <button type="button" role="tab" class="ql-tab" id="qlTabDc" data-ql-tab="dc" aria-controls="qlPanelDc" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_dc">Điểm chuẩn</button>
-        <button type="button" role="tab" class="ql-tab" id="qlTabDuLieu" data-ql-tab="du_lieu" aria-controls="qlPanelDuLieu" aria-selected="false" tabindex="-1" data-i18n="ql_tab_du_lieu">Xoá dữ liệu</button>
+        <button type="button" role="tab" class="ql-tab" id="qlTabCachXep" data-ql-tab="cach_xep" aria-controls="qlPanelCachXep" aria-selected="false" tabindex="-1" data-i18n="ux4_ql_tab_cach_xep">Cách xếp</button>
+        <!-- UX4-L2: mục ít dùng hoặc nguy hiểm gom vào "Thêm ▾"; id và data-ql-tab của các tab cũ giữ nguyên -->
+        <div class="ql-them" id="qlThem">
+          <button type="button" class="ql-tab ql-tab-them" id="qlNutThem" aria-haspopup="true" aria-expanded="false" aria-controls="qlThemMenu" data-i18n="ux4_ql_tab_them">Thêm ▾</button>
+          <div class="ql-them-menu" id="qlThemMenu" role="group" hidden>
+            <button type="button" role="tab" class="ql-tab" id="qlTabWh" data-ql-tab="wh" aria-controls="qlPanelWh" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_wh">Điểm quyết tâm</button>
+            <button type="button" role="tab" class="ql-tab" id="qlTabDc" data-ql-tab="dc" aria-controls="qlPanelDc" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_dc">Điểm chuẩn</button>
+            <button type="button" role="tab" class="ql-tab" id="qlTabDb" data-ql-tab="db" aria-controls="qlPanelDb" aria-selected="false" tabindex="-1" hidden data-i18n="db_tieu_de">Bảng điều khiển</button>
+            <button type="button" role="tab" class="ql-tab" id="qlTabDuLieu" data-ql-tab="du_lieu" aria-controls="qlPanelDuLieu" aria-selected="false" tabindex="-1" data-i18n="ql_tab_du_lieu">Làm lại từ đầu</button>
+          </div>
+        </div>
       </div>
 
       <div role="tabpanel" id="qlPanelClb" data-ql-tab="clb" aria-labelledby="qlTabClb">
+      <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_clb"></p>
+      <p class="ql-tt" id="qlTtClb" role="status"></p>
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="admin_club_form_title">Thêm hoặc sửa CLB</h2></div>
         <div class="admin-form-grid" id="clubForm">
@@ -1036,6 +1022,8 @@
       </div>
 
       <div role="tabpanel" id="qlPanelHs" data-ql-tab="hs" aria-labelledby="qlTabHs" hidden>
+      <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_hs"></p>
+      <p class="ql-tt" id="qlTtHs" role="status"></p>
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="admin_reserve_assign_title">Gán nhóm ưu tiên và xuất hồ sơ học sinh</h2></div>
         <div class="search-row">
@@ -1191,12 +1179,12 @@
               </div>
             </div>
             <div class="wh-thao-tac-muc">
-              <button class="btn btn-danger" id="btnWhXoaTatCa" data-i18n="btn_wh_xoa_tat_ca">Xoá điểm quyết tâm của tất cả học sinh</button>
+              <button class="btn btn-secondary" id="btnWhXoaTatCa" data-i18n="btn_wh_xoa_tat_ca">Xoá điểm quyết tâm của tất cả học sinh</button>
               <div class="wh-ql-xacnhan" id="whXoaTatCaHop" hidden>
                 <p class="hint-text" id="whXoaTatCaHoi"></p>
                 <div class="search-row">
                   <input type="text" id="whXoaTatCaGo" class="text-input text-input-sm" autocomplete="off" data-i18n-aria-label="aria_wh_go_xoa" aria-label="Gõ chữ xác nhận để xoá">
-                  <button class="btn btn-danger" id="btnWhXoaTatCaXn" data-i18n="btn_wh_xoa_tat_ca_xn">Xác nhận xoá</button>
+                  <button class="btn btn-secondary" id="btnWhXoaTatCaXn" data-i18n="btn_wh_xoa_tat_ca_xn">Xác nhận xoá</button>
                   <button class="btn btn-ghost" id="btnWhXoaTatCaHuy" data-i18n="btn_cancel">Huỷ</button>
                 </div>
               </div>
@@ -1231,6 +1219,8 @@
       </div>
 
       <div role="tabpanel" id="qlPanelDuLieu" data-ql-tab="du_lieu" aria-labelledby="qlTabDuLieu" hidden>
+      <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_lam_lai"></p>
+      <p class="ql-tt" id="qlTtDuLieu" role="status"></p>
       <div class="panel">
         <div class="panel-head"><h2 data-i18n="danger_zone_title">Vùng nguy hiểm: xoá dữ liệu để làm lại</h2></div>
         <p class="hint-text" data-i18n="danger_zone_desc">Nạp tệp chỉ thêm học sinh mới, không xoá học sinh cũ. Muốn làm lại với bộ dữ liệu khác, hãy xoá ở đây trước, nếu không học sinh cũ vẫn chiếm chỗ.</p>
@@ -1241,9 +1231,15 @@
         </div>
       </div>
       </div>
-      <!-- UX1A-L2: tiêu chí xếp + thử cấu hình gấp dưới một mục đóng -->
-      <details class="ux1a-nang-cao" id="ux1aNangCao">
-        <summary data-i18n="ux1a_nang_cao">Nâng cao: tiêu chí xếp, thử cấu hình</summary>
+      <div role="tabpanel" id="qlPanelCachXep" data-ql-tab="cach_xep" aria-labelledby="qlTabCachXep" hidden>
+      <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_cach_xep"></p>
+      <p class="ql-tt" id="qlTtCachXep" role="status"></p>
+      <!-- UX1A-L2b: Cài đặt = một câu hỏi, ba thẻ, lưu ngay (js/18_cai_dat.js); chỉ có nghĩa khi có workspace -->
+      <div class="panel" id="ux1aCaiDat" data-quyen="quan_tri" hidden>
+        <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
+        <div class="panel-body" id="ux1aCaiDatThan"></div>
+      </div>
+            <div class="ux1a-nang-cao" id="ux1aNangCao">
       <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
       <div class="panel gt-ui" id="gt2TieuChiPanel">
         <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tiêu chí xếp</h2></div>
@@ -1278,7 +1274,7 @@
               <div class="check-khoi">
               </div>
               <div class="panel-actions gt2-nut-phai">
-                <button class="btn btn-primary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
+                <button class="btn btn-secondary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
               </div>
               <div id="gt2TcPhanHoi" class="save-feedback" role="status"></div>
             </section>
@@ -1328,7 +1324,29 @@
           </div>
         </div>
       </div>
-      </details>
+      </div>
+      </div>
+      <div role="tabpanel" id="qlPanelDb" data-ql-tab="db" aria-labelledby="qlTabDb" hidden>
+      <!-- GAP-8 (V§11): bảng điều khiển quản trị, chỉ đọc; chỉ hiện khi FA-DAA bật (js/10_theo_doi.js taiDashboard). -->
+      <div class="panel" id="dashboardPanel" hidden>
+        <div class="panel-head">
+          <div class="panel-head-trai">
+            <h2 data-i18n="db_tieu_de">Bảng điều khiển</h2>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-secondary" id="btnXuatDashboard" type="button" data-i18n="btn_xuat_dashboard">Xuất bảng điều khiển (Excel)</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <table class="data-table" id="dbBang">
+            <thead><tr><th data-i18n="db_cot_chi_so">Chỉ số</th><th data-i18n="db_cot_gia_tri">Giá trị</th>
+              <th data-i18n="db_cot_muc_tieu">Mục tiêu</th><th data-i18n="db_cot_dat">Đạt</th></tr></thead>
+            <tbody id="dbBangBody"></tbody>
+          </table>
+          <div id="dbFeedback" class="save-feedback" role="status"></div>
+        </div>
+      </div>
+      </div>
     </section>
 
     <!-- ---------- TAB 5: NHẬP ĐIỂM ---------- -->

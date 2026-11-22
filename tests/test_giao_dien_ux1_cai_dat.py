@@ -21,6 +21,7 @@ def _luat(api):
 
 def _vao_cai_dat(page):
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")      # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aChia100", state="visible")
     page.wait_for_selector('.ux1a-the[aria-checked="true"]')      # cấu hình đã nạp xong
 
@@ -214,10 +215,11 @@ def test_menu_ba_cham_cai_dat_mo_cung_ba_the(mo_trang):  # noqa: F811
 def test_thay_doi_mo_muc_nang_cao_voi_tieu_chi_xep(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _vao_cai_dat(page)
-    assert not page.evaluate("document.getElementById('ux1aNangCao').open")
+    page.click("#qlTabClb")          # UX4-L2: "Thay đổi…" mở tab Cách xếp (không còn mục gập "Nâng cao")
+    assert page.locator("#gt2TieuChiPanel").is_hidden()
+    page.click("#qlTabCachXep")
     page.locator("#ux1aThayDoi").click()
     page.wait_for_selector("#gt2TieuChiPanel", state="visible")
-    assert page.evaluate("document.getElementById('ux1aNangCao').open")
     assert not loi, loi
 
 

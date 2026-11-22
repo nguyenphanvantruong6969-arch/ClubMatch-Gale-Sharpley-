@@ -69,7 +69,7 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
         page.wait_for_selector("#gt2TcDanhSach li")
         return page, api, db, loi
 

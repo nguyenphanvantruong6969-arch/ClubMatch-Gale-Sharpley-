@@ -204,11 +204,10 @@ function ux1aTenCach(ma) { return t(UX1A_CACH.find((c) => c.ma === ma).tt); }
 
 function ux1aMoNangCao() {
   switchTab("admin");
-  const d = el("ux1aNangCao");
-  if (d) {
-    d.open = true;
-    el("gt2TieuChiPanel").scrollIntoView({ block: "start" });
-  }
+  /* UX4-L2: tiêu chí xếp nằm trong tab "Cách xếp" (không còn mục gập "Nâng cao"). */
+  if (typeof datTabConQl === "function") datTabConQl("cach_xep", { luu: true });
+  const p = el("gt2TieuChiPanel");
+  if (p) p.scrollIntoView({ block: "start" });
 }
 
 function ux1aApDungSong(cfg) {

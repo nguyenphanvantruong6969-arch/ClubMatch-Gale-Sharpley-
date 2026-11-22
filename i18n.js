@@ -433,11 +433,11 @@
       wharton_khoa_nv_ghi_chu: "Điểm quyết tâm đang khoá và học sinh này đã có điểm, nên nguyện vọng và ô chọn thi được giữ nguyên. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần đổi.",
       /* A13.5: tab con của thẻ Quản lý, xử lý hàng loạt điểm quyết tâm, lỗi chặn gọn, khoá xuất. */
       ql_tab_nhom_aria: "Các mục của thẻ Quản lý",
-      ql_tab_clb: "{slot_p}",
+      ql_tab_clb: "Danh sách {slot_sl}",
       ql_tab_hs: "{person_p}",
       ql_tab_wh: "Điểm quyết tâm",
       ql_tab_dc: "Điểm chuẩn",
-      ql_tab_du_lieu: "Xoá dữ liệu",
+      ql_tab_du_lieu: "Làm lại từ đầu",
       wh_hl_tai: "Tải danh sách cần sửa",
       wh_hl_tai_xong: "Đã lưu danh sách {n} {person_pl} cần sửa: {path}",
       wh_hl_phong: "Phóng cho đủ 100 theo tỉ lệ",
@@ -546,7 +546,27 @@
       toast_student_deleted: "Đã xoá {person_l} {student_id}.",
 
       admin_title: "Quản lý",
-      admin_desc: "Thêm hoặc sửa {slot_sl}, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của {person_l} chỉ được hưởng suất khi cùng nhãn với {slot_sl}.",
+
+      ux4_ql_tab_cach_xep: "Cách xếp",
+
+      ux4_ql_tab_them: "Thêm ▾",
+
+      ux4_mo_clb: "Thêm {slot_sl} mới, hoặc sửa số chỗ và {session_l} của {slot_sl} đã có.",
+
+      ux4_tt_clb: "{n} {slot_sl} · {cho} chỗ · {b} {session_l}",
+
+      ux4_mo_hs: "Tìm {person_l}, chọn nhiều em rồi gán nhóm ưu tiên hoặc xuất danh sách.",
+
+      ux4_tt_hs: "{n} {person_l}",
+
+      ux4_mo_cach_xep: "Chọn ai được xét trước khi {slot_sl} hết chỗ, rồi thử xem kết quả đổi thế nào. Kết quả chính thức chỉ đổi ở lần xếp tiếp theo.",
+
+      ux4_tt_cach_xep: "Đang dùng: {cach}",
+
+      ux4_mo_lam_lai: "Dùng khi bắt đầu một đợt mới. Mỗi nút đều tự sao lưu trước khi xoá.",
+
+      ux4_tt_lam_lai: "Hiện có {hs} {person_l} và {clb} {slot_sl}.",
+      admin_desc: "Sửa danh sách {slot_sl} và {person_l}, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới.",
       admin_club_form_title: "Thêm hoặc sửa {slot_sl}",
       placeholder_club_id: "Mã {slot_sl} (ví dụ: clb_01)",
       placeholder_club_name: "Tên {slot_sl}",
@@ -574,7 +594,7 @@
       toast_club_deleted: "Đã xoá {slot_sl} {club_id}.",
       toast_club_deleted_removed: "Đã xoá {slot_sl} {club_id}, kèm {n_scores} điểm đã chấm và {n_tests} ô tick thi. Bản sao lưu: {backup_name}.",
 
-      danger_zone_title: "Vùng nguy hiểm: xoá dữ liệu để làm lại",
+      danger_zone_title: "Làm lại từ đầu",
       danger_zone_desc: "Nạp tệp chỉ thêm {person_l} mới, không xoá {person_l} cũ. Muốn làm lại với bộ dữ liệu khác, hãy xoá ở đây trước, nếu không {person_l} cũ vẫn chiếm chỗ.",
       danger_zone_safety: "Cả hai nút đều tự sao lưu dữ liệu trước khi xoá. Lịch sử các lần sắp xếp được giữ lại.",
       btn_reset_students: "Xoá toàn bộ {person_l} (giữ {slot_sl})",
@@ -1892,7 +1912,7 @@
       ql_tab_hs: "{person_p}",
       ql_tab_wh: "Commitment points",
       ql_tab_dc: "Cut-off points",
-      ql_tab_du_lieu: "Delete data",
+      ql_tab_du_lieu: "Start over",
       wh_hl_tai: "Download the list to fix",
       wh_hl_tai_xong: "Saved the list of {n} {person_pl} to fix: {path}",
       wh_hl_phong: "Scale to 100 by ratio",
@@ -2001,7 +2021,27 @@
       toast_student_deleted: "Deleted {person_l} {student_id}.",
 
       admin_title: "Manage",
-      admin_desc: "Add or edit {slot_pl}, quotas and priority seats. A priority group only gets those seats in a {slot_l} with the same label.",
+
+      ux4_ql_tab_cach_xep: "How to rank",
+
+      ux4_ql_tab_them: "More ▾",
+
+      ux4_mo_clb: "Add a new {slot_l}, or change the places and {session_l} of an existing one.",
+
+      ux4_tt_clb: "{n} {slot_pl} · {cho} places · {b} {session_l}",
+
+      ux4_mo_hs: "Find {person_pl}, tick several, then give them a priority group or export the list.",
+
+      ux4_tt_hs: "{n} {person_pl}",
+
+      ux4_mo_cach_xep: "Choose who is considered first when a {slot_l} runs out of places, then try it out. The official result changes only at the next run.",
+
+      ux4_tt_cach_xep: "In use: {cach}",
+
+      ux4_mo_lam_lai: "Use this to begin a new round. Each button backs up first.",
+
+      ux4_tt_lam_lai: "There are {hs} {person_pl} and {clb} {slot_pl}.",
+      admin_desc: "Edit the list of {slot_pl} and {person_pl}, choose how places are given out, or start over. Pick a section below.",
       admin_club_form_title: "Add or edit {slot_la}",
       placeholder_club_id: "{slot} ID (e.g. club_01)",
       placeholder_club_name: "{slot} name",
@@ -2029,7 +2069,7 @@
       toast_club_deleted: "Deleted {slot_l} {club_id}.",
       toast_club_deleted_removed: "Deleted {slot_l} {club_id}, with {n_scores} saved score(s) and {n_tests} test tick(s). Backup: {backup_name}.",
 
-      danger_zone_title: "Danger zone: delete data to start over",
+      danger_zone_title: "Start over",
       danger_zone_desc: "Importing a file only adds {person_pl}. It doesn't remove existing ones. To start over with a different set, delete here first, or the old {person_pl} will keep taking seats.",
       danger_zone_safety: "Both buttons back up the data before deleting. The allocation history is kept.",
       btn_reset_students: "Delete all {person_pl} (keep {slot_pl})",

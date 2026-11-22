@@ -247,6 +247,16 @@ SUA_CO_Y = {
          'Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch.'),
         ("These don't stop the allocation, but they can skew the results.",
          'Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results.')],
+    # UX4-L2: chủ ý đổi chữ của thẻ Quản lý (bảng từ ngữ docs/ke_hoach/ux/UX4_TU_NGU.md); chuỗi đã điền nhãn mặc định.
+    ("ui", "admin_desc"): [
+        ("Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.",
+         "Sửa danh sách CLB và học sinh, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới."),
+        ("Add or edit clubs, quotas and priority seats. A priority group only gets those seats in a club with the same label.",
+         "Edit the list of clubs and students, choose how places are given out, or start over. Pick a section below.")],
+    ("ui", "ql_tab_clb"): [("CLB", "Danh sách CLB")],
+    ("ui", "ql_tab_du_lieu"): [("Xoá dữ liệu", "Làm lại từ đầu"), ("Delete data", "Start over")],
+    ("ui", "danger_zone_title"): [("Vùng nguy hiểm: xoá dữ liệu để làm lại", "Làm lại từ đầu"),
+                                  ("Danger zone: delete data to start over", "Start over")],
 }
 
 
@@ -508,7 +518,7 @@ def test_mau_20_chuoi_mac_dinh_giong_het_truoc_day(anh_chup):
     ra = _chay_js({"khoa": MAU_20, "tham_so": tham_so})
     for lang in ("vi", "en"):
         for k in MAU_20:
-            mong_doi = anh_chup["ui"][lang][k]
+            mong_doi = _sua_co_y("ui", k, anh_chup["ui"][lang][k])   # UX4: cùng danh sách đổi chữ có chủ ý
             for ten, gia_tri in tham_so.items():
                 mong_doi = mong_doi.replace("{%s}" % ten, str(gia_tri))
             assert ra[lang][k] == mong_doi, (lang, k)

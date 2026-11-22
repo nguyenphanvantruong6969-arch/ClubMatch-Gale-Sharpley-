@@ -45,7 +45,7 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
         page.wait_for_selector("#gt2TcDanhSach li")
         return page, api, loi
 
@@ -143,7 +143,7 @@ def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
         page.reload()
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp (không còn mục gập)
         page.wait_for_selector("#gt2TcDanhSach li")
     # UX1A-L2b: không còn ô tick; chọn rồi chọn lại giá trị cũ thì cờ điểm quyết tâm đã lưu được giữ nguyên.
     assert api.get_workspace_config()["data"]["config"]["rules"]["wharton"] is True

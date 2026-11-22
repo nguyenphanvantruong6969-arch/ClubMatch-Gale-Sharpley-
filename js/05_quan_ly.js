@@ -392,12 +392,17 @@ function loadAdminClubs() {
     const emptyState = el("adminClubEmptyState");
     clear(body);
     if (!res.ok || !res.data.length) {
+      qlTt.clb = res.ok ? { n: 0, cho: 0, b: 0 } : null;
+      veTtQl();
       veTrangThaiRong(emptyState, UX2_RONG_CLB_QL);
       emptyState.hidden = false;
       return;
     }
     emptyState.hidden = true;
     const nhieuBuoi = new Set(res.data.map((c) => c.buoi || BUOI_MAC_DINH)).size > 1;
+    qlTt.clb = { n: res.data.length, cho: res.data.reduce((a, c) => a + (Number(c.capacity) || 0), 0),
+      b: new Set(res.data.map((c) => c.buoi || BUOI_MAC_DINH)).size };
+    veTtQl();
     document.querySelectorAll("#view-admin .cot-buoi").forEach((o) => {
       o.hidden = !nhieuBuoi;
     });
@@ -507,6 +512,7 @@ function loadAdminStudents() {
     el("adminDemDanhDau").textContent = "";
 
     if (!res.ok || !res.data.rows.length) {
+      if (res.ok && !search) { qlTt.hs = 0; veTtQl(); }
       veTrangThaiRong(emptyState, UX2_RONG_HS_QL);
       emptyState.hidden = false;
       pagination.hidden = true;
@@ -514,6 +520,8 @@ function loadAdminStudents() {
     }
     emptyState.hidden = true;
     pagination.hidden = false;
+    if (!search) qlTt.hs = res.data.total;
+    veTtQl();
     adminStudentPage = res.data.page;   /* máy chủ kẹp trang vượt tổng về trang cuối (A13.12, 1.6 / 3.3) */
 
     res.data.rows.forEach((s) => {
@@ -567,7 +575,7 @@ function whChuaBat(res) {
 }
 
 function anKhoiWharton() {
-  ["adminWhartonBlock", "adminDiemChuanBlock"].forEach((id) => { if (el(id)) el(id).hidden = true; });
+  ["adminWhartonBlock", "adminDiemChuanBlock", "dashboardPanel"].forEach((id) => { if (el(id)) el(id).hidden = true; });
   whQl.sid = null;
   dc.rows = null;
 }
@@ -1368,7 +1376,7 @@ function initAdminHandlers() {
  * từng chỗ khối đổi trạng thái. Tab đang mở được nhớ trong localStorage (đọc ghi đều có try/catch,
  * như `docTrangThaiThuGon`); không đọc được hoặc tab đã nhớ không còn thì mở tab đầu. */
 const KHOA_TAB_CON_QL = "rbda_ql_tab_con";
-const TAB_CON_QL = ["clb", "hs", "wh", "dc", "du_lieu"];
+const TAB_CON_QL = ["clb", "hs", "cach_xep", "wh", "dc", "db", "du_lieu"];   /* UX4-L2: wh, dc, db, du_lieu nằm trong "Thêm ▾" */
 let tabConQlMong = "clb";      // tab người dùng muốn mở; áp dụng ngay khi tab đó hiện
 
 function docTabConQl() {
@@ -1412,6 +1420,40 @@ function datTabConQl(ten, tuyChon) {
     tabConQlMong = muon;
     luuTabConQl(muon);
   }
+  /* UX4-L2: tab nằm trong "Thêm ▾" thì nút Thêm hiện trạng thái đang chọn; chọn xong thì đóng menu. */
+  const nutThem = el("qlNutThem");
+  if (nutThem) {
+    nutThem.classList.toggle("is-chon", !!document.querySelector('#qlThemMenu [role=tab][aria-selected="true"]'));
+    dongMenuThemQl();
+  }
+}
+
+function dongMenuThemQl() {
+  const menu = el("qlThemMenu"), nut = el("qlNutThem");
+  if (!menu || menu.hidden) return;
+  menu.hidden = true;
+  nut.setAttribute("aria-expanded", "false");
+}
+
+function moMenuThemQl() {
+  const menu = el("qlThemMenu"), nut = el("qlNutThem");
+  menu.hidden = !menu.hidden;
+  nut.setAttribute("aria-expanded", menu.hidden ? "false" : "true");
+}
+
+/* ---- UX4-L2: dòng trạng thái của từng tab con (chỉ hiển thị, dựng từ dữ liệu đã tải, không gọi API thêm) ---- */
+const qlTt = { clb: null, hs: null, cachXep: "" };
+
+function veTtQl() {
+  const ghi = (id, chu) => { const o = el(id); if (o) o.textContent = chu || ""; };
+  if (qlTt.clb) ghi("qlTtClb", t("ux4_tt_clb", qlTt.clb));
+  if (qlTt.hs !== null) {
+    ghi("qlTtHs", t("ux4_tt_hs", { n: qlTt.hs }));
+    ghi("qlTtDuLieu", qlTt.clb ? t("ux4_tt_lam_lai", { hs: qlTt.hs, clb: qlTt.clb.n }) : "");
+  }
+  const chon = document.querySelector('#ux1aCaiDat .ux1a-the[id^="ux1aMt"][aria-checked="true"] .ux1a-the-tt');
+  qlTt.cachXep = chon ? chon.textContent.trim() : "";
+  ghi("qlTtCachXep", qlTt.cachXep ? t("ux4_tt_cach_xep", { cach: qlTt.cachXep }) : "");
 }
 
 /* Hai tab điểm hiện theo khối của chúng; sau đó mở lại tab người dùng muốn nếu đã có thể. */
@@ -1419,6 +1461,8 @@ function capNhatTabConQl() {
   const wh = el("adminWhartonBlock"), dc = el("adminDiemChuanBlock");
   if (wh) el("qlTabWh").hidden = wh.hidden;
   if (dc) el("qlTabDc").hidden = dc.hidden;
+  const db = el("dashboardPanel");
+  if (db) el("qlTabDb").hidden = db.hidden;
   const hien = tabConQlHien().map((n) => n.dataset.qlTab);
   datTabConQl(hien.includes(tabConQlMong) ? tabConQlMong : tabConQlDangChon());
 }
@@ -1427,12 +1471,22 @@ function initTabConQl() {
   const dai = el("qlTabs");
   if (!dai) return;
   tabConQlMong = docTabConQl();
+  el("qlNutThem").addEventListener("click", moMenuThemQl);
+  document.addEventListener("click", (ev) => {
+    if (!ev.target.closest || !ev.target.closest("#qlThem")) dongMenuThemQl();
+  });
+  window.addEventListener("langchange", veTtQl);
+  const theDoiChon = el("ux1aCaiDatThan");
+  if (theDoiChon) new MutationObserver(veTtQl).observe(theDoiChon, { attributes: true, subtree: true, childList: true });
   dai.addEventListener("click", (ev) => {
     const nut = ev.target.closest && ev.target.closest("[role=tab]");
     if (nut && !nut.hidden) datTabConQl(nut.dataset.qlTab, { luu: true });
   });
   dai.addEventListener("keydown", (ev) => {
-    const hien = tabConQlHien();
+    if (ev.key === "Escape") { dongMenuThemQl(); el("qlNutThem").focus(); return; }
+    /* UX4-L2: mũi tên chỉ đi giữa các tab của dải; các tab trong "Thêm ▾" chọn bằng chuột hoặc Tab. */
+    const hien = tabConQlHien().filter((n) => !n.closest("#qlThemMenu"));
+    if (!hien.length || !hien.includes(document.activeElement) && ev.target.closest("#qlThemMenu")) return;
     /* Tab đang có tiêu điểm là mốc (kể cả khi vừa focus mà chưa chọn), không thì tab đang chọn. */
     const i = Math.max(0, hien.findIndex((n) => n === document.activeElement
       || (!hien.includes(document.activeElement) && n.dataset.qlTab === tabConQlDangChon())));

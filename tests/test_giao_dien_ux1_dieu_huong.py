@@ -84,16 +84,17 @@ def test_giao_vien_thay_nhom_phu_hop_va_vao_ket_qua(mo):
     assert not loi, loi
 
 
-def test_nang_cao_dong_mac_dinh_va_chua_hai_bang_gt2(mo):
+def test_tieu_chi_va_thu_nam_trong_tab_cach_xep_khong_con_muc_gap(mo):
+    # UX4-L2: thay cho "Nâng cao đóng mặc định": hai bảng GT2 nằm trong tab Cách xếp
     page, api, mo_trang, loi = mo
     mo_trang()
     page.click('.nav-item[data-tab="admin"]')
-    assert not page.evaluate("document.getElementById('ux1aNangCao').open")
     assert page.locator("#gt2TieuChiPanel").is_hidden()
-    assert page.evaluate("!!document.querySelector('#ux1aNangCao #gt2TieuChiPanel')")
-    assert page.evaluate("!!document.querySelector('#ux1aNangCao #gt2ThuPanel')")
+    assert page.evaluate("!!document.querySelector('#qlPanelCachXep #gt2TieuChiPanel')")
+    assert page.evaluate("!!document.querySelector('#qlPanelCachXep #gt2ThuPanel')")
     assert page.locator("#qlTabClb").is_visible()   # chỉnh sửa CLB nằm trước
-    page.click("#ux1aNangCao > summary")
+    assert page.locator("#ux1aNangCao summary").count() == 0
+    page.click("#qlTabCachXep")
     assert page.locator("#gt2TieuChiPanel").is_visible()
     assert not loi, loi
 
