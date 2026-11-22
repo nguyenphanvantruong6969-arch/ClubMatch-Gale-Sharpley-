@@ -81,7 +81,8 @@ function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
 
 function ux1aVeSanSang(hop, d, taiLai, quayLai, tuyChon) {
   /* MT2: `tuyChon.giuBang` = vẽ bảng đặt loại cả khi đã sẵn sàng (công tắc "Chia CLB theo loại" cần sửa loại bất cứ lúc nào);
-     `tuyChon.khoaConThieu` = câu đầu khi còn thiếu (không nhắc Huy chương). Không truyền: đúng như cũ. */
+     `tuyChon.khoaConThieu` = câu đầu khi còn thiếu (không nhắc Huy chương); `tuyChon.khoaGt` {loại: khoá chữ} đổi chữ mục đích
+     của từng loại (MT2: Giới hạn không có huy chương). Không truyền: đúng như cũ. */
   tuyChon = tuyChon || {};
   hop.textContent = "";
   hop.hidden = false;
@@ -136,7 +137,7 @@ function ux1aVeSanSang(hop, d, taiLai, quayLai, tuyChon) {
     ux1aEl("span", { class: "ux1a-ss-gt-nhan", text: t("ux1a_ss_cac_loai") }),
     ...["TU_DO", "GIOI_HAN", "TUYEN_CHON"].map((ma) => {
       const idTip = "ux1aSsTip_" + ma;
-      const chu = t("ux1a_ss_gt_" + ma);
+      const chu = t((tuyChon.khoaGt && tuyChon.khoaGt[ma]) || "ux1a_ss_gt_" + ma);
       return ux1aEl("span", { class: "ux1a-ss-gt" },
         ux1aEl("span", { class: "ux1a-ss-gt-ten", text: t("fa_loai_" + ma) }),
         ux1aEl("button", { type: "button", class: "ux1a-i", "data-loai": ma, text: "i",
@@ -212,7 +213,7 @@ function mt2VeChiaLoai() {
     if (!d.hieu_luc || d.fa_daa) { bang.hidden = true; bang.textContent = ""; return; }
     return callApi("get_san_sang_loai").then((s) => {
       if (!s.ok) { bang.hidden = true; return; }
-      ux1aVeSanSang(bang, s.data, mt2VeChiaLoai, null, { giuBang: true, khoaConThieu: "mt2_con_thieu" });
+      ux1aVeSanSang(bang, s.data, mt2VeChiaLoai, null, { giuBang: true, khoaConThieu: "mt2_con_thieu", khoaGt: { GIOI_HAN: "mt2_gt_GIOI_HAN" } });
     });
   });
 }

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-L3 FIX 1: chữ chú thích loại "Giới hạn" ở bảng MT2 không nhắc huy chương
+
+- Checker F5: chữ "i" của Giới hạn nói "xếp theo huy chương" dù chế độ chia loại không có huy chương. `ux1aVeSanSang` nhận `tuyChon.khoaGt` {loại: khoá chữ}; MT2 dùng `mt2_gt_GIOI_HAN` (vi + en: điểm quyết tâm nếu có, rồi bốc thăm). Khoá cũ `ux1a_ss_gt_GIOI_HAN` giữ cho chế độ Huy chương.
+- Test mới: `test_chu_i_cua_gioi_han_khong_nhac_huy_chuong` (tests/test_giao_dien_mt2.py; 7 ca, chạy thật với Chromium, không bỏ qua).
+
 ## 2026-11-22 — MT2-L3: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ
 
 - Giao diện: khối `#mt2ChiaLoai` (index.html) đầu thẻ con "Câu lạc bộ": MỘT công tắc `#mt2CongTac` (mặc định TẮT), bật thì hiện bảng đặt loại `#mt2Bang` (dùng lại `ux1aVeSanSang`, thêm tuỳ chọn `giuBang` / `khoaConThieu`; lưu vẫn qua `dat_loai_clb`), tắt thì ẩn (loại vẫn nằm trong `clubs.loai`). Lưu `rules.chia_loai` qua `update_workspace_config` (chỉ quản trị); bấm đúp bị chặn; lỗi backend đưa công tắc về trạng thái thật. Chế độ Huy chương: công tắc khoá ở BẬT, bảng chỉ vẽ ở Cài đặt (không trùng id). Chữ mới `mt2_*` (vi + en, i18n.js); ghi chú nói rõ CLB Giới hạn bỏ qua điểm thi (phán quyết checker L2).

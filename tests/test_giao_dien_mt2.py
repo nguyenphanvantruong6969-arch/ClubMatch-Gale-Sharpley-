@@ -131,3 +131,14 @@ def test_che_do_huy_chuong_khoa_cong_tac_va_khong_ve_bang_trung(trang):
     assert page.locator("#mt2CongTac").is_checked() is True
     assert page.locator("#mt2Bang").is_hidden()
     assert not loi, loi
+
+
+def test_chu_i_cua_gioi_han_khong_nhac_huy_chuong(trang):
+    page, api, loi = trang
+    _bat(page, api)
+    nut = page.locator('#mt2Bang .ux1a-i[data-loai="GIOI_HAN"]')
+    chu = page.locator("#" + nut.get_attribute("aria-describedby")).text_content()
+    assert "huy chương" not in chu.lower() and "bốc thăm" in chu
+    for ma in ("TU_DO", "TUYEN_CHON"):
+        assert "huy chương" not in page.locator('#mt2Bang .ux1a-i[data-loai="%s"]' % ma).get_attribute("aria-label").lower()
+    assert not loi, loi
