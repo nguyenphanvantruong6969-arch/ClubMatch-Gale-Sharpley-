@@ -71,7 +71,7 @@ pipeline, invariants 1, 2, 8).
 
 ## Status
 - LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
-- L1 PASS (checker 948f753) | L2 coded (head 0944994), in review | L3 pending | L4 pending (optional)
+- L1 PASS (checker 948f753) | L2 PASS (checker 6988b09) | L3 GO sent | L4 pending (optional)
 
 ## Sessions
 | Role | Session id | Model | Notes |
@@ -79,6 +79,8 @@ pipeline, invariants 1, 2, 8).
 | LEAD | session_01YVAyu3BTRoD9jYgVDEJ86g | Sonnet | this branch file only |
 | CODER | session_01YVAytzKYmkQsmVJ6CvbkXT | Sonnet | |
 | CHECKER | session_01YVAyu1qB1UHaWqW9cvwFqw | Sonnet | |
+
+- L2 ruling (checker): chia_100 + GIOI_HAN mixes point scales (tier by tick); accepted. L3 must not offer the test tick for GIOI_HAN clubs, or document it. Health-report type checks via kiem_loai_tu_csdl are MANDATORY in L3; add a test for non-blocking type warnings (F4).
 
 ## Needs Truong
 - (none yet; lead appends one line each)
