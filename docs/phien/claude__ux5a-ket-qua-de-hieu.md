@@ -23,7 +23,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
       visible enabled controls NOW (admin and teacher) + number of `.btn-primary` visible; (2) table of changed strings:
       key | old VI | new VI | new EN | why; (3) choice map: which ONE control is gold per panel, which go under
       "Thêm ▾" / `<details>`. **MILESTONE 1: Truong approves before code.**
-- [ ] **L2 `Kết quả` tab (MUST).** ≤ 7 visible controls before opening a fold; one gold = the next step; the rest
+- [x] **L2 `Kết quả` tab (MUST).** ≤ 7 visible controls before opening a fold; one gold = the next step; the rest
       secondary or inside the existing menus; one-line purpose under the title.
 - [ ] **L3 `Chi tiết và xuất tệp` tab (MUST).** Same budgets; exports grouped behind one "Xuất tệp ▾"; the single gold
       action is chosen in L1; long detail tables stay reachable (collapsed by default if > 1 screen, never removed).
@@ -38,7 +38,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 
 ## Current state
 - L1 done (2026-11-22): `docs/ke_hoach/ux/UX5A_TU_NGU.md` written (measured with real Chromium, 6 decisions D1–D6 with defaults).
-- **STOPPED at MILESTONE 1: waiting for Truong to approve words + choice map. No product code yet.**
+- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2 done.
 - Env: `.venv` created locally from `requirements-dev.txt` (gitignored). Measure script is in the session scratchpad only.
 
 ## Session log (append only)
@@ -46,3 +46,4 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 |---|---|---|---|
 | 2026-11-22 | Sonnet | Plan + protocol for Track A | split from UX5B by Truong |
 | 2026-11-22 | Sonnet | L1 audit + words + choice map | measured admin+teacher, both tabs; stop point |
+| 2026-11-22 | Sonnet | L2 Kết quả tab | tests ux5a_l2 green; t3_l3 failure pre-exists (UX4) |

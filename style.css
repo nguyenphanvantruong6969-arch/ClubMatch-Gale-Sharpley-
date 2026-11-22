@@ -3409,3 +3409,7 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }
 #ux1aNangCao > summary { display: block; cursor: pointer; }
 #ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }
+
+/* UX5A: nếp gập ít dùng của thẻ Kết quả / Chi tiết (Hick) */
+.ux5a-hop-rong { width: min(360px, 90vw); }
+.ux5a-hop-rong .hint-text { margin: 6px 10px 4px; }

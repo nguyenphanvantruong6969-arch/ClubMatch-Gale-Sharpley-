@@ -275,17 +275,18 @@
     <section class="view" id="view-results">
       <header class="view-header">
         <h1 data-i18n="kq_title">Kết quả</h1>
-        <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào. Bảng này không có điểm hay số bốc thăm; khung tra cứu (dành cho quản trị và giáo viên) cho xem chi tiết riêng của từng {person_l}.</p>
+        <p class="view-desc" data-i18n="kq_desc">Xem {person_l} học {slot_sl} nào, tra cứu vì sao một {person_l} được xếp như vậy, hoặc xuất theo {cohort_l}. Bảng này không có điểm hay số bốc thăm.</p>
       </header>
       <!-- UX1A-L3: tra cứu một học sinh nằm ĐẦU thẻ Kết quả (trên bảng) -->
       <!-- GT1: tra cứu một học sinh (giải thích vì sao em được/không được từng CLB); js/14_giai_trinh.js -->
       <div class="panel gt-ui" id="gtPanel">
         <div class="panel-head"><h2 data-i18n="gt_tieu_de">Tra cứu một {person_l}</h2></div>
         <div class="panel-body">
+          <p class="hint-text" data-i18n="ux5a_gt_mo_ta">Gõ tên hoặc mã để xem vì sao {person_l} đó được (hoặc không được) vào từng {slot_sl}.</p>
           <!-- UX1B-L5c: ô tìm to ở đầu; các việc về mã tra cứu gập vào "Mã tra cứu…" (chỉ quản trị) -->
           <div class="search-row gt-tim-hang">
             <select id="gtLop" class="text-input text-input-sm" data-i18n-aria-label="gt_lop_aria" hidden></select>
-            <input type="text" id="gtTim" class="text-input gt-tim-to" data-i18n-placeholder="gt_tim_ph" placeholder="Gõ tên hoặc mã {person_l} để xem vì sao">
+            <input type="text" id="gtTim" class="text-input gt-tim-to" data-i18n-placeholder="gt_tim_ph" placeholder="Tên hoặc mã {person_l}">
           </div>
           <ul id="gtDs" class="gt-ds"></ul>
           <div id="gtKetQua" role="status"></div>
@@ -296,17 +297,17 @@
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
           <details class="menu-khac gt-ma-gap" id="gtMaFold" data-quyen="quan_tri">
-            <summary class="btn btn-ghost" data-i18n="ux1b_ma_tra_cuu">Mã tra cứu…</summary>
+            <summary class="btn btn-ghost" data-i18n="ux1b_ma_tra_cuu">Mã tra cứu cho {person_pl} tự xem…</summary>
             <ol class="gt-buoc" id="gtBuocHuongDan" aria-label="Các bước cho học sinh tự tra cứu" data-i18n-aria-label="gt_buoc_aria">
               <li data-i18n="gt_buoc_1">Tạo mã tra cứu</li>
               <li data-i18n="gt_buoc_2">Xuất mã, in phiếu</li>
-              <li data-i18n="gt_buoc_3">Chế độ {person_l} tra cứu</li>
+              <li data-i18n="gt_buoc_3">Khoá máy cho {person_pl} tự tra cứu</li>
               <li data-i18n="gt_buoc_4">Thoát bằng tài khoản quản trị</li>
             </ol>
             <div class="search-row">
               <button type="button" class="btn btn-secondary" id="btnGtTaoMa" data-quyen="quan_tri" data-i18n="gt_tao_ma">Tạo mã tra cứu</button>
               <button type="button" class="btn btn-secondary" id="btnGtXuatMa" data-quyen="quan_tri" data-i18n="gt_xuat_ma">Xuất mã tra cứu (CSV)</button>
-              <button type="button" class="btn btn-primary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Chế độ {person_l} tra cứu</button>
+              <button type="button" class="btn btn-secondary" id="btnGtCheDoHs" data-quyen="quan_tri" data-i18n="gt_che_do_hs">Khoá máy cho {person_pl} tự tra cứu</button>
             </div>
             <div id="gtMaPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
           </details>
@@ -321,11 +322,17 @@
             <label class="lop-nhan" for="ux1bLop" data-i18n="ux1b_chon_lop">Chọn {cohort_l}</label>
             <select id="ux1bLop" class="text-input text-input-sm"></select>
             <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
-            <button class="btn btn-secondary" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
-            <button class="btn btn-secondary" id="btnUx1bPhieuLop" type="button" data-i18n="gt_in_lop">In phiếu cả {cohort_l}</button>
-            <button class="btn btn-secondary" id="btnUx1bBaoCaoPdf" type="button" data-i18n="ux1i_bao_cao_pdf">Báo cáo tổng hợp (PDF)</button>
+            <!-- UX5A-L2: ba việc ít dùng gập vào một nếp (Hick); id các nút giữ nguyên -->
+            <details class="menu-khac" id="ux1bThemMenu">
+              <summary class="btn btn-secondary" id="ux1bThemTom" data-i18n="ux5a_ux1b_them">Báo cáo và phiếu in ▾</summary>
+              <div class="menu-khac-hop ux5a-hop-rong">
+                <button class="menu-khac-muc" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
+                <button class="menu-khac-muc" id="btnUx1bPhieuLop" type="button" data-i18n="gt_in_lop">In phiếu cả {cohort_l}</button>
+                <button class="menu-khac-muc" id="btnUx1bBaoCaoPdf" type="button" data-i18n="ux1i_bao_cao_pdf">Báo cáo tổng hợp (PDF)</button>
+                <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp: mức lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}. Không có tên, mã hay điểm.</p>
+              </div>
+            </details>
           </div>
-          <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp (lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}); không có tên, mã hay điểm.</p>
           <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
         </div>
       </div>
@@ -341,7 +348,7 @@
             <button type="button" class="kq-seg-nut" data-kq="clb" aria-pressed="false" data-i18n="kq_theo_clb">Theo {slot_sl}</button>
             <button type="button" class="kq-seg-nut" data-kq="ma" aria-pressed="false" data-i18n="kq_theo_ma">Theo mã {person_l}</button>
           </div>
-          <button type="button" class="btn btn-secondary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
+          <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
         </div>
         <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
         <div class="search-row kq-chon-hang-phu" id="kqChonLopHang" hidden>
@@ -355,6 +362,7 @@
         <div class="search-row kq-chon-hang-phu" id="kqTimHang" hidden>
           <input type="text" id="kqTimKiem" class="text-input" data-i18n-placeholder="kq_tim_ph" placeholder="Tìm mã hoặc tên">
         </div>
+        <p class="hint-text" data-i18n="ux5a_kq_mo_bang">Bảng cho biết mỗi {person_l} học {slot_sl} nào ở từng {session_l}.</p>
         <div id="kqRong" class="empty-state" hidden></div>
         <div class="scroll-x">
           <table class="data-table" id="kqBang" hidden>
@@ -366,7 +374,7 @@
       </div>
       <!-- GAP-5: ba cau phan hoi mot cham (chi khi rules.fa_phan_hoi bat); js/10_theo_doi.js -->
       <div class="panel" id="phanHoiPanel" hidden>
-        <div class="panel-head"><h2 data-i18n="ph_tieu_de">Ý kiến về kết quả xếp CLB</h2></div>
+        <div class="panel-head"><h2 data-i18n="ph_tieu_de">Ý kiến của {person_l} về kết quả</h2></div>
         <div class="panel-body">
           <div class="search-row">
             <label class="lop-nhan" for="phMa" data-i18n="kn_ma">Mã học sinh</label>
@@ -385,6 +393,8 @@
             <button type="button" class="kq-seg-nut ph-hieu" data-gia-tri="1" aria-pressed="false" data-i18n="ph_co">Có</button>
             <button type="button" class="kq-seg-nut ph-hieu" data-gia-tri="0" aria-pressed="false" data-i18n="ph_khong">Không</button>
           </div>
+          <details class="nang-cao ux5a-nep-ph" id="phThemY">
+            <summary class="btn btn-ghost" data-i18n="ux5a_ph_them">Thêm ý kiến ▾</summary>
           <p data-i18n="ph_cau_kho">Phần nào khó nhất?</p>
           <div class="kq-seg ph-nhom" role="group" data-i18n-aria-label="ph_cau_kho">
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="chon_clb" aria-pressed="false" data-i18n="ph_kho_chon_clb">Chọn CLB</button>
@@ -393,8 +403,9 @@
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="thu_thach" aria-pressed="false" data-i18n="ph_kho_thu_thach">Thử thách</button>
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="khong_co" aria-pressed="false" data-i18n="ph_kho_khong_co">Không có</button>
           </div>
+          </details>
           <div class="search-row">
-            <button class="btn btn-primary" id="btnGuiPhanHoi" type="button" data-i18n="ph_gui">Gửi</button>
+            <button class="btn btn-secondary" id="btnGuiPhanHoi" type="button" data-i18n="ph_gui">Gửi</button>
           </div>
           <div id="phKetQua" class="save-feedback" role="status"></div>
         </div>

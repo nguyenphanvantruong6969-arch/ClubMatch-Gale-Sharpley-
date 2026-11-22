@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5A-L2: thẻ Kết quả (một nút vàng, nếp "Báo cáo và phiếu in", chữ dễ hiểu)
+
+- "Tải bảng này (Excel)" là nút vàng duy nhất của thẻ; "Khoá máy cho học sinh tự tra cứu" (trước là vàng) thành nút thường (D1). "Gửi" ở khung phản hồi thành nút thường (D2).
+- Khung "Theo lớp và báo cáo": 5 → 3 điều khiển; "Báo cáo tổng hợp", "In phiếu cả lớp", "Báo cáo tổng hợp (PDF)" vào nếp `ux1bThemMenu` (id nút giữ nguyên, 2 lần bấm).
+- Chữ: `kq_desc`, `gt_tim_ph`, `ux1b_ma_tra_cuu`, `gt_che_do_hs`, `gt_buoc_3`, `ux1b_bao_cao_hint`, `ph_tieu_de`, `ph_cau_kho` đổi tại chỗ; khoá mới `ux5a_gt_mo_ta`, `ux5a_ux1b_them`, `ux5a_kq_mo_bang`, `ux5a_ph_them`. `kq_desc` giữ cụm "bảng này"/"tra cứu" (test GT4 đòi). O1: câu "khó nhất" của khung phản hồi vào nếp "Thêm ý kiến ▾".
+- File: index.html, style.css, i18n.js. Không đổi backend; `kiem_nhanh.py` 7/7 (cần `git fetch origin main` để có nhánh so sánh).
+- Test mới: `tests/test_giao_dien_ux5a_l2.py` (+ `tests/_ux5a_chung.py`, 9 ca: ngân sách Hick, một nút vàng, nếp báo cáo, chữ, EN). Test cũ sửa có chủ: `test_giao_dien_ux1b_vai_gv.py` (báo cáo nay 2 lần bấm), `test_giao_dien_ux1b_l5c.py` (nhãn "Mã tra cứu…").
+- Đã có sẵn từ UX4, không phải của lô này: `test_giao_dien_t3_l3.py::test_chu_giao_dien_dung_chu_cua_so_nhap_khong_con_du_tru` đỏ (đòi "Chỉ tiêu" trong thẻ Quản lý); xử lý ở giai đoạn 2.
+
 ## 2026-11-22 — UX5A-L1: đo thẻ Kết quả + Chi tiết và xuất tệp, bảng từ ngữ, bản đồ lựa chọn (chưa có mã)
 
 - Tài liệu `docs/ke_hoach/ux/UX5A_TU_NGU.md`: số điều khiển nhìn thấy hiện nay (quản trị và giáo viên, nếp đóng/mở), sáu quyết định D1–D6 kèm mặc định, bảng từ ngữ VI/EN, bản đồ lựa chọn (một nút vàng mỗi thẻ).
