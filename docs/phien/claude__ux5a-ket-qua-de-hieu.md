@@ -25,7 +25,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
       "Thêm ▾" / `<details>`. **MILESTONE 1: Truong approves before code.**
 - [x] **L2 `Kết quả` tab (MUST).** ≤ 7 visible controls before opening a fold; one gold = the next step; the rest
       secondary or inside the existing menus; one-line purpose under the title.
-- [ ] **L3 `Chi tiết và xuất tệp` tab (MUST).** Same budgets; exports grouped behind one "Xuất tệp ▾"; the single gold
+- [x] **L3 `Chi tiết và xuất tệp` tab (MUST).** Same budgets; exports grouped behind one "Xuất tệp ▾"; the single gold
       action is chosen in L1; long detail tables stay reachable (collapsed by default if > 1 screen, never removed).
 - [ ] **L4 Teacher view + tests (MUST).** Playwright "Hick budget" + "Von Restorff" tests for both tabs, admin and
       teacher; jargon test (no "cấu hình", "suất", raw ISO timestamps in visible text). **MILESTONE 2: checker + Truong.**
@@ -38,7 +38,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 
 ## Current state
 - L1 done (2026-11-22): `docs/ke_hoach/ux/UX5A_TU_NGU.md` written (measured with real Chromium, 6 decisions D1–D6 with defaults).
-- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2 done.
+- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2, L3 done.
 - Env: `.venv` created locally from `requirements-dev.txt` (gitignored). Measure script is in the session scratchpad only.
 
 ## Session log (append only)
@@ -47,3 +47,4 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 | 2026-11-22 | Sonnet | Plan + protocol for Track A | split from UX5B by Truong |
 | 2026-11-22 | Sonnet | L1 audit + words + choice map | measured admin+teacher, both tabs; stop point |
 | 2026-11-22 | Sonnet | L2 Kết quả tab | tests ux5a_l2 green; t3_l3 failure pre-exists (UX4) |
+| 2026-11-22 | Sonnet | L3 Chi tiết và xuất tệp tab | tests ux5a_l3 + ws_nhan green |

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5A-L3: thẻ Chi tiết và xuất tệp (đúng một nút vàng, bỏ "suất"/"Chọi", gợi ý gọn, nút theo hàng đã chọn)
+
+- Chữ: "Tải kết quả về máy" (tiêu đề khung xuất), "Chọn thêm tệp để xuất", menu "Xuất tệp khác ▾"; "suất" → "chỗ dành riêng/chỗ thường" ở chú giải, khung "Chỗ dành riêng đã dùng", số đếm và dòng tóm tắt; "Chọi cao nhất" → "Nhiều học sinh muốn nhất"; dòng mục tiêu "Được vào CLB mình chọn đầu tiên: x%". Khoá mới `ux5a_nhom_chi_tiet`, `ux5a_xuat_canh_bao` (khoá cũ `xuat_canh_bao_diem` giữ cho thẻ Nhập tại chỗ). Bỏ đề xuất đổi "Học sinh trên mỗi chỗ" (cũ đã rõ).
+- Bố cục: tiêu đề nhóm "Số liệu chi tiết" trên 7 khung gập; gợi ý huy chương chuyển vào trong menu "Xuất tệp khác"; chỉ còn một đoạn gợi ý + một dòng cảnh báo đỏ trong khung xuất; "Chạy vòng 2" và "Gửi khiếu nại" thành nút thường (D2) → đúng một nút vàng ("Xuất kết quả (Excel)").
+- D4: "Xuất CSV học sinh đã chọn", "Bỏ chọn" và ô tick "Hồ sơ học sinh đã chọn" ẩn tới khi tick ít nhất một em (vẫn giữ id; `disabled` giữ nguyên).
+- File: index.html, style.css, i18n.js, js/03_ket_qua.js. Không đổi backend; `kiem_nhanh.py` 7/7.
+- Test mới: `tests/test_giao_dien_ux5a_l3.py` (12 ca). Test cũ sửa có chủ: `test_giao_dien_ux1_ket_qua.py` (nhãn menu), `test_ws_nhan.py` (`SUA_CO_Y`, nhãn UX5A, 11 khoá).
+
 ## 2026-11-22 — UX5A-L2: thẻ Kết quả (một nút vàng, nếp "Báo cáo và phiếu in", chữ dễ hiểu)
 
 - "Tải bảng này (Excel)" là nút vàng duy nhất của thẻ; "Khoá máy cho học sinh tự tra cứu" (trước là vàng) thành nút thường (D1). "Gửi" ở khung phản hồi thành nút thường (D2).

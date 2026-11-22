@@ -248,3 +248,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX4-L4 (Cách xếp: một câu hỏi, Tuỳ chỉnh thêm, Thử cách xếp này; chữ Điểm quyết tâm/Điểm chuẩn) | xong, chờ Truong duyệt ảnh + checker | 2026-11-22 | index.html, style.css, i18n.js, js/05_quan_ly.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js | tests/test_giao_dien_ux4_l4.py | MILESTONE 2 |
 | UX5A-L1 (đo + bảng từ ngữ + bản đồ lựa chọn: thẻ Kết quả, Chi tiết và xuất tệp) | xong, chờ Truong duyệt từ ngữ | 2026-11-22 | docs/ke_hoach/ux/UX5A_TU_NGU.md | — | MILESTONE 1 |
 | UX5A-L2 (thẻ Kết quả: một vàng, nếp Báo cáo và phiếu in, chữ) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js | tests/test_giao_dien_ux5a_l2.py | |
+| UX5A-L3 (thẻ Chi tiết và xuất tệp: một vàng, chữ, gợi ý gọn, ẩn nút hàng đã chọn) | xong, chờ checker | 2026-11-22 | index.html, style.css, i18n.js, js/03_ket_qua.js | tests/test_giao_dien_ux5a_l3.py | |
