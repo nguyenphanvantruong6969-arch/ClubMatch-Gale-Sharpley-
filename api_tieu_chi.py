@@ -21,6 +21,7 @@ from rbda_priority_pipeline import (
     default_reserve_eligible_fn,
     diem_wharton_hieu_luc,
     doc_stb_buoi,
+    dung_chia_loai,
     dung_fa_daa,
     dung_wharton,
     kiem_ho_so_wharton,
@@ -161,6 +162,9 @@ class TieuChiMixin:
         Trả `(KetQuaTuan, None)` hoặc `(None, phản hồi lỗi)`. KHÔNG ghi CSDL. `sao_luu=False` bỏ cả sao lưu
         (ước tính MT1-L3). `sua_clb(clubs)`: sửa từ điển CLB đã đọc, trong bộ nhớ, trước khi kiểm
         (giả định chỗ giữ của một thẻ mục tiêu mà chưa áp)."""
+        if dung_chia_loai(luat):
+            # MT2: đường này giải KHÔNG qua lớp loại CLB; chạy thử cho số sai hơn là từ chối rõ ràng.
+            return None, _fail(err("mt_thu_chua_ho_tro_loai"))
         # 3) Sao lưu (hỏng không chặn, như lần chính thức) rồi kiểm dữ liệu. Ước tính chỉ đọc thì
         # `sao_luu=False`: không sao lưu, không viết gì.
         if sao_luu:

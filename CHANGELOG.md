@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-22 — MT2-L2: "Chia CLB theo loại" chạy trong pipeline, không cần huy chương
+
+- `api.py` (`run_pipeline`): khi `dung_chia_loai` bật mà `fa_daa` tắt → kiểm loại CLB bằng `fa_daa.kiem_loai_tu_csdl` (mỗi buổi một CLB Tự do, mọi CLB có loại, Tuyển chọn có điểm sàn; lỗi chặn trước khi bốc/khoá/ghi), rồi chạy `fa_daa.chay_fa_daa` với `diem_wharton` hiệu lực: rỗng (chỉ xếp: điểm thi rồi bốc thăm) hoặc điểm quyết tâm hai quỹ (`chia_100`). Hai chốt `sanity_check_result` / `verify_stability` vẫn chạy trên đầu vào đã chuẩn bị; một giao dịch như cũ. `fa_daa` bật: đường cũ, không đổi.
+- `fa_daa.chay_fa_daa(..., diem_wharton=None)` (mặc định = lấy từ huy chương, như cũ). Khoá ưu tiên không đọc hạng nguyện vọng (bất biến 2).
+- Chạy thử / ước tính (`_giai_trong_bo_nho`) từ chối khi bật: mã mới `mt_thu_chua_ho_tro_loai` (cuối `i18n_errors.py`, đã sinh lại `i18n_loi.js`) — đường đó không qua lớp loại nên sẽ cho số sai.
+- Đo bất biến 8 (dữ liệu MÔ PHỎNG, 30 em, 3 CLB, 12 seed × 2 chế độ): 0 cặp phá vỡ. Lý do lý thuyết: mỗi CLB dùng một thứ tự ưu tiên cố định theo từng em (điểm thi, điểm quyết tâm, bốc thăm) + chỉ tiêu, lọc điểm sàn chỉ loại cặp không hợp lệ → hàm chọn thay thế được; giữ chỗ dùng suất dự trữ mềm hai lượt.
+- Test mới: `tests/test_mt2_l2_chay.py` (15 ca; gồm F1 dấu vân tay `fa_clb` khi bật, F2 `_luat_ap_dung` mang `chia_loai`). `kiem_nhanh` 7/7; trùng khít 3 bộ × 20 seed (60 ca).
+
 ## 2026-11-22 — MT2-L1: khoá luật `chia_loai` ("Chia CLB theo loại") — cấu hình + công tắc
 
 - `rules.chia_loai` (bool, mặc định False) trong `LUAT_XEP_MAC_DINH` và `MAC_DINH_TRUONG_HOC`; kiểm bool trong `cau_hinh_ws._chuan_hoa`. Hiệu lực = `dung_chia_loai(rules)` = `chia_loai` HOẶC `fa_daa` (workspace Huy chương cũ chạy y nguyên). Không cần `wharton`.
