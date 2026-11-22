@@ -395,7 +395,7 @@
           </div>
           <details class="nang-cao ux5a-nep-ph" id="phThemY">
             <summary class="btn btn-ghost" data-i18n="ux5a_ph_them">Thêm ý kiến ▾</summary>
-          <p data-i18n="ph_cau_kho">Phần nào khó nhất?</p>
+          <p data-i18n="ph_cau_kho">Phần nào khó nhất? (không bắt buộc)</p>
           <div class="kq-seg ph-nhom" role="group" data-i18n-aria-label="ph_cau_kho">
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="chon_clb" aria-pressed="false" data-i18n="ph_kho_chon_clb">Chọn CLB</button>
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="xep_thu_tu" aria-pressed="false" data-i18n="ph_kho_xep_thu_tu">Xếp thứ tự</button>
@@ -485,7 +485,7 @@
               <button class="menu-khac-muc" id="btnPdfDsLop" type="button" data-i18n="xp1_pdf_ds_lop">Danh sách theo {cohort_l} (PDF)</button>
               <select id="pdfLop" class="text-input text-input-sm" data-i18n-aria-label="xp1_pdf_lop_aria"></select>
               <button class="menu-khac-muc" id="btnPdfPhieuLop" type="button" data-i18n="xp1_pdf_phieu_lop">Phiếu giải trình theo {cohort_l} (PDF)</button>
-              <p class="hint-text ux5a-goi-y-fa" id="xuatFaAnGoiY" data-sg11a-xuat-fa data-i18n="xuat_fa_an_goi_y">Các nút xuất lý do kết quả, bảng nhu cầu, gợi ý chỉ tiêu và biên bản bốc thăm chỉ hiện khi bật chế độ "Xếp theo loại {slot_l} và huy chương".</p>
+              <p class="hint-text ux5a-goi-y-fa" id="xuatFaAnGoiY" data-sg11a-xuat-fa data-i18n="xuat_fa_an_goi_y">Muốn xuất thêm lý do kết quả, bảng nhu cầu, gợi ý chỉ tiêu, biên bản bốc thăm: bật chế độ "Xếp theo loại câu lạc bộ và huy chương" ở thẻ Quản lý.</p>
             </div>
           </details>
         </div>
@@ -950,7 +950,7 @@
     <section class="view" id="view-admin">
       <header class="view-header">
         <h1 data-i18n="admin_title">Quản lý</h1>
-        <p class="view-desc" data-i18n="admin_desc">Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.</p>
+        <p class="view-desc" data-i18n="admin_desc">Sửa danh sách CLB và học sinh, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới.</p>
       </header>
 
 
@@ -1037,7 +1037,7 @@
             <tbody id="taiBuoiBody"></tbody>
           </table>
         </div>
-        <p class="hint-text" data-i18n="ti_le_choi_giai_thich">Tỉ lệ chọi tính theo số học sinh, không theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.</p>
+        <p class="hint-text" data-i18n="ti_le_choi_giai_thich">Số học sinh trên mỗi chỗ tính theo số học sinh, không tính theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.</p>
       </div>
       </div>
 
@@ -1045,7 +1045,7 @@
       <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_hs"></p>
       <p class="ql-tt" id="qlTtHs" role="status"></p>
       <div class="panel">
-        <div class="panel-head"><h2 data-i18n="admin_reserve_assign_title">Gán nhóm ưu tiên và xuất hồ sơ học sinh</h2></div>
+        <div class="panel-head"><h2 data-i18n="admin_reserve_assign_title">Học sinh và nhóm ưu tiên</h2></div>
         <div class="search-row">
           <input type="text" id="adminStudentSearch" class="text-input" data-i18n-placeholder="placeholder_admin_student_search" placeholder="Tìm học sinh theo mã hoặc tên…">
           <!-- A14: lọc theo lớp; danh sách lớp nạp từ list_classes (js/04 napOChonLop). -->
@@ -1077,7 +1077,7 @@
             <th data-i18n="th_student_id">Mã học sinh</th>
             <th data-i18n="th_name">Họ tên</th>
             <th data-i18n="th_cohort">{cohort}</th>
-            <th data-i18n="th_current_reserve_group">Nhóm ưu tiên hiện tại</th>
+            <th data-i18n="th_current_reserve_group">Nhóm ưu tiên</th>
           </tr></thead>
           <tbody id="adminStudentTableBody"></tbody>
         </table>
@@ -1113,13 +1113,13 @@
         <div class="wh-hang-loat" id="whHangLoat">
           <div class="search-row">
             <button class="btn btn-secondary" id="btnWhTaiCanSua" type="button" data-i18n="wh_hl_tai">Tải danh sách cần sửa</button>
-            <button class="btn btn-secondary" id="btnWhPhong" type="button" data-i18n="wh_hl_phong">Phóng cho đủ 100 theo tỉ lệ</button>
+            <button class="btn btn-secondary" id="btnWhPhong" type="button" data-i18n="wh_hl_phong">Tự cộng cho đủ 100 (giữ tỉ lệ)</button>
           </div>
           <div class="wh-ql-xacnhan" id="whPhongHop" hidden>
             <p class="hint-text" id="whPhongHoi"></p>
             <div class="search-row">
-              <input type="text" id="whPhongGo" class="text-input text-input-sm" autocomplete="off" data-i18n-aria-label="aria_wh_go_phong" aria-label="Gõ chữ xác nhận để phóng điểm">
-              <button class="btn btn-primary" id="btnWhPhongXn" type="button" data-i18n="wh_hl_phong_xn">Xác nhận phóng điểm</button>
+              <input type="text" id="whPhongGo" class="text-input text-input-sm" autocomplete="off" data-i18n-aria-label="aria_wh_go_phong" aria-label="Gõ chữ xác nhận để tự cộng điểm">
+              <button class="btn btn-primary" id="btnWhPhongXn" type="button" data-i18n="wh_hl_phong_xn">Xác nhận tự cộng</button>
               <button class="btn btn-ghost" id="btnWhPhongHuy" type="button" data-i18n="btn_cancel">Huỷ</button>
             </div>
           </div>
@@ -1147,11 +1147,11 @@
 
         <div class="wh-ql-loc-hang">
           <input type="text" id="whQlTim" class="text-input" data-i18n-placeholder="wh_tim_placeholder" placeholder="Tìm học sinh theo mã hoặc tên…">
-          <label class="wh-ql-loc"><span data-i18n="wh_loc_quy">Quỹ</span>
+          <label class="wh-ql-loc"><span data-i18n="wh_loc_quy">Loại điểm</span>
             <select id="whLocQuy" class="text-input text-input-sm">
               <option value="" data-i18n="wh_loc_tat_ca">Tất cả</option>
-              <option value="1" data-i18n="wh_quy_1">Quỹ 1, đã thi</option>
-              <option value="2" data-i18n="wh_quy_2">Quỹ 2, không thi</option>
+              <option value="1" data-i18n="wh_quy_1">Điểm cho CLB có thi</option>
+              <option value="2" data-i18n="wh_quy_2">Điểm cho CLB không thi</option>
             </select></label>
           <label class="wh-ql-loc" id="whLocBuoiNhan"><span data-i18n="wh_loc_buoi">Buổi</span>
             <select id="whLocBuoi" class="text-input text-input-sm"></select></label>
@@ -1230,7 +1230,7 @@
             <button class="nut-i nut-i-chu" id="btnDcThongTin" type="button" aria-expanded="false" aria-controls="dcThongTin" data-i18n-aria-label="dc_giai_thich" aria-label="Giải thích về điểm chuẩn" data-i18n="ux4_giai_thich">Giải thích</button>
           </div>
         </div>
-        <p class="hint-text" id="dcThongTin" hidden data-i18n="dc_mo_ta">Điểm thấp nhất đã được nhận ở từng câu lạc bộ, tách theo hai cách xét (xét điểm thi và xét điểm quyết tâm) và theo suất thường hay suất ưu tiên. Xét điểm quyết tâm tính theo điểm quyết tâm. Xét điểm thi tính theo điểm thi, kèm điểm quyết tâm của người nhận cuối. CLB còn chỗ ghi 0 điểm. Chỉ dành cho quản trị.</p>
+        <p class="hint-text" id="dcThongTin" hidden data-i18n="dc_mo_ta">Điểm thấp nhất đã được nhận ở từng câu lạc bộ, tách theo hai cách xét (theo điểm thi và theo điểm quyết tâm) và theo chỗ thường hay chỗ dành riêng. CLB còn chỗ trống thì ghi "chưa cần điểm". Chỉ dành cho quản trị.</p>
         <p class="canh-bao-vang" id="dcQlCu" role="status" hidden data-i18n="dc_cu">Dữ liệu đã đổi sau lần chạy gần nhất, nên điểm chuẩn có thể đã cũ. Hãy chạy lại để cập nhật.</p>
         <p class="hint-text" id="dcQlRong" hidden data-i18n="dc_chua_co_ket_qua">Chưa có kết quả. Hãy chạy sắp xếp trước.</p>
         <div id="dcQlTongQuan"></div>
@@ -1248,7 +1248,7 @@
       <p class="hint-text ql-mo-ta" data-i18n="ux4_mo_lam_lai"></p>
       <p class="ql-tt" id="qlTtDuLieu" role="status"></p>
       <div class="panel">
-        <div class="panel-head"><h2 data-i18n="danger_zone_title">Vùng nguy hiểm: xoá dữ liệu để làm lại</h2></div>
+        <div class="panel-head"><h2 data-i18n="danger_zone_title">Làm lại từ đầu</h2></div>
         <p class="hint-text" data-i18n="danger_zone_desc">Nạp tệp chỉ thêm học sinh mới, không xoá học sinh cũ. Muốn làm lại với bộ dữ liệu khác, hãy xoá ở đây trước, nếu không học sinh cũ vẫn chiếm chỗ.</p>
         <p class="hint-text" data-i18n="danger_zone_safety">Cả hai nút đều tự sao lưu dữ liệu trước khi xoá. Lịch sử các lần sắp xếp được giữ lại.</p>
         <div class="search-row">
@@ -1269,18 +1269,18 @@
         <summary class="btn btn-secondary" data-i18n="ux4_tuy_chinh_them">Tuỳ chỉnh thêm</summary>
       <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
       <div class="panel gt-ui" id="gt2TieuChiPanel">
-        <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tiêu chí xếp</h2></div>
+        <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tuỳ chỉnh chi tiết</h2></div>
         <div class="panel-body">
-          <p class="hint-text" data-i18n="gt2_tc_mo_ta">Thứ tự dưới đây là cách phần mềm xếp những người cùng đăng ký một suất. Chỉ chọn được trong các lựa chọn có sẵn.</p>
+          <p class="hint-text" data-i18n="gt2_tc_mo_ta">Danh sách dưới đây là thứ tự phần mềm dùng để chọn khi nhiều học sinh cùng muốn một chỗ. Chỉ chọn được trong các lựa chọn có sẵn.</p>
           <div class="gt2-luoi">
             <section class="gt2-the gt2-the-thu-tu" aria-labelledby="gt2TcThuTuTieuDe">
-              <h3 id="gt2TcThuTuTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_thu_tu">Thứ tự xếp hiện tại</h3>
+              <h3 id="gt2TcThuTuTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_thu_tu">Thứ tự đang dùng</h3>
               <div id="gt2TcDanhSach"></div>
               <div id="gt2TcKhongDung" class="gt2-khong-dung" hidden></div>
               <p class="hint-text" id="gt2TcGhiChu"></p>
             </section>
             <section class="gt2-the gt2-form" id="gt2TcDieuKhien" aria-labelledby="gt2TcFormTieuDe">
-              <h3 id="gt2TcFormTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_chon">Chọn cách xếp</h3>
+              <h3 id="gt2TcFormTieuDe" class="gt2-tieu-de-the" data-i18n="gt2_tc_chon">Đổi cách xếp</h3>
               <div class="club-field">
                 <label for="gt2TcPriority" id="gt2TcPriorityNhan"></label>
                 <select id="gt2TcPriority" class="text-input"></select>
@@ -1301,7 +1301,7 @@
               <div class="check-khoi">
               </div>
               <div class="panel-actions gt2-nut-phai">
-                <button class="btn btn-secondary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tiêu chí</button>
+                <button class="btn btn-secondary" id="gt2TcLuu" type="button" data-i18n="gt2_tc_luu">Lưu tuỳ chỉnh</button>
               </div>
               <div id="gt2TcPhanHoi" class="save-feedback" role="status"></div>
             </section>
@@ -1313,20 +1313,20 @@
 
       <!-- GT2-L3: thử cấu hình — chạy thử, so hai lần chạy (js/15_tieu_chi.js). Không đổi kết quả chính thức. -->
       <div class="panel gt-ui" id="gt2ThuPanel">
-        <div class="panel-head"><h2 data-i18n="gt2_thu_tieu_de">Thử cấu hình</h2></div>
+        <div class="panel-head"><h2 data-i18n="gt2_thu_tieu_de">Thử cách xếp khác</h2></div>
         <div class="panel-body">
-          <ol class="gt-buoc gt2-buoc" id="gt2ThuBuoc" hidden data-i18n-aria-label="gt2_thu_buoc_aria" aria-label="Các bước thử cấu hình">
+          <ol class="gt-buoc gt2-buoc" id="gt2ThuBuoc" hidden data-i18n-aria-label="gt2_thu_buoc_aria" aria-label="Các bước thử cách xếp">
             <li data-i18n="gt2_thu_buoc_1">Chạy thử</li>
             <li data-i18n="gt2_thu_buoc_2">Chọn hai lần để so sánh</li>
             <li data-i18n="gt2_thu_buoc_3">So sánh, xuất tệp</li>
           </ol>
-          <p class="hint-text" data-i18n="gt2_thu_mo_ta">Chạy thử dùng đúng các lựa chọn đang hiện ở khung Tiêu chí xếp phía trên. Kết quả thử không được công bố và không thay kết quả chính thức.</p>
+          <p class="hint-text" data-i18n="gt2_thu_mo_ta">Thử xếp lại bằng các lựa chọn đang hiện ở trên. Kết quả thử không được công bố và không thay kết quả chính thức.</p>
           <div id="gt2ThuCanhBao" class="canh-bao-vang gt2-canh-bao" role="status" hidden></div>
           <div class="panel-actions">
-            <button class="btn btn-primary" id="gt2ThuChay" type="button" data-i18n="gt2_thu_chay">Chạy thử</button>
+            <button class="btn btn-primary" id="gt2ThuChay" type="button" data-i18n="gt2_thu_chay">Thử cách xếp này</button>
           </div>
           <div id="gt2ThuPhanHoi" class="save-feedback" role="status"></div>
-          <p class="hint-text" id="gt2ThuChuaCo" hidden data-i18n="gt2_thu_chua_co">Chưa có lần chạy nào để so sánh. Hãy chạy xếp chính thức rồi chạy thử.</p>
+          <p class="hint-text" id="gt2ThuChuaCo" hidden data-i18n="gt2_thu_chua_co">Chưa có kết quả nào để so sánh. Hãy chạy xếp chính thức trước, rồi bấm "Thử cách xếp này".</p>
           <details class="club-them" id="gt2ThuSoSanhKhac">
             <summary class="btn btn-secondary" data-i18n="ux4_so_sanh_khac">So sánh với lần khác</summary>
           <div class="gt2-hai-o" id="gt2ThuChon" hidden>
@@ -1346,8 +1346,8 @@
           </div>
           <div id="gt2ThuXuat" class="save-feedback" role="status"></div>
           <div id="gt2ThuApDung" class="gt2-ap-dung" hidden>
-            <h3 data-i18n="gt2_ad_tieu_de">Dùng tiêu chí của một lần chạy thử</h3>
-            <p class="hint-text" data-i18n="gt2_ad_ghi_chu">Nút dưới đây chỉ lưu tiêu chí của lần thử vào cấu hình. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.</p>
+            <h3 data-i18n="gt2_ad_tieu_de">Dùng cách xếp của một lần thử</h3>
+            <p class="hint-text" data-i18n="gt2_ad_ghi_chu">Nút dưới đây chỉ lưu cách xếp của lần thử. Kết quả chính thức chỉ đổi khi quản trị chạy xếp chính thức lần kế tiếp.</p>
             <ul id="gt2ThuApDungDs" class="gt2-ad-ds"></ul>
             <div id="gt2ThuApDungXacNhan" class="run-confirm-bar" hidden></div>
             <div id="gt2ThuApDungPhanHoi" class="save-feedback" role="status"></div>
