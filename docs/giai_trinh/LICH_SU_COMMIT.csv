@@ -1,4 +1,5 @@
 ma,ngay,tac_gia,gop_nhanh,so_tep_doi,tieu_de
+fd40227,2026-11-22,Claude Code (theo yêu cầu và duyệt của Truong),,9,"GT-LS: báo cáo lịch sử thay đổi kèm commit, sơ đồ luồng xử lý, bảng commit đầy đủ (chỉ tài liệu)"
 3a70029,2026-11-21,Tài khoản của Truong (gộp yêu cầu gộp PR),co,,Merge pull request #27 from nguyenphanvantruong6969-arch/claude/sm2-mot-so-mau
 69edbdd,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,1,SM2: log Truong decision (no custom-vocabulary dictionary)
 b4a1dab,2026-11-21,Claude Code (theo yêu cầu và duyệt của Truong),,2,SM2: Status DONE 8839a2a CI green

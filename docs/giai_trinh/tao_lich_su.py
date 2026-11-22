@@ -1,4 +1,4 @@
-"""Dựng `LICH_SU_THAY_DOI.md`, `LICH_SU_COMMIT.csv` và `LICH_SU_THAY_DOI.pdf` từ lịch sử git THẬT của kho.
+"""Dựng `LICH_SU_THAY_DOI.md`, `LICH_SU_COMMIT.csv` và `LICH_SU_THAY_DOI.pdf` và `.docx` từ lịch sử git THẬT của kho.
 
 Chạy (cần clone ĐỦ lịch sử, không phải shallow):
     git fetch --unshallow origin        # nếu `git rev-parse --is-shallow-repository` in ra true
@@ -26,6 +26,7 @@ KHO_URL = "https://github.com/nguyenphanvantruong6969-arch/ClubMatch-Gale-Sharpl
 DUONG_MD = os.path.join(THU_MUC, "LICH_SU_THAY_DOI.md")
 DUONG_CSV = os.path.join(THU_MUC, "LICH_SU_COMMIT.csv")
 DUONG_PDF = os.path.join(THU_MUC, "LICH_SU_THAY_DOI.pdf")
+DUONG_DOCX = os.path.join(THU_MUC, "LICH_SU_THAY_DOI.docx")
 DUONG_SVG_XU_LY = os.path.join(THU_MUC, "so_do_xu_ly.svg")
 DUONG_SVG_BUOC = os.path.join(THU_MUC, "so_do_luong.svg")
 # Hai danh tính tác giả trong git, quy về nhãn đọc được (không in tên hiển thị hay thư điện tử).
@@ -349,6 +350,64 @@ def ghi_pdf(md: str) -> bool:
     return pdf_bang_node(html_)
 
 
+def svg_ra_png(svg: str, png: str) -> bool:
+    """Chụp SVG thành PNG bằng Playwright của Node (docx không nhúng được SVG)."""
+    tam = png + ".html"
+    with open(svg, encoding="utf-8") as f:
+        ma = re.sub(r"<\?xml[^>]*\?>", "", f.read())
+    with open(tam, "w", encoding="utf-8") as f:
+        f.write('<html><body style="margin:0">%s</body></html>' % ma)
+    kich_ban = ("const {chromium}=require('playwright');(async()=>{const b=await chromium.launch({args:['--no-sandbox']});"
+                "const p=await b.newPage({viewport:{width:1200,height:900},deviceScaleFactor:1.5});await p.goto('file://'+process.argv[1]);"
+                "await p.screenshot({path:process.argv[2],fullPage:true,timeout:120000});await b.close();})();")
+    try:
+        subprocess.run(["node", "-e", kich_ban, tam, png], check=True, timeout=240, capture_output=True)
+        return True
+    except (OSError, subprocess.SubprocessError):
+        return False
+    finally:
+        if os.path.exists(tam):
+            os.remove(tam)
+
+
+def ghi_docx(md: str) -> bool:
+    """Dùng lại bộ dựng .docx của gói minh chứng, rồi thay hai dòng đánh dấu bằng ảnh sơ đồ."""
+    spec = importlib.util.spec_from_file_location("tao_goi_minh_chung", os.path.join(THU_MUC, "tao_goi_minh_chung.py"))
+    g = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(g)
+    g.TIEU_DE = "Báo cáo lịch sử thay đổi và sơ đồ luồng xử lý"
+    g.DUONG_DOCX = DUONG_DOCX
+    if not g.ghi_docx([("LICH_SU_THAY_DOI.md", md)]):
+        return False
+    import docx
+    from docx.shared import Cm
+    tai_lieu = docx.Document(DUONG_DOCX)
+    for dau, svg in (("[[SO_DO_XU_LY]]", DUONG_SVG_XU_LY), ("[[SO_DO_BUOC]]", DUONG_SVG_BUOC)):
+        png = os.path.join(THU_MUC, "_so_do_tam.png")
+        if not svg_ra_png(svg, png):
+            print("Không chụp được sơ đồ: .docx giữ dòng đánh dấu")
+            continue
+        for dv in tai_lieu.paragraphs:
+            if dv.text.strip() == dau:
+                for r in list(dv.runs):
+                    r.text = ""
+                dv.add_run().add_picture(png, height=Cm(21) if dau == "[[SO_DO_XU_LY]]" else None,
+                                         width=None if dau == "[[SO_DO_XU_LY]]" else Cm(17))
+        os.remove(png)
+    rong = {5: (2.0, 2.1, 2.2, 5.2, 5.5), 4: (2.0, 2.1, 2.3, 10.6), 3: (3.0, 4.0, 10.0)}
+    for b in tai_lieu.tables:
+        w = rong.get(len(b.columns))
+        if w and len(b.columns) in (4, 5):
+            b.autofit = False
+            for c, cm in zip(b.columns, w):
+                c.width = Cm(cm)
+            for hang in b.rows:
+                for o, cm in zip(hang.cells, w):
+                    o.width = Cm(cm)
+    tai_lieu.save(DUONG_DOCX)
+    return True
+
+
 def pdf_bang_node(html_: str) -> bool:
     """Dự phòng khi Python không có playwright: dùng Playwright của Node (cùng Chromium cài sẵn)."""
     tam = os.path.join(THU_MUC, "_lich_su_tam.html")
@@ -376,9 +435,11 @@ def main() -> int:
         f.write(md.replace("[[SO_DO_XU_LY]]", "![Sơ đồ luồng xử lý](so_do_xu_ly.svg)").replace("[[SO_DO_BUOC]]", "![Sơ đồ 12 bước](so_do_luong.svg)"))
     ghi_csv(tq)
     ok = ghi_pdf(md)
+    ok_docx = ghi_docx(md)
     print("md :", DUONG_MD)
     print("csv:", DUONG_CSV)
     print("pdf:", DUONG_PDF if ok else "không dựng")
+    print("docx:", DUONG_DOCX if ok_docx else "không dựng")
     return 0
 
 

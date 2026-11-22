@@ -2,7 +2,7 @@
 
 > **Dữ liệu mô phỏng.** Mọi tên và điểm trong dự án do máy sinh với hạt giống cố định, không phải học sinh hay khảo sát thật.
 > Báo cáo chỉ nêu sự việc đọc từ lịch sử git; nhận xét về mức đóng góp và mọi kết luận do học sinh thực hiện đề tài tự viết.
-> Tệp này do `docs/giai_trinh/tao_lich_su.py` sinh ra từ git, mốc đối chiếu `3a70029`. Không sửa tay; sửa script rồi chạy lại.
+> Tệp này do `docs/giai_trinh/tao_lich_su.py` sinh ra từ git, mốc đối chiếu `fd40227`. Không sửa tay; sửa script rồi chạy lại.
 
 ## 1. Cách đối chiếu
 
@@ -20,15 +20,15 @@ Cần clone đầy đủ: nếu `git rev-parse --is-shallow-repository` in `true
 
 | Mục | Giá trị |
 |---|---|
-| Số commit | 1338 (trong đó 93 commit gộp nhánh) |
-| Khoảng thời gian trong kho | 2026-10-24 đến 2026-11-21 |
+| Số commit | 1339 (trong đó 93 commit gộp nhánh) |
+| Khoảng thời gian trong kho | 2026-10-24 đến 2026-11-22 |
 | Commit gốc | `e08af78a6955227f65bab42d2e7dae2a5c147c18` |
-| Tệp test Python | 379 |
+| Tệp test Python | 380 |
 | Yêu cầu gộp PR vào nhánh chính | 23 (mục 5) |
-| Commit của: Claude Code (theo yêu cầu và duyệt của Truong) | 1315 |
+| Commit của: Claude Code (theo yêu cầu và duyệt của Truong) | 1316 |
 | Commit của: Tài khoản của Truong (gộp yêu cầu gộp PR) | 23 |
 
-Commit theo tháng: 2026-10: 108; 2026-11: 1230.
+Commit theo tháng: 2026-10: 108; 2026-11: 1231.
 
 Nhãn tác giả được quy từ hai danh tính git; tên hiển thị và thư điện tử không in ở đây. Các commit của tài khoản Truong đều là commit gộp PR.
 
@@ -210,7 +210,7 @@ Các số PR vắng trong bảng (#2, #5, #22, #26) không có commit gộp tron
 | GAP | Phần sau xếp của FA-DAA: điểm danh, danh sách chờ, khiếu nại, vòng 2, bảng điều khiển | 40 | 2026-11-10 | 2026-11-10 |
 | FG | Gộp biểu mẫu Forms | 45 | 2026-11-12 | 2026-11-13 |
 | SG | Mười hai mục SG-1 đến SG-12, làm song song (`docs/ke_hoach/SG_SONG_SONG.md`) | 173 | 2026-11-13 | 2026-11-14 |
-| GT | Giải trình kết quả, thử tiêu chí, tài khoản, nhật ký thao tác, gói minh chứng | 150 | 2026-11-15 | 2026-11-18 |
+| GT | Giải trình kết quả, thử tiêu chí, tài khoản, nhật ký thao tác, gói minh chứng | 151 | 2026-11-15 | 2026-11-22 |
 | UX | Làm lại giao diện (UX1, UX2) | 174 | 2026-11-18 | 2026-11-21 |
 | XP | Xuất PDF | 32 | 2026-11-18 | 2026-11-19 |
 | MT | Ba thẻ mục tiêu | 74 | 2026-11-20 | 2026-11-21 |
