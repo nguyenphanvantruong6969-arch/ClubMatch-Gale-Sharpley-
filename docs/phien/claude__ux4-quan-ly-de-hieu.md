@@ -22,24 +22,38 @@ part within seconds of opening it. UI + wording only: no backend, schema, algori
 8. Điểm quyết tâm: "Quỹ 1, đã thi", "Phóng cho đủ 100 theo tỉ lệ", raw ISO lock time "2026-11-22 03:36:59", bare "i".
 9. Điểm chuẩn: "XÉT ĐIỂM THI —" / "XÉT ĐIỂM QUYẾT TÂM 0" with no meaning for "—" or 0.
 
+## Design rule: Hick's law (Truong, 2026-11-22)
+"Don't give the user too many options or they get confused." Decision time grows with the number of equal-weight
+choices shown at once, so every screen shows FEW choices; the rest is one click away (progressive disclosure).
+Budgets (checked by a test that counts VISIBLE, enabled controls: buttons, selects, inputs, tabs, links):
+- Sub-tab strip: **≤ 4** visible items. Rarely used / dangerous items go under one "Thêm ▾" item.
+- One choice group (radio cards / one select): **≤ 3 options**, one pre-selected default, short labels.
+- Per panel: **1 primary button**; ≤ 7 visible controls before the user opens "Thêm tuỳ chọn".
+- A control that does not apply to the current choice is HIDDEN, not just disabled (e.g. group settings when no
+  priority group is used). Actions on selected rows appear only after a row is selected.
+- Never remove a capability: everything hidden stays reachable in ≤ 2 clicks and keeps its element id.
+
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] **L1 Wording sheet (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: one table, every visible string of
-      the Quản lý tab (incl. sub-tabs, buttons, placeholders, column heads, hints, toasts): key | old | proposed new
-      | why. Use the starting proposal below. Use `{club_s}/{person_l}`-style placeholders where the key already has
-      them (sector vocabulary, Z1). **MILESTONE 1: Truong approves/edits the words before any code.**
-- [ ] **L2 Structure (MUST).** (a) one plain subtitle for the whole tab; (b) sub-tabs renamed to tasks + one-line
-      purpose and a live status line under each heading (e.g. "3 CLB · 30 chỗ · 1 buổi"); (c) move "Tiêu chí xếp"
-      + "Thử cấu hình" out of the fold into a NEW sub-tab "Cách xếp" (order: CLB, Học sinh, Cách xếp, Điểm quyết tâm*,
-      Điểm chuẩn*, Làm lại từ đầu; * = only when the feature is on, as now). Keep every element id and the
-      `localStorage` remember-tab behaviour; old saved value "du_lieu"/"clb"/... still works.
-- [ ] **L3 CLB + Học sinh panels (MUST).** Apply approved words; label the session column; session field = dropdown
-      of existing sessions + "Thêm buổi mới…" (UI only, via `get_danh_sach_buoi`); ⓘ help for "Số chỗ dành riêng" and
-      "Nhóm ưu tiên" with one example; Học sinh: buttons disabled + "Đã chọn 0 học sinh" until a row is ticked.
-- [ ] **L4 Cách xếp + score panels (MUST: Cách xếp; OPTIONAL: Điểm quyết tâm, Điểm chuẩn).** Questions instead of
-      system labels; a live plain sentence "Với lựa chọn này: …" built from the current selects (display only, no
-      new rule); trial runs: default the 2nd dropdown to the newest trial, disable "So sánh" when both are the same,
-      run labels "Kết quả chính thức lần 1 — 22/11 03:36"; dates as dd/mm/yyyy HH:mm; "—"/0 explained in the
-      header ⓘ. **MILESTONE 2: checker + Truong 5-second test.**
+- [ ] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
+      string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel: controls visible
+      now (count) → visible after redesign (count) → where each hidden one goes. Keep sector placeholders
+      (`{person_l}` etc.). **MILESTONE 1: Truong approves words + choice map before any code.**
+- [ ] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
+      "Danh sách CLB", "Học sinh", "Cách xếp"; "Thêm ▾" holds Điểm quyết tâm*, Điểm chuẩn*, Làm lại từ đầu
+      (* only when the feature is on, as now). "Tiêu chí xếp" + "Thử cấu hình" leave the "Nâng cao" fold and live in
+      "Cách xếp". Each sub-tab: one-line purpose + live status line (e.g. "3 CLB · 30 chỗ · 1 buổi"). Keep ids and
+      remember-tab (`localStorage`, try/catch; old saved values still open the right panel).
+- [ ] **L3 CLB + Học sinh (MUST).** CLB form shows 3 fields: Tên, Số chỗ, Buổi (dropdown of existing sessions +
+      "Thêm buổi mới…", via `get_danh_sach_buoi`) + one "Lưu CLB" button. Mã CLB auto-filled from the name (editable,
+      UI only; backend validation unchanged) and Chỗ dành riêng / Nhóm ưu tiên live under "Thêm tuỳ chọn".
+      Label the session column. Học sinh: assign/export buttons hidden until ≥ 1 row ticked ("Đã chọn n học sinh").
+- [ ] **L4 Cách xếp (MUST) + score panels (OPTIONAL).** Replace the three selects with ONE question
+      "Khi CLB hết chỗ, ai được xét trước?" and ≤ 3 cards (pattern of `js/18_cai_dat.js`): "Điểm bài thi cao hơn"
+      (default), "Học sinh thuộc nhóm ưu tiên", "Cả hai". Each card maps to existing `priority` values; tier_mode,
+      score_scope and the group list appear only when they apply, under "Tuỳ chỉnh thêm". Live sentence
+      "Với lựa chọn này: …" (display only). Trial: one button "Thử cách xếp này" that compares with the latest
+      official result by default; the two run dropdowns move under "So sánh lần khác". Dates dd/mm/yyyy HH:mm.
+      Optional: Điểm quyết tâm / Điểm chuẩn wording + same budgets. **MILESTONE 2: checker + Truong 5-second test.**
 
 ## Starting wording proposal (L1 refines; Truong decides)
 | Old | Proposed |
@@ -61,6 +75,9 @@ part within seconds of opening it. UI + wording only: no backend, schema, algori
 
 ## Acceptance (both milestones)
 - Truong opens the tab cold and can say what each sub-tab is for (5-second test) — his verdict decides.
+- Playwright "Hick budget" test per sub-tab: visible enabled controls within the budgets above; sub-tab strip ≤ 4.
+- Saving a card in "Cách xếp" sends exactly the same `priority/tier_mode/score_scope` values the old selects sent
+  for the same choice (test compares payloads), so stored config and results are unchanged.
 - Playwright test: visible text of `#view-admin` (each sub-tab) contains none of: "cấu hình", "suất", "nhãn",
   "Quỹ 1", "Phóng", an ISO timestamp `\d{4}-\d\d-\d\d \d\d:`; the fold "Nâng cao" text appears nowhere.
 - Default config: results byte-identical (no backend change; `kiem_nhanh.py` `trung_khit` 7/7).
@@ -81,3 +98,4 @@ part within seconds of opening it. UI + wording only: no backend, schema, algori
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-22 | Opus | Audit of Quản lý tab, plan + protocol | UX3-L3 rename "Nhập thủ công" shipped separately |
+| 2026-11-22 | Opus | Plan revised for Hick's law (budgets, 3 tabs + Thêm, one-question rules panel) | replaces "6 sub-tabs" idea |

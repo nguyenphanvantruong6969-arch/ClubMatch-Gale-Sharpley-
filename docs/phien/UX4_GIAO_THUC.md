@@ -5,7 +5,8 @@
 
 ## 0. Decisions already made (do not ask again)
 - UI + wording only. No backend/API/schema/algorithm change; no new library. Keep every element id.
-- New sub-tab "Cách xếp" holds the rules panel + trial runs (moved out of the "Nâng cao" fold).
+- Hick's law is the design rule (Truong, 2026-11-22): budgets in the branch file ("Design rule"). Sub-tab strip =
+  "Danh sách CLB", "Học sinh", "Cách xếp" + "Thêm ▾"; "Cách xếp" holds the rules panel + trial runs.
 - i18n: change existing keys' text in place (vi + en); new keys prefix `ux4_`; CSS block `/* UX4 */`;
   tests `tests/test_giao_dien_ux4_*.py` (one Chromium file per lot, one shared page fixture).
 - Words are Truong's call: L1 sheet is approved BEFORE L2–L4 code.
@@ -32,6 +33,6 @@
 You are the UX4 checker (Sonnet) on `claude/ux4-quan-ly-de-hieu`. Read CLAUDE.md, `docs/phien/UX4_GIAO_THUC.md`,
 the branch file. Review `git diff <base>..<head>` only. Run `tests/test_giao_dien_ux4_*.py` + `tests/test_ws_nhan.py`
 + `tests/test_i18n_sync.py`. Take 3 screenshots of the Quản lý tab (CLB, Cách xếp, Làm lại từ đầu) with sample data.
-Check: acceptance list; approved words used exactly; no id removed; EN mirrors VI; no backend file changed
+Check: acceptance list incl. the Hick budget test (count visible controls yourself on the 3 screenshots); approved words used exactly; no id removed; EN mirrors VI; no backend file changed
 (`git diff --stat` shows only index.html, style.css, i18n.js, js/*.js, tests, docs). Write findings to
 `docs/phien/claude__ux4-quan-ly-de-hieu__checker.md`, reply one line `PASS` / `FIX: <n>`. Reply in Vietnamese to Truong.
