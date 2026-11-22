@@ -38,7 +38,7 @@ Both tabs must also be tidy for the TEACHER role (`body[data-vai="giao_vien"]`).
 
 ## Current state
 - L1 done (2026-11-22): `docs/ke_hoach/ux/UX5A_TU_NGU.md` written (measured with real Chromium, 6 decisions D1–D6 with defaults).
-- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2, L3, L4 done; checker next, then phase 2.
+- Truong approved M1 (D1–D6 defaults) and ordered: all lots L2–L4 non-stop, then phase 2 (whole-UX5A debug). L2, L3, L4 done (base edf7526, head 29d70d2). Checker session: `session_01TGThn68PrGbUVp59Ctd4ZX` (waiting for PASS/FIX; max 4 FIX rounds). Then PHASE 2 (whole-UX5A debug: soat-ma, ruff, related tests, re-measure L1 numbers, manual Chromium walk, fix bugs with regression tests).
 - Env: `.venv` created locally from `requirements-dev.txt` (gitignored). Measure script is in the session scratchpad only.
 
 ## Session log (append only)
