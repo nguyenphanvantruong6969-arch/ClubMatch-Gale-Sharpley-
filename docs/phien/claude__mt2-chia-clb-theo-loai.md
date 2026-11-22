@@ -69,6 +69,17 @@ pipeline, invariants 1, 2, 8).
 - `tests/test_ws_nhan.py` snapshots UI strings: add intentional changes to `SUA_CO_Y` with a `MT2` comment.
 - UX4 (branch `claude/ux4-quan-ly-de-hieu`) redesigns the same tab, not merged: keep ids; expect a small merge.
 
+## Status
+- LEAD started 2026-11-22. Design reviewed: accepted as written (no design change needed; lead = Sonnet).
+- L1 pending | L2 pending | L3 pending | L4 pending (optional)
+
+## Sessions
+| Role | Session id | Model | Notes |
+|---|---|---|---|
+| LEAD | session_01YVAyu3BTRoD9jYgVDEJ86g | Sonnet | this branch file only |
+| CODER | (pending) | Sonnet | |
+| CHECKER | (pending) | Sonnet | |
+
 ## Needs Truong
 - (none yet; lead appends one line each)
 
