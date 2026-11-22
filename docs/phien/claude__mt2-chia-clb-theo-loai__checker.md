@@ -183,3 +183,11 @@ Types were set through `dat_loai_clb` (UI path), then a Sổ nhập / CSV WITHOU
 - **Decisions:** accepted GIOI_HAN fund-scale limit (Truong later resolved it), accepted R1 deviation (all four FA club columns follow `dung_chia_loai`), settings-cards sentence is optional (not done), 28-control table accepted as data entry.
 - **How to test:** python `playwright` is not preinstalled: `pip install playwright`, `RBDA_TEST_CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome`, or the UI tests skip silently. Scratch scripts (not committed) were in the session scratchpad: `st_common.py`, `st_run.py`, `st_ident.py`, `st_ident2.py`, `st_misc.py`, `st_reimport.py`, `st_r1.py`.
 - **Files touched by the checker:** only this file. No product code or tests.
+
+## R1-FIX — range 1d6a433..fb17724 — VERDICT: PASS (R1 now PASS)
+| Check | Result |
+|---|---|
+| Files changed | only `CHANGELOG.md` and `docs/ke_hoach/CLAUDE_CHI_TIET.md` (no code, no test) |
+| Doc tests | `test_a13_12_tai_lieu` and all `*tai_lieu*`/`*huong_dan*` tests: 66 passed; `ls tests/test_*.py | wc -l` = 379 matches the doc |
+| Lint / quick check | `ruff check .` clean; `kiem_nhanh.py --co-so 1d6a433` 7/7 |
+| N1: stress rerun with INTEGER floors (floors rounded to whole numbers, as the import requires), 800x20, 150 seeds each, same checks as the original stress (pipeline ok incl. `verify_stability`, 3200 rows, capacity, TU_DO never rejects, floor respected, same-seed rerun identical, STB unchanged, other seed refused on locked lottery, `run_history` append-only; independent blocking-pair check for chi_xep) | chi_xep **150/150 with 0 violations** (p50 0.64 s, max 1.06 s); chia_100 **150/150 with 0 violations** (p50 0.46 s, max 0.82 s). Data SIMULATED |
