@@ -14,8 +14,7 @@
 | Branch | Lots (all must-ship) | Branch file |
 |---|---|---|
 | `claude/a5-nhom-dong-hang` | L1 core → L2 backend → L3 UI → L4 docs | `docs/phien/claude__a5-nhom-dong-hang.md` |
-- Spec + tests per lot = its Plan block; done = boxes ticked + Acceptance.
-- Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push.
+- Lot spec = its Plan block; done = boxes + Acceptance. Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push.
 - New error codes appended at END of `i18n_errors.py` (prefix `a5_`), then `python tao_i18n_js.py`; UI keys `a5_`.
 
 ## 2. Roles (exactly 3 sessions, no Agent tool, no replacements)
@@ -27,8 +26,7 @@
 - `_GIAO_THUC_GON.md` §3 budget applies to all. Near usage limit: update "Current state", stop.
 
 ## 3. Loop per lot
-1. lead → coder `GO L<n>`.
-2. coder: failing tests from the lot's boxes → minimal code → lot test file + ≤ 3 related (`-q --tb=line | tail -15`)
+1. lead → coder `GO L<n>`. 2. coder: failing tests from the lot's boxes → minimal code → lot test file + ≤ 3 related (`-q --tb=line | tail -15`)
    → `git fetch origin main` → `.claude/skills/soat-ma/scripts/kiem_nhanh.py --so-seed 20 | tail -10` (all OK,
    incl. `trung_khit`; L3/L4 may use default seeds) → `soat-ma` four tiers → CHANGELOG + TIEN_DO row `A5-L<n>`
    → commit `A5-L<n>: …` → push → `CODER DONE L<n> | base <sha> head <sha>`.
