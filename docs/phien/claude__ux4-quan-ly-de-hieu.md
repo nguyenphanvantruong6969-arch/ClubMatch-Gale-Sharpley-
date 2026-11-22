@@ -48,7 +48,7 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Never use accent colour for decoration (headings, icons, counts).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
+- [x] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
       string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel (incl. which ONE control is gold): controls visible
       now (count) → visible after redesign (count) → where each hidden one goes. Keep sector placeholders
       (`{person_l}` etc.). **MILESTONE 1: Truong approves words + choice map before any code.**
@@ -108,7 +108,7 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Teacher role never sees this tab (unchanged).
 
 ## Current state
-- Planned only (2026-11-22, Opus). No code yet.
+- L1 done (2026-11-22, Sonnet): `docs/ke_hoach/ux/UX4_TU_NGU.md` written, WAITING for Truong's approval (5 decisions D1–D5 in §0; default = recommended). No code yet. Next: L2.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -116,3 +116,4 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 | 2026-11-22 | Opus | Audit of Quản lý tab, plan + protocol | UX3-L3 rename "Nhập thủ công" shipped separately |
 | 2026-11-22 | Opus | Plan revised for Hick's law (budgets, 3 tabs + Thêm, one-question rules panel) | replaces "6 sub-tabs" idea |
 | 2026-11-22 | Opus | Added Von Restorff rule (one gold per panel, red isolated, badge on default) | |
+| 2026-11-22 | Sonnet | L1 wording sheet + choice map (measured counts with Chromium) | Found MT1 three-card question overlaps L4 (D1) |
