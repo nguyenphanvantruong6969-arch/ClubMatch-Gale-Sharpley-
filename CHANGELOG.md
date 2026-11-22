@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-22 — UX5A-L4: thẻ Kết quả + Chi tiết cho giáo viên, bài test Hick / Von Restorff / từ cấm
+
+- Không đổi mã sản phẩm: lô này khoá hành vi bằng test, cho cả quản trị lẫn giáo viên. Giáo viên: không thấy phần `data-quyen="quan_tri"`, không có nút chết, vẫn tới tra cứu, "Theo lớp", "Xuất theo lớp", báo cáo (≤ 2 lần bấm).
+- Test mới: `tests/test_giao_dien_ux5a_l4.py` (13 ca: một nút vàng + không đỏ + ngân sách tổng mỗi thẻ × 2 vai, từ cấm × 2 thẻ × 2 vai, id còn nguyên, nút của quản trị ≤ 2 lần bấm). Banner cảnh báo không vàng.
+- Không đổi backend.
+
 ## 2026-11-22 — UX5A-L3: thẻ Chi tiết và xuất tệp (đúng một nút vàng, bỏ "suất"/"Chọi", gợi ý gọn, nút theo hàng đã chọn)
 
 - Chữ: "Tải kết quả về máy" (tiêu đề khung xuất), "Chọn thêm tệp để xuất", menu "Xuất tệp khác ▾"; "suất" → "chỗ dành riêng/chỗ thường" ở chú giải, khung "Chỗ dành riêng đã dùng", số đếm và dòng tóm tắt; "Chọi cao nhất" → "Nhiều học sinh muốn nhất"; dòng mục tiêu "Được vào CLB mình chọn đầu tiên: x%". Khoá mới `ux5a_nhom_chi_tiet`, `ux5a_xuat_canh_bao` (khoá cũ `xuat_canh_bao_diem` giữ cho thẻ Nhập tại chỗ). Bỏ đề xuất đổi "Học sinh trên mỗi chỗ" (cũ đã rõ).
