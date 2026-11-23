@@ -17,7 +17,7 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 | ST-A-005 | fixed a5beec0 (`delete_student(id, xac_nhan_xoa_ket_qua)`; blank result rows no longer block) |
 | ST-A-006 | fixed a29c97d (`integrity_check` at open / run / import / backup; recovery page uses it too) |
 | ST-A-007 | fixed a5beec0 (`forms_dot.nap_mau_forms()` before every forms-module import) |
-| ST-A-008 | Needs Truong: 3000 students 68-76 s → 32.4 s (Chia 100) / 38.4 s (Huy chương) (06ca113), target 30 s not met; see handoff |
+| ST-A-008 | fixed e486b50 (3000 students 68-76 s → 26.3 s Huy chương / 24.3 s Chia 100; quadratic `giai_trinh` scans memoised, ASCII85 off, `get_tien_do_xuat`) |
 | ST-B-003 | fixed 5868c7e |
 | ST-B-004 (backend) | fixed 5868c7e (preview warns; kiosk confirm = B) |
 | ST-B-006 (validation code) | fixed a5beec0 (inline field error = B) |

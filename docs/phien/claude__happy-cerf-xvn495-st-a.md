@@ -40,6 +40,8 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 
 - A→B (ST-A-008 / SF-A5, optional): new read-only API `get_tien_do_xuat()` → `{dang_xuat, xong, tong, ten}` (students done / total, accumulated across classes when `theo_lop=true`; `ten` = class being built). It does not take the write lock, so poll it (e.g. every 500 ms) while `export_phieu_giai_trinh_pdf` runs from `chayXuatPdf` (js/03_ket_qua.js, button `btnPdfPhieuLop` and the whole-school item) and show "xong/tong" instead of a frozen button. New i18n text is B's (i18n.js); no new error code.
 
+- A→B (found at SF-A5 check): `tests_stress/b/test_b4_hien_thi.py::test_b4_chi_ban_phim_nhap_chay_xuat` FAILS also when run alone, and also on c0e38d2 (before any SF-A5 code): `Page.expect_file_chooser` timeout 5000 ms. Not caused by A (no JS touched). Likely B's UI changes (e.g. ST-B-009 / focus order) vs the keyboard-only flow; please check and fix on B's side.
+
 ### SF status
 | Bug | Lot | State |
 |---|---|---|
@@ -55,6 +57,9 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 | ST-B-006 (validation code) | 3 | fixed backend (SF-A3): codes `club_capacity_not_integer`, `capacity_too_large`; inline field error = B lot 2 |
 | ST-A-001 | 3 | fixed (SF-A3): `update_workspace_config` data.warnings; B renders under mode cards |
 | ST-A-008 | 4-5 | fixed (SF-A5): 3000 students 68-76 s → 26.3 s (Huy chương) / 24.3 s (Chia 100), 800 → 6.5 / 5.8 s; page count and cell text unchanged; progress API `get_tien_do_xuat`. Margin ~12 % under 30 s on a 4-core container |
+
+### SF-A5 verification (head e486b50)
+- tests_stress/a: 1485 passed, 0 xfail, 2 skipped (7 min). tests_stress/b: 60 passed, 1 failed = the Ask above (pre-existing, B's). kiem_nhanh 7/7, trung_khit 3x20 = 60 cases identical, ruff clean.
 
 ## SF-A5 (ST-A-008) — what was done
 - Measured first (container, 4 cores, no other load): whole-school PDF at 3000 = 30.6 s after SF-A4. cProfile at 800: `_py_asciiBase85Encode` ~10 %, reportlab drawing (`drawString`, `_py_fp_str`) ~60 %, and `giai_trinh` data prep grew QUADRATICALLY (0.4 s at 800 → 4.7 s at 3000 Chia 100; 0.6 → 6.8 s Huy chương): `_nguoi_nhan_cuoi`, `sum(... assign ...)` and `_chuan_clb_fa` rescanned all assignments for every preference of every student.
