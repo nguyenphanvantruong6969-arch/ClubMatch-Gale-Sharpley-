@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A (sửa CI): chữ cảnh báo mới theo luật văn phong, bản chụp chữ ws_nhan
+
+- `i18n_errors.py`: bỏ `{detail}` thô và chữ IN HOA nhấn mạnh khỏi `csdl_hong_can_khoi_phuc`, `so_nhap_canh_bao_giu_diem`, `so_nhap_canh_bao_o_bo_qua` (`tests/test_van_phong_tu_nhien.py`). `tests/test_ws_nhan.py`: ba câu đổi chủ ý (`csv_student_id_case_conflict`, `cannot_delete_club_referenced`, `cannot_delete_student_matched`) vào `SUA_CO_Y`; bảy mã mới vào `MA_MOI_SAU_ANH_CHUP`.
+
 ## 2026-11-23 — SF-A4: PDF phiếu cả trường nhanh hơn ~1,8-2 lần (ST-A-008, một phần)
 
 - `xuat_pdf.py`: ô bảng là chuỗi tự xuống dòng bằng `simpleSplit` (cache theo chữ + bề rộng cột; khoảng trắng gộp như `Paragraph`; ô có từ dài hơn cột vẫn dùng `Paragraph` để cắt từ) thay cho `Paragraph` mỗi ô; `Paragraph` của khối dùng chung nhớ kết quả `wrap` theo bề rộng (dựng lại `blPara` nếu `split` đã xoá).
