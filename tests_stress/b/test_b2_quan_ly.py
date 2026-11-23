@@ -2,7 +2,6 @@
 việc sau khi xếp. SIMULATED data."""
 import sqlite3
 
-import pytest
 
 from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui)
 from ho_tro_tep import CAC_TEP
