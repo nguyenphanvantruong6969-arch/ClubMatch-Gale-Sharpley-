@@ -207,3 +207,16 @@ Cần `FIX CIFIX1` (vòng 1): sửa chữ dự phòng ở `index.html` (#1). Ph�
 - Bug #1 và nhỏ #2 đã sửa: `index.html` hint `a5_club_nhom_goi_y` đã là "một"; `HUONG_DAN_SU_DUNG.md` §18 "xếp cứng". Diff chỉ chữ (index.html, HUONG_DAN, CHANGELOG), không đổi test.
 - Chữ dự phòng vi trong `index.html` = `i18n.js` vi cho cả hai id A5 (`a5_club_nhom_goi_y`, `a5_gt2_tc_nhom_goi_y`); chữ en không có dự phòng trong HTML nên không có gì để so. 55 passed: `test_t3_l1_chu_du_phong`, `test_i18n_sync`, `test_a5_*` (có Chromium); `git status` sạch.
 - Không chạy lại `kiem_nhanh` (diff không chạm `.py`); chưa chạy lại nhóm 25 tệp `test_giao_dien_*` nặng.
+
+## CIFIX2 — range 4b32040..7c3687a — VERDICT: NO BUGS (nguyên nhân gốc chưa tái hiện được tự nhiên; cơ chế đã chứng minh)
+Thay đổi: một dòng trong `tests/test_giao_dien_ux2_khung.py::test_khung_khong_lam_nhay_bo_cuc_120_hs` (`top: Math.round(r.top + window.scrollY)`); không đổi `th`, các ngưỡng `|Δtop|≤1/≤2`, `hangDau≤3`, `cao≤4`.
+
+1. **Không làm yếu test:** ĐẠT. Gây hỏng tạm (đã hoàn tác `style.css`, `git status` sạch):
+   - M1: đẩy `<table>` xuống 5 px CHỈ khi còn hàng khung (`table:has(… .ux2-khung-hang){margin-top:5px}`) → test **ĐỎ** (giua vs sau lệch 5 px).
+   - M2: dịch `th:first-child` 5 px khi hàng khung đang hiện → test **ĐỎ** (kiểm `th` bằng nhau).
+   - M3: tăng chiều cao khối khung 19→30 px → test vẫn xanh. Không liên quan thay đổi này (ngưỡng `cao` không đổi; hàng cao theo padding ô, không theo khối con) — ghi lại, không phải hồi quy của CIFIX2.
+   - Cơ chế gốc: ép `scrollTo(0,80)` rồi giấu hàng khung → toạ độ khung nhìn 390 → 470 (nhảy 80, bố cục không đổi), nhưng toạ độ tài liệu giữ 470. Vậy test cũ sẽ đỏ, test mới không bị lừa, mà vẫn bắt dịch thật (M1/M2).
+2. **A5 có gây ra không:** KHÔNG có bằng chứng. Đo cùng kịch bản (admin → tab học sinh, 120 HS, khung 1400×1000) ở `e71790a` (trước hint `index.html` của L3) và ở HEAD: cùng `scrollHeight` 1142 → 1000 khi giấu khung, cùng `thead.top` 470, `scrollY` 0 ở cả hai. Hint CLB nằm ở form CLB (không hiện ở tab học sinh) nên không đổi chiều cao đường này. `git diff 1e07297..4b32040` chỉ là chữ i18n/`index.html` (một đoạn hint).
+3. **Test cũ có đỏ tự nhiên không:** TÔI KHÔNG TÁI HIỆN: bản test cũ xanh 3/3 và bản mới xanh 3/3 ở đây (`scrollY`=0). Nên "scroll 80 px khi vào tab admin" là giả thuyết đã chứng minh được về cơ chế (ép scroll) nhưng chưa thấy xảy ra tự nhiên; có thể phụ thuộc môi trường CI (phông/chiều cao khác làm Playwright cuộn để bấm `#qlTabHs`). Đo bằng toạ độ tài liệu là cách đúng bất kể nguyên nhân.
+4. **Test khác cùng rủi ro:** không thấy. 17 tệp dùng `getBoundingClientRect`, nhưng chỉ tệp này đo `top` của `thead` qua lúc bật/tắt khung; `test_giao_dien_ux2_chuyen_canh` (L7 khung, dòng ~110) chỉ đếm hàng và hiệu ứng, các chỗ đo khác không bắc qua việc gỡ khung.
+- Chưa đo: CI thật (đỏ này chỉ thấy trên CI), toàn bộ ~25 tệp `test_giao_dien_*`.
