@@ -5,14 +5,14 @@ ST-A backend stress test (protocol `docs/phien/ST_GIAO_THUC.md`): find every bug
 API and roles. NEVER edit production code. Output: `tests_stress/a/`, `docs/phien/ST_BAO_CAO_A.md`, this file.
 
 ## Plan
-- [ ] A1 Algorithm properties + modes × chia_loai on the shared Sổ
-- [ ] A2 Import fuzzing
-- [ ] A3 Pipeline and DB
+- [x] A1 Algorithm properties + modes × chia_loai on the shared Sổ
+- [x] A2 Import fuzzing
+- [x] A3 Pipeline and DB
 - [ ] A4 API surface, roles, exports, timing
 
 ## Current state
 - Done: venv set up (`.venv`, py3.13), helper design.
-- In progress: A1.
+- In progress: A4 (API surface, roles, exports, timing).
 - Tests: `.venv/bin/python -m pytest -q tests_stress/a/<file> --tb=line`.
 
 ## Decisions and gotchas

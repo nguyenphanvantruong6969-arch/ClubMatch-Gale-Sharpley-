@@ -51,16 +51,41 @@ def match_rows(db_path):
 
 
 def db_bytes(db_path):
-    """Content snapshot of all tables (stable, independent of file layout)."""
+    """Content snapshot of ALL tables (order-independent) to prove a refusal wrote nothing."""
     c = sqlite3.connect(db_path)
     try:
         out = {}
         for (t,) in c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name").fetchall():
-            out[t] = c.execute('SELECT * FROM "%s" ORDER BY 1' % t).fetchall() if False else \
-                sorted(map(repr, c.execute('SELECT * FROM "%s"' % t).fetchall()))
+            out[t] = sorted(map(repr, c.execute('SELECT * FROM "%s"' % t).fetchall()))
         return out
     finally:
         c.close()
+
+
+def check_contract(res, where=""):
+    """Contract {ok,data,errors}; every code known in i18n_errors (vi+en) and renderable."""
+    from i18n_errors import MESSAGES, format_message
+    assert isinstance(res, dict), (where, type(res))
+    assert {"ok", "data", "errors"} <= set(res), (where, list(res))
+    assert isinstance(res["errors"], list), where
+    entries = list(res["errors"])
+    d = res.get("data")
+    if isinstance(d, dict):
+        for k in ("warnings", "canh_bao", "loi"):
+            v = d.get(k)
+            if isinstance(v, list):
+                entries += [e for e in v if isinstance(e, dict) and "code" in e]
+    if not res["ok"]:
+        assert entries, (where, "ok:false without errors")
+    for e in entries:
+        assert isinstance(e, dict) and "code" in e and "params" in e, (where, e)
+        assert e["code"] in MESSAGES, (where, "unknown code %r" % e["code"])
+        assert MESSAGES[e["code"]].get("vi") and MESSAGES[e["code"]].get("en"), (where, e["code"])
+        for lang in ("vi", "en"):
+            txt = format_message(e["code"], e["params"], lang)
+            assert isinstance(txt, str) and txt, (where, e)
+            assert "{" not in txt or "}" not in txt, (where, "unfilled placeholder in %s: %r" % (lang, txt))
+    return entries
 
 
 def gen_instance(seed, n_students=None, n_buoi=None, max_clubs=6, tested_frac=0.4):
