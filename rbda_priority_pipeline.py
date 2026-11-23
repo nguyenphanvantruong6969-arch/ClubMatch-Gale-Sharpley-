@@ -191,6 +191,14 @@ def compute_club_priority(
     return tier1_sorted + tier2_sorted
 
 
+def tach_nhom_clb(o) -> tuple[str, ...]:
+    """Tách ô nhóm kiểu `a|b` thành các nhãn (A5): cắt theo `|`, bỏ khoảng trắng hai đầu,
+    bỏ phần rỗng. `""`/None -> `()`. Hàm thuần, KHÔNG chuẩn hoá nhãn (nơi gọi tự chuẩn hoá)."""
+    if o is None:
+        return ()
+    return tuple(p for p in (x.strip() for x in str(o).split("|")) if p)
+
+
 def xay_tier_rank(students: dict[str, dict], tiers) -> dict[str, int]:
     """{student_id: hạng nhóm} từ danh sách nhóm `tiers` (tốt nhất đứng đầu).
 
@@ -208,7 +216,12 @@ def xay_tier_rank(students: dict[str, dict], tiers) -> dict[str, int]:
 
     hang: dict[str, int] = {}
     for i, ten in enumerate(tiers or []):
-        hang.setdefault(khoa(ten), i)
+        if "|" in str(ten):
+            # A5: "a|b" = các nhãn cùng MỘT hạng (chỉ số của mục).
+            for phan in tach_nhom_clb(ten):
+                hang.setdefault(khoa(phan), i)
+        else:
+            hang.setdefault(khoa(ten), i)
     ra: dict[str, int] = {}
     for sid, info in students.items():
         nhom = khoa((info or {}).get("reserve_group") or "")
@@ -2706,7 +2719,11 @@ def default_reserve_eligible_fn(students: dict[str, dict], clubs: dict[str, dict
         club_group = clubs.get(cid, {}).get("reserve_group")
         if not club_group:
             return False
-        return students.get(sid, {}).get("reserve_group") == club_group
+        nhom_hs = students.get(sid, {}).get("reserve_group")
+        if "|" in str(club_group):
+            # A5: ô CLB "a|b" -> đủ diện nếu nhãn của em thuộc tập (pooled).
+            return bool(nhom_hs) and nhom_hs in tach_nhom_clb(club_group)
+        return nhom_hs == club_group
     return fn
 
 

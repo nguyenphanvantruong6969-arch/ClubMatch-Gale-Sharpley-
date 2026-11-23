@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L1: nhóm đồng hạng `a|b` — lõi
+
+- `rbda_priority_pipeline.py`: hàm thuần `tach_nhom_clb` (tách `|`, cắt trắng, bỏ rỗng); `xay_tier_rank`: mục `tiers` dạng `a|b` cho các nhãn CÙNG một hạng (mục không có `|` đi đúng đường cũ); `default_reserve_eligible_fn`: ô CLB `a|b` = đủ diện nếu nhãn của em thuộc tập (pooled, D1); ô không có `|` giữ nguyên nhánh `==`. `club_choice_function`, `compute_club_priority` không đổi.
+- Test mới: `tests/test_a5_nhom_dong_hang.py` (7 ca, gồm 250 ca ngẫu nhiên seed cố định kiểm substitutability + law of aggregate demand, bất biến 8). `kiem_nhanh.py --so-seed 20`: 7/7 ĐẠT, trùng khít 3 bộ × 20 seed. Số tệp test ở CLAUDE_CHI_TIET: 380.
+
 ## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
 
 - CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.
