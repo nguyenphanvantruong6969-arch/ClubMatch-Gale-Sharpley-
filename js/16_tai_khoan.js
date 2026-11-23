@@ -428,4 +428,6 @@
   }
 
   window.initTaiKhoan = initTaiKhoan;
+  /* ST-B-009: js/14 mở hộp tạo tài khoản quản trị đầu tiên khi "Chế độ học sinh" cần có tài khoản mới khoá được. */
+  window.tkMoHopTaoDau = () => capNhat().then(() => { if (phien && !phien.co_tai_khoan) veHop(); });
 })();

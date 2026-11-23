@@ -415,7 +415,6 @@ def test_b2_viec_sau_xep_che_do_huy_chuong(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-004")
 def test_b2_nhap_tai_cho_ma_khac_hoa_thuong_tao_hoc_sinh_trung(mo):
     ui = mo()
     chon_cach(ui, "huy_chuong")

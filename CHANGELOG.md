@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B2 (nốt): ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk)
+
+- ST-B-009 (`js/14_giai_trinh.js` `moHs`, `js/16_tai_khoan.js` `window.tkMoHopTaoDau`, `i18n.js` `gt_hs_can_tai_khoan`): chưa có tài khoản thì "Chế độ học sinh" không dựng lớp phủ giả, báo và mở hộp tạo tài khoản quản trị (backend A trả `can_tao_tai_khoan`).
+- ST-B-004 (`js/04_nhap_tai_cho.js`, `i18n.js` `kiosk_ma_khac_hoa_thuong`): "Nhập tại chỗ" hỏi lại khi mã chỉ khác hoa/thường với mã đã có (tìm bằng `search_students`; bấm Tạo lần hai thì tạo).
+- Test cũ chỉnh theo luồng mới (cần tài khoản để vào chế độ học sinh): `test_giao_dien_gt1_hoc_sinh.py`, `_gt3_hoc_sinh.py`, `_gt4_man_hoc_sinh.py`, `_ux1_dieu_huong.py`, `_ux1b_phieu.py`; stress `test_b3_vai_tro.py` (nhánh chưa-có-tài-khoản chuyển thành khẳng định luồng mới). Test mới: 2 ca trong `test_giao_dien_sf_b_lo2.py`.
+
 ## 2026-11-23 — SF-B3 (một phần) + SF-B4: ST-B-005, 010, 012, 013
 
 - ST-B-005 (`js/02_van_hanh.js`, `i18n.js` `so_nhap_bo_qua_tep`): thả nhiều tệp thì hàng đợi nói rõ tệp nào bị bỏ qua.

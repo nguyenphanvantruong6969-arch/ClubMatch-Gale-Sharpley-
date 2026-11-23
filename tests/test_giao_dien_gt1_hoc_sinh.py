@@ -47,10 +47,24 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.clock.install()                      # đồng hồ giả: chạy 60 giây mà không chờ thật
+        # SF-B (ST-B-009): "Chế độ học sinh" chỉ dựng lớp phủ khi đã có tài khoản (khoá thật).
+        if not api._co_tai_khoan():
+            assert api.tao_tai_khoan("qt_nen", "matkhau-gia-1", "quan_tri")["ok"]
+            assert api.dang_nhap("qt_nen", "matkhau-gia-1")["ok"]
         page.goto(url)
         page.wait_for_selector("#gtPanel", state="attached")
         page.click('button.nav-item[data-tab="results"]')
         yield page, loi, api
+
+
+def _thoat_admin(page):
+    """SF-B (ST-B-009): có tài khoản thì thoát chế độ học sinh cần mật khẩu quản trị."""
+    page.click("#btnGtHsThoat")
+    page.click("#btnGtHsCo")
+    page.fill("#gtHsQtTen", "qt_nen")
+    page.fill("#gtHsQtMk", "matkhau-gia-1")
+    page.locator("#gtHsQuanTri button[type=submit], #gtHsQuanTri button").first.click()
+    page.wait_for_selector("#gtHs", state="hidden")
 
 
 def _vao(page, sid, ma):
@@ -102,8 +116,7 @@ def test_phan_quan_tri_bi_khoa_khi_o_che_do_hoc_sinh(mo):
     page.click("#btnGtCheDoHs")
     assert page.evaluate("document.querySelector('.app-shell').inert") is True
     assert page.evaluate("document.querySelector('#gtPanel').closest('[inert]') !== null") is True
-    page.click("#btnGtHsThoat")
-    page.click("#btnGtHsCo")
+    _thoat_admin(page)
     page.wait_for_function("document.querySelector('.app-shell').inert === false")   # thoát là bất đồng bộ: đợi, không đọc ngay
     assert page.evaluate("document.querySelector('.app-shell').inert") is False
     assert loi == []
@@ -152,8 +165,7 @@ def test_thoat_co_hoi_lai_va_xoa_the(mo):
     assert page.locator("#gtHsXacNhan").is_visible() and page.locator("#gtHs").is_visible()
     page.click("#btnGtHsKhong")
     assert not page.locator("#gtHsXacNhan").is_visible() and page.locator("#gtHsKetQua .gt-ten").count() == 1
-    page.click("#btnGtHsThoat")
-    page.click("#btnGtHsCo")
+    _thoat_admin(page)
     assert not page.locator("#gtHs").is_visible()
     assert page.locator("#gtHsKetQua").inner_text() == ""
     mo_gap_ma(page)
@@ -240,8 +252,7 @@ def test_phan_hoi_ve_sau_khi_xoa_vi_het_gio_hay_thoat_bi_bo(mo):
     assert page.locator("#gtHsKetQua").inner_text() == "" and HS["s1"] not in page.locator("#gtHs").inner_text()
     _vao(page, "s1", ma["s1"])                            # lần nữa, rồi thoát khi đang chờ
     _cho_giu(page, giu)
-    page.click("#btnGtHsThoat")
-    page.click("#btnGtHsCo")
+    _thoat_admin(page)
     tha()
     page.wait_for_timeout(500)
     mo_gap_ma(page)

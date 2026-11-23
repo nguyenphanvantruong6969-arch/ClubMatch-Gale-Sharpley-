@@ -93,3 +93,26 @@ def test_st_b_005_tha_hai_tep_noi_tep_bi_bo_qua(trang):
     txt = page.locator("#importQueue").inner_text()
     assert "b.xlsx" in txt, txt
     assert not loi, loi
+
+
+def test_st_b_004_nhap_tai_cho_ma_khac_hoa_thuong_hoi_lai(trang, api):
+    page, loi = trang
+    with api._ket_noi_doc() as cur:
+        ma = cur.execute("SELECT student_id FROM students LIMIT 1").fetchone()[0]
+    page.locator('.nav-item[data-tab="fallback"]').click()
+    page.wait_for_selector("#newStudentId", state="visible")
+    bien = ma.swapcase() if ma.swapcase() != ma else ma.lower() + "x"
+    page.fill("#newStudentId", bien)
+    page.fill("#newStudentName", "Trùng hoa thường")
+    lop = page.locator("#newStudentLop")
+    if lop.is_visible():
+        lop.select_option(index=1)
+    page.locator("#btnCreateStudent").click()
+    page.wait_for_function("document.getElementById('newStudentId').getAttribute('aria-invalid') === 'true'")
+    with api._ket_noi_doc() as cur:
+        assert cur.execute("SELECT COUNT(*) FROM students WHERE student_id = ?", (bien,)).fetchone()[0] == 0
+    page.locator("#btnCreateStudent").click()           # lần hai: xác nhận, tạo thật
+    page.wait_for_timeout(800)
+    with api._ket_noi_doc() as cur:
+        assert cur.execute("SELECT COUNT(*) FROM students WHERE student_id = ?", (bien,)).fetchone()[0] == 1
+    assert not loi, loi
