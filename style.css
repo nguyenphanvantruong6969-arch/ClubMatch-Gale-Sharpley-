@@ -3371,3 +3371,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 /* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
 .mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .mt2-cong-tac-ten { font-weight: 600; }
+
+/* SF-B7 (ST-A-001): cảnh báo thiếu dữ liệu dưới các thẻ chế độ ở Cài đặt */
+.ux1a-canh-bao { margin-top: 10px; }

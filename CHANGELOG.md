@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B7: ST-A-001 (cảnh báo thiếu dữ liệu dưới các thẻ chế độ)
+
+- `js/18_cai_dat.js` (`ux1aTaoThe`): thêm vùng `#ux1aCanhBao` (`role="status"`) dưới các thẻ chế độ (#ux1aChiXep, #ux1aChia100, #ux1aHuyChuong) và hàm `datCanhBao`; sau `update_workspace_config`, nếu `data.warnings` có `che_do_thieu_du_lieu` thì hiện câu của backend (`n_thieu_loai`, `n_buoi_thieu_tu_do`, `n_thieu_diem_san`, `n_huy_chuong_sai`, `che_do`), không có thì ẩn; đổi chế độ thì xoá cảnh báo cũ rồi vẽ lại theo lần lưu mới; "Hoàn tác" cũng cập nhật. `style.css`: `.ux1a-canh-bao`. Chữ từ `i18n_loi.js` của A, không có chữ mới.
+- Test mới (đỏ trước): `tests_stress/b/test_b5_canh_bao_che_do.py` (thiếu dữ liệu thì có cảnh báo và hết khi đổi lại; đủ dữ liệu thì không có); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
 ## 2026-11-23 — SF-B6: ST-B-007 (xoá CLB / học sinh đã có dữ liệu: xác nhận lần hai)
 
 - `js/00_nen.js`: `hoiXacNhanXoaKem` / `boXoaKemBar` (thanh xác nhận `#xoaKemBar`, dùng kiểu `.run-confirm-bar`, không `confirm()` native; Esc hoặc "Huỷ" thì không gọi gì; con trỏ mặc định ở "Huỷ").

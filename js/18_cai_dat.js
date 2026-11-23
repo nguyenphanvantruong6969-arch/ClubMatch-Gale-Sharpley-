@@ -59,9 +59,17 @@ function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
   });
   const loi = ux1aEl("p", { class: "ux1a-loi", role: "alert", id: tienTo + "LoiThe", hidden: true });
   const sanSang = ux1aEl("div", { class: "ux1a-san-sang", id: tienTo + "SanSang", hidden: true });
-  const hop = ux1aEl("div", { class: "ux1a-cai-dat" }, cauHoi, luoi, loi, sanSang);
+  /* SF-B7 (ST-A-001): cảnh báo `che_do_thieu_du_lieu` của update_workspace_config, ngay dưới các thẻ chế độ. */
+  const canhBao = ux1aEl("div", { class: "canh-bao-vang ux1a-canh-bao", id: tienTo + "CanhBao", role: "status", hidden: true });
+  const hop = ux1aEl("div", { class: "ux1a-cai-dat" }, cauHoi, luoi, loi, canhBao, sanSang);
   return {
     hop, sanSang,
+    /* `ds` = data.warnings của lần lưu cấu hình vừa xong ([{code, params}]); rỗng / không có = ẩn. */
+    datCanhBao(ds) {
+      const co = (ds || []).filter((w) => w && w.code === "che_do_thieu_du_lieu");
+      canhBao.textContent = co.length ? trErrs(co).join(" ") : "";
+      canhBao.hidden = !co.length;
+    },
     datCach(ma) {
       const coThe = bo.some((c) => c.ma === ma);
       bo.forEach((c, i) => {
@@ -310,9 +318,11 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
     const rules = { wharton: c.wharton, fa_daa: c.fa };
     if (!c.fa) UX1A_CO_SAU_XEP.forEach((k) => { if (luat[k] === true) rules[k] = false; });
     the.loi("");
+    the.datCanhBao(null);       /* đổi chế độ thì làm mới: cảnh báo cũ không còn đúng */
     return dat(rules).then((r) => {
       if (!r.ok) { the.loi(trErrs(r.errors).join(" ")); return; }
       khiXong(r.data.config);
+      the.datCanhBao(r.data.warnings);      /* SF-B7: sau khiXong (nó vẽ lại thẻ) để cảnh báo của lần đổi này còn lại */
       callApi("get_last_run_info").then((lr) => {
         const daChay = lr.ok && lr.data;
         const chu = t("ux1a_cd_da_chuyen", { cach: ux1aTenCach(ma) }) +
@@ -325,6 +335,7 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
           dat(ve0).then((r2) => {
             if (!r2.ok) { the.loi(trErrs(r2.errors).join(" ")); return; }
             khiXong(r2.data.config);
+            the.datCanhBao(r2.data.warnings);
           });
         } } });
         setTimeout(() => toast.goBo(), 10000);
