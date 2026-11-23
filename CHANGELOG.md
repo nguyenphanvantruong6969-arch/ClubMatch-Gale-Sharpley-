@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B3 (một phần) + SF-B4: ST-B-005, 010, 012, 013
+
+- ST-B-005 (`js/02_van_hanh.js`, `i18n.js` `so_nhap_bo_qua_tep`): thả nhiều tệp thì hàng đợi nói rõ tệp nào bị bỏ qua.
+- ST-B-010 (`recovery.js`): bấm "Khôi phục" lần hai sau khi đã khôi phục xong không chạy lại (không thay câu thành công).
+- ST-B-012 (`js/00_nen.js`): đổi ngôn ngữ thì đóng các thông báo đang hiện (chuỗi đã dịch sẵn, không dịch lại được).
+- ST-B-013 (`style.css`, `index.html`): ≤900 px `.main` rộng bằng cột (hết co theo nội dung), `.scroll-x` thành khối chứa cho `.sr-only`, bảng CLB nằm trong `.scroll-x`.
+- Chờ A: ST-A-001 (khung cảnh báo), ST-B-009, ST-B-004. Test mới: `tests/test_giao_dien_sf_b_lo4.py` (2 ca), thêm 2 ca vào `test_giao_dien_sf_b_lo2.py`; gỡ 4 xfail.
+
 ## 2026-11-23 — SF-B2 (một phần): ST-B-006, ST-B-011
 
 - ST-B-006 (`js/05_quan_ly.js`, nút Lưu CLB): chỉ tiêu thập phân báo lỗi ngay ở ô chỉ tiêu (không gửi xuống backend); xoá dòng phản hồi cũ trước mỗi lần lưu.

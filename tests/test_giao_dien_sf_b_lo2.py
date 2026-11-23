@@ -1,4 +1,4 @@
-"""SF-B lô 2: bản hồi quy nhỏ cho ST-B-006 / ST-B-011 (bản đầy đủ: tests_stress/b/).
+"""SF-B lô 2: bản hồi quy nhỏ cho ST-B-005, 006, 010, 011 (bản đầy đủ: tests_stress/b/).
 Chromium thật qua `browser_host`, MỘT fixture trang dùng chung; sổ nhập MÔ PHỎNG."""
 
 import base64
@@ -59,4 +59,37 @@ def test_st_b_011_zip_hong_noi_dung_nguyen_nhan(trang, api, monkeypatch):
     page.wait_for_selector("#toastStack .toast, #toastStack > *")
     hien = page.evaluate("document.getElementById('toastStack').innerText")
     assert "zip" in hien.lower() and "các ô đã điền" not in hien, hien
+    assert not loi, loi
+
+
+def test_st_b_010_khoi_phuc_xong_bam_lai_khong_chay_hai_lan(tmp_path):
+    """Trang phục hồi: sau khi 'Khôi phục' thành công, bấm lại 0,4 s sau không gọi restore_from_backup lần hai."""
+    import recovery
+    db = tmp_path / "app.db"
+    db.write_bytes(b"SQLite format 3\0" + b"x" * 100)
+    api = recovery.RecoveryAPI(str(db), "disk image is malformed")
+    goi = []
+    api.restore_from_backup = lambda: (goi.append(1), {"ok": True, "data": {"detail": {"code": "recovery_ok", "params": {}}}, "errors": []})[1]
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, GOC, "recovery.html", open_browser=False)
+        page = br.new_page(bypass_csp=True)
+        page.goto(url)
+        page.wait_for_selector("#btnRestoreBackup")
+        page.locator("#btnRestoreBackup").click()
+        page.wait_for_timeout(400)
+        page.locator("#btnRestoreBackup").click(force=True)
+        page.wait_for_timeout(800)
+        br.close()
+    assert len(goi) == 1, goi
+
+
+def test_st_b_005_tha_hai_tep_noi_tep_bi_bo_qua(trang):
+    page, loi = trang
+    page.evaluate("""() => themFileVaoHangDoi([new File([new Uint8Array(4)], 'a.xlsx'), new File([new Uint8Array(4)], 'b.xlsx')])""")
+    page.wait_for_selector("#importQueue .queue-row")
+    txt = page.locator("#importQueue").inner_text()
+    assert "b.xlsx" in txt, txt
     assert not loi, loi

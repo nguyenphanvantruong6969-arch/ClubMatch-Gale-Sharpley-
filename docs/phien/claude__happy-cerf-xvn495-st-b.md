@@ -47,8 +47,12 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 | ST-B-011 | 2 | fixed (SF-B2, UI wording; A may add a dedicated zip error code) |
 | ST-B-006 (field error) | 2 | fixed (SF-B2, client-side integer check; A still owes validation code in lot 3) |
 | ST-A-001 (warning UI) | 3 | open |
-| ST-B-005 | 3 | open |
-| ST-B-010 | 3 | open |
-| ST-B-012 | 4 | open |
-| ST-B-013 | 4 | open |
+| ST-B-005 | 3 | fixed (SF-B3) |
+| ST-B-010 | 3 | fixed (SF-B3) |
+| ST-B-012 | 4 | fixed (SF-B4) |
+| ST-B-013 | 4 | fixed (SF-B4) |
 Merged origin/…-st-a at start (§2 done). venv ready.
+
+## SF notes (coder B)
+- Env flake at BASE HEAD too (not from SF): `test_b4_moi_nut_xuat_tep_mo_duoc` fails ('btnPdfPhieuLop … .pdf.tmp tệp rỗng': fixed 2.5 s wait, PDF slower in this container). `test_b2_hoc_sinh_phan_trang_tim_kiem_gan_nhom` failed once (8≠50 rows, render race), passed 2 reruns. Neither touched; marked for Truong/CI check.
+- Still open for B (need A first): ST-B-009 UI, ST-B-004 kiosk confirm, ST-A-001 warning UI, and ST-B-007 / ST-B-006 (A's validation code). Resume: merge origin/…-st-a, read A's handoff for field/code names.

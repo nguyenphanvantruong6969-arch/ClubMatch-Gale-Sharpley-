@@ -84,7 +84,6 @@ def test_b4_vi_en_moi_man_hinh_khoa_tho_chua_dich_va_tran_chu(mo):
     assert not chua_dich, ("%d chuỗi tiếng Việt còn nguyên ở chế độ English" % len(chua_dich), sorted(set(chua_dich))[:8])
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-012")
 def test_b4_thong_bao_giu_nguyen_tieng_viet_sau_khi_doi_ngon_ngu(mo):
     ui = mo()
     p = ui.page
@@ -148,7 +147,6 @@ def test_b4_do_rong_man_hinh(mo, rong):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-013")
 @pytest.mark.parametrize("rong", [390])
 def test_b4_quan_ly_cuon_ngang_o_man_hinh_hep(mo, rong):
     ui = mo(viewport={"width": rong, "height": 800})

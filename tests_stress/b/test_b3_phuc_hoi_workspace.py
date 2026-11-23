@@ -267,7 +267,6 @@ def khoa_tho_trang(page):
     return sorted(set(_KHOA_THO.findall(page.locator("body").inner_text())))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-010")
 def test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong(trinh_duyet, tmp_path):
     db = _dung_ws_co_sao_luu(tmp_path)
     with open(db, "wb") as f:

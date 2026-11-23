@@ -1941,7 +1941,7 @@ html.tat-hieu-ung .status-strip:hover {
    ========================================================================== */
 
 /* Bảng rộng phải cuộn TRONG khung của nó, không đẩy cả trang trượt ngang. */
-.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }   /* ST-B-013: chữ .sr-only (absolute) trong bảng không thoát ra làm cả trang cuộn ngang */
 
 .data-table th.num, .data-table td.num {
   text-align: right;
@@ -2251,6 +2251,8 @@ html.tat-hieu-ung .status-strip:hover {
    thanh ben len tren thanh mot dai ngang, o nhap duoc xuong dong. */
 @media (max-width: 900px) {
   .app-shell { grid-template-columns: 1fr; }
+  /* ST-B-013: .main có margin-inline:auto nên co theo nội dung (fit-content) và rộng hơn màn hình; ép bằng cột. */
+  .main { width: 100%; box-sizing: border-box; }
   .sidebar {
     position: static;
     height: auto;

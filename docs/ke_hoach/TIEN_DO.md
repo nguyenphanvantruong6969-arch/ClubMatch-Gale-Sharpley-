@@ -253,3 +253,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | MT2-CI1 (vùng bấm 44 px nút tài khoản, nguyên nhân từ UX3) | xong, chờ CI | 2026-11-22 | style.css, CHANGELOG.md | tests/test_giao_dien_ux2_nut.py (đạt) | 79 ca giao diện đạt |
 | SF-B1 (ST-B-001, 002, 008: màn hình cũ) | xong, chờ CI | 2026-11-23 | js/09_the_xem.js, js/18_cai_dat.js, i18n.js, CHANGELOG.md | tests/test_giao_dien_sf_b_lo1.py | 3 xfail gỡ; kiem_nhanh 7/7 |
 | SF-B2 (ST-B-006, 011; 009/004 chờ A) | một phần, chờ CI | 2026-11-23 | js/05_quan_ly.js, js/075_workspace.js, i18n.js, CHANGELOG.md | tests/test_giao_dien_sf_b_lo2.py | 2 xfail gỡ |
+| SF-B3 (ST-B-005, 010; ST-A-001 UI chờ A) + SF-B4 (ST-B-012, 013) | một phần, chờ CI | 2026-11-23 | js/00_nen.js, js/02_van_hanh.js, recovery.js, style.css, index.html, i18n.js, CHANGELOG.md | tests/test_giao_dien_sf_b_lo4.py, lo2 | 4 xfail gỡ |

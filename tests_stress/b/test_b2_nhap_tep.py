@@ -38,7 +38,6 @@ def test_b2_nhap_tep_xau_thong_bao_sach_va_db_khong_doi(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-005")
 def test_b2_hai_tep_mot_lan_tot_va_xau(mo):
     ui = mo()
     p = ui.page
