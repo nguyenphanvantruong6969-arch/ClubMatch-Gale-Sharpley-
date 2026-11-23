@@ -110,3 +110,37 @@ Cần `FIX L2`: sửa #1 (+ test #2). Còn lại ĐẠT. Vòng 1/2.
 Phát hiện mới: không có. Các điểm đã nêu ở vòng 1 vẫn đúng: CSV bỏ qua cả học sinh `|` + cảnh báo (chấp nhận được); xem trước Sổ nhập chưa báo trước và import trả `ok=True` (ghi nhận cho L3/L4 hoặc "Needs Truong", không chặn). Chưa đo: `run_pipeline` đầu-cuối với CLB `a|b`, FA bật, Chromium, toàn bộ bộ test.
 
 Kết luận: L2 NO BUGS sau FIX1.
+
+## L3 — range e71790a..baa8dbd — VERDICT: NO BUGS (1 nhận xét nhỏ)
+
+### Ô của lot
+| Ô | Kết quả | Bằng chứng |
+|---|---|---|
+| `ws_v_tiers`: tách `|`, khoá như backend, lỗi trùng / phần rỗng | ĐẠT | `wsKhoaNhom` = đ→d, NFD bỏ dấu, lower-case, `split(/\s+/)` (NBSP, dấu cách kép) — khớp `xay_tier_rank` / `cau_hinh_ws`. Chỉ khác `toLowerCase` vs `casefold` (chữ như `ß`) — không liên quan nhãn tiếng Việt. |
+| Chỉ báo lỗi khi CÓ dòng `|` (đường cũ không đổi) | ĐẠT | `wsLoiGachNhom` trả `""` ngay khi không dòng nào có `|`; kiểm cũ `new Set(tiers).size` giữ nguyên, kiểm mới chỉ ở nhánh `else`. Trình duyệt: `Khối 12 / Khối 11` → qua, hiển thị `Khối 12 › Khối 11`; `a` + `A` (không `|`) → qua như trước; `x / x` → "hai dòng trùng nhau" như cũ. |
+| `rvTiers` hiện `a = b › c` | ĐẠT | `wsHienThiTiers`; đo trong Chromium: `" A | b \nc"` → `A = b › c`. |
+| Gợi ý (hint) `a5_` + i18n vi/en | ĐẠT | 5 khoá, vi và en đủ; `i18n_khoa` ĐẠT; `chu_cam` ĐẠT. Hint: dưới ô tiers wizard (ghép vào `ws_r_tiers_chi_strict`), dưới ô nhóm CLB (`aria-describedby`), dưới ô tiers `gt2TcTiers`. Câu CLB nêu rõ "nhóm điểm cao hơn có thể lấy hết suất". |
+| Chromium test `tests/test_a5_giao_dien.py` | ĐẠT | 10 passed, chạy 2 lần liên tiếp (2,45 s và 2,54 s) — không chập chờn; một fixture trang dùng chung (đúng yêu cầu lot). |
+| Sai lệch coder: không có tóm tắt tiers chỉ-đọc trong `js/15_tieu_chi.js` nên thêm hint dưới textarea | CHẤP NHẬN | `15_tieu_chi.js` chỉ có textarea sửa được, `gt2TcLuatDangChon` gửi nguyên `a|b` lên `update_workspace_config`, `taiTieuChi` nạp lại `join("\n")` giữ `|`; kiểm tra ở đó do backend (`cau_hinh_ws`, đã duyệt L2) và lỗi hiện qua `feedbackErrors`. Ô `a = b` chỉ-đọc không tồn tại nên không có gì để sửa. |
+
+### Ca biên tôi tự chạy trong Chromium (script ở thư mục tạm, không commit) — 10/10 đúng
+`"a||b"`, `"x|  |y"`, `"|"` → lỗi "phần trống"; `" A | a "`, `"a|b\nb"`, `"a|b\nB"`, `"Khối 12|x\nkhoi 12"` (NBSP thật), `"Đ|x\nd"` → lỗi "MỘT hạng"; hợp lệ: `" A | b \nc"` → `A = b › c`; `"a|b\nchinh_sach|chinh sach"` → `a = b › chinh_sach = chinh sach` (nhãn có `_` ≠ nhãn có dấu cách, đúng như backend); `"a\nA"` (không `|`) → qua `a › A`. Không có `pageerror`.
+
+### XSS / thoát chữ
+Tên nhóm đi vào `wsEl("td", {text})` (`textContent`). Test của coder: `<img src=x onerror=window.__xss=1>|b` → hiện đúng chữ `<img …> = b`, `window.__xss` không đặt, không lỗi JS. ĐẠT. Hint là khoá i18n cố định, không chứa dữ liệu người dùng.
+
+### soat-ma bốn tầng (trên diff này)
+- Tầng 1/2: không đổi (diff không chạm `.py` sản phẩm); `kiem_nhanh --so-seed 20` 7/7, 60 ca trùng khít.
+- Tầng 3 (UI, ba vai không áp dụng đầy đủ — chỉ vai quản trị/wizard bị chạm): đã đo như trên; không thêm lời gọi `window.pywebview.api.*` mới; không thêm `localStorage`; 32 test giao diện workspace hiện có (`test_ws_giao_dien`, `test_ws_luat_giao_dien`, `test_ws_nhan_giao_dien`) qua.
+- Tầng 4: ruff sạch, i18n khớp, CHANGELOG/TIEN_DO/CLAUDE_CHI_TIET cập nhật.
+
+### Phát hiện
+| # | Mức | Tệp | Vấn đề | Đề xuất |
+|---|---|---|---|---|
+| 1 | nhỏ | index.html (hint `a5_gt2_tc_nhom_goi_y`) | Hint thứ hai dưới `gt2TcTiers` không có `id` và không nằm trong `aria-describedby` của textarea (chỉ hint cũ `gt2TcTiersGoiY` có), nên trình đọc màn hình không đọc nó. | Thêm id và nối vào `aria-describedby` (`"gt2TcTiersGoiY gt2TcTiersGoiY2"`). Không chặn. |
+
+### Chưa đo
+Đổi ngôn ngữ giữa chừng trên hint mới (chỉ kiểm tra khoá vi/en có đủ), bấm đúp, kiosk học sinh (không chạm), toàn bộ bộ test.
+
+### Kết luận L3
+NO BUGS; một nhận xét nhỏ (#1) không chặn.
