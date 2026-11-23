@@ -179,3 +179,26 @@ NO BUGS; một nhận xét nhỏ (#1) không chặn.
 
 ### Kết luận L4
 NO BUGS. Hai nhận xét chữ (#1, #2) nên sửa trong lượt tiếp nếu tiện, không chặn.
+
+## CIFIX1 — range 1e07297..75cf192 — VERDICT: BUG (1) → `FIX CIFIX1`
+
+### Đã đạt
+| Mục | Kết quả | Bằng chứng |
+|---|---|---|
+| Không test nào bị yếu đi | ĐẠT | `test_ws_nhan.py`: chỉ thêm 2 mã vào `MA_MOI_SAU_ANH_CHUP` (đúng cơ chế của chính tệp: "Chỉ THÊM mã", assert vẫn bắt mã lạ); `test_a5_giao_dien.py`: chỉ đổi chữ mong đợi `MỘT`→`một` cho khớp văn bản mới. Không xoá/ nới assert nào. |
+| `a5_` đã chuyển lên trước khối MT1 | ĐẠT | `i18n_errors.py`: `=== A5 ===` ở dòng 1622–1631, trước `=== MT1 (L2) ===` (1632); `i18n_loi_khop` ĐẠT (regenerate khớp). |
+| Bốn test CI đỏ | ĐẠT | `test_mt1_uoc_tinh`, `test_mt1_api`, `test_van_phong_tu_nhien`, `test_ws_nhan` + `test_i18n_sync` + `test_a5_*` + `test_gt3_phan_quyen`: 204 passed. |
+| Chữ in hoa nhấn mạnh trong mã lỗi / `i18n.js` / HUONG_DAN | ĐẠT một phần | quét bằng script: `i18n_errors.py` mã `a5_*` và khoá `ws_v_tiers*`/`a5_*` trong `i18n.js` không còn từ in hoa. Mục 18 `HUONG_DAN_SU_DUNG.md`: còn "xếp CỨNG" (nhỏ, tệp này không bị test văn phong quét; xem #2). |
+| `kiem_nhanh --so-seed 20` | ĐẠT | 7/7, 60 ca trùng khít. |
+
+### Phát hiện
+| # | Mức | Tệp | Vấn đề | Đường xảy ra | Đề xuất |
+|---|---|---|---|---|---|
+| 1 | **cần sửa (làm CI đỏ)** | `index.html` dòng ~1002 (`#clubFormReserveGroupGoiY`) | CIFIX1 đổi `MỘT`→`một` trong `i18n.js` (`a5_club_nhom_goi_y`) nhưng KHÔNG đổi chữ dự phòng cùng câu trong `index.html` ("Mỗi học sinh chỉ có MỘT nhóm."). | `pytest tests/test_t3_l1_chu_du_phong.py::test_chu_du_phong_trong_index_html_khop_catalog` → FAIL: `a5_club_nhom_goi_y` lệch catalog. Tôi chạy nhóm 61 tệp test quét `MESSAGES`/`i18n.js`/`HUONG_DAN`/`phan_quyen`/`SO_DANG_KY`/`CHANGELOG` (không Chromium nặng): chỉ đúng 1 test này đỏ (còn lại xanh, một số skip đã biết). Nên CI shard chứa test này sẽ đỏ tiếp. | Sửa `index.html`: "…Mỗi học sinh chỉ có một nhóm." (khớp từng chữ với `i18n.js` vi). Chạy lại `test_t3_l1_chu_du_phong`. Không đổi test. |
+| 2 | nhỏ | `HUONG_DAN_SU_DUNG.md` §18 | Còn "xếp CỨNG theo nhóm" (in hoa nhấn mạnh). Không có test bắt, chỉ nhất quán văn phong. | Đổi "cứng" thường nếu tiện. |
+
+### Săn thêm test toàn bộ bộ có thể vỡ do A5
+Đã chạy: mọi tệp trong `tests/` có tham chiếu `MESSAGES`, `i18n_errors`, `i18n.js`, `i18n_loi`, `HUONG_DAN_SU_DUNG`, `phan_quyen`, `_KHONG_GHI`, `_GIAO_VIEN`, `SO_DANG_KY`, `CLAUDE_CHI_TIET`, `TIEN_DO`, `CHANGELOG` (61 tệp, ~3,7 phút, có Chromium). Kết quả: 1 FAIL (#1), phần còn lại pass. KHÔNG chạy: ~25 tệp `test_giao_dien_*` nặng (a13_8, chay, diem, gt, ux, wharton, xoa, upload, tran, thu_gon, bang, ux2, a14, t3) và `test_a13_11_stress`, `test_a13_12_browser_host` — chưa đo. Test phân quyền/nhật ký (`test_gt3_phan_quyen`, `test_gt3_nhat_ky`, `test_ws_registry`…) nằm trong nhóm đã chạy.
+
+### Kết luận CIFIX1
+Cần `FIX CIFIX1` (vòng 1): sửa chữ dự phòng ở `index.html` (#1). Phần còn lại ĐẠT.
