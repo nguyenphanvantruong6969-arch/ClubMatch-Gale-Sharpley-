@@ -1308,9 +1308,9 @@ học sinh có nhãn `a` **hoặc** `b` đủ điều kiện dùng suất ưu ti
 > **Lưu ý quan trọng: nhóm điểm cao hơn có thể lấy hết suất dự trữ.** Hai nhóm không chia đều suất mà **cạnh tranh chung** trong các suất đó, theo thứ tự ưu tiên của CLB
 > (điểm, rồi bốc thăm). Nếu nhóm `a` điểm cao hơn nhóm `b`, nhóm `a` có thể lấy hết suất, nhóm `b` không có suất nào. Phần mềm **không** có chế độ chia đều giữa hai nhóm.
 
-- Dùng cả hai cách trong một lần chạy là không hợp lệ: xếp nghiêm ngặt theo nhóm thì bỏ qua suất dự trữ. Hai cách chỉ dùng chung cách viết `|`.
+- Dùng cả hai cách trong một lần chạy thì suất dự trữ **không có tác dụng**: xếp nghiêm ngặt theo nhóm bỏ qua suất dự trữ (không báo lỗi). Hai cách chỉ dùng chung cách viết `|`.
 - Nhãn được chuẩn hoá từng phần (bỏ dấu, chữ thường): `Chính sách|Khối 10` thành `chinh_sach|khoi_10`, sắp xếp và bỏ trùng.
-- CLB ghi `a|b` được tính là "giữ chỗ cho nhóm khác" ở thẻ mục tiêu: thẻ "Dành cho một nhóm" chuyển sang "Tuỳ chỉnh".
+- CLB ghi `a|b` được tính là đang giữ chỗ cho nhóm khác: thẻ mục tiêu "Dành chỗ cho một nhóm" không còn khớp, nên phần mềm không còn nhận ra thẻ đó là thẻ đang áp dụng.
 - Báo cáo suất dự trữ và cảnh báo dữ liệu hiểu `a|b`: nhãn `a` của học sinh khớp CLB `a|b`, không bị báo "không CLB nào dùng".
 
 ### Học sinh ghi dấu `|` thì sao
