@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B-L4: test Hick + Von Restorff cả ba thẻ, vai quản trị và giáo viên; test cùng payload (MILESTONE 2)
+
+- Chỉ test (không sửa mã sản phẩm): `tests/test_giao_dien_ux5b_l4.py` (11 ca): số ô ≤ 7 (Nhập nguyện vọng: quản trị ≤ 7, giáo viên ≤ 6, trạng thái "đã chọn một em"; Nhập điểm: danh sách ≤ 7, đang chấm ≤ 2), tối đa một nút vàng mỗi thẻ, không nút đỏ, không nút bị làm mờ thay vì ẩn, giáo viên không thấy thẻ Xếp CLB/Tạo mới/điểm quyết tâm; test từ cấm và chữ trần "i"; "cùng payload": ba lần Lưu gọi đúng `submit_test_selection`, `submit_preferences`, `submit_wharton` (giáo viên: hai lần đầu) với đúng tham số, Lưu Bước 1 không kéo theo lưu Bước 2. Cách đếm: ngoài hàng bảng, ngoài dữ liệu dạng danh sách (thẻ kết quả tìm và phân trang, hàng thứ tự nguyện vọng, lưới CLB) và nút "Sửa" của mục gập (điều hướng giữa các bước). Số đo là dữ liệu MÔ PHỎNG.
+
 ## 2026-11-23 — UX5B-L3: thẻ Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm (Hick + Von Restorff)
 
 - `index.html`, `js/04_nhap_tai_cho.js`, `js/06_cham_diem.js`, `js/00_nen.js`, `i18n.js`, `style.css` (khối `/* UX5B */`): D2 ba bước là ba mục gập, MỘT mục mở (nút Lưu của mục đó là nút vàng duy nhất); mục gập còn dòng "Đã lưu: …" hoặc "• Chưa lưu" + nút "Sửa"; Lưu Bước 1 thì Bước 2 tự mở, Lưu Bước 2 thì Bước 3 (nếu có) tự mở. Ba lời gọi lưu giữ riêng, tham số y như cũ.
