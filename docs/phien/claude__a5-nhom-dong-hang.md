@@ -66,7 +66,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
   - [ ] Hints: tiers textarea placeholder/hint and club "nhóm ưu tiên" field hint explain `a|b`; keys prefix `a5_`.
   - [ ] One Chromium test file `tests/test_a5_giao_dien.py`, one shared page fixture: JS error on a label in
         two lines; review shows `a = b`.
-- [ ] **L4 docs (must; Truong asked)** — guide section on `a|b` (both modes) with the warning "nhóm điểm cao hơn
+- [x] **L4 docs (must; Truong asked)** — guide section on `a|b` (both modes) with the warning "nhóm điểm cao hơn
       có thể lấy hết suất dự trữ"; registry A5 note (small part done); CHANGELOG + TIEN_DO. Simulated data only.
 
 ## Acceptance (kiem_nhan)
@@ -85,14 +85,14 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- L1-L3 done+checked (L2 after 1 FIX round; L3 head baa8dbd). Next: L4 docs (+ aria-describedby on gt2TcTiers hint).
+- L1-L4 done+checked (code head 85ff58f). Next: CI gate (§4), then final check (§5).
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L3 NO BUGS, GO L4 sent |
-| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L3 NO BUGS |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L4 NO BUGS, idle |
+| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L4 NO BUGS |
 
 ## Needs Truong
 - (low priority, not blocking) `xem_truoc_so_nhap` does not warn beforehand about a student cell with `|`; import returns ok=True while that student is skipped (warning a5_nhom_hs_co_gach). Decide if a pre-import warning is wanted.
