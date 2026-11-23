@@ -42,3 +42,8 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 
 ## CIFIX2
 - Root cause in CHANGELOG (viewport-relative `top` + scroll clamp when skeleton rows are hidden; flaky race, not A5). Fix = document coordinates in the test measurement; sequential group (111) passed locally before and ux2_khung 5x after.
+
+## L5 — soat-ma walk
+- T1: no change to ranking/choice code; end-to-end `run_pipeline` test locks pooled reserve behaviour (mutant `default_reserve_eligible_fn -> False` fails 4/5; removing the preview warning fails the preview test).
+- T2: preview stays read-only (counts of students/clubs/preferences unchanged, test); import behaviour unchanged (test); no new i18n code, no new public method (phan_quyen/nhat_ky untouched); SQL none new. Invariants 1/5/6/7 unaffected; `kiem_nhanh` below.
+- T3: no UI change (the existing preview list renders warnings by code). T4: test count 383 in CLAUDE_CHI_TIET, CHANGELOG, TIEN_DO.

@@ -467,6 +467,12 @@ class NhapDuLieuMixin:
             kq["loi"] = du_lieu["loi"]
             kq["canh_bao"] = [] if du_lieu["loi"] else self._canh_bao_so_nhap(du_lieu)[0]
             if not du_lieu["loi"]:
+                # A5: ô nhóm của HỌC SINH có `|` -> lúc nhập em đó bị bỏ qua; nói trước khi bấm Nhập.
+                kq["canh_bao"] += [err("a5_nhom_hs_co_gach", student_id=s["student_id"],
+                                       reserve_group=s["reserve_group"])
+                                   for s in du_lieu["students"]
+                                   if self.o_nhom_hs_co_gach(s.get("reserve_group"))]
+            if not du_lieu["loi"]:
                 kq["canh_bao"] += self._canh_bao_fa_xem_truoc(du_lieu)
             if not du_lieu["loi"]:
                 kq["canh_bao"] += self._canh_bao_wharton_trong_xem_truoc(du_lieu)

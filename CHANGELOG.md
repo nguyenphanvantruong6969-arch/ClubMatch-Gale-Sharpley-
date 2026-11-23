@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L5: xem trước sổ nhập cảnh báo nhóm có `|`, và chạy xếp thật với CLB `a|b`
+
+- `api_nhap.py` `xem_truoc_so_nhap`: mỗi học sinh có ô nhóm chứa `|` thêm một cảnh báo `a5_nhom_hs_co_gach` (dùng lại mã cũ, cùng dạng `student_id` + `reserve_group`) TRƯỚC khi nhập; chỉ đọc, không ghi gì. Sổ không có `|`: kết quả xem trước y hệt như trước. Nhập thật không đổi (em đó bị bỏ qua kèm cảnh báo). Không thêm mã i18n.
+- Test mới: `tests/test_a5_chay_xep.py` (5 ca; `run_pipeline` thật, Wharton tắt, dữ liệu mô phỏng dựng bằng nhập CSV + `bulk_set_reserve_group`): suất dự trữ của CLB `a|b` chỉ vào a/b theo hạng và chỉ ở CLB đó; nhóm điểm cao hơn lấy hết 3 suất (b cao hơn thì b lấy hết); ô `a` loại b dù b điểm cao hơn; `a|b` khi không có em nhóm b cho đúng kết quả như `a`. Thêm 3 ca xem trước vào `tests/test_a5_nhom_dong_hang_backend.py`. Số tệp test: 383.
+
 ## 2026-11-23 — A5-CIFIX2: `test_khung_khong_lam_nhay_bo_cuc_120_hs` đo theo toạ độ tài liệu
 
 - CI Linux 1/6 đỏ: `top` đầu bảng 390 so với 470. Nguyên nhân: test đo `getBoundingClientRect().top` (toạ độ khung nhìn). Lúc vào thẻ, trang có thể đang cuộn 80 px (hiệu ứng vào thẻ làm trang cao thêm 80 px, race theo thời gian: cục bộ gặp ngẫu nhiên, CI chậm gặp đều); giấu 8 hàng khung làm trang co từ 1142 về 1000 px nên trình duyệt kéo cuộn về 0, toạ độ khung nhìn nhảy 80 dù bố cục không đổi. Không liên quan thay đổi A5 (1e07297 chỉ may mắn qua).

@@ -138,3 +138,53 @@ def test_gan_hang_loat_co_gach_bi_tu_choi_db_khong_doi(api):
     assert _db(api, "SELECT student_id, reserve_group FROM students ORDER BY 1") == truoc
     assert api.bulk_set_reserve_group(["HS1", "HS2"], "Chính sách")["ok"] is True
     assert _db(api, "SELECT reserve_group FROM students ORDER BY 1") == [("chinh_sach",)] * 2
+
+
+def _so(clubs, hs):
+    import io
+    import so_nhap
+    bio = io.BytesIO()
+    so_nhap.ghi_so_nhap(bio, clubs=clubs, students=hs)
+    return base64.b64encode(bio.getvalue()).decode()
+
+
+_CLB = [{"club_id": "c1", "name": "C1", "capacity": 10, "reserve_capacity": 2,
+         "reserve_group": "a|b", "buoi": ""}]
+
+
+def _hs(*nhan):
+    return [{"student_id": "S%d" % i, "name": "Em %d" % i, "reserve_group": n,
+             "nv": [{"club_id": "c1", "thi": False, "diem": ""}]} for i, n in enumerate(nhan)]
+
+
+def _dem(api):
+    return (_db(api, "SELECT COUNT(*) FROM students"), _db(api, "SELECT COUNT(*) FROM clubs"),
+            _db(api, "SELECT COUNT(*) FROM preferences"))
+
+
+def test_xem_truoc_so_nhap_bao_hoc_sinh_co_gach_va_khong_ghi_gi(api):
+    x = _so(_CLB, _hs("a", "a|b", "b|c"))
+    truoc = _dem(api)
+    kq = api.xem_truoc_so_nhap(x)
+    assert kq["ok"], kq["errors"]
+    a5 = [(w["params"]["student_id"], w["params"]["reserve_group"])
+          for w in kq["data"]["canh_bao"] if w["code"] == "a5_nhom_hs_co_gach"]
+    assert a5 == [("S1", "a|b"), ("S2", "b|c")]
+    assert _dem(api) == truoc == ([(0,)], [(0,)], [(0,)])           # chỉ xem, không ghi gì
+
+
+def test_xem_truoc_so_nhap_khong_co_gach_khong_them_gi(api):
+    sach = api.xem_truoc_so_nhap(_so(_CLB, _hs("a", "b")))["data"]
+    co = api.xem_truoc_so_nhap(_so(_CLB, _hs("a", "a|b")))["data"]
+    assert not [w for w in sach["canh_bao"] if w["code"] == "a5_nhom_hs_co_gach"]
+    # bỏ cảnh báo A5 thì phần còn lại của hai bản xem trước y hệt nhau
+    bo = [w for w in co["canh_bao"] if w["code"] != "a5_nhom_hs_co_gach"]
+    assert bo == sach["canh_bao"] and {k: v for k, v in co.items() if k != "canh_bao"} == \
+        {k: v for k, v in sach.items() if k != "canh_bao"}
+
+
+def test_nhap_that_van_bo_qua_hoc_sinh_co_gach_va_canh_bao(api):
+    kq = api.import_so_nhap(_so(_CLB, _hs("a", "a|b")))
+    assert kq["ok"], kq["errors"]
+    assert "a5_nhom_hs_co_gach" in {w["code"] for w in kq["data"]["warnings"]}
+    assert _db(api, "SELECT student_id, reserve_group FROM students") == [("S0", "a")]
