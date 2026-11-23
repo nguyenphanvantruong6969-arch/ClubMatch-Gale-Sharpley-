@@ -54,6 +54,9 @@ def mo(tmp_path):
     url = browser_host.serve(api, GOC, "index.html", open_browser=False)
 
     def vao(dong_ho=False):
+        # SF-B (ST-B-009): "Chế độ học sinh" chỉ dựng lớp phủ khi đã có tài khoản (khoá thật); test nào chưa tự tạo thì tạo ở đây.
+        if not api._co_tai_khoan():
+            assert api.tao_tai_khoan("qt_nen", MK, "quan_tri")["ok"] and api.dang_nhap("qt_nen", MK)["ok"]
         if dong_ho:
             page.clock.install()
         page.goto(url)

@@ -130,6 +130,34 @@ def _nguoi_nhan_cuoi(cid, assign, base_rank):
     return (max(giu, key=lambda s: base_rank[cid].get(s, len(base_rank[cid]))) if giu else None), len(giu)
 
 
+def _nho(b, ten):
+    """Bộ nhớ đệm theo CLB nằm NGAY TRONG `b` (dữ liệu một buổi của MỘT lần xuất): `assign`, `base_rank`, `fa_rows`
+    không đổi trong lúc xuất, còn mỗi em lại hỏi lại cùng một CLB (SF-A5, ST-A-008: 3 000 phiếu từng quét cả danh sách
+    xếp cho MỖI nguyện vọng của MỖI em, nên thời gian tăng theo bình phương số em)."""
+    nho = b.get(ten)
+    if nho is None:
+        nho = b[ten] = {}
+    return nho
+
+
+def _nhan_cuoi_nho(cid, b):
+    """`_nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])`, tính một lần cho mỗi CLB."""
+    nho = _nho(b, "_nho_nhan_cuoi")
+    if cid not in nho:
+        nho[cid] = _nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])
+    return nho[cid]
+
+
+def _so_nhan(cid, b):
+    """Số em được xếp vào CLB `cid` (đếm cả một lượt cho mọi CLB)."""
+    dem = b.get("_nho_so_nhan")
+    if dem is None:
+        dem = b["_nho_so_nhan"] = {}
+        for k in b["assign"].values():
+            dem[k] = dem.get(k, 0) + 1
+    return dem.get(cid, 0)
+
+
 def _ma_tu_choi(sid, cid, b, cuoi):
     """(mã, sau_nguoi_nhan_cuoi) cho em `sid` bị từ chối ở CLB `cid` so với người nhận cuối `cuoi`."""
     rank = b["base_rank"][cid]
@@ -161,7 +189,7 @@ def _lua_chon_rbda(sid, buoi, b):
         c = b["clubs"].get(cid)
         if c is None:
             continue
-        cuoi, n = _nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])
+        cuoi, n = _nhan_cuoi_nho(cid, b)
         diem_clb = b["scores"].get(cid, {})
         x = {"hang": i + 1, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
              "loai_clb": c.get("loai"), "diem_em": diem_clb.get(sid), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
@@ -213,6 +241,14 @@ def _cau_huy_chuong(r, cua_em, ten_clb):
 
 
 def _chuan_clb_fa(cid, b):
+    """Một lần cho mỗi CLB (xem `_nho`); tính thật ở `_chuan_clb_fa_tinh`."""
+    nho = _nho(b, "_nho_chuan_fa")
+    if cid not in nho:
+        nho[cid] = _chuan_clb_fa_tinh(cid, b)
+    return nho[cid]
+
+
+def _chuan_clb_fa_tinh(cid, b):
     """UX1B-R1: mức vào được của CLB có thi ở chế độ FA, MỘT quy tắc cho cột, thanh SVG và câu "Vì sao": lấy từ các dòng bị
     từ chối đã lưu của CLB (`fa_ly_do`: mọi dòng REJECTED của một CLB cùng so với MỘT người nhận cuối, người có khoá xấu
     nhất theo (giữ chỗ, điểm, huy chương, bốc thăm)). Có dòng RESERVED -> người nhận cuối giữ chỗ riêng, không có mức điểm
@@ -228,7 +264,7 @@ def _chuan_clb_fa(cid, b):
             return None, "giu_cho"
         cat = [r["cut_score"] for r in tu_choi if r.get("cut_score") is not None]
         return (cat[0], "diem") if cat else (None, None)
-    so_nhan = sum(1 for k in b["assign"].values() if k == cid)
+    so_nhan = _so_nhan(cid, b)
     if c["capacity"] is None or so_nhan < c["capacity"]:
         return None, "con_cho"
     return None, None
@@ -248,7 +284,7 @@ def _lua_chon_fa(sid, buoi, b, huy=None):
         if c is None:
             continue
         r = dong.get(cid)
-        n = sum(1 for s, k in b["assign"].items() if k == cid)
+        n = _so_nhan(cid, b)
         x = {"hang": i + 1, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
              "loai_clb": c.get("loai"), "diem_em": (r or {}).get("diem_em"), "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
              "da_nhan": n, "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket,
@@ -281,7 +317,7 @@ def _lua_chon_fa(sid, buoi, b, huy=None):
                                     "chon_loc": False}
         ra.append({"hang": None, "club_id": cid, "ten_clb": c["ten"], "chon_loc": c["chon_loc"],
                    "loai_clb": c.get("loai"), "diem_em": None, "suc_chua": c["capacity"], "du_tru": c["reserve_capacity"],
-                   "da_nhan": sum(1 for s, k in b["assign"].items() if k == cid),
+                   "da_nhan": _so_nhan(cid, b),
                    "stb_em": b["stb"].get(sid), "duoc_xep": cid == ket, "diem_chuan": None,
                    "diem_chuan_loai": None, "sau_nguoi_nhan_cuoi": None, "vi_tri_cho": None,
                    "huy_chuong": NHAN_HUY_CHUONG.get(huy.get(cid)),
@@ -303,7 +339,7 @@ def _diem_da_thi(sid, b, ds, fa):
         if x is not None:
             chuan, loai = x["diem_chuan"], x["diem_chuan_loai"]
         elif not fa and cid in b.get("base_rank", {}):
-            cuoi, n = _nguoi_nhan_cuoi(cid, b["assign"], b["base_rank"])
+            cuoi, n = _nhan_cuoi_nho(cid, b)
             if n >= c["capacity"] and cuoi is not None:
                 chuan, loai = (diem_clb[cuoi], "diem") if cuoi in diem_clb else (None, "boc_tham")
             else:

@@ -58,6 +58,9 @@ SO_NV_MAC_DINH = 15
 # Trần MỖI BUỔI của phần mềm (rbda_priority_pipeline.TRAN_NGUYEN_VONG_MOI_BUOI,
 # TRAN_CLB_THI_MOI_BUOI). Chép lại ở đây vì tệp này phải chạy được một mình
 # trong bản đóng gói của skill; tests/test_so_nhap.py canh hai bên bằng nhau.
+# SF-A3 (ST-A-003): chỉ tiêu một CLB tối đa 2^31 - 1 (số nguyên 32 bit). Lớn hơn là gõ nhầm, và >= 2^63 làm
+# SQLite từ chối ghi ('Python int too large') sau khi xem trước đã báo ổn.
+TRAN_SUC_CHUA = 2 ** 31 - 1
 TRAN_NV_MOI_BUOI = 10
 TRAN_THI_MOI_BUOI = 5
 SO_DONG_CLB_TRONG = 60
@@ -554,9 +557,14 @@ def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dic
 
     clubs = _doc_sheet_clb(wb[ten_clb], loi, clb_da_co or {}, ma_da_co or {}, clb_cu or {},
                            cfg, chuan_clb)
-    students = _doc_sheet_hs(wb[ten_hs], clubs, loi, cfg, chuan_hs)
+    meta_hs: dict = {}
+    students = _doc_sheet_hs(wb[ten_hs], clubs, loi, cfg, chuan_hs, meta_hs)
     ra = {"clubs": [c for c in clubs if not c.get("hong")],
           "students": students, "loi": loi,
+          # SF-A1 (ST-B-003/ST-A-004): hình dạng sheet học sinh — không có cột điểm thi thì nạp sổ
+          # KHÔNG xoá ô tick/điểm đã lưu; ô nằm ở cột không tên bị bỏ qua thì báo.
+          "co_cot_thi": meta_hs.get("co_cot_thi", False),
+          "n_o_bo_qua": meta_hs.get("n_o_bo_qua", 0),
           # UX1A-L5: chỉ để NÓI (xem trước): sổ có cột Huy chương không? Không ảnh hưởng gì được lưu.
           "co_cot_huy_chuong": _sheet_co_cot_huy_chuong(wb[ten_hs])}
     # FA-1: sheet "Giữ chỗ" tuỳ chọn. Có sheet thì khoá `giu_cho` có mặt (kể cả rỗng = xoá hết).
@@ -661,7 +669,7 @@ def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHE
                       and f_chi_tieu.is_integer() and f_uu_tien.is_integer())
             n_chi_tieu = int(f_chi_tieu) if hop_le else 0
             n_uu_tien = int(f_uu_tien) if hop_le else 0
-            hop_le = hop_le and n_chi_tieu > 0 and 0 <= n_uu_tien <= n_chi_tieu
+            hop_le = hop_le and 0 < n_chi_tieu <= TRAN_SUC_CHUA and 0 <= n_uu_tien <= n_chi_tieu
         except (ValueError, OverflowError):
             hop_le = False
         if not hop_le:
@@ -846,7 +854,13 @@ def _sheet_co_cot_huy_chuong(ws) -> bool:
     return False
 
 
-def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS) -> list:
+def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> list:
+    """`meta` (dict, tuỳ chọn) nhận hai điều về hình dạng sheet, chỉ để NÓI và để KHÔNG xoá nhầm:
+    `co_cot_thi` (sheet có cột điểm thi nào không) và `n_o_bo_qua` (số ô có chữ nằm ở cột KHÔNG có
+    tiêu đề, tức không được đọc — thường là sổ mất hàng tiêu đề thứ hai)."""
+    if meta is None:
+        meta = {}
+    meta.update(co_cot_thi=False, n_o_bo_qua=0)
     dong_iter = _cac_dong(ws)
     dau = next(dong_iter, None)
     if dau is None:
@@ -940,12 +954,15 @@ def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS) -> list:
     def lay(o, i):
         return o[i].strip() if i is not None and i < len(o) else ""
 
+    meta["co_cot_thi"] = bool(cot_diem) or cot_diem_cn is not None
+    cot_khong_ten = [i for i, t in enumerate(tieu_de) if not str(t or "").strip()]
     students, ma_da_gap = [], {}
     for so_dong, o in dong_iter:
         sid = lay(o, cot["student_id"])
         if not sid:
             loi.append(err("so_nhap_thieu_ma_hs", sheet=ten_sheet, dong=so_dong))
             continue
+        meta["n_o_bo_qua"] += sum(1 for i in cot_khong_ten if lay(o, i))
         # Trùng ĐÚNG từng ký tự mới là trùng. "hs01" và "HS01" là hai học
         # sinh với phần mềm; hàm nạp vẫn cảnh báo cặp mã như thế.
         if sid in ma_da_gap:

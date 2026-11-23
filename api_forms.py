@@ -169,6 +169,7 @@ class FormsMixin:
         except (FileNotFoundError, ValueError, KeyError):
             d = None
         if d is not None:
+            forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
             import phan_tich_cau_hoi
             thi = [c for c in d["cau_lac_bo"] if c["de_thi"]]
             de.update(co=True, n_clb_thi=len(thi),
@@ -184,6 +185,7 @@ class FormsMixin:
             return _fail(err("phieu_clb_tep_sai", detail=str(e)))
         if clubs is None:
             return _fail(err("forms_chua_co_clb"))
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import so_de_thi
         try:
             path = self._duong_xuat(output_path, "MAU_DE_THI_KIOSK.xlsx")
@@ -206,6 +208,7 @@ class FormsMixin:
         du_lieu, loi_co = self._bytes_xlsx(file_base64)
         if loi_co or du_lieu is None:
             return _fail(loi_co)
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import phan_tich_cau_hoi
         import so_de_thi
         with self._khoa_ghi:

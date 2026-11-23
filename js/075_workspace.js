@@ -405,7 +405,12 @@ function wsNhapZip(oFile) {
   const reader = new FileReader();
   reader.onload = () => {
     callApi("import_workspace", bufferSangBase64(reader.result), file.name).then((res) => {
-      if (!res.ok) { showErrorToast(res.errors); return; }
+      if (!res.ok) {
+        /* ST-B-011: tệp zip hỏng trả ws_du_lieu_sai ("kiểm tra các ô đã điền") dù không có ô nào: nói đúng nguyên nhân, chi tiết kỹ thuật giữ nguyên. */
+        if ((res.errors || []).some((e) => e && e.code === "ws_du_lieu_sai")) showToast(t("ws_nhap_zip_loi"), "error", res.errors);
+        else showErrorToast(res.errors);
+        return;
+      }
       showToast(t("ws_da_nhap", { ten: res.data.name }), "success");
       wsLamMoiDanhSach();
     });

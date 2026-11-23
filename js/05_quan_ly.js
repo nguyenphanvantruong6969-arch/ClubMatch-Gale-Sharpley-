@@ -422,19 +422,19 @@ function loadAdminClubs() {
       armTwoStepConfirm(delBtn, () => t("confirm_delete_generic"), () => {
         chayTai(callApi("delete_club", c.club_id), (delRes) => {
           if (delRes.ok) {
-            const d = delRes.data || {};
-            /* Xoá CLB kéo theo điểm đã chấm / ô tick thi: nói rõ số và tệp sao lưu (A13.12, 3.2). */
-            const mat = (d.n_scores_removed || 0) + (d.n_tests_removed || 0);
-            showToast(mat && d.backup_path
-              ? t("toast_club_deleted_removed", {
-                club_id: c.club_id, n_scores: d.n_scores_removed || 0, n_tests: d.n_tests_removed || 0,
-                backup_name: String(d.backup_path).split(/[\\/]/).pop() })
-              : t("toast_club_deleted", { club_id: c.club_id }), "success");
-            loadAdminClubs();
-            loadReserveGroupOptions();
-            lamMoiSauDoiClb();
+            xoaClbXong(c.club_id, delRes.data || {});
           } else {
             showErrorToast(delRes.errors);
+            /* SF-B6 (ST-B-007): CLB còn nguyện vọng / kết quả: hỏi lần hai rồi xoá kèm (có sao lưu). */
+            const e = (delRes.errors || []).find((x) => x && x.code === "cannot_delete_club_referenced");
+            if (e) {
+              hoiXacNhanXoaKem(body.closest("table") || body, t("xoa_kem_clb_hoi", { club_id: c.club_id, ...(e.params || {}) }), () => {
+                chayTai(callApi("delete_club", c.club_id, true), (r2) => {
+                  if (r2.ok) xoaClbXong(c.club_id, r2.data || {}, true);
+                  else showErrorToast(r2.errors);
+                });
+              });
+            }
           }
         });
       });
@@ -471,6 +471,26 @@ function oFaClb(c) {
 }
 
 /* Lưu / xoá CLB đổi cả danh sách buổi, bảng tải theo buổi và lịch tuần (A13.12, 3.10). */
+/* Sau khi xoá CLB (SF-B6 tách ra để lần xoá thường và lần xoá kèm dùng chung). */
+function xoaClbXong(clubId, d, kem) {
+  const mat = (d.n_scores_removed || 0) + (d.n_tests_removed || 0);
+  const tenSaoLuu = d.backup_path ? String(d.backup_path).split(/[\\/]/).pop() : "";
+  if (kem) {
+    showToast(t("toast_xoa_kem_clb", {
+      club_id: clubId, n_prefs: d.n_prefs_removed || 0, n_results: d.n_results_cleared || 0, backup_name: tenSaoLuu }), "success");
+  } else {
+    /* Xoá CLB kéo theo điểm đã chấm / ô tick thi: nói rõ số và tệp sao lưu (A13.12, 3.2). */
+    showToast(mat && d.backup_path
+      ? t("toast_club_deleted_removed", {
+        club_id: clubId, n_scores: d.n_scores_removed || 0, n_tests: d.n_tests_removed || 0, backup_name: tenSaoLuu })
+      : t("toast_club_deleted", { club_id: clubId }), "success");
+  }
+  loadAdminClubs();
+  loadReserveGroupOptions();
+  lamMoiSauDoiClb();
+  if (kem) veXuatPanel();   /* kết quả hiện tại thành cũ: làm mới dải cảnh báo "kết quả có thể đã cũ" */
+}
+
 function lamMoiSauDoiClb() {
   loadBuoiOptions();
   loadTaiTheoBuoi();
@@ -1159,6 +1179,8 @@ const UX2_RONG_HS_QL = {
 const UX2_LOI_CLB = {
   club_id_required: "clubFormId",
   capacity_must_be_positive: "clubFormCapacity",
+  club_capacity_not_integer: "clubFormCapacity",   /* SF-B5 (ST-B-006): mã backend, hiện ngay ở ô chỉ tiêu */
+  capacity_too_large: "clubFormCapacity",
   reserve_capacity_negative: "clubFormReserveCapacity",
   reserve_capacity_exceeds_capacity: "clubFormReserveCapacity",
 };
@@ -1176,6 +1198,7 @@ function initAdminHandlers() {
     const buoiRaw = el("clubFormBuoi") ? el("clubFormBuoi").value.trim() : "";
     const buoi = clbDangSua || buoiRaw ? buoiRaw : null;
     ["clubFormId", "clubFormName", "clubFormCapacity", "clubFormReserveCapacity"].forEach((x) => xoaLoiTaiO(el(x)));
+    feedback(el("clubFormFeedback"), "", false);   /* ST-B-006: bỏ dòng phản hồi của lần bấm trước */
     if (!id || (!name && !clbDangSua) || !capacity) {
       feedback(el("clubFormFeedback"), t("feedback_club_form_required"), true);
       /* UX2-L4: tô đúng ô còn thiếu (cùng câu cũ, không chuỗi mới) và đưa con trỏ về ô đầu tiên. */

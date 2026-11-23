@@ -1,5 +1,107 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B9: CI Linux 6/6 (id trùng `ux1aMtCanhBao`), sửa lỗi của SF-B7
+
+- Nguyên nhân gốc: vùng cảnh báo của SF-B7 đặt id `tienTo + "CanhBao"` trong `ux1aTaoThe`, mà thẻ mục tiêu MT1 cũng dùng `ux1aTaoThe` (tiền tố `ux1aMt`) và đã có `#ux1aMtCanhBao` (`js/19_muc_tieu.js`): hai phần tử cùng id làm `tests/test_giao_dien_mt1.py::test_che_do_huy_chuong_khoa_co_hoi_mot_dong_ly_do_va_uoc_tinh_khong_co` lỗi strict mode (chạy cục bộ tái hiện đỏ trước khi sửa). Bộ test liên quan em chạy trước khi push không có tệp này.
+- Sửa: `js/18_cai_dat.js` đổi id thành `tienTo + "CanhBaoDuLieu"` (`#ux1aCanhBaoDuLieu`); test của SF-B7 đổi theo; thêm `test_st_a_001_vung_canh_bao_khong_trung_id_voi_the_muc_tieu` (không id `ux1a*` nào trùng trong trang Cài đặt) ở `tests/test_giao_dien_sf_b_lo5.py`.
+
+## 2026-11-23 — SF-B8: test bàn phím `test_b4_chi_ban_phim_nhap_chay_xuat` (lỗi chập chờn của test) + bản hồi quy SF-B5..B7
+
+- Nguyên nhân gốc: KHÔNG phải thứ tự focus sau ST-B-009 (Tab vẫn tới đúng `#dropZone`, `keydown` Enter chạy và `input.click()` được gọi). Chạy riêng 8 lần: 5 lần đỏ, kể cả với `index.html` nguyên bản. `expect_file_chooser` đăng ký chặn hộp chọn tệp bằng thông điệp không chờ phản hồi; nhấn Enter ngay thì đôi khi hộp chọn tệp mở trước khi chặn có hiệu lực nên sự kiện không bao giờ tới. Thêm một vòng khứ hồi `p.evaluate("0")` trước khi nhấn phím: 6/6 xanh. Thời gian chờ giữ nguyên 5000 ms.
+- Phát hiện kèm (lỗi thật, nhỏ, không phải nguyên nhân của chập chờn): `<input id="fileAny">` nằm TRONG `#dropZone`, nên `input.click()` nổi bọt lên và `zone` gọi `input.click()` lần hai. `js/02_van_hanh.js` (`initCsvImportHandlers`): bỏ qua cú bấm xuất phát từ chính ô chọn tệp. Test khoá: cùng test bàn phím đếm `HTMLInputElement.prototype.click` bằng đúng 1 sau một lần Enter.
+- Thêm `tests/test_giao_dien_sf_b_lo5.py` (5 ca): bản hồi quy nhỏ cho ST-B-006, ST-B-007 (CLB, học sinh), ST-A-001. Đếm lại tệp test: 388.
+
+## 2026-11-23 — SF-B7: ST-A-001 (cảnh báo thiếu dữ liệu dưới các thẻ chế độ)
+
+- `js/18_cai_dat.js` (`ux1aTaoThe`): thêm vùng `#ux1aCanhBao` (`role="status"`) dưới các thẻ chế độ (#ux1aChiXep, #ux1aChia100, #ux1aHuyChuong) và hàm `datCanhBao`; sau `update_workspace_config`, nếu `data.warnings` có `che_do_thieu_du_lieu` thì hiện câu của backend (`n_thieu_loai`, `n_buoi_thieu_tu_do`, `n_thieu_diem_san`, `n_huy_chuong_sai`, `che_do`), không có thì ẩn; đổi chế độ thì xoá cảnh báo cũ rồi vẽ lại theo lần lưu mới; "Hoàn tác" cũng cập nhật. `style.css`: `.ux1a-canh-bao`. Chữ từ `i18n_loi.js` của A, không có chữ mới.
+- Test mới (đỏ trước): `tests_stress/b/test_b5_canh_bao_che_do.py` (thiếu dữ liệu thì có cảnh báo và hết khi đổi lại; đủ dữ liệu thì không có); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
+## 2026-11-23 — SF-B6: ST-B-007 (xoá CLB / học sinh đã có dữ liệu: xác nhận lần hai)
+
+- `js/00_nen.js`: `hoiXacNhanXoaKem` / `boXoaKemBar` (thanh xác nhận `#xoaKemBar`, dùng kiểu `.run-confirm-bar`, không `confirm()` native; Esc hoặc "Huỷ" thì không gọi gì; con trỏ mặc định ở "Huỷ").
+- `js/05_quan_ly.js`: khi `delete_club(id)` bị từ chối bằng `cannot_delete_club_referenced`, vẫn hiện thông báo lỗi như trước rồi hỏi lần hai; xác nhận thì gọi `delete_club(club_id, true)`. `xoaClbXong` dùng chung cho hai đường, báo số nguyện vọng bỏ, kết quả thành chưa có suất và tên tệp sao lưu (`backup_path`), làm mới dải "kết quả đã cũ" (`veXuatPanel`).
+- `js/04_nhap_tai_cho.js`: tương tự cho `cannot_delete_student_matched` và `delete_student(student_id, true)` (`xoaHocSinhXong`); thanh hỏi bị gỡ khi mở học sinh khác.
+- `i18n.js` (vi + en): `xoa_kem_clb_hoi`, `xoa_kem_hs_hoi`, `xoa_kem_nut`, `toast_xoa_kem_clb`, `toast_xoa_kem_hs` (không in hoa, không `{detail}`, tiếng Anh không dùng "you").
+- Test mới (đỏ trước): 4 ca trong `tests_stress/b/test_b2_quan_ly.py` (CLB và học sinh: hỏi lần hai rồi xoá được; huỷ ở bước hai thì chỉ có đúng một lần gọi, dữ liệu và `run_history` nguyên; dải "kết quả cũ" bật); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
+## 2026-11-23 — SF-B5: ST-B-006 (chỉ tiêu CLB: báo đúng chữ ngay ở ô)
+
+- `js/05_quan_ly.js`: bảng `UX2_LOI_CLB` thêm `club_capacity_not_integer` và `capacity_too_large` (mã backend của SF-A3) vào ô `clubFormCapacity`; bỏ kiểm phía trình duyệt `Number.isInteger(Number(capacity))` (báo sai chữ "phải lớn hơn 0" cho 1.5). Chữ lấy từ `i18n_loi.js` của A, nên không có chữ mới trong `i18n.js`.
+- Test mới (đỏ trước khi sửa): `tests_stress/b/test_b2_quan_ly.py::test_b2_form_clb_chi_tieu_thap_phan_hien_dung_chu_o_o` (1.5 và số rất lớn); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
+## 2026-11-23 — SF-A5: PDF phiếu cả trường ≤ 30 s ở 3 000 em + báo tiến độ (ST-A-008)
+
+- `giai_trinh.py`: bộ nhớ đệm theo CLB trong dữ liệu một buổi (`_nhan_cuoi_nho`, `_so_nhan`, `_chuan_clb_fa` nhớ kết quả; `_nguoi_nhan_cuoi`, đếm suất và quét `fa_rows` từng quét cả danh sách xếp cho MỖI nguyện vọng của MỖI em, nên chuẩn bị 3 000 phiếu tốn 4,7 s (Chia 100) / 6,8 s (Huy chương), nay 0,1 s). Kết quả không đổi: dữ liệu phiếu 3 000 em × 2 chế độ và 800 em × 2 chế độ so trước/sau bằng nhau từng trường (trừ `run_at`).
+- `xuat_pdf.py` (`dung_pdf`): luồng trang chỉ nén Flate, tắt ASCII85 của reportlab trong lúc dựng (đặt `rl_config.useA85 = 0`, trả lại ngay cả khi lỗi); ~7 % nhanh hơn, tệp nhỏ hơn. `ngat_trang(khi_qua=None)` + `_tai_lieu_bao_tien_do`: gọi hàm báo sau mỗi ngắt trang.
+- `phieu_giai_trinh.py` (`dung_phieu_pdf(..., khi_xong_em=None)`) + `api_xuat.py`: API mới `get_tien_do_xuat()` (chỉ đọc, KHÔNG lấy khoá ghi; mức giáo viên trong `phan_quyen.py`) trả `{dang_xuat, xong, tong, ten}`; `xong`/`tong` đếm học sinh, cộng dồn qua các lớp khi `theo_lop=True` (`ten` = lớp đang dựng). Xuất xong hoặc lỗi thì về trạng thái rảnh. Khung giao diện (B) hỏi định kỳ để hiện thanh tiến độ.
+- Đo (mô phỏng, máy cloud 4 nhân, một PDF cả trường): 800 em 6,5 / 5,8 s; 3 000 em 26,3 s (Huy chương) / 24,3 s (Chia 100); trước SF-A: 68-76 s. Số trang không đổi (5 902 ở 3 000 em Chia 100; 1 578 ở 800). Chia theo lớp tuần tự không nhanh hơn một tệp (thời gian tuyến tính theo số phiếu), nên nhanh hơn nữa cần dựng song song nhiều tiến trình: chưa làm (xem tệp bàn giao).
+- Test mới: `tests/test_sf_a_5.py` (9 ca). Bỏ nhánh `xfail` ST-A-008 ở `tests_stress/a/test_a4_exports_timing.py` (nay là `assert` ≤ 30 s).
+
+## 2026-11-23 — SF-A (sửa CI 2): kiểm toàn vẹn không chờ khoá
+
+- `api_chung.py` (`kiem_toan_ven_db`): chờ khoá 0,2 s (trước 5 s) rồi bỏ qua; CSDL đang bị khoá ngoài thì `run_pipeline` / `reset_data` vẫn báo `csdl_dang_ban` dưới 7 s (`tests/test_a13_11_stress.py` đỏ trên CI: 8-10 s).
+
+## 2026-11-23 — SF-A (sửa CI): chữ cảnh báo mới theo luật văn phong, bản chụp chữ ws_nhan
+
+- `i18n_errors.py`: bỏ `{detail}` thô và chữ IN HOA nhấn mạnh khỏi `csdl_hong_can_khoi_phuc`, `so_nhap_canh_bao_giu_diem`, `so_nhap_canh_bao_o_bo_qua` (`tests/test_van_phong_tu_nhien.py`). `tests/test_ws_nhan.py`: ba câu đổi chủ ý (`csv_student_id_case_conflict`, `cannot_delete_club_referenced`, `cannot_delete_student_matched`) vào `SUA_CO_Y`; bảy mã mới vào `MA_MOI_SAU_ANH_CHUP`.
+
+## 2026-11-23 — SF-A4: PDF phiếu cả trường nhanh hơn ~1,8-2 lần (ST-A-008, một phần)
+
+- `xuat_pdf.py`: ô bảng là chuỗi tự xuống dòng bằng `simpleSplit` (cache theo chữ + bề rộng cột; khoảng trắng gộp như `Paragraph`; ô có từ dài hơn cột vẫn dùng `Paragraph` để cắt từ) thay cho `Paragraph` mỗi ô; `Paragraph` của khối dùng chung nhớ kết quả `wrap` theo bề rộng (dựng lại `blPara` nếu `split` đã xoá).
+- Đo (mô phỏng, máy cloud, phiếu cả trường một PDF): 800 em 18,8 s → 9,1 s; 3 000 em 68-76 s → 32,4 s (Chia 100) / 38,4 s (Huy chương) ở lần chạy stress cuối (lần đo đầu 40,6 s). Mục tiêu ≤ 30 s ở 3 000 em CHƯA đạt: phần còn lại là reportlab thuần Python (định dạng số, `drawString`, ghi PDF); xem "Needs Truong" trong tệp bàn giao. Số trang 800 em không đổi (1 589).
+- Test mới: `tests/test_sf_a_4.py` (5 ca).
+
+## 2026-11-23 — SF-A3: xoá có xác nhận, chỉ tiêu, đổi chế độ, biểu mẫu (ST-A-005, ST-B-007, ST-A-003, ST-B-006, ST-A-001, ST-A-007)
+
+- `api_quan_ly.py`: `delete_student(student_id, xac_nhan_xoa_ket_qua=False)` chỉ chặn khi em có suất thật hoặc có nguyện vọng mà vẫn có dòng kết quả (em nhập nhầm không nguyện vọng xoá được); xác nhận thì sao lưu rồi xoá kèm dòng kết quả (lịch sử `run_history`/`fa_*` giữ nguyên, kết quả hiện tại thành cũ). `delete_club(club_id, xac_nhan_xoa_kem=False)`: xác nhận thì sao lưu, xoá nguyện vọng của CLB, dòng kết quả thành "chưa có suất". Mặc định chặn như cũ; thông báo `cannot_delete_*` nay nói rõ lối thoát. `create_or_update_club`: chỉ tiêu không nguyên (`club_capacity_not_integer`, thay cho "Hãy thử lại" + câu Python thô; số thực 1.5 không còn bị cắt thành 1) hoặc quá lớn (`capacity_too_large`).
+- `so_nhap.py` (`TRAN_SUC_CHUA = 2**31-1`) + `api_nhap.py` (`import_clubs_csv`): chỉ tiêu vượt trần bị `so_nhap_chi_tieu_sai` ở cả xem trước lẫn nạp (trước: xem trước ổn, nạp vỡ `error_importing_clubs_csv`).
+- `api_workspace.py` (`update_workspace_config`, `_canh_bao_doi_che_do`): data có thêm `warnings`; vừa bật Huy chương / Chia CLB theo loại mà dữ liệu CLB còn thiếu (Loại, CLB Tự do, điểm sàn, huy chương) thì báo `che_do_thieu_du_lieu`.
+- `api_forms.py`, `api_forms_nap.py`: gọi `forms_dot.nap_mau_forms()` trước mọi `import` mô-đun của `mau_forms_thi_clb` (ST-A-007).
+- `api_chung.py` (`kiem_toan_ven_db`): bỏ qua dòng vi phạm CHECK / NOT NULL của integrity_check (dữ liệu cũ, di trú cố ý không đụng) — chỉ hỏng cấu trúc mới là "hỏng" (sửa lỗi của SF-A2 làm vỡ `test_run_pipeline_reports_validation_errors`).
+- `i18n_errors.py` + `i18n_loi.js`: `che_do_thieu_du_lieu`, `club_capacity_not_integer`, `capacity_too_large`; câu của hai mã `cannot_delete_*` sửa.
+- Test mới: `tests/test_sf_a_3.py` (25 ca; chỉ tiêu, xoá em/CLB, đổi chế độ, biểu mẫu); các ca chỉ tiêu / xoá nằm trong `tests/test_sf_a_3.py`. Bỏ `xfail` ST-A-001, 003, 005, ST-B-006, ST-B-007.
+
+## 2026-11-23 — SF-B2 (nốt): ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk)
+
+- ST-B-009 (`js/14_giai_trinh.js` `moHs`, `js/16_tai_khoan.js` `window.tkMoHopTaoDau`, `i18n.js` `gt_hs_can_tai_khoan`): chưa có tài khoản thì "Chế độ học sinh" không dựng lớp phủ giả, báo và mở hộp tạo tài khoản quản trị (backend A trả `can_tao_tai_khoan`).
+- ST-B-004 (`js/04_nhap_tai_cho.js`, `i18n.js` `kiosk_ma_khac_hoa_thuong`): "Nhập tại chỗ" hỏi lại khi mã chỉ khác hoa/thường với mã đã có (tìm bằng `search_students`; bấm Tạo lần hai thì tạo).
+- Test cũ chỉnh theo luồng mới (cần tài khoản để vào chế độ học sinh): `test_giao_dien_gt1_hoc_sinh.py`, `_gt3_hoc_sinh.py`, `_gt4_man_hoc_sinh.py`, `_ux1_dieu_huong.py`, `_ux1b_phieu.py`; stress `test_b3_vai_tro.py` (nhánh chưa-có-tài-khoản chuyển thành khẳng định luồng mới). Test mới: 2 ca trong `test_giao_dien_sf_b_lo2.py`.
+
+## 2026-11-23 — SF-B3 (một phần) + SF-B4: ST-B-005, 010, 012, 013
+
+- ST-B-005 (`js/02_van_hanh.js`, `i18n.js` `so_nhap_bo_qua_tep`): thả nhiều tệp thì hàng đợi nói rõ tệp nào bị bỏ qua.
+- ST-B-010 (`recovery.js`): bấm "Khôi phục" lần hai sau khi đã khôi phục xong không chạy lại (không thay câu thành công).
+- ST-B-012 (`js/00_nen.js`): đổi ngôn ngữ thì đóng các thông báo đang hiện (chuỗi đã dịch sẵn, không dịch lại được).
+- ST-B-013 (`style.css`, `index.html`): ≤900 px `.main` rộng bằng cột (hết co theo nội dung), `.scroll-x` thành khối chứa cho `.sr-only`, bảng CLB nằm trong `.scroll-x`.
+- Chờ A: ST-A-001 (khung cảnh báo), ST-B-009, ST-B-004. Test mới: `tests/test_giao_dien_sf_b_lo4.py` (2 ca), thêm 2 ca vào `test_giao_dien_sf_b_lo2.py`; gỡ 4 xfail.
+
+## 2026-11-23 — SF-B2 (một phần): ST-B-006, ST-B-011
+
+- ST-B-006 (`js/05_quan_ly.js`, nút Lưu CLB): chỉ tiêu thập phân báo lỗi ngay ở ô chỉ tiêu (không gửi xuống backend); xoá dòng phản hồi cũ trước mỗi lần lưu.
+- ST-B-011 (`js/075_workspace.js` `wsNhapZip`, `i18n.js` `ws_nhap_zip_loi`): nhập zip hỏng nói đúng nguyên nhân (backend vẫn trả `ws_du_lieu_sai`; chi tiết kỹ thuật giữ nguyên).
+- Chờ backend của A: ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk). Test mới: `tests/test_giao_dien_sf_b_lo2.py` (2 ca); gỡ 2 xfail.
+
+## 2026-11-23 — SF-B1: ST-B-001, ST-B-002, ST-B-008 (màn hình cũ)
+
+- ST-B-001 (`js/09_the_xem.js`, `loadKetQuaTab`): tab Kết quả bỏ hàng của lần chạy trước ngay khi mở, hiện khung chờ nếu tải chậm.
+- ST-B-002 (`js/18_cai_dat.js`, `ux1aApDungSong`): vẽ lại công tắc "Chia CLB theo loại" sau khi đổi chế độ.
+- ST-B-008 (`i18n.js`, `ux1a_cau_canh_bao` vi/en): câu thanh "Việc tiếp theo" không còn hứa chặn chạy ("nên xem lại").
+- Test mới: `tests/test_giao_dien_sf_b_lo1.py` (3 ca). `tests_stress/b/ho_tro.py`: `_doc_bang` bỏ qua hàng khung chờ (`.ux2-khung-hang`); gỡ 3 xfail.
+## 2026-11-23 — SF-A2: an toàn (ST-A-006 CSDL hỏng, ST-B-009 khoá chế độ học sinh ở backend)
+
+- `api_chung.py` (`kiem_toan_ven_db`): kiểm `PRAGMA integrity_check(1)` (không dùng `quick_check`: đo trên 8 ca lật byte thì 3 ca "row N missing from index" lọt quick_check). `api.py`: `PipelineAPI.__init__` từ chối mở CSDL hỏng (ném `sqlite3.DatabaseError` → `main.py` vào trang phục hồi); `run_pipeline` chặn ở Bước 00 bằng mã `csdl_hong_can_khoi_phuc` TRƯỚC sao lưu; `_backup_db` không chép trang hỏng (không đẩy bản tốt ra khỏi vòng 10 bản). `api_nhap.py` (`import_so_nhap`): cùng mã, trước mọi đọc/ghi. `recovery.py` (`_quick_check_ok`): dùng `integrity_check` để trang phục hồi không coi tệp hỏng chỉ mục là đọc được.
+- `api_tai_khoan.py` (`vao_che_do_hoc_sinh`): chưa có tài khoản thì `{khoa: False, can_tao_tai_khoan: True}` (hợp đồng cũ giữ nguyên) để giao diện dẫn tới tạo tài khoản; có tài khoản thì khoá như cũ (đã khoá mọi hàm ngoài tra cứu, F5 không bỏ).
+- `i18n_errors.py` + `i18n_loi.js`: mã mới `csdl_hong_can_khoi_phuc`.
+- Test mới: `tests/test_sf_a_2.py` (6 ca); `tests/test_gt_tich_hop.py` thêm khẳng định `can_tao_tai_khoan`. Bỏ `xfail` ST-A-006.
+
+## 2026-11-23 — SF-A1: nạp Sổ an toàn (ST-B-003, ST-A-004, ST-B-004 phần backend, ST-A-002)
+
+- `so_nhap.py` (`_doc_sheet_hs`, `doc_so_nhap`): sheet học sinh báo thêm `co_cot_thi` (có cột điểm thi nào không) và `n_o_bo_qua` (ô có chữ nằm ở cột không có tiêu đề, tức không được đọc).
+- `api_nhap.py` (`import_so_nhap`, `_canh_bao_so_nhap`, `xem_truoc_so_nhap`): sổ KHÔNG có cột điểm thi thì bỏ bước ghi đè ô thi/điểm — ô tick và điểm đã lưu được GIỮ, kèm cảnh báo `so_nhap_canh_bao_giu_diem`; sổ có cột mà bỏ ô thi đã lưu thì xem trước báo `so_nhap_canh_bao_mat_diem` (N); ô ở cột không tên báo `so_nhap_canh_bao_o_bo_qua`; xem trước báo mã học sinh chỉ khác mã đã có ở chữ hoa/thường (`csv_student_id_case_conflict`, câu chữ nói rõ "gần như trùng"); `import_so_nhap` sao lưu (`_backup_db`) trước khi ghi, hỏng sao lưu không chặn.
+- `cau_hinh_ws.py` (`doc_cau_hinh(conn=)`), `api_workspace.py` (`_cfg_ws`): trong giao dịch chung, đọc cấu hình qua chính kết nối giao dịch, không mở kết nối thứ hai (gốc của `csdl_dang_ban` khi nạp sổ ~3 000 em, ST-A-002).
+- `i18n_errors.py` + `i18n_loi.js`: ba mã cảnh báo mới, một câu sửa. `pyproject.toml`: per-file-ignores cho `tests_stress/**` (SIM115, B023, PLE2502/2515: ký tự độ rộng 0 là dữ liệu thử cố ý); bỏ import/biến thừa trong `tests_stress/a/`.
+- Test mới: `tests/test_sf_a_1.py` (8 ca). Bỏ `xfail` ở ST-B-003, ST-B-004 (nhập sổ), ST-A-002, ST-A-004 trong `tests_stress/`.
+
 ## 2026-11-23 — ST2 (kế hoạch): stress test vòng 2, cố ý làm sập chương trình
 
 - `docs/phien/ST2_GIAO_THUC.md` (kill -9, thiếu tài nguyên, fuzz chuỗi thao tác, cỡ cực lớn; fuzz HTTP, monkey test, backend chết dưới giao diện, chạy dài) và `docs/phien/SF_ST2_PROMPTS.md` (bốn prompt). Chỉ chạy sau khi SF đã gộp và CI xanh. Không đổi mã sản phẩm.

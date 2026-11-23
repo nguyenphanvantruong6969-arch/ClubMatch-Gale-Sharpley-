@@ -64,6 +64,41 @@ def _nho_trong_luc_xuat(ham):
     return boc
 
 
+def kiem_toan_ven_db(duong_dan: str):
+    """None nếu tệp SQLite nguyên vẹn (hoặc chưa có / còn rỗng — CSDL mới); ngược lại chuỗi ngắn nói
+    điểm hỏng đầu tiên. SF-A2 (ST-A-006).
+
+    Dùng `PRAGMA integrity_check`, KHÔNG dùng `quick_check`: quick_check bỏ qua việc đối chiếu chỉ mục với
+    bảng nên để lọt đúng kiểu hỏng "row N missing from index" (đo trên 8 ca lật byte: 3 ca lọt). Tốn ~ms
+    cho CSDL cỡ vài trăm KB tới vài MB."""
+    import os
+    import sqlite3
+
+    if not duong_dan or not os.path.isfile(duong_dan) or os.path.getsize(duong_dan) == 0:
+        return None
+    try:
+        conn = sqlite3.connect(duong_dan, timeout=0.2)   # bị khoá thì bỏ qua NGAY (xem test_a13_11_stress: báo csdl_dang_ban < 7 s)
+        try:
+            cac_dong = conn.execute("PRAGMA integrity_check(100)").fetchall()
+        finally:
+            conn.close()
+    except sqlite3.OperationalError as e:
+        if "locked" in str(e).lower() or "busy" in str(e).lower():
+            return None            # đang bị khoá bởi lần ghi khác: không kết luận là hỏng
+        return str(e).splitlines()[0][:120]
+    except sqlite3.DatabaseError as e:
+        return str(e).splitlines()[0][:120]
+    # integrity_check còn báo dòng vi phạm CHECK / NOT NULL — dữ liệu CŨ có sẵn mà di trú cố ý không đụng
+    # tới (xem test_run_pipeline_reports_validation_errors): đó là lỗi dữ liệu, bước validate lo, KHÔNG phải
+    # trang hỏng. Chỉ các dòng còn lại mới là hỏng cấu trúc.
+    hong = [str(r[0]) for r in cac_dong
+            if r and r[0] != "ok"
+            and not str(r[0]).startswith(("CHECK constraint failed", "NULL value in"))]
+    if not hong:
+        return None
+    return hong[0].splitlines()[0][:120]
+
+
 def _fail_co_buoc(steps, errors):
     """Thất bại của run_pipeline: nhật ký từng bước nằm trong `data`.
 

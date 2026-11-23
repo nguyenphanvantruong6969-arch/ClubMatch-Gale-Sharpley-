@@ -51,13 +51,17 @@ def thu_muc_ghi_duoc(thu_muc: str) -> bool:
 
 
 def _quick_check_ok(path: str) -> bool:
-    """True nếu path là file SQLite hợp lệ và PRAGMA quick_check trả 'ok'."""
+    """True nếu path là file SQLite hợp lệ và PRAGMA integrity_check trả 'ok'.
+
+    SF-A2 (ST-A-006): trước đây `quick_check`, vốn không đối chiếu chỉ mục với bảng — để lọt kiểu hỏng
+    "row N missing from index", trong khi `PipelineAPI` giờ từ chối mở đúng kiểu hỏng đó: trang phục hồi
+    sẽ coi tệp là đọc được và vòng lặp. Tên hàm giữ nguyên cho các nơi gọi."""
     if not os.path.isfile(path) or os.path.getsize(path) == 0:
         return False
     try:
         conn = sqlite3.connect(path)
         try:
-            row = conn.execute("PRAGMA quick_check").fetchone()
+            row = conn.execute("PRAGMA integrity_check(1)").fetchone()
             return bool(row) and row[0] == "ok"
         finally:
             conn.close()

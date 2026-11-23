@@ -168,8 +168,11 @@ function kqNapOClb(ds) {
 }
 
 function loadKetQuaTab() {
-  Promise.all([callApi("get_trang_thai_ket_qua"), layDsLop(), callApi("get_club_fill_stats")])
-    .then(([tt, dsLop, clbRes]) => {
+  const than = el("kqThan");
+  const hoi = Promise.all([callApi("get_trang_thai_ket_qua"), layDsLop(), callApi("get_club_fill_stats")]);
+  /* ST-B-001: bỏ hàng của lần chạy TRƯỚC ngay khi mở tab (dữ liệu mới chưa về); khung chờ hiện nếu tải chậm. */
+  if (than) { than.textContent = ""; hienKhungCho(than, 0, 8, hoi); }
+  hoi.then(([tt, dsLop, clbRes]) => {
       kq.coKq = !!(tt.ok && tt.data.co_ket_qua);
       el("kqCuBanner").hidden = !(tt.ok && tt.data.ket_qua_cu);
       const dsClb = clbRes.ok ? kqSapClb(clbRes.data) : [];
