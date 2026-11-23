@@ -5,7 +5,7 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 ## Summary (severity counts) — updated at end of each lot
 | S1 | S2 | S3 | S4 | total |
 |---|---|---|---|---|
-| 0 | 3 | 3 | 0 | 6 |
+| 0 | 4 | 3 | 1 | 8 |
 
 ## Lot status
 | Lot | State | Tests |
@@ -13,7 +13,7 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 | A1 | done | test_a1_algo_props.py (520 random seeds + 120 brute-force + invariants 1-3), test_a1_modes.py, test_a1_fa.py, test_a1_findings.py |
 | A2 | done | test_a2_xlsx_fuzz.py (69 mutation kinds + big-book), test_a2_raw_csv_zip.py (raw bytes, base64 args, 3 CSV kinds x 24 variants x 4 entry points, 14 zip abuses) |
 | A3 | done | test_a3_faults.py (10 stage faults x fresh/after-run, BaseException, backup/export faults), test_a3_db.py (threads, external lock, corruption + recovery, schema x2, 6 random 30-step timelines) |
-| A4 | – | |
+| A4 | done | test_a4_api_fuzz.py (168 methods x 20 hostile values, export path strings, workspace traversal sentinels), test_a4_roles.py, test_a4_exports_timing.py |
 
 ## Bugs
 | id | sev | area | title | repro | invariant |
@@ -25,6 +25,8 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 | ST-A-004 | S3 | import | Sổ whose Học sinh sheet has a ONE-row header: 337 scores + all medals silently ignored, ok:true, 0 warnings | tests_stress/a/test_a2_xlsx_fuzz.py::test_one_row_header_does_not_silently_drop_points | — |
 | ST-A-005 | S2 | quản lý | A student created after a run (kiosk typo id) can never be deleted: `cannot_delete_student_matched` after the next run; message says "run again" (circular) | tests_stress/a/test_a3_db.py::test_student_created_by_mistake_after_a_run_can_be_removed | — |
 | ST-A-006 | S2 | DB / backup | DB failing `integrity_check` opens fine, run may report ok:true, corrupt copies rotate the good backups out | tests_stress/a/test_a3_db.py::test_run_on_page_corrupt_db_must_not_report_ok | — |
+| ST-A-007 | S4 | forms | `ai_chua_dang_ky`, `chuyen_tep_forms`, `doi_chieu_hai_lan` raise raw ModuleNotFoundError when called in a fresh process before any call that adds `mau_forms_thi_clb` to sys.path (import precedes precondition check); UI order avoids it | tests_stress/a/test_a4_api_fuzz.py::test_method_contract_on_bad_args[ai_chua_dang_ky] (non-strict xfail) | — |
+| ST-A-008 | S2 | export | `export_phieu_giai_trinh_pdf` (whole school, one PDF): 800 students 18 s, 3000 students 68-76 s (> 30 s) | tests_stress/a/test_a4_exports_timing.py::test_timing_scaled_book[*-3000] (xfail) | — |
 
 ### ST-A-001
 Steps: new workspace; set Chia 100 (or Chỉ xếp); `import_so_nhap(SO_NHAP_DOI_CHE_DO_150HS.xlsx)` (warns `fa_cot_bo_qua`, and
@@ -102,3 +104,14 @@ or run refuses with the recovery path when `quick_check` fails; do not rotate go
   restores newest good backup and keeps the `.corrupt-` file, `start_fresh`, all-backups-corrupt keeps the original;
   `di_tru_schema` twice and on an older schema is idempotent; 6 random 30-step timelines keep invariant 3 (existing STB order),
   capacity bounds and `integrity_check == ok`.
+
+### ST-A-007 / ST-A-008
+007: fresh `PipelineAPI`, call `ai_chua_dang_ky(None)` -> `ModuleNotFoundError: danh_sach_chua_dang_ky`. After `get_forms_buoc_12` the path exists and calls work.
+008: scaled shared Sổ (generator patched to n students), `export_phieu_giai_trinh_pdf` with no class filter: 18.4 s at 800, 68-76 s at 3000 (Huy chương and Chia 100). Everything else <= 6.3 s (3000: import 1.2-1.6 s, run 2-6 s, export_ket_qua 2 s). 800x20 / 3000x60 plain seed data: run 0.06 / 0.26 s, all exports <= 1.8 s. Numbers in `docs/phien/ST_A_TIMING.txt`.
+Note: ST-A-002 did not reproduce on the scaled shared Sổ at 3000 (it depends on tick-row volume: the copied-row Sổ has ~40 k tick rows).
+
+## A4 negative results
+- 168 public methods x 20 hostile values (None, 0, -1, 10**30, NaN, 200 kB string, SQL, traversal, NUL, RTL/emoji, huge lists...): contract kept, no hang, DB integrity ok; only ST-A-007. `chuan_hoa_buoi`/`chuan_hoa_nhom_du_tru` are staticmethods returning str, outside the permission gate (pure helpers, harmless; some AttributeError on wrong types).
+- Export path strings (13 kinds x 9 exports) and workspace slugs (`../SENTINEL`, absolute, NUL, encoded) never escaped the root; `mo_tep`/`mo_thu_muc` never exec shell metacharacters.
+- Roles: every public method has a `QUYEN` entry; no session -> `gt3_can_dang_nhap` everywhere; teacher refused on all admin methods with no data change; teacher cannot create accounts or escalate; login lockout works; student kiosk lock refuses all but 3 methods, teacher cannot unlock, lookup errors identical for known/unknown ids.
+- Exports (xlsx, CSV, PDF, zip, 3 modes) open; export -> re-import round trip gives identical clubs/prefs/scores and identical allocation.

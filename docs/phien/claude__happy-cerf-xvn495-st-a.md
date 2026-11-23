@@ -12,7 +12,7 @@ API and roles. NEVER edit production code. Output: `tests_stress/a/`, `docs/phie
 
 ## Current state
 - Done: venv set up (`.venv`, py3.13), helper design.
-- In progress: A4 (API surface, roles, exports, timing).
+- Done: A1-A4. Remaining: final review only.
 - Tests: `.venv/bin/python -m pytest -q tests_stress/a/<file> --tb=line`.
 
 ## Decisions and gotchas
@@ -33,3 +33,4 @@ API and roles. NEVER edit production code. Output: `tests_stress/a/`, `docs/phie
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-23 | Sonnet | started ST-A, read protocol | |
+| 2026-11-23 | Sonnet | A1-A4 done, 8 bugs logged (ST_BAO_CAO_A.md) | |
