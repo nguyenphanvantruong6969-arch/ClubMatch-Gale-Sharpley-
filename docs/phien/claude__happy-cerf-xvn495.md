@@ -9,9 +9,10 @@ admin can switch Chỉ xếp / Chia 100 / Huy chương and "Chia CLB theo loại
 - [x] `du_lieu_test/tao_so_nhap_doi_che_do.py` → `du_lieu_test/SO_NHAP_DOI_CHE_DO_150HS.xlsx` (simulated data).
 - [x] Verified with the real API: imported in Huy chương mode → 0 import warnings; 8 mode switches + 3 chia_loai
       toggles, health report empty and `run_pipeline(seed=42)` ok after every switch.
-- [ ] ST-A on `claude/happy-cerf-xvn495-st-a` (backend) — prompt in ST_GIAO_THUC context / Truong's chat.
-- [ ] ST-B on `claude/happy-cerf-xvn495-st-b` (UI).
-- [ ] Merge both bug reports, triage into registry items (next Opus session).
+- [x] ST-A on `claude/happy-cerf-xvn495-st-a` (backend): 8 bugs (0 S1, 4 S2, 3 S3, 1 S4), `ST_BAO_CAO_A.md`.
+- [x] ST-B on `claude/happy-cerf-xvn495-st-b` (UI): 13 bugs (1 S1, 1 S2, 6 S3, 5 S4), `ST_BAO_CAO_B.md`.
+- [x] Fix plan: `docs/phien/SF_GIAO_THUC.md` (item SF, two coders on the son branches, loop until green).
+- [ ] SF-A lots 1–4 on `-st-a`; SF-B lots 1–4 on `-st-b`; cross-check; one PR `-st-b` → this branch.
 
 ## Current state
 - Done: data file + generator, protocol, this file. No production code touched.
@@ -31,3 +32,4 @@ admin can switch Chỉ xếp / Chia 100 / Huy chương and "Chia CLB theo loại
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-22 | Opus | data file, ST protocol, two implementer prompts | planning only |
+| 2026-11-23 | Opus | ST results summarised; SF fix protocol + two coder prompts | planning only |
