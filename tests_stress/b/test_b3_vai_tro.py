@@ -1,11 +1,9 @@
 """ST-B lot B3 (part 1): login / logout / roles in the real UI. SIMULATED data."""
-import json
 import sqlite3
 import urllib.request
 
-import pytest
 
-from ho_tro import chon_cach, khoa_tho, dem_db, rules, chay_ui, ket_qua_db
+from ho_tro import khoa_tho, dem_db, rules
 from conftest import SO_150
 
 TRACEBACK = ("Traceback", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "object has no attribute")
@@ -56,7 +54,7 @@ def test_b3_tao_tai_khoan_va_kiem_tra_dau_vao(mo):
     assert "quantri" in p.locator("#tkHuyHieu").inner_text()
     # không lưu mật khẩu rõ trong CSDL
     c = sqlite3.connect(ui.api.db_path)
-    cot = [r[1] for r in c.execute("pragma table_info(tai_khoan)")]
+    [r[1] for r in c.execute("pragma table_info(tai_khoan)")]
     hang = c.execute("select * from tai_khoan").fetchall()
     c.close()
     assert not any(MK in str(x) for x in hang), "mật khẩu lưu dạng rõ"
@@ -244,6 +242,14 @@ def test_b3_che_do_hoc_sinh_tra_cuu_khoa_va_thoat(mo):
     _nap_api(ui)
     ma = _ma_tra_cuu(ui)
     sid, code = next(iter(ma.items()))
+    # ST-B-009 (SF-B): chưa có tài khoản → nút không dựng lớp phủ giả mà dẫn tới tạo tài khoản quản trị trước
+    ui.tab("results")
+    p.evaluate("() => { const d = document.getElementById('gtMaFold'); if (d) d.open = true; }")
+    p.locator("#btnGtCheDoHs").click()
+    p.wait_for_selector("#tkFormTao", timeout=8000)
+    assert p.locator("#gtHs").is_hidden(), "chưa có tài khoản mà vẫn dựng lớp phủ chế độ học sinh (chỉ là hình)"
+    _tao_tk_ui(ui, "quantri", MK)
+    p.locator("#tkNutDong").click()
     _vao_che_do_hs(ui)
     # lớp phủ che kín: các phần còn lại inert
     assert p.evaluate("[...document.querySelectorAll('.sidebar, nav, main')].some(e => e.inert || e.closest('[inert]'))"), "phần còn lại của app không bị khoá inert"
@@ -278,13 +284,17 @@ def test_b3_che_do_hoc_sinh_tra_cuu_khoa_va_thoat(mo):
     p.wait_for_timeout(2500)
     con_khoa = p.locator("#gtHs").is_visible()
     print("sau F5, lớp phủ học sinh còn:", con_khoa)
-    ui.anh("ST-B-009_f5_thoat_che_do_hoc_sinh") if not con_khoa else None
-    if not con_khoa:
-        pytest.xfail("ST-B-009: chưa có tài khoản → F5 thoát chế độ học sinh, mọi thẻ quản trị hiện lại, API không khoá (%s)" % r)
-    # thoát: không có tài khoản → hỏi lại rồi thoát
+    assert con_khoa, ("ST-B-009: F5 thoát chế độ học sinh dù đã có tài khoản", r)
+    assert not any(v == "OK!" for v in r.values()), r
+    # thoát: cần tài khoản quản trị
     p.locator("#btnGtHsThoat").click()
     p.locator("#btnGtHsCo").click()
+    p.wait_for_selector("#gtHsQuanTri:not([hidden])", timeout=5000)
+    p.fill("#gtHsQtTen", "quantri")
+    p.fill("#gtHsQtMk", MK)
+    p.locator("#gtHsQuanTri button[type=submit], #gtHsQuanTri button").first.click()
     p.wait_for_selector("#gtHs", state="hidden", timeout=8000)
+    p.wait_for_timeout(800)
     assert ui.api.get_phien_dang_nhap()["data"].get("che_do_hs") in (False, None)
     ui.tab("results")
     ui.kiem_loi(bo_qua=("401", "403", "Failed to load resource"))

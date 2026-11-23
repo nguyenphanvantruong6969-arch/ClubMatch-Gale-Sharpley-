@@ -1,7 +1,6 @@
 """ST-B lot B2 (part 1): import via the real UI — good + bad files. SIMULATED data."""
-import pytest
 
-from ho_tro import (chon_cach, nap_so_150, dat_tep, nap_tep, dem_db, khoa_tho, chay_ui, so_dong_run, rules)
+from ho_tro import (chon_cach, nap_so_150, dat_tep, nap_tep, dem_db, khoa_tho)
 from ho_tro_tep import CAC_TEP, goc
 
 TU_CHOI = ["rong_0_byte", "van_ban_doi_duoi_xlsx", "xlsx_cat_cut", "xlsx_doi_duoi_xls", "duoi_pdf", "thieu_sheet_clb",
@@ -21,7 +20,7 @@ def test_b2_nhap_tep_xau_thong_bao_sach_va_db_khong_doi(mo):
         mk, ten = CAC_TEP[k]
         nd = mk() if callable(mk) else mk
         truoc = dem_db(ui)
-        txt, nap = dat_tep(ui, ten, nd), None
+        txt, _nap = dat_tep(ui, ten, nd), None
         can_nap = ui.page.locator("#btnImportAll").is_visible()
         if can_nap:
             loi.append((k, "tệp xấu mà giao diện vẫn cho nạp", txt[:160]))
@@ -38,7 +37,6 @@ def test_b2_nhap_tep_xau_thong_bao_sach_va_db_khong_doi(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-005")
 def test_b2_hai_tep_mot_lan_tot_va_xau(mo):
     ui = mo()
     p = ui.page

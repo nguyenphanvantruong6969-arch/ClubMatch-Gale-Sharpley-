@@ -94,8 +94,8 @@ def ket_qua_ui(ui, mong_doi=None, cho_giay=8.0):
 
 def _doc_bang(ui):
     p = ui.page
-    p.wait_for_function("document.querySelectorAll('#kqThan tr').length>0 || !document.getElementById('kqRong').hidden", timeout=30000)
-    rows = p.evaluate("""() => [...document.querySelectorAll('#kqThan tr')].map(tr => {
+    p.wait_for_function("document.querySelectorAll('#kqThan tr:not(.ux2-khung-hang)').length>0 || !document.getElementById('kqRong').hidden", timeout=30000)
+    rows = p.evaluate("""() => [...document.querySelectorAll('#kqThan tr:not(.ux2-khung-hang)')].map(tr => {
         const td=[...tr.querySelectorAll('td')]; return [td[0].innerText.trim(), td.slice(2).map(x=>x.innerText.trim())]; })""")
     out = {}
     for sid, cells in rows:

@@ -100,6 +100,8 @@ def test_nang_cao_dong_mac_dinh_va_chua_hai_bang_gt2(mo):
 
 def test_man_hoc_sinh_phu_kin_ca_bon_nhom(mo):
     page, api, mo_trang, loi = mo
+    # SF-B (ST-B-009): lớp phủ chỉ dựng khi đã có tài khoản (khoá thật).
+    assert api.tao_tai_khoan("qt_nen", MK, "quan_tri")["ok"] and api.dang_nhap("qt_nen", MK)["ok"]
     mo_trang()
     page.click('.nav-item[data-tab="results"]')
     mo_gap_ma(page)

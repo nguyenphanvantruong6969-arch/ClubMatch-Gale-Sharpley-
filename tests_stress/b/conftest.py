@@ -4,7 +4,6 @@ One fixture `mo` -> open(...) returns a Ui object with .page, .api, .loi (consol
 unhandled rejections + failed API calls). Every test must end with `ui.kiem_loi()`.
 """
 import os
-import shutil
 import sys
 
 import pytest

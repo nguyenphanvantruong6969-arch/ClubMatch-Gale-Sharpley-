@@ -8,8 +8,8 @@ import time
 
 import pytest
 
-from ho_tro import chon_cach, khoa_tho, dem_db, rules, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
-from ho_tro_tep import CAC_TEP, so_nhan_ban
+from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
+from ho_tro_tep import so_nhan_ban
 from conftest import SO_150
 
 DAU = re.compile("[àáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ]", re.I)
@@ -84,7 +84,6 @@ def test_b4_vi_en_moi_man_hinh_khoa_tho_chua_dich_va_tran_chu(mo):
     assert not chua_dich, ("%d chuỗi tiếng Việt còn nguyên ở chế độ English" % len(chua_dich), sorted(set(chua_dich))[:8])
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-012")
 def test_b4_thong_bao_giu_nguyen_tieng_viet_sau_khi_doi_ngon_ngu(mo):
     ui = mo()
     p = ui.page
@@ -148,7 +147,6 @@ def test_b4_do_rong_man_hinh(mo, rong):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-013")
 @pytest.mark.parametrize("rong", [390])
 def test_b4_quan_ly_cuon_ngang_o_man_hinh_hep(mo, rong):
     ui = mo(viewport={"width": rong, "height": 800})
@@ -342,9 +340,7 @@ def test_b4_moi_nut_xuat_tep_mo_duoc(mo):
 
 def test_b4_xuat_du_lieu_dau_vao_nap_lai_cung_ket_qua(mo):
     """Export input data as a Sổ, import into a NEW workspace, same students / prefs / ticks / scores / medals."""
-    import openpyxl
     ui = mo()
-    p = ui.page
     chon_cach(ui, "huy_chuong")
     nap_so_150(ui)
     chay_ui(ui)

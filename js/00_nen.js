@@ -334,6 +334,12 @@ function thoiGianToastMs(message) {
   return Math.min(TOAST_DAI_NHAT_MS, TOAST_THANH_CONG_MS + them);
 }
 
+/* ST-B-012: thông báo đã dịch sẵn thành chuỗi (kèm tham số), không dịch lại được: đổi ngôn ngữ thì đóng các thông báo
+   đang hiện, để không còn chữ sai ngôn ngữ trên màn hình (nút "Hoàn tác" của thông báo cũ cũng đi theo). */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll("#toastStack .toast").forEach((x) => { if (x.goBo) x.goBo(); x.remove(); });
+});
+
 function showToast(message, type, opts) {
   /* Tham so thu ba: mang loi (tu showErrorToast) hoac tuy chon
      {sticky, ghim, khiDong, errors, canhBao}. */

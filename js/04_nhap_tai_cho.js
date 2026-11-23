@@ -233,6 +233,7 @@ function initFallbackHandlers() {
     if (el("kioskLop").value) el("kioskLopNhac").hidden = true;
     veDauChuaLuu();
   });
+  let maDaXacNhanTrung = null;   /* ST-B-004: mã đã được hỏi lại (hoặc đã kiểm không trùng) cho lần bấm "Tạo" kế tiếp */
   el("btnCreateStudent").addEventListener("click", () => {
     const id = el("newStudentId").value.trim();
     const name = el("newStudentName").value.trim();
@@ -255,6 +256,23 @@ function initFallbackHandlers() {
       focusODau([el("newStudentLop")]);
       return;
     }
+    /* ST-B-004: mã chỉ khác hoa/thường với một mã đã có (dc001 so với DC001) sẽ thành MỘT em thứ hai: hỏi lại, bấm "Tạo" lần nữa
+       mới tạo. Chỉ để cảnh báo (phần mềm vẫn phân biệt hoa/thường); tìm lỗi thì cứ tạo như cũ. */
+    if (maDaXacNhanTrung !== id) {
+      callApi("search_students", id).then((tim) => {
+        const giong = tim.ok ? tim.data.filter((r) => r.student_id !== id && r.student_id.toLowerCase() === id.toLowerCase()) : [];
+        if (giong.length) {
+          maDaXacNhanTrung = id;
+          baoLoiTaiO(el("newStudentId"), () => t("kiosk_ma_khac_hoa_thuong", { ma: giong[0].student_id }));
+          focusODau([el("newStudentId")]);
+          return;
+        }
+        maDaXacNhanTrung = id;
+        el("btnCreateStudent").click();
+      });
+      return;
+    }
+    maDaXacNhanTrung = null;
     roiDiNeuDuoc(() => khiBan(el("btnCreateStudent"), () => callApi("create_student_if_missing", id, name, lopMoi)).then((res) => {
       if (!res.ok) {
         baoLoiForm(document, res.errors, { student_id_required: "newStudentId" }); /* mã lạ → toast như cũ */

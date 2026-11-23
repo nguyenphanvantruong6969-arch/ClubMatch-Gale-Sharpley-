@@ -4,7 +4,7 @@ import sqlite3
 
 import pytest
 
-from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, so_dong_run, rules, ket_qua_db, ket_qua_ui)
+from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui)
 from ho_tro_tep import CAC_TEP
 
 TRACEBACK = ("Traceback", "invalid literal", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "IndexError",
@@ -34,7 +34,7 @@ def _luu_clb(ui, id_, ten, cap, rc="", buoi=""):
     p.fill("#clubFormBuoi", buoi)
     p.locator("#btnSaveClub").click()
     p.wait_for_timeout(900)
-    vung = p.locator("#clubForm").evaluate("e => (e.closest('section,div.panel,div') || document.body).parentElement.innerText")
+    p.locator("#clubForm").evaluate("e => (e.closest('section,div.panel,div') || document.body).parentElement.innerText")
     nhac = p.locator("#clubFormFeedback").inner_text() + " " + " ".join(
         p.evaluate("[...document.querySelectorAll('.loi-o')].map(e => e.innerText)"))
     if p.locator("#btnClubFormHuy").is_visible():
@@ -74,7 +74,7 @@ def test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat(mo):
     nap_so_150(ui)
     _vao_clb(ui)
     p = ui.page
-    nhac = _luu_clb(ui, "T4", "Thập phân", "1.5")
+    _luu_clb(ui, "T4", "Thập phân", "1.5")
     p.locator("#clubFormFeedback details").first.evaluate("e => e.open = true") if p.locator("#clubFormFeedback details").count() else None
     ui.anh("ST-B-006_chi_tieu_1.5")
     chu = p.locator("#clubFormFeedback").inner_text()
@@ -194,7 +194,7 @@ def test_b2_lop_sua_tai_cho_va_xuat_hoc_sinh(mo):
         o.fill(gt)
         o.blur()
         p.wait_for_timeout(700)
-    lop = q(ui, "select class_id from students_lop limit 1") if False else None
+    q(ui, "select class_id from students_lop limit 1") if False else None
     # xuất học sinh đã tick
     p.locator("#adminStudentTableBody .admin-row-checkbox").first.check()
     p.locator("#btnAdminXuatHs").click()
@@ -403,7 +403,7 @@ def test_b2_viec_sau_xep_che_do_huy_chuong(mo):
             if el.is_visible() and el.is_enabled():
                 el.click(timeout=2000, no_wait_after=True)
                 p.wait_for_timeout(400)
-        except Exception as e:
+        except Exception:
             pass
     assert not khoa_tho(ui, "#view-others")
     # chuyển sang chế độ khác: thẻ này phải biến mất
@@ -414,7 +414,6 @@ def test_b2_viec_sau_xep_che_do_huy_chuong(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-004")
 def test_b2_nhap_tai_cho_ma_khac_hoa_thuong_tao_hoc_sinh_trung(mo):
     ui = mo()
     chon_cach(ui, "huy_chuong")
@@ -425,7 +424,6 @@ def test_b2_nhap_tai_cho_ma_khac_hoa_thuong_tao_hoc_sinh_trung(mo):
     assert dem_db(ui, "students")[0] == n0, "kiosk: mã 'dc001' tạo thêm học sinh dù DC001 đã có (%d -> %d)" % (n0, dem_db(ui, "students")[0])
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-008")
 def test_b2_viec_tiep_theo_noi_can_sua_truoc_khi_chay_nhung_nut_chay_van_bat(mo):
     ui = mo()
     p = ui.page

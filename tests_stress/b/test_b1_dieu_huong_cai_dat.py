@@ -1,7 +1,6 @@
 """ST-B lot B1: navigation + Cài đặt (mode cards, chia_loai, double-click, reload during run, back/forward).
 Chromium thật qua browser_host. SIMULATED data. Mỗi test kết thúc bằng ui.kiem_loi()."""
 import random
-import sqlite3
 
 import pytest
 
@@ -158,7 +157,6 @@ def test_b1_tai_lai_trong_luc_chay(mo):
 def test_b1_lui_tien_trinh_duyet(mo):
     ui = mo()
     p = ui.page
-    url = p.url
     chon_cach(ui, "huy_chuong")
     nap_so_150(ui)
     ui.tab("results")
@@ -176,7 +174,6 @@ def test_b1_lui_tien_trinh_duyet(mo):
     ui.kiem_loi(bo_qua=("net::ERR",))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-001")
 def test_b1_bang_ket_qua_cu_hien_khi_tai_cham(mo):
     """Results tab keeps showing the PREVIOUS run's rows (no loading frame, no stale banner) until the reload ends."""
     import time
@@ -268,7 +265,6 @@ def test_b1_chia_loai_bam_nhanh(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-002")
 @pytest.mark.parametrize("tu,sang", [("chia_100", "huy_chuong"), ("huy_chuong", "chia_100")])
 def test_b1_cong_tac_chia_loai_cu_sau_khi_doi_che_do(mo, tu, sang):
     """After clicking a mode card, the 'Chia CLB theo loại' switch just below (Quản lý > CLB) keeps the OLD state

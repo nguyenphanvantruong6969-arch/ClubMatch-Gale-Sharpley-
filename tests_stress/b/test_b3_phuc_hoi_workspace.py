@@ -2,11 +2,8 @@
 import base64
 import glob
 import os
-import shutil
 import sqlite3
 
-import pytest
-from playwright.sync_api import sync_playwright
 
 import browser_host
 import recovery
@@ -265,12 +262,10 @@ def test_b3_trang_phuc_hoi_thu_muc_khong_ghi_duoc(trinh_duyet, tmp_path, monkeyp
 
 
 def khoa_tho_trang(page):
-    import re
     from ho_tro import _KHOA_THO
     return sorted(set(_KHOA_THO.findall(page.locator("body").inner_text())))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-010")
 def test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong(trinh_duyet, tmp_path):
     db = _dung_ws_co_sao_luu(tmp_path)
     with open(db, "wb") as f:
@@ -291,7 +286,6 @@ def test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong(trinh_duyet, tmp_p
         "bấm 'Khôi phục' hai lần cách 0,4 s: restore_from_backup chạy %d lần, dòng trạng thái cuối: %r" % (len(goi), stt[:120]))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-011")
 def test_b3_workspace_zip_hong_thong_bao_dung_nguyen_nhan(mo):
     ui = mo()
     p = ui.page

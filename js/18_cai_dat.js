@@ -264,6 +264,8 @@ function ux1aApDungSong(cfg) {
   if (typeof TAB_LOADERS !== "undefined" && TAB_LOADERS.others) TAB_LOADERS.others();
   if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo();
   if (typeof ux1aVeSauXep === "function") ux1aVeSauXep();
+  /* ST-B-002: công tắc "Chia CLB theo loại" (Quản lý › CLB) phụ thuộc chế độ vừa đổi; vẽ lại từ cấu hình đã lưu. */
+  if (typeof mt2VeChiaLoai === "function") mt2VeChiaLoai();
 }
 
 /* Vẽ trang Cài đặt vào `host` cho workspace `slug`. */

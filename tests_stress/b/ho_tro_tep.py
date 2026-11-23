@@ -1,6 +1,5 @@
 """ST-B: build mutated import files (SIMULATED) from the shared Sổ."""
 import io
-import shutil
 
 import openpyxl
 

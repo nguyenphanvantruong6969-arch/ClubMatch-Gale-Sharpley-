@@ -20,6 +20,32 @@
 - `i18n_errors.py` + `i18n_loi.js`: `che_do_thieu_du_lieu`, `club_capacity_not_integer`, `capacity_too_large`; câu của hai mã `cannot_delete_*` sửa.
 - Test mới: `tests/test_sf_a_3.py` (25 ca; chỉ tiêu, xoá em/CLB, đổi chế độ, biểu mẫu); các ca chỉ tiêu / xoá nằm trong `tests/test_sf_a_3.py`. Bỏ `xfail` ST-A-001, 003, 005, ST-B-006, ST-B-007.
 
+## 2026-11-23 — SF-B2 (nốt): ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk)
+
+- ST-B-009 (`js/14_giai_trinh.js` `moHs`, `js/16_tai_khoan.js` `window.tkMoHopTaoDau`, `i18n.js` `gt_hs_can_tai_khoan`): chưa có tài khoản thì "Chế độ học sinh" không dựng lớp phủ giả, báo và mở hộp tạo tài khoản quản trị (backend A trả `can_tao_tai_khoan`).
+- ST-B-004 (`js/04_nhap_tai_cho.js`, `i18n.js` `kiosk_ma_khac_hoa_thuong`): "Nhập tại chỗ" hỏi lại khi mã chỉ khác hoa/thường với mã đã có (tìm bằng `search_students`; bấm Tạo lần hai thì tạo).
+- Test cũ chỉnh theo luồng mới (cần tài khoản để vào chế độ học sinh): `test_giao_dien_gt1_hoc_sinh.py`, `_gt3_hoc_sinh.py`, `_gt4_man_hoc_sinh.py`, `_ux1_dieu_huong.py`, `_ux1b_phieu.py`; stress `test_b3_vai_tro.py` (nhánh chưa-có-tài-khoản chuyển thành khẳng định luồng mới). Test mới: 2 ca trong `test_giao_dien_sf_b_lo2.py`.
+
+## 2026-11-23 — SF-B3 (một phần) + SF-B4: ST-B-005, 010, 012, 013
+
+- ST-B-005 (`js/02_van_hanh.js`, `i18n.js` `so_nhap_bo_qua_tep`): thả nhiều tệp thì hàng đợi nói rõ tệp nào bị bỏ qua.
+- ST-B-010 (`recovery.js`): bấm "Khôi phục" lần hai sau khi đã khôi phục xong không chạy lại (không thay câu thành công).
+- ST-B-012 (`js/00_nen.js`): đổi ngôn ngữ thì đóng các thông báo đang hiện (chuỗi đã dịch sẵn, không dịch lại được).
+- ST-B-013 (`style.css`, `index.html`): ≤900 px `.main` rộng bằng cột (hết co theo nội dung), `.scroll-x` thành khối chứa cho `.sr-only`, bảng CLB nằm trong `.scroll-x`.
+- Chờ A: ST-A-001 (khung cảnh báo), ST-B-009, ST-B-004. Test mới: `tests/test_giao_dien_sf_b_lo4.py` (2 ca), thêm 2 ca vào `test_giao_dien_sf_b_lo2.py`; gỡ 4 xfail.
+
+## 2026-11-23 — SF-B2 (một phần): ST-B-006, ST-B-011
+
+- ST-B-006 (`js/05_quan_ly.js`, nút Lưu CLB): chỉ tiêu thập phân báo lỗi ngay ở ô chỉ tiêu (không gửi xuống backend); xoá dòng phản hồi cũ trước mỗi lần lưu.
+- ST-B-011 (`js/075_workspace.js` `wsNhapZip`, `i18n.js` `ws_nhap_zip_loi`): nhập zip hỏng nói đúng nguyên nhân (backend vẫn trả `ws_du_lieu_sai`; chi tiết kỹ thuật giữ nguyên).
+- Chờ backend của A: ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk). Test mới: `tests/test_giao_dien_sf_b_lo2.py` (2 ca); gỡ 2 xfail.
+
+## 2026-11-23 — SF-B1: ST-B-001, ST-B-002, ST-B-008 (màn hình cũ)
+
+- ST-B-001 (`js/09_the_xem.js`, `loadKetQuaTab`): tab Kết quả bỏ hàng của lần chạy trước ngay khi mở, hiện khung chờ nếu tải chậm.
+- ST-B-002 (`js/18_cai_dat.js`, `ux1aApDungSong`): vẽ lại công tắc "Chia CLB theo loại" sau khi đổi chế độ.
+- ST-B-008 (`i18n.js`, `ux1a_cau_canh_bao` vi/en): câu thanh "Việc tiếp theo" không còn hứa chặn chạy ("nên xem lại").
+- Test mới: `tests/test_giao_dien_sf_b_lo1.py` (3 ca). `tests_stress/b/ho_tro.py`: `_doc_bang` bỏ qua hàng khung chờ (`.ux2-khung-hang`); gỡ 3 xfail.
 ## 2026-11-23 — SF-A2: an toàn (ST-A-006 CSDL hỏng, ST-B-009 khoá chế độ học sinh ở backend)
 
 - `api_chung.py` (`kiem_toan_ven_db`): kiểm `PRAGMA integrity_check(1)` (không dùng `quick_check`: đo trên 8 ca lật byte thì 3 ca "row N missing from index" lọt quick_check). `api.py`: `PipelineAPI.__init__` từ chối mở CSDL hỏng (ném `sqlite3.DatabaseError` → `main.py` vào trang phục hồi); `run_pipeline` chặn ở Bước 00 bằng mã `csdl_hong_can_khoi_phuc` TRƯỚC sao lưu; `_backup_db` không chép trang hỏng (không đẩy bản tốt ra khỏi vòng 10 bản). `api_nhap.py` (`import_so_nhap`): cùng mã, trước mọi đọc/ghi. `recovery.py` (`_quick_check_ok`): dùng `integrity_check` để trang phục hồi không coi tệp hỏng chỉ mục là đọc được.
