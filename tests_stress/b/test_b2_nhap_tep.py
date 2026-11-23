@@ -76,7 +76,6 @@ def test_b2_nap_lai_cung_tep_hai_lan_khong_nhan_doi(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-003")
 def test_b2_nap_lai_so_khong_co_diem_xoa_diem_cu_khong_canh_bao(mo):
     """Re-import of a Sổ with no test marks deletes every stored tick + score; preview must at least warn."""
     ui = mo()
@@ -92,7 +91,6 @@ def test_b2_nap_lai_so_khong_co_diem_xoa_diem_cu_khong_canh_bao(mo):
         "điểm/ô thi cũ bị xoá %s -> %s, xem trước chỉ nói: %r" % (truoc, sau, txt[:200]))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-004")
 def test_b2_ma_hoc_sinh_khac_hoa_thuong_thanh_hoc_sinh_moi(mo):
     ui = mo()
     chon_cach(ui, "huy_chuong")

@@ -1,7 +1,6 @@
 """ST-A3: concurrency, locked DB, corrupt DB + recovery, schema migration twice, random timelines. SIMULATED data."""
 import os
 import random
-import shutil
 import sqlite3
 import threading
 import time
@@ -237,7 +236,7 @@ def test_old_schema_migrates_then_idempotent(tmp_path):
     finally:
         c.close()
     try:
-        r1 = rp.di_tru_schema(p)
+        rp.di_tru_schema(p)
     except Exception as e:
         pytest.fail("di_tru_schema raised on an older DB: %r" % e)
     c = sqlite3.connect(p)

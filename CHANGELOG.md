@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A1: nạp Sổ an toàn (ST-B-003, ST-A-004, ST-B-004 phần backend, ST-A-002)
+
+- `so_nhap.py` (`_doc_sheet_hs`, `doc_so_nhap`): sheet học sinh báo thêm `co_cot_thi` (có cột điểm thi nào không) và `n_o_bo_qua` (ô có chữ nằm ở cột không có tiêu đề, tức không được đọc).
+- `api_nhap.py` (`import_so_nhap`, `_canh_bao_so_nhap`, `xem_truoc_so_nhap`): sổ KHÔNG có cột điểm thi thì bỏ bước ghi đè ô thi/điểm — ô tick và điểm đã lưu được GIỮ, kèm cảnh báo `so_nhap_canh_bao_giu_diem`; sổ có cột mà bỏ ô thi đã lưu thì xem trước báo `so_nhap_canh_bao_mat_diem` (N); ô ở cột không tên báo `so_nhap_canh_bao_o_bo_qua`; xem trước báo mã học sinh chỉ khác mã đã có ở chữ hoa/thường (`csv_student_id_case_conflict`, câu chữ nói rõ "gần như trùng"); `import_so_nhap` sao lưu (`_backup_db`) trước khi ghi, hỏng sao lưu không chặn.
+- `cau_hinh_ws.py` (`doc_cau_hinh(conn=)`), `api_workspace.py` (`_cfg_ws`): trong giao dịch chung, đọc cấu hình qua chính kết nối giao dịch, không mở kết nối thứ hai (gốc của `csdl_dang_ban` khi nạp sổ ~3 000 em, ST-A-002).
+- `i18n_errors.py` + `i18n_loi.js`: ba mã cảnh báo mới, một câu sửa. `pyproject.toml`: per-file-ignores cho `tests_stress/**` (SIM115, B023, PLE2502/2515: ký tự độ rộng 0 là dữ liệu thử cố ý); bỏ import/biến thừa trong `tests_stress/a/`.
+- Test mới: `tests/test_sf_a_1.py` (8 ca). Bỏ `xfail` ở ST-B-003, ST-B-004 (nhập sổ), ST-A-002, ST-A-004 trong `tests_stress/`.
+
 ## 2026-11-23 — ST2 (kế hoạch): stress test vòng 2, cố ý làm sập chương trình
 
 - `docs/phien/ST2_GIAO_THUC.md` (kill -9, thiếu tài nguyên, fuzz chuỗi thao tác, cỡ cực lớn; fuzz HTTP, monkey test, backend chết dưới giao diện, chạy dài) và `docs/phien/SF_ST2_PROMPTS.md` (bốn prompt). Chỉ chạy sau khi SF đã gộp và CI xanh. Không đổi mã sản phẩm.

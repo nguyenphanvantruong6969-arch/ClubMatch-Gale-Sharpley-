@@ -1,13 +1,11 @@
 """ST-A3: fault injection into every pipeline stage -> full rollback, backup exists, run_history append-only. SIMULATED data."""
 import glob
 import os
-import sqlite3
 
 import pytest
 
 import api as api_mod
 import fa_daa
-import sthelp
 from sthelp import check_contract, db_bytes, load_so150, new_ws_api, rows, switch
 
 
@@ -81,7 +79,7 @@ def test_fault_rolls_back_everything(tmp_path, monkeypatch, stage, first):
         assert db_bytes(a.db_path) == snap, "stage %s: DB changed although run failed" % stage
         assert _n_hist(a) == n0
         assert _backups(a), "no backup file after a failed run (backup happens first)"
-        steps = [s.get("step") for s in (res["data"] or {}).get("steps", [])] if isinstance(res.get("data"), dict) else []
+        [s.get("step") for s in (res["data"] or {}).get("steps", [])] if isinstance(res.get("data"), dict) else []
     # a following clean run works and appends exactly one run_history row
     n1 = _n_hist(a)
     assert n1 == n0 + (1 if res["ok"] else 0)

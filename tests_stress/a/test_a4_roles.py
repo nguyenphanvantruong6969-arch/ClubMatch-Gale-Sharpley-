@@ -3,7 +3,6 @@ import pytest
 
 import apifuzz as F
 import phan_quyen as pq
-import sthelp
 from sthelp import check_contract, db_bytes, load_so150, new_ws_api, rows, switch
 
 PW = "Matkhau-12345"
