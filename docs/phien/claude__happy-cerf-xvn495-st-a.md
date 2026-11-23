@@ -13,7 +13,9 @@ API and roles. NEVER edit production code. Output: `tests_stress/a/`, `docs/phie
 ## Current state
 - SF-A lots 1-4 pushed (SF-A1 5868c7e, SF-A2 a29c97d, SF-A3 a5beec0, SF-A4 06ca113) + CI fixes (0913c56 i18n style/ws_nhan snapshot; 2c3e2ef merge of st-b + ruff; eba0a54 integrity check timeout 0.2 s for test_a13_11_stress).
 - Verified locally on merged head: kiem_nhanh 7/7, `ruff check .` clean, byte-identical 3 datasets x 20 seeds (60 cases), `pytest tests_stress/a`: 1482 passed, 2 skipped, 2 xfailed (= ST-A-008, Needs Truong); `pytest tests_stress/b`: 60 passed, 1 flaky (B4 keyboard export, passes alone), 0 xfailed.
-- Waiting: CI run of eba0a54 must be green (full matrix). If red: fix (loop turn), push, re-check.
+- CI run of eba0a54 (full matrix, coverage) is GREEN.
+
+**SF-A DONE eba0a54** (every bug fixed except ST-A-008 = Needs Truong; §4 holds on the merged head at that sha).
 - After CI green: write `SF-A DONE <sha>` below, then review B's diff (`git diff 78bf5f8..origin/claude/happy-cerf-xvn495-st-b -- . ':!tests_stress'`) against invariants 1-8; findings -> B's Asks (max 2 rounds).
 
 ## Decisions and gotchas
