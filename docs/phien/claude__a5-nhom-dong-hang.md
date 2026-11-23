@@ -85,7 +85,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- L1, L2 done+checked (L2 after 1 FIX round, head 3b0f485). Next: L3. Next: L2 (also add test tiers [x,a|b,c] -> a,b=1,c=2).
+- L1, L2 done+checked (L2 after 1 FIX round, head 3b0f485). Next: L3.
 
 ## Sessions
 | Role | Session id | Model | State |
