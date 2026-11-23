@@ -2,7 +2,6 @@
 import sqlite3
 import urllib.request
 
-import pytest
 
 from ho_tro import khoa_tho, dem_db, rules
 from conftest import SO_150
