@@ -112,3 +112,34 @@ def khoa_tho(ui, vung="body"):
     """Raw i18n keys / undefined / NaN visible in the (visible) text of `vung`."""
     txt = ui.page.evaluate("s => document.querySelector(s).innerText", vung)
     return sorted(set(_KHOA_THO.findall(txt)))
+
+
+def dem_db(ui, *bang):
+    c = sqlite3.connect(ui.api.db_path)
+    try:
+        return tuple(c.execute("select count(*) from %s" % b).fetchone()[0] for b in (bang or ("students", "clubs", "preferences", "club_test_selection", "club_scores")))
+    finally:
+        c.close()
+
+
+def dat_tep(ui, ten, noi_dung):
+    """Drop one in-memory file on the Xếp CLB drop zone; returns the queue text after the preview settles."""
+    p = ui.page
+    ui.tab("pipeline")
+    if p.locator("#btnClearQueue").is_visible():
+        p.locator("#btnClearQueue").click()
+    p.set_input_files("#fileAny", files=[{"name": ten, "mimeType": "application/octet-stream", "buffer": noi_dung}])
+    p.wait_for_function("document.querySelector('#importQueue').innerText.trim().length>0", timeout=60000)
+    p.wait_for_timeout(1200)
+    return p.locator("#importQueue").inner_text() + "\n" + p.locator("#importWarnings").inner_text()
+
+
+def nap_tep(ui, ten, noi_dung, cho=3000):
+    """dat_tep + click 'import' when offered. Returns (preview_text, imported: bool)."""
+    p = ui.page
+    txt = dat_tep(ui, ten, noi_dung)
+    if p.locator("#btnImportAll").is_visible() and p.locator("#btnImportAll").is_enabled():
+        p.locator("#btnImportAll").click()
+        p.wait_for_timeout(cho)
+        return txt, True
+    return txt, False

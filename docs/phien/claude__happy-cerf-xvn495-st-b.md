@@ -10,12 +10,12 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 
 ## Plan
 - [x] B1 Navigation + Cài đặt (mode cards x50, chia_loai toggle, double-click, reload during run, back/forward)
-- [ ] B2 Data screens (import good+bad files, CLB CRUD, students, wharton/medals, Điểm chuẩn, reset, chấm điểm, nhập tại chỗ, #ux1aSauXep)
+- [x] B2 Data screens (import good+bad files, CLB CRUD, students, wharton/medals, Điểm chuẩn, reset, chấm điểm, nhập tại chỗ, #ux1aSauXep)
 - [ ] B3 Roles + kiosk (login, teacher, student mode, recovery, workspace CRUD)
 - [ ] B4 Robustness + display (3000 students, vi/en, widths 390/768/1366, keyboard-only, downloads)
 
 ## Current state
-- Done: setup (.venv), conftest fixture (`mo()` -> Ui with .page/.api/.loi/.kiem_loi()), helpers `ho_tro.py` (chon_cach, nap_so_150, chay_ui, ket_qua_db/ui, khoa_tho), lot B1 (2 bugs S3: ST-B-001, ST-B-002). Next: B2.
+- Done: setup (.venv), conftest fixture (`mo()` -> Ui with .page/.api/.loi/.kiem_loi()), helpers `ho_tro.py` (chon_cach, nap_so_150, chay_ui, ket_qua_db/ui, khoa_tho), lot B1 (2 bugs S3: ST-B-001, ST-B-002). B2 done (ST-B-003..008). Next: B3.
 - Tests: `.venv/bin/python -m pytest -q --tb=line tests_stress/b/<file> 2>&1 | tail -15`
 
 ## Decisions and gotchas
@@ -27,3 +27,4 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 |---|---|---|---|
 | 2026-11-23 | Sonnet | setup, fixture | |
 | 2026-11-23 | Sonnet | B1 done, report started | 50-switch test ~2 min; full B1 file ~3.5 min |
+| 2026-11-23 | Sonnet | B2 done | full B2 ~4 min; helpers in ho_tro.py / ho_tro_tep.py |
