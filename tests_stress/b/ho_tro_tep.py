@@ -163,3 +163,20 @@ CAC_TEP = {
     "csv_bom_chi_tieu_de": ("﻿club_id,name,capacity\n".encode("utf-8"), "du_lieu.csv"),
     "zip_hong": (b"PK\x03\x04" + b"\x00" * 50, "ws.zip"),
 }
+
+
+def so_nhan_ban(lan):
+    """The shared Sổ with the 150 students copied `lan` times (new ids, full preferences, tests, medals)."""
+    def f(wb):
+        h = wb["2. Học sinh"]
+        goc_hang = [[c.value for c in r] for r in h.iter_rows(min_row=3, max_row=152)]
+        for k in range(1, lan):
+            for r in goc_hang:
+                n = list(r)
+                n[0] = "%s_%d" % (r[0], k)
+                h.append(n)
+        c = wb["1. CLB"]
+        for r in range(2, c.max_row + 1):
+            if isinstance(c.cell(r, 3).value, (int, float)):
+                c.cell(r, 3).value = int(c.cell(r, 3).value) * lan
+    return _sua(f)

@@ -6,7 +6,7 @@ Screenshots (deviceScaleFactor 1): `docs/phien/anh_st_b/`. Backend report: branc
 ## Summary (severity counts) — updated at end of each lot
 | S1 | S2 | S3 | S4 | total |
 |---|---|---|---|---|
-| 1 | 1 | 6 | 3 | 11 |
+| 1 | 1 | 6 | 5 | 13 |
 
 ## Lot status
 | Lot | State | Tests |
@@ -14,7 +14,7 @@ Screenshots (deviceScaleFactor 1): `docs/phien/anh_st_b/`. Backend report: branc
 | B1 | done | test_b1_dieu_huong_cai_dat.py (11 tests; 3 xfail strict = ST-B-001, ST-B-002 x2) |
 | B2 | done | test_b2_nhap_tep.py (7 tests), test_b2_quan_ly.py (13 tests); xfail strict: ST-B-003..008 |
 | B3 | done | test_b3_vai_tro.py (9 tests), test_b3_phuc_hoi_workspace.py (7 tests); xfail: ST-B-009 (imperative), 010, 011 |
-| B4 | – | |
+| B4 | done | test_b4_hien_thi.py (10 tests; xfail strict: ST-B-012, ST-B-013) |
 
 ## Bugs
 | id | sev | area | title | repro | invariant |
@@ -30,6 +30,8 @@ Screenshots (deviceScaleFactor 1): `docs/phien/anh_st_b/`. Backend report: branc
 | ST-B-009 | S2 | Kiosk / chế độ học sinh | With NO account created, "Chế độ học sinh" is only an overlay: F5 leaves it and every admin tab (incl. Xoá dữ liệu) is back; the backend does not lock (all APIs answer) | tests_stress/b/test_b3_vai_tro.py::test_b3_che_do_hoc_sinh_tra_cuu_khoa_va_thoat (imperative xfail) | — |
 | ST-B-010 | S4 | Trang phục hồi | After a successful "Khôi phục", the button stays enabled; a second click (nothing visibly changed) replaces the success line with "Tệp dữ liệu hiện tại vẫn đọc được bình thường, nên phần mềm không đổi tên…" | tests_stress/b/test_b3_phuc_hoi_workspace.py::test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong | — |
 | ST-B-011 | S3 | Workspace | Importing an empty / corrupt / non-zip / path-traversal zip shows "…thông tin không gian làm việc chưa hợp lệ. Kiểm tra lại các ô đã điền." (no field exists); the real cause is only in "Chi tiết kỹ thuật" | tests_stress/b/test_b3_phuc_hoi_workspace.py::test_b3_workspace_zip_hong_thong_bao_dung_nguyen_nhan | — |
+| ST-B-012 | S4 | Thông báo / i18n | Toasts already on screen (e.g. "Đã chuyển sang … [Hoàn tác] [Đóng thông báo]") stay Vietnamese after switching to English | tests_stress/b/test_b4_hien_thi.py::test_b4_thong_bao_giu_nguyen_tieng_viet_sau_khi_doi_ngon_ngu | — |
+| ST-B-013 | S4 | Responsive | At 390 px the Quản lý tab is 772 px wide (whole page scrolls sideways, sidebar slides out); at 768 px only 4 px over | tests_stress/b/test_b4_hien_thi.py::test_b4_quan_ly_cuon_ngang_o_man_hinh_hep[390] | — |
 
 ### ST-B-001
 Steps: new workspace → Cài đặt: Huy chương → import the shared Sổ (UI) → run → open Kết quả (150 rows) → Cài đặt: Chỉ xếp →
@@ -98,6 +100,24 @@ Steps: ⋯ workspace list › "Nhập" › choose a 0-byte / 40-byte / text file
 Kiểm tra lại các ô đã điền." — the only useful sentence is inside the collapsed "Chi tiết kỹ thuật" ("Không đọc được tệp zip: File is not a zip file" / "Zip không an toàn: đường dẫn chứa '..'").
 Safety is fine: no workspace created, nothing written outside the workspace root. Screenshot `ST-B-011_zip_hong.png`. Suspected: `import_workspace` error code → generic `ws_thong_tin_khong_hop_le` mapping.
 
+### ST-B-012
+Steps: Cài đặt: click a mode card (sticky toast with Hoàn tác / Đóng thông báo), click the language button → English. Actual: the page is English, the toast keeps "Hoàn tác", "Đóng thông báo".
+Screenshot `ST-B-012_toast_sau_khi_doi_en.png`. Suspected: `showToast` text is not redrawn on "langchange".
+
+### ST-B-013
+Steps: window 390 px (browser fallback or small tablet; the Windows window minimum is 1024 × 640 so this only matters for `browser_host`), open Quản lý. `ux1aCaiDat` and its children are 674–724 px wide
+(`ux1aLuoi`, `ux1aSanSang`, `ux1aMtBlock`, `view-header`); `document.scrollWidth` 772. Other tabs at 390 and 768 and all tabs at 1366 have no sideways overflow. Screenshot `ST-B-013_quan_ly_390.png`.
+Suspected: fixed min-width / grid columns in the `.ux1a-*` rules of style.css.
+
+## Checked, no bug (B4)
+- 3 000 students (the 150-student Sổ copied 20×, full preferences/ticks/medals, capacities ×20): import 3.5 s, UI run 6.1 s, Results tab 3 000 rows in 0.4 s, Quản lý › Học sinh first page 0.4 s, search 0.3 s, no main-thread stall > 600 ms (ST-A-008 is PDF only, not tested here). The 3 150-row single-pref variant imports in 5 s too.
+- vi ↔ en on every tab and every Quản lý sub-tab, 2 rounds, after a run: no raw i18n key / `undefined` / `NaN`, no Vietnamese left in static English text (workspace name and data names excluded), no clipped button / heading / label text. Only the toast issue above.
+- Widths 390 / 768 / 1366: no sideways overflow on any tab except Quản lý ≤ 768 (above); #btnRun stays inside the viewport at every width. Screenshot `B4_390_pipeline.png` is the clean case.
+- Keyboard only: Tab reaches the drop zone, Enter opens the file chooser, Tab → "nhập", Enter, Tab → "Chạy", Enter (focus ring 2 px), Tab → "Chi tiết và xuất tệp", Enter, Tab → "Xuất kết quả", Enter → `.xlsx` written; 150 extra Tabs end without error or trap.
+  Intermittent: in 3 of the first 6 runs of that test the final Enter on #btnXuatTuyChon answered "Chưa chọn mục nào để xuất." (`B4_ban_phim_xuat_ket.png`); in the next 15 runs it never happened, so cause not found (suspect: export options still initialising right after the tab opens). Not logged as a bug.
+- Exports (every visible export button on Chi tiết và xuất tệp after a Huy chương run): each writes a file that opens (xlsx loads in openpyxl, CSV has an even column count, PDF has `%PDF` … `%%EOF`, HTML has `<html`). "Xuất dữ liệu đầu vào" → import into a NEW workspace reproduces students / clubs / preferences / ticks / scores / medals exactly.
+- Downloads go to the `xuat/` folder (browser_host has no browser download); the in-page path text matches the real file.
+
 ## Checked, no bug (B3)
 - First admin through the UI: mismatch / short password / empty name / 61-char name each give a message and create nothing; passwords are not stored in clear; duplicate names (other case) refused; `<img onerror>` and SQL-looking names don't execute.
 - Login screen after logout covers the app (`tk-kin`); after logout every data API answers `ok:false`; 5 wrong passwords → "tạm khoá… 60 giây" (also for the right password during the lock); the other account is not locked; teacher login works.
@@ -136,6 +156,7 @@ Safety is fine: no workspace created, nothing written outside the workspace root
 - Note: undo toasts stack and stay 10 s; clicking an OLD "Hoàn tác" after a newer switch restores the older state (expected, S4 at most; not logged).
 
 ## Needs Truong
+- ST-B-012 / ST-B-013: cosmetic; decide whether the browser fallback must support 390 px at all (the exe window minimum is 1024 × 640).
 - ST-B-009: will the trial run with or without accounts? If without, "Chế độ học sinh" gives no real protection (F5) — consider disabling the button until an admin exists.
 - ST-B-003: is "the Sổ replaces every tick and score of the students it lists" intended? If yes, only a warning is needed (S3); if no, it is a data-loss bug (S1).
 - Scores have no upper bound (11 or 1000 accepted by the scoring screen and the import); capacity 1e9 accepted. Is a cap wanted (10 / 100)?
