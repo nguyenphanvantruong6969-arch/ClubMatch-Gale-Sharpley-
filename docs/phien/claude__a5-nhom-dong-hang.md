@@ -91,8 +91,8 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | (pending) | claude-sonnet-5-5 | creating |
-| checker | (pending) | claude-sonnet-5-5 | creating |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | created, GO L1 sent |
+| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | created, waiting |
 
 ## Needs Truong
 - (none yet)
