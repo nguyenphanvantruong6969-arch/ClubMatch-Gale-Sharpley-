@@ -144,3 +144,38 @@ Tên nhóm đi vào `wsEl("td", {text})` (`textContent`). Test của coder: `<im
 
 ### Kết luận L3
 NO BUGS; một nhận xét nhỏ (#1) không chặn.
+
+## L4 — range 027407d..6a561f0 — VERDICT: NO BUGS (2 nhận xét nhỏ về chữ trong hướng dẫn)
+
+### Độ chính xác mục 18 `HUONG_DAN_SU_DUNG.md` so với mã thật
+| Câu trong hướng dẫn | Kết quả | Bằng chứng |
+|---|---|---|
+| Mỗi học sinh MỘT nhãn; không `|` thì kết quả y hệt | ĐÚNG | L1: nhánh `==` cũ giữ nguyên; `trung_khit` 60 ca |
+| Cách 1: `a|b` cùng một hạng, trước hạng sau và trước em không nhóm; trong hạng: đã chấm điểm trước, điểm giảm dần, bốc thăm | ĐÚNG | `xay_tier_rank` + `uu_tien_theo_nhom`; test L1 ra `["s3","s2","s6","s1","s4","s5"]` |
+| Xem lại hiện `Khối 12 = Học sinh giỏi › Khối 11` | ĐÚNG | `wsHienThiTiers`, đo ở L3 |
+| Nhóm ở hai hạng / `a||b` bị chặn "ở màn hình và ở backend" | ĐÚNG | `ws_v_tiers` + `cau_hinh_ws`; thẻ Tiêu chí chỉ báo từ backend (nói "màn hình" vẫn đúng vì lỗi hiện ra) |
+| Cách 2: `a|b` đủ điều kiện nếu nhãn thuộc tập; nhãn khác thì không; cảnh báo "nhóm điểm cao hơn có thể lấy hết suất dự trữ"; KHÔNG chia đều | ĐÚNG, TRUNG THỰC | `default_reserve_eligible_fn` pooled (`club_choice_function` không đổi); khung lưu ý đúng chữ lead yêu cầu |
+| Xếp nghiêm ngặt thì bỏ qua suất dự trữ | ĐÚNG | `bo_qua_du_tru = True` khi `tier_rank` khác None (`rbda_priority_pipeline.py` ~L719) |
+| Chuẩn hoá `Chính sách|Khối 10` → `chinh_sach|khoi_10`, sắp xếp, bỏ trùng | ĐÚNG | test `chuan_hoa_o_nhom_clb` L2 |
+| Báo cáo suất dự trữ + cảnh báo dữ liệu hiểu `a|b` | ĐÚNG | L2: `instr`, `NOT EXISTS` |
+| Học sinh `|`: lỗi `a5_nhom_hs_co_gach`, CSV bỏ qua + cảnh báo, gán tay / hàng loạt bị từ chối | ĐÚNG | L2 + FIX1 (mã hàng loạt là `a5_nhom_hs_co_gach_hang_loat` — hướng dẫn nêu một mã, không sai về ý) |
+| Giới hạn: chỉ gộp, không chia đều; huy chương / chia loại không đổi; ổn định đo trên 250 ca mô phỏng | ĐÚNG | không có `reserve_group` trong mã huy chương / chia loại (grep); test L1 250 ca seed cố định |
+| Không bịa nội dung đề cương, không kết luận cho báo cáo | ĐẠT | mục chỉ hướng dẫn vận hành; ghi "dữ liệu MÔ PHỎNG, không phải khảo sát thật" |
+
+### Phát hiện (nhỏ, không chặn)
+| # | Mức | Tệp:chỗ | Vấn đề | Đề xuất |
+|---|---|---|---|---|
+| 1 | nhỏ | `HUONG_DAN_SU_DUNG.md` mục 18, dòng về thẻ mục tiêu | Ghi tên thẻ là "Dành cho một nhóm", nhưng thẻ thật tên "Dành chỗ cho một nhóm" (`mt1_the_danh_cho_tt`). Chữ "Tuỳ chỉnh" là trạng thái nội bộ `tuy_chinh` của `muc_tieu.py`; tôi không tìm thấy thẻ nào hiện đúng chữ đó trong i18n. | Sửa thành "Dành chỗ cho một nhóm", và nói "không còn tương ứng thẻ nào (tuỳ chỉnh)" hoặc bỏ cụm "Tuỳ chỉnh". |
+| 2 | nhỏ | cùng mục, dòng "Dùng cả hai cách … không hợp lệ" | Thực tế mã không báo lỗi: xếp nghiêm ngặt chỉ **bỏ qua** suất dự trữ (`bo_qua_du_tru`). Câu sau của chính hướng dẫn nói đúng, nhưng "không hợp lệ" nghe như bị chặn. | Đổi thành "không có tác dụng: xếp nghiêm ngặt thì bỏ qua suất dự trữ". |
+
+### Các điểm khác lead nhờ soi
+- **Sổ đăng ký A5:** ghi chú tiến độ trung thực: nêu phần nhỏ đã làm, "Chưa làm: bảng thuộc tính nhiều giá trị, bộ lọc cứng, chia đều suất", ngoại lệ bất biến 7 do Truong duyệt 22/11/2026. ĐẠT.
+- **CHANGELOG / TIEN_DO:** khớp (L4 nêu mục 18, ghi chú sổ đăng ký, sửa `aria-describedby`, "112 ca tài liệu/giao diện đạt" — tôi chạy lại 66 ca tài liệu + 45 ca A5, đều xanh). ĐẠT.
+- **`aria-describedby` (nhận xét L3 #1):** `index.html` nay có `id="gt2TcTiersGoiY2"` và `aria-describedby="gt2TcTiersGoiY gt2TcTiersGoiY2"`; test mới trong `test_a5_giao_dien.py` kiểm đúng hai id và cả hai phần tử tồn tại. ĐẠT.
+- **Test tài liệu:** `test_a13_12_tai_lieu`, `test_fa_m6_tai_lieu`, `test_gt3_tai_lieu`, `test_tai_lieu_dong_bo`, `test_tai_lieu_du_lieu`, `test_vi_du_huong_dan` = 66 passed.
+- **Toàn bộ test A5 cùng một lần** (`test_a5_nhom_dong_hang.py` + `_backend.py` + `test_a5_giao_dien.py`, có Chromium): 45 passed, 5,7 s.
+- **`kiem_nhanh --so-seed 20`:** 7/7, 60 ca trùng khít. `git status` sạch.
+- Chưa đo: toàn bộ bộ test, `run_pipeline` đầu-cuối với CLB `a|b`, FA bật, build Windows (CI gate lo).
+
+### Kết luận L4
+NO BUGS. Hai nhận xét chữ (#1, #2) nên sửa trong lượt tiếp nếu tiện, không chặn.
