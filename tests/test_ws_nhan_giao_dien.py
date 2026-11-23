@@ -75,8 +75,9 @@ def test_cong_ty_thay_tu_cua_minh_tren_man_hinh(mo_trang):
     _cho_chu(page, "#statStudents + .strip-label", "nhân viên")
     assert _chu_the(page, "#statClubs + .strip-label") == "dự án"
     assert _chu_the(page, '[data-tab="scoring"]').endswith("Nhập điểm")
-    mo_ta = _chu_the(page, "#view-pipeline .view-desc")
-    assert mo_ta == "Nhập sổ nhập, bấm Chạy để xếp nhân viên vào dự án, rồi tải kết quả."
+    # UX5B-L2: mô tả tab Nạp & xếp không còn chỗ giữ của ngành; kiểm tên bước "Xếp {person_l} vào {slot_sl}".
+    tieu_de = page.locator('#view-pipeline [data-i18n="step_title_rbda"]').first.text_content()
+    assert tieu_de == "Xếp nhân viên vào dự án"
     assert "học sinh" not in page.locator("#view-pipeline").inner_text()
     assert not loi, loi
 
@@ -87,8 +88,8 @@ def test_cong_ty_sang_tieng_anh(mo_trang):
     page.evaluate("window.I18N.setLang('en')")
     _cho_chu(page, "#statStudents + .strip-label", "employees")
     assert _chu_the(page, "#statClubs + .strip-label") == "projects"
-    mo_ta = _chu_the(page, "#view-pipeline .view-desc")
-    assert mo_ta == "Import the intake workbook, press Run to place employees in projects, then download the results."
+    tieu_de = page.locator('#view-pipeline [data-i18n="step_title_rbda"]').first.text_content()
+    assert tieu_de == "Place employees in projects"
     assert not loi, loi
 
 

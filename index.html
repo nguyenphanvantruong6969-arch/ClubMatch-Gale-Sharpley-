@@ -113,12 +113,12 @@
 
       <div class="panel" id="panelNhap">
         <div class="panel-head">
-          <h2 data-i18n="import_panel_title">Nhập dữ liệu</h2>
+          <h2 data-i18n="import_panel_title">1. Nhập sổ</h2>
           <div class="panel-actions">
             <button class="btn btn-secondary" id="btnTaiSoMau" data-i18n="btn_tai_so_mau">Tải sổ nhập mẫu</button>
           </div>
         </div>
-        <p class="hint-text" data-i18n="import_hint">Chưa có sổ nhập? Bấm "Tải sổ nhập mẫu" (sổ có đủ mọi cột và bảng giải thích từng cột), điền xong rồi kéo vào ô bên dưới.</p>
+        <p class="hint-text" data-i18n="import_hint">Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.</p>
 
         <div class="drop-zone" id="dropZone" tabindex="0" role="button"
              aria-describedby="dropZoneHint">
@@ -140,12 +140,12 @@
 
       <div class="panel" id="panelCanhBao">
         <div class="panel-head">
-          <h2 data-i18n="health_panel_title">Cảnh báo dữ liệu</h2>
+          <h2 data-i18n="health_panel_title">2. Xem cảnh báo</h2>
           <div class="panel-actions">
-            <button class="btn btn-secondary" id="btnValidate" data-i18n="btn_validate">Kiểm tra lại dữ liệu</button>
+            <button class="btn btn-secondary" id="btnValidate" data-i18n="btn_validate">Kiểm tra lại</button>
           </div>
         </div>
-        <p class="hint-text" data-i18n="health_panel_hint">Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch. Nên xem trước khi chạy.</p>
+        <p class="hint-text" data-i18n="health_panel_hint">Cảnh báo "Nghiêm trọng" chặn việc chạy cho đến khi sửa xong. Các cảnh báo khác không chặn.</p>
         <div id="healthSummary" class="health-summary"></div>
         <details class="ux5b-gap" id="healthChiTiet" hidden>
           <summary data-i18n="ux5b_xem_chi_tiet">Xem chi tiết</summary>
@@ -155,7 +155,7 @@
 
       <div class="panel" id="panelBuoc">
         <div class="panel-head">
-          <h2 data-i18n="steps_panel_title">Các bước xử lý</h2>
+          <h2 data-i18n="steps_panel_title">3. Chạy xếp</h2>
           <div class="panel-actions">
             <button class="btn btn-primary" id="btnRun" data-i18n="btn_run_pipeline">Chạy sắp xếp</button>
           </div>
@@ -258,7 +258,7 @@
         <div class="panel-head">
           <h2 data-i18n="history_panel_title">Lịch sử sắp xếp</h2>
           <div class="panel-actions">
-            <button class="btn btn-ghost" id="btnToggleHistory" data-i18n="btn_toggle">Hiện/ẩn</button>
+            <button class="btn btn-ghost" id="btnToggleHistory" data-i18n="btn_toggle">Xem lịch sử</button>
           </div>
         </div>
         <table class="data-table" id="historyTable" hidden>

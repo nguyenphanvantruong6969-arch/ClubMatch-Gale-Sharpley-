@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B-FIX-CI (sửa CI nền run #1443, commit L2 8441218)
+
+- Nguyên nhân gốc 1: L2 đổi chữ catalog `i18n.js` (`import_panel_title`, `import_hint`, `health_panel_title`, `btn_validate`, `health_panel_hint`, `steps_panel_title`, `btn_toggle`) nhưng chữ dự phòng trong `index.html` còn bản cũ → `tests/test_t3_l1_chu_du_phong.py` đỏ (Linux 4/6, Windows 5/9). Sửa: `index.html` khớp catalog.
+- Nguyên nhân gốc 2: `pipeline_desc` mới không còn chỗ giữ của ngành, nên `tests/test_ws_nhan_giao_dien.py` (2 ca) đòi câu mô tả cũ (Linux 6/6). Sửa test: kiểm tên bước `step_title_rbda` ("Xếp nhân viên vào dự án" / "Place employees in projects") để vẫn chứng minh từ của ngành lên màn hình. Không nới lỏng.
+
 ## 2026-11-23 — UX5B-L2: thẻ Xếp CLB (Hick + Von Restorff); đã nhập `origin/main` (MT2) trước
 
 - P0: gộp `origin/main` (có MT2) vào nhánh; xung đột `CHANGELOG`, `CLAUDE_CHI_TIET`, `TIEN_DO` (giữ hai bên), `index.html`, `style.css` (giữ công tắc MT2 và thẻ UX4/UX5A). CI run #1435 xanh.
