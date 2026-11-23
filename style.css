@@ -3010,7 +3010,7 @@ tr.ws-dang-mo td { background: var(--moss-soft); }
 .tk-thanh-ben { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; min-width: 0; }
 /* UX3: dòng 1 = tên + vai (cắt bằng "…", có title); dòng 2 = hai nút cùng cỡ. Chỉ còn một nút thì nút chiếm cả dòng. */
 .tk-thanh-ben #tkHuyHieu { grid-column: 1 / -1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tk-thanh-ben .btn { min-width: 0; min-height: 44px; width: 100%; padding-left: 6px; padding-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; justify-content: center; }
+.tk-thanh-ben .btn { min-height: 44px; /* MT2-CI1: vùng bấm >= 44 px (test_giao_dien_ux2_nut) */ min-width: 0; width: 100%; padding-left: 6px; padding-right: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; justify-content: center; }
 .tk-thanh-ben .btn:only-of-type { grid-column: 1 / -1; }
 .tk-thanh-ben[hidden] { display: none; }
 
@@ -3418,3 +3418,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .nhom-tieu-de { margin: 28px 0 10px; font-size: 16px; font-weight: 600; color: var(--ink); }
 .ux5a-goi-y-fa { margin: 6px 10px 4px; }
 #xuatNangCao > summary { margin-bottom: 8px; }
+/* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
+.mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.mt2-cong-tac-ten { font-weight: 600; }

@@ -579,7 +579,7 @@ def diem_wharton_hieu_luc(
 # mặc định TẮT ở tầng thuật toán (mặc định BẬT là của cau_hinh_ws, A13.13); xem `dung_wharton` và `_luat_de_ghi_hoac_bam`.
 LUAT_XEP_MAC_DINH = {"priority": "score", "tier_mode": "reserve",
                      "score_scope": "per_slot", "tiers": [], "wharton": False,
-                     "fa_daa": False}
+                     "fa_daa": False, "chia_loai": False}
 
 
 def luat_xep_cua(rules) -> dict:
@@ -630,6 +630,19 @@ def dung_fa_daa(rules) -> bool:
     return bat
 
 
+def dung_chia_loai(rules) -> bool:
+    """MT2: workspace có chia CLB theo loại (Tự do / Giới hạn / Tuyển chọn, `clubs.loai`) không?
+
+    Hiệu lực = `chia_loai` bật HOẶC `fa_daa` bật (Huy chương luôn dùng loại, nên workspace cũ giữ
+    nguyên). TẮT thì `loai` bị BỎ QUA (không xoá). Ném ValueError nếu `chia_loai` không phải bool.
+    """
+    luat = luat_xep_cua(rules)
+    bat = luat["chia_loai"]
+    if not isinstance(bat, bool):
+        raise ValueError("rules.chia_loai phai la true hoac false, nhan %r" % (bat,))
+    return bat or dung_fa_daa(rules)
+
+
 def _luat_de_ghi_hoac_bam(luat: dict) -> dict:
     """Bản của luật hiệu lực để GHI (`run_history.luat_xep`) hoặc BĂM (dấu vân tay).
 
@@ -637,7 +650,7 @@ def _luat_de_ghi_hoac_bam(luat: dict) -> dict:
     (nhóm xếp cứng, điểm theo người…) phải giữ nguyên từng byte chuỗi đã ghi và dấu vân tay,
     nếu không mọi kết quả cũ của chúng tự báo "đã cũ" chỉ vì có thêm một khoá luôn bằng False.
     """
-    bo = [k for k in ("wharton", "fa_daa") if luat.get(k) is False]
+    bo = [k for k in ("wharton", "fa_daa", "chia_loai") if luat.get(k) is False]
     if bo:
         return {k: v for k, v in luat.items() if k not in bo}
     return luat
@@ -2779,7 +2792,7 @@ def dau_van_tay_du_lieu(cur, rules=None) -> str:
         cac_phan.append(("wharton", "SELECT student_id, club_id, tier, points FROM wharton_bids "
                                     "ORDER BY student_id, club_id"))
     # FA-DAA chỉ vào dấu vân tay khi BẬT (kiểu CLB, điểm sàn, tối thiểu, sức chứa phòng, giữ chỗ).
-    if dung_fa_daa(rules):
+    if dung_chia_loai(rules):
         cac_phan.append(("fa_clb", "SELECT club_id, COALESCE(loai, ''), COALESCE(diem_san, -1), "
                                    "COALESCE(so_toi_thieu, -1), COALESCE(suc_chua_phong, -1) "
                                    "FROM clubs ORDER BY club_id"))

@@ -387,6 +387,7 @@ function loadAdminTab(giuTrang) {
   taiDashboard(); /* GAP-8 (js/10_theo_doi.js): tự ẩn khi FA tắt */
   taiTieuChi(); /* GT2 (js/15_tieu_chi.js) */
   if (typeof ux1aTaiCaiDat === "function") ux1aTaiCaiDat(); /* UX1A-L2b */
+  if (typeof mt2KhoiTaoChiaLoai === "function") { mt2KhoiTaoChiaLoai(); mt2VeChiaLoai(); } /* MT2 */
   if (!giuTrang) adminStudentPage = 1;
   chayTai(callApi("get_last_run_info"), (res) => {
     adminCoKetQua = !!(res.ok && res.data);

@@ -56,6 +56,7 @@ _TIEU_DE_KHOA = {
               "en": "Priority groups (first group has the highest priority)"},
     "wharton": {"vi": "Xét điểm quyết tâm", "en": "Use commitment points"},
     "fa_daa": {"vi": "Chế độ huy chương (FA)", "en": "Medal mode (FA)"},
+    "chia_loai": {"vi": "Chia CLB theo loại", "en": "Split clubs by type"},
 }
 
 _TIEU_DE_TANG = {
@@ -132,6 +133,8 @@ def cac_lua_chon_hop_le() -> dict:
                     "tieu_de": _TIEU_DE_KHOA["wharton"]},
         "fa_daa": {"kieu": "bool", "gia_tri": [True, False], "nhan": {},
                    "tieu_de": _TIEU_DE_KHOA["fa_daa"]},
+        "chia_loai": {"kieu": "bool", "gia_tri": [True, False], "nhan": {},
+                      "tieu_de": _TIEU_DE_KHOA["chia_loai"]},
     }
 
 
