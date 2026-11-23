@@ -61,3 +61,10 @@ Diff `js/04_nhap_tai_cho.js` chỉ thêm `ux5bMucMo = ...`, `ux5bVeMuc()`, đổ
 
 ## Ảnh (`docs/phien/anh_ux5b/`, 1280 px, dsf 1)
 `admin_nhap_nguyen_vong.png` (toàn trang, một em), `gv_nhap_nguyen_vong.png` (toàn trang), `admin_nhap_diem_ds.png`, `gv_nhap_diem_ds.png` (sổ 120: đã chấm hết nên không có nút vàng), `admin_nhap_diem_dang_cham.png`.
+
+---
+# Vòng 2 (b42cc57..5a68872, UX5B-FIX1) — **PASS**
+- FIX 1 đã xử lý: gõ điểm → hiện "• Chưa lưu" (`#chuaLuuDiem`); bấm "‹ Danh sách" lần 1 chỉ cảnh báo (toast, vẫn ở màn chấm), lần 2 trong 4 giây mới bỏ; Lưu xong thì hết "Chưa lưu" và quay lại không hỏi; ô bị đánh lỗi khi lưu một phần vẫn tính là chưa lưu (`__ux2Loi`). Khoá i18n mới có đủ VI và EN. Cùng mẫu "bấm lần hai" của thẻ Nhập nguyện vọng.
+- Phạm vi: chỉ `index.html`, `i18n.js`, `js/06_cham_diem.js`, test và tài liệu; không có tệp backend. Hai test mới phủ cả hai nhánh; không test cũ nào bị sửa.
+- Chạy lại cùng bộ test: **91 passed**.
+- Ghi chú nhỏ (không chặn): cơ chế "bấm lại trong 4 giây" kém hiển nhiên hơn hộp xác nhận, nhưng nhất quán với phần còn lại của ứng dụng.
