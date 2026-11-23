@@ -4,3 +4,7 @@ book 800 huy_chuong/True {'import_so_nhap': 0.39, 'run_pipeline': 0.56, 'get_dat
 book 3000 huy_chuong/True {'import_so_nhap': 1.63, 'run_pipeline': 6.26, 'get_data_health_report': 0.18, 'export_ket_qua': 2.08, 'export_phieu_giai_trinh_pdf': 75.57}
 book 800 chia_100/False {'import_so_nhap': 0.41, 'run_pipeline': 0.2, 'get_data_health_report': 0.05, 'export_ket_qua': 0.5, 'export_phieu_giai_trinh_pdf': 16.24}
 book 3000 chia_100/False {'import_so_nhap': 1.22, 'run_pipeline': 2.06, 'get_data_health_report': 0.17, 'export_ket_qua': 2.11, 'export_phieu_giai_trinh_pdf': 68.27}
+book 800 huy_chuong/True {'import_so_nhap': 0.38, 'run_pipeline': 0.59, 'get_data_health_report': 0.03, 'export_ket_qua': 0.47, 'export_phieu_giai_trinh_pdf': 6.52}
+book 3000 huy_chuong/True {'import_so_nhap': 1.15, 'run_pipeline': 5.85, 'get_data_health_report': 0.12, 'export_ket_qua': 1.79, 'export_phieu_giai_trinh_pdf': 26.28}
+book 800 chia_100/False {'import_so_nhap': 0.37, 'run_pipeline': 0.22, 'get_data_health_report': 0.05, 'export_ket_qua': 0.51, 'export_phieu_giai_trinh_pdf': 5.76}
+book 3000 chia_100/False {'import_so_nhap': 1.21, 'run_pipeline': 2.04, 'get_data_health_report': 0.16, 'export_ket_qua': 1.98, 'export_phieu_giai_trinh_pdf': 24.26}

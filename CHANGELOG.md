@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A5: PDF phiếu cả trường ≤ 30 s ở 3 000 em + báo tiến độ (ST-A-008)
+
+- `giai_trinh.py`: bộ nhớ đệm theo CLB trong dữ liệu một buổi (`_nhan_cuoi_nho`, `_so_nhan`, `_chuan_clb_fa` nhớ kết quả; `_nguoi_nhan_cuoi`, đếm suất và quét `fa_rows` từng quét cả danh sách xếp cho MỖI nguyện vọng của MỖI em, nên chuẩn bị 3 000 phiếu tốn 4,7 s (Chia 100) / 6,8 s (Huy chương), nay 0,1 s). Kết quả không đổi: dữ liệu phiếu 3 000 em × 2 chế độ và 800 em × 2 chế độ so trước/sau bằng nhau từng trường (trừ `run_at`).
+- `xuat_pdf.py` (`dung_pdf`): luồng trang chỉ nén Flate, tắt ASCII85 của reportlab trong lúc dựng (đặt `rl_config.useA85 = 0`, trả lại ngay cả khi lỗi); ~7 % nhanh hơn, tệp nhỏ hơn. `ngat_trang(khi_qua=None)` + `_tai_lieu_bao_tien_do`: gọi hàm báo sau mỗi ngắt trang.
+- `phieu_giai_trinh.py` (`dung_phieu_pdf(..., khi_xong_em=None)`) + `api_xuat.py`: API mới `get_tien_do_xuat()` (chỉ đọc, KHÔNG lấy khoá ghi; mức giáo viên trong `phan_quyen.py`) trả `{dang_xuat, xong, tong, ten}`; `xong`/`tong` đếm học sinh, cộng dồn qua các lớp khi `theo_lop=True` (`ten` = lớp đang dựng). Xuất xong hoặc lỗi thì về trạng thái rảnh. Khung giao diện (B) hỏi định kỳ để hiện thanh tiến độ.
+- Đo (mô phỏng, máy cloud 4 nhân, một PDF cả trường): 800 em 6,5 / 5,8 s; 3 000 em 26,3 s (Huy chương) / 24,3 s (Chia 100); trước SF-A: 68-76 s. Số trang không đổi (5 902 ở 3 000 em Chia 100; 1 578 ở 800). Chia theo lớp tuần tự không nhanh hơn một tệp (thời gian tuyến tính theo số phiếu), nên nhanh hơn nữa cần dựng song song nhiều tiến trình: chưa làm (xem tệp bàn giao).
+- Test mới: `tests/test_sf_a_5.py` (9 ca). Bỏ nhánh `xfail` ST-A-008 ở `tests_stress/a/test_a4_exports_timing.py` (nay là `assert` ≤ 30 s).
+
 ## 2026-11-23 — SF-A (sửa CI 2): kiểm toàn vẹn không chờ khoá
 
 - `api_chung.py` (`kiem_toan_ven_db`): chờ khoá 0,2 s (trước 5 s) rồi bỏ qua; CSDL đang bị khoá ngoài thì `run_pipeline` / `reset_data` vẫn báo `csdl_dang_ban` dưới 7 s (`tests/test_a13_11_stress.py` đỏ trên CI: 8-10 s).

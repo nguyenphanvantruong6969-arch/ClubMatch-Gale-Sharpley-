@@ -224,12 +224,21 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
     return k
 
 
-def dung_phieu_pdf(cac_em, duong, so_ngay=None, tieu_de="Phiếu giải trình kết quả xếp CLB") -> str:
-    """Như `dung_phieu_html` nhưng ra PDF (A4 dọc, mỗi học sinh bắt đầu một trang mới). Trả đường dẫn thật đã ghi."""
+def dung_phieu_pdf(cac_em, duong, so_ngay=None, tieu_de="Phiếu giải trình kết quả xếp CLB", khi_xong_em=None) -> str:
+    """Như `dung_phieu_html` nhưng ra PDF (A4 dọc, mỗi học sinh bắt đầu một trang mới). Trả đường dẫn thật đã ghi.
+    `khi_xong_em(k)` (tuỳ chọn, SF-A5): báo đã dựng xong phiếu của `k` em (k = 1, 2, ..., rồi đủ số em khi ghi xong)."""
     import xuat_pdf
     khoi = []
+    xong = [0]
+
+    def qua_mot_em():
+        xong[0] += 1
+        khi_xong_em(xong[0])
     for gt, hs, ma in cac_em:
         if khoi:
-            khoi.append(xuat_pdf.ngat_trang())
+            khoi.append(xuat_pdf.ngat_trang(qua_mot_em if khi_xong_em else None))
         khoi.extend(_khoi_pdf(xuat_pdf, gt, hs, so_ngay, ma, tieu_de))
-    return xuat_pdf.dung_pdf(duong, khoi)
+    duong_that = xuat_pdf.dung_pdf(duong, khoi)
+    if khi_xong_em:
+        khi_xong_em(len(cac_em))
+    return duong_that

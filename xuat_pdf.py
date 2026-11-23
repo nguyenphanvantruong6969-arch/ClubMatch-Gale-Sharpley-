@@ -144,9 +144,29 @@ def dong_khoa_gia_tri(khoa, gia_tri):
                        _kieu("kv"))
 
 
-def ngat_trang():
+def ngat_trang(khi_qua=None):
+    """Ngắt trang. `khi_qua` (tuỳ chọn, SF-A5): hàm không đối số, `dung_pdf` gọi NGAY SAU khi ngắt trang này xong —
+    dùng để báo tiến độ (mỗi học sinh một ngắt trang)."""
     from reportlab.platypus import PageBreak
-    return PageBreak()
+    if khi_qua is None:
+        return PageBreak()
+
+    class _NgatTrangBao(PageBreak):
+        pass
+    kq = _NgatTrangBao()
+    kq.khi_qua = khi_qua
+    return kq
+
+
+def _tai_lieu_bao_tien_do():
+    from reportlab.platypus import SimpleDocTemplate
+
+    class _Doc(SimpleDocTemplate):
+        def afterFlowable(self, flowable):
+            khi_qua = getattr(flowable, "khi_qua", None)
+            if khi_qua is not None:
+                khi_qua()
+    return _Doc
 
 
 def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
@@ -221,15 +241,22 @@ def dung_pdf(duong, khoi):
     _dang_ky_phong()
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
-    from reportlab.platypus import SimpleDocTemplate
     thu_muc = os.path.dirname(os.path.abspath(duong))
     os.makedirs(thu_muc, exist_ok=True)
     fd, tam = tempfile.mkstemp(suffix=".pdf.tmp", dir=thu_muc)
     os.close(fd)
+    from reportlab import rl_config
+    a85_cu = rl_config.useA85
     try:
-        doc = SimpleDocTemplate(tam, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm,
-                                topMargin=16 * mm, bottomMargin=18 * mm)
-        doc.build(list(khoi), canvasmaker=_canvas_so_trang())
+        doc = _tai_lieu_bao_tien_do()(tam, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm,
+                                      topMargin=16 * mm, bottomMargin=18 * mm)
+        # SF-A5 (ST-A-008): luồng trang chỉ nén Flate, KHÔNG bọc thêm ASCII85 (mã hoá bằng Python thuần chiếm ~10 %
+        # thời gian PDF cả trường và làm tệp to thêm ~25 %). Chữ và số trang không đổi; trả cấu hình lại ngay sau đó.
+        rl_config.useA85 = 0
+        try:
+            doc.build(list(khoi), canvasmaker=_canvas_so_trang())
+        finally:
+            rl_config.useA85 = a85_cu
         dich = duong_dan_khong_de(os.path.abspath(duong))
         os.replace(tam, dich)
         return dich

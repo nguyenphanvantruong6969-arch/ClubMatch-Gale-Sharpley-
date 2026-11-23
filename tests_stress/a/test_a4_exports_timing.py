@@ -178,6 +178,4 @@ def test_timing_scaled_book(tmp_path, n, mode, cl):
     with open(os.path.join(sthelp.GOC, "docs", "phien", "ST_A_TIMING.txt"), "a") as f:
         f.write(line + "\n")
     slow = {k: v for k, v in out.items() if v > 30}
-    if slow and set(slow) == {"export_phieu_giai_trinh_pdf"}:
-        pytest.xfail("ST-A-008: %s" % slow)
     assert not slow, out

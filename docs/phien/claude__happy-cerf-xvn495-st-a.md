@@ -8,12 +8,14 @@ SF-A (fix coder A, backend): fix the ST-A / ST-B stress-test bugs owned by A, pe
 - [x] Lot 1 SF-A1 (5868c7e), lot 2 SF-A2 (a29c97d), lot 3 SF-A3 (a5beec0), lot 4 SF-A4 (06ca113)
 - [x] CI fixes (0913c56, 2c3e2ef, eba0a54); §4 holds, CI green on eba0a54; SF-A DONE written
 - [x] §5 review of B diff, round 1 (in this file, b0fff37)
-- [ ] §5 round 2 after B finishes its 3 open UI items; B merges A, opens ONE PR into `claude/happy-cerf-xvn495` titled `SF: fix stress-test bugs`
+- [x] SF-A5 = ST-A-008 (Truong chose option (a)): see below
+- [x] §5 round 2 done (2026-11-23): B's head is still e50cc52, the 3 UI items are still open (see "Review of B")
+- [ ] B does its 3 UI items, merges A, CI green; B opens ONE PR into `claude/happy-cerf-xvn495` titled `SF: fix stress-test bugs` (only if Truong asks)
 
 ## Current state
-- Done: all of A's lots; every owned bug fixed except ST-A-008 (Needs Truong). CI full matrix green on eba0a54; later commits (b0fff37 head) only touch docs, CI not rerun on them.
-- Verified on merged head: kiem_nhanh 7/7, ruff clean, byte-identical 3 datasets x 20 seeds, tests_stress/a 1482 pass / 2 xfail (ST-A-008), tests_stress/b 60 pass (1 load-flaky, passes alone).
-- In progress: nothing on A's side. Waiting on B: ST-B-007 confirm UI, ST-A-001 warning UI, inline code for ST-B-006 (see "Review of B").
+- Done: all of A's lots incl. SF-A5; every owned bug fixed (ST-A-008 now fixed: 3000 students 24-26 s). CI full matrix green on eba0a54; later commits (docs + SF-A5) not yet run on CI.
+- Verified on head after SF-A5: kiem_nhanh 7/7, ruff clean, byte-identical 3 datasets x 20 seeds (60 cases), `tests/test_sf_a_*.py` + xp1/gt1/gt3/ux1 phieu tests (289 pass, 19 skip). tests_stress/a and /b: see "SF-A5 verification" below.
+- In progress: nothing on A's side. Waiting on B: ST-B-007 confirm UI, ST-A-001 warning UI, inline code for ST-B-006, optional progress bar for `get_tien_do_xuat` (see "Review of B" and Asks).
 - Tests: `.venv/bin/python -m pytest -q --tb=line tests/test_sf_a_*.py`; stress folders must be run separately (`tests_stress/a`, `tests_stress/b`: conftest clash).
 
 ## Decisions and gotchas
@@ -36,6 +38,8 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 - A→B (ST-B-006): `create_or_update_club` returns `club_capacity_not_integer` / `capacity_too_large` (no more raw Python text). Show them inline on the capacity field; A removed the xfail of `test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat`, B verifies it passes.
 - A→B (ST-A-001): `update_workspace_config` response now has `data.warnings` (`che_do_thieu_du_lieu` with n_thieu_loai, n_buoi_thieu_tu_do, n_thieu_diem_san, n_huy_chuong_sai, che_do); render it under the mode cards (js/18_cai_dat.js).
 
+- A→B (ST-A-008 / SF-A5, optional): new read-only API `get_tien_do_xuat()` → `{dang_xuat, xong, tong, ten}` (students done / total, accumulated across classes when `theo_lop=true`; `ten` = class being built). It does not take the write lock, so poll it (e.g. every 500 ms) while `export_phieu_giai_trinh_pdf` runs from `chayXuatPdf` (js/03_ket_qua.js, button `btnPdfPhieuLop` and the whole-school item) and show "xong/tong" instead of a frozen button. New i18n text is B's (i18n.js); no new error code.
+
 ### SF status
 | Bug | Lot | State |
 |---|---|---|
@@ -50,7 +54,12 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 | ST-A-007 | 3 | fixed (SF-A3) |
 | ST-B-006 (validation code) | 3 | fixed backend (SF-A3): codes `club_capacity_not_integer`, `capacity_too_large`; inline field error = B lot 2 |
 | ST-A-001 | 3 | fixed (SF-A3): `update_workspace_config` data.warnings; B renders under mode cards |
-| ST-A-008 | 4 | partly fixed (SF-A4): 800 students 18.8→9.1 s, 3000: 68-76→32.4 s (Chia 100) / 38.4 s (Huy chương) in the final stress run (40.6 s in a first run); target ≤30 s NOT met → Needs Truong |
+| ST-A-008 | 4-5 | fixed (SF-A5): 3000 students 68-76 s → 26.3 s (Huy chương) / 24.3 s (Chia 100), 800 → 6.5 / 5.8 s; page count and cell text unchanged; progress API `get_tien_do_xuat`. Margin ~12 % under 30 s on a 4-core container |
+
+## SF-A5 (ST-A-008) — what was done
+- Measured first (container, 4 cores, no other load): whole-school PDF at 3000 = 30.6 s after SF-A4. cProfile at 800: `_py_asciiBase85Encode` ~10 %, reportlab drawing (`drawString`, `_py_fp_str`) ~60 %, and `giai_trinh` data prep grew QUADRATICALLY (0.4 s at 800 → 4.7 s at 3000 Chia 100; 0.6 → 6.8 s Huy chương): `_nguoi_nhan_cuoi`, `sum(... assign ...)` and `_chuan_clb_fa` rescanned all assignments for every preference of every student.
+- Fixes: (1) per-club memo in the per-buoi dict `b` (`_nhan_cuoi_nho`, `_so_nhan`, `_chuan_clb_fa`); phieu data for 800 and 3000 students x 2 modes compared field by field before/after = identical (except `run_at`). (2) `dung_pdf` builds with `rl_config.useA85 = 0` (restored in `finally`). (3) `get_tien_do_xuat` + `khi_xong_em` callback (marker page break + `afterFlowable`).
+- Result: 3000 → 26.3 s (Huy chương) / 24.3 s (Chia 100); stress test `test_timing_scaled_book[*-3000]` now asserts ≤ 30 s (xfail branch removed). GC off, per-class sequential split: tried / measured, no gain.
 
 ## Review of B's diff (SF §5, round 1) — findings for B's "Asks"
 Scope: B's own commits 497b018, dedfd44, cdc36c4, edb987a, 681228a, 1f06b1e, a324d59, afe28c7 (JS / i18n.js / index.html / style.css / recovery.js / tests). Invariants 1-8: nothing touched (no allocation, STB, run_history, pipeline, schema or CSV code); UI keeps the `{ok,data,errors}` contract. ST-B-009 uses `data.can_tao_tai_khoan` correctly.
@@ -59,22 +68,28 @@ Scope: B's own commits 497b018, dedfd44, cdc36c4, edb987a, 681228a, 1f06b1e, a32
 2b. [open] ST-A-001 UI: `js/18_cai_dat.js` must render `data.warnings` (`che_do_thieu_du_lieu`: n_thieu_loai, n_buoi_thieu_tu_do, n_thieu_diem_san, n_huy_chuong_sai, che_do) under the mode cards after `update_workspace_config`.
 3. [nit] ST-B-012 closes every toast on `langchange` (also toasts with an "Hoàn tác" button): acceptable, say so in the changelog.
 Merge hint for B: merge `origin/claude/happy-cerf-xvn495-st-a` (head after this file) first; conflicts are expected only in CHANGELOG.md, TIEN_DO.md and the test-file count line of `docs/ke_hoach/CLAUDE_CHI_TIET.md` (A resolved it once at 386 = actual count after both branches; recount with `ls tests/test_*.py | wc -l`). CI needs `tests/test_ws_nhan.py` (already updated on A) and `tests/test_van_phong_tu_nhien.py` (no raw `{detail}`, no ALL-CAPS emphasis in new i18n text).
-Round 2: pending B's three open items; A answers any new Ask on its next resume.
+### Round 2 (2026-11-23, report only; this was the last round allowed by SF §5)
+B's head is unchanged since round 1 (`e50cc52`, already merged into A). Re-checked the three UI items by grep on the merged tree:
+1. [still open] ST-B-006 `js/05_quan_ly.js:1161-1193`: the map `UX2_LOI_CLB` has only `capacity_must_be_positive`; the client check `Number.isInteger(Number(capacity))` still shows the wrong text for 1.5. Map `club_capacity_not_integer` and `capacity_too_large` (backend codes) to `clubFormCapacity`, drop or re-code the client check.
+2. [still open] ST-B-007: `js/05_quan_ly.js:423` calls `delete_club` with the id only; `js/04_nhap_tai_cho.js:432` calls `delete_student` with the id only. No code handles `cannot_delete_club_referenced` / `cannot_delete_student_matched` with a second confirm and a call with `true`.
+3. [still open] ST-A-001: `js/18_cai_dat.js` has no mention of `warnings` / `che_do_thieu_du_lieu`.
+No new invariant problem seen (B's diff touches no allocation, STB, run_history, pipeline, schema or CSV code). A does not edit B's files (SF §0); the three items stay B's. Optional: dedicated zip error code for ST-B-011 (B's note) is NOT done on A; B's wording fix stands.
 
 ## Needs Truong
-- ST-A-008 (whole-school phieu PDF at 3000 students): after cached `Paragraph.wrap` + string table cells it is 32-41 s depending on the run (target ≤ 30 s). The rest is pure-Python reportlab (number formatting, `drawString`, PDF serialisation; `_rl_accel` C ext absent). Further options, each needs a decision: (a) split the whole-school PDF per class / chunk (the per-class export `theo_lop` already exists) and show progress; (b) add `pypdf`/qpdf to merge chunks built in parallel processes (new library); (c) a hand-written canvas flowable for the phieu page (big change). Not done.
+- ST-A-008: RESOLVED by SF-A5 (below), nothing to decide. One optional follow-up if the school kiosk is much slower than this container (4 cores, ~12 % margin): build per-class parts in worker processes (stdlib `multiprocessing`; needs `freeze_support()` in the PyInstaller entry point and a Windows test, so not done). Sequential splitting per class does NOT speed things up (time is linear in the number of slips; the stress data has a single class).
+- Pure-reportlab remainder (number formatting, `drawString`, PDF serialisation) is now ~85 % of the time.
 - ST-A-005/ST-B-007 schema: no schema change was needed (deleting keeps `run_history`; current results go stale through the existing data fingerprint). Nothing to decide.
 - `tests/test_xp1_*` PDF text tests need `pypdf`, which is not in `requirements-dev.txt`, so they skip locally and (apparently) on CI: the visible-text equivalence of the new string cells is covered only by `tests/test_sf_a_4.py` (cell text) and page count (1589 before/after at 800). A reviewer with `pypdf` may want to diff text of old/new PDFs.
 
 ## Next steps
-0. DECISION (Truong, 2026-11-23): ST-A-008 = option (a): split the whole-school phieu PDF per class (reuse `theo_lop`) + progress reporting; no new library. Implement as SF-A5 (test first, byte-identical invariant 1 unaffected, CHANGELOG + TIEN_DO).
-1. Fetch; read B's handoff Asks; answer any new Ask to A (round 2 of §5 review, max 2).
-2. If Truong decides ST-A-008: options in "Needs Truong" (per-class split + progress, or a PDF-merge library).
+0. DONE (SF-A5): ST-A-008. Truong's option (a) asked for per-class split + progress; measured result: per-class split alone gives no speed-up, so SF-A5 removed the real costs (quadratic `giai_trinh` scans, ASCII85) and added the progress API; per-class export (`theo_lop`) already existed and now reports accumulated progress.
+1. Fetch; merge B if it has new commits; read B's handoff Asks; answer any new Ask to A (review rounds are used up: only re-check that B's 3 items landed).
+2. (none)
 3. B merges A first, CI green, B opens the single PR; Truong merges. Then ST2 round (`docs/phien/ST2_GIAO_THUC.md`).
 
 ## Files touched
-- Production: api.py, api_chung.py, api_nhap.py, api_quan_ly.py, api_tai_khoan.py, api_workspace.py, api_forms.py, api_forms_nap.py, cau_hinh_ws.py, so_nhap.py, recovery.py, xuat_pdf.py, i18n_errors.py (+ i18n_loi.js), pyproject.toml
-- Tests: tests/test_sf_a_1..4.py, test_gt_tich_hop.py, test_ws_nhan.py; xfail markers removed in tests_stress/
+- Production: api.py, api_chung.py, api_nhap.py, api_quan_ly.py, api_tai_khoan.py, api_workspace.py, api_forms.py, api_forms_nap.py, cau_hinh_ws.py, so_nhap.py, recovery.py, xuat_pdf.py, giai_trinh.py, phieu_giai_trinh.py, phan_quyen.py, i18n_errors.py (+ i18n_loi.js), pyproject.toml
+- Tests: tests/test_sf_a_1..5.py, test_gt_tich_hop.py, test_ws_nhan.py; xfail markers removed in tests_stress/
 - Docs: CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, CLAUDE_CHI_TIET.md (test count), ST_BAO_CAO_A.md (fixed shas)
 
 ## Session log (append only)
@@ -83,3 +98,4 @@ Round 2: pending B's three open items; A answers any new Ask on its next resume.
 | 2026-11-23 | Sonnet | started ST-A, read protocol | |
 | 2026-11-23 | Sonnet | A1-A4 done, 8 bugs logged (ST_BAO_CAO_A.md) | |
 | 2026-11-23 | Sonnet | SF-A lots 1-4, CI fixes, SF-A DONE eba0a54, review of B round 1 | context ~400k, handoff |
+| 2026-11-23 | Sonnet | SF-A5 (ST-A-008), review of B round 2, handoff | context well under 400k |
