@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — ST2 (kế hoạch): stress test vòng 2, cố ý làm sập chương trình
+
+- `docs/phien/ST2_GIAO_THUC.md` (kill -9, thiếu tài nguyên, fuzz chuỗi thao tác, cỡ cực lớn; fuzz HTTP, monkey test, backend chết dưới giao diện, chạy dài) và `docs/phien/SF_ST2_PROMPTS.md` (bốn prompt). Chỉ chạy sau khi SF đã gộp và CI xanh. Không đổi mã sản phẩm.
+
 ## 2026-11-23 — SF (kế hoạch): sửa toàn bộ lỗi stress test
 
 - `docs/phien/SF_GIAO_THUC.md`: phân 21 lỗi ST-A/ST-B cho hai coder trên hai nhánh con (A: mã Python, B: giao diện), vòng lặp đỏ → xanh từng lỗi, điều kiện dừng (tests_stress 0 failed/0 xfail, CI xanh, trùng khít 3×20), kiểm chéo, một PR về nhánh mẹ. Không đổi mã sản phẩm.
