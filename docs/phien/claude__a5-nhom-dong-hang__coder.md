@@ -26,3 +26,9 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 - `api_nhap` ~L335 `_soat_...` only reads the normalised cell.
 - Sổ nhập student sheet and student CSV both go through `_ghi_nhom_du_tru` loops.
 - Also found: `tests/test_gt3_phan_quyen.py` requires every public method in `phan_quyen.py`; added `chuan_hoa_o_nhom_clb`, `o_nhom_hs_co_gach` to `_GIAO_VIEN` (phan_quyen.py) and `_KHONG_GHI` (nhat_ky.py) next to `chuan_hoa_nhom_du_tru`.
+
+## L3 — soat-ma walk
+- T3: ran real Chromium (browser_host), wizard step 3. XSS: tier name `<img src=x onerror=...>|b` shown as text (`wsEl text:` = textContent), `window.__xss` stays undefined (test). No API call added (no phan_quyen/nhat_ky change); JS errors: none (`pageerror` collected in every test). Dedup/empty-part errors use i18n keys vi+en (kiem_nhanh i18n_khoa, chu_cam OK after fixing an English "You" in a hint). New hint `<p>` paragraphs use data-i18n so language switch redraws. Stability: test file run 3x in a row, all green. `localStorage`/reduced-motion/keyboard not touched.
+- T1/T2: untouched in L3. T4: 5 JS mutants (dup check off, ` = ` joiner, empty-part check off, đ→d replace removed) — the last one SURVIVED at first (weak test) → added cases `đoàn|DOAN`, `Đội / đoi|x`; now caught. Docs: count 382 files, CHANGELOG, TIEN_DO.
+- Not done: plan line "js/15_tieu_chi.js read-only summary shows a = b": no such summary exists there (only the textarea). Left unchanged; hint paragraph added under the textarea instead.
+- Related runs: test_ws_giao_dien, test_giao_dien_t3_l3, test_giao_dien_gt2_tieu_chi, test_i18n_sync, test_i18n_khoa_dc_khong_chet, test_gt3_phan_quyen, test_tai_lieu_dong_bo, test_a13_12_tai_lieu all pass.

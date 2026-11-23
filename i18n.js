@@ -1129,6 +1129,11 @@
       ws_v_max_choices: "Số lựa chọn tối đa phải là số nguyên từ 1 đến 20.",
       ws_v_max_tests: "Số mục dự thi tối đa phải là số nguyên từ 0 đến 20, hoặc tích \"Không giới hạn\".",
       ws_v_tiers: "Danh sách nhóm có hai dòng trùng nhau.",
+      ws_v_tiers_rong: "Danh sách nhóm có một phần trống quanh dấu |. Viết dạng a|b, mỗi phần là một nhóm.",
+      ws_v_tiers_hang: "Một nhóm xuất hiện ở hai hạng (hoặc hai lần trong một dòng a|b). Mỗi nhóm chỉ được ở MỘT hạng.",
+      a5_tiers_goi_y: "Muốn hai nhóm cùng một hạng, viết chung một dòng, ngăn bằng dấu |, ví dụ: Khối 12|Học sinh giỏi.",
+      a5_club_nhom_goi_y: "Có thể ghi nhiều nhóm, ngăn bằng dấu |, ví dụ a|b: các nhóm này dùng chung suất ưu tiên, nhóm điểm cao hơn có thể lấy hết suất. Mỗi học sinh chỉ có MỘT nhóm.",
+      a5_gt2_tc_nhom_goi_y: "Muốn hai nhóm cùng một hạng, viết chung một dòng, ngăn bằng dấu |, ví dụ a|b. Một nhóm chỉ được xuất hiện một lần.",
 
       /* === A: FA-M7 G0 === */
       nav_chuan_bi: "Chuẩn bị đợt",
@@ -2589,6 +2594,11 @@
       ws_v_max_choices: "Most choices must be a whole number from 1 to 20.",
       ws_v_max_tests: "Most tested places must be a whole number from 0 to 20, or tick \"No limit\".",
       ws_v_tiers: "The group list has two identical lines.",
+      ws_v_tiers_rong: "The group list has an empty part around a |. Write it as a|b, each part being one group.",
+      ws_v_tiers_hang: "A group appears in two ranks (or twice in one a|b line). Each group can be in only ONE rank.",
+      a5_tiers_goi_y: "To put two groups at the same rank, write them on one line separated by |, e.g. Senior|Honours.",
+      a5_club_nhom_goi_y: "Several groups may be listed, separated by |, e.g. a|b: they share the priority seats, and the higher-scoring group may take all of them. Each student has exactly ONE group.",
+      a5_gt2_tc_nhom_goi_y: "To put two groups at the same rank, write them on one line separated by |, e.g. a|b. A group may appear only once.",
 
       /* === A: FA-M7 G0 === */
       nav_chuan_bi: "Prepare round",

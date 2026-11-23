@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L3: nhóm đồng hạng `a|b` — giao diện
+
+- `js/075_workspace.js`: `wsKhoaNhom` (cùng khoá với `xay_tier_rank`: bỏ dấu, đ→d, hoa/thường, mọi khoảng trắng kể cả U+00A0), `wsNhomTrongMuc`, `wsLoiGachNhom`, `wsHienThiTiers`. `ws_v_tiers` giữ kiểm trùng dòng cũ; thêm lỗi `ws_v_tiers_rong` (phần rỗng quanh `|`) và `ws_v_tiers_hang` (một nhóm ở hai hạng / hai lần trong một dòng) CHỈ khi có dòng chứa `|` (như `cau_hinh_ws.py`). Bước xem lại (`rvTiers`) hiện `a = b › c`.
+- Gợi ý: `index.html` (ô "Nhóm ưu tiên" của CLB và ô thứ hạng nhóm ở Tiêu chí) và bước 3 trình hướng dẫn; khoá i18n `a5_tiers_goi_y`, `a5_club_nhom_goi_y` (có cảnh báo "nhóm điểm cao hơn có thể lấy hết suất"), `a5_gt2_tc_nhom_goi_y`, `ws_v_tiers_rong`, `ws_v_tiers_hang` (vi + en).
+- `js/15_tieu_chi.js` KHÔNG đổi: không có bản tóm tắt chỉ-đọc của tiers ở đó (chỉ có ô textarea, giữ nguyên `|`); mục "tóm tắt a = b" của kế hoạch chỉ áp dụng cho `rvTiers`.
+- Test mới: `tests/test_a5_giao_dien.py` (10 ca Chromium thật, một trang dùng chung; lỗi hai hạng, NBSP, đ→d, phần rỗng, hiện `a = b`, XSS). Số tệp test: 382.
+
 ## 2026-11-23 — A5-L2 FIX1: gán hàng loạt nhóm học sinh chặn `|`
 
 - Checker BUG #1: `bulk_set_reserve_group` lưu `a|b` thành `a_b`. Sửa: từ chối trước mọi lần ghi bằng mã mới `a5_nhom_hs_co_gach_hang_loat` (không có student_id). Hai hàm công khai mới của L2 chưa có trong bảng quyền: thêm vào `phan_quyen.py` (`_GIAO_VIEN`) và `nhat_ky.py` (`_KHONG_GHI`) để `test_gt3_phan_quyen` đạt.
