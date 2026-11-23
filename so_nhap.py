@@ -58,6 +58,9 @@ SO_NV_MAC_DINH = 15
 # Trần MỖI BUỔI của phần mềm (rbda_priority_pipeline.TRAN_NGUYEN_VONG_MOI_BUOI,
 # TRAN_CLB_THI_MOI_BUOI). Chép lại ở đây vì tệp này phải chạy được một mình
 # trong bản đóng gói của skill; tests/test_so_nhap.py canh hai bên bằng nhau.
+# SF-A3 (ST-A-003): chỉ tiêu một CLB tối đa 2^31 - 1 (số nguyên 32 bit). Lớn hơn là gõ nhầm, và >= 2^63 làm
+# SQLite từ chối ghi ('Python int too large') sau khi xem trước đã báo ổn.
+TRAN_SUC_CHUA = 2 ** 31 - 1
 TRAN_NV_MOI_BUOI = 10
 TRAN_THI_MOI_BUOI = 5
 SO_DONG_CLB_TRONG = 60
@@ -666,7 +669,7 @@ def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHE
                       and f_chi_tieu.is_integer() and f_uu_tien.is_integer())
             n_chi_tieu = int(f_chi_tieu) if hop_le else 0
             n_uu_tien = int(f_uu_tien) if hop_le else 0
-            hop_le = hop_le and n_chi_tieu > 0 and 0 <= n_uu_tien <= n_chi_tieu
+            hop_le = hop_le and 0 < n_chi_tieu <= TRAN_SUC_CHUA and 0 <= n_uu_tien <= n_chi_tieu
         except (ValueError, OverflowError):
             hop_le = False
         if not hop_le:

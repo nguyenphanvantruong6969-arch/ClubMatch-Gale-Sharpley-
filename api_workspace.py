@@ -25,7 +25,7 @@ import workspace
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
-from rbda_priority_pipeline import init_db
+from rbda_priority_pipeline import dung_chia_loai, dung_fa_daa, init_db
 
 
 class CauHinhHong(Exception):
@@ -355,4 +355,27 @@ class WorkspaceMixin:
         with self._khoa_ghi:
             da_luu = cau_hinh_ws.doc_cau_hinh(db, nghiem=True)
             moi = cau_hinh_ws.ghi_cau_hinh(db, cau_hinh_ws.tron_len(da_luu, cfg))
-        return _ok({"slug": slug, "config": moi})
+            canh_bao = self._canh_bao_doi_che_do(db, da_luu["rules"], moi["rules"])
+        return _ok({"slug": slug, "config": moi, "warnings": canh_bao})
+
+    def _canh_bao_doi_che_do(self, db, rules_cu, rules_moi) -> list:
+        """SF-A3 (ST-A-001): vừa BẬT Huy chương / Chia CLB theo loại mà dữ liệu CLB đã nạp còn thiếu thứ chế độ đó
+        cần (Loại, CLB Tự do mỗi buổi, điểm sàn, hồ sơ huy chương — thường vì sổ nạp lúc chế độ khác đã BỎ các
+        cột đó): báo ngay lúc đổi, thay vì để lần chạy xếp mới chặn. Chỉ đọc; chỉ với workspace đang mở."""
+        try:
+            if os.path.realpath(db) != os.path.realpath(self.db_path):
+                return []
+            if dung_fa_daa(rules_moi) and not dung_fa_daa(rules_cu):
+                che_do, san = "huy_chuong", self.get_san_sang_huy_chuong()
+            elif dung_chia_loai(rules_moi) and not dung_chia_loai(rules_cu):
+                che_do, san = "chia_loai", self.get_san_sang_loai()
+            else:
+                return []
+            d = san.get("data") if san.get("ok") else None
+            if not d or d["san_sang"] or not d["clubs"]:
+                return []
+            return [err("che_do_thieu_du_lieu", che_do=che_do, n_thieu_loai=len(d["thieu_loai"]),
+                        n_buoi_thieu_tu_do=len(d["buoi_thieu_tu_do"]), n_thieu_diem_san=len(d["thieu_diem_san"]),
+                        n_huy_chuong_sai=d.get("huy_chuong_sai", 0))]
+        except Exception:
+            return []                  # chỉ là lời báo thêm: không bao giờ làm hỏng việc lưu cấu hình

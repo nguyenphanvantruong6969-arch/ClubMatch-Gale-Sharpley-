@@ -322,6 +322,18 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Tệp dạng dọc cần có cột mã {person_l} và cột mã {slot_sl} (tên cột \"student_id\" và \"club_id\"). Các cột đang có: {fieldnames}",
     "en": "A long-format file needs {person_la} code column and {slot_la} code column (named \"student_id\" and \"club_id\"). Columns found: {fieldnames}"
   },
+  "che_do_thieu_du_lieu": {
+    "vi": "Đã đổi chế độ, nhưng dữ liệu {slot_l} đã nạp còn thiếu thứ chế độ này cần: {n_thieu_loai} {slot_l} chưa có Loại, {n_buoi_thieu_tu_do} buổi chưa có {slot_l} Tự do, {n_thieu_diem_san} {slot_l} Tuyển chọn chưa có điểm sàn, {n_huy_chuong_sai} {person_l} có huy chương chưa hợp lệ. Lần chạy xếp sẽ bị chặn tới khi đủ. Hãy nạp lại sổ có các cột đó (khi đang ở chế độ này) hoặc đặt Loại ở Quản lý.",
+    "en": "The mode was changed, but the stored {slot_l} data is missing what this mode needs: {n_thieu_loai} {slot_l}(s) without a Type, {n_buoi_thieu_tu_do} session(s) without a Free {slot_l}, {n_thieu_diem_san} selective {slot_l}(s) without a floor score, {n_huy_chuong_sai} {person_l}(s) with invalid medals. The allocation run will be blocked until this is complete. Reload a workbook that has those columns (while in this mode) or set the Type in Manage."
+  },
+  "club_capacity_not_integer": {
+    "vi": "Chỉ tiêu và Suất ưu tiên phải là số nguyên (không có phần thập phân hay chữ).",
+    "en": "Quota and reserved seats must be whole numbers (no decimals or letters)."
+  },
+  "capacity_too_large": {
+    "vi": "Chỉ tiêu quá lớn: tối đa {max}.",
+    "en": "Quota is too large: the maximum is {max}."
+  },
   "capacity_must_be_positive": {
     "vi": "Chỉ tiêu phải lớn hơn 0.",
     "en": "Quota must be more than 0."
@@ -379,8 +391,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "Enter the {person_l} ID."
   },
   "cannot_delete_club_referenced": {
-    "vi": "Không xoá được {slot_sl} {club_id} vì {slot_sl} này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước.",
-    "en": "{slot} {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first."
+    "vi": "Không xoá được {slot_sl} {club_id} vì {slot_sl} này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước: xác nhận xoá kèm (nguyện vọng bị bỏ, kết quả hiện tại thành cũ và cần xếp lại, có sao lưu), hoặc nạp lại Dữ liệu từ sổ đã sửa.",
+    "en": "{slot} {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first: confirm the delete-with-data option (the preferences are dropped, current results become outdated and must be rerun, a backup is taken), or reload the data from a corrected workbook."
   },
   "student_not_found": {
     "vi": "Không tìm thấy {person_l} {student_id}.",
@@ -431,8 +443,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "This {slot_l} is already in the preference list."
   },
   "cannot_delete_student_matched": {
-    "vi": "Không xoá được {person_l} {student_id} vì {person_l} này có trong kết quả sắp xếp gần nhất. Hãy xử lý xong rồi sắp xếp lại.",
-    "en": "{person} {student_id} can't be deleted because the {person_l} is in the latest results. Sort that out, then run the allocation again."
+    "vi": "Không xoá được {person_l} {student_id} vì {person_l} này đang có {slot_l} trong kết quả sắp xếp gần nhất. Muốn xoá (ví dụ {person_l} rút), hãy xác nhận xoá kèm kết quả: dòng kết quả của {person_l} này bị bỏ (có sao lưu), kết quả hiện tại thành cũ nên cần xếp lại.",
+    "en": "{person} {student_id} can't be deleted because the {person_l} holds a {slot_l} in the latest results. To delete anyway (for example a withdrawal), confirm the delete-with-results option: this {person_l}'s result rows are removed (a backup is taken) and the current results become outdated, so run the allocation again."
   },
   "stb_redrawn_and_locked": {
     "vi": "Đã bốc thăm cho {n} {person_l} và khoá kết quả bốc thăm.",

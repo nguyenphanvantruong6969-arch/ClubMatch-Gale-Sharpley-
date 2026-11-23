@@ -23,7 +23,6 @@ def test_import_warns_at_import_time(tmp_path, mode, codes, rep):
     assert rows(api.db_path, "SELECT COUNT(*) FROM clubs WHERE loai IS NOT NULL")[0][0] == 0
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-001")
 @pytest.mark.parametrize("rep", [1, 2])
 @pytest.mark.parametrize("mode", ["chia_100", "chi_xep"])
 def test_switch_after_lossy_import_gives_notice_or_stays_runnable(tmp_path, mode, rep):

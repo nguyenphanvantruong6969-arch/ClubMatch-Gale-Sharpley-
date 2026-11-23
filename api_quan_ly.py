@@ -14,6 +14,7 @@ from api_chung import (
     _now,
 )
 import fa_daa
+import math
 import so_nhap
 from api_workspace import CauHinhHong, loi_cau_hinh
 from i18n_errors import err
@@ -318,11 +319,19 @@ class QuanLyMixin:
         gọi thiếu tham số lặng lẽ xoá suất dự trữ, nhãn dự trữ và buổi.
         """
         try:
-            capacity = int(capacity)
+            # SF-A3 (ST-B-006, ST-A-003): chỉ tiêu "1.5" / "abc" / None trước đây rơi vào `except` ngoài cùng thành
+            # "Không lưu được, hãy thử lại" kèm câu Python thô; số thực "1.5" (float) còn bị `int()` cắt lặng lẽ
+            # thành 1. Nay: không phải số nguyên -> mã riêng; quá lớn -> mã riêng.
+            capacity = self._so_nguyen(capacity)
+            if capacity is None or (reserve_capacity is not None
+                                    and self._so_nguyen(reserve_capacity) is None):
+                return _fail(err("club_capacity_not_integer"))
+            if capacity > so_nhap.TRAN_SUC_CHUA:
+                return _fail(err("capacity_too_large", max=so_nhap.TRAN_SUC_CHUA))
             # None (loi goi thieu tham so) truoc day nem AttributeError.
             club_id = (club_id or "").strip()
             if reserve_capacity is not None:
-                reserve_capacity = int(reserve_capacity)
+                reserve_capacity = self._so_nguyen(reserve_capacity)
                 loi = loi_suc_chua(capacity, reserve_capacity)
                 if loi:
                     return _fail(self._loi_suc_chua(loi))
@@ -359,6 +368,21 @@ class QuanLyMixin:
             return _fail(err("error_saving_club", detail=str(e)))
 
     @staticmethod
+    def _so_nguyen(v):
+        """Số nguyên từ int / số thực nguyên / chuỗi ('10', ' 10 ', '10.0'); không thì None (bool, '1.5', NaN...)."""
+        if isinstance(v, bool):
+            return None
+        if isinstance(v, int):
+            return v
+        try:
+            f = float(v.strip() if isinstance(v, str) else v)
+        except (TypeError, ValueError):
+            return None
+        if not math.isfinite(f) or not f.is_integer():
+            return None
+        return int(v.strip()) if isinstance(v, str) and v.strip().lstrip("+-").isdigit() else int(f)
+
+    @staticmethod
     def _loi_suc_chua(loi):
         if loi == "capacity_not_positive":
             return err("capacity_must_be_positive")
@@ -366,10 +390,15 @@ class QuanLyMixin:
             return err("reserve_capacity_negative")
         return err("reserve_capacity_exceeds_capacity")
 
-    def delete_club(self, club_id: str):
+    def delete_club(self, club_id: str, xac_nhan_xoa_kem: bool = False):
         """
         Xoá club — CHẶN nếu đã có preferences/match_results tham chiếu
         tới club này, để tránh mất dữ liệu học sinh đã nộp.
+
+        SF-A3 (ST-B-007): `xac_nhan_xoa_kem=True` (giao diện hỏi hai bước) là lối thoát: sao lưu TRƯỚC, xoá
+        club cùng nguyện vọng / ô thi / điểm / giữ chỗ trỏ tới nó; dòng kết quả của club đó thành "chưa có suất"
+        (club_id rỗng) — không xoá dòng, để em ấy vẫn hiện ở bảng kết quả và biết phải xếp lại. Lịch sử các lần
+        chạy giữ nguyên; kết quả hiện tại thành "cũ".
         """
         try:
             # Xoá CLB kéo theo điểm giáo viên đã chấm và ô tick thi của CLB đó. Còn gì để mất thì sao
@@ -381,8 +410,9 @@ class QuanLyMixin:
                     for ten in ("preferences", "match_results", "club_scores",
                                 "club_test_selection", "wharton_bids")}
             backup_path = None
-            if not (dem["preferences"] or dem["match_results"]) and (
-                    dem["club_scores"] or dem["club_test_selection"] or dem["wharton_bids"]):
+            if (not (dem["preferences"] or dem["match_results"]) and (
+                    dem["club_scores"] or dem["club_test_selection"] or dem["wharton_bids"])) or (
+                    xac_nhan_xoa_kem and (dem["preferences"] or dem["match_results"])):
                 backup_path = self._backup_db()
             with self._ket_noi_ghi() as cur:
                 n_prefs = cur.execute(
@@ -391,11 +421,18 @@ class QuanLyMixin:
                 n_matches = cur.execute(
                     "SELECT COUNT(*) FROM match_results WHERE club_id = ?", (club_id,)
                 ).fetchone()[0]
-                if n_prefs > 0 or n_matches > 0:
+                if (n_prefs > 0 or n_matches > 0) and not xac_nhan_xoa_kem:
                     return _fail(err(
                         "cannot_delete_club_referenced",
                         club_id=club_id, n_prefs=n_prefs, n_matches=n_matches,
                     ))
+                if n_prefs or n_matches:
+                    cur.execute("DELETE FROM preferences WHERE club_id = ?", (club_id,))
+                    cur.execute(
+                        "UPDATE match_results SET club_id = NULL, round_num = NULL, matched_tier = NULL, "
+                        "rank_in_student_pref = NULL WHERE club_id = ?", (club_id,))
+                cur.execute("DELETE FROM ket_qua_truoc WHERE club_id = ?", (club_id,))
+                cur.execute("DELETE FROM fa_gioi_han_gv WHERE club_id = ?", (club_id,))
                 # Con trước, cha sau: khoá ngoại chặn xoá CLB khi còn dòng
                 # đăng ký thi / điểm trỏ tới nó.
                 bi_anh_huong = [r[0] for r in cur.execute(
@@ -414,7 +451,8 @@ class QuanLyMixin:
                     "DELETE FROM club_scores WHERE club_id = ?", (club_id,)).rowcount
                 cur.execute("DELETE FROM clubs WHERE club_id = ?", (club_id,))
             return _ok({"club_id": club_id, "deleted": True, "n_scores_removed": n_scores,
-                        "n_tests_removed": n_tests, "backup_path": backup_path})
+                        "n_tests_removed": n_tests, "n_prefs_removed": n_prefs,
+                        "n_results_cleared": n_matches, "backup_path": backup_path})
         except Exception as e:
             return _fail(err("error_deleting_club", detail=str(e)))
 
@@ -1748,26 +1786,50 @@ class QuanLyMixin:
         except Exception as e:
             return _fail(err("error_resetting_student_entry", detail=str(e)))
 
-    def delete_student(self, student_id: str):
+    @staticmethod
+    def _co_dau_vet_ket_qua(cur, student_id: str) -> bool:
+        """Em có suất thật trong kết quả, hoặc có nguyện vọng mà vẫn có dòng kết quả (SF-A3)."""
+        n_dong, n_suat = cur.execute(
+            "SELECT COUNT(*), COUNT(club_id) FROM match_results WHERE student_id = ?",
+            (student_id,)).fetchone()
+        if n_suat:
+            return True
+        return bool(n_dong) and bool(cur.execute(
+            "SELECT 1 FROM preferences WHERE student_id = ? LIMIT 1", (student_id,)).fetchone())
+
+    def delete_student(self, student_id: str, xac_nhan_xoa_ket_qua: bool = False):
         """
-        Nút 'Xoá học sinh' — xoá hẳn học sinh khỏi hệ thống (dùng khi
-        tạo nhầm mã / trùng học sinh tại kiosk). CHẶN nếu học sinh đã
-        có mặt trong match_results (đã qua lần chạy pipeline gần nhất)
-        để tránh làm lệch thống kê lấp đầy club và mất dấu kiểm toán —
-        phải chạy lại pipeline (hoặc xử lý ở tab Quản lý) trước.
+        Nút 'Xoá học sinh' — xoá hẳn học sinh khỏi hệ thống (tạo nhầm mã,
+        trùng học sinh tại kiosk, hoặc học sinh rút).
+
+        SF-A3 (ST-A-005): chặn khi học sinh có dấu vết THẬT trong kết quả gần
+        nhất: có suất (`club_id` khác rỗng), hoặc có nguyện vọng mà vẫn có
+        dòng kết quả (trượt hết). Dòng kết quả TRỐNG của em KHÔNG nguyện
+        vọng (lần chạy chỉ ghi dòng rỗng) không chặn: trước đây em nhập nhầm
+        sau một lần chạy không bao giờ xoá được, vì lần chạy lại chính là
+        thứ đẻ ra dòng đó.
+
+        `xac_nhan_xoa_ket_qua=True` (giao diện hỏi hai bước): xoá cả dòng kết
+        quả của em, sao lưu TRƯỚC. Lịch sử các lần chạy (`run_history`,
+        `fa_*`) giữ nguyên; kết quả hiện tại thành "cũ" (vân tay dữ liệu đổi)
+        nên màn hình báo phải xếp lại.
         """
         try:
+            with self._ket_noi_doc() as cur:
+                co_dau_vet = self._co_dau_vet_ket_qua(cur, student_id)
+            backup_path = None
+            if co_dau_vet and xac_nhan_xoa_ket_qua:
+                backup_path = self._backup_db()
             with self._ket_noi_ghi() as cur:
                 exists = cur.execute(
                     "SELECT 1 FROM students WHERE student_id = ?", (student_id,)
                 ).fetchone()
                 if not exists:
                     return _fail(err("student_not_found", student_id=student_id))
-                n_matches = cur.execute(
-                    "SELECT COUNT(*) FROM match_results WHERE student_id = ?", (student_id,)
-                ).fetchone()[0]
-                if n_matches > 0:
+                if self._co_dau_vet_ket_qua(cur, student_id) and not xac_nhan_xoa_ket_qua:
                     return _fail(err("cannot_delete_student_matched", student_id=student_id))
+                n_ket_qua = cur.execute(
+                    "DELETE FROM match_results WHERE student_id = ?", (student_id,)).rowcount
                 cu_w = self._doc_diem_wharton_cua_em(cur, student_id)
                 cur.execute("DELETE FROM wharton_bids WHERE student_id = ?", (student_id,))
                 if self._co_diem(cu_w):
@@ -1780,7 +1842,10 @@ class QuanLyMixin:
                 cur.execute("DELETE FROM ket_qua_truoc WHERE student_id = ?", (student_id,))
                 cur.execute("DELETE FROM stb_buoi WHERE student_id = ?", (student_id,))   # FA-SC-L5: không đánh lại số
                 cur.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
-            return _ok({"student_id": student_id, "deleted": True})
+            kq = {"student_id": student_id, "deleted": True}
+            if xac_nhan_xoa_ket_qua:
+                kq.update(n_ket_qua_bo=n_ket_qua, backup_path=backup_path)
+            return _ok(kq)
         except Exception as e:
             return _fail(err("error_deleting_student", detail=str(e)))
 

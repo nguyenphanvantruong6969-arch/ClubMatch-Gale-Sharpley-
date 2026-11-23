@@ -799,7 +799,7 @@ class NhapDuLieuMixin:
                         continue
                     # Cung dung dieu kien nhu create_or_update_club — khong de
                     # duong CSV lot qua thu duong UI da chan.
-                    if loi_suc_chua(capacity, reserve_capacity):
+                    if loi_suc_chua(capacity, reserve_capacity) or capacity > so_nhap.TRAN_SUC_CHUA:
                         canh_bao.append(err("csv_club_row_invalid", line=i,
                                             reason="capacity"))
                         n_bo += 1

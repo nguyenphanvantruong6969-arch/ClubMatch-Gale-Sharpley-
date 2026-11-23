@@ -28,9 +28,12 @@ def _so():
     return openpyxl.load_workbook(SO_150)
 
 
-def _api(tmp_path, name="a"):
+CHI_XEP = {"wharton": False, "fa_daa": False}
+
+
+def _api(tmp_path, name="a", rules=None):
     api = PipelineAPI(str(tmp_path / (name + ".db")), thu_muc_xuat=str(tmp_path / ("x_" + name)))
-    ch.ghi_cau_hinh(api.db_path, {"rules": HUY_CHUONG})
+    ch.ghi_cau_hinh(api.db_path, {"rules": rules or HUY_CHUONG})
     return api
 
 
@@ -167,3 +170,4 @@ def test_so_lon_ba_nghin_hoc_sinh_nap_duoc(tmp_path):
     r = api.import_so_nhap(_b64(wb))
     assert r["ok"], r["errors"][:1]
     assert r["data"]["n_hoc_sinh"] == 5 * len(hang)
+

@@ -278,7 +278,6 @@ def test_big_book_3000_rows(tmp_path, base_bytes, n):
     assert res["ok"], res["errors"]
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-003")
 @pytest.mark.parametrize("name", ["cap_1e300", "cap_huge_int"])
 def test_capacity_beyond_int64_preview_matches_import(tmp_path, base_bytes, name):
     """preview must refuse (or import must succeed) — not preview OK then import `error_importing_clubs_csv` with a raw

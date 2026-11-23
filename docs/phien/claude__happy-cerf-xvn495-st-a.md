@@ -29,6 +29,9 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 
 - A→B (ST-B-009): `vao_che_do_hoc_sinh` with NO account still returns ok, now with `data.can_tao_tai_khoan: true` (and `khoa: false`). In `js/14_giai_trinh.js` `moHs`, when `can_tao_tai_khoan` is true, open the existing create-admin-account flow first and only then (re-)call `vao_che_do_hoc_sinh`; keep the overlay open after F5 (`get_phien_dang_nhap().che_do_hs`). Update the imperative xfail in `tests_stress/b/test_b3_vai_tro.py` and the old `tests/test_giao_dien_gt3_hoc_sinh.py::test_khong_co_tai_khoan_thoat_nhu_cu` as your new flow needs.
 - A→B: new error code `csdl_hong_can_khoi_phuc` (data file corrupt: run/import refuse; startup raises into recovery page). Recovery page now uses `integrity_check`.
+- A→B (ST-B-007/ST-A-005): UI's two-click delete should, when the first call is refused with `cannot_delete_club_referenced` / `cannot_delete_student_matched`, offer a second confirm and then call `delete_club(club_id, true)` / `delete_student(student_id, true)` (returns `backup_path`; results become stale → stale banner). The refusal text now names this way out (keeps "xử lý", "nạp lại", "Dữ liệu" so `test_b2_xoa_clb_dang_co_nguyen_vong_khong_chi_duong` is green once its xfail is removed — A already removed it).
+- A→B (ST-B-006): `create_or_update_club` returns `club_capacity_not_integer` / `capacity_too_large` (no more raw Python text). Show them inline on the capacity field; A removed the xfail of `test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat`, B verifies it passes.
+- A→B (ST-A-001): `update_workspace_config` response now has `data.warnings` (`che_do_thieu_du_lieu` with n_thieu_loai, n_buoi_thieu_tu_do, n_thieu_diem_san, n_huy_chuong_sai, che_do); render it under the mode cards (js/18_cai_dat.js).
 
 ### SF status
 | Bug | Lot | State |
@@ -39,11 +42,11 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 | ST-B-004 (backend) | 1 | fixed (SF-A1: preview warns; import already warned; kiosk confirm = B lot 2) |
 | ST-B-009 (backend lock) | 2 | fixed backend (SF-A2): lock already refuses all but 3 methods when an account exists; no-account entry returns `can_tao_tai_khoan: true`. UI part = B lot 2 |
 | ST-A-006 | 2 | fixed (SF-A2; uses integrity_check, not quick_check — quick_check missed the repro) |
-| ST-A-005 + ST-B-007 | 3 | open |
-| ST-A-003 | 3 | open |
-| ST-A-007 | 3 | open |
-| ST-B-006 (validation code) | 3 | open |
-| ST-A-001 | 3 | open |
+| ST-A-005 + ST-B-007 | 3 | fixed backend (SF-A3): `delete_student(id, xac_nhan_xoa_ket_qua)`, `delete_club(id, xac_nhan_xoa_kem)`; UI confirm = B lot 3 |
+| ST-A-003 | 3 | fixed (SF-A3) |
+| ST-A-007 | 3 | fixed (SF-A3) |
+| ST-B-006 (validation code) | 3 | fixed backend (SF-A3): codes `club_capacity_not_integer`, `capacity_too_large`; inline field error = B lot 2 |
+| ST-A-001 | 3 | fixed (SF-A3): `update_workspace_config` data.warnings; B renders under mode cards |
 | ST-A-008 | 4 | open |
 
 ## Needs Truong

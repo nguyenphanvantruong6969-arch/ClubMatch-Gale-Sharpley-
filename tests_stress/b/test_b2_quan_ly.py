@@ -68,7 +68,6 @@ def test_b2_form_clb_gia_tri_bien(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-006")
 def test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat(mo):
     ui = mo()
     chon_cach(ui, "huy_chuong")
@@ -107,7 +106,6 @@ def test_b2_xoa_clb_khong_co_nguyen_vong_hai_buoc_roi_chay_lai(mo):
     ui.kiem_loi()
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-007")
 def test_b2_xoa_clb_dang_co_nguyen_vong_khong_chi_duong(mo):
     ui = mo()
     p = ui.page

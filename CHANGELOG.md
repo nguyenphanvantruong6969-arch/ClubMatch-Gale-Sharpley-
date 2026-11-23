@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A3: xoá có xác nhận, chỉ tiêu, đổi chế độ, biểu mẫu (ST-A-005, ST-B-007, ST-A-003, ST-B-006, ST-A-001, ST-A-007)
+
+- `api_quan_ly.py`: `delete_student(student_id, xac_nhan_xoa_ket_qua=False)` chỉ chặn khi em có suất thật hoặc có nguyện vọng mà vẫn có dòng kết quả (em nhập nhầm không nguyện vọng xoá được); xác nhận thì sao lưu rồi xoá kèm dòng kết quả (lịch sử `run_history`/`fa_*` giữ nguyên, kết quả hiện tại thành cũ). `delete_club(club_id, xac_nhan_xoa_kem=False)`: xác nhận thì sao lưu, xoá nguyện vọng của CLB, dòng kết quả thành "chưa có suất". Mặc định chặn như cũ; thông báo `cannot_delete_*` nay nói rõ lối thoát. `create_or_update_club`: chỉ tiêu không nguyên (`club_capacity_not_integer`, thay cho "Hãy thử lại" + câu Python thô; số thực 1.5 không còn bị cắt thành 1) hoặc quá lớn (`capacity_too_large`).
+- `so_nhap.py` (`TRAN_SUC_CHUA = 2**31-1`) + `api_nhap.py` (`import_clubs_csv`): chỉ tiêu vượt trần bị `so_nhap_chi_tieu_sai` ở cả xem trước lẫn nạp (trước: xem trước ổn, nạp vỡ `error_importing_clubs_csv`).
+- `api_workspace.py` (`update_workspace_config`, `_canh_bao_doi_che_do`): data có thêm `warnings`; vừa bật Huy chương / Chia CLB theo loại mà dữ liệu CLB còn thiếu (Loại, CLB Tự do, điểm sàn, huy chương) thì báo `che_do_thieu_du_lieu`.
+- `api_forms.py`, `api_forms_nap.py`: gọi `forms_dot.nap_mau_forms()` trước mọi `import` mô-đun của `mau_forms_thi_clb` (ST-A-007).
+- `api_chung.py` (`kiem_toan_ven_db`): bỏ qua dòng vi phạm CHECK / NOT NULL của integrity_check (dữ liệu cũ, di trú cố ý không đụng) — chỉ hỏng cấu trúc mới là "hỏng" (sửa lỗi của SF-A2 làm vỡ `test_run_pipeline_reports_validation_errors`).
+- `i18n_errors.py` + `i18n_loi.js`: `che_do_thieu_du_lieu`, `club_capacity_not_integer`, `capacity_too_large`; câu của hai mã `cannot_delete_*` sửa.
+- Test mới: `tests/test_sf_a_3.py` (25 ca; chỉ tiêu, xoá em/CLB, đổi chế độ, biểu mẫu); các ca chỉ tiêu / xoá nằm trong `tests/test_sf_a_3.py`. Bỏ `xfail` ST-A-001, 003, 005, ST-B-006, ST-B-007.
+
 ## 2026-11-23 — SF-A2: an toàn (ST-A-006 CSDL hỏng, ST-B-009 khoá chế độ học sinh ở backend)
 
 - `api_chung.py` (`kiem_toan_ven_db`): kiểm `PRAGMA integrity_check(1)` (không dùng `quick_check`: đo trên 8 ca lật byte thì 3 ca "row N missing from index" lọt quick_check). `api.py`: `PipelineAPI.__init__` từ chối mở CSDL hỏng (ném `sqlite3.DatabaseError` → `main.py` vào trang phục hồi); `run_pipeline` chặn ở Bước 00 bằng mã `csdl_hong_can_khoi_phuc` TRƯỚC sao lưu; `_backup_db` không chép trang hỏng (không đẩy bản tốt ra khỏi vòng 10 bản). `api_nhap.py` (`import_so_nhap`): cùng mã, trước mọi đọc/ghi. `recovery.py` (`_quick_check_ok`): dùng `integrity_check` để trang phục hồi không coi tệp hỏng chỉ mục là đọc được.

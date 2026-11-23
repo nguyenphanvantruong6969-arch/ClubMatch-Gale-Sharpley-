@@ -321,7 +321,6 @@ def test_random_30_step_timeline(tmp_path, seed):
     assert _integrity(a.db_path) == "ok"
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-005")
 @pytest.mark.parametrize("rep", [1, 2])
 def test_student_created_by_mistake_after_a_run_can_be_removed(tmp_path, rep):
     """A kiosk typo id created AFTER the first run: once a rerun gives it a (blank) match row, delete_student refuses

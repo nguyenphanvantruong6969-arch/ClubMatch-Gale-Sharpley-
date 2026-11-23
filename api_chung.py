@@ -79,7 +79,7 @@ def kiem_toan_ven_db(duong_dan: str):
     try:
         conn = sqlite3.connect(duong_dan, timeout=5)
         try:
-            dong = conn.execute("PRAGMA integrity_check(1)").fetchone()
+            cac_dong = conn.execute("PRAGMA integrity_check(100)").fetchall()
         finally:
             conn.close()
     except sqlite3.OperationalError as e:
@@ -88,9 +88,15 @@ def kiem_toan_ven_db(duong_dan: str):
         return str(e).splitlines()[0][:120]
     except sqlite3.DatabaseError as e:
         return str(e).splitlines()[0][:120]
-    if dong and dong[0] == "ok":
+    # integrity_check còn báo dòng vi phạm CHECK / NOT NULL — dữ liệu CŨ có sẵn mà di trú cố ý không đụng
+    # tới (xem test_run_pipeline_reports_validation_errors): đó là lỗi dữ liệu, bước validate lo, KHÔNG phải
+    # trang hỏng. Chỉ các dòng còn lại mới là hỏng cấu trúc.
+    hong = [str(r[0]) for r in cac_dong
+            if r and r[0] != "ok"
+            and not str(r[0]).startswith(("CHECK constraint failed", "NULL value in"))]
+    if not hong:
         return None
-    return str(dong[0] if dong else "?").splitlines()[0][:120]
+    return hong[0].splitlines()[0][:120]
 
 
 def _fail_co_buoc(steps, errors):
