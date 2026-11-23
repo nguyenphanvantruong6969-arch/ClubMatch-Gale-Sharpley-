@@ -84,7 +84,8 @@ def check_contract(res, where=""):
         for lang in ("vi", "en"):
             txt = format_message(e["code"], e["params"], lang)
             assert isinstance(txt, str) and txt, (where, e)
-            assert "{" not in txt or "}" not in txt, (where, "unfilled placeholder in %s: %r" % (lang, txt))
+            import re
+            assert not re.search(r"\{[A-Za-z_][A-Za-z_0-9]*\}", txt), (where, "unfilled placeholder in %s: %r" % (lang, txt))
     return entries
 
 

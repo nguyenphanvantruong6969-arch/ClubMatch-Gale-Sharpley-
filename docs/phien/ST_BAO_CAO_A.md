@@ -5,7 +5,7 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 ## Summary (severity counts) — updated at end of each lot
 | S1 | S2 | S3 | S4 | total |
 |---|---|---|---|---|
-| 0 | 3 | 2 | 0 | 5 |
+| 0 | 3 | 3 | 0 | 6 |
 
 ## Lot status
 | Lot | State | Tests |
