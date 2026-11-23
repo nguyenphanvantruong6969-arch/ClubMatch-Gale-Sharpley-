@@ -58,7 +58,7 @@ def test_st_b_011_zip_hong_noi_dung_nguyen_nhan(trang, api, monkeypatch):
     page.evaluate("""() => wsNhapZip({files: [new File([new Uint8Array(4)], 'hong.zip')], value: ''})""")
     page.wait_for_selector("#toastStack .toast, #toastStack > *")
     hien = page.evaluate("document.getElementById('toastStack').innerText")
-    assert "zip" in hien.lower() and "các ô đã điền" not in hien, hien
+    assert ("nén" in hien.lower() or "zip" in hien.lower()) and "các ô đã điền" not in hien, hien
     assert not loi, loi
 
 

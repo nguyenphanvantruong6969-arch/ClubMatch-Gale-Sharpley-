@@ -824,7 +824,7 @@
       ws_nhan_ban_kem: "Kèm dữ liệu",
       ws_khong_xoa_dang_mo: "Đang mở không gian làm việc này nên chưa xoá được. Hãy mở không gian làm việc khác trước.",
       ws_chi_nhan_zip: "Chỉ nhận tệp nén do chương trình này xuất ra.",
-      ws_nhap_zip_loi: "Không đọc được tệp zip: tệp bị hỏng hoặc không phải bản xuất của chương trình này. Chưa tạo không gian làm việc nào.",
+      ws_nhap_zip_loi: "Không đọc được tệp nén: tệp bị hỏng hoặc không phải bản xuất của chương trình này. Chưa tạo không gian làm việc nào.",
       ws_da_mo: "Đã mở không gian làm việc \"{ten}\".",
       ws_da_tao: "Đã tạo không gian làm việc \"{ten}\".",
       ws_da_doi_ten: "Đã đổi tên thành \"{ten}\".",
