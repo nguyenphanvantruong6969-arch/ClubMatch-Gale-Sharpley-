@@ -1,27 +1,27 @@
 # Branch handoff: claude/happy-cerf-xvn495-st-a
 
 ## Feature / goal
-ST-A backend stress test (protocol `docs/phien/ST_GIAO_THUC.md`): find every bug in algorithm, import, pipeline/DB,
-API and roles. NEVER edit production code. Output: `tests_stress/a/`, `docs/phien/ST_BAO_CAO_A.md`, this file.
+SF-A (fix coder A, backend): fix the ST-A / ST-B stress-test bugs owned by A, per `docs/phien/SF_GIAO_THUC.md`. Item code SF, commits SF-A1..A4. Branch `claude/happy-cerf-xvn495-st-a`.
 
 ## Plan
-- [x] A1 Algorithm properties + modes × chia_loai on the shared Sổ
-- [x] A2 Import fuzzing
-- [x] A3 Pipeline and DB
-- [ ] A4 API surface, roles, exports, timing
+- [x] §2 start (merge st-b, venv, Asks/status)
+- [x] Lot 1 SF-A1 (5868c7e), lot 2 SF-A2 (a29c97d), lot 3 SF-A3 (a5beec0), lot 4 SF-A4 (06ca113)
+- [x] CI fixes (0913c56, 2c3e2ef, eba0a54); §4 holds, CI green on eba0a54; SF-A DONE written
+- [x] §5 review of B diff, round 1 (in this file, b0fff37)
+- [ ] §5 round 2 after B finishes its 3 open UI items; B merges A, opens ONE PR into `claude/happy-cerf-xvn495` titled `SF: fix stress-test bugs`
 
 ## Current state
-- SF-A lots 1-4 pushed (SF-A1 5868c7e, SF-A2 a29c97d, SF-A3 a5beec0, SF-A4 06ca113) + CI fixes (0913c56 i18n style/ws_nhan snapshot; 2c3e2ef merge of st-b + ruff; eba0a54 integrity check timeout 0.2 s for test_a13_11_stress).
-- Verified locally on merged head: kiem_nhanh 7/7, `ruff check .` clean, byte-identical 3 datasets x 20 seeds (60 cases), `pytest tests_stress/a`: 1482 passed, 2 skipped, 2 xfailed (= ST-A-008, Needs Truong); `pytest tests_stress/b`: 60 passed, 1 flaky (B4 keyboard export, passes alone), 0 xfailed.
-- CI run of eba0a54 (full matrix, coverage) is GREEN.
-
-**SF-A DONE eba0a54** (every bug fixed except ST-A-008 = Needs Truong; §4 holds on the merged head at that sha).
-- After CI green: write `SF-A DONE <sha>` below, then review B's diff (`git diff 78bf5f8..origin/claude/happy-cerf-xvn495-st-b -- . ':!tests_stress'`) against invariants 1-8; findings -> B's Asks (max 2 rounds).
+- Done: all of A's lots; every owned bug fixed except ST-A-008 (Needs Truong). CI full matrix green on eba0a54; later commits (b0fff37 head) only touch docs, CI not rerun on them.
+- Verified on merged head: kiem_nhanh 7/7, ruff clean, byte-identical 3 datasets x 20 seeds, tests_stress/a 1482 pass / 2 xfail (ST-A-008), tests_stress/b 60 pass (1 load-flaky, passes alone).
+- In progress: nothing on A's side. Waiting on B: ST-B-007 confirm UI, ST-A-001 warning UI, inline code for ST-B-006 (see "Review of B").
+- Tests: `.venv/bin/python -m pytest -q --tb=line tests/test_sf_a_*.py`; stress folders must be run separately (`tests_stress/a`, `tests_stress/b`: conftest clash).
 
 ## Decisions and gotchas
-- Mode mapping (rules): chi_xep = wharton False; chia_100 = wharton True; huy_chuong = wharton True + fa_daa True;
-  chia_loai separate bool. Set via `cau_hinh_ws.ghi_cau_hinh(db, {"rules": {...}})`.
-- Shared Sổ must be imported in Huy chương mode.
+- Used `PRAGMA integrity_check` (not quick_check: quick_check missed the ST-A-006 repro); filter CHECK/NOT NULL lines (old data); wait only 0.2 s on lock (test_a13_11_stress needs csdl_dang_ban < 7 s).
+- ST-B-009 backend: no-account `vao_che_do_hoc_sinh` stays ok with `can_tao_tai_khoan: true` (a hard refusal broke an old UI test).
+- Deletes: default refuse as before; confirm flags `xac_nhan_xoa_ket_qua` / `xac_nhan_xoa_kem`; no schema change.
+- New i18n text must pass `tests/test_van_phong_tu_nhien.py` (no raw `{detail}`, no ALL-CAPS) and intended text changes go in `tests/test_ws_nhan.py` SUA_CO_Y / MA_MOI_SAU_ANH_CHUP.
+- CI cancels the previous run on every push; full matrix ~10-12 min. Do not run heavy local tests concurrently with stress runs (flaky UI timing).
 
 ## SF (Coder A) — asks and status
 Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged origin/...-st-b at start.
@@ -67,13 +67,18 @@ Round 2: pending B's three open items; A answers any new Ask on its next resume.
 - `tests/test_xp1_*` PDF text tests need `pypdf`, which is not in `requirements-dev.txt`, so they skip locally and (apparently) on CI: the visible-text equivalence of the new string cells is covered only by `tests/test_sf_a_4.py` (cell text) and page count (1589 before/after at 800). A reviewer with `pypdf` may want to diff text of old/new PDFs.
 
 ## Next steps
-1. A1 → A4 in order, commit "ST-A<n>: ..." and push after each.
+1. Fetch; read B's handoff Asks; answer any new Ask to A (round 2 of §5 review, max 2).
+2. If Truong decides ST-A-008: options in "Needs Truong" (per-class split + progress, or a PDF-merge library).
+3. B merges A first, CI green, B opens the single PR; Truong merges. Then ST2 round (`docs/phien/ST2_GIAO_THUC.md`).
 
 ## Files touched
-- tests_stress/a/*, docs/phien/ST_BAO_CAO_A.md
+- Production: api.py, api_chung.py, api_nhap.py, api_quan_ly.py, api_tai_khoan.py, api_workspace.py, api_forms.py, api_forms_nap.py, cau_hinh_ws.py, so_nhap.py, recovery.py, xuat_pdf.py, i18n_errors.py (+ i18n_loi.js), pyproject.toml
+- Tests: tests/test_sf_a_1..4.py, test_gt_tich_hop.py, test_ws_nhan.py; xfail markers removed in tests_stress/
+- Docs: CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, CLAUDE_CHI_TIET.md (test count), ST_BAO_CAO_A.md (fixed shas)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-23 | Sonnet | started ST-A, read protocol | |
 | 2026-11-23 | Sonnet | A1-A4 done, 8 bugs logged (ST_BAO_CAO_A.md) | |
+| 2026-11-23 | Sonnet | SF-A lots 1-4, CI fixes, SF-A DONE eba0a54, review of B round 1 | context ~400k, handoff |
