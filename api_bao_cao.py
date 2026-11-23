@@ -569,7 +569,8 @@ class BaoCaoMixin:
                               JOIN students s ON s.student_id = p.student_id
                              WHERE p.club_id = c.club_id
                                AND s.reserve_group IS NOT NULL
-                               AND s.reserve_group = c.reserve_group
+                               AND instr('|' || c.reserve_group || '|',
+                                         '|' || s.reserve_group || '|') > 0
                            ) AS nhom_dang_ky,
                            (SELECT COUNT(*)
                               FROM match_results m

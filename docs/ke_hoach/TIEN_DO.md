@@ -251,3 +251,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | MT2 (L1–L4) | xong, chờ checker L4 | 2026-11-22 | xem các dòng MT2-L1..L4 | tests/test_mt2_*.py, tests/test_giao_dien_mt2.py | số đo mô phỏng; chờ Truong duyệt |
 | MT2-FIX-R1 (nạp/xuất cột Loại khi chia loại bật) | xong, chờ checker | 2026-11-22 | api_nhap.py, api_xuat.py, CHANGELOG.md | tests/test_mt2_r1_nap_loai.py | kiem_nhanh 7/7; trùng khít 3×20 |
 | MT2-CI1 (vùng bấm 44 px nút tài khoản, nguyên nhân từ UX3) | xong, chờ CI | 2026-11-22 | style.css, CHANGELOG.md | tests/test_giao_dien_ux2_nut.py (đạt) | 79 ca giao diện đạt |
+| A5-L1 (lõi nhóm đồng hạng a\|b) | xong, chờ checker | 2026-11-23 | rbda_priority_pipeline.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_a5_nhom_dong_hang.py | kiem_nhanh 7/7; trùng khít 3×20 |
+| A5-L2 (backend nhóm đồng hạng a\|b) | xong, chờ checker | 2026-11-23 | api_nhap.py, api_quan_ly.py, api_bao_cao.py, api.py, cau_hinh_ws.py, i18n_errors.py, i18n_loi.js | tests/test_a5_nhom_dong_hang_backend.py | kiem_nhanh 7/7; trùng khít 3×20 |
+| A5-L3 (giao diện nhóm đồng hạng a\|b) | xong, chờ checker | 2026-11-23 | js/075_workspace.js, index.html, i18n.js, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_a5_giao_dien.py | Chromium thật 10/10; kiem_nhanh 7/7 |
+| A5-L4 (tài liệu nhóm đồng hạng a\|b + aria-describedby) | xong, chờ checker | 2026-11-23 | HUONG_DAN_SU_DUNG.md, docs/ke_hoach/SO_DANG_KY_33_MUC.md, index.html, CHANGELOG.md | tests/test_a5_giao_dien.py (+1 ca) | 112 ca tài liệu/giao diện đạt |

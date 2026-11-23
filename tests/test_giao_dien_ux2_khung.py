@@ -152,7 +152,8 @@ def test_khung_khong_lam_nhay_bo_cuc_120_hs(api, mo):
         const r = t.querySelector('thead').getBoundingClientRect();
         const h = document.querySelector('#adminStudentTableBody tr');
         /* offsetTop / offsetHeight: bố cục THẬT, không dính transform của hiệu ứng trượt vào (L8) */
-        return { th, top: Math.round(r.top), hangDau: h ? h.offsetTop : null, cao: h ? h.offsetHeight : null }; }"""
+        /* top tính theo TÀI LIỆU (cộng scrollY): giấu hàng khung làm trang ngắn lại và trình duyệt kéo cuộn về, nên toạ độ so với khung nhìn đổi dù bố cục không đổi */
+        return { th, top: Math.round(r.top + window.scrollY), hangDau: h ? h.offsetTop : null, cao: h ? h.offsetHeight : null }; }"""
     _vao_hs(page)
     page.wait_for_function(SO_KHUNG + " > 0", timeout=3000)
     giua = page.evaluate(do)

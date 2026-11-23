@@ -21,6 +21,7 @@ from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
 from rbda_priority_pipeline import (
     LOP_TOI_DA,
+    tach_nhom_clb,
     chuan_hoa_lop,
     BUOI_MAC_DINH,
     WHARTON_NGAN_SACH,
@@ -346,7 +347,7 @@ class QuanLyMixin:
                 if reserve_group is None:
                     reserve_group_value = cu[2] if cu else None
                 else:
-                    reserve_group_value = self.chuan_hoa_nhom_du_tru(reserve_group) or None
+                    reserve_group_value = self.chuan_hoa_o_nhom_clb(reserve_group) or None
                 if buoi is None:
                     buoi_value = cu[3] if cu else None
                 else:
@@ -427,7 +428,7 @@ class QuanLyMixin:
                     "UNION "
                     "SELECT DISTINCT reserve_group FROM students WHERE reserve_group IS NOT NULL"
                 ).fetchall()
-            return _ok(sorted(r[0] for r in rows if r[0]))
+            return _ok(sorted({p for r in rows if r[0] for p in tach_nhom_clb(r[0])}))
         except Exception as e:
             return _fail(err("error_reading_reserve_groups", detail=str(e)))
 
@@ -440,6 +441,9 @@ class QuanLyMixin:
                 ).fetchone()
                 if not exists:
                     return _fail(err("student_not_found", student_id=student_id))
+                if self.o_nhom_hs_co_gach(reserve_group):
+                    return _fail(err("a5_nhom_hs_co_gach", student_id=student_id,
+                                     reserve_group=reserve_group))
                 value = self.chuan_hoa_nhom_du_tru(reserve_group) or None
                 cur.execute(
                     "UPDATE students SET reserve_group = ? WHERE student_id = ?",
@@ -454,6 +458,9 @@ class QuanLyMixin:
         try:
             if not isinstance(student_ids, list) or not student_ids:
                 return _fail(err("student_ids_must_be_nonempty_list"))
+            if self.o_nhom_hs_co_gach(reserve_group):
+                # A5: học sinh chỉ có MỘT nhóm; từ chối trước mọi lần ghi (không lưu `a_b`).
+                return _fail(err("a5_nhom_hs_co_gach_hang_loat", reserve_group=reserve_group))
             value = self.chuan_hoa_nhom_du_tru(reserve_group) or None
             with self._ket_noi_ghi() as cur:
                 existing_ids = {

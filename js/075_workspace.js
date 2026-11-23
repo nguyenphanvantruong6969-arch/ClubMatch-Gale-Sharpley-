@@ -489,6 +489,40 @@ function wsChoPhepWharton(w) {
   return w.priority !== "tier" && w.scoreScope === "per_slot";
 }
 
+/* A5: một mục của danh sách thứ hạng nhóm có thể là "a|b" = các nhóm CÙNG MỘT hạng. Khoá so
+   sánh giống xay_tier_rank / cau_hinh_ws.py: bỏ dấu, đ→d, không phân biệt hoa thường, mọi
+   khoảng trắng (kể cả U+00A0) thu về một dấu cách. */
+function wsKhoaNhom(s) {
+  return String(s).replace(/đ/g, "d").replace(/Đ/g, "D").normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/\s+/).filter(Boolean).join(" ");
+}
+
+/* Các nhóm trong một mục: "a | b" -> ["a", "b"]. Mục không có "|" -> [mục]. */
+function wsNhomTrongMuc(muc) {
+  return String(muc).split("|").map((x) => x.trim());
+}
+
+/* Lỗi riêng của dấu "|" (rỗng, một nhóm ở hai hạng / hai lần trong một mục): trả mã khoá i18n hoặc "".
+   Danh sách không có "|" nào thì KHÔNG kiểm gì thêm — đúng như trước (cau_hinh_ws.py cùng luật). */
+function wsLoiGachNhom(tiers) {
+  if (!tiers.some((m) => m.includes("|"))) return "";
+  const da = new Set();
+  for (const muc of tiers) {
+    for (const p of wsNhomTrongMuc(muc)) {
+      if (!p) return "ws_v_tiers_rong";
+      const k = wsKhoaNhom(p);
+      if (da.has(k)) return "ws_v_tiers_hang";
+      da.add(k);
+    }
+  }
+  return "";
+}
+
+/* Hiển thị hạng nhóm: "a|b" -> "a = b" (các nhóm đồng hạng), nối các hạng bằng " › ". */
+function wsHienThiTiers(tiers) {
+  return tiers.map((m) => wsNhomTrongMuc(m).filter(Boolean).join(" = ")).join(" › ");
+}
+
 function wsTiers(w) {
   return wsDungThuTuNhom(w)
     ? w.tiersText.split("\n").map((s) => s.trim()).filter(Boolean) : [];
@@ -524,6 +558,10 @@ function wsLoiBuoc(w, buoc) {
     }
     const tiers = wsTiers(w);
     if (new Set(tiers).size !== tiers.length) loi.push(t("ws_v_tiers"));
+    else {
+      const loiGach = wsLoiGachNhom(tiers);
+      if (loiGach) loi.push(t(loiGach));
+    }
   }
   return loi;
 }
@@ -773,7 +811,7 @@ function wsBuoc3(hop) {
     wsTruong("wzPriority", "ws_r_priority", oPriority),
     wsTruong("wzTierMode", "ws_r_tier_mode", oTierMode),
     wsTruong("wzScoreScope", "ws_r_score_scope", oScope),
-    wsTruong("wzTiers", "ws_r_tiers", oTiers, t("ws_r_tiers_chi_strict")),
+    wsTruong("wzTiers", "ws_r_tiers", oTiers, t("ws_r_tiers_chi_strict") + " " + t("a5_tiers_goi_y")),
   );
 }
 
@@ -796,7 +834,7 @@ function wsBuoc4(hop) {
     hang(t("ws_r_score_scope"), t(r.score_scope === "per_person" ? "ws_r_ss_per_person" : "ws_r_ss_per_slot"), "rvScoreScope"),
     hang(t("ws_r_wharton"), t(r.wharton ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvWharton"),
     hang(t("ws_r_fa_daa"), t(r.fa_daa ? "ws_r_wharton_bat" : "ws_r_wharton_tat"), "rvFaDaa"),
-    ...(r.tiers.length ? [hang(t("ws_r_tiers"), r.tiers.join(" › "), "rvTiers")] : []),
+    ...(r.tiers.length ? [hang(t("ws_r_tiers"), wsHienThiTiers(r.tiers), "rvTiers")] : []),
   ];
   hop.append(
     wsEl("p", { class: "hint-text", text: t("ws_wz_xem_lai_hint") }),

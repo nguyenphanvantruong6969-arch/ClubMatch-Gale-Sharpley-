@@ -27,6 +27,7 @@
 15. [Xếp theo loại CLB và huy chương (tuỳ chọn)](#15-xếp-theo-loại-clb-và-huy-chương-tuỳ-chọn)
 16. [Chuẩn bị đợt](#16-chuẩn-bị-đợt)
 17. [Chia CLB theo loại (tuỳ chọn)](#17-chia-clb-theo-loại-tuỳ-chọn)
+18. [Hai nhóm ưu tiên đồng hạng: dấu `|` (tuỳ chọn)](#18-hai-nhóm-ưu-tiên-đồng-hạng-dấu--tuỳ-chọn)
 
 ---
 
@@ -1277,6 +1278,50 @@ CLB Tuyển chọn thiếu điểm sàn hoặc chưa có em nào có điểm thi
   nên trong cùng một CLB Giới hạn có thể so điểm của hai quỹ. Vì CLB Giới hạn không xét điểm thi, nên tránh cho học sinh tick thi CLB Giới hạn.
 - Sổ nhập CLB và các tệp CSV **không đổi cột**: cột loại và điểm sàn đã có sẵn từ mục 15.
 - Kiểm chứng tính ổn định của chế độ này mới đo trên dữ liệu **mô phỏng** (không phải khảo sát thật).
+
+
+## 18. Hai nhóm ưu tiên đồng hạng: dấu `|` (tuỳ chọn)
+
+Mỗi học sinh chỉ có **một** nhóm ưu tiên (một nhãn). Dấu `|` không đặt ở học sinh mà ở hai nơi khác, để nói "hai nhóm này được đối xử như nhau".
+Không dùng dấu `|` thì phần mềm chạy y hệt như trước, kết quả không đổi một dòng nào. Sổ nhập CLB và các tệp CSV **không đổi cột**.
+
+### Cách 1 — Thứ hạng nhóm nghiêm ngặt: `a|b` là cùng một hạng
+
+Dùng khi xếp cứng theo nhóm (Cài đặt → cách xếp "Thứ hạng nhóm nghiêm ngặt" hoặc ưu tiên "Chỉ theo nhóm"; danh sách ở trình hướng dẫn workspace, bước 3, hoặc thẻ Tiêu chí).
+Mỗi dòng là một hạng, hạng đầu tốt nhất. Viết hai nhóm chung một dòng, ngăn bằng `|`:
+
+```
+Khối 12|Học sinh giỏi
+Khối 11
+```
+
+- Hai nhóm ở dòng 1 **cùng một hạng**, cùng đứng trước Khối 11 và trước em không có nhóm.
+- Trong hạng đó thứ tự vẫn là: đã được chấm điểm trước, điểm giảm dần, rồi số bốc thăm. Nhóm nào không được xếp trước nhóm kia.
+- Ở bước xem lại, hạng này hiện là `Khối 12 = Học sinh giỏi › Khối 11`.
+- Một nhóm chỉ được xuất hiện **một lần** trong cả danh sách. Nhóm ở hai hạng, hoặc dòng có phần trống như `a||b`, bị chặn (báo ngay ở màn hình và ở backend).
+
+### Cách 2 — Suất dự trữ: ô "Nhóm ưu tiên" của CLB ghi `a|b`
+
+Dùng khi CLB giữ suất ưu tiên (cột *Suất ưu tiên*). Ghi hai nhãn ngăn bằng `|` ở cột *Nhóm ưu tiên* của CLB, ví dụ `a|b`:
+học sinh có nhãn `a` **hoặc** `b` đủ điều kiện dùng suất ưu tiên của CLB đó; nhãn khác thì không.
+
+> **Lưu ý quan trọng: nhóm điểm cao hơn có thể lấy hết suất dự trữ.** Hai nhóm không chia đều suất mà **cạnh tranh chung** trong các suất đó, theo thứ tự ưu tiên của CLB
+> (điểm, rồi bốc thăm). Nếu nhóm `a` điểm cao hơn nhóm `b`, nhóm `a` có thể lấy hết suất, nhóm `b` không có suất nào. Phần mềm **không** có chế độ chia đều giữa hai nhóm.
+
+- Dùng cả hai cách trong một lần chạy thì suất dự trữ **không có tác dụng**: xếp nghiêm ngặt theo nhóm bỏ qua suất dự trữ (không báo lỗi). Hai cách chỉ dùng chung cách viết `|`.
+- Nhãn được chuẩn hoá từng phần (bỏ dấu, chữ thường): `Chính sách|Khối 10` thành `chinh_sach|khoi_10`, sắp xếp và bỏ trùng.
+- CLB ghi `a|b` được tính là đang giữ chỗ cho nhóm khác: thẻ mục tiêu "Dành chỗ cho một nhóm" không còn khớp, nên phần mềm không còn nhận ra thẻ đó là thẻ đang áp dụng.
+- Báo cáo suất dự trữ và cảnh báo dữ liệu hiểu `a|b`: nhãn `a` của học sinh khớp CLB `a|b`, không bị báo "không CLB nào dùng".
+
+### Học sinh ghi dấu `|` thì sao
+
+Ô nhóm của học sinh có `|` là **lỗi** (mã `a5_nhom_hs_co_gach`), không bao giờ được lưu thầm thành `a_b`. Khi nạp tệp, học sinh đó bị bỏ qua (không tạo, không lưu nguyện vọng) kèm cảnh báo; gán tay hoặc gán hàng loạt cũng bị từ chối. Sửa thành đúng một nhóm rồi nạp lại.
+
+### Giới hạn đã biết
+
+- Chỉ có thể **gộp** nhóm; chia đều suất giữa các nhóm ngoài phạm vi.
+- Chế độ huy chương và chia theo loại (mục 15, 17) không đọc nhãn nhóm nên không đổi.
+- Kiểm chứng tính ổn định của hàm chọn CLB với nhiều nhãn mới đo trên dữ liệu **mô phỏng** (250 ca ngẫu nhiên), không phải khảo sát thật.
 
 ---
 

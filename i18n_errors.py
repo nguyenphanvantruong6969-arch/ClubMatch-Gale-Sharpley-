@@ -1619,6 +1619,16 @@ MESSAGES = {
         "en": "{n} {person_pl} have no valid medals. The loaded book has commitment points or misplaced medals, not individual mistakes. Load the book again with a Medal column, or go back to Divide 100 points in Settings.",
     },
     # === end UX1B (L5c) ===
+    # === A5 ===
+    "a5_nhom_hs_co_gach": {
+        "vi": "Nhóm ưu tiên “{reserve_group}” của {person_l} {student_id} có dấu |. Mỗi {person_l} chỉ có một nhóm; dấu | chỉ dùng ở ô nhóm của {slot_l} hoặc ở danh sách thứ hạng nhóm. Sửa lại thành một nhóm.",
+        "en": "The priority group “{reserve_group}” of {person_l} {student_id} contains “|”. Each {person_l} has exactly one group; “|” is only for a {slot_l}'s group cell or the group ranking list. Fix it to a single group.",
+    },
+    "a5_nhom_hs_co_gach_hang_loat": {
+        "vi": "Nhóm ưu tiên “{reserve_group}” có dấu |. Mỗi {person_l} chỉ có một nhóm; dấu | chỉ dùng ở ô nhóm của {slot_l} hoặc ở danh sách thứ hạng nhóm. Chưa gán cho ai; sửa lại thành một nhóm.",
+        "en": "The priority group “{reserve_group}” contains “|”. Each {person_l} has exactly one group; “|” is only for a {slot_l}'s group cell or the group ranking list. Nobody was assigned; fix it to a single group.",
+    },
+    # === end A5 ===
     # === MT1 (L2) ===
     "mt_muc_tieu_la": {
         "vi": "Không có mục tiêu này. Hãy chọn một trong ba thẻ.",

@@ -1,5 +1,53 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-CIFIX2: `test_khung_khong_lam_nhay_bo_cuc_120_hs` đo theo toạ độ tài liệu
+
+- CI Linux 1/6 đỏ: `top` đầu bảng 390 so với 470. Nguyên nhân: test đo `getBoundingClientRect().top` (toạ độ khung nhìn). Lúc vào thẻ, trang có thể đang cuộn 80 px (hiệu ứng vào thẻ làm trang cao thêm 80 px, race theo thời gian: cục bộ gặp ngẫu nhiên, CI chậm gặp đều); giấu 8 hàng khung làm trang co từ 1142 về 1000 px nên trình duyệt kéo cuộn về 0, toạ độ khung nhìn nhảy 80 dù bố cục không đổi. Không liên quan thay đổi A5 (1e07297 chỉ may mắn qua).
+- Sửa test, giữ nguyên ý kiểm: `top = rect.top + scrollY` (toạ độ tài liệu). Mọi so sánh và ngưỡng khác giữ nguyên.
+
+## 2026-11-23 — A5-CIFIX1b: chữ dự phòng trong index.html khớp danh mục i18n
+
+- `index.html` đoạn `#clubFormReserveGroupGoiY` còn "MỘT" trong khi `i18n.js` `a5_club_nhom_goi_y` đã là chữ thường: `test_t3_l1_chu_du_phong` đỏ. Sửa index.html cho khớp từng ký tự; kiểm thêm hai đoạn gợi ý khác (`a5_gt2_tc_nhom_goi_y`, `gt2_tc_nhom_goi_y`) khớp; gợi ý bước 3 trình hướng dẫn nằm trong JS (không có chữ dự phòng). `HUONG_DAN_SU_DUNG.md` mục 18: "xếp CỨNG" thành "xếp cứng".
+
+## 2026-11-23 — A5-CIFIX1: sửa 4 test đỏ trên CI do khoá i18n của A5
+
+- `i18n_errors.py`: hai mã `a5_nhom_hs_co_gach`, `a5_nhom_hs_co_gach_hang_loat` chuyển lên NGAY TRƯỚC khối MT1 (L2) để phần ĐUÔI của `MESSAGES` vẫn toàn mã `mt_` (`test_mt1_uoc_tinh`, `test_mt1_api` ghim đuôi). Việc này THAY dòng "thêm ở cuối" trong `A5_GIAO_THUC.md` §1. Sinh lại `i18n_loi.js`.
+- Chữ nhấn mạnh viết hoa "MỘT"/"ONE" đổi sang chữ thường ở mã lỗi A5, `ws_v_tiers_hang`, `a5_club_nhom_goi_y` (vi + en) và mục 18 của hướng dẫn (`test_van_phong_tu_nhien`).
+- `tests/test_ws_nhan.py`: thêm hai mã A5 vào `MA_MOI_SAU_ANH_CHUP`. `tests/test_a5_giao_dien.py`: cập nhật chuỗi mong đợi theo chữ thường (không nới lỏng kiểm tra).
+
+## 2026-11-23 — A5-L4: tài liệu nhóm đồng hạng `a|b`
+
+- `HUONG_DAN_SU_DUNG.md`: mục 18 mới (+ mục lục): cách 1 thứ hạng nhóm nghiêm ngặt `a|b` = cùng một hạng; cách 2 suất dự trữ, ô nhóm CLB `a|b` dùng chung (pooled) với cảnh báo "nhóm điểm cao hơn có thể lấy hết suất dự trữ"; học sinh ghi `|` là lỗi `a5_nhom_hs_co_gach`; giới hạn đã biết. Không nhắc tên chế độ trong mục 15 (test `test_fa_m6_tai_lieu` quét từ mục 15 đến hết tệp).
+- `docs/ke_hoach/SO_DANG_KY_33_MUC.md`: ghi chú tiến độ ở mục A5 (phần nhỏ đã làm; chưa làm bảng thuộc tính nhiều giá trị, bộ lọc cứng, chia đều suất).
+- `index.html`: đoạn gợi ý `|` ở ô thứ hạng nhóm (Tiêu chí) có id `gt2TcTiersGoiY2` và nằm trong `aria-describedby` của ô (checker L3 #1). Test mới: `test_o_thu_hang_nhom_o_tieu_chi_tro_toi_ca_hai_goi_y`.
+- Số liệu nhắc trong tài liệu là dữ liệu MÔ PHỎNG; không có kết luận cho báo cáo đề tài.
+
+## 2026-11-23 — A5-L3: nhóm đồng hạng `a|b` — giao diện
+
+- `js/075_workspace.js`: `wsKhoaNhom` (cùng khoá với `xay_tier_rank`: bỏ dấu, đ→d, hoa/thường, mọi khoảng trắng kể cả U+00A0), `wsNhomTrongMuc`, `wsLoiGachNhom`, `wsHienThiTiers`. `ws_v_tiers` giữ kiểm trùng dòng cũ; thêm lỗi `ws_v_tiers_rong` (phần rỗng quanh `|`) và `ws_v_tiers_hang` (một nhóm ở hai hạng / hai lần trong một dòng) CHỈ khi có dòng chứa `|` (như `cau_hinh_ws.py`). Bước xem lại (`rvTiers`) hiện `a = b › c`.
+- Gợi ý: `index.html` (ô "Nhóm ưu tiên" của CLB và ô thứ hạng nhóm ở Tiêu chí) và bước 3 trình hướng dẫn; khoá i18n `a5_tiers_goi_y`, `a5_club_nhom_goi_y` (có cảnh báo "nhóm điểm cao hơn có thể lấy hết suất"), `a5_gt2_tc_nhom_goi_y`, `ws_v_tiers_rong`, `ws_v_tiers_hang` (vi + en).
+- `js/15_tieu_chi.js` KHÔNG đổi: không có bản tóm tắt chỉ-đọc của tiers ở đó (chỉ có ô textarea, giữ nguyên `|`); mục "tóm tắt a = b" của kế hoạch chỉ áp dụng cho `rvTiers`.
+- Test mới: `tests/test_a5_giao_dien.py` (10 ca Chromium thật, một trang dùng chung; lỗi hai hạng, NBSP, đ→d, phần rỗng, hiện `a = b`, XSS). Số tệp test: 382.
+
+## 2026-11-23 — A5-L2 FIX1: gán hàng loạt nhóm học sinh chặn `|`
+
+- Checker BUG #1: `bulk_set_reserve_group` lưu `a|b` thành `a_b`. Sửa: từ chối trước mọi lần ghi bằng mã mới `a5_nhom_hs_co_gach_hang_loat` (không có student_id). Hai hàm công khai mới của L2 chưa có trong bảng quyền: thêm vào `phan_quyen.py` (`_GIAO_VIEN`) và `nhat_ky.py` (`_KHONG_GHI`) để `test_gt3_phan_quyen` đạt.
+- Test mới: `test_gan_hang_loat_co_gach_bi_tu_choi_db_khong_doi`.
+
+## 2026-11-23 — A5-L2: nhóm đồng hạng `a|b` — backend
+
+- `api_nhap.py`: `chuan_hoa_o_nhom_clb` (ô CLB `a|b`: chuẩn hoá từng phần, bỏ trùng, sắp xếp; ô không có `|` = `chuan_hoa_nhom_du_tru` như cũ) dùng khi nạp CSV / Sổ nhập CLB; `o_nhom_hs_co_gach` + mã lỗi `a5_nhom_hs_co_gach` (cuối `i18n_errors.py`, sinh lại `i18n_loi.js`): ô nhóm của HỌC SINH có `|` bị bỏ qua cả em đó (cảnh báo, không tạo em, không lưu `a_b`) ở hai đường nạp tệp; `_soat_nhom_du_tru_la` tách nhãn CLB theo `|`.
+- `api_quan_ly.py`: `create_or_update_club` dùng `chuan_hoa_o_nhom_clb`; `set_student_reserve_group` từ chối `|`; `list_reserve_groups_in_use` gợi ý nhãn đơn.
+- `api_bao_cao.py` (`get_suat_du_tru`) và `api.py` (cảnh báo sức khoẻ dữ liệu mục 4, 6): so khớp bằng `instr('|'||…||'|', …)`, không dùng `LIKE`.
+- `cau_hinh_ws.py`: `tiers` có `|` chỉ khi bật: phần rỗng hoặc một nhãn ở hai hạng / hai lần trong một mục -> `ValueError`; `tiers` không có `|` giữ hành vi cũ.
+- Thẻ mục tiêu (`muc_tieu.py`): không đổi mã; CLB `a|b` tính là "giữ cho nhóm khác" và thẻ `danh_cho` -> `tuy_chinh` (khoá bằng test).
+- Test mới: `tests/test_a5_nhom_dong_hang_backend.py` (25 ca). Số tệp test: 381. kiem_nhanh --so-seed 20: 7/7, trùng khít 3×20.
+
+## 2026-11-23 — A5-L1: nhóm đồng hạng `a|b` — lõi
+
+- `rbda_priority_pipeline.py`: hàm thuần `tach_nhom_clb` (tách `|`, cắt trắng, bỏ rỗng); `xay_tier_rank`: mục `tiers` dạng `a|b` cho các nhãn CÙNG một hạng (mục không có `|` đi đúng đường cũ); `default_reserve_eligible_fn`: ô CLB `a|b` = đủ diện nếu nhãn của em thuộc tập (pooled, D1); ô không có `|` giữ nguyên nhánh `==`. `club_choice_function`, `compute_club_priority` không đổi.
+- Test mới: `tests/test_a5_nhom_dong_hang.py` (7 ca, gồm 250 ca ngẫu nhiên seed cố định kiểm substitutability + law of aggregate demand, bất biến 8). `kiem_nhanh.py --so-seed 20`: 7/7 ĐẠT, trùng khít 3 bộ × 20 seed. Số tệp test ở CLAUDE_CHI_TIET: 380.
+
 ## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
 
 - CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.
