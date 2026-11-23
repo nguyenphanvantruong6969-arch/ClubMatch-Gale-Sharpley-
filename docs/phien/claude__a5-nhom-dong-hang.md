@@ -24,7 +24,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - Lead model: Sonnet (`_GIAO_THUC_GON.md` §1: design is settled). Truong may swap in Opus.
 
 ## Plan (lots; ticked by the lead after checker NO BUGS)
-- [ ] **L1 core (must)** — `rbda_priority_pipeline.py`
+- [x] **L1 core (must)** — `rbda_priority_pipeline.py`
   - [ ] One helper `tach_nhom_clb(o) -> tuple[str, ...]` (split `|`, strip, drop empties; `""`/None → `()`).
         Pure, no normalising (callers normalise their own way). Used by every lot.
   - [ ] `default_reserve_eligible_fn`: cell without `|` keeps the exact old `==` path (byte-identical); with `|`
@@ -85,14 +85,14 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- Done: planning. Lead started 2026-11-23; next: create coder/checker, GO L1.
+- L1 done+checked (head 68341c9, checker 2a5a5a8). Next: L2 (also add test tiers [x,a|b,c] -> a,b=1,c=2).
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | created, GO L1 sent |
-| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | created, waiting |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L1 done, GO L2 sent |
+| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L1 NO BUGS |
 
 ## Needs Truong
 - (none yet)
