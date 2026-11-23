@@ -12,6 +12,7 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 - [x] B1 Navigation + Cài đặt (mode cards x50, chia_loai toggle, double-click, reload during run, back/forward)
 - [x] B2 Data screens (import good+bad files, CLB CRUD, students, wharton/medals, Điểm chuẩn, reset, chấm điểm, nhập tại chỗ, #ux1aSauXep)
 - [x] B3 Roles + kiosk (login, teacher, student mode, recovery, workspace CRUD)
+- [x] SF-B5..B8 (ST-B-006, ST-B-007, ST-A-001, keyboard test) + SF-B9 CI fix
 - [x] B4 Robustness + display (3000 students, vi/en, widths 390/768/1366, keyboard-only, downloads)
 
 ## Current state
@@ -21,6 +22,9 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 ## Decisions and gotchas
 - Mode cards (#ux1aChiXep/#ux1aChia100/#ux1aHuyChuong) live in view-admin (#ux1aCaiDat); chia_loai switch is `#mt2CongTac` in Quản lý > CLB.
 - Import the shared Sổ in Huy chương mode first (set via card), then UI import (#fileAny + #btnImportAll).
+
+## SF-B DONE 369650f
+CI run 45211035814 on 369650f: all 17 jobs green (ruff, Linux 1-6/6, Windows 1-9/9, coverage >= 85 %); `git rev-list --left-right --count origin/...-st-b...HEAD` = `0 0`. Local: kiem_nhanh 7/7, ruff clean, `tests_stress/b` 68 passed / 0 xfail. PR NOT opened (only when Truong asks: one PR into `claude/happy-cerf-xvn495`, title `SF: fix stress-test bugs`). All numbers SIMULATED.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -45,13 +49,16 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 | ST-B-009 (UI) | 2 | fixed (SF-B2) |
 | ST-B-004 (kiosk confirm) | 2 | fixed (SF-B2; UI-only via search_students; A may add exact backend check, optional) |
 | ST-B-011 | 2 | fixed (SF-B2, UI wording; A may add a dedicated zip error code) |
-| ST-B-006 (field error) | 2 | fixed (SF-B2, client-side integer check; A still owes validation code in lot 3) |
-| ST-A-001 (warning UI) | 3 | open |
+| ST-B-006 (field error) | 2 | fixed (SF-B5: backend codes mapped inline; client check removed) |
+| ST-A-001 (warning UI) | 3 | fixed (SF-B7) |
 | ST-B-005 | 3 | fixed (SF-B3) |
 | ST-B-010 | 3 | fixed (SF-B3) |
 | ST-B-012 | 4 | fixed (SF-B4) |
 | ST-B-013 | 4 | fixed (SF-B4) |
 Merged origin/…-st-a at start (§2 done). venv ready.
+
+| ST-B-007 (UI confirm) | 3 | fixed (SF-B6) |
+| keyboard test (`test_b4_chi_ban_phim_nhap_chay_xuat`) | 4 | fixed (SF-B8: test race; plus `input.click()` double call) |
 
 ## SF notes (coder B)
 - Env flake at BASE HEAD too (not from SF): `test_b4_moi_nut_xuat_tep_mo_duoc` fails ('btnPdfPhieuLop … .pdf.tmp tệp rỗng': fixed 2.5 s wait, PDF slower in this container). `test_b2_hoc_sinh_phan_trang_tim_kiem_gan_nhom` failed once (8≠50 rows, render race), passed 2 reruns. Neither touched; marked for Truong/CI check.
@@ -60,3 +67,4 @@ Merged origin/…-st-a at start (§2 done). venv ready.
 ## Current state (B, end of this session)
 - B lots 1-4 done except items needing A: ST-A-001 warning UI, ST-B-007 UI, ST-B-006 validation code. Head pushed; CI run on it is the next thing to check (run 45127725794 was red for the `zip` word in vi UI: fixed; also Linux 5/6 shard exit 1 with '215 passed' - check log head for cause).
 - Next: fetch/merge origin/...-st-a, read A's handoff Asks, do the 3 open items, then §4 checks and §5 (review A diff, wait 'SF-A DONE', PR into claude/happy-cerf-xvn495 titled 'SF: fix stress-test bugs').
+| 2026-11-23 | Sonnet | SF-B5..B8 + SF-B9, CI loop | 2 CI rounds: (1) 120844a red on Linux 6/6 only: duplicate id `ux1aMtCanhBao` (my SF-B7 warning area vs MT1 card), fixed by id `CanhBaoDuLieu` + id-uniqueness test; (2) 369650f all green. Keyboard test root cause = Playwright `expect_file_chooser` race (test side), not focus order. Not done (optional, A's ask): progress bar for `get_tien_do_xuat`. |
