@@ -188,3 +188,41 @@ def test_giao_vien_nhap_diem_cung_mot_nut_vang_va_co_lai_danh_sach(mo_ux5b):
     assert page.locator("#btnScoringQuayLai").is_visible()
     assert len(dem(page, "#view-scoring")) <= 2
     assert not loi, loi
+
+
+def test_quay_lai_khi_con_diem_chua_luu_phai_hoi_roi_moi_bo(mo_ux5b):
+    """UX5B-FIX1 (checker): điểm đã gõ mà chưa Lưu không được mất im lặng khi bấm "‹ Danh sách"."""
+    page, api, loi = mo_ux5b("quan_tri", "scoring")
+    page.wait_for_selector("#scoringOverviewBody button")
+    page.locator("#scoringOverviewBody button").first.click()
+    page.wait_for_selector("#scoringTableBody .score-input")
+    o = page.locator("#scoringTableBody .score-input").first
+    cu = o.input_value()
+    assert page.locator("#chuaLuuDiem").is_hidden()
+    o.fill("7" if cu != "7" else "6")
+    assert page.locator("#chuaLuuDiem").is_visible()
+    page.locator("#btnScoringQuayLai").click()                     # lần 1: chỉ cảnh báo, vẫn ở màn chấm
+    assert page.locator("#scoringWorkArea").is_visible()
+    assert page.locator("#scoringTableBody .score-input").first.input_value() != cu
+    page.locator("#btnScoringQuayLai").click()                     # lần 2 (trong 4 giây): bỏ thay đổi, về danh sách
+    page.wait_for_selector("#scoringClubPanel:not([hidden])")
+    assert page.locator("#scoringWorkArea").is_hidden()
+    page.locator("#scoringOverviewBody button").first.click()      # mở lại: điểm về giá trị đã lưu
+    page.wait_for_selector("#scoringTableBody .score-input")
+    assert page.locator("#scoringTableBody .score-input").first.input_value() == cu
+    assert not loi, loi
+
+
+def test_luu_diem_xong_thi_het_chua_luu_va_quay_lai_khong_hoi(mo_ux5b):
+    page, api, loi = mo_ux5b("quan_tri", "scoring")
+    page.wait_for_selector("#scoringOverviewBody button")
+    page.locator("#scoringOverviewBody button").first.click()
+    page.wait_for_selector("#scoringTableBody .score-input")
+    page.locator("#scoringTableBody .score-input").first.fill("7")
+    assert page.locator("#chuaLuuDiem").is_visible()
+    page.locator("#btnSaveScores").click()
+    page.wait_for_function("document.getElementById('scoringFeedback').textContent.trim() !== ''")
+    assert page.locator("#chuaLuuDiem").is_hidden()
+    page.locator("#btnScoringQuayLai").click()                     # một lần là đi ngay
+    page.wait_for_selector("#scoringClubPanel:not([hidden])")
+    assert not loi, loi

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B-FIX1 (checker vòng 1): không mất điểm im lặng khi bấm "‹ Danh sách"
+
+- `js/06_cham_diem.js`, `index.html`, `i18n.js`: ô điểm nhớ giá trị đã lưu (`data-cu`); có điểm chưa lưu thì hiện "• Chưa lưu" (`#chuaLuuDiem`) cạnh nút Lưu điểm và nút "‹ Danh sách" bấm lần đầu chỉ cảnh báo (khoá mới `ux5b_diem_chua_luu_canh_bao`, vi + en), bấm lại trong 4 giây mới bỏ; lưu xong thì hết dấu và quay lại không hỏi. Chữ cảnh báo là chữ mới ngoài bảng duyệt (Truong cân nhắc).
+- Test mới trong `tests/test_giao_dien_ux5b_l3.py` (+2).
+
 ## 2026-11-23 — UX5B-L4: test Hick + Von Restorff cả ba thẻ, vai quản trị và giáo viên; test cùng payload (MILESTONE 2)
 
 - Chỉ test (không sửa mã sản phẩm): `tests/test_giao_dien_ux5b_l4.py` (11 ca): số ô ≤ 7 (Nhập nguyện vọng: quản trị ≤ 7, giáo viên ≤ 6, trạng thái "đã chọn một em"; Nhập điểm: danh sách ≤ 7, đang chấm ≤ 2), tối đa một nút vàng mỗi thẻ, không nút đỏ, không nút bị làm mờ thay vì ẩn, giáo viên không thấy thẻ Xếp CLB/Tạo mới/điểm quyết tâm; test từ cấm và chữ trần "i"; "cùng payload": ba lần Lưu gọi đúng `submit_test_selection`, `submit_preferences`, `submit_wharton` (giáo viên: hai lần đầu) với đúng tham số, Lưu Bước 1 không kéo theo lưu Bước 2. Cách đếm: ngoài hàng bảng, ngoài dữ liệu dạng danh sách (thẻ kết quả tìm và phân trang, hàng thứ tự nguyện vọng, lưới CLB) và nút "Sửa" của mục gập (điều hướng giữa các bước). Số đo là dữ liệu MÔ PHỎNG.
