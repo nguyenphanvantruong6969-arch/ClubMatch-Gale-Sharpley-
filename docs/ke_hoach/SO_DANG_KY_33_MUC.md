@@ -270,6 +270,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** Bộ lọc đổi danh sách nguyện vọng: cần cảnh báo ứng viên không còn lựa chọn nào.
 - **Kiểm nhận:** Test: ứng viên bị lọc không bao giờ được ghép; cảnh báo ở báo cáo sức khoẻ dữ liệu.
 - **Phụ thuộc:** Z7, B2
+- **Tiến độ (23/11/2026) — phần nhỏ đã làm:** nhóm ưu tiên đồng hạng bằng dấu `|` (nhánh claude/a5-nhom-dong-hang): `rules.tiers` mục `a|b` = cùng một hạng; ô `clubs.reserve_group` `a|b` = suất dự trữ dùng chung (D1 pooled). Học sinh vẫn MỘT nhãn; không đổi cột, không đổi schema (ngoại lệ bất biến 7 do Truong duyệt 22/11/2026). Chưa làm: bảng thuộc tính nhiều giá trị, bộ lọc cứng, chia đều suất. Hướng dẫn: `HUONG_DAN_SU_DUNG.md` mục 18.
 - **Ngành cần (R):** KTX, YT, KT, HP, TS, NS · **tuỳ chọn (O):** DT, SK, NT, VL, LG, TC
 - **Khác nhau theo ngành:**
   - KTX (Ký túc xá): Giới tính, loại phòng, hoàn cảnh.

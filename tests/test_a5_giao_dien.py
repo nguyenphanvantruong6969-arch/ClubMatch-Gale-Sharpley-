@@ -98,3 +98,11 @@ def test_ten_nhom_chua_html_khong_chay_ma(trang_buoc3):
     assert page.locator("#rvTiers").inner_text() == "<img src=x onerror=window.__xss=1> = b"
     assert page.evaluate("window.__xss") is None
     assert not loi_js, loi_js
+
+
+def test_o_thu_hang_nhom_o_tieu_chi_tro_toi_ca_hai_goi_y(trang_buoc3):
+    """Checker L3 #1: gợi ý `|` có id và nằm trong aria-describedby của ô textarea."""
+    page, _ = trang_buoc3
+    ids = page.evaluate("document.getElementById('gt2TcTiers').getAttribute('aria-describedby')").split()
+    assert ids == ["gt2TcTiersGoiY", "gt2TcTiersGoiY2"]
+    assert all(page.evaluate("!!document.getElementById(%r)" % i) for i in ids)

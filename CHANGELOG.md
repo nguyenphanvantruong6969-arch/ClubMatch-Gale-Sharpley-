@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L4: tài liệu nhóm đồng hạng `a|b`
+
+- `HUONG_DAN_SU_DUNG.md`: mục 18 mới (+ mục lục): cách 1 thứ hạng nhóm nghiêm ngặt `a|b` = cùng một hạng; cách 2 suất dự trữ, ô nhóm CLB `a|b` dùng chung (pooled) với cảnh báo "nhóm điểm cao hơn có thể lấy hết suất dự trữ"; học sinh ghi `|` là lỗi `a5_nhom_hs_co_gach`; giới hạn đã biết. Không nhắc tên chế độ trong mục 15 (test `test_fa_m6_tai_lieu` quét từ mục 15 đến hết tệp).
+- `docs/ke_hoach/SO_DANG_KY_33_MUC.md`: ghi chú tiến độ ở mục A5 (phần nhỏ đã làm; chưa làm bảng thuộc tính nhiều giá trị, bộ lọc cứng, chia đều suất).
+- `index.html`: đoạn gợi ý `|` ở ô thứ hạng nhóm (Tiêu chí) có id `gt2TcTiersGoiY2` và nằm trong `aria-describedby` của ô (checker L3 #1). Test mới: `test_o_thu_hang_nhom_o_tieu_chi_tro_toi_ca_hai_goi_y`.
+- Số liệu nhắc trong tài liệu là dữ liệu MÔ PHỎNG; không có kết luận cho báo cáo đề tài.
+
 ## 2026-11-23 — A5-L3: nhóm đồng hạng `a|b` — giao diện
 
 - `js/075_workspace.js`: `wsKhoaNhom` (cùng khoá với `xay_tier_rank`: bỏ dấu, đ→d, hoa/thường, mọi khoảng trắng kể cả U+00A0), `wsNhomTrongMuc`, `wsLoiGachNhom`, `wsHienThiTiers`. `ws_v_tiers` giữ kiểm trùng dòng cũ; thêm lỗi `ws_v_tiers_rong` (phần rỗng quanh `|`) và `ws_v_tiers_hang` (một nhóm ở hai hạng / hai lần trong một dòng) CHỈ khi có dòng chứa `|` (như `cau_hinh_ws.py`). Bước xem lại (`rvTiers`) hiện `a = b › c`.
