@@ -603,7 +603,13 @@ function hienKhungCho(tbody, soCot, soDong, hoi, caoHang) {
 function ux2DiToi(tab, oId) {
   const the = document.querySelector('.nav-item[data-tab="' + tab + '"]');
   if (the) the.click();
-  setTimeout(() => { const o = oId ? el(oId) : null; if (o) o.focus(); }, 0);
+  /* UX5B-L3: ô nằm trong mục gập (<details>, ví dụ "Tạo học sinh mới") thì mở mục đó trước, rồi mới đưa con trỏ vào. */
+  setTimeout(() => {
+    const o = oId ? el(oId) : null;
+    if (!o) return;
+    for (let d = o.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
+    o.focus();
+  }, 0);
 }
 
 /* Ten cac the dung trong cau huong dan: LAY TU nav (cung khoa nav_*) de khong bao gio lech ten the that. */

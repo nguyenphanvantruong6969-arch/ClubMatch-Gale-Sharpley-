@@ -850,21 +850,28 @@
     <section class="view" id="view-fallback">
       <header class="view-header">
         <h1 data-i18n="fallback_title">Nhập nguyện vọng</h1>
-        <p class="view-desc" data-i18n="fallback_desc">Tìm hoặc tạo học sinh, rồi chọn CLB dự thi và xếp hạng nguyện vọng.</p>
+        <!-- UX5B-L3 (D3): quản trị thấy bản "Tìm", giáo viên (không tạo được) giữ câu cũ -->
+        <p class="view-desc" data-quyen="quan_tri" data-i18n="ux5b_fallback_desc_qt">Tìm học sinh, rồi chọn CLB dự thi và xếp hạng nguyện vọng.</p>
+        <p class="view-desc ux5b-chi-gv" data-i18n="fallback_desc">Tìm hoặc tạo học sinh, rồi chọn CLB dự thi và xếp hạng nguyện vọng.</p>
       </header>
 
       <div class="panel">
-        <div class="panel-head"><h2 data-i18n="fallback_step0_title">Tìm hoặc tạo học sinh</h2></div>
+        <div class="panel-head"><h2 data-i18n="fallback_step0_title">Tìm học sinh</h2></div>
         <div class="search-row">
           <input type="text" id="studentSearchInput" class="text-input" data-i18n-placeholder="placeholder_fallback_search" placeholder="Nhập mã học sinh hoặc tên…">
           <button class="btn btn-secondary" id="btnStudentSearch" data-i18n="btn_search">Tìm</button>
         </div>
-        <div class="new-student-row" data-quyen="quan_tri">
-          <input type="text" id="newStudentId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_new_student_id" placeholder="Mã học sinh mới">
-          <input type="text" id="newStudentName" class="text-input" data-i18n-placeholder="placeholder_full_name" placeholder="Họ tên">
-          <select id="newStudentLop" class="text-input text-input-sm" data-i18n-aria-label="kiosk_lop_nhan" hidden></select>
-          <button class="btn btn-secondary" id="btnCreateStudent" data-i18n="btn_create_student">Tạo học sinh mới</button>
-        </div>
+        <!-- UX5B-L3: việc ít dùng (tạo mới) gập lại; ba ô và nút Tạo giữ nguyên id -->
+        <details class="ux5b-gap ux5b-tao-moi" id="ux5bTaoMoi" data-quyen="quan_tri">
+          <summary data-i18n="ux5b_tao_moi">Tạo học sinh mới ▾</summary>
+          <div class="new-student-row">
+            <input type="text" id="newStudentId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_new_student_id" placeholder="Mã học sinh mới">
+            <input type="text" id="newStudentName" class="text-input" data-i18n-placeholder="placeholder_full_name" placeholder="Họ tên">
+            <select id="newStudentLop" class="text-input text-input-sm" data-i18n-aria-label="kiosk_lop_nhan" hidden></select>
+            <button class="btn btn-secondary" id="btnCreateStudent" data-i18n="btn_create_student">Tạo học sinh mới</button>
+          </div>
+        </details>
+        <p class="ux5b-tt" id="ux5bTtNhap" role="status" data-i18n="ux5b_tt_chua_chon">Chọn một học sinh ở trên để bắt đầu.</p>
         <div id="studentSearchResults" class="search-results"></div>
         <div class="pagination-row" id="fallbackStudentPagination" hidden>
           <button class="btn btn-ghost" id="btnFallbackPrevPage" data-i18n="btn_prev_page">‹ Trước</button>
@@ -900,8 +907,9 @@
           <span class="chua-luu" id="kioskLopNhac" role="status" hidden data-i18n="kiosk_lop_nhac">Chọn {cohort_l} của {person_l} này trước khi lưu.</span>
         </div>
         <div class="fallback-steps">
-          <div class="fallback-step">
+          <div class="fallback-step" id="fbBuoc1" data-muc="thi">
             <h3 data-i18n="fallback_step1_title">Bước 1. Chọn CLB dự thi</h3>
+            <div class="ux5b-muc-tom"><span class="ux5b-muc-tom-chu"></span><button type="button" class="btn btn-secondary btn-nho ux5b-muc-sua" id="ux5bSuaThi" data-muc="thi" data-i18n="ux5b_sua">Sửa</button></div>
             <p class="hint-text" id="fallbackStep1Hint" data-i18n="fallback_step1_hint">Mỗi buổi chọn tối đa 5 CLB. Bỏ chọn một CLB đã chấm điểm thì điểm đó bị xoá khi bấm Lưu.</p>
             <div id="testSelectionGrid" class="option-list"></div>
             <button class="btn btn-primary" id="btnSubmitTestSelection" data-i18n="btn_save_test_selection">Lưu CLB dự thi</button>
@@ -910,8 +918,9 @@
             <p class="wh-khoa-ghi-chu" id="testSelectionKhoa" role="status" hidden data-i18n="wharton_khoa_nv_ghi_chu">Điểm quyết tâm đang khoá và học sinh này đã có điểm, nên nguyện vọng và ô chọn thi được giữ nguyên. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần đổi.</p>
           </div>
 
-          <div class="fallback-step">
+          <div class="fallback-step" id="fbBuoc2" data-muc="nv">
             <h3 data-i18n="fallback_step2_title">Bước 2. Xếp hạng nguyện vọng</h3>
+            <div class="ux5b-muc-tom"><span class="ux5b-muc-tom-chu"></span><button type="button" class="btn btn-secondary btn-nho ux5b-muc-sua" id="ux5bSuaNv" data-muc="nv" data-i18n="ux5b_sua">Sửa</button></div>
             <p class="hint-text" data-i18n="fallback_step2_hint">Bấm vào CLB theo thứ tự muốn vào nhất trước, mỗi buổi tối đa 10 CLB. Có thể chọn cả CLB không có ở Bước 1.</p>
             <p class="hint-text" id="fallbackBuoiHint" hidden data-i18n="fallback_buoi_hint">Mỗi buổi chỉ nhận được tối đa một CLB. Chọn CLB ở nhiều buổi để có lịch cả tuần.</p>
             <div class="phu-buoi" id="fallbackPhuBuoi" hidden></div>
@@ -919,7 +928,7 @@
             <div class="ranking-result">
               <div class="ranking-result-label" data-i18n="ranking_current_label">Thứ tự nguyện vọng</div>
               <ol id="rankingList" class="ranking-list"></ol>
-              <button class="btn btn-ghost" id="btnClearRanking" data-i18n="btn_clear_all">Xoá hết</button>
+              <button class="btn btn-ghost" id="btnClearRanking" data-i18n="btn_clear_all" hidden>Xoá hết</button>
             </div>
             <button class="btn btn-primary" id="btnSubmitPreferences" data-i18n="btn_save_preferences">Lưu nguyện vọng</button>
             <span class="chua-luu" id="chuaLuuNv" hidden data-i18n="fallback_chua_luu">• Chưa lưu</span>
@@ -929,8 +938,9 @@
 
           <!-- Bước 3 · Điểm Wharton (mục A13): chỉ hiện khi workspace bật Wharton; js/04_nhap_tai_cho.js
                dựng khung theo buổi trong #fbWhartonBody. -->
-          <div class="fallback-step" id="fbWhartonStep" hidden>
+          <div class="fallback-step" id="fbWhartonStep" data-muc="b3" data-quyen="quan_tri" hidden>
             <h3 data-i18n="fallback_step3_title">Bước 3. Điểm quyết tâm</h3>
+            <div class="ux5b-muc-tom"><span class="ux5b-muc-tom-chu"></span><button type="button" class="btn btn-secondary btn-nho ux5b-muc-sua" id="ux5bSuaW" data-muc="b3" data-i18n="ux5b_sua">Sửa</button></div>
             <p class="hint-text" data-i18n="fallback_step3_hint">Chia đúng 100 điểm cho các CLB đã thi và đúng 100 điểm cho các CLB không thi, ở mỗi buổi. Ô để trống tính là 0 điểm.</p>
             <p class="wh-khoa-ghi-chu" id="fbWhartonKhoa" role="status" hidden data-i18n="wharton_da_khoa_kiosk">Điểm quyết tâm đang khoá vì đã chạy xếp. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần sửa.</p>
             <div id="fbWhartonBody"></div>
@@ -938,8 +948,9 @@
             <span class="chua-luu" id="chuaLuuWharton" hidden data-i18n="fallback_chua_luu">• Chưa lưu</span>
             <span class="save-feedback" role="status" aria-live="polite" id="whartonFeedback"></span>
           </div>
-          <div class="fallback-step" id="fbHuyChuongStep" hidden>
+          <div class="fallback-step" id="fbHuyChuongStep" data-muc="b3" hidden>
             <h3 data-i18n="fallback_step3_hc_title">Bước 3. Huy chương</h3>
+            <div class="ux5b-muc-tom"><span class="ux5b-muc-tom-chu"></span><button type="button" class="btn btn-secondary btn-nho ux5b-muc-sua" id="ux5bSuaHc" data-muc="b3" data-i18n="ux5b_sua">Sửa</button></div>
             <p class="hint-text" data-i18n="fallback_step3_hc_hint">Mỗi ngày có ba huy chương vàng, bạc, đồng, đã điền sẵn theo thứ tự nguyện vọng. Chọn CLB khác cho một huy chương thì hai huy chương đổi chỗ. CLB Tự do không nhận huy chương.</p>
             <p class="wh-khoa-ghi-chu" id="fbHuyChuongKhoa" role="status" hidden data-i18n="hc_da_khoa_kiosk">Huy chương đang khoá vì đã chạy xếp. Nhờ người quản lý mở khoá ở thẻ Quản lý nếu cần sửa.</p>
             <div id="fbHuyChuongBody"></div>
@@ -1404,6 +1415,7 @@
 
       <div class="panel" id="scoringClubPanel">
         <div class="panel-head"><h2 data-i18n="scoring_overview_title">Tiến độ chấm của từng CLB</h2></div>
+        <p class="ux5b-tt" id="ux5bTtDiem" role="status"></p>
         <table class="data-table">
           <thead><tr>
             <th data-i18n="th_name_short">Tên</th>
@@ -1441,6 +1453,7 @@
         <div class="panel-head">
           <h2 id="scoringClubLabel">—</h2>
           <div class="panel-actions">
+            <button class="btn btn-ghost" id="btnScoringQuayLai" data-i18n="ux5b_quay_lai">‹ Danh sách CLB</button>
             <button class="btn btn-primary" id="btnSaveScores" data-i18n="btn_save_scores">Lưu điểm</button>
           </div>
         </div>

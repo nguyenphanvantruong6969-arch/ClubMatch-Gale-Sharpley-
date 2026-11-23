@@ -86,6 +86,12 @@ function loadScoringOverview() {
     const emptyState = el("scoringOverviewEmpty");
     clear(body);
     const withApplicants = res.ok ? res.data.filter((c) => c.n_applicants > 0) : [];
+    /* UX5B-L3: dòng trạng thái ("còn m CLB chưa chấm xong" hoặc "Đã chấm xong hết") và MỘT nút vàng "Chấm tiếp"
+       ở CLB đầu tiên chưa chấm xong (Von Restorff); các nút "Chấm" còn lại là nút thường. */
+    const chuaXong = withApplicants.filter((c) => c.n_scored < c.n_applicants);
+    const dong = el("ux5bTtDiem");
+    if (dong) dong.textContent = !withApplicants.length ? "" : chuaXong.length
+      ? t("ux5b_tt_diem", { m: chuaXong.length }) : t("ux5b_tt_diem_xong");
     if (!res.ok || !withApplicants.length) {
       emptyState.hidden = false;
       return;
@@ -99,8 +105,9 @@ function loadScoringOverview() {
       tr.appendChild(tdProgress);
       const tdAction = document.createElement("td");
       const btn = document.createElement("button");
-      btn.className = "btn btn-secondary btn-row-link";
-      btn.textContent = t("btn_score_link");
+      const tiep = chuaXong.length > 0 && c === chuaXong[0];
+      btn.className = (tiep ? "btn btn-primary" : "btn btn-secondary") + " btn-row-link";
+      btn.textContent = t(tiep ? "ux5b_cham_tiep" : "btn_score_link");
       btn.addEventListener("click", () => openScoringClub(c.club_id));
       tdAction.appendChild(btn);
       tr.appendChild(tdAction);
@@ -117,6 +124,7 @@ function openScoringClub(clubId) {
     }
     currentScoringClub = clubId;
     el("scoringWorkArea").hidden = false;
+    el("scoringClubPanel").hidden = true;   /* UX5B-L3: đang chấm một CLB thì danh sách lui đi; nút "‹ Danh sách" đưa về */
     el("scoringClubLabel").textContent = `${res.data.club_name} (${res.data.club_id})`;
 
     const body = el("scoringTableBody");
@@ -147,6 +155,12 @@ function openScoringClub(clubId) {
 }
 
 function initScoringHandlers() {
+  /* UX5B-L3 (D4): lối quay về danh sách; dùng lại loadScoringTab nên tiến độ được nạp mới. */
+  el("btnScoringQuayLai").addEventListener("click", () => loadScoringTab());
+  window.addEventListener("langchange", () => {
+    if (!el("scoringWorkArea").hidden || LUAT_CHAM_DIEM.theoNguoi) return;
+    if (el("view-scoring").classList.contains("is-active")) loadScoringOverview();
+  });
   el("btnSavePersonScores").addEventListener("click", () => {
     const inputs = document.querySelectorAll("#scoringPersonBody .score-input");
     inputs.forEach((input) => {

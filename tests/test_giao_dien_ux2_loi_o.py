@@ -108,6 +108,7 @@ def test_form_clb_loi_backend_theo_ma_ve_dung_o_ma_la_thi_khung_phan_hoi(man):
 def test_form_them_hoc_sinh_thieu_o(man):
     page, api, loi = man
     page.locator('[data-tab="fallback"]').click()
+    page.locator("#ux5bTaoMoi > summary").click()          # UX5B-L3: "Tạo học sinh mới" là mục gập
     page.wait_for_selector("#btnCreateStudent", state="visible")
     page.fill("#newStudentName", "Chỉ có tên")
     page.click("#btnCreateStudent")

@@ -288,6 +288,8 @@ SUA_CO_Y = {
     ("ui", 'btn_validate'): [('Kiểm tra lại dữ liệu', 'Kiểm tra lại'), ('Re-check data', 'Re-check')],
     ("ui", 'steps_panel_title'): [('Các bước xử lý', '3. Chạy xếp'), ('Processing steps', '3. Run')],
     ("ui", 'btn_toggle'): [('Hiện/ẩn', 'Xem lịch sử'), ('Show/hide', 'Show history')],
+    # UX5B-L3: chủ ý đổi chữ thẻ Nhập nguyện vọng ("Tạo" chuyển sang mục gập riêng); docs/ke_hoach/ux/UX5B_TU_NGU.md §2.2. Chuỗi đã điền nhãn mặc định.
+    ("ui", 'fallback_step0_title'): [('Tìm hoặc tạo học sinh', 'Tìm học sinh'), ('Find or create a student', 'Find a student')],
 }
 
 
@@ -567,7 +569,7 @@ def test_giao_dien_cong_ty(anh_chup):
     assert ra["vi"]["toast_run_success"] == "Sắp xếp xong: 8/9 nhân viên có dự án, sau 2 vòng."
     assert ra["en"]["toast_run_success"] == \
         "Allocation finished: 8/9 employees placed in 2 round(s)."
-    assert ra["en"]["fallback_step0_title"] == "Find or create an employee"   # a -> an
+    assert ra["en"]["fallback_step0_title"] == "Find an employee"   # a -> an (UX5B-L3: bỏ "or create")
     assert "học sinh" not in ra["vi"]["pipeline_desc"] and "CLB" not in ra["vi"]["pipeline_desc"]
     # UX5B-L2: pipeline_desc không còn chỗ giữ của ngành; kiểm sự thay nhãn bằng câu trạng thái có {person_l}.
     assert ra["vi"]["pipeline_desc"] == "Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy."

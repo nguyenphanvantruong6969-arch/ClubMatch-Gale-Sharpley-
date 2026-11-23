@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B-L3: thẻ Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm (Hick + Von Restorff)
+
+- `index.html`, `js/04_nhap_tai_cho.js`, `js/06_cham_diem.js`, `js/00_nen.js`, `i18n.js`, `style.css` (khối `/* UX5B */`): D2 ba bước là ba mục gập, MỘT mục mở (nút Lưu của mục đó là nút vàng duy nhất); mục gập còn dòng "Đã lưu: …" hoặc "• Chưa lưu" + nút "Sửa"; Lưu Bước 1 thì Bước 2 tự mở, Lưu Bước 2 thì Bước 3 (nếu có) tự mở. Ba lời gọi lưu giữ riêng, tham số y như cũ.
+- D3: giáo viên không thấy mục "Điểm quyết tâm" (`data-quyen="quan_tri"` trên `#fbWhartonStep`) và thấy câu mô tả cũ; quản trị thấy bản "Tìm …". D6: "Xoá hết" chỉ hiện khi đã có nguyện vọng. "Tạo {person_l} mới ▾" thành mục gập (`#ux5bTaoMoi`, giữ id ba ô và nút Tạo); `ux2DiToi` mở mọi `<details>` chứa ô cần đưa con trỏ tới. Nút "i" của khối quyết tâm đọc "Giải thích".
+- Nhập điểm: dòng trạng thái `#ux5bTtDiem`, nút vàng "Chấm tiếp" ở CLB đầu tiên chưa chấm xong, D4 nút `#btnScoringQuayLai` (đang chấm một CLB thì danh sách lui đi).
+- Khoá i18n mới `ux5b_*` (vi + en); đổi tại chỗ `fallback_step0_title`; ghi vào `SUA_CO_Y` của `tests/test_ws_nhan.py` (ghi chú UX5B, không nới lỏng).
+- Test mới: `tests/test_giao_dien_ux5b_l3.py` (13); `tests/_mo_muc.py` (mở đúng bước trước khi thao tác). Test cũ chỉnh vì UI đổi: 15 tệp giao diện (mở đúng bước/mục gập, chờ lưới ở trạng thái `attached`), `test_giao_dien_t3_l1.py` (nút "Chấm tiếp"). Số ô (ngoài danh sách dữ liệu và nút "Sửa"): quản trị 7, giáo viên 6 (trước: 27 và 23). Số đo là dữ liệu MÔ PHỎNG.
+
 ## 2026-11-23 — UX5B-FIX-CI (sửa CI nền run #1443, commit L2 8441218)
 
 - Nguyên nhân gốc 1: L2 đổi chữ catalog `i18n.js` (`import_panel_title`, `import_hint`, `health_panel_title`, `btn_validate`, `health_panel_hint`, `steps_panel_title`, `btn_toggle`) nhưng chữ dự phòng trong `index.html` còn bản cũ → `tests/test_t3_l1_chu_du_phong.py` đỏ (Linux 4/6, Windows 5/9). Sửa: `index.html` khớp catalog.

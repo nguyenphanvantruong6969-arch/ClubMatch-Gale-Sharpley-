@@ -3427,3 +3427,14 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .ux5b-gap > summary { cursor: pointer; color: var(--ink-soft, var(--ink)); }
 #view-pipeline[data-trang-thai="trong"] .drop-zone { border-color: var(--gold); border-width: 3px; }
 #nangCao .stb-lock-line, #nangCao .chon-buoi { margin-top: 8px; }
+/* UX5B-L3: Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm */
+body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
+.ux5b-tao-moi { margin: 10px 0; }
+.ux5b-tao-moi > summary { list-style: none; }
+.ux5b-tao-moi > summary::-webkit-details-marker { display: none; }
+.ux5b-tao-moi .new-student-row { margin-top: 8px; }
+.fallback-step .ux5b-muc-tom { display: none; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fallback-step.ux5b-dong .ux5b-muc-tom { display: flex; }
+.fallback-step.ux5b-dong > :not(h3):not(.ux5b-muc-tom) { display: none !important; }
+.fallback-step.ux5b-dong h3 { margin-bottom: 4px; }
+.ux5b-muc-tom-chu { color: var(--ink-soft, var(--ink)); }

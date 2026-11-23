@@ -13,6 +13,7 @@ hình (xem kế hoạch "UI review"):
 """
 
 import csv
+from _mo_muc import mo_muc  # noqa: E402,F401
 import os
 import sqlite3
 
@@ -200,6 +201,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     assert page.is_hidden("#chuaLuuThi") and page.is_hidden("#chuaLuuNv")
 
     # Bỏ tick clb_c -> hiện "Chưa lưu".
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="clb_c"]').click()
     assert page.is_visible("#chuaLuuThi")
     # Tick lại -> đúng như đã lưu -> dấu biến mất.
@@ -234,6 +236,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     assert ticks == [("clb_a",), ("clb_c",)]
 
     # Đổi nguyện vọng rồi LƯU -> đi ngay, không cảnh báo.
+    mo_muc(page, "nv")
     page.click("#btnClearRanking")
     assert page.is_visible("#chuaLuuNv")
     page.locator('#rankingSourceGrid .option-row[data-club-id="clb_c"]').click()
@@ -245,6 +248,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     # Xuất em đang có thay đổi chưa lưu -> nhắc lưu trước, không xuất.
     mo_the(page, "fallback")
     mo_hs_the_03(page, "HS03")
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="clb_a"]').click()
     page.click("#menuHocSinh > summary")
     page.click("#btnXuatEmNay")

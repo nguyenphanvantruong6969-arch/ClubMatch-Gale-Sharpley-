@@ -125,6 +125,11 @@ def test_bang_tien_do_cham_bo_cot_ma_clb_va_nut_cham_khong_mui_ten(api, mo):
     page.wait_for_selector("#scoringOverviewBody .btn-row-link")
     dau = page.eval_on_selector_all("#scoringClubPanel thead th", "e => e.map(x => x.textContent.trim())")
     assert "Mã CLB" not in dau and dau[0] == "Tên"
-    nut = page.locator("#scoringOverviewBody .btn-row-link").first
-    assert nut.inner_text().strip() == "Chấm" and "btn-secondary" in nut.get_attribute("class")
+    # UX5B-L3: CLB đầu tiên chưa chấm xong mang nút vàng "Chấm tiếp"; các nút còn lại vẫn là "Chấm" thường.
+    nuts = page.locator("#scoringOverviewBody .btn-row-link")
+    chu = [x.strip() for x in nuts.all_inner_texts()]
+    assert chu and set(chu) <= {"Chấm", "Chấm tiếp"} and chu.count("Chấm tiếp") <= 1
+    for i, ten in enumerate(chu):
+        lop = nuts.nth(i).get_attribute("class")
+        assert ("btn-primary" in lop) == (ten == "Chấm tiếp") and ("btn-secondary" in lop) == (ten == "Chấm")
     assert page.locator("#scoringOverviewBody .scoring-progress-bar").count() == 0

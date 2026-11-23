@@ -261,3 +261,5 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | MT2-FIX-R1 (nạp/xuất cột Loại khi chia loại bật) | xong, chờ checker | 2026-11-22 | api_nhap.py, api_xuat.py, CHANGELOG.md | tests/test_mt2_r1_nap_loai.py | kiem_nhanh 7/7; trùng khít 3×20 |
 | MT2-CI1 (vùng bấm 44 px nút tài khoản, nguyên nhân từ UX3) | xong, chờ CI | 2026-11-22 | style.css, CHANGELOG.md | tests/test_giao_dien_ux2_nut.py (đạt) | 79 ca giao diện đạt |
 | UX5B-L2 (thẻ Xếp CLB; đã gộp main/MT2) | xong, chờ checker | 2026-11-23 | index.html, js/02_van_hanh.js, js/05_quan_ly.js, i18n.js, style.css | tests/test_giao_dien_ux5b_l2.py | số ô 3/5/7; số đo mô phỏng |
+| UX5B-FIX-CI (CI nền run #1443: chữ dự phòng index.html, test nhãn ngành) | xong, chờ CI | 2026-11-23 | index.html, tests/test_ws_nhan_giao_dien.py, CHANGELOG.md | tests/test_t3_l1_chu_du_phong.py, tests/test_ws_nhan_giao_dien.py (đạt) | kiem_nhanh 7/7 |
+| UX5B-L3 (Nhập nguyện vọng ba mục gập + Nhập điểm) | xong, chờ checker | 2026-11-23 | index.html, js/00_nen.js, js/04_nhap_tai_cho.js, js/06_cham_diem.js, i18n.js, style.css | tests/test_giao_dien_ux5b_l3.py | số ô 7/6 (trước 27/23); số đo mô phỏng |

@@ -13,6 +13,7 @@ Mọi phép kiểm cuối cùng nhìn vào CSDL, không chỉ nhìn chữ trên 
 """
 
 import os
+from _mo_muc import mo_muc  # noqa: E402,F401
 import sqlite3
 
 import pytest
@@ -98,6 +99,7 @@ def test_bo_tick_clb_da_cham_bao_da_xoa_diem_va_moi_the_khop(trang):
     page, api, loi = trang
     _mo_hoc_sinh(page, "binh", "HS02")
 
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="clb_a"]').click()
     page.locator("#btnSubmitTestSelection").click()
     page.wait_for_function(

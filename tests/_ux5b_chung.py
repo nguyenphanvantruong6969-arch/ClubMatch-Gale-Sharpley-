@@ -17,6 +17,34 @@ from api import PipelineAPI  # noqa: E402
 from _ux5a_chung import GOC, JS_DEM, JS_DO, JS_VANG, JS_CHU, MK, SO_120, dem  # noqa: E402,F401
 
 
+# Điều khiển của thẻ Nhập nguyện vọng, TRỪ dữ liệu dạng danh sách (thẻ kết quả tìm + phân trang, hàng thứ tự nguyện vọng, lưới CLB)
+# và nút "Sửa" của mục gập (điều hướng giữa ba bước, như thanh tab); xem quyết định ghi ở hồ sơ nhánh.
+JS_DEM_NHAP = """(sel) => {
+  const vis = e => e.checkVisibility({checkVisibilityCSS: true, contentVisibilityAuto: true});
+  const root = document.querySelector(sel);
+  const q = 'button, select, input:not([type=hidden]), textarea, summary, a[href]';
+  const dulieu = '#studentSearchResults, #fallbackStudentPagination, #rankingList, .option-list, .ux5b-muc-sua, tbody, thead';
+  return Array.from(root.querySelectorAll(q)).filter(e => vis(e) && !e.disabled && !e.closest(dulieu)
+    && !e.matches('.ux5b-muc-sua')).map(e => e.id || e.tagName);
+}"""
+JS_MUC_MO = """() => Array.from(document.querySelectorAll('#fallbackWorkArea .fallback-step[data-muc]'))
+  .filter(e => e.checkVisibility({checkVisibilityCSS: true}) && !e.classList.contains('ux5b-dong')).map(e => e.id)"""
+
+
+def dem_nhap(page, sel="#view-fallback"):
+    return page.evaluate(JS_DEM_NHAP, sel)
+
+
+def chon_hoc_sinh(page, ma):
+    """Bấm thẻ học sinh `ma` ở danh sách tìm, đợi phiếu của em đó mở."""
+    page.wait_for_selector('#studentSearchResults .hs-card[data-student-id="%s"]' % ma)
+    page.locator('#studentSearchResults .hs-card[data-student-id="%s"]' % ma).click()
+    page.wait_for_function(
+        "(ma) => !document.getElementById('fallbackWorkArea').hidden && "
+        "document.getElementById('currentStudentLabel').textContent.includes(ma)", arg=ma)
+    page.wait_for_timeout(300)
+
+
 @pytest.fixture
 def mo_ux5b():
     """mo_ux5b(vai, tab, nap=True, chay=False, chon_em=None) -> (page, api, loi)."""
@@ -59,7 +87,7 @@ def mo_ux5b():
         page.wait_for_selector("#view-%s" % tab, state="visible")
         page.wait_for_timeout(900)
         if chon_em:
-            page.fill("#fbSearch", chon_em) if page.locator("#fbSearch").count() else None
+            chon_hoc_sinh(page, chon_em)
         return page, api, loi
 
     yield mo

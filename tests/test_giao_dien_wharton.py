@@ -27,6 +27,7 @@ from _wharton import bat_wharton, chen_bids, dong_bids, dung_clb, dung_hs  # noq
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 DAU_VIET = re.compile(
     "[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", re.I)
@@ -76,11 +77,12 @@ def _chon(page, ma):
     page.wait_for_function(
         "(ma) => !document.getElementById('fallbackWorkArea').hidden &&"
         " document.getElementById('currentStudentLabel').textContent.includes(ma)", arg=ma)
-    page.wait_for_selector("#testSelectionGrid .option-row")
+    page.wait_for_selector("#testSelectionGrid .option-row", state="attached")   # UX5B-L3: Bước 1 có thể đang gập
 
 
 def _cho_buoc_3(page):
-    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung")
+    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung", state="attached")
+    mo_muc(page, "b3")                                           # UX5B-L3: Bước 3 là mục gập
 
 
 def _khung(page, quy, buoi=None):
@@ -223,6 +225,7 @@ def test_bo_clb_o_buoc_2_xoa_dong_va_buoc_3_ve_lai_thieu_40(mo):
     page.wait_for_function("() => document.getElementById('chuaLuuWharton').hidden")
     assert len(dong_bids(api)) == 2           # A13.12: không có dòng 100 tự điền của A
 
+    mo_muc(page, "nv")
     page.locator("#rankingList li").nth(2).locator("button").click()       # bỏ C khỏi nguyện vọng
     page.locator("#btnSubmitPreferences").click()
     page.wait_for_function(
@@ -241,6 +244,7 @@ def test_tick_them_b_o_buoc_1_thi_buoc_3_nhac_chia_lai(mo):
     _cho_buoc_3(page)
     assert "Cần chia lại điểm" not in page.locator("#fbWhartonStep").inner_text()
 
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="B"]').click()
     page.locator("#btnSubmitTestSelection").click()
     page.wait_for_function(

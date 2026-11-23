@@ -13,6 +13,7 @@ chỉ nhìn chữ trên màn hình.
 """
 
 import json
+from _mo_muc import mo_muc  # noqa: E402,F401
 import os
 import re
 import sqlite3
@@ -308,7 +309,8 @@ def test_sau_khi_chay_xep_khoi_khoa_man_sua_va_buoc_3_kiosk_chi_doc_roi_mo_khoa(
     page.locator('[data-tab="fallback"]').click()
     page.wait_for_selector("#studentSearchResults .hs-card")
     page.locator('#studentSearchResults .hs-card[data-student-id="%s"]' % sid).click()
-    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung")
+    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung", state="attached")
+    mo_muc(page, "b3")                                      # UX5B-L3: Bước 3 là mục gập
     assert page.locator("#fbWhartonKhoa").is_visible()
     assert page.locator("#btnSubmitWharton").is_disabled()
     assert all(page.locator("#fbWhartonBody input.wh-diem").nth(i).is_disabled()

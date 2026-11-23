@@ -199,6 +199,7 @@ def test_nhap_tai_cho_hang_hoc_sinh_moi_nam_ngay_duoi_o_tim_va_menu_ba_cham(api,
     _mo_tab(page, "fallback")
     page.wait_for_selector("#studentSearchInput")
     y_tim = page.locator("#studentSearchInput").bounding_box()["y"]
+    page.locator("#ux5bTaoMoi > summary").click()        # UX5B-L3: "Tạo học sinh mới" là mục gập
     y_moi = page.locator("#newStudentId").bounding_box()["y"]
     assert 0 < y_moi - y_tim < 120, (y_tim, y_moi)       # T3-32: cùng cụm với ô tìm, không nằm dưới danh sách
     page.fill("#newStudentId", "HS99")
@@ -224,9 +225,9 @@ def test_nhap_tai_cho_khong_in_ma_tho_clb_va_khong_con_cau_hai_buoc(api, mo):
     page.fill("#studentSearchInput", "HS01")
     page.click("#btnStudentSearch")
     page.locator("#studentSearchResults .hs-card").first.click()
-    page.wait_for_selector("#testSelectionGrid .option-row")
+    page.wait_for_selector("#testSelectionGrid .option-row", state="attached")   # UX5B-L3: Bước 1 có thể đang gập
     for sel in ("#testSelectionGrid", "#rankingSourceGrid"):
-        assert "clb_a" not in page.inner_text(sel), sel       # T3-35: bỏ mã thô
+        assert "clb_a" not in page.evaluate("(s) => document.querySelector(s).textContent", sel), sel       # T3-35: bỏ mã thô
     assert "không phụ thuộc nhau" not in page.inner_text("#view-fallback")
     assert not loi
 

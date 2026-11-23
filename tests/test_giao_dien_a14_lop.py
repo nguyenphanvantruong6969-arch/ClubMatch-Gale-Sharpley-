@@ -5,6 +5,7 @@ Dữ liệu khác: lọc, và nút "Xuất theo lớp" khoá khi chưa có kết
 không lẫn tiếng Anh. Cần các API lớp của phiên A (set_student_class, list_classes...)."""
 
 import os
+from _mo_muc import mo_muc  # noqa: E402,F401
 import re
 
 import pytest
@@ -102,6 +103,7 @@ def test_kiosk_khong_co_lop_an_o_chon(mo):
     _chon_hs(page, "HS1")
     assert page.locator("#kioskLopHang").is_hidden()
     assert page.locator("#newStudentLop").is_hidden()
+    mo_muc(page, "nv")
     page.locator("#rankingSourceGrid .option-row").first.click()
     page.locator("#btnSubmitPreferences").click()
     page.wait_for_function("() => document.getElementById('preferencesFeedback').textContent.trim() !== ''")
@@ -142,6 +144,7 @@ def test_kiosk_hien_san_lop_hien_tai_cua_em(mo):
 def test_kiosk_tao_em_moi_phai_chon_lop_va_gui_lop(mo):
     page, api, loi = mo({"HS1": "10A1"})
     page.locator('[data-tab="fallback"]').click()
+    page.locator("#ux5bTaoMoi > summary").click()          # UX5B-L3: "Tạo học sinh mới" là mục gập
     page.wait_for_selector("#newStudentLop:not([hidden])")
     page.fill("#newStudentId", "HS9")
     page.fill("#newStudentName", "Em Chín")
@@ -421,6 +424,7 @@ def test_kiosk_luu_xong_thi_o_lop_het_chua_luu_va_chon_lai_ve_nhu_cu_cung_het(mo
     page, api, loi = mo({"HS1": "10A1"})
     _chon_hs(page, "HS2")
     page.select_option("#kioskLop", "10A1")
+    mo_muc(page, "nv")
     page.locator("#rankingSourceGrid .option-row").first.click()
     page.locator("#btnSubmitPreferences").click()
     page.wait_for_function("() => document.getElementById('preferencesFeedback').textContent.trim() !== ''")
