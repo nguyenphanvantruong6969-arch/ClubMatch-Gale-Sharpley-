@@ -44,8 +44,8 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 | ST-B-008 | 1 | fixed (SF-B1) |
 | ST-B-009 (UI) | 2 | open (needs A's backend lock) |
 | ST-B-004 (kiosk confirm) | 2 | open (needs A's backend warning) |
-| ST-B-011 | 2 | open |
-| ST-B-006 (field error) | 2 | open |
+| ST-B-011 | 2 | fixed (SF-B2, UI wording; A may add a dedicated zip error code) |
+| ST-B-006 (field error) | 2 | fixed (SF-B2, client-side integer check; A still owes validation code in lot 3) |
 | ST-A-001 (warning UI) | 3 | open |
 | ST-B-005 | 3 | open |
 | ST-B-010 | 3 | open |

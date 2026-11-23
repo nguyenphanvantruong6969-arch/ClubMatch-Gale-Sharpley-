@@ -288,7 +288,6 @@ def test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong(trinh_duyet, tmp_p
         "bấm 'Khôi phục' hai lần cách 0,4 s: restore_from_backup chạy %d lần, dòng trạng thái cuối: %r" % (len(goi), stt[:120]))
 
 
-@pytest.mark.xfail(strict=True, reason="ST-B-011")
 def test_b3_workspace_zip_hong_thong_bao_dung_nguyen_nhan(mo):
     ui = mo()
     p = ui.page

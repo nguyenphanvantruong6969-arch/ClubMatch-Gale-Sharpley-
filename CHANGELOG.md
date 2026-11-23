@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B2 (một phần): ST-B-006, ST-B-011
+
+- ST-B-006 (`js/05_quan_ly.js`, nút Lưu CLB): chỉ tiêu thập phân báo lỗi ngay ở ô chỉ tiêu (không gửi xuống backend); xoá dòng phản hồi cũ trước mỗi lần lưu.
+- ST-B-011 (`js/075_workspace.js` `wsNhapZip`, `i18n.js` `ws_nhap_zip_loi`): nhập zip hỏng nói đúng nguyên nhân (backend vẫn trả `ws_du_lieu_sai`; chi tiết kỹ thuật giữ nguyên).
+- Chờ backend của A: ST-B-009 (UI), ST-B-004 (hộp xác nhận kiosk). Test mới: `tests/test_giao_dien_sf_b_lo2.py` (2 ca); gỡ 2 xfail.
+
 ## 2026-11-23 — SF-B1: ST-B-001, ST-B-002, ST-B-008 (màn hình cũ)
 
 - ST-B-001 (`js/09_the_xem.js`, `loadKetQuaTab`): tab Kết quả bỏ hàng của lần chạy trước ngay khi mở, hiện khung chờ nếu tải chậm.

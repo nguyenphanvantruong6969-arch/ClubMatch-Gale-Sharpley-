@@ -1176,6 +1176,7 @@ function initAdminHandlers() {
     const buoiRaw = el("clubFormBuoi") ? el("clubFormBuoi").value.trim() : "";
     const buoi = clbDangSua || buoiRaw ? buoiRaw : null;
     ["clubFormId", "clubFormName", "clubFormCapacity", "clubFormReserveCapacity"].forEach((x) => xoaLoiTaiO(el(x)));
+    feedback(el("clubFormFeedback"), "", false);   /* ST-B-006: bỏ dòng phản hồi của lần bấm trước */
     if (!id || (!name && !clbDangSua) || !capacity) {
       feedback(el("clubFormFeedback"), t("feedback_club_form_required"), true);
       /* UX2-L4: tô đúng ô còn thiếu (cùng câu cũ, không chuỗi mới) và đưa con trỏ về ô đầu tiên. */
@@ -1185,6 +1186,12 @@ function initAdminHandlers() {
       if (!capacity) thieu.push(el("clubFormCapacity"));
       thieu.forEach((o) => baoLoiTaiO(o, () => t("feedback_club_form_required")));
       focusODau(thieu);
+      return;
+    }
+    /* ST-B-006: chỉ tiêu phải là số nguyên: số thập phân báo ngay ở ô (cùng câu "chỉ tiêu phải lớn hơn 0"), không gửi xuống backend. */
+    if (!Number.isInteger(Number(capacity))) {
+      baoLoiForm(el("clubFormId").closest("form") || document, [{ code: "capacity_must_be_positive", params: {} }], UX2_LOI_CLB,
+        { khac: (ds) => feedbackErrors(el("clubFormFeedback"), ds) });
       return;
     }
     chayNut(el("btnSaveClub"), () => callApi("create_or_update_club", id, name || null, capacity, reserveCapacity, reserveGroup, buoi), (res) => {
