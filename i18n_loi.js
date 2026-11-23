@@ -1170,6 +1170,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "{n} {score_l} đã chấm trong phần mềm sẽ bị xoá, vì sổ ghi \"thi\" (chưa có {score_l}) ở các ô đó. Muốn giữ {score_l} thì xuất lại dữ liệu đầu vào thành sổ mới rồi sửa trên sổ đó.",
     "en": "{n} {score_l}(s) already entered in the app will be removed, because the workbook says \"thi\" (no {score_l} yet) in those cells. To keep them, export the current input data to a new workbook and edit that one."
   },
+  "csdl_hong_can_khoi_phuc": {
+    "vi": "Tệp dữ liệu của phần mềm không qua được bước kiểm tra toàn vẹn ({detail}), nên phần mềm DỪNG, không chạy và không sao lưu đè lên các bản còn tốt. Hãy đóng phần mềm rồi mở lại để vào trang phục hồi (khôi phục từ bản sao lưu nguyên vẹn gần nhất).",
+    "en": "The app's data file failed the integrity check ({detail}), so the app STOPS: it will not run and will not overwrite the good backups. Close the app and reopen it to reach the recovery page (restore from the newest intact backup)."
+  },
   "so_nhap_canh_bao_giu_diem": {
     "vi": "Sổ này không có cột {score_l} thi, nên {n} ô chọn thi (và {score_l} kèm theo) đã lưu của các {person_l} trong sổ được GIỮ NGUYÊN, không bị xoá.",
     "en": "This workbook has no test {score_l} column, so the {n} test selection(s) (and any {score_l}) already stored for the {person_l}(s) in it are KEPT, not deleted."

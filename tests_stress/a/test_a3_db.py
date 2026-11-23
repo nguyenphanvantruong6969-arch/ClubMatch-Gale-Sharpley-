@@ -336,7 +336,6 @@ def test_student_created_by_mistake_after_a_run_can_be_removed(tmp_path, rep):
     assert r["ok"], r["errors"]
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-006")
 @pytest.mark.parametrize("rep", [1, 2])
 def test_run_on_page_corrupt_db_must_not_report_ok(tmp_path, rep):
     """5 flipped bytes in the data pages: PRAGMA integrity_check fails, yet PipelineAPI opens and (seed 2) a run is

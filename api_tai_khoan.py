@@ -188,11 +188,14 @@ class TaiKhoanMixin:
 
     def vao_che_do_hoc_sinh(self):
         """I2: giao diện vào chế độ học sinh tự tra cứu. Có tài khoản: từ đây chỉ `tra_cuu_hoc_sinh` (và thoát) còn
-        chạy được cho tới khi một quản trị đăng nhập lại. Chưa có tài khoản: không khoá gì (như cũ)."""
+        chạy được cho tới khi một quản trị đăng nhập lại. Chưa có tài khoản: không khoá gì, trả `can_tao_tai_khoan: True` (SF-A2, ST-B-009)."""
         try:
             khoa = self._co_tai_khoan()
             self._che_do_hs = khoa
-            return _ok({"khoa": khoa})
+            # SF-A2 (ST-B-009): không có tài khoản thì không có gì để khoá hay mở khoá (ai cũng gọi
+            # `thoat_che_do_hoc_sinh` được): lớp phủ chỉ là giả. Giữ hợp đồng cũ (ok, khoa False) và báo thêm
+            # `can_tao_tai_khoan` để giao diện dẫn tới luồng tạo tài khoản quản trị trước khi coi là đã khoá.
+            return _ok({"khoa": khoa, "can_tao_tai_khoan": not khoa})
         except Exception as e:
             return _fail(err("gt3_loi_tai_khoan", detail=str(e)))
 

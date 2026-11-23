@@ -12,6 +12,7 @@ import cau_hinh_ws
 import fa_daa
 import so_nhap
 from api_workspace import CauHinhHong, loi_cau_hinh
+from api_chung import kiem_toan_ven_db
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
@@ -516,6 +517,10 @@ class NhapDuLieuMixin:
         báo của cả ba gom về một danh sách.
         """
         try:
+            loi_ven = kiem_toan_ven_db(self.db_path)       # SF-A2 (ST-A-006): không nạp vào trang hỏng
+            if loi_ven:
+                return _fail(err("csdl_hong_can_khoi_phuc", detail=loi_ven))
+
             du_lieu, loi = self._doc_so_nhap(file_base64)
             if loi:
                 return _fail(loi)

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A2: an toàn (ST-A-006 CSDL hỏng, ST-B-009 khoá chế độ học sinh ở backend)
+
+- `api_chung.py` (`kiem_toan_ven_db`): kiểm `PRAGMA integrity_check(1)` (không dùng `quick_check`: đo trên 8 ca lật byte thì 3 ca "row N missing from index" lọt quick_check). `api.py`: `PipelineAPI.__init__` từ chối mở CSDL hỏng (ném `sqlite3.DatabaseError` → `main.py` vào trang phục hồi); `run_pipeline` chặn ở Bước 00 bằng mã `csdl_hong_can_khoi_phuc` TRƯỚC sao lưu; `_backup_db` không chép trang hỏng (không đẩy bản tốt ra khỏi vòng 10 bản). `api_nhap.py` (`import_so_nhap`): cùng mã, trước mọi đọc/ghi. `recovery.py` (`_quick_check_ok`): dùng `integrity_check` để trang phục hồi không coi tệp hỏng chỉ mục là đọc được.
+- `api_tai_khoan.py` (`vao_che_do_hoc_sinh`): chưa có tài khoản thì `{khoa: False, can_tao_tai_khoan: True}` (hợp đồng cũ giữ nguyên) để giao diện dẫn tới tạo tài khoản; có tài khoản thì khoá như cũ (đã khoá mọi hàm ngoài tra cứu, F5 không bỏ).
+- `i18n_errors.py` + `i18n_loi.js`: mã mới `csdl_hong_can_khoi_phuc`.
+- Test mới: `tests/test_sf_a_2.py` (6 ca); `tests/test_gt_tich_hop.py` thêm khẳng định `can_tao_tai_khoan`. Bỏ `xfail` ST-A-006.
+
 ## 2026-11-23 — SF-A1: nạp Sổ an toàn (ST-B-003, ST-A-004, ST-B-004 phần backend, ST-A-002)
 
 - `so_nhap.py` (`_doc_sheet_hs`, `doc_so_nhap`): sheet học sinh báo thêm `co_cot_thi` (có cột điểm thi nào không) và `n_o_bo_qua` (ô có chữ nằm ở cột không có tiêu đề, tức không được đọc).
