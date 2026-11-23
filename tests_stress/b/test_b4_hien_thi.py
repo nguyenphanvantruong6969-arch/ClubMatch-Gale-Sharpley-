@@ -222,9 +222,17 @@ def test_b4_chi_ban_phim_nhap_chay_xuat(mo):
     p.evaluate("document.activeElement && document.activeElement.blur(); window.scrollTo(0,0)")
     n = _tab_toi(p, "#dropZone")
     assert n, "không Tab tới được vùng thả tệp"
+    # SF-B8: đếm số lần `input.click()` (hộp chọn tệp phải mở MỘT lần: #fileAny nằm trong #dropZone, cú bấm nổi bọt lên vùng thả)
+    p.evaluate("""() => { window.__clickTep = 0; const oc = HTMLInputElement.prototype.click;
+        HTMLInputElement.prototype.click = function () { if (this.type === 'file') window.__clickTep++; return oc.apply(this, arguments); }; }""")
     with p.expect_file_chooser(timeout=5000) as fc:
+        # Nguyên nhân gốc của lỗi chập chờn: `expect_file_chooser` đăng ký chặn hộp chọn tệp bằng một thông điệp không
+        # chờ phản hồi; nhấn Enter ngay thì đôi khi hộp chọn tệp mở TRƯỚC khi chặn có hiệu lực và sự kiện không bao giờ tới.
+        # Một vòng khứ hồi (evaluate) bảo đảm chặn đã bật; thời gian chờ giữ nguyên 5000 ms.
+        p.evaluate("0")
         p.keyboard.press("Enter")
     fc.value.set_files(SO_150)
+    assert p.evaluate("window.__clickTep") == 1, "một cú Enter phải gọi input.click() đúng một lần"
     p.wait_for_selector("#btnImportAll", state="visible")
     p.wait_for_function("document.querySelector('#importQueue').innerText.includes('Sẵn sàng')", timeout=20000)
     p.wait_for_timeout(800)

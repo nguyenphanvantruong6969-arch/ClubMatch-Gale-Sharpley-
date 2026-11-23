@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B8: test bàn phím `test_b4_chi_ban_phim_nhap_chay_xuat` (lỗi chập chờn của test) + bản hồi quy SF-B5..B7
+
+- Nguyên nhân gốc: KHÔNG phải thứ tự focus sau ST-B-009 (Tab vẫn tới đúng `#dropZone`, `keydown` Enter chạy và `input.click()` được gọi). Chạy riêng 8 lần: 5 lần đỏ, kể cả với `index.html` nguyên bản. `expect_file_chooser` đăng ký chặn hộp chọn tệp bằng thông điệp không chờ phản hồi; nhấn Enter ngay thì đôi khi hộp chọn tệp mở trước khi chặn có hiệu lực nên sự kiện không bao giờ tới. Thêm một vòng khứ hồi `p.evaluate("0")` trước khi nhấn phím: 6/6 xanh. Thời gian chờ giữ nguyên 5000 ms.
+- Phát hiện kèm (lỗi thật, nhỏ, không phải nguyên nhân của chập chờn): `<input id="fileAny">` nằm TRONG `#dropZone`, nên `input.click()` nổi bọt lên và `zone` gọi `input.click()` lần hai. `js/02_van_hanh.js` (`initCsvImportHandlers`): bỏ qua cú bấm xuất phát từ chính ô chọn tệp. Test khoá: cùng test bàn phím đếm `HTMLInputElement.prototype.click` bằng đúng 1 sau một lần Enter.
+- Thêm `tests/test_giao_dien_sf_b_lo5.py` (5 ca): bản hồi quy nhỏ cho ST-B-006, ST-B-007 (CLB, học sinh), ST-A-001. Đếm lại tệp test: 388.
+
 ## 2026-11-23 — SF-B7: ST-A-001 (cảnh báo thiếu dữ liệu dưới các thẻ chế độ)
 
 - `js/18_cai_dat.js` (`ux1aTaoThe`): thêm vùng `#ux1aCanhBao` (`role="status"`) dưới các thẻ chế độ (#ux1aChiXep, #ux1aChia100, #ux1aHuyChuong) và hàm `datCanhBao`; sau `update_workspace_config`, nếu `data.warnings` có `che_do_thieu_du_lieu` thì hiện câu của backend (`n_thieu_loai`, `n_buoi_thieu_tu_do`, `n_thieu_diem_san`, `n_huy_chuong_sai`, `che_do`), không có thì ẩn; đổi chế độ thì xoá cảnh báo cũ rồi vẽ lại theo lần lưu mới; "Hoàn tác" cũng cập nhật. `style.css`: `.ux1a-canh-bao`. Chữ từ `i18n_loi.js` của A, không có chữ mới.

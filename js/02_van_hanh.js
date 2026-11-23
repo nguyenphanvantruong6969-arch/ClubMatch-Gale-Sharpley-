@@ -868,7 +868,9 @@ function initCsvImportHandlers() {
   const input = el("fileAny");
   if (!zone || !input) return;
 
-  zone.addEventListener("click", () => { if (!khoaVungTha()) input.click(); });
+  /* SF-B8: `#fileAny` nằm TRONG `#dropZone`, nên `input.click()` nổi bọt lên đây và gọi `input.click()` lần hai.
+     Bỏ qua cú bấm xuất phát từ chính ô chọn tệp: mỗi lần mở hộp chọn tệp chỉ gọi MỘT lần. */
+  zone.addEventListener("click", (ev) => { if (ev.target !== input && !khoaVungTha()) input.click(); });
   zone.addEventListener("keydown", (ev) => {
     if (ev.key === "Enter" || ev.key === " ") {
       ev.preventDefault();
