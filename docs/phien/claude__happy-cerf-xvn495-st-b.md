@@ -56,3 +56,7 @@ Merged origin/…-st-a at start (§2 done). venv ready.
 ## SF notes (coder B)
 - Env flake at BASE HEAD too (not from SF): `test_b4_moi_nut_xuat_tep_mo_duoc` fails ('btnPdfPhieuLop … .pdf.tmp tệp rỗng': fixed 2.5 s wait, PDF slower in this container). `test_b2_hoc_sinh_phan_trang_tim_kiem_gan_nhom` failed once (8≠50 rows, render race), passed 2 reruns. Neither touched; marked for Truong/CI check.
 - Still open for B (need A first): ST-A-001 warning UI, ST-B-007 UI (A's delete flow), ST-B-006 validation code (A, lot 3). Resume: merge origin/…-st-a, read A's handoff for field/code names.
+
+## Current state (B, end of this session)
+- B lots 1-4 done except items needing A: ST-A-001 warning UI, ST-B-007 UI, ST-B-006 validation code. Head pushed; CI run on it is the next thing to check (run 45127725794 was red for the `zip` word in vi UI: fixed; also Linux 5/6 shard exit 1 with '215 passed' - check log head for cause).
+- Next: fetch/merge origin/...-st-a, read A's handoff Asks, do the 3 open items, then §4 checks and §5 (review A diff, wait 'SF-A DONE', PR into claude/happy-cerf-xvn495 titled 'SF: fix stress-test bugs').
