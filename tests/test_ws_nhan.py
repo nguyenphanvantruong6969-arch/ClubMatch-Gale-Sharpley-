@@ -58,6 +58,8 @@ MA_MOI_SAU_ANH_CHUP = {
     # === B: FA-M9/M10 — add below ===
     "forms_thieu_tep_nap", "forms_thieu_tep_dang_ky", "forms_nhieu_tep_list", "forms_chua_chuyen_tep",
     # === end B ===
+    # A5 (nhóm đồng hạng a|b)
+    "a5_nhom_hs_co_gach", "a5_nhom_hs_co_gach_hang_loat",
 
     # (spacer: unchanged line between marker blocks)
 

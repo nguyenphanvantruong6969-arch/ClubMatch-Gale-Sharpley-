@@ -1282,7 +1282,7 @@ CLB Tuyển chọn thiếu điểm sàn hoặc chưa có em nào có điểm thi
 
 ## 18. Hai nhóm ưu tiên đồng hạng: dấu `|` (tuỳ chọn)
 
-Mỗi học sinh chỉ có **MỘT** nhóm ưu tiên (một nhãn). Dấu `|` không đặt ở học sinh mà ở hai nơi khác, để nói "hai nhóm này được đối xử như nhau".
+Mỗi học sinh chỉ có **một** nhóm ưu tiên (một nhãn). Dấu `|` không đặt ở học sinh mà ở hai nơi khác, để nói "hai nhóm này được đối xử như nhau".
 Không dùng dấu `|` thì phần mềm chạy y hệt như trước, kết quả không đổi một dòng nào. Sổ nhập CLB và các tệp CSV **không đổi cột**.
 
 ### Cách 1 — Thứ hạng nhóm nghiêm ngặt: `a|b` là cùng một hạng

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-CIFIX1: sửa 4 test đỏ trên CI do khoá i18n của A5
+
+- `i18n_errors.py`: hai mã `a5_nhom_hs_co_gach`, `a5_nhom_hs_co_gach_hang_loat` chuyển lên NGAY TRƯỚC khối MT1 (L2) để phần ĐUÔI của `MESSAGES` vẫn toàn mã `mt_` (`test_mt1_uoc_tinh`, `test_mt1_api` ghim đuôi). Việc này THAY dòng "thêm ở cuối" trong `A5_GIAO_THUC.md` §1. Sinh lại `i18n_loi.js`.
+- Chữ nhấn mạnh viết hoa "MỘT"/"ONE" đổi sang chữ thường ở mã lỗi A5, `ws_v_tiers_hang`, `a5_club_nhom_goi_y` (vi + en) và mục 18 của hướng dẫn (`test_van_phong_tu_nhien`).
+- `tests/test_ws_nhan.py`: thêm hai mã A5 vào `MA_MOI_SAU_ANH_CHUP`. `tests/test_a5_giao_dien.py`: cập nhật chuỗi mong đợi theo chữ thường (không nới lỏng kiểm tra).
+
 ## 2026-11-23 — A5-L4: tài liệu nhóm đồng hạng `a|b`
 
 - `HUONG_DAN_SU_DUNG.md`: mục 18 mới (+ mục lục): cách 1 thứ hạng nhóm nghiêm ngặt `a|b` = cùng một hạng; cách 2 suất dự trữ, ô nhóm CLB `a|b` dùng chung (pooled) với cảnh báo "nhóm điểm cao hơn có thể lấy hết suất dự trữ"; học sinh ghi `|` là lỗi `a5_nhom_hs_co_gach`; giới hạn đã biết. Không nhắc tên chế độ trong mục 15 (test `test_fa_m6_tai_lieu` quét từ mục 15 đến hết tệp).

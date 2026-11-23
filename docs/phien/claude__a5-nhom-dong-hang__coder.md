@@ -32,3 +32,7 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 - T1/T2: untouched in L3. T4: 5 JS mutants (dup check off, ` = ` joiner, empty-part check off, đ→d replace removed) — the last one SURVIVED at first (weak test) → added cases `đoàn|DOAN`, `Đội / đoi|x`; now caught. Docs: count 382 files, CHANGELOG, TIEN_DO.
 - Not done: plan line "js/15_tieu_chi.js read-only summary shows a = b": no such summary exists there (only the textarea). Left unchanged; hint paragraph added under the textarea instead.
 - Related runs: test_ws_giao_dien, test_giao_dien_t3_l3, test_giao_dien_gt2_tieu_chi, test_i18n_sync, test_i18n_khoa_dc_khong_chet, test_gt3_phan_quyen, test_tai_lieu_dong_bo, test_a13_12_tai_lieu all pass.
+
+## CIFIX1
+- CI red (4 tests): (1) `test_mt1_uoc_tinh`/`test_mt1_api` pin the TAIL of `i18n_errors.MESSAGES` to `mt_` keys → moved the A5 block to just before `# === MT1 (L2) ===` (overrides protocol §1 "append at END"); (2) `test_van_phong_tu_nhien` bans all-caps emphasis (MỘT/ONE) in displayed text → lowercase in i18n_errors, i18n.js, guide §18; (3) `test_ws_nhan` needs new codes in `MA_MOI_SAU_ANH_CHUP`.
+- Lesson: new i18n codes must go BEFORE the MT1 block; run `-k "i18n or van_phong or ws_nhan or mt1 or tieng_viet or chu_cam or tai_lieu"` (364 pass, 1 skip: pypdf missing locally) before pushing.

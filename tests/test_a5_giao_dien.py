@@ -62,11 +62,11 @@ def _thu(page, noi_dung):
 
 
 @pytest.mark.parametrize("noi_dung, khoa", [
-    ("a\nb|a", "Mỗi nhóm chỉ được ở MỘT hạng"),          # một nhóm ở hai hạng
-    ("a|A", "Mỗi nhóm chỉ được ở MỘT hạng"),              # hai lần trong một dòng (không phân biệt hoa)
-    ("Khối 1|x\nkhoi  1", "Mỗi nhóm chỉ được ở MỘT hạng"),   # dấu, NBSP, dấu cách kép
-    ("đoàn|DOAN", "Mỗi nhóm chỉ được ở MỘT hạng"),        # đ → d, bỏ dấu (như xay_tier_rank)
-    ("Đội\nđoi|x", "Mỗi nhóm chỉ được ở MỘT hạng"),
+    ("a\nb|a", "Mỗi nhóm chỉ được ở một hạng"),          # một nhóm ở hai hạng
+    ("a|A", "Mỗi nhóm chỉ được ở một hạng"),              # hai lần trong một dòng (không phân biệt hoa)
+    ("Khối 1|x\nkhoi  1", "Mỗi nhóm chỉ được ở một hạng"),   # dấu, NBSP, dấu cách kép
+    ("đoàn|DOAN", "Mỗi nhóm chỉ được ở một hạng"),        # đ → d, bỏ dấu (như xay_tier_rank)
+    ("Đội\nđoi|x", "Mỗi nhóm chỉ được ở một hạng"),
     ("a||b", "phần trống quanh dấu |"),
     ("a|\nb", "phần trống quanh dấu |"),
 ])
