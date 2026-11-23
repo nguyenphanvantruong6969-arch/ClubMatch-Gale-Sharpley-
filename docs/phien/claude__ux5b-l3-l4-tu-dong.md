@@ -18,7 +18,7 @@ then loop until CI is green. L1 and L2 are already on `claude/affectionate-lampo
   (4) Scoring: while one club is open the list panel is hidden; "Danh sach" button returns (typed but unsaved scores are dropped, as on tab switch).
 - Old tests changed only because the UI changed (open the right step first via tests/_mo_muc.py, wait grids as attached, T3-36 expects "Cham tiep").
 - Env: venv /home/user/venv_ux5b, PLAYWRIGHT_BROWSERS_PATH=/home/user/pw (symlinks to 1243).
-- Checker session id: (fill in)
+- Checker session id: session_01VfPzNrzpAVzD7j2CAfX6Xv (created 2026-11-23, reviews 8441218..b42cc57; coder session session_01VfPzNuDZRixo4pKedaMd5w)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
