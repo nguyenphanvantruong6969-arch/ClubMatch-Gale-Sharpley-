@@ -3,7 +3,7 @@
 > Fresh session: read CLAUDE.md, then THIS file, then `docs/phien/A5_GIAO_THUC.md`. Cap 100 lines.
 > Spec source: `docs/phien/claude__vibrant-goodall-sqcnbb.md` (design talk 2026-11-22). Planner: Opus, no product code.
 
-Status: IN PROGRESS 2026-11-23 — lead started, creating coder + checker
+Status: CODE DONE 61cb42d, Tests CI green 2026-11-23 (all shards + lint + coverage); final check §5 in progress; Windows build workflow NOT run (see Needs Truong)
 
 ## Feature / goal
 Registry item **A5 (small part)**: equal-rank priority groups. Each student keeps exactly ONE label
@@ -85,16 +85,19 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- L1-L4 done+checked (code head 85ff58f). Next: CI gate (§4), then final check (§5).
+- L1-L4 + CIFIX1/1b/2 done+checked; Tests CI green on 61cb42d. Next: §5 final check, then summary.
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L4 NO BUGS, idle |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | all lots + CI fixes done |
 | checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L4 NO BUGS |
 
 ## Needs Truong
+- `Build Windows executable (rbda-kiosk)` is manual-only (workflow_dispatch) and overwrites the public release "ban-moi-nhat"; lead did NOT run it. Run it yourself when you want the exe (Actions tab, branch claude/a5-nhom-dong-hang or after merge).
+- test_khung_khong_lam_nhay_bo_cuc_120_hs (ux2_khung) was changed to measure in document coords (CIFIX2): CI-only race, not reproduced locally; checker proved mechanism + mutation-tested. Please glance at it.
+- i18n codes a5_nhom_hs_co_gach* were placed BEFORE the MT1 block, not at the end (protocol said end), because test_mt1_uoc_tinh/test_mt1_api pin the tail of MESSAGES to mt_.
 - (low priority, not blocking) `xem_truoc_so_nhap` does not warn beforehand about a student cell with `|`; import returns ok=True while that student is skipped (warning a5_nhom_hs_co_gach). Decide if a pre-import warning is wanted.
 
 ## Session log (append only)
