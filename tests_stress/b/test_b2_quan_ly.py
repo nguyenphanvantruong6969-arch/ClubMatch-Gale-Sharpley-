@@ -81,6 +81,27 @@ def test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat(mo):
         "chỉ tiêu 1.5 → thông báo chung 'Hãy thử lại' + lộ Python: %r" % chu[:200])
 
 
+def test_b2_form_clb_chi_tieu_thap_phan_hien_dung_chu_o_o(mo):
+    """SF-B5 (ST-B-006): 1.5 hiện câu 'số nguyên' ngay ở ô chỉ tiêu (không phải 'phải lớn hơn 0'); số rất lớn hiện 'quá lớn'."""
+    ui = mo()
+    chon_cach(ui, "huy_chuong")
+    nap_so_150(ui)
+    _vao_clb(ui)
+    p = ui.page
+    n_truoc = dem_db(ui, "clubs")[0]
+    for gia_tri, mong, cam in (("1.5", "số nguyên", "lớn hơn 0"), ("99999999999", "quá lớn", "số nguyên")):
+        nhac = _luu_clb(ui, "TP1", "Thập phân", gia_tri)
+        assert mong in nhac and cam not in nhac, (gia_tri, nhac)
+        assert not any(x in nhac for x in TRACEBACK), nhac
+        assert dem_db(ui, "clubs")[0] == n_truoc, "chỉ tiêu xấu vẫn được lưu"
+    p.fill("#clubFormId", "TP1")
+    p.fill("#clubFormName", "Thập phân")
+    p.evaluate("e => { document.getElementById('clubFormCapacity').value = '1.5'; }")
+    p.locator("#btnSaveClub").click()
+    p.wait_for_function("document.getElementById('clubFormCapacity').getAttribute('aria-invalid') === 'true'")
+    ui.kiem_loi()
+
+
 def test_b2_xoa_clb_khong_co_nguyen_vong_hai_buoc_roi_chay_lai(mo):
     ui = mo()
     p = ui.page

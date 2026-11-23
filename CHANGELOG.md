@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B5: ST-B-006 (chỉ tiêu CLB: báo đúng chữ ngay ở ô)
+
+- `js/05_quan_ly.js`: bảng `UX2_LOI_CLB` thêm `club_capacity_not_integer` và `capacity_too_large` (mã backend của SF-A3) vào ô `clubFormCapacity`; bỏ kiểm phía trình duyệt `Number.isInteger(Number(capacity))` (báo sai chữ "phải lớn hơn 0" cho 1.5). Chữ lấy từ `i18n_loi.js` của A, nên không có chữ mới trong `i18n.js`.
+- Test mới (đỏ trước khi sửa): `tests_stress/b/test_b2_quan_ly.py::test_b2_form_clb_chi_tieu_thap_phan_hien_dung_chu_o_o` (1.5 và số rất lớn); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
 ## 2026-11-23 — SF-A5: PDF phiếu cả trường ≤ 30 s ở 3 000 em + báo tiến độ (ST-A-008)
 
 - `giai_trinh.py`: bộ nhớ đệm theo CLB trong dữ liệu một buổi (`_nhan_cuoi_nho`, `_so_nhan`, `_chuan_clb_fa` nhớ kết quả; `_nguoi_nhan_cuoi`, đếm suất và quét `fa_rows` từng quét cả danh sách xếp cho MỖI nguyện vọng của MỖI em, nên chuẩn bị 3 000 phiếu tốn 4,7 s (Chia 100) / 6,8 s (Huy chương), nay 0,1 s). Kết quả không đổi: dữ liệu phiếu 3 000 em × 2 chế độ và 800 em × 2 chế độ so trước/sau bằng nhau từng trường (trừ `run_at`).
