@@ -220,3 +220,37 @@ Thay đổi: một dòng trong `tests/test_giao_dien_ux2_khung.py::test_khung_kh
 3. **Test cũ có đỏ tự nhiên không:** TÔI KHÔNG TÁI HIỆN: bản test cũ xanh 3/3 và bản mới xanh 3/3 ở đây (`scrollY`=0). Nên "scroll 80 px khi vào tab admin" là giả thuyết đã chứng minh được về cơ chế (ép scroll) nhưng chưa thấy xảy ra tự nhiên; có thể phụ thuộc môi trường CI (phông/chiều cao khác làm Playwright cuộn để bấm `#qlTabHs`). Đo bằng toạ độ tài liệu là cách đúng bất kể nguyên nhân.
 4. **Test khác cùng rủi ro:** không thấy. 17 tệp dùng `getBoundingClientRect`, nhưng chỉ tệp này đo `top` của `thead` qua lúc bật/tắt khung; `test_giao_dien_ux2_chuyen_canh` (L7 khung, dòng ~110) chỉ đếm hàng và hiệu ứng, các chỗ đo khác không bắc qua việc gỡ khung.
 - Chưa đo: CI thật (đỏ này chỉ thấy trên CI), toàn bộ ~25 tệp `test_giao_dien_*`.
+
+## L5 — range 597e651..33f85cf — VERDICT: NO BUGS (2 nhận xét nhỏ)
+
+### (1) `xem_truoc_so_nhap` cảnh báo `|` ở học sinh — ĐẠT
+Mã: sau khi đã có `du_lieu` hợp lệ, thêm `err("a5_nhom_hs_co_gach", student_id, reserve_group)` cho mỗi học sinh có `o_nhom_hs_co_gach`. Đo bằng `PipelineAPI` + Sổ nhập thật (script tạm):
+- `"a||b"`, NBSP `"a | b"`, `" | "`, `"|"`, `" |"`, `"a|"` → đều cảnh báo đúng một lần cho em đó (lần đầu tôi tưởng `" | "` không báo — lỗi script của tôi, đo lại thì có).
+- `|` chỉ ở ô CLB, hoặc học sinh `a`/`b`/`c`/rỗng/None → KHÔNG cảnh báo A5. Sổ không có `|` → danh sách cảnh báo và mọi khoá còn lại y hệt (test so từng phần tử).
+- 300 học sinh, 30 em có `|` → đúng 30 cảnh báo. Xem trước chỉ đọc: DB sau nhiều lần xem trước vẫn 0 học sinh / 0 CLB / 0 nguyện vọng.
+- Hình dạng cảnh báo `{student_id, reserve_group}` khớp placeholder của `a5_nhom_hs_co_gach` (câu vi hiển thị đúng); UI danh sách xem trước hiển thị theo mã nên không cần đổi JS.
+- Nhập thật không đổi: em có `|` không được tạo, không có `a_b`, cảnh báo giữ nguyên. Lưu ý nhỏ #1: nhập thật phát cảnh báo này HAI lần cho một em (một ở bước chọn thi, một ở bước nguyện vọng — hành vi từ L2, do hai hàm CSV), còn xem trước phát một lần. Không sai dữ liệu, chỉ trùng lặp ở danh sách cảnh báo; có thể dedupe ở lần sau nếu muốn.
+
+### (2) `tests/test_a5_chay_xep.py` — ĐẠT, có ý nghĩa (không tautology)
+Gọi `run_pipeline(seed=7)` thật (Wharton tắt) trên dữ liệu MÔ PHỎNG; kiểm bằng bảng `match_results`: suất dự trữ chỉ vào a/b, c và em chưa nhóm không có suất dự trữ; nhóm điểm cao hơn lấy hết 3 suất (a-cao: a1..a3; b-cao: b1..b3); ô `"a"` thì b điểm cao vẫn bị loại; `a|b` khi không có học sinh b cho kết quả y hệt ô `a`. 5 passed. Gây hỏng tạm (hoàn tác bằng `cp`, `git status` sạch):
+| Đột biến | `test_a5_chay_xep` | Ghi chú |
+|---|---|---|
+| bỏ `|` (chỉ nhánh `==`) | ĐỎ (4 fail) | |
+| chỉ nhãn đầu của ô | ĐỎ (1 fail) | |
+| so khớp chuỗi con (`nhom_hs in club_group`) | XANH | tương đương với nhãn a/b/c của test này; đột biến bị test đơn vị bắt (backend/L1: 1 fail) — đủ, vì có test riêng về nhãn là chuỗi con |
+| `xay_tier_rank` gán hạng 0 cho mọi phần | XANH (cả `test_a5_chay_xep` lẫn `test_a5_nhom_dong_hang`) | không có test nào đặt mục `a|b` ở chỉ số ≠ 0. Đây chính là nhận xét nhỏ #1 của L1, chưa được xử lý (nhỏ #2 dưới) |
+
+### (3) Test / văn bản / bất biến
+- Không test nào bị làm yếu liên quan A5. Có MỘT thay đổi ngoài A5: `tests/test_a13_12_browser_host.py::_con_song` timeout 1 s → 5 s (thăm dò máy chủ còn sống). Chấp nhận được: không đổi khẳng định (`True`/`False`), máy chủ đã tắt vẫn từ chối kết nối ngay; chỉ giảm chập chờn trên CI. Nhưng nó KHÔNG thuộc A5 — lead nên ghi rõ trong CHANGELOG (đã có chú thích trong test). Tôi chạy `test_a13_12_browser_host` = xanh.
+- Không có từ in hoa nhấn mạnh trong văn bản mới (CHANGELOG, comment, test); không thêm mã i18n.
+- CHANGELOG, TIEN_DO, CLAUDE_CHI_TIET (383 tệp — tôi đếm lại `ls tests/test_*.py` = 383) khớp.
+- `kiem_nhanh --so-seed 20`: 7/7, 60 ca trùng khít. Bộ test liên quan (`test_a13_12_browser_host`, `test_i18n_sync`, `test_a13_12_so_nhap`, `test_so_nhap`, `test_ws_so_nhap`) + A5 = 141 + 53 passed.
+- soat-ma: Tầng 1 (lõi) không đổi trong L5; Tầng 2 backend: chỉ đọc, SQL không đổi, không thêm đường ghi, mã lỗi cũ; Tầng 3 UI: không đổi JS/HTML (danh sách cảnh báo hiển thị theo mã); Tầng 4: ruff sạch, `i18n_*` OK, mutation như trên.
+
+### Phát hiện
+| # | Mức | Vấn đề | Đề xuất |
+|---|---|---|---|
+| 1 | nhỏ | Nhập thật phát `a5_nhom_hs_co_gach` hai lần cho một học sinh. | Dedupe theo `student_id` (không chặn). |
+| 2 | nhỏ | Vẫn chưa có test khoá "mục `a|b` không ở chỉ số 0" cho `xay_tier_rank` (nhận xét L1 #1). | Thêm ca `tiers=["x","a|b","c"]` → a,b = 1, c = 2. |
+
+Chưa đo: toàn bộ bộ test, FA bật, build Windows (CI).
