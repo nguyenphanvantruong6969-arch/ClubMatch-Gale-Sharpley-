@@ -3,7 +3,7 @@
 > Fresh session: read CLAUDE.md, then THIS file, then `docs/phien/A5_GIAO_THUC.md`. Cap 100 lines.
 > Spec source: `docs/phien/claude__vibrant-goodall-sqcnbb.md` (design talk 2026-11-22). Planner: Opus, no product code.
 
-Status: DONE 61cb42d Tests CI green 2026-11-23 (final check §5 only partly done, Windows build not run — see Needs Truong)
+Status: DONE 3ee4a7b Tests CI green 2026-11-23 (L1-L5b; Windows build workflow not run; final check §5 partial — see Needs Truong)
 
 ## Feature / goal
 Registry item **A5 (small part)**: equal-rank priority groups. Each student keeps exactly ONE label
@@ -85,7 +85,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- All done. Tests CI green on 61cb42d. Nothing left for the team; remaining items are under Needs Truong.
+- All done incl. L5 (preview warning, end-to-end run test) and L5b. Tests CI green on 3ee4a7b (Windows 8/9 test_a13_12_browser_host F5 test flaked once, green on rerun; its timeout change 281f782 is from another session). Nothing left for the team; remaining items are under Needs Truong.
 
 ## Sessions
 | Role | Session id | Model | State |
@@ -96,6 +96,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 
 ## Needs Truong
 - §5 final check NOT fully done: the 120-HS Sổ nhập and the CSV sets both need Wharton profiles to run the pipeline (n=108/139 invalid profiles), so I could not run an end-to-end `a|b` club by hand. Done: tiers `a|b`+`b|c` → error (Python), tiers `a|b`,`c` accepted; the rest is covered by tests (250-case randomised stability, Chromium UI tests). Please try once in the app: club reserve `a|b`, tiers `a|b` then `c`, a label in two lines (3 manual steps), and the Windows exe.
+- (resolved by L5: preview now warns about `|` students; end-to-end `a|b` run test added in tests/test_a5_chay_xep.py)
 - `Build Windows executable (rbda-kiosk)` is manual-only (workflow_dispatch) and overwrites the public release "ban-moi-nhat"; lead did NOT run it. Run it yourself when you want the exe (Actions tab, branch claude/a5-nhom-dong-hang or after merge).
 - test_khung_khong_lam_nhay_bo_cuc_120_hs (ux2_khung) was changed to measure in document coords (CIFIX2): CI-only race, not reproduced locally; checker proved mechanism + mutation-tested. Please glance at it.
 - i18n codes a5_nhom_hs_co_gach* were placed BEFORE the MT1 block, not at the end (protocol said end), because test_mt1_uoc_tinh/test_mt1_api pin the tail of MESSAGES to mt_.
