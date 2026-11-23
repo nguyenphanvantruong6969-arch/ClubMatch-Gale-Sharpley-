@@ -5,7 +5,7 @@ from ho_tro import chon_cach, nap_so_150
 
 def _canh_bao(ui):
     p = ui.page
-    o = p.locator("#ux1aCanhBao")
+    o = p.locator("#ux1aCanhBaoDuLieu")
     return o.inner_text() if o.count() and o.is_visible() else ""
 
 
@@ -14,11 +14,11 @@ def test_b5_doi_sang_huy_chuong_khi_thieu_du_lieu_co_canh_bao_roi_het_khi_doi_la
     chon_cach(ui, "chia_100")
     nap_so_150(ui)                       # nạp ở Chia 100: sổ không giữ huy chương / Loại
     chon_cach(ui, "huy_chuong")
-    ui.page.wait_for_selector("#ux1aCanhBao", state="visible")
+    ui.page.wait_for_selector("#ux1aCanhBaoDuLieu", state="visible")
     chu = _canh_bao(ui)
     assert "Đã đổi chế độ" in chu and "{" not in chu and "n_thieu" not in chu, chu
     chon_cach(ui, "chia_100")            # đổi chế độ thì làm mới: không còn cảnh báo
-    ui.page.wait_for_selector("#ux1aCanhBao", state="hidden")
+    ui.page.wait_for_selector("#ux1aCanhBaoDuLieu", state="hidden")
     ui.kiem_loi()
 
 
@@ -29,5 +29,5 @@ def test_b5_doi_che_do_khi_du_du_lieu_khong_co_canh_bao(mo):
     chon_cach(ui, "chia_100")
     chon_cach(ui, "huy_chuong")
     assert not _canh_bao(ui)
-    assert ui.page.locator("#ux1aCanhBao").count() == 0 or ui.page.locator("#ux1aCanhBao").is_hidden()
+    assert ui.page.locator("#ux1aCanhBaoDuLieu").count() == 0 or ui.page.locator("#ux1aCanhBaoDuLieu").is_hidden()
     ui.kiem_loi()

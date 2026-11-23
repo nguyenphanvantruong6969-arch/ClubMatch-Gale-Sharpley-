@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B9: CI Linux 6/6 (id trùng `ux1aMtCanhBao`), sửa lỗi của SF-B7
+
+- Nguyên nhân gốc: vùng cảnh báo của SF-B7 đặt id `tienTo + "CanhBao"` trong `ux1aTaoThe`, mà thẻ mục tiêu MT1 cũng dùng `ux1aTaoThe` (tiền tố `ux1aMt`) và đã có `#ux1aMtCanhBao` (`js/19_muc_tieu.js`): hai phần tử cùng id làm `tests/test_giao_dien_mt1.py::test_che_do_huy_chuong_khoa_co_hoi_mot_dong_ly_do_va_uoc_tinh_khong_co` lỗi strict mode (chạy cục bộ tái hiện đỏ trước khi sửa). Bộ test liên quan em chạy trước khi push không có tệp này.
+- Sửa: `js/18_cai_dat.js` đổi id thành `tienTo + "CanhBaoDuLieu"` (`#ux1aCanhBaoDuLieu`); test của SF-B7 đổi theo; thêm `test_st_a_001_vung_canh_bao_khong_trung_id_voi_the_muc_tieu` (không id `ux1a*` nào trùng trong trang Cài đặt) ở `tests/test_giao_dien_sf_b_lo5.py`.
+
 ## 2026-11-23 — SF-B8: test bàn phím `test_b4_chi_ban_phim_nhap_chay_xuat` (lỗi chập chờn của test) + bản hồi quy SF-B5..B7
 
 - Nguyên nhân gốc: KHÔNG phải thứ tự focus sau ST-B-009 (Tab vẫn tới đúng `#dropZone`, `keydown` Enter chạy và `input.click()` được gọi). Chạy riêng 8 lần: 5 lần đỏ, kể cả với `index.html` nguyên bản. `expect_file_chooser` đăng ký chặn hộp chọn tệp bằng thông điệp không chờ phản hồi; nhấn Enter ngay thì đôi khi hộp chọn tệp mở trước khi chặn có hiệu lực nên sự kiện không bao giờ tới. Thêm một vòng khứ hồi `p.evaluate("0")` trước khi nhấn phím: 6/6 xanh. Thời gian chờ giữ nguyên 5000 ms.

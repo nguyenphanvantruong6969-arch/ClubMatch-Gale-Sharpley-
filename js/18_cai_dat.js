@@ -60,7 +60,7 @@ function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
   const loi = ux1aEl("p", { class: "ux1a-loi", role: "alert", id: tienTo + "LoiThe", hidden: true });
   const sanSang = ux1aEl("div", { class: "ux1a-san-sang", id: tienTo + "SanSang", hidden: true });
   /* SF-B7 (ST-A-001): cảnh báo `che_do_thieu_du_lieu` của update_workspace_config, ngay dưới các thẻ chế độ. */
-  const canhBao = ux1aEl("div", { class: "canh-bao-vang ux1a-canh-bao", id: tienTo + "CanhBao", role: "status", hidden: true });
+  const canhBao = ux1aEl("div", { class: "canh-bao-vang ux1a-canh-bao", id: tienTo + "CanhBaoDuLieu", role: "status", hidden: true });
   const hop = ux1aEl("div", { class: "ux1a-cai-dat" }, cauHoi, luoi, loi, canhBao, sanSang);
   return {
     hop, sanSang,

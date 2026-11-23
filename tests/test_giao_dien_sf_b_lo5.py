@@ -179,11 +179,22 @@ def test_st_a_001_canh_bao_thieu_du_lieu_duoi_the_che_do_roi_het_khi_doi_lai(tra
     page, loi = trang_ws
     page.locator('.nav-item[data-tab="admin"]').click()
     page.wait_for_selector("#ux1aHuyChuong", state="visible")
-    assert page.locator("#ux1aCanhBao").is_hidden()
+    assert page.locator("#ux1aCanhBaoDuLieu").is_hidden()
     page.locator("#ux1aHuyChuong").click()                              # sổ nạp ở Chia 100: thiếu thứ Huy chương cần
-    page.wait_for_selector("#ux1aCanhBao", state="visible")
-    chu = page.locator("#ux1aCanhBao").inner_text()
+    page.wait_for_selector("#ux1aCanhBaoDuLieu", state="visible")
+    chu = page.locator("#ux1aCanhBaoDuLieu").inner_text()
     assert "Đã đổi chế độ" in chu and "{" not in chu, chu
     page.locator("#ux1aChia100").click()                                # đổi chế độ thì làm mới
-    page.wait_for_selector("#ux1aCanhBao", state="hidden")
+    page.wait_for_selector("#ux1aCanhBaoDuLieu", state="hidden")
+    assert not loi, loi
+
+
+def test_st_a_001_vung_canh_bao_khong_trung_id_voi_the_muc_tieu(trang_ws):
+    """Lần đầu thêm vùng cảnh báo bằng id `ux1aCanhBao`... trùng `#ux1aMtCanhBao` của thẻ mục tiêu MT1 (CI Linux 6/6)."""
+    page, loi = trang_ws
+    page.locator('.nav-item[data-tab="admin"]').click()
+    page.wait_for_selector("#ux1aHuyChuong", state="visible")
+    trung = page.evaluate("""() => { const dem = {}; document.querySelectorAll('[id]').forEach(e => { dem[e.id] = (dem[e.id] || 0) + 1; });
+        return Object.keys(dem).filter(k => dem[k] > 1 && k.startsWith('ux1a')); }""")
+    assert not trung, trung
     assert not loi, loi
