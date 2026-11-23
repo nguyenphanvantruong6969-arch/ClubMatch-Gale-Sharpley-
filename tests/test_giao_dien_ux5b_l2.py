@@ -1,3 +1,4 @@
+# ruff: noqa: F811
 """UX5B-L2: thẻ Xếp CLB (Chromium thật; dữ liệu MÔ PHỎNG, sổ 120 học sinh, 3 buổi). Chỉ quản trị (thẻ ẩn với giáo viên).
 Hick: ≤ 7 điều khiển nhìn thấy trước khi mở mục gập. Von Restorff: nút vàng đi theo bước kế tiếp. Dòng trạng thái nói việc tiếp theo."""
 

@@ -116,7 +116,7 @@ def test_chi_con_mot_nut_kiem_tra_nam_trong_khung_canh_bao(api, mo):
     assert page.locator("#btnHealthRecheck").count() == 0
     assert page.locator("#btnValidate").count() == 1
     assert page.locator(".panel:has(#healthList) #btnValidate").count() == 1
-    assert page.locator("#btnValidate").inner_text() == "Kiểm tra lại dữ liệu"
+    assert page.locator("#btnValidate").inner_text() == "Kiểm tra lại"   # UX5B-L2: chủ ý đổi chữ
     page.click("#btnValidate")
     page.wait_for_selector(".toast.is-success, .toast.is-warn")  # cảnh báo nghiêm trọng về điểm thi -> toast vàng
     assert page.locator("#healthSummary").inner_text().strip() != ""

@@ -74,6 +74,7 @@ def test_sau_khi_khoa_chi_con_mot_dong_bao_da_boc_tham(api, mo):
     assert api.run_pipeline(42)["ok"]
     page, _ = mo()
     page.wait_for_function("document.querySelector('#stbLockLine').textContent.indexOf('Đã bốc thăm lúc') !== -1")
+    page.locator("#nangCao > summary").click()   # UX5B-L2: dòng khoá bốc thăm nằm trong mục gập "Tuỳ chọn khi chạy"
     dong = page.inner_text("#stbLockLine")
     assert re.search(r"Đã bốc thăm lúc \d{2}/\d{2}/\d{4} \d{2}:\d{2}\.", dong), dong
     assert "Bốc thăm lại" in dong and "số khởi tạo" not in dong.lower()

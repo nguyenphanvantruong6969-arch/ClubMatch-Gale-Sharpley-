@@ -241,12 +241,22 @@ SUA_CO_Y = {
         ('(hoặc "Tải sổ mẫu có huy chương" nếu chế độ huy chương đang bật)',
          '(sổ có đủ mọi cột và bảng giải thích từng cột)'),
         ('(or "Download the medal workbook" if medal mode is on)',
-         '(it has every column and a table explaining each one)')],
+         '(it has every column and a table explaining each one)'),
+        # UX5B-L2: bản ngắn hơn, nói đúng việc làm (áp dụng sau hai thay thế trên)
+        ('Chưa có sổ nhập? Bấm "Tải sổ nhập mẫu" (sổ có đủ mọi cột và bảng giải thích từng cột), điền xong rồi kéo vào ô bên dưới.',
+         'Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.'),
+        ('No intake workbook yet? Press "Download the input workbook" (it has every column and a table explaining each one), fill it in, then drag it into the box below.',
+         'No workbook yet? Download the sample, fill it in, then drag it into the box below.')],
     ("ui", "health_panel_hint"): [
         ("Những điểm dưới đây không chặn việc sắp xếp nhưng có thể làm kết quả sai lệch.",
          'Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch.'),
         ("These don't stop the allocation, but they can skew the results.",
-         'Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results.')],
+         'Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results.'),
+        # UX5B-L2: một ý mỗi câu (áp dụng sau thay thế trên)
+        ('Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch. Nên xem trước khi chạy.',
+         'Cảnh báo "Nghiêm trọng" chặn việc chạy cho đến khi sửa xong. Các cảnh báo khác không chặn.'),
+        ('Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results. Check them before running.',
+         '"Serious" warnings block the run until fixed. Other warnings do not block it.')],
     # UX4-L2: chủ ý đổi chữ của thẻ Quản lý (bảng từ ngữ docs/ke_hoach/ux/UX4_TU_NGU.md); chuỗi đã điền nhãn mặc định.
     ("ui", "admin_desc"): [
         ("Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.",
@@ -274,8 +284,6 @@ SUA_CO_Y = {
     ("ui", 'pipeline_desc'): [('Nhập sổ nhập, bấm Chạy để xếp học sinh vào CLB, rồi tải kết quả.', 'Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy.'),
                               ('Import the intake workbook, press Run to place students in clubs, then download the results.', 'Do three things in order: import the workbook, read the warnings, press Run.')],
     ("ui", 'import_panel_title'): [('Nhập dữ liệu', '1. Nhập sổ'), ('Import data', '1. Import the workbook')],
-    ("ui", 'import_hint'): [('Chưa có sổ nhập? Bấm "Tải sổ nhập mẫu" (sổ có đủ mọi cột và bảng giải thích từng cột), điền xong rồi kéo vào ô bên dưới.', 'Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.'),
-                            ('No intake workbook yet? Press "Download the input workbook" (it has every column and a table explaining each one), fill it in, then drag it into the box below.', 'No workbook yet? Download the sample, fill it in, then drag it into the box below.')],
     ("ui", 'health_panel_title'): [('Cảnh báo dữ liệu', '2. Xem cảnh báo'), ('Data warnings', '2. Read the warnings')],
     ("ui", 'btn_validate'): [('Kiểm tra lại dữ liệu', 'Kiểm tra lại'), ('Re-check data', 'Re-check')],
     ("ui", 'steps_panel_title'): [('Các bước xử lý', '3. Chạy xếp'), ('Processing steps', '3. Run')],
@@ -550,7 +558,7 @@ def test_mau_20_chuoi_mac_dinh_giong_het_truoc_day(anh_chup):
 @can_node
 def test_giao_dien_cong_ty(anh_chup):
     ra = _chay_js({"khoa": ["label_students", "nav_scoring", "toast_run_success", "th_score",
-                            "admin_desc", "fallback_step0_title", "pipeline_desc"],
+                            "admin_desc", "fallback_step0_title", "pipeline_desc", "ux5b_tt_buoc_chay"],
                    "tham_so": {"n_matched": 8, "n_total": 9, "rounds": 2},
                    "nhan": CONG_TY})
     assert ra["vi"]["label_students"] == "nhân viên"

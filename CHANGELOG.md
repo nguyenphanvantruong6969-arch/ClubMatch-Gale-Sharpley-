@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B-L2: thẻ Xếp CLB (Hick + Von Restorff); đã nhập `origin/main` (MT2) trước
+
+- P0: gộp `origin/main` (có MT2) vào nhánh; xung đột `CHANGELOG`, `CLAUDE_CHI_TIET`, `TIEN_DO` (giữ hai bên), `index.html`, `style.css` (giữ công tắc MT2 và thẻ UX4/UX5A). CI run #1435 xanh.
+- `index.html`, `js/02_van_hanh.js`, `js/05_quan_ly.js`, `i18n.js`, `style.css` (khối `/* UX5B */`): dòng trạng thái `#ux5bTtPipeline` (nhập sổ / có tệp chờ / đã nạp N / đã xếp xong); mục gập "Tuỳ chọn khi chạy" (`#nangCao`) giờ chứa mã bốc thăm, dòng khoá bốc thăm và "Buổi sẽ xếp"; chọn một phần buổi thì dòng nhắc `#ux5bBuoiTom` hiện ngoài mục gập; danh sách cảnh báo trong `#healthChiTiet` (tự mở khi có mục nghiêm trọng). Số ô thấy được: 3 / 5 / 7 (trước 3 / 8 / 10). Chữ đổi theo bảng UX5B §2.1; nút "Chạy" và mọi `id` giữ nguyên, không đụng backend.
+- Ghi chú: câu "{n} cảnh báo, {s} nghiêm trọng" đã có sẵn ở `#healthSummary`; mục gập chỉ mang nhãn "Xem chi tiết" (khoá `ux5b_xem_chi_tiet`) để không lặp hai lần.
+- Test mới: `tests/test_giao_dien_ux5b_l2.py` (8), dùng `tests/_ux5b_chung.py`. Test cũ chỉnh vì UI đổi (mở `#nangCao` trước khi thao tác chip/khoá bốc thăm; nhãn "Kiểm tra lại"); `test_ws_nhan.py`: `SUA_CO_Y` ghi chú UX5B.
+
 ## 2026-11-23 — UX5B: Truong duyệt MILESTONE 1; prompt tự động L2-L4
 
 - Chỉ tài liệu: ghi duyệt M1 (từ ngữ, D1-D6, câu hỏi mở theo mặc định) trong `docs/ke_hoach/ux/UX5B_TU_NGU.md`, hồ sơ nhánh, `TIEN_DO.md`; thêm `docs/phien/UX5B_L2_L4_AUTO_PROMPT.md` (P0 nhập main, L2-L4, checker tự động, vòng CI). Không đổi mã.
