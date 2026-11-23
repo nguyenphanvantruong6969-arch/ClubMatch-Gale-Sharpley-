@@ -67,3 +67,4 @@ A bug that fails 2 fix attempts → `git revert` that attempt, mark "Needs Truon
   (`git diff 78bf5f8..origin/<other> -- . ':!tests_stress'`) against invariants 1–8 and §0; findings go to its
   "Asks" (max 2 rounds). Then B merges A (A is merged first), CI green, and B opens ONE PR into
   `claude/happy-cerf-xvn495` titled `SF: fix stress-test bugs` (repo PR template). Truong merges.
+- After Truong merges: round 2 crash-hunting `docs/phien/ST2_GIAO_THUC.md` (prompts: `docs/phien/SF_ST2_PROMPTS.md`).
