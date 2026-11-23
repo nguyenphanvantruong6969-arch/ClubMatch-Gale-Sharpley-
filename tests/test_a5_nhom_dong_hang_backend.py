@@ -127,3 +127,14 @@ def test_vong_tron_so_nhap_giu_a_gach_b(api, tmp_path):
     assert kq["ok"], kq
     assert _db(b, "SELECT reserve_group FROM clubs WHERE club_id='c1'") == [("a|b",)]
     assert _db(b, "SELECT reserve_group FROM students WHERE student_id='HS1'") == [("a",)]
+
+
+def test_gan_hang_loat_co_gach_bi_tu_choi_db_khong_doi(api):
+    api.create_or_update_club("c1", "C1", 20, 5, "a|b")
+    api.import_preferences_csv("student_id,name,reserve_group,pref_1\nHS1,A,a,c1\nHS2,B,,c1\n")
+    truoc = _db(api, "SELECT student_id, reserve_group FROM students ORDER BY 1")
+    r = api.bulk_set_reserve_group(["HS1", "HS2"], "a|b")
+    assert r["ok"] is False and r["errors"][0]["code"] == "a5_nhom_hs_co_gach_hang_loat"
+    assert _db(api, "SELECT student_id, reserve_group FROM students ORDER BY 1") == truoc
+    assert api.bulk_set_reserve_group(["HS1", "HS2"], "Chính sách")["ok"] is True
+    assert _db(api, "SELECT reserve_group FROM students ORDER BY 1") == [("chinh_sach",)] * 2

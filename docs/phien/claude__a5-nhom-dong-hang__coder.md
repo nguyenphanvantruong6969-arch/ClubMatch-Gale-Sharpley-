@@ -18,3 +18,11 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 - Tier 4 mutation tests (6): `>0`→`>=0` in report SQL; `instr` prefix in api.py health SQL; student-`|` rejection off; tiers cross-rank check off; substring match instead of set in `default_reserve_eligible_fn` → all caught (the substring one only after adding `test_reserve_khop_nhan_nguyen_khong_khop_chuoi_con`, a WEAK TEST I found and fixed). Survivor: `chuan_hoa_o_nhom_clb` fast path `if False` = equivalent mutant (general path gives the same string) — fine.
 - Known limitation: a student-cell `|` in a CSV import skips the whole student (lines 'nothing written'); a teacher sees a warning, not an error.
 - Out of scope noted: none. UI tier skipped (no UI changes in L2).
+
+## L2 FIX1 — student-label write paths re-grep (`UPDATE students SET reserve_group`, `INSERT INTO students`, `chuan_hoa_nhom_du_tru`)
+- `api_nhap._ghi_nhom_du_tru` (both import loops): guarded (check before student creation).
+- `api_quan_ly.set_student_reserve_group`: guarded. `bulk_set_reserve_group`: NOW guarded (new code `a5_nhom_hs_co_gach_hang_loat`, no student_id), rejects before any write.
+- `api_nhap` ~L550 `SET reserve_group = NULL`, `api_nhap._tao_hoac_bo_sung_hoc_sinh`, `api_quan_ly.create_or_update_student`, `rbda_priority_pipeline` demo seeder: write NULL / fixed labels only, no user cell.
+- `api_nhap` ~L335 `_soat_...` only reads the normalised cell.
+- Sổ nhập student sheet and student CSV both go through `_ghi_nhom_du_tru` loops.
+- Also found: `tests/test_gt3_phan_quyen.py` requires every public method in `phan_quyen.py`; added `chuan_hoa_o_nhom_clb`, `o_nhom_hs_co_gach` to `_GIAO_VIEN` (phan_quyen.py) and `_KHONG_GHI` (nhat_ky.py) next to `chuan_hoa_nhom_du_tru`.

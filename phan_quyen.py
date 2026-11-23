@@ -31,7 +31,7 @@ _CONG_KHAI = ("dang_nhap dang_xuat get_phien_dang_nhap tao_tai_khoan doi_mat_kha
 
 # Chỉ đọc, xuất, và việc của giáo viên (nhập điểm, điểm danh, nhập hộ học sinh tại chỗ, khiếu nại / phản hồi).
 _GIAO_VIEN = """
-check_data_integrity chuan_hoa_buoi chuan_hoa_nhom_du_tru detect_csv_kind dat_tieu_de_cua_so
+check_data_integrity chuan_hoa_buoi chuan_hoa_nhom_du_tru chuan_hoa_o_nhom_clb o_nhom_hs_co_gach detect_csv_kind dat_tieu_de_cua_so
 export_bang_dang_xem export_bang_nhu_cau export_bien_ban_boc_tham export_csv export_dashboard export_diem_danh
 export_du_lieu_dau_vao export_goi_y_chi_tieu export_hoc_sinh_csv export_ket_qua export_khieu_nai
 export_ly_do_csv export_phan_hoi export_thay_doi_ket_qua export_theo_lop export_wharton_can_sua

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L2 FIX1: gán hàng loạt nhóm học sinh chặn `|`
+
+- Checker BUG #1: `bulk_set_reserve_group` lưu `a|b` thành `a_b`. Sửa: từ chối trước mọi lần ghi bằng mã mới `a5_nhom_hs_co_gach_hang_loat` (không có student_id). Hai hàm công khai mới của L2 chưa có trong bảng quyền: thêm vào `phan_quyen.py` (`_GIAO_VIEN`) và `nhat_ky.py` (`_KHONG_GHI`) để `test_gt3_phan_quyen` đạt.
+- Test mới: `test_gan_hang_loat_co_gach_bi_tu_choi_db_khong_doi`.
+
 ## 2026-11-23 — A5-L2: nhóm đồng hạng `a|b` — backend
 
 - `api_nhap.py`: `chuan_hoa_o_nhom_clb` (ô CLB `a|b`: chuẩn hoá từng phần, bỏ trùng, sắp xếp; ô không có `|` = `chuan_hoa_nhom_du_tru` như cũ) dùng khi nạp CSV / Sổ nhập CLB; `o_nhom_hs_co_gach` + mã lỗi `a5_nhom_hs_co_gach` (cuối `i18n_errors.py`, sinh lại `i18n_loi.js`): ô nhóm của HỌC SINH có `|` bị bỏ qua cả em đó (cảnh báo, không tạo em, không lưu `a_b`) ở hai đường nạp tệp; `_soat_nhom_du_tru_la` tách nhãn CLB theo `|`.

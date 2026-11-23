@@ -1573,5 +1573,9 @@ window.I18N_ERROR_MESSAGES = {
   "a5_nhom_hs_co_gach": {
     "vi": "Nhóm ưu tiên “{reserve_group}” của {person_l} {student_id} có dấu |. Mỗi {person_l} chỉ có MỘT nhóm; dấu | chỉ dùng ở ô nhóm của {slot_l} hoặc ở danh sách thứ hạng nhóm. Sửa lại thành một nhóm.",
     "en": "The priority group “{reserve_group}” of {person_l} {student_id} contains “|”. Each {person_l} has exactly ONE group; “|” is only for a {slot_l}'s group cell or the group ranking list. Fix it to a single group."
+  },
+  "a5_nhom_hs_co_gach_hang_loat": {
+    "vi": "Nhóm ưu tiên “{reserve_group}” có dấu |. Mỗi {person_l} chỉ có MỘT nhóm; dấu | chỉ dùng ở ô nhóm của {slot_l} hoặc ở danh sách thứ hạng nhóm. Chưa gán cho ai; sửa lại thành một nhóm.",
+    "en": "The priority group “{reserve_group}” contains “|”. Each {person_l} has exactly ONE group; “|” is only for a {slot_l}'s group cell or the group ranking list. Nobody was assigned; fix it to a single group."
   }
 };

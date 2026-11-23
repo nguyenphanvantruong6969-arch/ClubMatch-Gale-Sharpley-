@@ -458,6 +458,9 @@ class QuanLyMixin:
         try:
             if not isinstance(student_ids, list) or not student_ids:
                 return _fail(err("student_ids_must_be_nonempty_list"))
+            if self.o_nhom_hs_co_gach(reserve_group):
+                # A5: học sinh chỉ có MỘT nhóm; từ chối trước mọi lần ghi (không lưu `a_b`).
+                return _fail(err("a5_nhom_hs_co_gach_hang_loat", reserve_group=reserve_group))
             value = self.chuan_hoa_nhom_du_tru(reserve_group) or None
             with self._ket_noi_ghi() as cur:
                 existing_ids = {
