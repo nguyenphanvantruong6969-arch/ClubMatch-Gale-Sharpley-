@@ -3421,3 +3421,9 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 /* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
 .mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .mt2-cong-tac-ten { font-weight: 600; }
+/* UX5B: thẻ Xếp CLB / Nhập nguyện vọng / Nhập điểm. Hick: mục ít dùng gập lại; Von Restorff: một nút vàng, việc kế tiếp có dòng trạng thái. */
+.ux5b-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }
+.ux5b-gap { margin: 8px 0 0; font-size: 13px; }
+.ux5b-gap > summary { cursor: pointer; color: var(--ink-soft, var(--ink)); }
+#view-pipeline[data-trang-thai="trong"] .drop-zone { border-color: var(--gold); border-width: 3px; }
+#nangCao .stb-lock-line, #nangCao .chon-buoi { margin-top: 8px; }

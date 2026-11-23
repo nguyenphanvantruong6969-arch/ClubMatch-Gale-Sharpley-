@@ -221,6 +221,9 @@ function veChonBuoi() {
     nhac.textContent = duoc.length
       ? t("chon_buoi_nhac_giu").replace("{buoi}", duoc.map(nhanBuoi).join(", "))
       : t("chon_buoi_nhac_het");
+    /* UX5B-L2: chọn một phần thì dòng nhắc hiện ngoài mục gập "Tuỳ chọn khi chạy" (chọn hết thì không có gì để nhắc). */
+    const tom = el("ux5bBuoiTom");
+    if (tom) { tom.hidden = !duoc.length; tom.textContent = duoc.length ? nhac.textContent : ""; }
   }
 }
 

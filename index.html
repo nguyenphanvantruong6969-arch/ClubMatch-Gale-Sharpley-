@@ -98,8 +98,10 @@
     <section class="view is-active" id="view-pipeline">
       <header class="view-header">
         <h1 data-i18n="pipeline_title">Xếp CLB</h1>
-        <p class="view-desc" data-i18n="pipeline_desc">Nhập sổ nhập, bấm Chạy để xếp học sinh vào CLB, rồi tải kết quả.</p>
+        <p class="view-desc" data-i18n="pipeline_desc">Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy.</p>
       </header>
+      <!-- UX5B-L2: dòng trạng thái "đã xong gì, việc tiếp theo là gì" (js/02_van_hanh.js, ux5bVeTrangThaiPipeline) -->
+      <p class="ux5b-tt" id="ux5bTtPipeline" role="status"></p>
 
       <div class="status-strip" id="statusStrip">
         <div class="strip-item"><span class="strip-num" id="statStudents">—</span><span class="strip-label" data-i18n="label_students">học sinh</span></div>
@@ -145,7 +147,10 @@
         </div>
         <p class="hint-text" data-i18n="health_panel_hint">Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch. Nên xem trước khi chạy.</p>
         <div id="healthSummary" class="health-summary"></div>
-        <div id="healthList" class="health-list"></div>
+        <details class="ux5b-gap" id="healthChiTiet" hidden>
+          <summary data-i18n="ux5b_xem_chi_tiet">Xem chi tiết</summary>
+          <div id="healthList" class="health-list"></div>
+        </details>
       </div>
 
       <div class="panel" id="panelBuoc">
@@ -162,16 +167,14 @@
           <button type="button" class="btn btn-ghost btn-nho" id="btnChiTietBuoc" data-i18n="btn_chi_tiet_buoc">Chi tiết</button>
         </div>
 
-        <div class="stb-lock-line" id="stbLockLine"></div>
         <details class="nang-cao" id="nangCao">
-          <summary data-i18n="nang_cao">Nâng cao</summary>
+          <summary data-i18n="ux5b_tuy_chon_chay">Tuỳ chọn khi chạy</summary>
+          <div class="stb-lock-line" id="stbLockLine"></div>
           <label class="seed-input-wrap">
             <span data-i18n="label_seed">Mã bốc thăm</span>
             <input type="number" id="seedInput" value="42" class="seed-input">
           </label>
-        </details>
-
-        <div class="chon-buoi" id="chonBuoiBox" hidden>
+          <div class="chon-buoi" id="chonBuoiBox" hidden>
           <div class="chon-buoi-dau">
             <span class="chon-buoi-nhan" data-i18n="chon_buoi_title">Buổi sẽ xếp</span>
             <div class="chon-buoi-dai">
@@ -186,7 +189,10 @@
                chon mot phan. veChonBuoi() duoc goi lai tu
                reapplyDynamicTextForLangChange de dong nay theo dung ngon ngu. -->
           <p class="hint-text" id="chonBuoiNhac">Buổi không chọn giữ nguyên kết quả của lần xếp trước.</p>
-        </div>
+          </div>
+        </details>
+        <!-- UX5B-L2: chọn một phần buổi thì dòng nhắc ra ngoài mục gập (veChonBuoi ghi, cùng câu với chonBuoiNhac) -->
+        <p class="hint-text" id="ux5bBuoiTom" role="status" hidden></p>
 
         <!-- UX2-L5: 4 pha (chỉ hiển thị; chạy xong mới biết từng bước). Trạng thái do ux2VePha() ghi, chữ tĩnh do data-i18n. -->
         <ol class="ux2-pha" id="ux2Pha" data-i18n-aria-label="ux2_pha_nhan" aria-label="Tiến trình xếp">
