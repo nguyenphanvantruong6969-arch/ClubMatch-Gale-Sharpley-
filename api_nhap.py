@@ -12,6 +12,7 @@ import cau_hinh_ws
 import fa_daa
 import so_nhap
 from api_workspace import CauHinhHong, loi_cau_hinh
+from api_chung import kiem_toan_ven_db
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
@@ -341,10 +342,16 @@ class NhapDuLieuMixin:
                 for cot in s.get("diem_w_mo_coi", []):
                     canh_bao.append(err("csv_wp_khong_co_nguyen_vong",
                                         student_id=s["student_id"], cot=cot))
+        ma_hs_so = {s["student_id"] for s in du_lieu["students"]}
+        thi_trong_so = {(s["student_id"], x["club_id"]) for s in du_lieu["students"]
+                        for x in s["nv"] if x["thi"]}
         with self._ket_noi_doc() as cur:
             diem = {(r[0], r[1]) for r in cur.execute(
                 "SELECT student_id, club_id FROM club_scores")}
             n_xoa = sum(1 for cap in cap_thi if cap in diem)
+            # SF-A1 (ST-B-003): ô tick thi đã lưu của các em có trong sổ.
+            tick_luu = [(r[0], r[1]) for r in cur.execute(
+                "SELECT student_id, club_id FROM club_test_selection") if r[0] in ma_hs_so]
             co_nhom = {r[0] for r in cur.execute(
                 "SELECT student_id FROM students "
                 "WHERE reserve_group IS NOT NULL AND reserve_group <> ''")}
@@ -360,6 +367,16 @@ class NhapDuLieuMixin:
             canh_bao.append(err("so_nhap_canh_bao_khong_co_hs"))
         if n_xoa:
             canh_bao.append(err("so_nhap_canh_bao_xoa_diem", n=n_xoa))
+        if tick_luu:
+            if not du_lieu.get("co_cot_thi", True):
+                # Sổ không có cột điểm thi nào: nó không biết gì về ô thi/điểm -> giữ (không xoá).
+                canh_bao.append(err("so_nhap_canh_bao_giu_diem", n=len(tick_luu)))
+            else:
+                n_mat = sum(1 for cap in tick_luu if cap not in thi_trong_so)
+                if n_mat:
+                    canh_bao.append(err("so_nhap_canh_bao_mat_diem", n=n_mat))
+        if du_lieu.get("n_o_bo_qua"):
+            canh_bao.append(err("so_nhap_canh_bao_o_bo_qua", n=du_lieu["n_o_bo_qua"]))
         if n_bo:
             canh_bao.append(err("so_nhap_canh_bao_bo_nhom", n=n_bo))
         # Cấu hình ĐÃ LƯU từ trước mà hai danh từ trùng nhãn (A14): cột đọc theo thứ tự trong Sổ.
@@ -466,6 +483,12 @@ class NhapDuLieuMixin:
             kq["loi"] = du_lieu["loi"]
             kq["canh_bao"] = [] if du_lieu["loi"] else self._canh_bao_so_nhap(du_lieu)[0]
             if not du_lieu["loi"]:
+                # SF-A1 (ST-B-004): mã học sinh chỉ khác mã đã có ở chữ hoa/thường -> báo TRƯỚC khi nhập
+                # (lúc nhập thật, hàm nạp CSV đã báo câu này).
+                with self._ket_noi_doc() as cur:
+                    kq["canh_bao"] += self._soat_ma_trung_hoa_thuong(
+                        cur, [s["student_id"] for s in du_lieu["students"]])
+            if not du_lieu["loi"]:
                 kq["canh_bao"] += self._canh_bao_fa_xem_truoc(du_lieu)
             if not du_lieu["loi"]:
                 kq["canh_bao"] += self._canh_bao_wharton_trong_xem_truoc(du_lieu)
@@ -494,6 +517,10 @@ class NhapDuLieuMixin:
         báo của cả ba gom về một danh sách.
         """
         try:
+            loi_ven = kiem_toan_ven_db(self.db_path)       # SF-A2 (ST-A-006): không nạp vào trang hỏng
+            if loi_ven:
+                return _fail(err("csdl_hong_can_khoi_phuc", detail=loi_ven))
+
             du_lieu, loi = self._doc_so_nhap(file_base64)
             if loi:
                 return _fail(loi)
@@ -511,6 +538,13 @@ class NhapDuLieuMixin:
                 canh_bao.extend(res["data"]["warnings"])
                 return res["data"]
 
+            # SF-A1 (ST-B-003): sao lưu TRƯỚC khi nạp, như `run_pipeline` (nạp sổ có thể ghi đè ô thi,
+            # điểm, nhóm). Hỏng sao lưu không chặn nạp — cùng luật với bước 1 của pipeline.
+            try:
+                self._backup_db()
+            except Exception:
+                pass
+
             # MỘT giao dịch cho cả sổ: CLB đã ghi mà bước học sinh hỏng (CSDL
             # bị khoá, lỗi bất ngờ) thì CLB cũng được huỷ. Màn hình nói "chưa
             # nạp gì cả" là đúng sự thật.
@@ -527,9 +561,12 @@ class NhapDuLieuMixin:
                 if csv_text["preferences"]:
                     # Chọn thi trước nguyện vọng: đúng thứ tự giao diện cũ vẫn
                     # nạp, nên kết quả trùng khít với bộ ba tệp CSV.
-                    d = buoc(self.import_test_selection_csv(csv_text["test_selection"]))
-                    kq["n_students_created"] += d["n_students_created"]
-                    kq["n_scores_written"] = d["n_scores_written"]
+                    # SF-A1 (ST-B-003): sổ KHÔNG có cột điểm thi nào thì bỏ bước này — nó ghi đè (xoá) ô
+                    # tick và điểm đã lưu của mọi em trong sổ, trong khi sổ không hề nói gì về chúng.
+                    if du_lieu.get("co_cot_thi", True):
+                        d = buoc(self.import_test_selection_csv(csv_text["test_selection"]))
+                        kq["n_students_created"] += d["n_students_created"]
+                        kq["n_scores_written"] = d["n_scores_written"]
 
                     d = buoc(self.import_preferences_csv(csv_text["preferences"]))
                     kq["n_students_created"] += d["n_students_created"]

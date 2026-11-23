@@ -1,5 +1,4 @@
 """ST-A2: raw-bytes xlsx abuse, CSV imports (3 kinds + auto), workspace zip. SIMULATED data."""
-import base64
 import io
 import os
 import random
@@ -124,7 +123,7 @@ def test_csv_variants_contract(tmp_path, kind, good, fn):
         switch(api, "chi_xep", False)
         if kind != "clubs":
             api.import_clubs_csv(CLB_OK)
-        snap = db_bytes(api.db_path)
+        db_bytes(api.db_path)
         with _limit(60):
             for call in (getattr(api, fn), lambda t, a=api: a.import_csv_auto(t), lambda t, a=api: a.detect_csv_kind(t),
                          lambda t, a=api, k=kind: a.preview_import_csv(t, {"clubs": "clubs", "prefs": "preferences",
@@ -181,7 +180,7 @@ def test_workspace_zip_abuse(tmp_path, base_bytes):
         "not_zip": b"hello",
         "truncated": (good or _zip([("app.db", db)]))[:100],
     }
-    before = set(os.listdir(api._goc_ws))
+    set(os.listdir(api._goc_ws))
     for name, data in cases.items():
         with _limit(90):
             try:

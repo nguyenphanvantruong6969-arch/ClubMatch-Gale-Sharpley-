@@ -1,10 +1,7 @@
 """ST-A2: Sổ nhập (xlsx) mutation fuzzing: >= 40 kinds. Expect contract + known i18n codes, no traceback, DB unchanged
 on refusal. SIMULATED data."""
 import io
-import os
-import random
 import unicodedata
-import zipfile
 
 import openpyxl
 import pytest
@@ -269,7 +266,6 @@ def test_big_book_ok(tmp_path, base_bytes, n):
     assert res["ok"], res["errors"]
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-002")
 @pytest.mark.parametrize("n", [3000, 3000])   # reproduced twice (fresh tmp each time)
 def test_big_book_3000_rows(tmp_path, base_bytes, n):
     """3000-student Sổ: import fails with csdl_dang_ban although nothing else uses the DB (single thread)."""
@@ -299,7 +295,6 @@ def test_capacity_beyond_int64_preview_matches_import(tmp_path, base_bytes, name
     assert res["ok"] or res["errors"][0]["code"] != "error_importing_clubs_csv"
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-004")
 @pytest.mark.parametrize("rep", [1, 2])
 def test_one_row_header_does_not_silently_drop_points(tmp_path, base_bytes, rep):
     """Sub-header row removed: 337 test scores + all medals sit in unlabeled columns. Import must refuse or warn that

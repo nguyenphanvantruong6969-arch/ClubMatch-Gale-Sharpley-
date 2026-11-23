@@ -1,7 +1,6 @@
 """ST-A3: concurrency, locked DB, corrupt DB + recovery, schema migration twice, random timelines. SIMULATED data."""
 import os
 import random
-import shutil
 import sqlite3
 import threading
 import time
@@ -237,7 +236,7 @@ def test_old_schema_migrates_then_idempotent(tmp_path):
     finally:
         c.close()
     try:
-        r1 = rp.di_tru_schema(p)
+        rp.di_tru_schema(p)
     except Exception as e:
         pytest.fail("di_tru_schema raised on an older DB: %r" % e)
     c = sqlite3.connect(p)
@@ -337,7 +336,6 @@ def test_student_created_by_mistake_after_a_run_can_be_removed(tmp_path, rep):
     assert r["ok"], r["errors"]
 
 
-@pytest.mark.xfail(strict=True, reason="ST-A-006")
 @pytest.mark.parametrize("rep", [1, 2])
 def test_run_on_page_corrupt_db_must_not_report_ok(tmp_path, rep):
     """5 flipped bytes in the data pages: PRAGMA integrity_check fails, yet PipelineAPI opens and (seed 2) a run is

@@ -112,10 +112,12 @@ class WorkspaceMixin:
 
         `nghiem=False` (mặc định): cấu hình đọc không được thì lùi về mặc định — đủ cho nơi chỉ
         HIỂN THỊ (nhãn, tên). `nghiem=True`: ném `CauHinhHong` — cho nơi QUYẾT ĐỊNH."""
+        # SF-A1 (ST-A-002): trong một giao dịch chung (`_mot_giao_dich`) thì đọc qua chính kết nối đó.
+        chung = getattr(self._giao_dich, "conn", None)
         if not nghiem:
-            return cau_hinh_ws.doc_cau_hinh(self.db_path)
+            return cau_hinh_ws.doc_cau_hinh(self.db_path, conn=chung)
         try:
-            return cau_hinh_ws.doc_cau_hinh(self.db_path, nghiem=True)
+            return cau_hinh_ws.doc_cau_hinh(self.db_path, nghiem=True, conn=chung)
         except (ValueError, sqlite3.Error) as e:
             if isinstance(e, sqlite3.OperationalError) and (
                     "locked" in str(e).lower() or "busy" in str(e).lower()):

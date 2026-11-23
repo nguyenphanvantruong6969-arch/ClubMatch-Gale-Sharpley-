@@ -211,8 +211,8 @@ MESSAGES = {
         "en": "{score_p} can't be imported from a preferences file, so the {score_l} columns here were ignored. Put the {score_pl} in the test {slot_l} file instead.",
     },
     "csv_student_id_case_conflict": {
-        "vi": "Mã {student_id} và mã {da_co} chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai {person_l}. Nếu là cùng một {person_l}, hãy viết mã giống nhau ở cả hai tệp.",
-        "en": "The codes {student_id} and {da_co} differ only in upper and lower case, so they count as two {person_pl}. If both codes belong to one {person_l}, write the code the same way in both files.",
+        "vi": "Mã {student_id} gần như trùng mã {da_co}: chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai {person_l}. Nếu là cùng một {person_l}, hãy viết mã giống nhau ở cả hai tệp.",
+        "en": "The code {student_id} nearly duplicates {da_co}: they differ only in upper and lower case, so they count as two {person_pl}. If both codes belong to one {person_l}, write the code the same way in both files.",
     },
     "csv_student_id_maybe_truncated": {
         "vi": "Mã {student_id} có {do_dai} chữ số, trong khi phần lớn mã khác có {do_dai_pho_bien}. Có thể Excel đã bỏ số 0 ở đầu. Mở tệp gốc, đặt cột mã ở dạng Text rồi nạp lại.",
@@ -1224,6 +1224,22 @@ MESSAGES = {
     "so_nhap_canh_bao_xoa_diem": {
         "vi": "{n} {score_l} đã chấm trong phần mềm sẽ bị xoá, vì sổ ghi \"thi\" (chưa có {score_l}) ở các ô đó. Muốn giữ {score_l} thì xuất lại dữ liệu đầu vào thành sổ mới rồi sửa trên sổ đó.",
         "en": "{n} {score_l}(s) already entered in the app will be removed, because the workbook says \"thi\" (no {score_l} yet) in those cells. To keep them, export the current input data to a new workbook and edit that one.",
+    },
+    "csdl_hong_can_khoi_phuc": {
+        "vi": "Tệp dữ liệu của phần mềm không qua được bước kiểm tra toàn vẹn ({detail}), nên phần mềm DỪNG, không chạy và không sao lưu đè lên các bản còn tốt. Hãy đóng phần mềm rồi mở lại để vào trang phục hồi (khôi phục từ bản sao lưu nguyên vẹn gần nhất).",
+        "en": "The app's data file failed the integrity check ({detail}), so the app STOPS: it will not run and will not overwrite the good backups. Close the app and reopen it to reach the recovery page (restore from the newest intact backup).",
+    },
+    "so_nhap_canh_bao_giu_diem": {
+        "vi": "Sổ này không có cột {score_l} thi, nên {n} ô chọn thi (và {score_l} kèm theo) đã lưu của các {person_l} trong sổ được GIỮ NGUYÊN, không bị xoá.",
+        "en": "This workbook has no test {score_l} column, so the {n} test selection(s) (and any {score_l}) already stored for the {person_l}(s) in it are KEPT, not deleted.",
+    },
+    "so_nhap_canh_bao_mat_diem": {
+        "vi": "{n} ô chọn thi đã lưu (kèm {score_l} nếu có) sẽ bị xoá, vì sổ không đánh dấu thi ở các ô đó. Muốn giữ thì xuất lại dữ liệu đầu vào thành sổ mới rồi sửa trên sổ đó.",
+        "en": "{n} stored test selection(s) (with their {score_l}, if any) will be removed, because the workbook does not mark them as tests. To keep them, export the current input data to a new workbook and edit that one.",
+    },
+    "so_nhap_canh_bao_o_bo_qua": {
+        "vi": "{n} ô có chữ nằm ở cột không có tên tiêu đề nên KHÔNG được đọc (thường là sổ mất hàng tiêu đề thứ hai: {score_l} thi và Huy chương nằm ở đó). Kiểm lại hàng tiêu đề của sheet {person_l} trước khi nhập.",
+        "en": "{n} filled cell(s) sit in columns with no header and are NOT read (usually the workbook lost its second header row, where the test {score_l} and medal columns are). Check the header rows of the {person_l} sheet before importing.",
     },
     "so_nhap_canh_bao_bo_nhom": {
         "vi": "{n} {person_l} đang có {group} sẽ bị bỏ nhóm, vì ô {group} của những {person_l} đó trong sổ để trống.",

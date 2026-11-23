@@ -1,6 +1,5 @@
 """ST-A1: every mode x chia_loai on the shared Sổ, random toggle sequences, FA-DAA / floors. SIMULATED data."""
 import random
-import sqlite3
 
 import pytest
 

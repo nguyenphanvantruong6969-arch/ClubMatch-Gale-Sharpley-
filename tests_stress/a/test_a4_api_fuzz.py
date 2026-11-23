@@ -6,8 +6,7 @@ import shutil
 import pytest
 
 import apifuzz as F
-import sthelp
-from sthelp import check_contract, load_so150, new_ws_api, rows, switch
+from sthelp import check_contract, load_so150, new_ws_api, switch
 
 NON_CONTRACT = {"chuan_hoa_buoi", "chuan_hoa_nhom_du_tru"}   # pure string helpers (return str), not API calls
 FLAKY_IMPORT = {"ai_chua_dang_ky", "chuyen_tep_forms", "doi_chieu_hai_lan"}   # ST-A-007 (imports before precondition)
@@ -79,7 +78,7 @@ def test_workspace_traversal_sentinels(tmp_path):
     sentinel = os.path.join(os.path.dirname(root), "SENTINEL")
     os.makedirs(sentinel)
     open(os.path.join(sentinel, "keep.txt"), "w").write("x")
-    other = os.path.join(root, "workspaces")
+    os.path.join(root, "workspaces")
     slugs = ["../SENTINEL", "..\\SENTINEL", "../../SENTINEL", "/" + sentinel, sentinel, "x/../../SENTINEL", "..", ".", "",
              "workspaces/../../SENTINEL", "%2e%2e/SENTINEL", "a\0/../SENTINEL"]
     for s in slugs:

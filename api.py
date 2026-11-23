@@ -35,6 +35,7 @@ import fa_daa
 from api_chung import (
     _fail_co_buoc,
     _now,
+    kiem_toan_ven_db,
 )
 from i18n_errors import err, la_loi_csdl_ban
 from i18n_errors import phan_hoi_loi as _fail
@@ -103,6 +104,11 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
         self.db_path = db_path
+        # SF-A2 (ST-A-006): CSDL không qua kiểm toàn vẹn thì KHÔNG mở: ném lỗi để main.py vào trang phục
+        # hồi (khôi phục từ bản sao lưu nguyên vẹn) thay vì chạy tiếp trên trang hỏng.
+        loi_ven = kiem_toan_ven_db(db_path)
+        if loi_ven:
+            raise sqlite3.DatabaseError("integrity_check: " + loi_ven)
         # Thư mục gốc chứa workspaces/ (xem api_workspace.py). None = chạy
         # một CSDL như trước và mọi hàm workspace trả lỗi. `ws_da_chon` False
         # = còn phải để người dùng chọn workspace (giao diện hiện màn chọn).
@@ -859,7 +865,13 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
         với copy file trực tiếp vốn có thể chụp phải trạng thái nửa-ghi
         (xem kế hoạch kiểm thử mất dữ liệu — artifact, xem BAN_GIAO.md mục 8). Giữ lại tối đa _MAX_BACKUPS bản
         gần nhất, tự xoá bản cũ hơn. Trả về đường dẫn bản sao lưu.
+
+        SF-A2 (ST-A-006): CSDL không qua kiểm toàn vẹn thì KHÔNG sao lưu (ném `sqlite3.DatabaseError`): bản
+        chép của trang hỏng sẽ đẩy một bản TỐT ra khỏi vòng xoay.
         """
+        loi_ven = kiem_toan_ven_db(self.db_path)
+        if loi_ven:
+            raise sqlite3.DatabaseError("integrity_check: " + loi_ven)
         backup_dir = os.path.dirname(self.db_path) or "."
         ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
         backup_name = f"{os.path.basename(self.db_path)}.bak-{ts}"
@@ -1013,6 +1025,13 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
         steps_log = []
         conn = None
         try:
+            # ---------------- Bước 00 · CSDL PHẢI NGUYÊN VẸN (SF-A2, ST-A-006) ----------------
+            # Chạy trên trang hỏng có thể báo ok mà ghi kết quả sai, và sao lưu ngay sau đó sẽ chép trang
+            # hỏng đẩy bản tốt ra khỏi vòng 10 bản. Chặn TRƯỚC mọi việc, kể cả sao lưu.
+            loi_ven = kiem_toan_ven_db(self.db_path)
+            if loi_ven:
+                return _fail_co_buoc(steps_log, [err("csdl_hong_can_khoi_phuc", detail=loi_ven)])
+
             # ---------------- Bước 0 · CHẶN CHẠY TRÊN DỮ LIỆU TRỐNG (T3-01, B2) ----------------
             # Không có học sinh hoặc không có CLB thì không có gì để xếp: chạy vẫn ghi một dòng
             # run_history và KHOÁ bộ số bốc thăm (seed 42), làm các lần chạy sau với seed khác bị
