@@ -515,7 +515,11 @@ class NhapDuLieuMixin:
                 # Một bước hỏng -> huỷ CẢ giao dịch, kể cả các bước đã xong.
                 if not res["ok"]:
                     raise _HuyNapSo(res)
-                canh_bao.extend(res["data"]["warnings"])
+                for w in res["data"]["warnings"]:
+                    # A5: cả hai bước (chọn thi, nguyện vọng) bỏ qua em có `|` và cùng báo: giữ MỘT lần mỗi em.
+                    if w.get("code") == "a5_nhom_hs_co_gach" and w in canh_bao:
+                        continue
+                    canh_bao.append(w)
                 return res["data"]
 
             # MỘT giao dịch cho cả sổ: CLB đã ghi mà bước học sinh hỏng (CSDL

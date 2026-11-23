@@ -90,3 +90,16 @@ def test_reserve_khop_nhan_nguyen_khong_khop_chuoi_con():
           "s4": {"reserve_group": "b"}}
     fn = P.default_reserve_eligible_fn(hs, {"X": {"reserve_group": "ab|c"}})
     assert [fn(s, "X") for s in hs] == [False, True, True, False]
+
+
+def test_xay_tier_rank_va_thu_tu_uu_tien_x_ab_c_roi_chua_nhom():
+    """tiers ["x","a|b","c"]: x hạng 0, a và b CÙNG hạng 1, c hạng 2; ưu tiên x < a/b < c < chưa nhóm,
+    bất kể điểm (soát mã: đột biến 'mọi phần của mục a|b đều hạng 0' phải làm test này đỏ)."""
+    hs = {"x1": {"reserve_group": "x"}, "a1": {"reserve_group": "a"}, "b1": {"reserve_group": "b"},
+          "c1": {"reserve_group": "c"}, "u1": {"reserve_group": None}, "z1": {"reserve_group": "z"}}
+    rank = P.xay_tier_rank(hs, ["x", "a|b", "c"])
+    assert rank == {"x1": 0, "a1": 1, "b1": 1, "c1": 2}
+    diem = {"x1": 10.0, "a1": 50.0, "b1": 60.0, "c1": 70.0, "u1": 99.0, "z1": 98.0}
+    stb = {s: i for i, s in enumerate(["u1", "z1", "c1", "b1", "a1", "x1"])}
+    kq = P.uu_tien_theo_nhom("X", list(hs), diem, stb, rank)
+    assert kq == ["x1", "b1", "a1", "c1", "u1", "z1"]      # a/b cùng hạng: b điểm cao hơn đứng trước a

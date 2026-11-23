@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L5b: test khoá hạng nhóm `a|b`, bỏ lặp cảnh báo khi nhập Sổ
+
+- Test mới `test_xay_tier_rank_va_thu_tu_uu_tien_x_ab_c_roi_chua_nhom` (tests/test_a5_nhom_dong_hang.py): `xay_tier_rank` với `["x","a|b","c"]` cho x=0, a=b=1, c=2 và thứ tự ưu tiên x < a/b < c < chưa nhóm qua `uu_tien_theo_nhom`. Gây hỏng thử ("mọi phần của mục `a|b` hạng 0", cả hai nhánh) đều làm đỏ.
+- `api_nhap.py` `import_so_nhap`: cảnh báo `a5_nhom_hs_co_gach` chỉ giữ MỘT lần mỗi học sinh (hai bước nạp chọn thi và nguyện vọng cùng báo). Test: `test_nhap_that_so_nhap_bao_moi_hoc_sinh_co_gach_dung_mot_lan` (đỏ khi bỏ đoạn lọc).
+- KHÔNG thuộc A5: `tests/test_a13_12_browser_host.py` `_con_song` đổi timeout 1 giây thành 5 giây (commit 281f782) vì test chập chờn trên runner Windows chạy song song; không đổi mã sản phẩm.
+
 ## 2026-11-23 — A5-L5: xem trước sổ nhập cảnh báo nhóm có `|`, và chạy xếp thật với CLB `a|b`
 
 - `api_nhap.py` `xem_truoc_so_nhap`: mỗi học sinh có ô nhóm chứa `|` thêm một cảnh báo `a5_nhom_hs_co_gach` (dùng lại mã cũ, cùng dạng `student_id` + `reserve_group`) TRƯỚC khi nhập; chỉ đọc, không ghi gì. Sổ không có `|`: kết quả xem trước y hệt như trước. Nhập thật không đổi (em đó bị bỏ qua kèm cảnh báo). Không thêm mã i18n.

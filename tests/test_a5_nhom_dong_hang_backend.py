@@ -188,3 +188,10 @@ def test_nhap_that_van_bo_qua_hoc_sinh_co_gach_va_canh_bao(api):
     assert kq["ok"], kq["errors"]
     assert "a5_nhom_hs_co_gach" in {w["code"] for w in kq["data"]["warnings"]}
     assert _db(api, "SELECT student_id, reserve_group FROM students") == [("S0", "a")]
+
+
+def test_nhap_that_so_nhap_bao_moi_hoc_sinh_co_gach_dung_mot_lan(api):
+    kq = api.import_so_nhap(_so(_CLB, _hs("a", "a|b", "b|c")))
+    assert kq["ok"], kq["errors"]
+    a5 = [(w["params"]["student_id"]) for w in kq["data"]["warnings"] if w["code"] == "a5_nhom_hs_co_gach"]
+    assert sorted(a5) == ["S1", "S2"]                              # không lặp qua hai bước nạp
