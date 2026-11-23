@@ -1287,7 +1287,7 @@ Không dùng dấu `|` thì phần mềm chạy y hệt như trước, kết qu�
 
 ### Cách 1 — Thứ hạng nhóm nghiêm ngặt: `a|b` là cùng một hạng
 
-Dùng khi xếp CỨNG theo nhóm (Cài đặt → cách xếp "Thứ hạng nhóm nghiêm ngặt" hoặc ưu tiên "Chỉ theo nhóm"; danh sách ở trình hướng dẫn workspace, bước 3, hoặc thẻ Tiêu chí).
+Dùng khi xếp cứng theo nhóm (Cài đặt → cách xếp "Thứ hạng nhóm nghiêm ngặt" hoặc ưu tiên "Chỉ theo nhóm"; danh sách ở trình hướng dẫn workspace, bước 3, hoặc thẻ Tiêu chí).
 Mỗi dòng là một hạng, hạng đầu tốt nhất. Viết hai nhóm chung một dòng, ngăn bằng `|`:
 
 ```

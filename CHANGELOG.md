@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-CIFIX1b: chữ dự phòng trong index.html khớp danh mục i18n
+
+- `index.html` đoạn `#clubFormReserveGroupGoiY` còn "MỘT" trong khi `i18n.js` `a5_club_nhom_goi_y` đã là chữ thường: `test_t3_l1_chu_du_phong` đỏ. Sửa index.html cho khớp từng ký tự; kiểm thêm hai đoạn gợi ý khác (`a5_gt2_tc_nhom_goi_y`, `gt2_tc_nhom_goi_y`) khớp; gợi ý bước 3 trình hướng dẫn nằm trong JS (không có chữ dự phòng). `HUONG_DAN_SU_DUNG.md` mục 18: "xếp CỨNG" thành "xếp cứng".
+
 ## 2026-11-23 — A5-CIFIX1: sửa 4 test đỏ trên CI do khoá i18n của A5
 
 - `i18n_errors.py`: hai mã `a5_nhom_hs_co_gach`, `a5_nhom_hs_co_gach_hang_loat` chuyển lên NGAY TRƯỚC khối MT1 (L2) để phần ĐUÔI của `MESSAGES` vẫn toàn mã `mt_` (`test_mt1_uoc_tinh`, `test_mt1_api` ghim đuôi). Việc này THAY dòng "thêm ở cuối" trong `A5_GIAO_THUC.md` §1. Sinh lại `i18n_loi.js`.

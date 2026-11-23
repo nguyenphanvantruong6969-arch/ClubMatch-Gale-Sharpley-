@@ -36,3 +36,6 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 ## CIFIX1
 - CI red (4 tests): (1) `test_mt1_uoc_tinh`/`test_mt1_api` pin the TAIL of `i18n_errors.MESSAGES` to `mt_` keys → moved the A5 block to just before `# === MT1 (L2) ===` (overrides protocol §1 "append at END"); (2) `test_van_phong_tu_nhien` bans all-caps emphasis (MỘT/ONE) in displayed text → lowercase in i18n_errors, i18n.js, guide §18; (3) `test_ws_nhan` needs new codes in `MA_MOI_SAU_ANH_CHUP`.
 - Lesson: new i18n codes must go BEFORE the MT1 block; run `-k "i18n or van_phong or ws_nhan or mt1 or tieng_viet or chu_cam or tai_lieu"` (364 pass, 1 skip: pypdf missing locally) before pushing.
+
+## CIFIX1b
+- Lesson: when an i18n.js text changes, edit the `data-i18n` fallback in index.html the same way (`test_t3_l1_chu_du_phong`). Checked all 3 A5/gt2 hint paragraphs now match; sweep 277 pass.
