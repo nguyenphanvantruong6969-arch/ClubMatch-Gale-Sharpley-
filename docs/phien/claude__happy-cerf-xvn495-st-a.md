@@ -67,6 +67,7 @@ Round 2: pending B's three open items; A answers any new Ask on its next resume.
 - `tests/test_xp1_*` PDF text tests need `pypdf`, which is not in `requirements-dev.txt`, so they skip locally and (apparently) on CI: the visible-text equivalence of the new string cells is covered only by `tests/test_sf_a_4.py` (cell text) and page count (1589 before/after at 800). A reviewer with `pypdf` may want to diff text of old/new PDFs.
 
 ## Next steps
+0. DECISION (Truong, 2026-11-23): ST-A-008 = option (a): split the whole-school phieu PDF per class (reuse `theo_lop`) + progress reporting; no new library. Implement as SF-A5 (test first, byte-identical invariant 1 unaffected, CHANGELOG + TIEN_DO).
 1. Fetch; read B's handoff Asks; answer any new Ask to A (round 2 of §5 review, max 2).
 2. If Truong decides ST-A-008: options in "Needs Truong" (per-class split + progress, or a PDF-merge library).
 3. B merges A first, CI green, B opens the single PR; Truong merges. Then ST2 round (`docs/phien/ST2_GIAO_THUC.md`).
