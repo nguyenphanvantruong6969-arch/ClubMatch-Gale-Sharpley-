@@ -26,7 +26,9 @@ def _post(url, data=b"", headers=None):
 
 def _con_song(base, token):
     try:
-        urllib.request.urlopen(f"{base}/index.html?t={token}", timeout=1).read()
+        # 5 s (không phải 1 s): runner Windows chạy song song có thể trả lời chậm hơn 1 s dù máy chủ còn sống.
+        # Máy chủ đã tắt thì từ chối kết nối ngay, nên ngưỡng dài không làm chậm nhánh "đã tắt".
+        urllib.request.urlopen(f"{base}/index.html?t={token}", timeout=5).read()
         return True
     except urllib.error.HTTPError:
         raise
