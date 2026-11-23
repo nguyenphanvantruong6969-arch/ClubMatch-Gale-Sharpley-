@@ -82,3 +82,11 @@ def test_choice_function_substitutability_va_aggregate_demand():
                 assert not ((pool - acc) & acc2), (pool, x)
                 # law of aggregate demand: thêm người không làm giảm số được nhận
                 assert len(acc2) >= len(acc)
+
+
+def test_reserve_khop_nhan_nguyen_khong_khop_chuoi_con():
+    """Nhãn 'a' không được khớp 'ab|c' chỉ vì là chuỗi con (soát mã: đột biến `in club_group`)."""
+    hs = {"s1": {"reserve_group": "a"}, "s2": {"reserve_group": "ab"}, "s3": {"reserve_group": "c"},
+          "s4": {"reserve_group": "b"}}
+    fn = P.default_reserve_eligible_fn(hs, {"X": {"reserve_group": "ab|c"}})
+    assert [fn(s, "X") for s in hs] == [False, True, True, False]
