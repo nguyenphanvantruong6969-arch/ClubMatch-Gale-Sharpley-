@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A4: PDF phiếu cả trường nhanh hơn ~1,8-2 lần (ST-A-008, một phần)
+
+- `xuat_pdf.py`: ô bảng là chuỗi tự xuống dòng bằng `simpleSplit` (cache theo chữ + bề rộng cột; khoảng trắng gộp như `Paragraph`; ô có từ dài hơn cột vẫn dùng `Paragraph` để cắt từ) thay cho `Paragraph` mỗi ô; `Paragraph` của khối dùng chung nhớ kết quả `wrap` theo bề rộng (dựng lại `blPara` nếu `split` đã xoá).
+- Đo (mô phỏng, máy cloud, phiếu cả trường một PDF): 800 em 18,8 s → 9,1 s; 3 000 em 68-76 s → 40,6 s. Mục tiêu ≤ 30 s ở 3 000 em CHƯA đạt: phần còn lại là reportlab thuần Python (định dạng số, `drawString`, ghi PDF); xem "Needs Truong" trong tệp bàn giao. Số trang 800 em không đổi (1 589).
+- Test mới: `tests/test_sf_a_4.py` (5 ca).
+
 ## 2026-11-23 — SF-A3: xoá có xác nhận, chỉ tiêu, đổi chế độ, biểu mẫu (ST-A-005, ST-B-007, ST-A-003, ST-B-006, ST-A-001, ST-A-007)
 
 - `api_quan_ly.py`: `delete_student(student_id, xac_nhan_xoa_ket_qua=False)` chỉ chặn khi em có suất thật hoặc có nguyện vọng mà vẫn có dòng kết quả (em nhập nhầm không nguyện vọng xoá được); xác nhận thì sao lưu rồi xoá kèm dòng kết quả (lịch sử `run_history`/`fa_*` giữ nguyên, kết quả hiện tại thành cũ). `delete_club(club_id, xac_nhan_xoa_kem=False)`: xác nhận thì sao lưu, xoá nguyện vọng của CLB, dòng kết quả thành "chưa có suất". Mặc định chặn như cũ; thông báo `cannot_delete_*` nay nói rõ lối thoát. `create_or_update_club`: chỉ tiêu không nguyên (`club_capacity_not_integer`, thay cho "Hãy thử lại" + câu Python thô; số thực 1.5 không còn bị cắt thành 1) hoặc quá lớn (`capacity_too_large`).
