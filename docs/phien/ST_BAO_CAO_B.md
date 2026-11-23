@@ -6,14 +6,14 @@ Screenshots (deviceScaleFactor 1): `docs/phien/anh_st_b/`. Backend report: branc
 ## Summary (severity counts) — updated at end of each lot
 | S1 | S2 | S3 | S4 | total |
 |---|---|---|---|---|
-| 1 | 0 | 5 | 2 | 8 |
+| 1 | 1 | 6 | 3 | 11 |
 
 ## Lot status
 | Lot | State | Tests |
 |---|---|---|
 | B1 | done | test_b1_dieu_huong_cai_dat.py (11 tests; 3 xfail strict = ST-B-001, ST-B-002 x2) |
 | B2 | done | test_b2_nhap_tep.py (7 tests), test_b2_quan_ly.py (13 tests); xfail strict: ST-B-003..008 |
-| B3 | – | |
+| B3 | done | test_b3_vai_tro.py (9 tests), test_b3_phuc_hoi_workspace.py (7 tests); xfail: ST-B-009 (imperative), 010, 011 |
 | B4 | – | |
 
 ## Bugs
@@ -27,6 +27,9 @@ Screenshots (deviceScaleFactor 1): `docs/phien/anh_st_b/`. Backend report: branc
 | ST-B-006 | S3 | Quản lý › CLB | Capacity `1.5` → generic "Không lưu được… Hãy thử lại" + raw Python text `invalid literal for int() with base 10: '1.5'` in the details; no field error | tests_stress/b/test_b2_quan_ly.py::test_b2_form_clb_chi_tieu_thap_phan_bao_loi_ky_thuat | — |
 | ST-B-007 | S3 | Quản lý › CLB | A club that has preferences/results can never be deleted from the UI; the message ("Hãy xử lý các dữ liệu đó trước") names no way to do it (same family as ST-A-005) | tests_stress/b/test_b2_quan_ly.py::test_b2_xoa_clb_dang_co_nguyen_vong_khong_chi_duong | — |
 | ST-B-008 | S4 | Việc tiếp theo | After a late arrival the bar says "Dữ liệu có cảnh báo nghiêm trọng, cần sửa trước khi chạy" while the Run button is enabled and the run succeeds | tests_stress/b/test_b2_quan_ly.py::test_b2_viec_tiep_theo_noi_can_sua_truoc_khi_chay_nhung_nut_chay_van_bat | — |
+| ST-B-009 | S2 | Kiosk / chế độ học sinh | With NO account created, "Chế độ học sinh" is only an overlay: F5 leaves it and every admin tab (incl. Xoá dữ liệu) is back; the backend does not lock (all APIs answer) | tests_stress/b/test_b3_vai_tro.py::test_b3_che_do_hoc_sinh_tra_cuu_khoa_va_thoat (imperative xfail) | — |
+| ST-B-010 | S4 | Trang phục hồi | After a successful "Khôi phục", the button stays enabled; a second click (nothing visibly changed) replaces the success line with "Tệp dữ liệu hiện tại vẫn đọc được bình thường, nên phần mềm không đổi tên…" | tests_stress/b/test_b3_phuc_hoi_workspace.py::test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong | — |
+| ST-B-011 | S3 | Workspace | Importing an empty / corrupt / non-zip / path-traversal zip shows "…thông tin không gian làm việc chưa hợp lệ. Kiểm tra lại các ô đã điền." (no field exists); the real cause is only in "Chi tiết kỹ thuật" | tests_stress/b/test_b3_phuc_hoi_workspace.py::test_b3_workspace_zip_hong_thong_bao_dung_nguyen_nhan | — |
 
 ### ST-B-001
 Steps: new workspace → Cài đặt: Huy chương → import the shared Sổ (UI) → run → open Kết quả (150 rows) → Cài đặt: Chỉ xếp →
@@ -79,6 +82,31 @@ preferences, so the only exit is wiping all data. Screenshot `ST-B-007_xoa_clb_c
 Steps: shared Sổ, Huy chương, run; Nhập tại chỗ: new student NEW01 with one test club + one preference; open Xếp CLB. Actual: bar "Dữ liệu có cảnh báo nghiêm trọng, cần sửa trước khi chạy." with button "Xem cảnh báo",
 yet `#btnRun` is enabled and the run succeeds (the "nghiêm trọng" items are "1 student has no score yet"). Wording promises a block that does not exist. Screenshot `ST-B-008_viec_tiep_theo.png`.
 
+### ST-B-009
+Steps: fresh workspace, NO account; import + run; Kết quả › "Chế độ học sinh" (overlay "Mã học sinh / Mã tra cứu"); from the page call `list_students_admin`, `run_pipeline`, `export_ket_qua` → all `ok:true`;
+press F5 → the overlay is gone, sidebar and every tab are usable, "Xoá dữ liệu" included. Expected: either the button refuses / warns "tạo tài khoản quản trị trước, nếu không khoá này chỉ là hình",
+or the lock is real. Actual: a student at the kiosk presses F5 and is in the admin UI; no warning anywhere on the screen. With an account the lock is real (API refused, survives F5, second tab locked, exit needs admin password).
+Matches the documented design "chưa có tài khoản = chạy như cũ", hence S2 not S1; raise to S1 if the field trial runs without accounts. Screenshot `ST-B-009_f5_thoat_che_do_hoc_sinh.png` (page right after F5).
+Suspected: `vao_che_do_hoc_sinh` (api_tai_khoan.py) sets the flag only when accounts exist; `moHs` (js/14_giai_trinh.js) has no "no account" warning.
+
+### ST-B-010
+Steps: corrupt `app.db`; open recovery page; click "Khôi phục từ bản sao lưu gần nhất" (restores in <1 s, no visible change), click again 0.4 s later. Actual: `restore_from_backup` runs twice, the second answers
+`recovery_db_is_healthy`, and that text is what stays. The data is safe (first restore done, corrupt file set aside as `app.db.corrupt-…`). Screenshot `ST-B-010_phuc_hoi_bam_dup.png`. A real double-click is guarded (1 call).
+
+### ST-B-011
+Steps: ⋯ workspace list › "Nhập" › choose a 0-byte / 40-byte / text file named x.zip (or a zip containing `../../evil.txt`). Actual toast: "Không thực hiện được vì thông tin không gian làm việc chưa hợp lệ.
+Kiểm tra lại các ô đã điền." — the only useful sentence is inside the collapsed "Chi tiết kỹ thuật" ("Không đọc được tệp zip: File is not a zip file" / "Zip không an toàn: đường dẫn chứa '..'").
+Safety is fine: no workspace created, nothing written outside the workspace root. Screenshot `ST-B-011_zip_hong.png`. Suspected: `import_workspace` error code → generic `ws_thong_tin_khong_hop_le` mapping.
+
+## Checked, no bug (B3)
+- First admin through the UI: mismatch / short password / empty name / 61-char name each give a message and create nothing; passwords are not stored in clear; duplicate names (other case) refused; `<img onerror>` and SQL-looking names don't execute.
+- Login screen after logout covers the app (`tk-kin`); after logout every data API answers `ok:false`; 5 wrong passwords → "tạm khoá… 60 giây" (also for the right password during the lock); the other account is not locked; teacher login works.
+- Teacher: sees only fallback / scoring / results / others (no Xếp CLB, Quản lý, Chuẩn bị đợt); 13 write/admin APIs called from the page (run, reset_data, delete_*, update config, create club, create/delete account, unlock…) all refused, DB and config unchanged; password dialog has no create-account form.
+- browser_host: API without token refused; `/app.db`, `/api.py`, `/CLAUDE.md`, `/%2e%2e/app.db`, `/workspaces/`, `/docs/…`, `/tests_stress/…` not served; a foreign `Host` header refused.
+- Student self-lookup (with account): wrong code / unknown id / SQL / XSS / 500-char input give the same neutral message; the right code shows the student's clubs; all other APIs refused; F5 and a second tab stay locked; exit needs an admin account (wrong password / teacher / empty refused, right one exits and keeps the admin session).
+- Recovery page: 2 backups listed, one-click restore gives a valid 150-student DB (integrity ok, corrupt file set aside, not deleted); "Bắt đầu lại" needs two clicks and gives an empty valid DB; unwritable folder shows the dedicated panel and "Kiểm tra lại".
+- Workspace: create via wizard (empty DB), switch back (150 students and Huy chương intact), rename with 7 odd names (empty, 300 chars, `<b>`, duplicate, `../../etc`, `a/b\c:d`) no error and nothing outside the root, clone with data (150 students), delete needs two clicks and is disabled for the open workspace, export → zip → import → 150 students + results, importing it twice does not overwrite.
+
 ## Checked, no bug (B2)
 - 22 bad files through the UI (0-byte, text renamed .xlsx, truncated, .xls/.pdf/.csv/.zip, missing / empty sheets, capacity 0 / -5 / "abc", duplicate student id, duplicate club name, negative / date scores,
   unknown club, bad Loại, CSV UTF-16 / cp1258 / BOM): each refused with a Vietnamese message, no traceback / raw key, DB unchanged. Same file imported twice: no duplicates.
@@ -108,6 +136,7 @@ yet `#btnRun` is enabled and the run succeeds (the "nghiêm trọng" items are "
 - Note: undo toasts stack and stay 10 s; clicking an OLD "Hoàn tác" after a newer switch restores the older state (expected, S4 at most; not logged).
 
 ## Needs Truong
+- ST-B-009: will the trial run with or without accounts? If without, "Chế độ học sinh" gives no real protection (F5) — consider disabling the button until an admin exists.
 - ST-B-003: is "the Sổ replaces every tick and score of the students it lists" intended? If yes, only a warning is needed (S3); if no, it is a data-loss bug (S1).
 - Scores have no upper bound (11 or 1000 accepted by the scoring screen and the import); capacity 1e9 accepted. Is a cap wanted (10 / 100)?
 - A late arrival after the first run cannot enter medals without a global unlock; confirm this is the intended flow for the field trial.
