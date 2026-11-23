@@ -434,9 +434,11 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                            GROUP_CONCAT(s.student_id) AS ids
                     FROM students s
                     WHERE s.reserve_group IS NOT NULL AND TRIM(s.reserve_group) <> ''
-                      AND s.reserve_group NOT IN (
-                          SELECT reserve_group FROM clubs
-                          WHERE reserve_group IS NOT NULL AND TRIM(reserve_group) <> ''
+                      AND NOT EXISTS (
+                          SELECT 1 FROM clubs c
+                          WHERE c.reserve_group IS NOT NULL AND TRIM(c.reserve_group) <> ''
+                            AND instr('|' || c.reserve_group || '|',
+                                      '|' || s.reserve_group || '|') > 0
                       )
                     GROUP BY s.reserve_group ORDER BY s.reserve_group
                 """).fetchall()):
@@ -463,9 +465,11 @@ class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                     SELECT club_id, reserve_group, reserve_capacity FROM clubs
                     WHERE reserve_capacity > 0
                       AND reserve_group IS NOT NULL AND TRIM(reserve_group) <> ''
-                      AND reserve_group NOT IN (
-                          SELECT reserve_group FROM students
-                          WHERE reserve_group IS NOT NULL AND TRIM(reserve_group) <> ''
+                      AND NOT EXISTS (
+                          SELECT 1 FROM students st
+                          WHERE st.reserve_group IS NOT NULL AND TRIM(st.reserve_group) <> ''
+                            AND instr('|' || clubs.reserve_group || '|',
+                                      '|' || st.reserve_group || '|') > 0
                       )
                     ORDER BY club_id
                 """).fetchall()):

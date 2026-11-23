@@ -17,6 +17,7 @@ from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
 from rbda_priority_pipeline import (
     LOP_TOI_DA,
+    tach_nhom_clb,
     chuan_hoa_lop,
     khoa_sap_buoi,
     sap_buoi,
@@ -786,7 +787,7 @@ class NhapDuLieuMixin:
 
                     self._ghi_clb(cur, club_id, (row.get("name") or "").strip(),
                                   capacity, reserve_capacity,
-                                  self.chuan_hoa_nhom_du_tru(row.get("reserve_group")) or None,
+                                  self.chuan_hoa_o_nhom_clb(row.get("reserve_group")) or None,
                                   buoi_value)
                     if fa_bat:
                         fa_daa.ghi_thuoc_tinh_clb(cur, club_id, fa)
@@ -896,6 +897,22 @@ class NhapDuLieuMixin:
         )
         chu = re.sub(r"[^0-9a-zA-Z]+", "_", chu.lower())
         return chu.strip("_")
+
+    @staticmethod
+    def chuan_hoa_o_nhom_clb(raw) -> str:
+        """A5: ô nhóm của CLB, có thể là `a|b` (các nhãn cùng diện dự trữ). Chuẩn hoá từng phần
+        bằng `chuan_hoa_nhom_du_tru`, bỏ phần rỗng, bỏ trùng, sắp xếp, nối bằng `|`. Ô không có
+        `|` cho đúng `chuan_hoa_nhom_du_tru(raw)` như cũ."""
+        if "|" not in str(raw or ""):
+            return NhapDuLieuMixin.chuan_hoa_nhom_du_tru(raw)
+        phan = {NhapDuLieuMixin.chuan_hoa_nhom_du_tru(p) for p in tach_nhom_clb(raw)}
+        phan.discard("")
+        return "|".join(sorted(phan))
+
+    @staticmethod
+    def o_nhom_hs_co_gach(raw) -> bool:
+        """A5: ô nhóm của HỌC SINH chỉ được MỘT nhãn; có `|` là lỗi (không lặng lẽ thành `a_b`)."""
+        return "|" in str(raw or "")
 
     # Cot reserve_group la TUY CHON trong ca hai file hoc sinh. Truoc day
     # hoc sinh tao bang CSV luon co nhom du tru rong, phai vao man hinh 04
@@ -1055,10 +1072,10 @@ class NhapDuLieuMixin:
         if not nhom_da_ghi:
             return []
         nhom_clb = {
-            r[0] for r in cur.execute(
+            p for r in cur.execute(
                 "SELECT DISTINCT reserve_group FROM clubs "
                 "WHERE reserve_group IS NOT NULL AND TRIM(reserve_group) <> ''"
-            ).fetchall()
+            ).fetchall() for p in tach_nhom_clb(r[0])
         }
         canh_bao = []
         for nhan, n in sorted(nhom_da_ghi.items()):
@@ -1490,6 +1507,11 @@ class NhapDuLieuMixin:
                             n_skipped += 1
                             continue
 
+                    if self.o_nhom_hs_co_gach(nhom_du_tru):
+                        row_errors.append(err("a5_nhom_hs_co_gach", student_id=sid,
+                                              reserve_group=nhom_du_tru))
+                        n_skipped += 1
+                        continue
                     ket = self._tao_hoac_bo_sung_hoc_sinh(
                         cur, sid, name, existing_students, create_missing_students)
                     if ket == "bo_qua":
@@ -1725,6 +1747,11 @@ class NhapDuLieuMixin:
                             n_skipped += 1
                             continue
 
+                    if self.o_nhom_hs_co_gach(nhom_du_tru):
+                        row_errors.append(err("a5_nhom_hs_co_gach", student_id=sid,
+                                              reserve_group=nhom_du_tru))
+                        n_skipped += 1
+                        continue
                     ket = self._tao_hoac_bo_sung_hoc_sinh(
                         cur, sid, name, existing_students, create_missing_students)
                     if ket == "bo_qua":

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-L2: nhóm đồng hạng `a|b` — backend
+
+- `api_nhap.py`: `chuan_hoa_o_nhom_clb` (ô CLB `a|b`: chuẩn hoá từng phần, bỏ trùng, sắp xếp; ô không có `|` = `chuan_hoa_nhom_du_tru` như cũ) dùng khi nạp CSV / Sổ nhập CLB; `o_nhom_hs_co_gach` + mã lỗi `a5_nhom_hs_co_gach` (cuối `i18n_errors.py`, sinh lại `i18n_loi.js`): ô nhóm của HỌC SINH có `|` bị bỏ qua cả em đó (cảnh báo, không tạo em, không lưu `a_b`) ở hai đường nạp tệp; `_soat_nhom_du_tru_la` tách nhãn CLB theo `|`.
+- `api_quan_ly.py`: `create_or_update_club` dùng `chuan_hoa_o_nhom_clb`; `set_student_reserve_group` từ chối `|`; `list_reserve_groups_in_use` gợi ý nhãn đơn.
+- `api_bao_cao.py` (`get_suat_du_tru`) và `api.py` (cảnh báo sức khoẻ dữ liệu mục 4, 6): so khớp bằng `instr('|'||…||'|', …)`, không dùng `LIKE`.
+- `cau_hinh_ws.py`: `tiers` có `|` chỉ khi bật: phần rỗng hoặc một nhãn ở hai hạng / hai lần trong một mục -> `ValueError`; `tiers` không có `|` giữ hành vi cũ.
+- Thẻ mục tiêu (`muc_tieu.py`): không đổi mã; CLB `a|b` tính là "giữ cho nhóm khác" và thẻ `danh_cho` -> `tuy_chinh` (khoá bằng test).
+- Test mới: `tests/test_a5_nhom_dong_hang_backend.py` (25 ca). Số tệp test: 381. kiem_nhanh --so-seed 20: 7/7, trùng khít 3×20.
+
 ## 2026-11-23 — A5-L1: nhóm đồng hạng `a|b` — lõi
 
 - `rbda_priority_pipeline.py`: hàm thuần `tach_nhom_clb` (tách `|`, cắt trắng, bỏ rỗng); `xay_tier_rank`: mục `tiers` dạng `a|b` cho các nhãn CÙNG một hạng (mục không có `|` đi đúng đường cũ); `default_reserve_eligible_fn`: ô CLB `a|b` = đủ diện nếu nhãn của em thuộc tập (pooled, D1); ô không có `|` giữ nguyên nhánh `==`. `club_choice_function`, `compute_club_priority` không đổi.

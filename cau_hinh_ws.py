@@ -29,6 +29,7 @@ from nhan_ws import DANH_TU, NHAN_MAC_DINH
 from rbda_priority_pipeline import (
     TRAN_CLB_THI_MOI_BUOI,
     TRAN_NGUYEN_VONG_MOI_BUOI,
+    chuan_hoa_tim_kiem,
     connect_db,
 )
 
@@ -357,6 +358,22 @@ def _chuan_hoa(cfg, kiem_trung: bool = True) -> dict:
     luat["tiers"] = [t.strip() for t in tiers]
     if len(set(luat["tiers"])) != len(luat["tiers"]):
         raise ValueError("tiers có tên nhóm trùng nhau.")
+    # A5: mục "a|b" = các nhãn cùng một hạng; mỗi phần không rỗng, và một nhãn (cùng khoá với
+    # `xay_tier_rank`) không được nằm ở hai hạng, hay hai lần trong một mục.
+    co_gach = any("|" in t for t in luat["tiers"])   # không có `|`: giữ nguyên hành vi cũ
+    da_gap: set = set()
+    for t in luat["tiers"]:
+        if "|" not in t:
+            phan = [t]
+        else:
+            phan = [p.strip() for p in t.split("|")]
+            if not all(phan):
+                raise ValueError("tiers có mục %r chứa phần rỗng quanh dấu |." % (t,))
+        for p in phan:
+            khoa = " ".join(chuan_hoa_tim_kiem(p).split())
+            if co_gach and khoa in da_gap:
+                raise ValueError("tiers: nhóm %r nằm ở hai hạng (hoặc hai lần trong một mục)." % (p,))
+            da_gap.add(khoa)
 
     return kq
 

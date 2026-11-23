@@ -1677,6 +1677,12 @@ MESSAGES = {
         "en": "Trial runs and estimates do not support splitting clubs by type yet. Turn off \"Split clubs by type\" in Manage, or use the official allocation.",
     },
     # === end MT2 ===
+    # === A5 ===
+    "a5_nhom_hs_co_gach": {
+        "vi": "Nhóm ưu tiên “{reserve_group}” của {person_l} {student_id} có dấu |. Mỗi {person_l} chỉ có MỘT nhóm; dấu | chỉ dùng ở ô nhóm của {slot_l} hoặc ở danh sách thứ hạng nhóm. Sửa lại thành một nhóm.",
+        "en": "The priority group “{reserve_group}” of {person_l} {student_id} contains “|”. Each {person_l} has exactly ONE group; “|” is only for a {slot_l}'s group cell or the group ranking list. Fix it to a single group.",
+    },
+    # === end A5 ===
 }
 
 
