@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-A (sửa CI 2): kiểm toàn vẹn không chờ khoá
+
+- `api_chung.py` (`kiem_toan_ven_db`): chờ khoá 0,2 s (trước 5 s) rồi bỏ qua; CSDL đang bị khoá ngoài thì `run_pipeline` / `reset_data` vẫn báo `csdl_dang_ban` dưới 7 s (`tests/test_a13_11_stress.py` đỏ trên CI: 8-10 s).
+
 ## 2026-11-23 — SF-A (sửa CI): chữ cảnh báo mới theo luật văn phong, bản chụp chữ ws_nhan
 
 - `i18n_errors.py`: bỏ `{detail}` thô và chữ IN HOA nhấn mạnh khỏi `csdl_hong_can_khoi_phuc`, `so_nhap_canh_bao_giu_diem`, `so_nhap_canh_bao_o_bo_qua` (`tests/test_van_phong_tu_nhien.py`). `tests/test_ws_nhan.py`: ba câu đổi chủ ý (`csv_student_id_case_conflict`, `cannot_delete_club_referenced`, `cannot_delete_student_matched`) vào `SUA_CO_Y`; bảy mã mới vào `MA_MOI_SAU_ANH_CHUP`.

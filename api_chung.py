@@ -77,7 +77,7 @@ def kiem_toan_ven_db(duong_dan: str):
     if not duong_dan or not os.path.isfile(duong_dan) or os.path.getsize(duong_dan) == 0:
         return None
     try:
-        conn = sqlite3.connect(duong_dan, timeout=5)
+        conn = sqlite3.connect(duong_dan, timeout=0.2)   # bị khoá thì bỏ qua NGAY (xem test_a13_11_stress: báo csdl_dang_ban < 7 s)
         try:
             cac_dong = conn.execute("PRAGMA integrity_check(100)").fetchall()
         finally:
