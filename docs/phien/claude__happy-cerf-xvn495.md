@@ -13,6 +13,8 @@ admin can switch Chỉ xếp / Chia 100 / Huy chương and "Chia CLB theo loại
 - [x] ST-B on `claude/happy-cerf-xvn495-st-b` (UI): 13 bugs (1 S1, 1 S2, 6 S3, 5 S4), `ST_BAO_CAO_B.md`.
 - [x] Fix plan: `docs/phien/SF_GIAO_THUC.md` (item SF, two coders on the son branches, loop until green).
 - [ ] SF-A lots 1–4 on `-st-a`; SF-B lots 1–4 on `-st-b`; cross-check; one PR `-st-b` → this branch.
+- [ ] ST2 crash-hunting (`ST2_GIAO_THUC.md`) on new branches `-st2-a` / `-st2-b` from this branch after SF is merged + green.
+- Prompts for all four sessions: `docs/phien/SF_ST2_PROMPTS.md`.
 
 ## Current state
 - Done: data file + generator, protocol, this file. No production code touched.
@@ -33,3 +35,4 @@ admin can switch Chỉ xếp / Chia 100 / Huy chương and "Chia CLB theo loại
 |---|---|---|---|
 | 2026-11-22 | Opus | data file, ST protocol, two implementer prompts | planning only |
 | 2026-11-23 | Opus | ST results summarised; SF fix protocol + two coder prompts | planning only |
+| 2026-11-23 | Opus | ST2 crash-hunting protocol + prompts file | planning only |
