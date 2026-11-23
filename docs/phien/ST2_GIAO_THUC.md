@@ -7,8 +7,9 @@
 
 ## 0. Gate (check first; if it fails, write one line in your handoff file and STOP)
 - `origin/claude/happy-cerf-xvn495` contains the merged PR "SF: fix stress-test bugs" and its CI run is green.
-- Create your branch from it: `git checkout -b claude/happy-cerf-xvn495-st2-<a|b> origin/claude/happy-cerf-xvn495`,
-  push, handoff file `docs/phien/claude__happy-cerf-xvn495-st2-<a|b>.md` from `_TEMPLATE.md`.
+- Your branch ALREADY EXISTS (created 2026-11-23 from the pre-SF parent `b591834`):
+  `git fetch origin && git checkout claude/happy-cerf-xvn495-st2-<a|b> && git merge --no-edit origin/claude/happy-cerf-xvn495`
+  (brings in SF), push, handoff file `docs/phien/claude__happy-cerf-xvn495-st2-<a|b>.md` from `_TEMPLATE.md`.
 - Every ST/SF stress test still passes on that head (`pytest -q tests_stress`); a regression = first bug of ST2.
 
 ## 1. What counts as a crash (oracle after EVERY step, not only at the end)
