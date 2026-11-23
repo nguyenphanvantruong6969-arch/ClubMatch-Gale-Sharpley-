@@ -270,6 +270,16 @@ SUA_CO_Y = {
     ("ui", 'buoi_hint_form'): [('Hai CLB cùng buổi là trùng giờ, mỗi học sinh chỉ vào được một. Để trống nếu trường chỉ có một buổi.', 'Hai CLB cùng buổi thì trùng giờ, mỗi học sinh chỉ vào được một. Chọn "Một buổi chung" nếu trường chỉ có một buổi.'), ('Two clubs in the same session clash, so a student can join only one. Leave it blank if the school has a single session.', 'Two clubs in the same session clash, so a student can join only one. Choose "One shared session" if the school has only one session.')],
     ("ui", 'th_current_reserve_group'): [('Nhóm ưu tiên hiện tại', 'Nhóm ưu tiên'), ('Current priority group', 'Priority group')],
     ("ui", 'ti_le_choi_giai_thich'): [('Tỉ lệ chọi tính theo số học sinh, không theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.', 'Số học sinh trên mỗi chỗ tính theo số học sinh, không tính theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.'), ('Applicants per seat counts students, not preferences, because each student gets at most one seat per session.', 'Applicants per place counts students, not preferences, because each student gets at most one place per session.')],
+    # UX5B-L2: chủ ý đổi chữ thẻ Xếp CLB (đánh số ba bước, ngắn gọn); docs/ke_hoach/ux/UX5B_TU_NGU.md §2.1. Chuỗi đã điền nhãn mặc định.
+    ("ui", 'pipeline_desc'): [('Nhập sổ nhập, bấm Chạy để xếp học sinh vào CLB, rồi tải kết quả.', 'Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy.'),
+                              ('Import the intake workbook, press Run to place students in clubs, then download the results.', 'Do three things in order: import the workbook, read the warnings, press Run.')],
+    ("ui", 'import_panel_title'): [('Nhập dữ liệu', '1. Nhập sổ'), ('Import data', '1. Import the workbook')],
+    ("ui", 'import_hint'): [('Chưa có sổ nhập? Bấm "Tải sổ nhập mẫu" (sổ có đủ mọi cột và bảng giải thích từng cột), điền xong rồi kéo vào ô bên dưới.', 'Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.'),
+                            ('No intake workbook yet? Press "Download the input workbook" (it has every column and a table explaining each one), fill it in, then drag it into the box below.', 'No workbook yet? Download the sample, fill it in, then drag it into the box below.')],
+    ("ui", 'health_panel_title'): [('Cảnh báo dữ liệu', '2. Xem cảnh báo'), ('Data warnings', '2. Read the warnings')],
+    ("ui", 'btn_validate'): [('Kiểm tra lại dữ liệu', 'Kiểm tra lại'), ('Re-check data', 'Re-check')],
+    ("ui", 'steps_panel_title'): [('Các bước xử lý', '3. Chạy xếp'), ('Processing steps', '3. Run')],
+    ("ui", 'btn_toggle'): [('Hiện/ẩn', 'Xem lịch sử'), ('Show/hide', 'Show history')],
 }
 
 
@@ -551,8 +561,10 @@ def test_giao_dien_cong_ty(anh_chup):
         "Allocation finished: 8/9 employees placed in 2 round(s)."
     assert ra["en"]["fallback_step0_title"] == "Find or create an employee"   # a -> an
     assert "học sinh" not in ra["vi"]["pipeline_desc"] and "CLB" not in ra["vi"]["pipeline_desc"]
-    assert ra["vi"]["pipeline_desc"] == \
-        "Nhập sổ nhập, bấm Chạy để xếp nhân viên vào dự án, rồi tải kết quả."
+    # UX5B-L2: pipeline_desc không còn chỗ giữ của ngành; kiểm sự thay nhãn bằng câu trạng thái có {person_l}.
+    assert ra["vi"]["pipeline_desc"] == "Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy."
+    assert ra["vi"]["ux5b_tt_buoc_chay"] == 'Đã nạp {n} nhân viên. Xem cảnh báo rồi bấm "Chạy sắp xếp".'
+    assert ra["en"]["ux5b_tt_buoc_chay"] == '{n} employees loaded. Read the warnings, then press "Run allocation".'
 
 
 @can_node
