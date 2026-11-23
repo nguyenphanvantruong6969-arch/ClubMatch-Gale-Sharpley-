@@ -431,16 +431,39 @@ function initFallbackHandlers() {
     const studentId = currentFallbackStudent;
     callApi("delete_student", studentId).then((res) => {
       if (res.ok) {
-        showToast(t("toast_student_deleted", { student_id: studentId }), "success");
-        hsDaChon.delete(studentId);
-        boChonHocSinhDuPhong();     /* MỘT đường dọn: xếp hạng, Bước 3, mốc "đã lưu", hẹn giờ (A13.12, 1.9) */
-        el("studentSearchInput").value = "";
-        loadFallbackStudentList();
+        xoaHocSinhXong(studentId);
       } else {
         showErrorToast(res.errors);
+        /* SF-B6 (ST-B-007): học sinh đã có kết quả: hỏi lần hai rồi xoá kèm kết quả (có sao lưu). */
+        const e = (res.errors || []).find((x) => x && x.code === "cannot_delete_student_matched");
+        if (e) {
+          hoiXacNhanXoaKem(el("fallbackWorkArea"), t("xoa_kem_hs_hoi", { student_id: studentId }), () => {
+            callApi("delete_student", studentId, true).then((r2) => {
+              if (r2.ok) xoaHocSinhXong(studentId, r2.data || {});
+              else showErrorToast(r2.errors);
+            });
+          }, "afterbegin");
+        }
       }
     });
   });
+}
+
+/* Sau khi xoá học sinh đang mở (SF-B6 tách ra: lần xoá thường và lần xoá kèm kết quả dùng chung). */
+function xoaHocSinhXong(studentId, kem) {
+  if (kem) {
+    showToast(t("toast_xoa_kem_hs", {
+      student_id: studentId, n: kem.n_ket_qua_bo || 0,
+      backup_name: kem.backup_path ? String(kem.backup_path).split(/[\\/]/).pop() : "" }), "success");
+  } else {
+    showToast(t("toast_student_deleted", { student_id: studentId }), "success");
+  }
+  hsDaChon.delete(studentId);
+  boXoaKemBar();
+  boChonHocSinhDuPhong();     /* MỘT đường dọn: xếp hạng, Bước 3, mốc "đã lưu", hẹn giờ (A13.12, 1.9) */
+  el("studentSearchInput").value = "";
+  loadFallbackStudentList();
+  if (kem) veXuatPanel();     /* kết quả hiện tại thành cũ: làm mới dải cảnh báo */
 }
 
 /* Moi lan go phim la mot lan goi; tra ve lech thu tu thi ket qua CU de
@@ -559,6 +582,7 @@ function danhDauTheDangChon() {
 }
 
 function selectFallbackStudent(studentId) {
+  boXoaKemBar();      /* SF-B6: thanh hỏi xoá kèm của học sinh trước không được còn khi mở học sinh khác */
   const luotChon = (luotGoiMoiNhat.chon_hs = (luotGoiMoiNhat.chon_hs || 0) + 1);
   buoiTaiCho = null;
   Promise.all([callApi("get_student_entry_state", studentId), callApi("list_clubs"), layDsLop()]).then(([stateRes, clubsRes]) => {

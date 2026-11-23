@@ -580,6 +580,12 @@
       confirm_delete_generic: "Bấm lần nữa để xoá",
       toast_club_deleted: "Đã xoá {slot_sl} {club_id}.",
       toast_club_deleted_removed: "Đã xoá {slot_sl} {club_id}, kèm {n_scores} điểm đã chấm và {n_tests} ô tick thi. Bản sao lưu: {backup_name}.",
+      /* SF-B6 (ST-B-007): xác nhận lần hai khi xoá {slot_sl} / {person_l} đã có nguyện vọng hoặc kết quả */
+      xoa_kem_clb_hoi: "{slot_sl} {club_id} đang nằm trong {n_prefs} nguyện vọng và {n_matches} kết quả. Nếu xoá luôn, các nguyện vọng đó bị bỏ, kết quả hiện tại thành cũ và cần xếp lại. Dữ liệu được sao lưu trước khi xoá.",
+      xoa_kem_hs_hoi: "{person} {student_id} đang có {slot_l} trong kết quả xếp gần nhất. Nếu xoá luôn, các dòng kết quả của {person_l} này bị bỏ, kết quả hiện tại thành cũ và cần xếp lại. Dữ liệu được sao lưu trước khi xoá.",
+      xoa_kem_nut: "Xoá luôn kèm dữ liệu",
+      toast_xoa_kem_clb: "Đã xoá {slot_sl} {club_id}: bỏ {n_prefs} nguyện vọng, {n_results} kết quả thành chưa có suất. Kết quả hiện tại đã cũ, cần xếp lại. Bản sao lưu: {backup_name}.",
+      toast_xoa_kem_hs: "Đã xoá {person_l} {student_id} cùng {n} dòng kết quả. Kết quả hiện tại đã cũ, cần xếp lại. Bản sao lưu: {backup_name}.",
 
       danger_zone_title: "Vùng nguy hiểm: xoá dữ liệu để làm lại",
       danger_zone_desc: "Nạp tệp chỉ thêm {person_l} mới, không xoá {person_l} cũ. Muốn làm lại với bộ dữ liệu khác, hãy xoá ở đây trước, nếu không {person_l} cũ vẫn chiếm chỗ.",
@@ -2044,6 +2050,12 @@
       confirm_delete_generic: "Click again to delete",
       toast_club_deleted: "Deleted {slot_l} {club_id}.",
       toast_club_deleted_removed: "Deleted {slot_l} {club_id}, with {n_scores} saved score(s) and {n_tests} test tick(s). Backup: {backup_name}.",
+      /* SF-B6 (ST-B-007): second confirmation when deleting a {slot_l} / {person_l} that already has preferences or results */
+      xoa_kem_clb_hoi: "{slot} {club_id} is in {n_prefs} preference(s) and {n_matches} result(s). Deleting it anyway drops those preferences, and the current results become outdated and must be rerun. A backup is taken before deleting.",
+      xoa_kem_hs_hoi: "{person} {student_id} holds a {slot_l} in the latest results. Deleting anyway removes this {person_l}'s result rows, and the current results become outdated and must be rerun. A backup is taken before deleting.",
+      xoa_kem_nut: "Delete with its data",
+      toast_xoa_kem_clb: "Deleted {slot_l} {club_id}: {n_prefs} preference(s) dropped, {n_results} result(s) now unplaced. The current results are outdated and need a rerun. Backup: {backup_name}.",
+      toast_xoa_kem_hs: "Deleted {person_l} {student_id} and {n} result row(s). The current results are outdated and need a rerun. Backup: {backup_name}.",
 
       danger_zone_title: "Danger zone: delete data to start over",
       danger_zone_desc: "Importing a file only adds {person_pl}. It doesn't remove existing ones. To start over with a different set, delete here first, or the old {person_pl} will keep taking seats.",

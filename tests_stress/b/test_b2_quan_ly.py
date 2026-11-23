@@ -3,7 +3,7 @@ việc sau khi xếp. SIMULATED data."""
 import sqlite3
 
 
-from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui)
+from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui, so_dong_run)
 from ho_tro_tep import CAC_TEP
 
 TRACEBACK = ("Traceback", "invalid literal", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "IndexError",
@@ -144,6 +144,151 @@ def test_b2_xoa_clb_dang_co_nguyen_vong_khong_chi_duong(mo):
     # lối thoát phải có trong chính màn hình: nói rõ làm ở đâu (Nhập nguyện vọng / nạp lại / xoá dữ liệu)
     assert any(k in thongbao for k in ("Nhập nguyện vọng", "nạp lại", "Xoá dữ liệu", "Dữ liệu")), (
         "CLB đang có 64 nguyện vọng + 15 kết quả không xoá được; thông báo chỉ nói 'Hãy xử lý các dữ liệu đó trước' mà không chỉ cách")
+
+
+def _nut_xoa_clb(ui, club_id):
+    return ui.page.locator('#adminClubTableBody tr[data-club-id="%s"] .btn-icon-danger' % club_id)
+
+
+def _dem(ui, sql, *a):
+    return q(ui, sql, *a)[0][0]
+
+
+def _goi_delete(ui, ten):
+    """Gói API `ten` để đếm số lần gọi và đối số (browser_host tra hàm bằng getattr mỗi lần gọi)."""
+    goi = []
+    goc = getattr(ui.api, ten)
+    setattr(ui.api, ten, lambda *a: (goi.append(a), goc(*a))[1])
+    return goi
+
+
+def test_b2_xoa_clb_co_du_lieu_hoi_lan_hai_roi_xoa_duoc(mo):
+    """SF-B6 (ST-B-007): CLB còn nguyện vọng/kết quả: lần hai hỏi xác nhận, xác nhận thì xoá (có sao lưu),
+    run_history giữ nguyên, kết quả hiện tại thành cũ (dải cảnh báo)."""
+    ui = mo()
+    p = ui.page
+    chon_cach(ui, "huy_chuong")
+    nap_so_150(ui)
+    chay_ui(ui)
+    _vao_clb(ui)
+    n_run = so_dong_run(ui)
+    n_clb = dem_db(ui, "clubs")[0]
+    n_hs_kq = _dem(ui, "select count(*) from match_results")
+    goi = _goi_delete(ui, "delete_club")
+    nut = _nut_xoa_clb(ui, "THU_6_6")
+    nut.click()
+    nut.click()
+    p.wait_for_selector("#xoaKemBar", state="visible")
+    assert goi == [("THU_6_6",)], goi
+    assert dem_db(ui, "clubs")[0] == n_clb
+    chu = p.locator("#xoaKemBar").inner_text()
+    assert "THU_6_6" in chu and "xếp lại" in chu, chu
+    p.locator("#xoaKemBar .btn-primary").click()
+    p.wait_for_selector('#adminClubTableBody tr[data-club-id="THU_6_6"]', state="detached")
+    assert goi == [("THU_6_6",), ("THU_6_6", True)], goi
+    assert dem_db(ui, "clubs")[0] == n_clb - 1
+    assert _dem(ui, "select count(*) from preferences where club_id='THU_6_6'") == 0
+    assert _dem(ui, "select count(*) from match_results") == n_hs_kq, "dòng kết quả không được xoá, chỉ bỏ suất"
+    assert so_dong_run(ui) == n_run, "run_history phải giữ nguyên"
+    assert not p.locator("#xoaKemBar").count()
+    assert "sao lưu" in p.locator("#toastStack").inner_text().lower()
+    assert ui.api.get_trang_thai_ket_qua()["data"]["ket_qua_cu"] is True
+    ui.tab("others")
+    p.wait_for_selector("#ketQuaCuBanner", state="visible")
+    ui.kiem_loi()
+
+
+def test_b2_xoa_clb_co_du_lieu_huy_o_buoc_hai_con_nguyen(mo):
+    ui = mo()
+    p = ui.page
+    chon_cach(ui, "huy_chuong")
+    nap_so_150(ui)
+    chay_ui(ui)
+    _vao_clb(ui)
+    n_run = so_dong_run(ui)
+    truoc = (dem_db(ui, "clubs")[0], _dem(ui, "select count(*) from preferences"), _dem(ui, "select count(*) from match_results"))
+    goi = _goi_delete(ui, "delete_club")
+    nut = _nut_xoa_clb(ui, "THU_6_6")
+    nut.click()
+    nut.click()
+    p.wait_for_selector("#xoaKemBar", state="visible")
+    p.locator("#xoaKemBar .btn-ghost").click()
+    p.wait_for_selector("#xoaKemBar", state="detached")
+    p.wait_for_timeout(500)
+    assert goi == [("THU_6_6",)], "huỷ ở bước hai thì không gọi gì thêm: %r" % goi
+    assert (dem_db(ui, "clubs")[0], _dem(ui, "select count(*) from preferences"), _dem(ui, "select count(*) from match_results")) == truoc
+    assert so_dong_run(ui) == n_run
+    assert ui.api.get_trang_thai_ket_qua()["data"]["ket_qua_cu"] is False
+    ui.kiem_loi()
+
+
+def _chon_hs_tai_cho(ui, sid):
+    p = ui.page
+    ui.tab("fallback")
+    p.fill("#studentSearchInput", sid)
+    p.locator('.hs-card[data-student-id="%s"]' % sid).first.click()
+    p.wait_for_selector("#fallbackWorkArea:not([hidden])")
+
+
+def _xoa_hs(ui):
+    p = ui.page
+    p.locator("#menuHocSinh > summary").click()
+    nut = p.locator("#btnDeleteStudent")
+    nut.click()
+    nut.click()
+
+
+def test_b2_xoa_hoc_sinh_co_ket_qua_hoi_lan_hai_roi_xoa_duoc(mo):
+    """SF-B6 (ST-B-007), phía học sinh (Nhập tại chỗ)."""
+    ui = mo()
+    p = ui.page
+    chon_cach(ui, "huy_chuong")
+    nap_so_150(ui)
+    chay_ui(ui)
+    sid = q(ui, "select student_id from match_results where club_id is not null order by student_id limit 1")[0][0]
+    n_run = so_dong_run(ui)
+    n_hs = dem_db(ui, "students")[0]
+    _chon_hs_tai_cho(ui, sid)
+    goi = _goi_delete(ui, "delete_student")
+    _xoa_hs(ui)
+    p.wait_for_selector("#xoaKemBar", state="visible")
+    assert goi == [(sid,)], goi
+    assert dem_db(ui, "students")[0] == n_hs
+    assert sid in p.locator("#xoaKemBar").inner_text()
+    p.locator("#xoaKemBar .btn-primary").click()
+    p.wait_for_function("document.getElementById('fallbackWorkArea').hidden")
+    assert goi == [(sid,), (sid, True)], goi
+    assert dem_db(ui, "students")[0] == n_hs - 1
+    assert _dem(ui, "select count(*) from match_results where student_id=?", sid) == 0
+    assert so_dong_run(ui) == n_run
+    assert "sao lưu" in p.locator("#toastStack").inner_text().lower()
+    assert ui.api.get_trang_thai_ket_qua()["data"]["ket_qua_cu"] is True
+    ui.kiem_loi()
+
+
+def test_b2_xoa_hoc_sinh_co_ket_qua_huy_o_buoc_hai_con_nguyen(mo):
+    ui = mo()
+    p = ui.page
+    chon_cach(ui, "huy_chuong")
+    nap_so_150(ui)
+    chay_ui(ui)
+    sid = q(ui, "select student_id from match_results where club_id is not null order by student_id limit 1")[0][0]
+    n_run = so_dong_run(ui)
+    n_hs = dem_db(ui, "students")[0]
+    n_kq = _dem(ui, "select count(*) from match_results where student_id=?", sid)
+    _chon_hs_tai_cho(ui, sid)
+    goi = _goi_delete(ui, "delete_student")
+    _xoa_hs(ui)
+    p.wait_for_selector("#xoaKemBar", state="visible")
+    p.locator("#xoaKemBar .btn-ghost").click()
+    p.wait_for_selector("#xoaKemBar", state="detached")
+    p.wait_for_timeout(500)
+    assert goi == [(sid,)], goi
+    assert dem_db(ui, "students")[0] == n_hs
+    assert _dem(ui, "select count(*) from match_results where student_id=?", sid) == n_kq
+    assert so_dong_run(ui) == n_run
+    assert not p.locator("#fallbackWorkArea").is_hidden()
+    ui.kiem_loi()
 
 
 def _san_hs(ui, n_cho=3150):

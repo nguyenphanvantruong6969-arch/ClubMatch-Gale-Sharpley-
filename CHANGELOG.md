@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B6: ST-B-007 (xoá CLB / học sinh đã có dữ liệu: xác nhận lần hai)
+
+- `js/00_nen.js`: `hoiXacNhanXoaKem` / `boXoaKemBar` (thanh xác nhận `#xoaKemBar`, dùng kiểu `.run-confirm-bar`, không `confirm()` native; Esc hoặc "Huỷ" thì không gọi gì; con trỏ mặc định ở "Huỷ").
+- `js/05_quan_ly.js`: khi `delete_club(id)` bị từ chối bằng `cannot_delete_club_referenced`, vẫn hiện thông báo lỗi như trước rồi hỏi lần hai; xác nhận thì gọi `delete_club(club_id, true)`. `xoaClbXong` dùng chung cho hai đường, báo số nguyện vọng bỏ, kết quả thành chưa có suất và tên tệp sao lưu (`backup_path`), làm mới dải "kết quả đã cũ" (`veXuatPanel`).
+- `js/04_nhap_tai_cho.js`: tương tự cho `cannot_delete_student_matched` và `delete_student(student_id, true)` (`xoaHocSinhXong`); thanh hỏi bị gỡ khi mở học sinh khác.
+- `i18n.js` (vi + en): `xoa_kem_clb_hoi`, `xoa_kem_hs_hoi`, `xoa_kem_nut`, `toast_xoa_kem_clb`, `toast_xoa_kem_hs` (không in hoa, không `{detail}`, tiếng Anh không dùng "you").
+- Test mới (đỏ trước): 4 ca trong `tests_stress/b/test_b2_quan_ly.py` (CLB và học sinh: hỏi lần hai rồi xoá được; huỷ ở bước hai thì chỉ có đúng một lần gọi, dữ liệu và `run_history` nguyên; dải "kết quả cũ" bật); bản hồi quy trong `tests/test_giao_dien_sf_b_lo5.py` (thêm ở SF-B8).
+
 ## 2026-11-23 — SF-B5: ST-B-006 (chỉ tiêu CLB: báo đúng chữ ngay ở ô)
 
 - `js/05_quan_ly.js`: bảng `UX2_LOI_CLB` thêm `club_capacity_not_integer` và `capacity_too_large` (mã backend của SF-A3) vào ô `clubFormCapacity`; bỏ kiểm phía trình duyệt `Number.isInteger(Number(capacity))` (báo sai chữ "phải lớn hơn 0" cho 1.5). Chữ lấy từ `i18n_loi.js` của A, nên không có chữ mới trong `i18n.js`.
