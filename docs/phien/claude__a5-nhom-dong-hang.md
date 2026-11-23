@@ -35,7 +35,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
         other groups and unlabelled; reserve `a|b` admits a and b, not c; randomised (≥ 200 cases, fixed seed)
         substitutability + law of aggregate demand of the club choice with multi-label eligibility (invariant 8).
   - [ ] Invariant 1: `kiem_nhanh.py --so-seed 20` → `trung_khit` OK (3 datasets × 20 seeds vs `origin/main`).
-- [ ] **L2 backend (must)**
+- [x] **L2 backend (must)**
   - [ ] `NhapDuLieuMixin.chuan_hoa_o_nhom_clb(raw)` (api_nhap.py, next to `chuan_hoa_nhom_du_tru`): split `|`,
         `chuan_hoa_nhom_du_tru` each part, dedupe, sort, join `|`; no `|` → exactly `chuan_hoa_nhom_du_tru(raw)`.
   - [ ] Use it for CLUB cells in `create_or_update_club` (api_quan_ly.py), Sổ nhập club sheet (`so_nhap.py`
@@ -85,17 +85,17 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- L1 done+checked (head 68341c9, checker 2a5a5a8). Next: L2 (also add test tiers [x,a|b,c] -> a,b=1,c=2).
+- L1, L2 done+checked (L2 after 1 FIX round, head 3b0f485). Next: L3. Next: L2 (also add test tiers [x,a|b,c] -> a,b=1,c=2).
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L1 done, GO L2 sent |
-| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L1 NO BUGS |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L2 NO BUGS, GO L3 sent |
+| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L2 NO BUGS |
 
 ## Needs Truong
-- (none yet)
+- (low priority, not blocking) `xem_truoc_so_nhap` does not warn beforehand about a student cell with `|`; import returns ok=True while that student is skipped (warning a5_nhom_hs_co_gach). Decide if a pre-import warning is wanted.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
