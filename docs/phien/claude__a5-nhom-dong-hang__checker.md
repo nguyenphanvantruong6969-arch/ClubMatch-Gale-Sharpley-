@@ -94,3 +94,19 @@ Chấp nhận được. Lý do: đúng quy ước sẵn có của hai hàm nạp
 
 ### Kết luận L2
 Cần `FIX L2`: sửa #1 (+ test #2). Còn lại ĐẠT. Vòng 1/2.
+
+## L2 (FIX1) — range 2c224ce..3b0f485 — VERDICT: NO BUGS (whole L2 = NO BUGS)
+
+| Mục | Kết quả | Bằng chứng |
+|---|---|---|
+| BUG #1 `bulk_set_reserve_group` | ĐÃ SỬA | kiểm `o_nhom_hs_co_gach` đặt TRƯỚC mọi lần ghi. Thử `"a|b"`, `"a |b"`, `"|"`, `"  |  "`, `" | "` → `ok=False`, mã `a5_nhom_hs_co_gach_hang_loat`, DB không đổi (H1=a, H2=b). Giá trị hợp lệ `"c"` và `""` vẫn gán/gỡ bình thường. |
+| Mã lỗi mới | ĐẠT | có trong `i18n_errors.py` (vi+en, placeholder `reserve_group`, `person_l`, `slot_l` giống mã anh em, không `{student_id}` thừa); `i18n_loi_khop` ĐẠT; params trả `{reserve_group}` đúng. |
+| Test mới (#2) | ĐẠT | đột biến "tắt kiểm bulk" (`if False`) → test ĐỎ (1 failed); đã hoàn tác, `git status` sạch. |
+| `phan_quyen.py` `_GIAO_VIEN`, `nhat_ky.py` `_KHONG_GHI` | HỢP LÝ | chỉ thêm `chuan_hoa_o_nhom_clb` và `o_nhom_hs_co_gach` — hai hàm tĩnh thuần (không DB, không ghi), cùng loại với `chuan_hoa_nhom_du_tru` đã có ở đúng hai danh sách này. Không nới quyền cho hàm ghi; `bulk_set_reserve_group` vẫn thuộc nhóm quản trị. Lý do cần: mọi phương thức công khai mới phải được phân loại (test phân quyền / nhật ký). 299 test `phan_quyen/nhat_ky/reserve/du_tru/i18n/bulk` qua. |
+| Đường ghi nhãn học sinh còn lại | ĐẠT | `grep "SET reserve_group\|INSERT INTO students"`: `set_student_reserve_group` (chặn), `bulk_set_reserve_group` (chặn), `_ghi_nhom_du_tru` qua hai hàm CSV (chặn ở trước), `UPDATE ... = NULL` (Sổ nhập, gỡ nhóm), hai `INSERT` với nhóm NULL, `api_muc_tieu` chỉ ghi CLB, `rbda_priority_pipeline` L3220 là dữ liệu mô phỏng nội bộ. Không còn đường nào lọt `|` thành `a_b`. |
+| `kiem_nhanh --so-seed 20` | ĐẠT | 7/7, 60 ca (3 bộ × 20 seed) trùng khít. |
+| Test A5 | ĐẠT | 34 passed. |
+
+Phát hiện mới: không có. Các điểm đã nêu ở vòng 1 vẫn đúng: CSV bỏ qua cả học sinh `|` + cảnh báo (chấp nhận được); xem trước Sổ nhập chưa báo trước và import trả `ok=True` (ghi nhận cho L3/L4 hoặc "Needs Truong", không chặn). Chưa đo: `run_pipeline` đầu-cuối với CLB `a|b`, FA bật, Chromium, toàn bộ bộ test.
+
+Kết luận: L2 NO BUGS sau FIX1.
