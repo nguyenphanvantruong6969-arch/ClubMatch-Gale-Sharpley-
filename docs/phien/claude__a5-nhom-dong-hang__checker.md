@@ -254,3 +254,8 @@ Gọi `run_pipeline(seed=7)` thật (Wharton tắt) trên dữ liệu MÔ PHỎN
 | 2 | nhỏ | Vẫn chưa có test khoá "mục `a|b` không ở chỉ số 0" cho `xay_tier_rank` (nhận xét L1 #1). | Thêm ca `tiers=["x","a|b","c"]` → a,b = 1, c = 2. |
 
 Chưa đo: toàn bộ bộ test, FA bật, build Windows (CI).
+
+## L5b — range 33f85cf..7e6a3d8 — VERDICT: NO BUGS
+1. Mutant `xay_tier_rank` "mọi phần của mục `a|b` hạng 0" nay **ĐỎ** (`test_xay_tier_rank_va_thu_tu_uu_tien_x_ab_c_roi_chua_nhom`, 1 failed); đã hoàn tác, `git status` sạch.
+2. Dedupe `import_so_nhap`: chỉ bỏ cảnh báo có `code == "a5_nhom_hs_co_gach"` mà đã có bản y hệt trong danh sách (so dict đầy đủ); mọi mã khác đi qua nguyên. So bản cũ (`33f85cf`) với mới trên cùng sổ: 3 em `|` (S2,S3,S4) cũ 6 cảnh báo → mới 3 (mỗi em MỘT), phần không phải a5 giống hệt; hai em (một `a|b`, một `a`) cũ 2 → mới 1; sổ không có `|` → danh sách cảnh báo giống hệt (cả hai rỗng — chưa có ca "sạch nhưng có cảnh báo khác"; xét mã thì không đổi vì bộ lọc chỉ chạm mã a5). Em có `|` hai dòng trong sổ: bị chặn từ trước bằng lỗi `so_nhap_hs_trung` (cũ và mới như nhau), nên "hai lần" chỉ còn ở hai bước nạp — đã gộp. Xem trước không bị đụng (diff chỉ ở `import_so_nhap`).
+3. `ruff` sạch; `kiem_nhanh --so-seed 20` 7/7, 60 ca trùng khít; `test_a5_*` + `test_so_nhap` + `test_ws_so_nhap` + `test_a13_12_so_nhap` = 179 passed.
