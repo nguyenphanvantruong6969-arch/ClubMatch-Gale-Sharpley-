@@ -5,8 +5,6 @@ CLB `clb_x`: chỉ tiêu 5, dự trữ 3, ô nhóm là tham số. Mọi em đề
 (chỗ rộng) làm nguyện vọng 2, nên em không trúng `clb_x` vẫn có chỗ.
 """
 
-import pytest
-
 NHOM = {"a": ["a1", "a2", "a3", "a4", "a5", "a6"], "b": ["b1", "b2", "b3", "b4", "b5", "b6"],
         "c": ["c1", "c2", "c3"], "u": ["u1", "u2", "u3"]}
 
