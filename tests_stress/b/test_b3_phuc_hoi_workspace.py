@@ -4,7 +4,6 @@ import glob
 import os
 import sqlite3
 
-import pytest
 
 import browser_host
 import recovery
