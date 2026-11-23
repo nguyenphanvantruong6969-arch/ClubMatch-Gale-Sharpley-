@@ -202,3 +202,8 @@ NO BUGS. Hai nhận xét chữ (#1, #2) nên sửa trong lượt tiếp nếu ti
 
 ### Kết luận CIFIX1
 Cần `FIX CIFIX1` (vòng 1): sửa chữ dự phòng ở `index.html` (#1). Phần còn lại ĐẠT.
+
+## CIFIX1b — range 75cf192..321ad2b — VERDICT: NO BUGS
+- Bug #1 và nhỏ #2 đã sửa: `index.html` hint `a5_club_nhom_goi_y` đã là "một"; `HUONG_DAN_SU_DUNG.md` §18 "xếp cứng". Diff chỉ chữ (index.html, HUONG_DAN, CHANGELOG), không đổi test.
+- Chữ dự phòng vi trong `index.html` = `i18n.js` vi cho cả hai id A5 (`a5_club_nhom_goi_y`, `a5_gt2_tc_nhom_goi_y`); chữ en không có dự phòng trong HTML nên không có gì để so. 55 passed: `test_t3_l1_chu_du_phong`, `test_i18n_sync`, `test_a5_*` (có Chromium); `git status` sạch.
+- Không chạy lại `kiem_nhanh` (diff không chạm `.py`); chưa chạy lại nhóm 25 tệp `test_giao_dien_*` nặng.
