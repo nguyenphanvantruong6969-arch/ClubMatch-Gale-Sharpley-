@@ -39,3 +39,6 @@ Behaviour note: a student cell with `|` in a CSV import skips that student entir
 
 ## CIFIX1b
 - Lesson: when an i18n.js text changes, edit the `data-i18n` fallback in index.html the same way (`test_t3_l1_chu_du_phong`). Checked all 3 A5/gt2 hint paragraphs now match; sweep 277 pass.
+
+## CIFIX2
+- Root cause in CHANGELOG (viewport-relative `top` + scroll clamp when skeleton rows are hidden; flaky race, not A5). Fix = document coordinates in the test measurement; sequential group (111) passed locally before and ux2_khung 5x after.

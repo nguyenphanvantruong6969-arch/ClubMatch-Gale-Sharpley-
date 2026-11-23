@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-23 — A5-CIFIX2: `test_khung_khong_lam_nhay_bo_cuc_120_hs` đo theo toạ độ tài liệu
+
+- CI Linux 1/6 đỏ: `top` đầu bảng 390 so với 470. Nguyên nhân: test đo `getBoundingClientRect().top` (toạ độ khung nhìn). Lúc vào thẻ, trang có thể đang cuộn 80 px (hiệu ứng vào thẻ làm trang cao thêm 80 px, race theo thời gian: cục bộ gặp ngẫu nhiên, CI chậm gặp đều); giấu 8 hàng khung làm trang co từ 1142 về 1000 px nên trình duyệt kéo cuộn về 0, toạ độ khung nhìn nhảy 80 dù bố cục không đổi. Không liên quan thay đổi A5 (1e07297 chỉ may mắn qua).
+- Sửa test, giữ nguyên ý kiểm: `top = rect.top + scrollY` (toạ độ tài liệu). Mọi so sánh và ngưỡng khác giữ nguyên.
+
 ## 2026-11-23 — A5-CIFIX1b: chữ dự phòng trong index.html khớp danh mục i18n
 
 - `index.html` đoạn `#clubFormReserveGroupGoiY` còn "MỘT" trong khi `i18n.js` `a5_club_nhom_goi_y` đã là chữ thường: `test_t3_l1_chu_du_phong` đỏ. Sửa index.html cho khớp từng ký tự; kiểm thêm hai đoạn gợi ý khác (`a5_gt2_tc_nhom_goi_y`, `gt2_tc_nhom_goi_y`) khớp; gợi ý bước 3 trình hướng dẫn nằm trong JS (không có chữ dự phòng). `HUONG_DAN_SU_DUNG.md` mục 18: "xếp CỨNG" thành "xếp cứng".
