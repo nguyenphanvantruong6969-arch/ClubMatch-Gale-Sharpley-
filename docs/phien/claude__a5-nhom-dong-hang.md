@@ -3,7 +3,7 @@
 > Fresh session: read CLAUDE.md, then THIS file, then `docs/phien/A5_GIAO_THUC.md`. Cap 100 lines.
 > Spec source: `docs/phien/claude__vibrant-goodall-sqcnbb.md` (design talk 2026-11-22). Planner: Opus, no product code.
 
-Status: PLANNED 2026-11-22 (not started)
+Status: IN PROGRESS 2026-11-23 — lead started, creating coder + checker
 
 ## Feature / goal
 Registry item **A5 (small part)**: equal-rank priority groups. Each student keeps exactly ONE label
@@ -85,14 +85,17 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- Done: planning only. Next: lead starts per `A5_GIAO_THUC.md` §6.
+- Done: planning. Lead started 2026-11-23; next: create coder/checker, GO L1.
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
+| lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
+| coder | (pending) | claude-sonnet-5-5 | creating |
+| checker | (pending) | claude-sonnet-5-5 | creating |
 
 ## Needs Truong
-- (none)
+- (none yet)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
