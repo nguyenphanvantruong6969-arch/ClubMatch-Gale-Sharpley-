@@ -1,5 +1,4 @@
 """ST-B lot B2 (part 1): import via the real UI — good + bad files. SIMULATED data."""
-import pytest
 
 from ho_tro import (chon_cach, nap_so_150, dat_tep, nap_tep, dem_db, khoa_tho)
 from ho_tro_tep import CAC_TEP, goc
