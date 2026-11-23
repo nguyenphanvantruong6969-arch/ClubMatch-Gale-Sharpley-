@@ -1,6 +1,6 @@
 # UX5B-L1 — Kiểm kê + bảng từ ngữ + bản đồ lựa chọn: Xếp CLB, Nhập nguyện vọng, Nhập điểm
 
-> Nhánh `claude/ux5b-nap-xep-nhap-tay`. Người soạn: Sonnet (coder). **Chờ Truong duyệt trước khi viết mã L2–L4.**
+> Nhánh `claude/ux5b-nap-xep-nhap-tay`. Người soạn: Sonnet (coder). **MILESTONE 1 ĐÃ DUYỆT (Truong, 2026-11-23): bảng từ ngữ §2, mặc định D1–D6 (§0), bản đồ §3, câu hỏi mở §5 theo mặc định (1: chỉ gập chip; 2: có "Chấm tiếp"; 3: đo ở trạng thái đã chọn một em). Được viết mã L2–L4.**
 > Luật: Hick (ít lựa chọn mỗi màn, ≤ 7 ô trước khi mở "thêm") + Von Restorff (một nút vàng mỗi thẻ, đỏ chỉ khi xoá dữ liệu).
 > Chỉ giao diện + chữ. Số "hiện nay" đo bằng Chromium thật (dữ liệu MÔ PHỎNG: sổ 120 học sinh, 9 CLB, 3 buổi, điểm quyết tâm bật).
 > Cách đếm = đúng cách của test UX4: nút/ô/`summary`/liên kết nhìn thấy và bật, **không tính** hàng trong `tbody`. Thẻ CLB dạng ô chọn

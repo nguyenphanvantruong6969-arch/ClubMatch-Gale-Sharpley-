@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — UX5B: Truong duyệt MILESTONE 1; prompt tự động L2-L4
+
+- Chỉ tài liệu: ghi duyệt M1 (từ ngữ, D1-D6, câu hỏi mở theo mặc định) trong `docs/ke_hoach/ux/UX5B_TU_NGU.md`, hồ sơ nhánh, `TIEN_DO.md`; thêm `docs/phien/UX5B_L2_L4_AUTO_PROMPT.md` (P0 nhập main, L2-L4, checker tự động, vòng CI). Không đổi mã.
+
 ## 2026-11-22 — Sửa CI đỏ trên nhánh UX5B (run #1401): gộp bản sửa UX5A, bỏ chạy đua trong một test
 
 - Nguyên nhân: nhánh UX5B rẽ ra từ `edf7526`, trước 16 commit sửa của UX5A (trả từ về "Chỉ tiêu" / "Suất ưu tiên", nút 44px, chữ dự phòng `index.html`, số tệp test trong tài liệu). Nền UX4 có chữ mới nhưng test đòi chữ cũ nên 7 lỗi ở Linux 1-6 và Windows 3, 5 (`test_giao_dien_ux2_nut`, `ux1_nhap_so`, `sg2_diem_quyet_tam`, `t3_l3`, `fa_quan_ly`, `ux1_tiep_theo`, `fg8_cau_chu`, `t3_l1_chu_du_phong`, `a13_12_tai_lieu`).

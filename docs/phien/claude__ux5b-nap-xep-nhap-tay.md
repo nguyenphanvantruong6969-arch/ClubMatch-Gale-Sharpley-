@@ -40,7 +40,10 @@ those two must be tidy under `body[data-vai="giao_vien"]` too (admin-only contro
   (invariant 5); default results byte-identical; `kiem_nhanh.py` 7/7; `test_i18n_sync.py`, `test_ws_nhan.py` green.
 
 ## Current state
-- L1 done (2026-11-22): `docs/ke_hoach/ux/UX5B_TU_NGU.md`. WAITING for Truong to approve words + D1–D6 (MILESTONE 1). No code yet; do not start L2 before approval.
+- L1 done (2026-11-22): `docs/ke_hoach/ux/UX5B_TU_NGU.md`. **MILESTONE 1 APPROVED by Truong 2026-11-23**: words §2, defaults D1–D6, open questions 1–3 by default. L2–L4 may start.
+- Work continues on `claude/affectionate-lamport-595imn` (it holds UX5A fixes and CI is green there, run #1403); `claude/ux5b-nap-xep-nhap-tay` is stale and red, do not push to it.
+- Full autonomous run: prompt in `docs/phien/UX5B_L2_L4_AUTO_PROMPT.md` (P0 merge `main`, then L2-L4, auto checker, CI loop). P0 comes first so the
+  `index.html`/`style.css` conflicts with MT2 are solved once, on a small diff. After P0 re-count controls on the three tabs (MT2 touched the quyet-tam block).
 - Test env: venv at scratchpad (`pip install -r requirements-dev.txt`), no `.venv` in the checkout.
 
 ## Session log (append only)
