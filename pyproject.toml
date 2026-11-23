@@ -23,6 +23,7 @@ select = ["E9", "F", "PLE", "B006", "B008", "SIM115", "B023"]
 [tool.ruff.lint.per-file-ignores]
 # Test va kich ban do dac mo tep ngan, doc mot lan; khong dang gia viet lai.
 "tests/**" = ["SIM115", "B023"]
+"tests_stress/**" = ["SIM115", "B023"]
 "du_lieu_test/**" = ["SIM115", "B023"]
 
 [tool.coverage.run]

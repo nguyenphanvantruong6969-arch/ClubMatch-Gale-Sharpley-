@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-23 — SF-B1: ST-B-001, ST-B-002, ST-B-008 (màn hình cũ)
+
+- ST-B-001 (`js/09_the_xem.js`, `loadKetQuaTab`): tab Kết quả bỏ hàng của lần chạy trước ngay khi mở, hiện khung chờ nếu tải chậm.
+- ST-B-002 (`js/18_cai_dat.js`, `ux1aApDungSong`): vẽ lại công tắc "Chia CLB theo loại" sau khi đổi chế độ.
+- ST-B-008 (`i18n.js`, `ux1a_cau_canh_bao` vi/en): câu thanh "Việc tiếp theo" không còn hứa chặn chạy ("nên xem lại").
+- Test mới: `tests/test_giao_dien_sf_b_lo1.py` (3 ca). `tests_stress/b/ho_tro.py`: `_doc_bang` bỏ qua hàng khung chờ (`.ux2-khung-hang`); gỡ 3 xfail.
+
 ## 2026-11-23 — ST2 (kế hoạch): stress test vòng 2, cố ý làm sập chương trình
 
 - `docs/phien/ST2_GIAO_THUC.md` (kill -9, thiếu tài nguyên, fuzz chuỗi thao tác, cỡ cực lớn; fuzz HTTP, monkey test, backend chết dưới giao diện, chạy dài) và `docs/phien/SF_ST2_PROMPTS.md` (bốn prompt). Chỉ chạy sau khi SF đã gộp và CI xanh. Không đổi mã sản phẩm.

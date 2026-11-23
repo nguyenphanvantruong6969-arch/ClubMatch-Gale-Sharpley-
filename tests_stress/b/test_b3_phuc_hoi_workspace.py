@@ -2,11 +2,9 @@
 import base64
 import glob
 import os
-import shutil
 import sqlite3
 
 import pytest
-from playwright.sync_api import sync_playwright
 
 import browser_host
 import recovery
@@ -265,7 +263,6 @@ def test_b3_trang_phuc_hoi_thu_muc_khong_ghi_duoc(trinh_duyet, tmp_path, monkeyp
 
 
 def khoa_tho_trang(page):
-    import re
     from ho_tro import _KHOA_THO
     return sorted(set(_KHOA_THO.findall(page.locator("body").inner_text())))
 

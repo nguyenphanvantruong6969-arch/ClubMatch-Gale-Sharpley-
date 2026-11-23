@@ -1,11 +1,10 @@
 """ST-B lot B3 (part 1): login / logout / roles in the real UI. SIMULATED data."""
-import json
 import sqlite3
 import urllib.request
 
 import pytest
 
-from ho_tro import chon_cach, khoa_tho, dem_db, rules, chay_ui, ket_qua_db
+from ho_tro import khoa_tho, dem_db, rules
 from conftest import SO_150
 
 TRACEBACK = ("Traceback", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "object has no attribute")
@@ -56,7 +55,7 @@ def test_b3_tao_tai_khoan_va_kiem_tra_dau_vao(mo):
     assert "quantri" in p.locator("#tkHuyHieu").inner_text()
     # không lưu mật khẩu rõ trong CSDL
     c = sqlite3.connect(ui.api.db_path)
-    cot = [r[1] for r in c.execute("pragma table_info(tai_khoan)")]
+    [r[1] for r in c.execute("pragma table_info(tai_khoan)")]
     hang = c.execute("select * from tai_khoan").fetchall()
     c.close()
     assert not any(MK in str(x) for x in hang), "mật khẩu lưu dạng rõ"

@@ -8,8 +8,8 @@ import time
 
 import pytest
 
-from ho_tro import chon_cach, khoa_tho, dem_db, rules, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
-from ho_tro_tep import CAC_TEP, so_nhan_ban
+from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
+from ho_tro_tep import so_nhan_ban
 from conftest import SO_150
 
 DAU = re.compile("[àáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ]", re.I)
@@ -342,9 +342,7 @@ def test_b4_moi_nut_xuat_tep_mo_duoc(mo):
 
 def test_b4_xuat_du_lieu_dau_vao_nap_lai_cung_ket_qua(mo):
     """Export input data as a Sổ, import into a NEW workspace, same students / prefs / ticks / scores / medals."""
-    import openpyxl
     ui = mo()
-    p = ui.page
     chon_cach(ui, "huy_chuong")
     nap_so_150(ui)
     chay_ui(ui)

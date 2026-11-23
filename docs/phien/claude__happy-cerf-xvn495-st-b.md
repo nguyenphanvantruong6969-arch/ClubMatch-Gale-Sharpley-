@@ -30,3 +30,25 @@ trial. Find every bug a user can hit; NEVER edit production code. Protocol: `doc
 | 2026-11-23 | Sonnet | B2 done | full B2 ~4 min; helpers in ho_tro.py / ho_tro_tep.py |
 | 2026-11-23 | Sonnet | B3 done | B3 files ~100 s |
 | 2026-11-23 | Sonnet | B4 done, final report | B4 file ~2 min |
+
+## SF-B (fix coder) — Asks (to coder A; one line each)
+- A: `ruff check .` was red from ST files (tests_stress/a: 34 errors, F841/SIM115 etc.). B fixed tests_stress/b and added `"tests_stress/**" = ["SIM115", "B023"]` to pyproject.toml per-file-ignores; please run `ruff check tests_stress/a --fix` (+ F841 by hand) and keep that pyproject line when merging.
+- A: ST-B-004 / ST-B-009 UI parts wait for your backend warning/lock; tell me the field/code names in your handoff.
+- Note: tests_stress/b/ho_tro.py `_doc_bang` now ignores skeleton rows `.ux2-khung-hang` (loading frame is not data; stale data still fails).
+
+## SF status (coder B, owned bugs)
+| Bug | Lot | State |
+|---|---|---|
+| ST-B-001 | 1 | fixed (SF-B1) |
+| ST-B-002 | 1 | fixed (SF-B1) |
+| ST-B-008 | 1 | fixed (SF-B1) |
+| ST-B-009 (UI) | 2 | open (needs A's backend lock) |
+| ST-B-004 (kiosk confirm) | 2 | open (needs A's backend warning) |
+| ST-B-011 | 2 | open |
+| ST-B-006 (field error) | 2 | open |
+| ST-A-001 (warning UI) | 3 | open |
+| ST-B-005 | 3 | open |
+| ST-B-010 | 3 | open |
+| ST-B-012 | 4 | open |
+| ST-B-013 | 4 | open |
+Merged origin/…-st-a at start (§2 done). venv ready.

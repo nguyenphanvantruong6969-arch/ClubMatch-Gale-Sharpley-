@@ -287,7 +287,7 @@
       /* UX1A-L1: thanh "Việc tiếp theo" */
       ux1a_cau_nap_so: "Chưa có dữ liệu. Nạp sổ nhập để bắt đầu.",
       ux1a_nut_nap_so: "Nạp sổ",
-      ux1a_cau_canh_bao: "Dữ liệu có cảnh báo nghiêm trọng, cần sửa trước khi chạy.",
+      ux1a_cau_canh_bao: "Dữ liệu có cảnh báo nghiêm trọng, nên xem lại.",
       ux1a_nut_canh_bao: "Xem cảnh báo",
       ux1a_cau_chay: "Dữ liệu đã sẵn sàng, chưa chạy sắp xếp.",
       ux1a_nut_chay: "Chạy sắp xếp",
@@ -1747,7 +1747,7 @@
       /* UX1A-L1: "Next step" bar */
       ux1a_cau_nap_so: "No data yet. Load the input book to start.",
       ux1a_nut_nap_so: "Load book",
-      ux1a_cau_canh_bao: "The data has a blocking warning; fix it before running.",
+      ux1a_cau_canh_bao: "The data has a serious warning; worth reviewing.",
       ux1a_nut_canh_bao: "View warnings",
       ux1a_cau_chay: "Data is ready; the allocation has not been run.",
       ux1a_nut_chay: "Run allocation",
