@@ -58,7 +58,7 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
   - [ ] Tests: `tests/test_a5_nhom_dong_hang_backend.py` (normaliser cases `"B|a| a |"` → `"a|b"`, student `|`
         error + nothing written, CSV warning silent for `a` when a club has `a|b`, report count, tiers
         cross-rank error, goal-card lock, round-trip Sổ nhập export→import keeps `a|b`).
-- [ ] **L3 UI (must)** — `js/075_workspace.js`, `js/15_tieu_chi.js`, i18n
+- [x] **L3 UI (must)** — `js/075_workspace.js`, `js/15_tieu_chi.js`, i18n
   - [ ] `ws_v_tiers`: split each line by `|`, trim, key like the backend (lower-case, no diacritics, single
         spaces); duplicate inside or across lines, or empty part → error.
   - [ ] `rvTiers` shows `a = b › c`; `js/15_tieu_chi.js` read-only summary of tiers shows `a = b`
@@ -85,14 +85,14 @@ Registry item **A5 (small part)**: equal-rank priority groups. Each student keep
 - `kiem_nhanh.py` default is 5 seeds: pass `--so-seed 20` for acceptance 1.
 - Do not touch `compute_club_priority` signature (anti-endogeneity test guards it).
 ## Current state (overwrite)
-- L1, L2 done+checked (L2 after 1 FIX round, head 3b0f485). Next: L3.
+- L1-L3 done+checked (L2 after 1 FIX round; L3 head baa8dbd). Next: L4 docs (+ aria-describedby on gt2TcTiers hint).
 
 ## Sessions
 | Role | Session id | Model | State |
 |---|---|---|---|
 | lead | session_01TGThn62kmcVTb1wTcWV1BG | claude-sonnet-5-5 | running |
-| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L2 NO BUGS, GO L3 sent |
-| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L2 NO BUGS |
+| coder | session_01TGThn8yyRbdQHVrNVMixYj | claude-sonnet-5-5 | L3 NO BUGS, GO L4 sent |
+| checker | session_01TGThn4sEFZK42aWUvKbj4R | claude-sonnet-5-5 | L3 NO BUGS |
 
 ## Needs Truong
 - (low priority, not blocking) `xem_truoc_so_nhap` does not warn beforehand about a student cell with `|`; import returns ok=True while that student is skipped (warning a5_nhom_hs_co_gach). Decide if a pre-import warning is wanted.
