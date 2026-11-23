@@ -47,10 +47,10 @@ Protocol: `docs/phien/SF_GIAO_THUC.md`. Item code SF, sub-ids SF-A1..A4. Merged 
 | ST-A-007 | 3 | fixed (SF-A3) |
 | ST-B-006 (validation code) | 3 | fixed backend (SF-A3): codes `club_capacity_not_integer`, `capacity_too_large`; inline field error = B lot 2 |
 | ST-A-001 | 3 | fixed (SF-A3): `update_workspace_config` data.warnings; B renders under mode cards |
-| ST-A-008 | 4 | partly fixed (SF-A4): 800 students 18.8→9.1 s, 3000: 68-76→40.6 s; target ≤30 s NOT met → Needs Truong |
+| ST-A-008 | 4 | partly fixed (SF-A4): 800 students 18.8→9.1 s, 3000: 68-76→32.4 s (Chia 100) / 38.4 s (Huy chương) in the final stress run (40.6 s in a first run); target ≤30 s NOT met → Needs Truong |
 
 ## Needs Truong
-- ST-A-008 (whole-school phieu PDF at 3000 students): after cached `Paragraph.wrap` + string table cells it is 40.6 s (target ≤ 30 s). The rest is pure-Python reportlab (number formatting, `drawString`, PDF serialisation; `_rl_accel` C ext absent). Further options, each needs a decision: (a) split the whole-school PDF per class / chunk (the per-class export `theo_lop` already exists) and show progress; (b) add `pypdf`/qpdf to merge chunks built in parallel processes (new library); (c) a hand-written canvas flowable for the phieu page (big change). Not done.
+- ST-A-008 (whole-school phieu PDF at 3000 students): after cached `Paragraph.wrap` + string table cells it is 32-41 s depending on the run (target ≤ 30 s). The rest is pure-Python reportlab (number formatting, `drawString`, PDF serialisation; `_rl_accel` C ext absent). Further options, each needs a decision: (a) split the whole-school PDF per class / chunk (the per-class export `theo_lop` already exists) and show progress; (b) add `pypdf`/qpdf to merge chunks built in parallel processes (new library); (c) a hand-written canvas flowable for the phieu page (big change). Not done.
 - ST-A-005/ST-B-007 schema: no schema change was needed (deleting keeps `run_history`; current results go stale through the existing data fingerprint). Nothing to decide.
 - `tests/test_xp1_*` PDF text tests need `pypdf`, which is not in `requirements-dev.txt`, so they skip locally and (apparently) on CI: the visible-text equivalence of the new string cells is covered only by `tests/test_sf_a_4.py` (cell text) and page count (1589 before/after at 800). A reviewer with `pypdf` may want to diff text of old/new PDFs.
 

@@ -7,6 +7,23 @@ All data SIMULATED. Production code untouched. Run: `.venv/bin/python -m pytest 
 |---|---|---|---|---|
 | 0 | 4 | 3 | 1 | 8 |
 
+## SF status (fixes) — updated by SF Coder A
+| id | state |
+|---|---|
+| ST-A-001 | fixed a5beec0 (`update_workspace_config` data.warnings `che_do_thieu_du_lieu`; UI rendering = B) |
+| ST-A-002 | fixed 5868c7e (`_cfg_ws` reads through the open transaction connection) |
+| ST-A-003 | fixed a5beec0 (`TRAN_SUC_CHUA` = 2^31-1 in preview + import + form + CSV) |
+| ST-A-004 | fixed 5868c7e (warning `so_nhap_canh_bao_o_bo_qua`; no test columns ⇒ stored ticks/scores kept) |
+| ST-A-005 | fixed a5beec0 (`delete_student(id, xac_nhan_xoa_ket_qua)`; blank result rows no longer block) |
+| ST-A-006 | fixed a29c97d (`integrity_check` at open / run / import / backup; recovery page uses it too) |
+| ST-A-007 | fixed a5beec0 (`forms_dot.nap_mau_forms()` before every forms-module import) |
+| ST-A-008 | Needs Truong: 3000 students 68-76 s → 32.4 s (Chia 100) / 38.4 s (Huy chương) (06ca113), target 30 s not met; see handoff |
+| ST-B-003 | fixed 5868c7e |
+| ST-B-004 (backend) | fixed 5868c7e (preview warns; kiosk confirm = B) |
+| ST-B-006 (validation code) | fixed a5beec0 (inline field error = B) |
+| ST-B-007 (backend) | fixed a5beec0 (`delete_club(id, xac_nhan_xoa_kem)`; UI confirm = B) |
+| ST-B-009 (backend) | fixed a29c97d (`vao_che_do_hoc_sinh` → `can_tao_tai_khoan`; lock with account already refuses all but 3 methods) |
+
 ## Lot status
 | Lot | State | Tests |
 |---|---|---|
