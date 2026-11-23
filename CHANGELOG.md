@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-23 — SF (kế hoạch): sửa toàn bộ lỗi stress test
+
+- `docs/phien/SF_GIAO_THUC.md`: phân 21 lỗi ST-A/ST-B cho hai coder trên hai nhánh con (A: mã Python, B: giao diện), vòng lặp đỏ → xanh từng lỗi, điều kiện dừng (tests_stress 0 failed/0 xfail, CI xanh, trùng khít 3×20), kiểm chéo, một PR về nhánh mẹ. Không đổi mã sản phẩm.
+
 ## 2026-11-22 — ST (chuẩn bị thử nghiệm): sổ nhập đổi chế độ + giao thức stress test
 
 - `du_lieu_test/tao_so_nhap_doi_che_do.py` → `du_lieu_test/SO_NHAP_DOI_CHE_DO_150HS.xlsx` (DỮ LIỆU MÔ PHỎNG, 150 em, 2 buổi × 7 CLB: 1 Tự do, 3 Giới hạn, 3 Tuyển chọn). Một sổ hợp lệ cho Chỉ xếp / Chia 100 / Huy chương và bật/tắt chia loại: huy chương 60/30/10 nằm trọn trong một quỹ (= 100). Nạp khi workspace đang ở chế độ Huy chương. Đã kiểm bằng API thật: 0 cảnh báo nhập, 8 lần đổi chế độ + 3 lần bật/tắt chia loại đều chạy được.
