@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-24 — UX1F (CI PR #32): sửa test `test_o_chon_lop_loc_bang_va_quyet_dinh_lop_in_phieu`
+
+- Nguyên nhân CI đỏ (run 45303334169): UX5A-L2 gập `#btnUx1bPhieuLop` vào nếp `<details id="ux1bThemMenu">` đóng sẵn nên `.click()` hết thời gian. Sửa test: mở nếp (`#ux1bThemTom`) trước khi bấm, trong `tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py`. Chỉ đổi test, không đổi mã sản phẩm. Các test khác bấm ba nút này đã mở nếp sẵn (đã rà `tests/`).
+
 ## 2026-11-24 — UX1F vào main: gộp nhánh `ux1-tich-hop` (sau UX5), sửa test theo giao diện mới
 
 - Gộp `origin/claude/ux1-tich-hop` (UX1F-L1..L5: pypdf cho test PDF, phiếu PDF vừa một trang, giáo viên lưu PDF một em, MỘT ô Chọn lớp `#kqChonLop`) vào `main` đã có UX5. Xung đột chữ: `.github/workflows/tests.yml` (gộp cả `pytest-xdist` và `pypdf`), CHANGELOG.md, TIEN_DO.md, đếm tệp test (nay 392).
