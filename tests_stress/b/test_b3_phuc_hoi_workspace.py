@@ -9,7 +9,7 @@ import browser_host
 import recovery
 import workspace as ws
 from api import PipelineAPI
-from conftest import GOC, SO_150, HOOK
+from conftest import ANH, GOC, SO_150, HOOK
 from ho_tro import chon_cach, khoa_tho, dem_db, rules, nap_so_150, chay_ui
 
 TRACEBACK = ("Traceback", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "object has no attribute")
@@ -280,7 +280,8 @@ def test_b3_trang_phuc_hoi_bam_lai_nut_khoi_phuc_sau_khi_xong(trinh_duyet, tmp_p
     page.locator("#btnRestoreBackup").click()
     page.wait_for_timeout(3000)
     stt = page.locator("#recoveryStatus").inner_text()
-    page.screenshot(path=os.path.join(GOC, "docs", "phien", "anh_st_b", "ST-B-010_phuc_hoi_bam_dup.png")) if os.makedirs(os.path.join(GOC, "docs", "phien", "anh_st_b"), exist_ok=True) is None else None
+    os.makedirs(ANH, exist_ok=True)
+    page.screenshot(path=os.path.join(ANH, "ST-B-010_phuc_hoi_bam_dup.png"))     # SFB-L3: thư mục ảnh của conftest (thư mục tạm), không đè PNG đã theo dõi
     ctx.close()
     assert len(goi) == 1 and "đọc được bình thường" not in stt, (
         "bấm 'Khôi phục' hai lần cách 0,4 s: restore_from_backup chạy %d lần, dòng trạng thái cuối: %r" % (len(goi), stt[:120]))

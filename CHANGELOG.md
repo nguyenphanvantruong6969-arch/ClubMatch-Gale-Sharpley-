@@ -5,6 +5,7 @@
 - Xoá `docs/phien/claude__great-edison-6ry675__TU_CHAY.md` và `claude__ux1-tich-hop-vao-main__TU_CHAY.md` (việc đã xong, nội dung đã ở main).
 - `docs/ke_hoach/TIEN_DO.md`: các dòng SF-*, UX5B-FIX-CI, UX1F-L* còn ghi "chờ CI/chờ checker" sửa theo thực tế (đã gộp vào main, CI #1522 xanh); thêm dòng SFB. `CLAUDE_CHI_TIET.md`: đếm tệp test = 402.
 - `tests_stress/b/conftest.py`: ảnh chụp mặc định ghi vào thư mục tạm (đặt `RBDA_ANH_ST_B` để lưu vào kho) nên chạy stress không còn sửa các PNG đã theo dõi.
+- `test_b3_phuc_hoi_workspace.py` (ST-B-010) còn ghi ảnh thẳng vào `docs/phien/anh_st_b/` bằng đường dẫn cứng: nay dùng `ANH` của conftest. Chạy cả thư mục `tests_stress/b` giờ để `git status` sạch.
 - SFB-L4 (tiến trình PDF, mã lỗi zip riêng) là lô tuỳ chọn: BỎ, để mục riêng.
 
 ## 2026-11-24 — SFB-L2: menu UX5A không còn bị cắt ở màn hình hẹp (CSS, commit riêng để revert được)

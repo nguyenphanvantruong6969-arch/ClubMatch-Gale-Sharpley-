@@ -11,10 +11,10 @@ Item code **SFB** (tentative; Truong to confirm it in the registry): bring the s
 - [x] L2 (must) product CSS: dropdown menus fit narrow screens (candidate in the memo) + a CI test in `tests/` + 3 screenshots for Truong; own commit so it can be reverted alone
 - [x] L3 (optional) cleanup: delete the two `__TU_CHAY.md` files, sync TIEN_DO/CHANGELOG/test count, stress screenshots no longer overwrite tracked PNGs
 - [-] L4 (optional, DROPPED, separate item) leftovers from SF: PDF export progress UI (`get_tien_do_xuat`), dedicated zip error code (ST-B-011)
-- [ ] CI gate: all jobs green on head, PR `mergeable_state` = clean, 0 behind main, final status line printed
+- [x] CI gate (round 2 green: push run + PR run, coverage gate included, mergeable_state clean; round 3 only re-runs for a test-only screenshot-path fix): all jobs green on head, PR `mergeable_state` = clean, 0 behind main, final status line printed
 
 ## Current state
-- L1-L3 done and pushed; PR #33 open into main (CI loop in progress, protocol section 4). `tests_stress/b`: 65/65 pass run per file (b4 10, b2_quan_ly 19, b1 13, b2_nhap_tep 8, b3_phuc_hoi 7, b3_vai_tro 9, b5 2).
+- L1-L3 done; PR #33 open into main; CI round 2 (head f49c37a) fully green, mergeable_state clean, 0 behind main. Round 3 = test-only fix (ST-B-010 screenshot path) pending CI. `tests_stress/b`: 65/65 pass run per file (b4 10, b2_quan_ly 19, b1 13, b2_nhap_tep 8, b3_phuc_hoi 7, b3_vai_tro 9, b5 2).
 - L2 deviation from the memo (flagged to Truong): the memo's single CSS rule is NOT enough. `.panel:hover` has `transform: translateY(-2px)`, which makes the panel the containing block of `position: fixed` while the mouse is over it (box ended at top -127). Added a second rule in the SAME @media block: `.panel:has(.menu-khac[open] > .ux5a-hop-rong):hover { transform: none; transition: none; }`. Desktop > 800 px unchanged. If Truong rejects it, revert the L2 commit alone.
 - L4 dropped (optional): PDF progress UI and dedicated zip error code remain open for their own item.
 - Known unrelated flake: `test_a13_12_browser_host.py::test_tai_lai_trang_khong_tat_may_chu` (Windows timing). Rerun the job; do not change the threshold.
@@ -40,3 +40,4 @@ Item code **SFB** (tentative; Truong to confirm it in the registry): bring the s
 | 2026-11-24 | Sonnet | Planned item SFB: branch, branch file, protocol, memo and patch | no code |
 | 2026-11-24 | Sonnet | Coded L1-L3, opened PR #33, CI loop started | L2 needed a 2nd CSS rule (hover transform) |
 | 2026-11-24 | Sonnet | CI round 1 red (Linux 2/6): UX2-L8 test scans style.css from its marker to EOF and forbids `overflow`; moved the SFB @media block above that marker | CI round 2 pushed |
+| 2026-11-24 | Sonnet | CI round 2 all green (both runs, coverage gate); found ST-B-010 test still wrote a tracked PNG, fixed (test-only), round 3 pushed | hourly backup trigger deleted |
