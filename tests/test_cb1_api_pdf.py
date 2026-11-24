@@ -194,6 +194,7 @@ def test_ban_chot_dau_van_tay_nguoi_thoi_gian_khoa_va_khong_hat_giong_mac_dinh(t
     chu = _chu(r["data"]["path"])
     dvt = _sql(db, "SELECT dau_van_tay FROM dau_van_tay_chay")[0][0]
     assert "BẢN CHỐT" in chu and dvt[:20] in chu.replace("\n", "")
+    assert chu.count("BẢN CHỐT") == 1 and "Từng bước đi đến kết quả" in chu and "Dấu xác nhận" in chu   # CB1-FIX4: bố cục mới, nhãn không lặp
     assert pa.bam_luat(cau_hinh_ws.doc_cau_hinh(db))[:20] in chu.replace("\n", "")
     assert str(SEED) not in chu and "Hạt giống:" not in chu
     assert "Đã làm" in chu

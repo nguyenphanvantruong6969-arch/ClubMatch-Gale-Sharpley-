@@ -24,20 +24,26 @@ CAU = {
     "vi": {
         "tieu_de": {"du_kien": "Phương án xếp — BẢN DỰ KIẾN", "chot": "Phương án xếp — BẢN CHỐT"},
         "gioi_thieu": {
-            "du_kien": "Đây là bản dự kiến: các nguyên tắc xếp nhà trường dự định dùng, công bố trước lần xếp chính thức.",
-            "chot": "Đây là bản chốt: các nguyên tắc xếp đã được nhà trường chốt và công bố cho lần xếp chính thức.",
+            "du_kien": "Nhà trường gửi đến các em và quý phụ huynh cách dự định xếp học sinh vào câu lạc bộ. Mọi người cùng xem trước, rồi mới đến lần xếp chính thức.",
+            "chot": "Đây là cách nhà trường đã chốt để xếp học sinh vào câu lạc bộ. Luật dưới đây sẽ được dùng cho lần xếp chính thức.",
         },
-        "muc_tieu": "Mục tiêu đã chọn",
-        "tieu_chi": "Thứ tự xét",
-        "quy_trinh": "Quy trình",
-        "tang_1": "Nhóm thứ nhất: người đã có điểm bài thi của câu lạc bộ",
-        "tang_2": "Nhóm thứ hai: những người còn lại",
+        "banner": "CÁCH XẾP HỌC SINH VÀO CÂU LẠC BỘ",
+        "nhan_ban": {"du_kien": "BẢN DỰ KIẾN", "chot": "BẢN CHỐT"},
+        "muc_tieu": "Nhà trường ưu tiên điều gì?",
+        "tieu_chi": "Khi một câu lạc bộ hết chỗ, ai được xét trước?",
+        "quy_trinh": "Từng bước đi đến kết quả",
+        "tang_1_tt": "Trước hết", "tang_1": "Các bạn đã làm bài thi của CLB",
+        "tang_2_tt": "Sau đó", "tang_2": "Các bạn còn lại",
+        "tang_chung_tt": "Với tất cả", "tang_chung": "Mọi học sinh cùng một thứ tự",
+        "luu_y": "Lưu ý",
+        "xac_nhan": "Dấu xác nhận",
+        "xac_nhan_mo_ta": "Dấu vân tay là chuỗi ký tự cho biết luật và dữ liệu không bị thay đổi sau khi chốt.",
         "khong_dung": "Cài đặt không có tác dụng",
         "da": "Đã làm", "chua": "Chưa làm",
         "chot_nguoi": "Người chốt phương án", "chot_luc": "Thời điểm chốt", "bam_luat": "Dấu vân tay của luật xếp",
         "dau_van_tay": "Dấu vân tay dữ liệu", "hat_giong": "Hạt giống", "khoa_luc": "Khoá số bốc thăm lúc",
-        "le_ky": "Biên bản bốc thăm có chữ ký là một tài liệu riêng; văn bản này không thay thế biên bản đó.",
-        "buoc_le": "Các bước bốc thăm có người chứng kiến",
+        "le_ky": "Biên bản bốc thăm có chữ ký là tài liệu riêng; văn bản này không thay thế biên bản đó.",
+        "buoc_le": "Bốc thăm có người chứng kiến",
         "moc": {
             "cong_bo": ("Công bố phương án", "Phương án đã được công bố"),
             "chot_du_lieu": ("Chốt dữ liệu và lấy dấu vân tay", "Dữ liệu đã chốt, có dấu vân tay"),
@@ -60,17 +66,23 @@ CAU = {
             "du_kien": "This is the draft: the rules the school plans to use, published before the official allocation.",
             "chot": "This is the final version: the rules the school has fixed and published for the official allocation.",
         },
-        "muc_tieu": "Chosen goal",
-        "tieu_chi": "Order of consideration",
-        "quy_trinh": "Procedure",
-        "tang_1": "First group: people who have a test score for the club",
-        "tang_2": "Second group: everyone else",
+        "banner": "HOW STUDENTS ARE PLACED IN CLUBS",
+        "nhan_ban": {"du_kien": "DRAFT", "chot": "FINAL"},
+        "muc_tieu": "What the school prioritises",
+        "tieu_chi": "When a club is full, who is considered first?",
+        "quy_trinh": "Step by step to the result",
+        "tang_1_tt": "First", "tang_1": "Students who took the club's test",
+        "tang_2_tt": "Then", "tang_2": "Everyone else",
+        "tang_chung_tt": "Everyone", "tang_chung": "All students in one order",
+        "luu_y": "Note",
+        "xac_nhan": "Confirmation",
+        "xac_nhan_mo_ta": "A fingerprint is a string of characters showing the rules and data were not changed after fixing.",
         "khong_dung": "Settings with no effect",
         "da": "Done", "chua": "Not yet",
         "chot_nguoi": "Plan fixed by", "chot_luc": "Time fixed", "bam_luat": "Fingerprint of the rules",
         "dau_van_tay": "Data fingerprint", "hat_giong": "Seed", "khoa_luc": "Lottery numbers locked at",
         "le_ky": "The signed draw record is a separate document; this text does not replace it.",
-        "buoc_le": "Steps of the witnessed draw",
+        "buoc_le": "The draw, with a witness",
         "moc": {
             "cong_bo": ("Publish the plan", "Plan published"),
             "chot_du_lieu": ("Fix the data and take its fingerprint", "Data fixed, fingerprint taken"),
@@ -197,51 +209,211 @@ def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong
     return nd
 
 
+# Bảng màu của PDF (cùng tông giao diện: nền tối, vàng nhấn, xanh rêu, giấy).
+_MAU = {"ink": "#1D2421", "ink2": "#3A423F", "slate": "#5A6663", "gold": "#C8871A", "gold_nhat": "#FBF3E0",
+        "moss": "#1F6B4A", "moss_nhat": "#DCE9E0", "giay": "#F3F4F1", "vien": "#DBDCD5", "rust": "#B4402F",
+        "rust_nhat": "#F3DCD9"}
+_RONG_MM = 186          # A4 210 mm trừ lề 12 mm mỗi bên (`xuat_pdf.LE_MM`)
+_THUT_MM = 10           # thụt hai bên cho phần thân (banner ăn hết bề ngang)
+
+
+def _chia32(h):
+    """Dấu vân tay 64 ký tự: ngắt hai dòng cho vừa thẻ (văn bản trích ra vẫn liền khi bỏ xuống dòng)."""
+    h = str(h)
+    return "<br/>".join(h[i:i + 32] for i in range(0, len(h), 32))
+
+
 def dung_pdf(nd: dict, duong: str) -> str:
     """Ghi `nd` (kết quả `dung_noi_dung`) ra PDF A4 qua `xuat_pdf`. Trả đường dẫn thật đã ghi.
 
-    Chỉ in chữ có trong `nd`; không thêm gì khác (không bảng so sánh, không phụ lục)."""
+    Chỉ in chữ có trong `nd` (cộng câu dẫn cố định ở `CAU`); không thêm gì khác (không bảng so sánh, không phụ lục).
+    Bố cục: băng đầu trang, mục tiêu, hai cột thứ tự xét, ghi chú, các mốc quy trình có chấm trạng thái, thẻ dấu xác
+    nhận (bản chốt), các bước bốc thăm."""
     import xuat_pdf
+    xuat_pdf.san_sang()
+    from reportlab.graphics.shapes import Circle, Drawing, String
+    from reportlab.lib import colors
+    from reportlab.lib.styles import ParagraphStyle
+    from reportlab.lib.units import mm
+    from reportlab.platypus import Indenter, KeepTogether, Paragraph, Spacer, Table, TableStyle
+    from reportlab.platypus.flowables import HRFlowable
+    from xml.sax.saxutils import escape as e
+
     c = CAU[nd["lang"]]
-    k = [xuat_pdf.tieu_de(nd["tieu_de"]), xuat_pdf.doan(nd["cau"])]
+    mau = {k: colors.HexColor(v) for k, v in _MAU.items()}
+    dam, thuong = "BeVietnamPro-Bold", "BeVietnamPro"
+    kieu = {}
+
+    def st(ten, **kw):
+        if ten not in kieu:
+            base = dict(fontName=thuong, fontSize=10.5, leading=15, textColor=mau["ink2"])
+            base.update(kw)
+            kieu[ten] = ParagraphStyle(ten, **base)
+        return kieu[ten]
+
+    def p(chu, ten="than", **kw):
+        return Paragraph(e("" if chu is None else str(chu)), st(ten, **kw))
+
+    def px(html, ten="than", **kw):
+        return Paragraph(html, st(ten, **kw))
+
+    def tieu(chu):
+        return [Spacer(1, 14), p(chu, "h2", fontName=dam, fontSize=14.5, leading=19, textColor=mau["ink"]),
+                HRFlowable(width=16 * mm, thickness=2.2, color=mau["gold"], spaceBefore=3, spaceAfter=7, hAlign="LEFT")]
+
+    def the(noi_dung, nen, vien=None, vach=None, rong=None, dem=10):
+        t = Table([[noi_dung]], colWidths=[rong or (_RONG_MM - 2 * _THUT_MM) * mm])
+        lenh = [("BACKGROUND", (0, 0), (-1, -1), nen), ("LEFTPADDING", (0, 0), (-1, -1), dem + 2),
+                ("RIGHTPADDING", (0, 0), (-1, -1), dem), ("TOPPADDING", (0, 0), (-1, -1), dem),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), dem)]
+        if vien:
+            lenh.append(("BOX", (0, 0), (-1, -1), 0.6, vien))
+        if vach:
+            lenh.append(("LINEBEFORE", (0, 0), (0, -1), 3.5, vach))
+        t.setStyle(TableStyle(lenh))
+        return t
+
+    def cham(xong):
+        d = Drawing(14, 14)
+        d.add(Circle(7, 7, 5.2, fillColor=mau["moss"] if xong else colors.white,
+                     strokeColor=mau["moss"] if xong else mau["slate"], strokeWidth=1.4))
+        if xong:
+            d.add(Circle(7, 7, 1.9, fillColor=colors.white, strokeColor=colors.white))
+        return d
+
+    def so(n):
+        d = Drawing(16, 16)
+        d.add(Circle(8, 8, 7.4, fillColor=mau["gold"], strokeColor=mau["gold"]))
+        d.add(String(8, 4.6, str(n), fontName=dam, fontSize=9, fillColor=mau["ink"], textAnchor="middle"))
+        return d
+
+    def gio(x):
+        """"2026-11-24T11:13:36" hoặc "2026-11-24 11:13:36" -> "24/11/2026, 11:13"; không đọc được thì giữ nguyên."""
+        import datetime
+        try:
+            return datetime.datetime.fromisoformat(str(x)).strftime("%d/%m/%Y, %H:%M")
+        except ValueError:
+            return str(x)
+
+    khoi = []
+    # ---- băng đầu trang
+    nhan = Table([[p(c["nhan_ban"][nd["ban"]], "nhan", fontName=dam, fontSize=9.5, leading=12, textColor=mau["ink"])]],
+                 colWidths=[(34 if nd["ban"] == "chot" else 38) * mm])
+    nhan.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), mau["gold"]), ("LEFTPADDING", (0, 0), (-1, -1), 9),
+                              ("RIGHTPADDING", (0, 0), (-1, -1), 9), ("TOPPADDING", (0, 0), (-1, -1), 3),
+                              ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
+    nhan.hAlign = "LEFT"
+    ten_ban = Table([[p(c["banner"], "bn", fontName=dam, fontSize=8.5, leading=11, textColor=mau["gold"])],
+                     [p(nd["tieu_de"].split(" — ")[0], "bt", fontName=dam, fontSize=21, leading=26, textColor=colors.white)],
+                     [nhan]], colWidths=[_RONG_MM * mm])
+    ten_ban.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), mau["ink"]),
+                                 ("LEFTPADDING", (0, 0), (-1, -1), _THUT_MM * mm),
+                                 ("RIGHTPADDING", (0, 0), (-1, -1), _THUT_MM * mm),
+                                 ("TOPPADDING", (0, 0), (0, 0), 14), ("BOTTOMPADDING", (0, 0), (0, 0), 2),
+                                 ("TOPPADDING", (0, 1), (0, 1), 2), ("BOTTOMPADDING", (0, 1), (0, 1), 8),
+                                 ("TOPPADDING", (0, 2), (0, 2), 0), ("BOTTOMPADDING", (0, 2), (0, 2), 16)]))
+    khoi += [ten_ban, Spacer(1, 12), Indenter(left=_THUT_MM * mm, right=_THUT_MM * mm),
+             p(nd["cau"], "gt", fontSize=11.5, leading=18, textColor=mau["ink2"])]
     for cb in nd["canh_bao"]:
-        k.append(xuat_pdf.dong_khoa_gia_tri("!", cb["chu"]))
+        khoi += [Spacer(1, 8), the(p(cb["chu"], "cb", fontName=dam, textColor=mau["rust"]),
+                                   mau["rust_nhat"], vach=mau["rust"])]
+
+    # ---- mục tiêu
     if nd["muc_tieu"]:
-        k.append(xuat_pdf.tieu_de(c["muc_tieu"]))
-        k.append(xuat_pdf.doan("%s. %s" % (nd["muc_tieu"]["tieu_de"], nd["muc_tieu"]["cau"])))
-    k.append(xuat_pdf.tieu_de(c["tieu_chi"]))
-    hien = None
+        mt = nd["muc_tieu"]
+        khoi += tieu(c["muc_tieu"])
+        khoi.append(the([p(mt["tieu_de"], "mt", fontName=dam, fontSize=14, leading=18, textColor=mau["moss"]),
+                         Spacer(1, 3), p(mt["cau"], "mt2", fontSize=11, leading=16)], mau["gold_nhat"], vach=mau["gold"]))
+
+    # ---- thứ tự xét: hai cột
+    khoi += tieu(c["tieu_chi"])
+    cot, khong_dung = {}, []
     for d in nd["tieu_chi"]:
-        if d["nhom"] == "khong_dung":
-            if hien != "khong_dung":
-                k.append(xuat_pdf.dong_khoa_gia_tri(c["khong_dung"], ""))
-                hien = "khong_dung"
-            k.append(xuat_pdf.doan("– " + d["chu"]))
-            continue
-        if d["nhom"] != hien:
-            k.append(xuat_pdf.dong_khoa_gia_tri(c[d["nhom"]], ""))
-            hien = d["nhom"]
-        k.append(xuat_pdf.doan("%d. %s" % (d["thu_tu"], d["chu"])))
-    k.append(xuat_pdf.doan(nd["ghi_chu"]))
-    k.append(xuat_pdf.tieu_de(c["quy_trinh"]))
+        (khong_dung if d["nhom"] == "khong_dung" else cot.setdefault(d["nhom"], [])).append(d)
+    rong_in = (_RONG_MM - 2 * _THUT_MM) * mm
+
+    def cot_the(nhom, rong):
+        tt = c[nhom + "_tt"] if nhom + "_tt" in c else ""
+        mo_ta = c[nhom]
+        if len(cot) == 1:                       # chỉ xét một nhóm (luật "chỉ theo nhóm ưu tiên")
+            tt, mo_ta = c["tang_chung_tt"], c["tang_chung"]
+        hang = [[p(tt.upper(), "ct", fontName=dam, fontSize=8.5, leading=11, textColor=mau["gold"]), ""],
+                [p(mo_ta, "cm", fontName=dam, fontSize=11, leading=15, textColor=mau["ink"]), ""]]
+        for d in cot[nhom]:
+            hang.append([so(d["thu_tu"]), p(d["chu"], "cd", fontSize=10.5, leading=14.5)])
+        b = Table(hang, colWidths=[9 * mm, rong - 9 * mm], hAlign="LEFT")
+        b.setStyle(TableStyle([("SPAN", (0, 0), (1, 0)), ("SPAN", (0, 1), (1, 1)), ("VALIGN", (0, 2), (-1, -1), "MIDDLE"),
+                               ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                               ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                               ("BOTTOMPADDING", (0, 1), (-1, 1), 8)]))
+        return b
+
+    nhom_co = [n for n in ("tang_1", "tang_2") if n in cot]
+    if len(nhom_co) == 2:
+        rc = (rong_in - 6 * mm) / 2
+        trai = the(cot_the(nhom_co[0], rc - 22), mau["giay"], vien=mau["vien"], rong=rc)
+        phai = the(cot_the(nhom_co[1], rc - 22), mau["giay"], vien=mau["vien"], rong=rc)
+        hai = Table([[trai, "", phai]], colWidths=[rc, 6 * mm, rc])
+        hai.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                                 ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0),
+                                 ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
+        khoi.append(hai)
+    elif nhom_co:
+        khoi.append(the(cot_the(nhom_co[0], rong_in - 22), mau["giay"], vien=mau["vien"]))
+    if khong_dung:
+        khoi += [Spacer(1, 6), p(c["khong_dung"], "kd", fontName=dam, fontSize=9.5, textColor=mau["slate"])]
+        khoi += [p("– " + d["chu"], "kd2", fontSize=9.5, leading=13, textColor=mau["slate"]) for d in khong_dung]
+    khoi += [Spacer(1, 8), the([p(c["luu_y"].upper(), "ly", fontName=dam, fontSize=8.5, leading=11, textColor=mau["moss"]),
+                                Spacer(1, 2), p(nd["ghi_chu"], "ly2", fontSize=10.5, leading=15, textColor=mau["ink"])],
+                               mau["moss_nhat"], vach=mau["moss"], dem=9)]
+
+    # ---- quy trình: chấm trạng thái, giờ nhỏ bên dưới, chữ Đã làm / Chưa làm bên phải
+    hang = []
     for m in nd["quy_trinh"]:
-        luc = " (%s)" % m["luc"] if m["luc"] else ""
-        k.append(xuat_pdf.doan("%s — %s%s" % (c["da"] if m["da"] else c["chua"], m["chu"], luc)))
+        luc = [p(gio(m["luc"]), "gio", fontSize=8.5, leading=11, textColor=mau["slate"])] if m["luc"] else []
+        hang.append([cham(m["da"]), [p(m["chu"], "mc", fontName=dam if m["da"] else thuong, textColor=mau["ink"])] + luc,
+                     p(c["da"] if m["da"] else c["chua"], "tt", fontName=dam, fontSize=9.5, leading=13,
+                       textColor=mau["moss"] if m["da"] else mau["slate"], alignment=2)])
+    qt = Table(hang, colWidths=[9 * mm, rong_in - 9 * mm - 24 * mm, 24 * mm])
+    qt.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 6),
+                            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                            ("LINEBELOW", (1, 0), (-1, -2), 0.5, mau["vien"])]))
+    khoi.append(KeepTogether(tieu(c["quy_trinh"]) + [qt]))
+
+    # ---- dấu xác nhận (bản chốt)
+    dong = []
     if "chot" in nd:
         ch = nd["chot"]
         if ch.get("nguoi"):
-            k.append(xuat_pdf.dong_khoa_gia_tri(c["chot_nguoi"], ch["nguoi"]))
-        k.append(xuat_pdf.dong_khoa_gia_tri(c["chot_luc"], ch.get("luc")))
-        k.append(xuat_pdf.dong_khoa_gia_tri(c["bam_luat"], ch.get("bam_luat")))
+            dong.append((c["chot_nguoi"], e(str(ch["nguoi"])), False))
+        dong.append((c["chot_luc"], e(gio(ch["luc"]) if ch.get("luc") else ""), False))
+        dong.append((c["bam_luat"], _chia32(e(str(ch.get("bam_luat") or ""))), True))
     if "dau_van_tay" in nd:
-        k.append(xuat_pdf.dong_khoa_gia_tri(c["dau_van_tay"], nd["dau_van_tay"]))
+        dong.append((c["dau_van_tay"], _chia32(e(nd["dau_van_tay"])), True))
     if "hat_giong" in nd:
         hg = nd["hat_giong"]
-        k.append(xuat_pdf.dong_khoa_gia_tri(c["hat_giong"], hg["seed"]))
+        dong.append((c["hat_giong"], e(str(hg["seed"])), True))
         if hg.get("locked_at"):
-            k.append(xuat_pdf.dong_khoa_gia_tri(c["khoa_luc"], hg["locked_at"]))
-    k.append(xuat_pdf.tieu_de(c["buoc_le"]))
-    for i, b in enumerate(nd["buoc_le"], 1):
-        k.append(xuat_pdf.doan("%d. %s" % (i, b)))
-    k.append(xuat_pdf.doan(c["le_ky"]))
-    return xuat_pdf.dung_pdf(duong, k)
+            dong.append((c["khoa_luc"], e(gio(hg["locked_at"])), False))
+    if dong:
+        cac = [[p(k, "k", fontSize=9, leading=12, textColor=mau["slate"]),
+                px(v, "v_ma" if may else "v", fontName="Courier" if may else thuong, fontSize=9 if may else 10.5, leading=12 if may else 14,
+                   textColor=mau["ink"])] for k, v, may in dong]
+        bang = Table(cac, colWidths=[42 * mm, rong_in - 42 * mm - 22 * mm])
+        bang.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                                  ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 4),
+                                  ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
+        khoi.append(KeepTogether(tieu(c["xac_nhan"]) + [
+            the([bang, Spacer(1, 4), p(c["xac_nhan_mo_ta"], "xm", fontSize=9, leading=12.5, textColor=mau["slate"])],
+                mau["giay"], vien=mau["vien"])]))
+
+    # ---- bốc thăm có người chứng kiến
+    buoc = [[so(i), p(b, "bl")] for i, b in enumerate(nd["buoc_le"], 1)]
+    bt = Table(buoc, colWidths=[9 * mm, rong_in - 9 * mm])
+    bt.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 4),
+                            ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
+    khoi.append(KeepTogether(tieu(c["buoc_le"]) + [bt, Spacer(1, 6),
+                                                   p(c["le_ky"], "le", fontSize=9.5, leading=13, textColor=mau["slate"])]))
+    return xuat_pdf.dung_pdf(duong, khoi)
