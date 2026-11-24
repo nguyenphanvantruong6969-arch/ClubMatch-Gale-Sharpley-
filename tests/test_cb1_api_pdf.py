@@ -233,16 +233,25 @@ def test_pdf_khong_ro_ri_ma_ten_diem_so_boc_tham(tmp_path):
     a, db = _mo(tmp_path)
     _xep(a)
     a.chot_phuong_an()
+    # số bốc thăm và điểm của MỖI học sinh đổi thành giá trị lạ, riêng từng người, để bắt rò rỉ (xuất không đọc hai cột này)
+    c = sqlite3.connect(db)
+    c.execute("UPDATE students SET stb_number = 700000 + rowid")
+    c.execute("UPDATE club_scores SET score = 8123.25 + rowid")
+    c.commit()
+    c.close()
     ds = _sql(db, "SELECT student_id, name, stb_number FROM students")
-    assert len(ds) >= 100
+    diem = [str(r[0]) for r in _sql(db, "SELECT score FROM club_scores")]
+    assert len(ds) >= 100 and diem and all(x.startswith("8") for x in diem)
     chu = ""
     for ban in ("du_kien", "chot"):
         chu += _chu(_xuat(a, tmp_path, ban, ten="rr_" + ban, in_hat_giong=(ban == "chot"))["data"]["path"])
     gop = chu.replace("\n", " ")
     for sid, ten, stb in ds:
         assert str(sid) not in gop
+        assert str(stb) not in gop
         if ten and len(ten.strip()) > 3:
             assert ten.strip() not in gop
+    assert not any(x in gop for x in diem) and "8123" not in gop
     assert "sha256" not in gop.lower() and "Số bốc thăm của" not in gop
     # chữ cấm của văn bản: không bảng so sánh, không "Phụ lục"
     assert "Phụ lục" not in gop and "So sánh" not in gop
