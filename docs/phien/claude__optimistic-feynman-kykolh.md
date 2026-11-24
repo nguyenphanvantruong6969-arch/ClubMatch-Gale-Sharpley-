@@ -16,7 +16,7 @@ fix in `browser_host.py`, PR #34 to main). Two feature items live on their own b
 - [x] CB1-FIX3/FIX4/FIX5: UI fixes, badge removed, hints trimmed, neutral-grey one-page PDF with school name.
 - [x] DC1 PR #35 opened (main merged into its branch first, head `38d1c06`).
 - [x] Main merged into CB1 branch, doc conflicts resolved (head `99938da`).
-- [ ] CB1 PR: scheduled one-shot (trigger `trig_01Lb8LyhnjbwPSTDyfTqTzSr`, 12:30 UTC 2026-11-24) checks CI then opens
+- [ ] CB1 PR: scheduled one-shot (trigger `trig_01NHqDYC9ouTDR2UXZCTtv4L`, 12:46 UTC 2026-11-24; CI of CB1 merge commit `99938da` was still queued at 12:30) checks CI then opens
   it. If the session is gone, open it manually (see Next steps).
 - [ ] Merge order, Truong to do: #35 DC1, then CB1 PR (CB1 will then conflict on docs; resolve).
 - [ ] Check CodeQL re-scan closed alerts #1 and #2 after PR #34 merge.
@@ -68,3 +68,4 @@ fix in `browser_host.py`, PR #34 to main). Two feature items live on their own b
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | Audited transparency/goals vs feedback; wrote DC1/CB1 briefs; launched two Opus sessions; fixed SEC-1; CB1 UI/PDF fixes; opened PR #34 | CI check for CB1 scheduled 12:35 UTC |
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | CB1 PDF: neutral greys, school name, squeezed to one page (FIX4, FIX5); handoff refreshed | Truong: "everything looks fine" |
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | Opened PR #35 (DC1); merged main into CB1 and DC1 branches; scheduled CB1 PR; restarted this branch from main after PR #34 merged | Merge order: #35 then CB1 PR |
+| 2026-11-24 | Sonnet 5.5 (Opus advisor) | Scheduled CB1 PR check ran: CB1 CI queued, DC1 push CI green, PR run queued; rescheduled to 12:46 UTC | Merge order unchanged: #35 then CB1 |
