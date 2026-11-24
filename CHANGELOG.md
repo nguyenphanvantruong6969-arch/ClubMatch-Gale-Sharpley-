@@ -37,6 +37,32 @@
 
 - Mới `phuong_an_xep.py`: `bam_luat(cfg)` (SHA-256 của `{rules, muc_tieu:{id,nhom}}`, bỏ `truoc` và mọi khoá ngoài luật), `trang_thai_quy_trinh(moc)` (năm mốc Đã/Chưa kèm thời điểm), `dung_noi_dung(...)` (dict chỉ gồm khoá danh sách trắng `KHOA_NOI_DUNG`). Bản dự kiến không bao giờ có hạt giống hay dấu vân tay dữ liệu; bản chốt chỉ có hạt giống khi tick và đã khoá. Câu chữ ở `CAU = {"vi", "en"}`; luật xếp lấy từ `tieu_chi.mo_ta_tieu_chi`, bước lễ dùng `fa_bien_ban.THU_TU_LE` (import, không chép). Không đụng thuật toán, CSV, schema.
 - Test mới: `tests/test_cb1_noi_dung.py` (20 ca, thuần).
+## 2026-11-24 — DC1-FIX2: sửa theo báo cáo checker
+
+- `kiem_doc_lap.py`: K0 đối chiếu cả `club_id` lẫn tên khi Sổ nhập đã điền Mã CLB (trước đây rơi sang tên, lọt `club_id` giả); lỗi đầu vào in một lần; không ghi được `--ra` → mã thoát 2.
+- Test mới (+8, nay 27 trong `tests/test_dc1_kiem_doc_lap.py`): hai đột biến K0, ba test khoá riêng từng phép con của K3 (đã thử tắt từng phép: đúng một test đỏ), thiếu thư mục theo CLB → K6 FAIL mã 1, `--ra` không ghi được → 2, lỗi in một lần.
+- README và `HUONG_DAN_CHAY.md` mục 10: nói rõ Mã CLB và hành vi khi thiếu tệp đi kèm (giữ FAIL, mã 1). Số tệp test 403.
+
+## 2026-11-24 — DC1-FIX1: sửa hai test tài liệu đỏ trên CI
+
+- `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: bỏ mã nội bộ K0/K7 và dấu nháy quanh tên tệp sinh ra (`test_gt3_tai_lieu.py`); `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 401 → 402 tệp test (`test_a13_12_tai_lieu.py`). Không đổi mã.
+
+## 2026-11-24 — DC1-L4: phép kiểm K7 (tệp tổng hợp)
+
+- `kiem_doc_lap.py`: K7 đối chiếu "Đã xếp" và "Trong đó diện dự trữ" của mục "TỪNG …" trong `_tong_hop.csv` với số đếm từ tệp chính; README và hai tài liệu giải trình đổi K0–K6 → K0–K7.
+- Test mới: `test_k7_tong_hop_lech` (`tests/test_dc1_kiem_doc_lap.py`, nay 19 test; ba bộ hợp lệ đòi `8 PASS`).
+
+## 2026-11-24 — DC1-L3: tài liệu cho script kiểm độc lập
+
+- Mới `du_lieu_test/kiem_doc_lap/README.md`; thêm mục 10 vào `docs/giai_trinh/HUONG_DAN_CHAY.md` và bước tuỳ chọn 13b vào `docs/giai_trinh/KICH_BAN_DEMO.md`. Chỉ tài liệu; không test mới.
+
+## 2026-11-24 — DC1-L1+L2: script kiểm độc lập đầu vào ⇄ kết quả (phạm vi B, chỉ bảo toàn)
+
+- Mục DC1 (chưa có trong sổ đăng ký; xem "Needs Truong" ở tệp nhánh). Không đổi mã sản phẩm, không đổi hợp đồng CSV.
+- Mới: `du_lieu_test/kiem_doc_lap/kiem_doc_lap.py` — chỉ dùng thư viện chuẩn + openpyxl; đọc Sổ nhập và bộ xuất CSV mặc định;
+  in bảng K0–K6 (PASS/FAIL) và ghi `dau_vao_ket_qua.csv`. Mã thoát 0 / 1 (có FAIL) / 2 (nhiều buổi hoặc không đọc được).
+- G2 đo trên 3 bộ: em không còn nguyện vọng nào vẫn có một dòng (chưa xếp); thứ hạng = vị trí trong danh sách nguyện vọng.
+- Test mới: `tests/test_dc1_kiem_doc_lap.py` (18: 8 đột biến K0–K6, thoát 2 hai ca, cô lập import bằng ast, 3 bộ hợp lệ × 2).
 
 ## 2026-11-24 — SEC-1: sửa hai cảnh báo CodeQL "Uncontrolled data used in path expression" (browser_host.py)
 
