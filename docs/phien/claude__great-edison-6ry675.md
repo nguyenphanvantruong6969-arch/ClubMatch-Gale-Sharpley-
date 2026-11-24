@@ -54,3 +54,4 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 | 2026-11-24 | Sonnet | Deep analysis of tests_stress/b (all 65 run), verified test fixes, found real 390 px menu overflow bug, saved memo+patch | context far over 400k; no product code changed |
 | 2026-11-24 | Sonnet | Planned item SFB (branch, branch file, protocol with CI loop, optional checker prompt); main CI #1522 confirmed green | no product code; code `SFB` is tentative, Truong to confirm |
 | 2026-11-24 | Sonnet | Answered whether the SFB prompt fixes the menu (yes via lot L2, verified by measurement, not visually) | no code |
+| 2026-11-24 | Sonnet | Sent Truong before/after screenshots of the 390 px menu fix (bottom sheet, page visible behind, button detached); awaiting Truong's look | images only in the session scratchpad, not in repo; the coder re-creates 3 screenshots in SFB L2 |
