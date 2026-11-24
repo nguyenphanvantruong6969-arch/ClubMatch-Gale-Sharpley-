@@ -4,7 +4,7 @@
 > Truong chose option **B** (conservation checks only). Option C (two-pool stability check) is parked; open it
 > only if the judges ask for an independent priority check.
 
-Status: DONE ff8c327 CI green 2026-11-24 (run cf71c7e was red on 2 doc tests; fixed in FIX1)
+Status: DONE 385b80a CI pending (FIX2 after checker report) 2026-11-24
 
 **Tóm tắt (tiếng Việt):** Đã làm L1–L4: script `du_lieu_test/kiem_doc_lap/kiem_doc_lap.py` (chỉ thư viện chuẩn + openpyxl) đối chiếu Sổ nhập với bộ CSV xuất, in bảng K0–K7 và ghi `dau_vao_ket_qua.csv`;
 19 test (đột biến từng phép kiểm, cô lập import, ba bộ hợp lệ đều PASS); README và hai mục tài liệu giải trình. Không đổi mã sản phẩm, không đổi hợp đồng CSV.
