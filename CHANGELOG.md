@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-24 — SFB-L1: `tests_stress/b` chạy lại được sau UX4/UX5 (chỉ sửa test)
+
+- Áp `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.patch`: `ho_tro.py` thêm `mo_the_che_do`, `mo_menu_them`, `tab_ql_hien`, `clic_tab_ql`; `test_b1`, `test_b2_quan_ly`, `test_b4_hien_thi` theo giao diện UX4-L2/L3/L4 (menu "Thêm ▾", "Thêm tuỳ chọn", ô Buổi là ô thả xuống, nút Gán ẩn khi chưa tick). Không bỏ/skip/xfail test nào, không nới ngưỡng thời gian.
+- Chạy từng tệp (DỮ LIỆU MÔ PHỎNG): 63/65 đạt; 2 test `test_b4_do_rong_man_hinh[390,768]` còn đỏ vì lỗi giao diện thật (menu UX5A tràn trái), sửa ở SFB-L2.
+
 ## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
 
 - Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).
