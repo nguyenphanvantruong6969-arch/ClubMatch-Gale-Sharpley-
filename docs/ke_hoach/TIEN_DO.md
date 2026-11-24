@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| SN-COT-LA (cảnh báo cột lạ có dữ liệu khi nạp Sổ nhập; mã tạm, chờ Truong xác nhận) | xong (đã đẩy lên nhánh, chưa PR) | 2026-11-24 | so_nhap.py (`_ten_cot_la`, khoá `cot_la`), api_nhap.py (`_canh_bao_so_nhap`), i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_so_nhap_cot_la.py (5 ca) | chỉ thêm cảnh báo, dữ liệu đọc/ghi không đổi; 546 test liên quan đạt; kiem_nhanh 7/7; 24 tổ hợp sổ hợp lệ không báo nhầm. Lượt thi ngoài nguyện vọng: GIỮ NGUYÊN (Truong chọn cách A, 24/11), đã có thông báo lúc xuất |
 | MT1-X1-L3 (kiểm chứng D5 + tài liệu) | xong (chờ checker) | 2026-11-21 | api_xuat.py (docstring), CHANGELOG.md | — (so ô 3 bộ dữ liệu: trùng khít) | mục MT1-X1 trọn vẹn sau CI xanh |
 | MT1-X1-L2 (sheet "Giữ chỗ" + khứ hồi đầy đủ) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`export_du_lieu_dau_vao`), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py (+3 ca) | cổng D2: chỉ khi FA bật; bảng rỗng = sheet chỉ có tiêu đề |
 | MT1-X1-L1 (Sổ nhập xuất mang cột FA của CLB) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`_du_lieu_so_nhap`), tests/test_mt1_dong_bo_loai_clb.py (bỏ xfail), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py | cổng D1: chỉ khi FA bật hoặc có CLB đã khai; còn "Giữ chỗ" ở L2 |
