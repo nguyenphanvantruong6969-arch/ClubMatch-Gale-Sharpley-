@@ -39,3 +39,4 @@ Item code **SFB** (tentative; Truong to confirm it in the registry): bring the s
 |---|---|---|---|
 | 2026-11-24 | Sonnet | Planned item SFB: branch, branch file, protocol, memo and patch | no code |
 | 2026-11-24 | Sonnet | Coded L1-L3, opened PR #33, CI loop started | L2 needed a 2nd CSS rule (hover transform) |
+| 2026-11-24 | Sonnet | CI round 1 red (Linux 2/6): UX2-L8 test scans style.css from its marker to EOF and forbids `overflow`; moved the SFB @media block above that marker | CI round 2 pushed |
