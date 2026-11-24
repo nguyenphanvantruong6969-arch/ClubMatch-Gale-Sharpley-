@@ -344,7 +344,9 @@ def test_ma_loi_mt_co_vi_va_en():
                "mt_the_can_diem", "mt_diem_chia_khong_dung", "mt_hoan_tac_khong_hop_le", "mt_khong_ap_dung"):
         m = i18n_errors.MESSAGES[ma]
         assert m["vi"].strip() and m["en"].strip(), ma
-    assert all(m.startswith("mt_") for m in list(i18n_errors.MESSAGES)[-8:])   # nối ở CUỐI tệp
+    # nối ở CUỐI tệp (các khối sau, như `cb1_` của CB1, được nối thêm phía sau và không tính)
+    khong_cb1 = [m for m in i18n_errors.MESSAGES if not m.startswith("cb1_")]
+    assert all(m.startswith("mt_") for m in khong_cb1[-8:])
 
 
 def test_json_cau_hinh_la_json_thuong(tmp_path):

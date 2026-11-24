@@ -195,3 +195,53 @@ def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong
         if in_hat_giong and hat_giong and hat_giong.get("seed") is not None:
             nd["hat_giong"] = {"seed": hat_giong["seed"], "locked_at": hat_giong.get("locked_at")}
     return nd
+
+
+def dung_pdf(nd: dict, duong: str) -> str:
+    """Ghi `nd` (kết quả `dung_noi_dung`) ra PDF A4 qua `xuat_pdf`. Trả đường dẫn thật đã ghi.
+
+    Chỉ in chữ có trong `nd`; không thêm gì khác (không bảng so sánh, không phụ lục)."""
+    import xuat_pdf
+    c = CAU[nd["lang"]]
+    k = [xuat_pdf.tieu_de(nd["tieu_de"]), xuat_pdf.doan(nd["cau"])]
+    for cb in nd["canh_bao"]:
+        k.append(xuat_pdf.dong_khoa_gia_tri("!", cb["chu"]))
+    if nd["muc_tieu"]:
+        k.append(xuat_pdf.tieu_de(c["muc_tieu"]))
+        k.append(xuat_pdf.doan("%s. %s" % (nd["muc_tieu"]["tieu_de"], nd["muc_tieu"]["cau"])))
+    k.append(xuat_pdf.tieu_de(c["tieu_chi"]))
+    hien = None
+    for d in nd["tieu_chi"]:
+        if d["nhom"] == "khong_dung":
+            if hien != "khong_dung":
+                k.append(xuat_pdf.dong_khoa_gia_tri(c["khong_dung"], ""))
+                hien = "khong_dung"
+            k.append(xuat_pdf.doan("– " + d["chu"]))
+            continue
+        if d["nhom"] != hien:
+            k.append(xuat_pdf.dong_khoa_gia_tri(c[d["nhom"]], ""))
+            hien = d["nhom"]
+        k.append(xuat_pdf.doan("%d. %s" % (d["thu_tu"], d["chu"])))
+    k.append(xuat_pdf.doan(nd["ghi_chu"]))
+    k.append(xuat_pdf.tieu_de(c["quy_trinh"]))
+    for m in nd["quy_trinh"]:
+        luc = " (%s)" % m["luc"] if m["luc"] else ""
+        k.append(xuat_pdf.doan("%s — %s%s" % (c["da"] if m["da"] else c["chua"], m["chu"], luc)))
+    if "chot" in nd:
+        ch = nd["chot"]
+        if ch.get("nguoi"):
+            k.append(xuat_pdf.dong_khoa_gia_tri(c["chot_nguoi"], ch["nguoi"]))
+        k.append(xuat_pdf.dong_khoa_gia_tri(c["chot_luc"], ch.get("luc")))
+        k.append(xuat_pdf.dong_khoa_gia_tri(c["bam_luat"], ch.get("bam_luat")))
+    if "dau_van_tay" in nd:
+        k.append(xuat_pdf.dong_khoa_gia_tri(c["dau_van_tay"], nd["dau_van_tay"]))
+    if "hat_giong" in nd:
+        hg = nd["hat_giong"]
+        k.append(xuat_pdf.dong_khoa_gia_tri(c["hat_giong"], hg["seed"]))
+        if hg.get("locked_at"):
+            k.append(xuat_pdf.dong_khoa_gia_tri(c["khoa_luc"], hg["locked_at"]))
+    k.append(xuat_pdf.tieu_de(c["buoc_le"]))
+    for i, b in enumerate(nd["buoc_le"], 1):
+        k.append(xuat_pdf.doan("%d. %s" % (i, b)))
+    k.append(xuat_pdf.doan(c["le_ky"]))
+    return xuat_pdf.dung_pdf(duong, k)

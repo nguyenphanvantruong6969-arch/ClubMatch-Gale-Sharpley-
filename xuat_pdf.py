@@ -75,6 +75,7 @@ def _tao_kieu(ten):
     mau = {
         "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=13, leading=16, spaceBefore=3, spaceAfter=3),
         "kv": dict(fontName="BeVietnamPro", fontSize=9.5, leading=12, spaceAfter=1),
+        "doan": dict(fontName="BeVietnamPro", fontSize=10.5, leading=14, spaceAfter=3),
         "o": dict(fontName="BeVietnamPro", fontSize=_CO_O, leading=_LEADING_O),
         "o_dau": dict(fontName="BeVietnamPro-Bold", fontSize=_CO_O, leading=_LEADING_O),
     }
@@ -140,6 +141,12 @@ def _o_chuoi(chu, kieu, rong):
 def tieu_de(chu):
     _dang_ky_phong()
     return _p(chu, "tieu_de")
+
+
+def doan(chu):
+    """CB1: một đoạn chữ thường (10,5 pt), dùng cho văn bản bằng lời; ký tự đặc biệt được thoát như mọi khối khác."""
+    _dang_ky_phong()
+    return _p(chu, "doan")
 
 
 def dong_khoa_gia_tri(khoa, gia_tri):

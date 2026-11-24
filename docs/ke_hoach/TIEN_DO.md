@@ -284,3 +284,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1F-L3 (giáo viên Lưu PDF một em) + L2 fix1 | xong (chờ checker) | 2026-11-20 | index.html, phieu_giai_trinh.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_ux1f_l3_giao_vien_pdf_mot_em.py, tests/test_ux1f_l2_phieu_pdf_bo_cuc.py | |
 | UX1F-L4 (một ô Chọn lớp) | xong (chờ checker) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
 | CB1-L1 (bộ dựng nội dung văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | phuong_an_xep.py, CHANGELOG.md | tests/test_cb1_noi_dung.py | kiem_nhanh 7/7 |
+| CB1-L2 (API + PDF văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | api_phuong_an.py, phuong_an_xep.py, xuat_pdf.py, api.py, phan_quyen.py, i18n_errors.py, i18n.js, i18n_loi.js | tests/test_cb1_api_pdf.py (+ 4 test cũ cập nhật) | kiem_nhanh 7/7 |

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — CB1-L2: API + PDF "Văn bản phương án xếp"
+
+- Mới `api_phuong_an.py` (`PhuongAnMixin`, nối vào `PipelineAPI`): `get_phuong_an_xep()` (chỉ đọc), `chot_phuong_an()` (MỘT hàng `workspace_settings` khoá `chot_phuong_an` = `{nguoi, vai, luc, bam_luat, muc_tieu, luat_xep}`; `luat_xep` là chuỗi `luat_xep_de_ghi(rules)` lúc chốt, thêm so với kế hoạch để so được với `run_history.luat_xep`; dòng nhật ký do cổng `phan_quyen`), `export_van_ban_phuong_an_pdf(output_path, ban, in_hat_giong)`. Bản chốt cần: đã chốt + có lần xếp chính thức + đã khoá số bốc thăm; hạt giống chỉ ở bản chốt đã khoá. Không đụng `run_history`, `match_results`, `stb_lock`, cấu hình; `doc_cau_hinh` chỉ đọc khoá `config`.
+- `phuong_an_xep.dung_pdf` (PDF A4 qua `xuat_pdf`); `xuat_pdf.doan(chu)` (đoạn chữ 10,5 pt). `phan_quyen._QUAN_TRI` += 3 hàm; `i18n.js` `nkhd_*` vi+en; `i18n_errors.py` nối ở CUỐI: `cb1_ban_la`, `cb1_chua_du_dieu_kien_ban_chot`, `cb1_hat_giong_chua_khoa`, `cb1_khong_chot_duoc` (rồi `tao_i18n_js.py`).
+- Test mới: `tests/test_cb1_api_pdf.py` (23 ca: rò rỉ mã/tên, hạt giống mặc định/dự kiến/chưa khoá, cảnh báo đổi sau chốt, chạy thử + chọn mục tiêu không ghi đè chốt, giáo viên bị từ chối, `run_history` không đổi, thiếu reportlab). Cập nhật 5 test đếm/liệt kê có sẵn cho khối `cb1_` và ba hàm mới (không nới lỏng): `test_mt1_api`, `test_mt1_uoc_tinh` (khối `mt_` nằm trước khối `cb1_`), `test_ws_nhan` (tiền tố `cb1_`), `test_gt3_phan_quyen` (ba hàm chỉ quản trị).
+
 ## 2026-11-24 — CB1-L1: bộ dựng nội dung "Văn bản phương án xếp" (hàm thuần)
 
 - Mới `phuong_an_xep.py`: `bam_luat(cfg)` (SHA-256 của `{rules, muc_tieu:{id,nhom}}`, bỏ `truoc` và mọi khoá ngoài luật), `trang_thai_quy_trinh(moc)` (năm mốc Đã/Chưa kèm thời điểm), `dung_noi_dung(...)` (dict chỉ gồm khoá danh sách trắng `KHOA_NOI_DUNG`). Bản dự kiến không bao giờ có hạt giống hay dấu vân tay dữ liệu; bản chốt chỉ có hạt giống khi tick và đã khoá. Câu chữ ở `CAU = {"vi", "en"}`; luật xếp lấy từ `tieu_chi.mo_ta_tieu_chi`, bước lễ dùng `fa_bien_ban.THU_TU_LE` (import, không chép). Không đụng thuật toán, CSV, schema.

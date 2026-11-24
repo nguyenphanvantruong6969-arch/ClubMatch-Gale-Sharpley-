@@ -1597,5 +1597,21 @@ window.I18N_ERROR_MESSAGES = {
   "mt_thu_chua_ho_tro_loai": {
     "vi": "Chạy thử và ước tính chưa hỗ trợ chế độ chia CLB theo loại. Hãy tắt \"Chia CLB theo loại\" trong Quản lý, hoặc dùng lần xếp chính thức.",
     "en": "Trial runs and estimates do not support splitting clubs by type yet. Turn off \"Split clubs by type\" in Manage, or use the official allocation."
+  },
+  "cb1_ban_la": {
+    "vi": "Không rõ bản văn bản cần xuất. Hãy chọn bản dự kiến hoặc bản chốt.",
+    "en": "Unknown version of the document. Choose the draft or the final version."
+  },
+  "cb1_chua_du_dieu_kien_ban_chot": {
+    "vi": "Chưa xuất được bản chốt. Cần chốt phương án, chạy xếp chính thức và khoá số bốc thăm trước.",
+    "en": "The final version cannot be exported yet. Fix the plan, run the official allocation and lock the lottery numbers first."
+  },
+  "cb1_hat_giong_chua_khoa": {
+    "vi": "Chỉ in được hạt giống ở bản chốt, sau khi đã khoá số bốc thăm.",
+    "en": "The starting value of the draw can only be printed in the final version, after the lottery numbers are locked."
+  },
+  "cb1_khong_chot_duoc": {
+    "vi": "Không chốt được phương án. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
+    "en": "The plan could not be fixed. Check the data file and try again."
   }
 };

@@ -48,7 +48,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
   `dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong, hat_giong, lang="vi")` →
   dict of WHITELISTED keys only (like `bao_cao_tong_hop.gom_du_lieu`). Rules: `ban="du_kien"` → no seed key ever;
   `ban="chot"` → seed only if `in_hat_giong` and lock present. Tests `tests/test_cb1_noi_dung.py` (pure, fast).
-- [ ] **L2 (must) API + PDF** — new mixin `api_phuong_an.py` (wired into `PipelineAPI` like `MucTieuMixin`):
+- [x] **L2 (must) API + PDF** — new mixin `api_phuong_an.py` (wired into `PipelineAPI` like `MucTieuMixin`):
   `chot_phuong_an()` writes key `chot_phuong_an` (account from session; one transaction) — the audit row comes from
   the existing `nhat_ky` wrapper (check `nen_ghi("chot_phuong_an")` is True); `get_phuong_an_xep()` (read: state,
   milestones, warnings, can-export flags); `export_van_ban_phuong_an_pdf(output_path="", ban="du_kien",
@@ -73,17 +73,23 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1 done (coder, 2026-11-24). Next: L2 API + PDF, then MILESTONE 1.
+- L1, L2 done (coder, 2026-11-24). Waiting for lead on MILESTONE 1; next L3 UI.
 
 ## Needs Truong
 - (empty)
 
+## Notes from coder
+- Chot value also stores `luat_xep` (= `luat_xep_de_ghi(rules)`) so the "official run did not use the chốt plan" warning can compare against `run_history.luat_xep`; additive, same row.
+- PDF text has no workspace nouns (tiêu chí sentences are existing school wording from `tieu_chi`); not run through `_nhan_xuat`.
+
 ## Files touched
 - docs/phien/claude__cb1-van-ban-phuong-an.md, docs/phien/CB1_GIAO_THUC.md: plan.
 - phuong_an_xep.py, tests/test_cb1_noi_dung.py: L1.
+- api_phuong_an.py, api.py, phan_quyen.py, xuat_pdf.py (`doan`), i18n_errors.py, i18n_loi.js, i18n.js, tests/test_cb1_api_pdf.py: L2; tests test_mt1_api/test_mt1_uoc_tinh/test_ws_nhan/test_gt3_phan_quyen adjusted for new names.
 
 ## Session log
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-24 | Opus | plan: branch file + protocol | answers Q1–Q4 above |
 | 2026-11-24 | Sonnet | L1 pure builder + 20 tests | kiem_nhanh 7/7 |
+| 2026-11-24 | Sonnet | L2 API + PDF + 23 tests | 4 older tests adjusted (counts/lists), no weakening |
