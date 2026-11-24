@@ -43,6 +43,7 @@ def trang(tmp_path_factory):
     page.wait_for_selector("#dropZone")
     page.locator('.nav-item[data-tab="admin"]').click()
     page.click("#qlTabCachXep")
+    page.evaluate("document.getElementById('ux1aNangCao').open = true")      # khung nằm trong "Tuỳ chỉnh thêm"
     page.wait_for_selector("#paPanel", state="visible")
     page.wait_for_function("document.getElementById('paTrangThai').textContent.trim() !== ''")
     yield page, api, loi
@@ -122,6 +123,7 @@ def test_5_doi_phuong_an_sau_chot_hien_canh_bao(trang):
     assert api.chon_muc_tieu("co_hoi")["ok"]
     page.click("#qlTabClb")
     page.click("#qlTabCachXep")
+    page.evaluate("document.getElementById('ux1aNangCao').open = true")
     page.wait_for_selector("#paCanhBao", state="visible")
     assert "đã đổi sau khi chốt" in page.locator("#paCanhBao").inner_text()
 

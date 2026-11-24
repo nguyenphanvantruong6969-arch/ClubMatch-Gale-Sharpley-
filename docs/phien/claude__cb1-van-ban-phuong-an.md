@@ -95,3 +95,4 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 | 2026-11-24 | Sonnet | L2 API + PDF + 23 tests | 4 older tests adjusted (counts/lists), no weakening |
 | 2026-11-24 | Sonnet | L3 UI + 7 Chromium tests | .run-confirm-bar[hidden] CSS fix |
 | 2026-11-24 | Sonnet | L4 docs + demo script | M1 verdict NO BUGS |
+| 2026-11-24 | Sonnet | CI run 1546 red: 4 tests (tai_lieu code map, a14_the_xem list, ux4_l4 control budget + single yellow button) fixed in product/docs, no test weakened | waiting CI rerun |

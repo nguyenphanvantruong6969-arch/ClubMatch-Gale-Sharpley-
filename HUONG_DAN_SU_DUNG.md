@@ -131,7 +131,7 @@ Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xá
 
 ### Văn bản phương án xếp (bản dự kiến và bản chốt)
 
-Ở **Quản lý → Cách xếp**, dưới khung Cài đặt, khung **Văn bản phương án xếp** (chỉ quản trị) tạo MỘT tệp PDF bằng lời thường cho học sinh, phụ huynh, nhà trường và ban giám khảo: luật xếp đang cài và quy trình minh bạch (công bố phương án, chốt dữ liệu, bốc hạt giống có người chứng kiến, chạy xếp chính thức, công bố kết quả và hạn khiếu nại; mỗi bước ghi Đã làm / Chưa làm kèm thời điểm). Không có bảng so sánh các phương án và không có phụ lục.
+Ở **Quản lý → Cách xếp**, mở **Tuỳ chỉnh thêm**, khung **Văn bản phương án xếp** (chỉ quản trị) tạo MỘT tệp PDF bằng lời thường cho học sinh, phụ huynh, nhà trường và ban giám khảo: luật xếp đang cài và quy trình minh bạch (công bố phương án, chốt dữ liệu, bốc hạt giống có người chứng kiến, chạy xếp chính thức, công bố kết quả và hạn khiếu nại; mỗi bước ghi Đã làm / Chưa làm kèm thời điểm). Không có bảng so sánh các phương án và không có phụ lục.
 
 - **Xuất bản dự kiến**: dùng được bất cứ lúc nào, kể cả trước lần xếp đầu tiên. Không bao giờ có hạt giống.
 - **Chốt phương án**: hộp xác nhận liệt kê mục tiêu và luật sẽ chốt. Chốt ghi người chốt, thời điểm và dấu vân tay của luật (kèm một dòng nhật ký thao tác); không đổi luật, không chạy xếp. Chốt lại được, mỗi lần hỏi lại.
