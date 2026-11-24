@@ -35,7 +35,6 @@ function paVe() {
   const hatDuoc = chotDuoc && !!d.co_the_in_hat_giong;
   hat.disabled = !hatDuoc;
   if (!hatDuoc) hat.checked = false;
-  el("paLyDoHat").textContent = hatDuoc ? t("cb1_ghi_chu_hat") : t("cb1_ly_do_hat");
 }
 
 function paTai() {
