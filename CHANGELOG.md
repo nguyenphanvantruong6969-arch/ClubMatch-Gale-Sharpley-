@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-24 — CI-WIN-PYPDF: sửa bộ test Windows trong workflow build exe (không có mã mục, Truong yêu cầu trực tiếp)
+
+- Lỗi: run #21 của *Build Windows executable (rbda-kiosk)* đỏ ở `tests/test_cb1_pdf_trung_tinh.py::test_pdf_in_ten_truong_len_bang_dau_trang_khi_co` — `ModuleNotFoundError: No module named 'pypdf'`. Bước cài đặt của workflow này thiếu `pypdf`, trong khi `tests.yml` (job Windows) đã có.
+- Sửa: thêm `"pypdf>=4,<6"` vào dòng `pip install` test của `.github/workflows/build-windows-exe.yml` (khớp `requirements-dev.txt`). Không đổi mã sản phẩm.
+
 ## 2026-11-24 — SN-COT-LA: cảnh báo cột lạ có dữ liệu khi nạp Sổ nhập (mã mục tạm, chờ Truong xác nhận)
 
 - Trước đây cột có tiêu đề mà phần mềm không nhận ra (vd "Email", "Ghi chú", "Phòng") bị bỏ qua IM LẶNG; chỉ cột không tiêu đề mới có cảnh báo. Nay `so_nhap_canh_bao_cot_la` (sheet, số cột, tối đa 3 tên) báo ở xem trước lẫn nạp thật, cho cả sheet CLB và sheet học sinh; cột lạ trống thì không báo.
