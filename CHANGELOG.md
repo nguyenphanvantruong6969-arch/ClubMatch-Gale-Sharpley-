@@ -7,6 +7,43 @@
 - Files: `so_nhap.py` (`_ten_cot_la`, khoá `cot_la`), `api_nhap.py` (`_canh_bao_so_nhap`), `i18n_errors.py` + `i18n_loi.js`. Test mới: `tests/test_so_nhap_cot_la.py`.
 - Chưa làm: lượt thi ngoài nguyện vọng vẫn không vào Sổ (đã có thông báo `xuat_kq_dau_vao_thieu`); đổi cần mục riêng vì đụng hợp đồng Sổ nhập.
 
+## 2026-11-24 — CB1-FIX3: sửa giao diện khung "Văn bản phương án xếp" sau khi xem ảnh; bỏ nhãn "Đề xuất" (Truong yêu cầu)
+
+- Mục: CB1 (đợt sửa sau chụp ảnh). Tệp: `index.html`, `js/2x_phuong_an.js`, `js/18_cai_dat.js`, `style.css`, `i18n.js`, `api_phuong_an.py`, tests (xem dưới).
+- Khung "Văn bản phương án xếp" ra khỏi mục gập "Tuỳ chỉnh thêm": nút Chốt và Xuất bản dự kiến hiện ngay. Ngân sách nút ở tab Cách xếp (`tests/test_giao_dien_ux4_l4.py`) nâng từ 9 lên 11 (thêm đúng hai nút đó); vẫn một nút vàng (`gt2ThuChay`).
+- Hộp xác nhận chốt: tiêu chí hiện theo hai nhóm có tiêu đề ("Học sinh đã có điểm thi của CLB" / "chưa có") thay vì một danh sách lặp dòng (API thêm `tom_tat_luat_tang`; `tom_tat_luat` giữ nguyên); hộp trung tính thay vì đỏ; nút Chốt và Huỷ nằm dưới danh sách.
+- Khoảng cách dòng gợi ý dưới ba nút và dưới ô "In hạt giống".
+- PDF phương án xếp viết lại cho tự nhiên và có bố cục (Truong yêu cầu): băng đầu trang kèm nhãn bản, thẻ mục tiêu, thứ tự xét chia hai cột có số, ô lưu ý, các mốc quy trình có chấm trạng thái và giờ dạng 24/11/2026, 11:13, thẻ "Dấu xác nhận" (mã in chữ đều), các bước bốc thăm; tiêu đề hỏi-đáp ("Nhà trường ưu tiên điều gì?", "Khi một câu lạc bộ hết chỗ, ai được xét trước?"). Chỉ đổi `phuong_an_xep.dung_pdf` và câu trong `CAU`; `xuat_pdf` dùng chung không đụng; nội dung (`dung_noi_dung`) và mọi khoá giữ nguyên.
+- PDF phương án xếp vừa MỘT trang (Truong, 24/11): giờ các mốc nằm cùng dòng với tên mốc, tên trường cạnh nhãn bản, "Dấu xác nhận" và "Bốc thăm có người chứng kiến" xếp hai cột, khoảng cách gọn hơn. Test: `n_trang == 1` cho cả hai bản (`tests/test_cb1_api_pdf.py`).
+- PDF chỉ dùng màu trung tính (Truong, 24/11): bảng màu `_MAU` toàn mức xám, băng đầu trang đen với nhãn bản trắng. Thêm tên trường/không gian làm việc lên băng đầu trang (khoá tuỳ chọn `truong` trong `KHOA_NOI_DUNG`, tham số `truong=None` của `dung_noi_dung`; API truyền `cfg["name"]`). Test mới: `tests/test_cb1_pdf_trung_tinh.py` (bảng màu chỉ xám, mã nguồn không gọi màu lạ, tên trường).
+- Gỡ bớt dòng gợi ý (Truong yêu cầu): đoạn mô tả dưới tiêu đề và dòng gợi ý dưới ô "In hạt giống" (khoá `cb1_mo_ta`, `cb1_ghi_chu_hat`, `cb1_ly_do_hat` bỏ vi và en); giữ dòng lý do khoá nút "Xuất bản chốt".
+- Bỏ nhãn "Đề xuất" ở thẻ "Chia 100 điểm" (`js/18_cai_dat.js`, `style.css`, khoá `ux4_de_xuat` vi và en).
+- Test: `tests/test_cb1_ui.py` (hai tiêu đề nhóm, hộp không đỏ, nút dưới danh sách), `tests/test_cb1_api_pdf.py` (`tom_tat_luat_tang`), `tests/test_giao_dien_ux1_cai_dat.py` (không còn "Đề xuất"). 66 ca liên quan đạt; `kiem_nhanh.py` 7/7. Thuật toán không đụng.
+
+## 2026-11-24 — CB1: sửa 4 lỗi CI của vòng 1 (tests.yml run 1546)
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: tên `workspace_settings` không để trong dấu huyền (test bản đồ mã chỉ chấp nhận tên có trong mã Python). `js/_danh_sach.txt`: thêm `2x_phuong_an` trước `08_khoi_dong` (khớp thứ tự `<script>` ở `index.html`). `index.html`: khung `#paPanel` chuyển vào mục "Tuỳ chỉnh thêm" (gập sẵn) và nút "Chốt phương án" đổi sang `btn-secondary`, để tab Cách xếp giữ đúng ngân sách điều khiển (≤ 9) và MỘT nút vàng duy nhất của `test_giao_dien_ux4_l4`. `tests/test_cb1_ui.py` mở mục đó trước. Không sửa test cũ.
+
+## 2026-11-24 — CB1-L4: tài liệu văn bản phương án xếp
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Văn bản phương án xếp (bản dự kiến và bản chốt)". `docs/ke_hoach/CB1_KICH_BAN_DEMO.md`: kịch bản 5 bước (dữ liệu MÔ PHỎNG, hạt giống 3). `CLAUDE_CHI_TIET.md`: hàng bản đồ mã CB1 và số tệp test. Không đổi mã.
+
+## 2026-11-24 — CB1-L3: giao diện "Văn bản phương án xếp" (tab Cách xếp của Quản lý)
+
+- `index.html`: khung `#paPanel` (quản trị) trong mục "Tuỳ chỉnh thêm" (gập sẵn, để không vượt ngân sách điều khiển của tab Cách xếp): nút "Chốt phương án" (hộp xác nhận liệt kê mục tiêu và luật sẽ chốt; chốt lại cũng hỏi lại), "Xuất bản dự kiến", "Xuất bản chốt" (khoá kèm lý do cho tới khi đủ điều kiện), ô "In hạt giống" (tắt mặc định, chỉ bật cho bản chốt đã khoá số bốc thăm), dòng trạng thái và cảnh báo. Mới `js/2x_phuong_an.js` (nạp trước `08_khoi_dong.js`; `initPhuongAn` ở `08_khoi_dong.js`; `datTabConQl` làm mới khi mở tab Cách xếp; giáo viên không gọi API để khỏi để lại dòng "bị từ chối"). `style.css`: `.run-confirm-bar[hidden]`. `i18n.js`: khoá `cb1_*` vi + en.
+- Test mới: `tests/test_cb1_ui.py` (7 ca, một Chromium, một trang dùng chung).
+- Siết test rò rỉ (`test_cb1_api_pdf.py`): đặt số bốc thăm và điểm riêng từng học sinh thành giá trị lạ rồi khẳng định không có trong PDF hai bản.
+
+## 2026-11-24 — CB1-L2: API + PDF "Văn bản phương án xếp"
+
+- Mới `api_phuong_an.py` (`PhuongAnMixin`, nối vào `PipelineAPI`): `get_phuong_an_xep()` (chỉ đọc), `chot_phuong_an()` (MỘT hàng `workspace_settings` khoá `chot_phuong_an` = `{nguoi, vai, luc, bam_luat, muc_tieu, luat_xep}`; `luat_xep` là chuỗi `luat_xep_de_ghi(rules)` lúc chốt, thêm so với kế hoạch để so được với `run_history.luat_xep`; dòng nhật ký do cổng `phan_quyen`), `export_van_ban_phuong_an_pdf(output_path, ban, in_hat_giong)`. Bản chốt cần: đã chốt + có lần xếp chính thức + đã khoá số bốc thăm; hạt giống chỉ ở bản chốt đã khoá. Không đụng `run_history`, `match_results`, `stb_lock`, cấu hình; `doc_cau_hinh` chỉ đọc khoá `config`.
+- `phuong_an_xep.dung_pdf` (PDF A4 qua `xuat_pdf`); `xuat_pdf.doan(chu)` (đoạn chữ 10,5 pt). `phan_quyen._QUAN_TRI` += 3 hàm; `i18n.js` `nkhd_*` vi+en; `i18n_errors.py` nối ở CUỐI: `cb1_ban_la`, `cb1_chua_du_dieu_kien_ban_chot`, `cb1_hat_giong_chua_khoa`, `cb1_khong_chot_duoc` (rồi `tao_i18n_js.py`).
+- Test mới: `tests/test_cb1_api_pdf.py` (23 ca: rò rỉ mã/tên, hạt giống mặc định/dự kiến/chưa khoá, cảnh báo đổi sau chốt, chạy thử + chọn mục tiêu không ghi đè chốt, giáo viên bị từ chối, `run_history` không đổi, thiếu reportlab). Cập nhật 5 test đếm/liệt kê có sẵn cho khối `cb1_` và ba hàm mới (không nới lỏng): `test_mt1_api`, `test_mt1_uoc_tinh` (khối `mt_` nằm trước khối `cb1_`), `test_ws_nhan` (tiền tố `cb1_`), `test_gt3_phan_quyen` (ba hàm chỉ quản trị).
+
+## 2026-11-24 — CB1-L1: bộ dựng nội dung "Văn bản phương án xếp" (hàm thuần)
+
+- Mới `phuong_an_xep.py`: `bam_luat(cfg)` (SHA-256 của `{rules, muc_tieu:{id,nhom}}`, bỏ `truoc` và mọi khoá ngoài luật), `trang_thai_quy_trinh(moc)` (năm mốc Đã/Chưa kèm thời điểm), `dung_noi_dung(...)` (dict chỉ gồm khoá danh sách trắng `KHOA_NOI_DUNG`). Bản dự kiến không bao giờ có hạt giống hay dấu vân tay dữ liệu; bản chốt chỉ có hạt giống khi tick và đã khoá. Câu chữ ở `CAU = {"vi", "en"}`; luật xếp lấy từ `tieu_chi.mo_ta_tieu_chi`, bước lễ dùng `fa_bien_ban.THU_TU_LE` (import, không chép). Không đụng thuật toán, CSV, schema.
+- Test mới: `tests/test_cb1_noi_dung.py` (20 ca, thuần).
 ## 2026-11-24 — DC1-FIX2: sửa theo báo cáo checker
 
 - `kiem_doc_lap.py`: K0 đối chiếu cả `club_id` lẫn tên khi Sổ nhập đã điền Mã CLB (trước đây rơi sang tên, lọt `club_id` giả); lỗi đầu vào in một lần; không ghi được `--ra` → mã thoát 2.
