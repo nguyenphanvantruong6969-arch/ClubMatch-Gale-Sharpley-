@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-24 — SEC-1: sửa hai cảnh báo CodeQL "Uncontrolled data used in path expression" (browser_host.py)
+
+- Mục: SEC-1 (Truong yêu cầu trực tiếp, không thuộc sổ 33 mục). Tệp: `browser_host.py` (`_tep_tinh`, nhánh phục vụ trang HTML trong `do_GET`), `tests/test_browser_host.py`.
+- `_tep_tinh`: từ chối byte NUL; thêm rào `that.startswith(goc + os.sep)` trên đường dẫn đã `realpath` (mẫu CodeQL nhận là rào chắn) bên cạnh kiểm `commonpath` sẵn có. Trước khi `open(full)` chốt lại cùng rào. Hành vi cho đường dẫn hợp lệ không đổi; thuật toán không đụng.
+- Test mới: `test_duong_dan_la_deu_tra_404_khong_loi` (NUL, gạch chéo ngược, thư mục anh em). `tests/test_browser_host.py` 41 ca đạt; `kiem_nhanh.py` 7/7.
+- Còn mở: cảnh báo trên GitHub chỉ đóng sau khi bản sửa vào `main` và CodeQL quét lại.
+
 ## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
 
 - Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).

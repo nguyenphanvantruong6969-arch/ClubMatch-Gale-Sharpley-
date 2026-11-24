@@ -422,6 +422,21 @@ def test_khong_thoat_ra_ngoai_thu_muc_tai_nguyen(hosted_canh_du_lieu):
         c.close()
 
 
+def test_duong_dan_la_deu_tra_404_khong_loi(hosted_canh_du_lieu):
+    """SEC-1 (CodeQL py/path-injection): byte NUL, thư mục anh em trùng tiền tố và gạch chéo ngược đều 404."""
+    import http.client
+
+    base, token = hosted_canh_du_lieu
+    cong = int(base.rsplit(":", 1)[1])
+    for duong in (f"/%00.js?t={token}", f"/js%00/00_nen.js?t={token}", f"/..%5Cngoai.html?t={token}",
+                  f"/../goc_anh/x.html?t={token}"):
+        c = http.client.HTTPConnection("127.0.0.1", cong, timeout=5)
+        c.request("GET", duong)
+        r = c.getresponse()
+        assert r.status == 404, duong
+        c.close()
+
+
 def test_trang_html_chua_token_phai_xin_bang_token(hosted):
     """Ai đọc được trang là đọc được token trong shim -> gọi được mọi API."""
     base, token = hosted
