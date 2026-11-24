@@ -75,9 +75,9 @@ def test_mot_lan_bam_ra_xuat_theo_lop_va_chon_lop_mo_bang_lop(mo):
     page.locator("#btnUx1bXuatLop").click()                                  # 1 lần bấm
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.length > 0")
     assert "→" in page.locator("#ux1bPhanHoi").inner_text()
-    n_opt = page.locator("#ux1bLop option").count()
+    n_opt = page.locator("#kqChonLop option").count()
     assert n_opt >= 1
-    page.locator("#ux1bLop").select_option(index=n_opt - 1)
+    page.locator("#kqChonLop").select_option(index=n_opt - 1)
     page.wait_for_selector("#kqBang", state="visible")
     assert page.locator("#kqTang1 [data-kq=\"lop\"]").get_attribute("aria-pressed") == "true"
     assert not loi, loi

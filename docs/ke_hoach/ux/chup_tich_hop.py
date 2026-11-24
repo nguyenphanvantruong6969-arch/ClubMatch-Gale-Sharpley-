@@ -64,7 +64,7 @@ for ten,so in (("DQT",SO),("FA",FA)):
     api.tao_tai_khoan("qt","matkhau-gia-1","quan_tri"); api.tao_tai_khoan("gv1","matkhau-gia-1","giao_vien"); api.dang_xuat(); api.dang_nhap("gv1","matkhau-gia-1")
     p=trang(api); p.wait_for_timeout(800)
     tab=p.evaluate("()=>document.querySelector('.nav-item.is-active').dataset.tab")
-    p.locator("#ux1bLop").select_option("10A2"); p.wait_for_timeout(600)
+    p.locator("#kqChonLop").select_option("10A2"); p.wait_for_timeout(600)
     p.screenshot(path=OUT+"/4_gv_%s_trang_ket_qua.png"%ten)
     p.locator("#btnUx1bPhieuLop").click(); r1=phan_hoi(p,"#ux1bPhanHoi")
     print(ten,"GV tab:",tab,"| phieu lop:",r1[:200])

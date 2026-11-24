@@ -16,6 +16,9 @@ _GOC = getattr(sys, "_MEIPASS", None) or os.path.dirname(os.path.abspath(__file_
 _THU_MUC_PHONG = os.path.join(_GOC, "assets", "fonts")
 _PHONG = {"BeVietnamPro": "BeVietnamPro-Regular.ttf", "BeVietnamPro-Bold": "BeVietnamPro-Bold.ttf"}
 _da_dang_ky = False
+LE_MM = 12                       # UX1F-L2: lề trái/phải/trên/dưới tối thiểu 12 mm (trước: 18/18/16/18)
+_CO_O = 8.5                      # cỡ chữ trong bảng (>= 8,5 pt)
+_DEM_NGANG_PT = 4                # đệm trái/phải ô, dùng để tính độ rộng tối thiểu của cột
 
 
 class ThieuThuVienPdf(Exception):
@@ -69,10 +72,10 @@ def _kieu(ten):
 def _tao_kieu(ten):
     from reportlab.lib.styles import ParagraphStyle
     mau = {
-        "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=15, leading=20, spaceAfter=8),
-        "kv": dict(fontName="BeVietnamPro", fontSize=10, leading=14, spaceAfter=2),
-        "o": dict(fontName="BeVietnamPro", fontSize=9, leading=12),
-        "o_dau": dict(fontName="BeVietnamPro-Bold", fontSize=9, leading=12),
+        "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=13, leading=16, spaceBefore=3, spaceAfter=3),
+        "kv": dict(fontName="BeVietnamPro", fontSize=9.5, leading=12, spaceAfter=1),
+        "o": dict(fontName="BeVietnamPro", fontSize=_CO_O, leading=10.5),
+        "o_dau": dict(fontName="BeVietnamPro-Bold", fontSize=_CO_O, leading=10.5),
     }
     return ParagraphStyle(ten, **mau[ten])
 
@@ -99,6 +102,39 @@ def ngat_trang():
     return PageBreak()
 
 
+def giu_cung(khoi):
+    """Giữ các khối liền nhau trên MỘT trang (nếu vừa): tránh chú thích/chân phiếu bị đẩy một mình sang trang sau."""
+    from reportlab.platypus import KeepTogether
+    return KeepTogether(list(khoi))
+
+
+def _rong_toi_thieu(tieu_de_cot):
+    """Độ rộng (pt) mỗi cột tối thiểu để TỪ DÀI NHẤT của tiêu đề cột nằm gọn một dòng (chỉ được xuống dòng ở dấu cách)."""
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    return [max((stringWidth(w, "BeVietnamPro-Bold", _CO_O) for w in str(c or "").split()), default=0)
+            + 2 * _DEM_NGANG_PT + 1 for c in tieu_de_cot]
+
+
+def _chia_cot(tong, ti_le, toi_thieu):
+    """Chia `tong` theo `ti_le`, nhưng không cột nào dưới `toi_thieu`; phần thiếu lấy từ các cột còn dư theo tỉ lệ."""
+    cot = [tong * t / sum(ti_le) for t in ti_le]
+    ghim = [False] * len(cot)
+    for _ in range(len(cot)):
+        thieu = [i for i, c in enumerate(cot) if not ghim[i] and c < toi_thieu[i]]
+        if not thieu:
+            break
+        for i in thieu:
+            cot[i], ghim[i] = toi_thieu[i], True
+        con = tong - sum(cot[i] for i in range(len(cot)) if ghim[i])
+        tl = sum(ti_le[i] for i in range(len(cot)) if not ghim[i])
+        if tl <= 0:
+            break
+        for i in range(len(cot)):
+            if not ghim[i]:
+                cot[i] = con * ti_le[i] / tl
+    return cot
+
+
 def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
     """Bảng có tiêu đề cột lặp lại ở mỗi trang; `do_rong` (tuỳ chọn) là tỉ lệ các cột.
     `cot_dau_mm`: cột đầu (số thứ tự) rộng CỐ ĐỊNH tính bằng mm; các cột còn lại chia phần còn lại theo tỉ lệ
@@ -108,21 +144,23 @@ def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
     from reportlab.platypus import Table, TableStyle
-    rong = A4[0] - 36 * mm
+    rong = A4[0] - 2 * LE_MM * mm
     n = len(tieu_de_cot)
     ti_le = do_rong or [1] * n
+    toi_thieu = _rong_toi_thieu(tieu_de_cot)
     if cot_dau_mm is not None and n > 1:
         con_lai = rong - cot_dau_mm * mm
-        cot = [cot_dau_mm * mm] + [con_lai * t / sum(ti_le[1:]) for t in ti_le[1:]]
+        cot = [cot_dau_mm * mm] + _chia_cot(con_lai, ti_le[1:], toi_thieu[1:])
     else:
-        cot = [rong * t / sum(ti_le) for t in ti_le]
+        cot = _chia_cot(rong, ti_le, toi_thieu)
     du_lieu = [[_p(c, "o_dau") for c in tieu_de_cot]] + [[_p(o, "o") for o in h] for h in hang]
     b = Table(du_lieu, colWidths=cot, repeatRows=1)
     b.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E8ECF0")),
         ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#9AA5B1")),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+        ("LEFTPADDING", (0, 0), (-1, -1), _DEM_NGANG_PT), ("RIGHTPADDING", (0, 0), (-1, -1), _DEM_NGANG_PT),
     ]))
     return b
 
@@ -146,7 +184,7 @@ def _canvas_so_trang():
             for tt in self._trang:
                 self.__dict__.update(tt)
                 self.setFont("BeVietnamPro", 8)
-                self.drawRightString(A4[0] - 18 * mm, 10 * mm, f"Trang {self._pageNumber}/{n}")
+                self.drawRightString(A4[0] - LE_MM * mm, 6 * mm, f"Trang {self._pageNumber}/{n}")
                 super().showPage()
             super().save()
     return _C
@@ -170,8 +208,8 @@ def dung_pdf(duong, khoi):
     fd, tam = tempfile.mkstemp(suffix=".pdf.tmp", dir=thu_muc)
     os.close(fd)
     try:
-        doc = SimpleDocTemplate(tam, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm,
-                                topMargin=16 * mm, bottomMargin=18 * mm)
+        doc = SimpleDocTemplate(tam, pagesize=A4, leftMargin=LE_MM * mm, rightMargin=LE_MM * mm,
+                                topMargin=LE_MM * mm, bottomMargin=LE_MM * mm)
         doc.build(list(khoi), canvasmaker=_canvas_so_trang())
         dich = duong_dan_khong_de(os.path.abspath(duong))
         os.replace(tam, dich)

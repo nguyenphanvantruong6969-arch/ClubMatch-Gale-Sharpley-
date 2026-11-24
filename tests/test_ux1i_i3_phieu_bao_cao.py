@@ -65,8 +65,9 @@ def test_giao_vien_in_phieu_lop_pdf_mot_lan_bam_sau_khi_vao(mo, tmp_path):  # no
     page, api, loi = mo
     api.thu_muc_xuat = str(tmp_path / "tai_xuong")
     os.makedirs(api.thu_muc_xuat)
-    assert page.locator("#btnUx1bPhieuLop").is_visible()              # đã ở thẻ Kết quả: lần bấm 0
-    page.locator("#ux1bLop").select_option(index=1)
+    page.locator("#ux1bThemTom").click()                              # UX5A-L2: nút nằm trong nếp "Báo cáo và phiếu in"; mở nếp = lần bấm 0
+    assert page.locator("#btnUx1bPhieuLop").is_visible()
+    page.locator("#kqChonLop").select_option(index=1)
     page.locator("#btnUx1bPhieuLop").click()                          # lần bấm 1
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.includes('.pdf')")
     tep = [t for t in os.listdir(api.thu_muc_xuat) if t.endswith(".pdf")]
@@ -80,6 +81,7 @@ def test_giao_vien_bao_cao_tong_hop_pdf_mot_lan_bam(mo, tmp_path):  # noqa: F811
     page, api, loi = mo
     api.thu_muc_xuat = str(tmp_path / "tai_xuong")
     os.makedirs(api.thu_muc_xuat)
+    page.locator("#ux1bThemTom").click()                              # UX5A-L2: mở nếp trước (lần bấm 0)
     page.locator("#btnUx1bBaoCaoPdf").click()                         # lần bấm 1
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.includes('.pdf')")
     assert [t for t in os.listdir(api.thu_muc_xuat) if t.endswith(".pdf")] == ["bao_cao_tong_hop.pdf"]

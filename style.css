@@ -2214,6 +2214,8 @@ html.tat-hieu-ung .status-strip:hover {
 .main:has(#view-scoring.is-active) { width: 100%; box-sizing: border-box; } /* SG-11a L4: Nhập điểm dùng chung bề rộng nội dung với thẻ Kết quả */
 .main { min-width: 0; }                                /* cột 1fr của lưới không được nở theo bảng rộng: bảng tự cuộn ngang trong .scroll-x, trang thì không */
 .kq-chon-hang { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.kq-chon-lop-goi { display: inline-flex; align-items: center; gap: 8px; }   /* UX1F-L4: bọc nhãn + ô chọn lớp, vẫn cùng hàng với các nút */
+.kq-chon-lop-goi[hidden] { display: none; }
 .kq-chon-hang-phu { margin-bottom: 14px; }
 .kq-chon-hang-phu[hidden] { display: none; }   /* .search-row đặt display:flex nên đè thuộc tính hidden */
 .kq-seg { display: inline-flex; border: 1px solid var(--hairline); border-radius: var(--radius-md); overflow: hidden; background: var(--paper); }
