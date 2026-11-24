@@ -11,7 +11,7 @@ then loop until CI is green. L1 and L2 are already on `claude/affectionate-lampo
 
 ## Current state
 - B0-B5 done and pushed: checker PASS in round 2 (UX5B-FIX1 5a68872: unsaved-scores guard on the back button; its wording `ux5b_diem_chua_luu_canh_bao` is new text outside the approved table). B6 and B7 done (2026-11-23): CI run #1496 green on 9540c7f; branch is 0 behind origin/main and merges into main cleanly (git merge-tree). Plan complete; waiting on Truong for the six judgement calls below, then one PR into main.
-- Truong approved the 5 new wordings (ux5b_tom_thi, ux5b_tom_nv, ux5b_tom_w, ux5b_tom_hc, ux5b_diem_chua_luu_canh_bao) on 2026-11-24 ("ok"). Calls (1)-(4) and (6) below not yet answered explicitly.
+- Truong approved the 5 new wordings (ux5b_tom_thi, ux5b_tom_nv, ux5b_tom_w, ux5b_tom_hc, ux5b_diem_chua_luu_canh_bao) on 2026-11-24 ("ok"). Calls (1)-(4) and (6) also approved by Truong on 2026-11-24 ("duyet het"); caveat: call (6) means the scoring-list Hick test measures 0, so it does not check that layout.
 - Judgement calls for Truong: (1) Hick budget counts controls outside list data (search result cards + pagination, ranking rows, club grids)
   and ignores the per-step "Sua" (Edit) buttons (step navigation, like a tab strip): admin 7, teacher 6 with one student open (before: 27/23).
   (2) Saving step 2 auto-opens step 3 when it exists (its reminders - "chia lai diem", "huy chuong da chinh" - live inside step 3).
@@ -30,3 +30,4 @@ then loop until CI is green. L1 and L2 are already on `claude/affectionate-lampo
 | 2026-11-23 | Sonnet | Checker round 1 FIX (unsaved scores), round 2 PASS; soat-ma report | CI loop next |
 | 2026-11-23 | Sonnet | Ticked B6 (CI #1496 success) and B7 (0 behind main) | docs only; Truong asked for it |
 | 2026-11-24 | Sonnet | Recorded Truong approval of the 5 new wordings | docs only |
+| 2026-11-24 | Sonnet | Recorded Truong approval of all six judgement calls | docs only |
