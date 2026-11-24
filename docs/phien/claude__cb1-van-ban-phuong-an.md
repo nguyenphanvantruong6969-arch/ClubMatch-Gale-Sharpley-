@@ -73,7 +73,12 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1, L2 done (coder, 2026-11-24). Status: DONE 0594da8 CI green 2026-11-24 (Tests rbda-kiosk run 1554 success; M1+M2 checker NO BUGS). The separate Windows-executable build workflow was not triggered on this branch.
+- L1-L4 done and pushed; checker M1 and M2 both NO BUGS. Tests (rbda-kiosk) green at 0594da8 (run 1554). Lead then merged origin/main (DC1) at 1d17129 (PR #36); CI for 1d17129 was still running (push run 45398383007, PR run 45398394935).
+- A send_later recheck fires ~13:43Z: if completed report "CI GREEN 1d17129" (or failing jobs, <=60 log lines) to lead session_01YVAyu1X941hBZsuDcwbrLK; fix only CB1-file failures.
+
+## Next steps
+1. git pull; list runs for the branch; report CI result for the latest head to the lead.
+2. If green, nothing else is pending (Status: DONE already recorded). Windows-exe build workflow was never seen running on this branch; unverified.
 
 ## Needs Truong
 - (empty)
@@ -95,6 +100,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 | 2026-11-24 | Sonnet | L2 API + PDF + 23 tests | 4 older tests adjusted (counts/lists), no weakening |
 | 2026-11-24 | Sonnet | L3 UI + 7 Chromium tests | .run-confirm-bar[hidden] CSS fix |
 | 2026-11-24 | Sonnet | L4 docs + demo script | M1 verdict NO BUGS |
+| 2026-11-24 | Sonnet | handoff at ~400k context; awaiting CI on 1d17129 (lead's DC1 merge) | no new work |
 | 2026-11-24 | Sonnet | CI run 1546 red: 4 tests (tai_lieu code map, a14_the_xem list, ux4_l4 control budget + single yellow button) fixed in product/docs, no test weakened | waiting CI rerun |
 
 ## Tóm tắt cho Truong (CB1)
