@@ -73,12 +73,11 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1-L4 done and pushed; checker M1 and M2 both NO BUGS. Tests (rbda-kiosk) green at 0594da8 (run 1554). Lead then merged origin/main (DC1) at 1d17129 (PR #36); CI for 1d17129 was still running (push run 45398383007, PR run 45398394935).
-- A send_later recheck fires ~13:43Z: if completed report "CI GREEN 1d17129" (or failing jobs, <=60 log lines) to lead session_01YVAyu1X941hBZsuDcwbrLK; fix only CB1-file failures.
+- CB1 DONE. L1-L4 shipped; checker M1 and M2 NO BUGS. Tests (rbda-kiosk) green at 9031c79 (push run 1591, PR #36 run 1592), same code as lead's DC1 merge 1d17129. Lead was told "CI GREEN 9031c79".
 
 ## Next steps
-1. git pull; list runs for the branch; report CI result for the latest head to the lead.
-2. If green, nothing else is pending (Status: DONE already recorded). Windows-exe build workflow was never seen running on this branch; unverified.
+1. Nothing pending. Optional: confirm the Windows-exe build workflow (never seen running on this branch) before release.
+2. PR #36 merge is Truong's/lead's call; do not push to the branch needlessly (each push restarts CI).
 
 ## Needs Truong
 - (empty)
@@ -109,3 +108,4 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Thử 2: bấm "Chốt phương án" (xem hộp xác nhận), chạy xếp chính thức, bấm "Xuất bản chốt": PDF có người chốt, thời điểm, dấu vân tay; ô "In hạt giống" tắt thì không có hạt giống.
 - Thử 3: đổi mục tiêu sang "Cơ hội như nhau" rồi mở lại khung: hiện cảnh báo "Phương án đã đổi sau khi chốt".
 - Kịch bản 5 bước đầy đủ: `docs/ke_hoach/CB1_KICH_BAN_DEMO.md`. Không có việc nào chờ Truong quyết định.
+| 2026-11-24 | Sonnet | final handoff: CI green on 9031c79, reported to lead | no new work |
