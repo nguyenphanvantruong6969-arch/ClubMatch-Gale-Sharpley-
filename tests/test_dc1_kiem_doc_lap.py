@@ -96,7 +96,7 @@ def doc_so_nhap_clb():
 def test_bo_hop_le_pass_het(capsys, bo, tmp_path):
     ma, out = chay(capsys, SO_NHAP_TEST, bo, str(tmp_path / "ra.csv"))
     assert ma == 0, out
-    for k in ("K0", "K1", "K2", "K3", "K4", "K5", "K6"):
+    for k in ("K0", "K1", "K2", "K3", "K4", "K5", "K6", "K7"):
         assert trang_thai(out, k) == "PASS", out
 
 
@@ -193,6 +193,18 @@ def test_k6_tep_theo_clb_thieu_dong(capsys, bo):
     assert ma == 1 and trang_thai(out, "K6") == "FAIL", out
 
 
+def test_k7_tong_hop_lech(capsys, bo):
+    tep = os.path.splitext(bo)[0] + "_tong_hop.csv"
+    d = doc(tep)
+    i = next(i for i, r in enumerate(d) if r and r[0].startswith("TỪNG "))
+    x = d[i + 1].index("Đã xếp")
+    d[i + 2][x] = str(int(d[i + 2][x]) + 1)
+    ghi(tep, d)
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    assert ma == 1 and trang_thai(out, "K7") == "FAIL", out
+    assert trang_thai(out, "K2") == "PASS", out
+
+
 def test_k0_clb_khong_doi_chieu_duoc(capsys, bo):
     d = doc(bo)
     for r in d[1:]:
@@ -281,7 +293,7 @@ def test_ba_bo_hop_le_pass_het(capsys, bo_hop_le, tmp_path):
     so, chinh = bo_hop_le
     ma, out = chay(capsys, so, chinh, str(tmp_path / "ra.csv"))
     assert ma == 0, out
-    assert "7 PASS, 0 FAIL" in out
+    assert "8 PASS, 0 FAIL" in out
 
 
 def test_csv_dau_vao_mot_dong_moi_hoc_sinh(capsys, bo_hop_le, tmp_path):

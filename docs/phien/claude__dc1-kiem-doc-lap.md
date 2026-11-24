@@ -82,7 +82,7 @@ feedback "đối chiếu được đầu vào với kết quả". It does NOT ch
   one session, default mode, no FA, no stability); `docs/giai_trinh/HUONG_DAN_CHAY.md` new short section;
   `docs/giai_trinh/KICH_BAN_DEMO.md` one optional step (default workspace, `SO_NHAP_TEST.xlsx`, Xuất CSV, run the
   script, show the table) with "Dữ liệu mô phỏng" and a pointer to `CA_MAU.md` §3–§5 for the cases. Vietnamese.
-- [ ] **L4 (optional)** K7 `_tong_hop.csv` cross-check + one mutation test. Drop if L1–L3 used the budget.
+- [x] **L4 (optional)** K7 `_tong_hop.csv` cross-check + one mutation test. Drop if L1–L3 used the budget.
 
 ## Acceptance
 Mutation tests FAIL the right check; 3 valid datasets PASS fully; ast isolation test passes;
@@ -91,13 +91,26 @@ Mutation tests FAIL the right check; 3 valid datasets PASS fully; ast isolation 
 
 ## Needs Truong
 - DC1 is not in the 33-item registry: approve adding it (planner recommends: yes, as a verification item, no sector).
+- New default workspaces have điểm quyết tâm ON, which blocks `SO_NHAP_TEST.xlsx` (`wharton_ho_so_chua_hop_le`). Docs (HUONG_DAN_CHAY §10) say to turn it off (`rules.wharton = false`); the UI click path was not verified here.
+- Windows commands and the UI export of the CSV set (button) were not run; the CSV set is produced via the `export_csv` API in tests.
 
 ## Current state
-- L1+L2 done in one commit (script + table + CSV were written together). 18 tests green; kiem_nhanh 7/7; ruff clean.
+- L1–L4 done (L4 = K7). L1+L2 were one commit (script + table + CSV were written together). 18 tests green; kiem_nhanh 7/7; ruff clean.
 - G2 observed: a student with no valid preference still has a (unplaced) row; unknown/duplicate clubs in a row make import reject the whole book, so rank = position in the list. K5 is exact (FAIL, not INFO).
 - soat-ma: tiers 1–3 not applicable (no product code); tier 4 = tests + docs only.
+
+### Self-check (SO_NHAP_TEST, seed 3, final script)
+```
+Học sinh: 120 | CLB: 10 | dòng kết quả: 120 | đã xếp: 109 | chưa xếp: 11
+K0 PASS … K7 PASS  (K0 files/one session/clubs · K1 each student once · K2 capacity · K3 reserve/group/dien
+  · K4 club in prefs · K5 rank = position · K6 per-club files · K7 _tong_hop counts)
+Tổng: 8 PASS, 0 FAIL
+```
+`dau_vao_ket_qua.csv` HS001–HS003 checked by eye against the Sổ nhập: HS001 prefs Tin học 7.9 / Mỹ thuật 7, unplaced;
+HS002 (chinh_sach) 4th pref Âm nhạc, Thường, rank 4; HS003 (chinh_sach) Tin học, Dự trữ, rank 1. All match.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-24 | Opus (planner) | Read export/Sổ nhập code, wrote this file + DC1_GIAO_THUC.md | no product code |
+| 2026-11-24 | Sonnet (coder) | L1–L4: script K0–K7, tests (19), README, docs, CHANGELOG/TIEN_DO | soat-ma: tiers 1–3 n/a (no product code) |

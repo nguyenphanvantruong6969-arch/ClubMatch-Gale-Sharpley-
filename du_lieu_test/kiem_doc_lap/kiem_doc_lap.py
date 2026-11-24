@@ -184,11 +184,32 @@ def doc_tep_theo_clb(thu_muc):
     return ra
 
 
+def doc_tong_hop(duong):
+    """Mục 'TỪNG ...' của `_tong_hop.csv` -> list (mã, tên, đã xếp, dự trữ); None nếu không có tệp/mục."""
+    if not os.path.isfile(duong):
+        return None
+    d = doc_csv(duong)
+    for i, r in enumerate(d):
+        if r and r[0].startswith("TỪNG ") and i + 1 < len(d):
+            tieu = [o.strip() for o in d[i + 1]]
+            if "Đã xếp" not in tieu or "Trong đó diện dự trữ" not in tieu:
+                return None
+            x, t = tieu.index("Đã xếp"), tieu.index("Trong đó diện dự trữ")
+            ra = []
+            for r2 in d[i + 2:]:
+                if not any(o.strip() for o in r2):
+                    break
+                ra.append((r2[1].strip(), r2[2].strip(), so_nguyen(r2[x]), so_nguyen(r2[t])))
+            return ra
+    return None
+
+
 # ------------------------------------------------------------------- đối chiếu ----
 
 class DoiChieu:
-    def __init__(self, clubs, hs, kq, tep_clb):
+    def __init__(self, clubs, hs, kq, tep_clb, tong_hop=None):
         self.clubs, self.hs, self.kq, self.tep_clb = clubs, hs, kq, tep_clb
+        self.tong_hop = tong_hop
         self.theo_ma = {c["ma"]: c for c in clubs if c["ma"]}
         theo_ten = {}
         for c in clubs:
@@ -214,7 +235,7 @@ class DoiChieu:
         return self.theo_ma.get(r["clb"]) or self.theo_ten.get(khoa_ten(r["ten_clb"]))
 
     def kiem(self):
-        return [self.k0(), self.k1(), self.k2(), self.k3(), self.k4(), self.k5(), self.k6()]
+        return [self.k0(), self.k1(), self.k2(), self.k3(), self.k4(), self.k5(), self.k6(), self.k7()]
 
     def _dong_xep(self):
         """(dòng, CLB) của các dòng đã xếp và đối chiếu được."""
@@ -319,6 +340,26 @@ class DoiChieu:
             loi.append(f"tổng dòng {n_dong} khác {len(self.kq)}")
         return self._kq("K6", vai(loi), "tệp theo CLB và tệp chính cùng một tập học sinh", "tệp theo CLB")
 
+    def k7(self):
+        if self.tong_hop is None:
+            return ("K7", "FAIL", "không thấy mục 'TỪNG ...' trong tệp *_tong_hop.csv")
+        xep, dtru = {}, {}
+        for r, c in self._dong_xep():
+            xep[c["ten"]] = xep.get(c["ten"], 0) + 1
+            dtru[c["ten"]] = dtru.get(c["ten"], 0) + (r["dien"] == DIEN_DU_TRU)
+        loi, thay = [], set()
+        for ma, ten, n_xep, n_dt in self.tong_hop:
+            c = self.theo_ma.get(ma) or self.theo_ten.get(khoa_ten(ten))
+            if c is None:
+                loi.append(f"{ma or ten} không có trong Sổ nhập")
+                continue
+            thay.add(c["ten"])
+            if (n_xep, n_dt) != (xep.get(c["ten"], 0), dtru.get(c["ten"], 0)):
+                loi.append(f"{c['ten']} tổng hợp {n_xep}/{n_dt}, tệp chính {xep.get(c['ten'], 0)}/{dtru.get(c['ten'], 0)}")
+        loi += [f"{t} xếp {n} em nhưng không có dòng tổng hợp" for t, n in xep.items() if t not in thay]
+        return self._kq("K7", vai(loi), "'Đã xếp' và 'Trong đó diện dự trữ' của tệp tổng hợp khớp tệp chính",
+                        "tệp tổng hợp")
+
 
 # ---------------------------------------------------------------------- xuất ----
 
@@ -355,7 +396,7 @@ def main(argv=None):
         clubs, hs = doc_so_nhap(a.so_nhap)
         kq = doc_ket_qua(a.ket_qua)
         tep = doc_tep_theo_clb(os.path.splitext(a.ket_qua)[0] + "_theo_club")
-        dc = DoiChieu(clubs, hs, kq, tep)
+        dc = DoiChieu(clubs, hs, kq, tep, doc_tong_hop(os.path.splitext(a.ket_qua)[0] + "_tong_hop.csv"))
         bang = dc.kiem()
     except DauVaoKhongDung as e:
         print(f"LỖI ĐẦU VÀO: {e}", file=sys.stderr)

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-24 — DC1-L4: phép kiểm K7 (tệp tổng hợp)
+
+- `kiem_doc_lap.py`: K7 đối chiếu "Đã xếp" và "Trong đó diện dự trữ" của mục "TỪNG …" trong `_tong_hop.csv` với số đếm từ tệp chính; README và hai tài liệu giải trình đổi K0–K6 → K0–K7.
+- Test mới: `test_k7_tong_hop_lech` (`tests/test_dc1_kiem_doc_lap.py`, nay 19 test; ba bộ hợp lệ đòi `8 PASS`).
+
 ## 2026-11-24 — DC1-L3: tài liệu cho script kiểm độc lập
 
 - Mới `du_lieu_test/kiem_doc_lap/README.md`; thêm mục 10 vào `docs/giai_trinh/HUONG_DAN_CHAY.md` và bước tuỳ chọn 13b vào `docs/giai_trinh/KICH_BAN_DEMO.md`. Chỉ tài liệu; không test mới.

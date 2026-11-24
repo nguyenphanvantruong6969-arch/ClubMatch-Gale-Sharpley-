@@ -30,6 +30,7 @@ Mã thoát: `0` mọi phép kiểm PASS · `1` có FAIL · `2` đầu vào khôn
 | K4 | CLB nhận nằm trong danh sách nguyện vọng của em đó |
 | K5 | "Nguyện vọng thứ" = vị trí CLB đó trong danh sách của em (đã bỏ ô trống); em chưa xếp thì để trống |
 | K6 | Các tệp trong `*_theo_club/` khớp tệp chính (cùng tập học sinh, cùng thứ hạng/diện/nhóm; `_chua_duoc_xep.csv` = tập chưa xếp) |
+| K7 | Mục "TỪNG …" của `*_tong_hop.csv`: cột "Đã xếp" và "Trong đó diện dự trữ" của từng CLB bằng số đếm từ tệp chính |
 
 Mỗi FAIL ghi số lượng và tối đa 5 mã học sinh/CLB. Tệp `dau_vao_ket_qua.csv` có mỗi học sinh một dòng:
 `student_id, ho_ten, nhom, nv_1..nv_k, diem_1..diem_k, club_id_nhan, ten_clb_nhan, dien, hang_nhan`

@@ -285,3 +285,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1F-L4 (một ô Chọn lớp) | xong (chờ checker) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
 | DC1-L1+L2 (script kiểm độc lập K0–K6 + dau_vao_ket_qua.csv) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (18) | kiem_nhanh 7/7 |
 | DC1-L3 (tài liệu script kiểm độc lập) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/README.md, docs/giai_trinh/HUONG_DAN_CHAY.md, docs/giai_trinh/KICH_BAN_DEMO.md, CHANGELOG.md | (không) | |
+| DC1-L4 (K7 tệp tổng hợp) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, README.md, docs/giai_trinh/*.md, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (+1) | |
