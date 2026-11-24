@@ -16,14 +16,13 @@ fix in `browser_host.py`, PR #34 to main). Two feature items live on their own b
 - [x] CB1-FIX3/FIX4/FIX5: UI fixes, badge removed, hints trimmed, neutral-grey one-page PDF with school name.
 - [x] DC1 PR #35 opened (main merged into its branch first, head `38d1c06`).
 - [x] Main merged into CB1 branch, doc conflicts resolved (head `99938da`).
-- [ ] CB1 PR: scheduled one-shot (trigger `trig_01NHqDYC9ouTDR2UXZCTtv4L`, 12:46 UTC 2026-11-24; CI of CB1 merge commit `99938da` was still queued at 12:30) checks CI then opens
-  it. If the session is gone, open it manually (see Next steps).
+- [x] CB1 PR #36 opened (CI green on `99938da`). DC1 PR #35 open (CI green).
 - [ ] Merge order, Truong to do: #35 DC1, then CB1 PR (CB1 will then conflict on docs; resolve).
 - [ ] Check CodeQL re-scan closed alerts #1 and #2 after PR #34 merge.
 
 ## Current state (overwrite each handoff)
-- Done so far: SEC-1 merged. PR #35 (DC1) open, CI running at last look. CB1 branch `claude/cb1-van-ban-phuong-an`
-  head `99938da` (main merged, related tests pass); its PR not opened yet (scheduled).
+- Done so far: SEC-1 merged (PR #34). PR #35 (DC1, head `38d1c06`) and PR #36 (CB1, head `99938da`) both open
+  with CI green. No scheduled triggers remain that matter (CB1 PR trigger already fired).
 - This branch (`claude/optimistic-feynman-kykolh`) was restarted from main after PR #34 merged (plain fast-forward
   push, no force); it carries only this handoff file.
 - Tests last run: CB1 tests 54 pass, `test_browser_host.py` 41 pass, `test_a13_12_tai_lieu.py` pass (file count 406
@@ -46,12 +45,13 @@ fix in `browser_host.py`, PR #34 to main). Two feature items live on their own b
 - Sample PDFs/screenshots were made from a git worktree at `/tmp/claude-0/cb1wt` (container-local, may be gone).
 
 ## Next steps (ordered)
-1. If the CB1 PR is not open: check CI of CB1 head, then open PR `claude/cb1-van-ban-phuong-an` to main, title
-   "CB1: Van ban phuong an xep", short body, attribution footer from the session reminder.
-2. When Truong says DC1 (#35) merged: merge main into the CB1 branch, resolve the three doc conflicts above, run
-   `tests/test_a13_12_tai_lieu.py` and CB1 tests, push (fetch first; the Opus session may have pushed).
-3. Check PR #34's CodeQL result; report briefly.
-4. Pending Truong decisions from earlier: D5 wording ("thu tu tieu chi co gioi han" vs numeric weights); students fill
+1. Wait for Truong to merge #35 (DC1) into main. Then merge main into `claude/cb1-van-ban-phuong-an`, resolve the
+   three doc conflicts (CHANGELOG.md, docs/ke_hoach/TIEN_DO.md keep both sides; test-file count line in
+   docs/ke_hoach/CLAUDE_CHI_TIET.md recount with `ls tests/test_*.py | wc -l`), run `tests/test_a13_12_tai_lieu.py` and
+   CB1 tests, `git fetch` first (an Opus session may have pushed), push, confirm CI green on PR #36.
+2. Check PR #34's CodeQL result (alerts #1, #2 on browser_host.py); report briefly. If still open, replace the path
+   joining in `browser_host._tep_tinh` with a startup-built allowlist map of static files.
+3. Pending Truong decisions from earlier: D5 wording ("thu tu tieu chi co gioi han" vs numeric weights); students fill
    `docs/giai_trinh/PHAN_CONG.md` themselves; optional: link `CA_MAU.md` sections 3-5 into `KICH_BAN_DEMO.md` (needs an
    item code, rule 1).
 
@@ -69,3 +69,4 @@ fix in `browser_host.py`, PR #34 to main). Two feature items live on their own b
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | CB1 PDF: neutral greys, school name, squeezed to one page (FIX4, FIX5); handoff refreshed | Truong: "everything looks fine" |
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | Opened PR #35 (DC1); merged main into CB1 and DC1 branches; scheduled CB1 PR; restarted this branch from main after PR #34 merged | Merge order: #35 then CB1 PR |
 | 2026-11-24 | Sonnet 5.5 (Opus advisor) | Scheduled CB1 PR check ran: CB1 CI queued, DC1 push CI green, PR run queued; rescheduled to 12:46 UTC | Merge order unchanged: #35 then CB1 |
+| 2026-11-24 | Sonnet 5.5 (Opus advisor) | Scheduled check found CB1 and DC1 CI green; opened PR #36 (CB1); handoff refreshed | Merge order: #35 then #36 |
