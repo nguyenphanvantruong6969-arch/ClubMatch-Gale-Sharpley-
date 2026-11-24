@@ -31,3 +31,4 @@ then loop until CI is green. L1 and L2 are already on `claude/affectionate-lampo
 | 2026-11-23 | Sonnet | Ticked B6 (CI #1496 success) and B7 (0 behind main) | docs only; Truong asked for it |
 | 2026-11-24 | Sonnet | Recorded Truong approval of the 5 new wordings | docs only |
 | 2026-11-24 | Sonnet | Recorded Truong approval of all six judgement calls | docs only |
+| 2026-11-24 | Sonnet | Truong approved the UX5 UI from six Chromium screenshots (admin, 1280x900, SIMULATED data); PR #30 open | docs only |
