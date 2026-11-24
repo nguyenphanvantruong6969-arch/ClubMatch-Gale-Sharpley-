@@ -17,3 +17,15 @@
 ## Notes (not bugs)
 - The protocol path `kiem_nhanh.py` is actually `.claude/skills/soat-ma/scripts/kiem_nhanh.py`.
 - Leak test asserts ids and names only (stb is queried but not asserted); safe because of the whitelist, optional to tighten in L3/L4.
+
+---
+
+# Milestone 2 (L3 UI + L4 docs), range 0e72c16..2a72a38 (+ 842a6f4 leak-test tightening)
+
+**Verdict: NO BUGS.**
+
+- `tests/test_cb1_ui.py` (Chromium, `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`): 7 passed. API/PDF/permission/ws_nhan tests: 114 passed. `kiem_nhanh.py` 7/7.
+- Leak test: at 2a72a38 it was NOT yet tightened (stb/score unused); commit 842a6f4 now sets unique per-student `stb_number` (700000+rowid) and `score` (8123.25+rowid) and asserts none appear in either PDF version. Passes.
+- UI: panel is admin-only (`data-quyen`), teacher skips the call (no refused-audit noise); confirm box lists goal + rules, re-chốt asks again, Esc/cancel works; bản chốt and seed checkbox disabled with a reason until chốt + official run + lock; no hard-coded text (i18n keys). Product code in L3 touches only UI + `.run-confirm-bar[hidden]` CSS fix.
+- Docs: HUONG_DAN section, 5-step demo script and code-map row present and consistent with behaviour; no commentary written for the student's report.
+- Minor (not a bug): panel refreshes on every `pointerenter` (extra read-only API call per hover); harmless.
