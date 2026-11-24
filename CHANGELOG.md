@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-24 — CB1-L1: bộ dựng nội dung "Văn bản phương án xếp" (hàm thuần)
+
+- Mới `phuong_an_xep.py`: `bam_luat(cfg)` (SHA-256 của `{rules, muc_tieu:{id,nhom}}`, bỏ `truoc` và mọi khoá ngoài luật), `trang_thai_quy_trinh(moc)` (năm mốc Đã/Chưa kèm thời điểm), `dung_noi_dung(...)` (dict chỉ gồm khoá danh sách trắng `KHOA_NOI_DUNG`). Bản dự kiến không bao giờ có hạt giống hay dấu vân tay dữ liệu; bản chốt chỉ có hạt giống khi tick và đã khoá. Câu chữ ở `CAU = {"vi", "en"}`; luật xếp lấy từ `tieu_chi.mo_ta_tieu_chi`, bước lễ dùng `fa_bien_ban.THU_TU_LE` (import, không chép). Không đụng thuật toán, CSV, schema.
+- Test mới: `tests/test_cb1_noi_dung.py` (20 ca, thuần).
+
 ## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
 
 - Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).

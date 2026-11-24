@@ -44,7 +44,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
    Dự kiến: M2–M5 normally "Chưa"; the fingerprint value is printed in BẢN CHỐT only.
 
 ## Plan (lots; ticked by the coder)
-- [ ] **L1 (must) pure builder** — new `phuong_an_xep.py`: `bam_luat(cfg)`, `trang_thai_quy_trinh(moc)` and
+- [x] **L1 (must) pure builder** — new `phuong_an_xep.py`: `bam_luat(cfg)`, `trang_thai_quy_trinh(moc)` and
   `dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong, hat_giong, lang="vi")` →
   dict of WHITELISTED keys only (like `bao_cao_tong_hop.gom_du_lieu`). Rules: `ban="du_kien"` → no seed key ever;
   `ban="chot"` → seed only if `in_hat_giong` and lock present. Tests `tests/test_cb1_noi_dung.py` (pure, fast).
@@ -73,15 +73,17 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- Planned only (Opus, 2026-11-24). No code yet. Next: coder starts L1.
+- L1 done (coder, 2026-11-24). Next: L2 API + PDF, then MILESTONE 1.
 
 ## Needs Truong
 - (empty)
 
 ## Files touched
 - docs/phien/claude__cb1-van-ban-phuong-an.md, docs/phien/CB1_GIAO_THUC.md: plan.
+- phuong_an_xep.py, tests/test_cb1_noi_dung.py: L1.
 
 ## Session log
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-24 | Opus | plan: branch file + protocol | answers Q1–Q4 above |
+| 2026-11-24 | Sonnet | L1 pure builder + 20 tests | kiem_nhanh 7/7 |
