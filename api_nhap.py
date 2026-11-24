@@ -377,6 +377,10 @@ class NhapDuLieuMixin:
                     canh_bao.append(err("so_nhap_canh_bao_mat_diem", n=n_mat))
         if du_lieu.get("n_o_bo_qua"):
             canh_bao.append(err("so_nhap_canh_bao_o_bo_qua", n=du_lieu["n_o_bo_qua"]))
+        for ten_sheet, cac_cot in du_lieu.get("cot_la") or []:
+            if cac_cot:        # SN-COT-LA: cột lạ có dữ liệu bị bỏ qua -> nói ra, không đổi gì được lưu
+                canh_bao.append(err("so_nhap_canh_bao_cot_la", sheet=ten_sheet, n=len(cac_cot),
+                                    ten=", ".join(cac_cot[:3]) + ("…" if len(cac_cot) > 3 else "")))
         if n_bo:
             canh_bao.append(err("so_nhap_canh_bao_bo_nhom", n=n_bo))
         # Cấu hình ĐÃ LƯU từ trước mà hai danh từ trùng nhãn (A14): cột đọc theo thứ tự trong Sổ.

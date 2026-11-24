@@ -413,6 +413,13 @@ def _khop_cot(tieu_de, bang_ten):
     return vi_tri
 
 
+def _ten_cot_la(tieu_de, da_nhan, co_du_lieu) -> list:
+    """SN-COT-LA: tên các cột CÓ tiêu đề mà phần mềm không nhận ra (chỉ số không thuộc `da_nhan`)
+    và có ít nhất một ô chứa chữ (chỉ số có trong `co_du_lieu`). Chỉ để NÓI — không đổi gì được đọc."""
+    return [str(t).strip() for i, t in enumerate(tieu_de)
+            if str(t or "").strip() and i not in da_nhan and i in co_du_lieu]
+
+
 def _cac_dong(ws):
     """(số dòng Excel, [ô đã thành chuỗi]) — bỏ dòng trống hoàn toàn."""
     for so_dong, hang in enumerate(ws.iter_rows(values_only=True), start=1):
@@ -555,8 +562,9 @@ def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dic
     if loi:
         return {"clubs": [], "students": [], "loi": loi}
 
+    meta_clb: dict = {}
     clubs = _doc_sheet_clb(wb[ten_clb], loi, clb_da_co or {}, ma_da_co or {}, clb_cu or {},
-                           cfg, chuan_clb)
+                           cfg, chuan_clb, meta_clb)
     meta_hs: dict = {}
     students = _doc_sheet_hs(wb[ten_hs], clubs, loi, cfg, chuan_hs, meta_hs)
     ra = {"clubs": [c for c in clubs if not c.get("hong")],
@@ -565,6 +573,8 @@ def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dic
           # KHÔNG xoá ô tick/điểm đã lưu; ô nằm ở cột không tên bị bỏ qua thì báo.
           "co_cot_thi": meta_hs.get("co_cot_thi", False),
           "n_o_bo_qua": meta_hs.get("n_o_bo_qua", 0),
+          # SN-COT-LA: cột có tiêu đề lạ mà có chữ, theo sheet — chỉ để NÓI.
+          "cot_la": [(chuan_clb, meta_clb.get("cot_la", [])), (chuan_hs, meta_hs.get("cot_la", []))],
           # UX1A-L5: chỉ để NÓI (xem trước): sổ có cột Huy chương không? Không ảnh hưởng gì được lưu.
           "co_cot_huy_chuong": _sheet_co_cot_huy_chuong(wb[ten_hs])}
     # FA-1: sheet "Giữ chỗ" tuỳ chọn. Có sheet thì khoá `giu_cho` có mặt (kể cả rỗng = xoá hết).
@@ -574,7 +584,7 @@ def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dic
     return ra
 
 
-def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHEET_CLB) -> list:
+def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHEET_CLB, meta=None) -> list:
     dong_iter = _cac_dong(ws)
     dau = next(dong_iter, None)
     if dau is None:
@@ -594,11 +604,16 @@ def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHE
         return o[i].strip() if i is not None and i < len(o) else ""
 
     tho = []
+    co_du_lieu_la: set = set()
+    la = [i for i, t in enumerate(tieu_de) if str(t or "").strip() and i not in set(cot.values())]
     for so_dong, o in dong_iter:
         ten = lay(o, "name")
         if not ten and not lay(o, "club_id"):
             continue        # dòng chỉ có buổi/chỉ tiêu lạc: coi như trống
+        co_du_lieu_la.update(i for i in la if i < len(o) and o[i].strip())
         tho.append((so_dong, o, ten))
+    if meta is not None:
+        meta["cot_la"] = _ten_cot_la(tieu_de, set(cot.values()), co_du_lieu_la)
 
     clubs, ten_da_gap, ma_da_gap = [], {}, {}
     for so_dong, o, ten in tho:
@@ -860,7 +875,7 @@ def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> li
     tiêu đề, tức không được đọc — thường là sổ mất hàng tiêu đề thứ hai)."""
     if meta is None:
         meta = {}
-    meta.update(co_cot_thi=False, n_o_bo_qua=0)
+    meta.update(co_cot_thi=False, n_o_bo_qua=0, cot_la=[])
     dong_iter = _cac_dong(ws)
     dau = next(dong_iter, None)
     if dau is None:
@@ -956,6 +971,11 @@ def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> li
 
     meta["co_cot_thi"] = bool(cot_diem) or cot_diem_cn is not None
     cot_khong_ten = [i for i, t in enumerate(tieu_de) if not str(t or "").strip()]
+    da_nhan = (set(cot.values()) | set(cot_nv.values()) | set(cot_diem.values())
+               | set(cot_w.values()) | set(cot_sai_che_do)
+               | ({cot_diem_cn} if cot_diem_cn is not None else set()))
+    ung_vien_la = [i for i, t in enumerate(tieu_de) if str(t or "").strip() and i not in da_nhan]
+    co_du_lieu_la: set = set()
     students, ma_da_gap = [], {}
     for so_dong, o in dong_iter:
         sid = lay(o, cot["student_id"])
@@ -963,6 +983,7 @@ def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> li
             loi.append(err("so_nhap_thieu_ma_hs", sheet=ten_sheet, dong=so_dong))
             continue
         meta["n_o_bo_qua"] += sum(1 for i in cot_khong_ten if lay(o, i))
+        co_du_lieu_la.update(i for i in ung_vien_la if lay(o, i))
         # Trùng ĐÚNG từng ký tự mới là trùng. "hs01" và "HS01" là hai học
         # sinh với phần mềm; hàm nạp vẫn cảnh báo cặp mã như thế.
         if sid in ma_da_gap:
@@ -1075,6 +1096,7 @@ def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> li
             if not diem_w_mo_coi:
                 del hs_moi["diem_w_mo_coi"]
         students.append(hs_moi)
+    meta["cot_la"] = _ten_cot_la(tieu_de, da_nhan, co_du_lieu_la)
     return students
 
 
