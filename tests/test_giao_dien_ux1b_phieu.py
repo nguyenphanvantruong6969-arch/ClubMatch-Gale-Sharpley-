@@ -79,6 +79,8 @@ def test_the_hoc_sinh_khong_co_so_khoa_boc_tham(mo):
     assert api.tao_ma_tra_cuu()["ok"]
     with api._ket_noi_doc() as cur:
         ma = dict(cur.execute("SELECT student_id, ma FROM ma_tra_cuu"))
+    # SF-B (ST-B-009): lớp phủ chỉ dựng khi đã có tài khoản (khoá thật).
+    assert api.tao_tai_khoan("qt_nen", "matkhau-gia-1", "quan_tri")["ok"] and api.dang_nhap("qt_nen", "matkhau-gia-1")["ok"]
     page.goto(url)
     page.wait_for_selector("#gtPanel", state="attached")
     page.click('button.nav-item[data-tab="results"]')

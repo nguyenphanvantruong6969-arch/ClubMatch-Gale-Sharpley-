@@ -402,7 +402,7 @@ def chuan_hoa(cfg: dict, kiem_trung: bool = True) -> dict:
     return _chuan_hoa(cfg, kiem_trung=kiem_trung)
 
 
-def doc_cau_hinh(db_path: str, nghiem: bool = False) -> dict:
+def doc_cau_hinh(db_path: str, nghiem: bool = False, conn=None) -> dict:
     """Cấu hình của workspace ở `db_path`, trộn lên mặc định trường học.
 
     Mặc định không bao giờ ném: tệp chưa có, bảng chưa có (CSDL cũ), hàng chưa có, JSON
@@ -419,7 +419,12 @@ def doc_cau_hinh(db_path: str, nghiem: bool = False) -> dict:
     if not os.path.isfile(db_path):
         return mac_dinh
     try:
-        conn = connect_db(db_path, CHO_KHOA_DOC_CAU_HINH_MS)
+        # SF-A1 (ST-A-002): `conn` = kết nối của giao dịch đang mở (nạp sổ lớn). Mở THÊM một kết nối ở
+        # đây khi giao dịch ghi đã giữ khoá độc quyền thì chờ hết hạn rồi báo "CSDL bận", không bao giờ
+        # xong. Dùng chính kết nối đó (và không đóng nó).
+        dung_chung = conn is not None
+        if not dung_chung:
+            conn = connect_db(db_path, CHO_KHOA_DOC_CAU_HINH_MS)
         try:
             co_bang = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'workspace_settings'"
@@ -430,7 +435,8 @@ def doc_cau_hinh(db_path: str, nghiem: bool = False) -> dict:
                 "SELECT value FROM workspace_settings WHERE key = ?", (KHOA_CAU_HINH,)
             ).fetchone()
         finally:
-            conn.close()
+            if not dung_chung:
+                conn.close()
         if not dong or dong[0] is None:
             return mac_dinh
         return _chuan_hoa(json.loads(dong[0]), kiem_trung=False)

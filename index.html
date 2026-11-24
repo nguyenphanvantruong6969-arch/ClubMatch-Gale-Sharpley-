@@ -299,7 +299,7 @@
           <div class="search-row" id="gtIn" hidden>
             <button type="button" class="btn btn-secondary" id="btnGtInMot" data-i18n="gt_in_mot">In phiếu cho {person_l} này</button>
             <button type="button" class="btn btn-secondary" id="btnGtInLop" data-i18n="gt_in_lop" hidden>In phiếu cả {cohort_l}</button>
-            <button type="button" class="btn btn-secondary" id="btnGtPdfMot" data-quyen="quan_tri" data-i18n="xp1_luu_pdf">Lưu PDF</button>
+            <button type="button" class="btn btn-secondary" id="btnGtPdfMot" data-i18n="xp1_luu_pdf">Lưu PDF</button>
           </div>
           <div id="gtXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
           <details class="menu-khac gt-ma-gap" id="gtMaFold" data-quyen="quan_tri">
@@ -320,13 +320,15 @@
         </div>
       </div>
 
-      <!-- UX1B: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). Không có nút in phiếu cả lớp: XP1 nối ở bước tích hợp -->
+      <!-- UX1B/UX1F-L4: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). MỘT ô "Chọn lớp" (#kqChonLop) cho cả bảng kết quả bên dưới và "In phiếu cả lớp" -->
       <div class="panel" id="ux1bPanel">
         <div class="panel-head"><h2 data-i18n="ux1b_tieu_de">Theo {cohort_l} và báo cáo</h2></div>
         <div class="panel-body">
           <div class="search-row">
-            <label class="lop-nhan" for="ux1bLop" data-i18n="ux1b_chon_lop">Chọn {cohort_l}</label>
-            <select id="ux1bLop" class="text-input text-input-sm"></select>
+            <span class="kq-chon-lop-goi" id="kqChonLopHang" hidden>
+              <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
+              <select id="kqChonLop" class="text-input text-input-sm"></select>
+            </span>
             <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
             <!-- UX5A-L2: ba việc ít dùng gập vào một nếp (Hick); id các nút giữ nguyên -->
             <details class="menu-khac" id="ux1bThemMenu">
@@ -357,10 +359,6 @@
           <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
         </div>
         <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
-        <div class="search-row kq-chon-hang-phu" id="kqChonLopHang" hidden>
-          <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
-          <select id="kqChonLop" class="text-input text-input-sm"></select>
-        </div>
         <div class="search-row kq-chon-hang-phu" id="kqChonClbHang" hidden>
           <label class="lop-nhan" for="kqChonClb" data-i18n="kq_chon_clb">Chọn {slot_l}</label>
           <select id="kqChonClb" class="text-input"></select>
@@ -1031,6 +1029,7 @@
         </div>
         <span class="save-feedback" role="status" aria-live="polite" id="clubFormFeedback"></span>
 
+        <div class="scroll-x">   <!-- ST-B-013: bảng CLB cuộn ngang trong khung, không kéo cả trang -->
         <table class="data-table" style="margin-top:18px;">
           <thead><tr>
             <th data-i18n="th_club_id">Mã CLB</th>
@@ -1043,6 +1042,7 @@
           </tr></thead>
           <tbody id="adminClubTableBody"></tbody>
         </table>
+        </div>
         <div id="adminClubEmptyState" class="empty-state" hidden></div>
         <p class="hint-text" data-i18n="buoi_hint_form">Hai CLB cùng buổi thì trùng giờ, mỗi học sinh chỉ vào được một. Chọn "Một buổi chung" nếu trường chỉ có một buổi.</p>
       </div>

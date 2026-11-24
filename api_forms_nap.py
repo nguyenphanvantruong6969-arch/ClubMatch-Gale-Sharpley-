@@ -43,6 +43,7 @@ class FormsNapMixin:
 
     def _tieu_de_tep(self, ten, du_lieu):
         """Dòng tiêu đề của tệp (không ghi gì vào đợt). Tệp hỏng -> ném ngoại lệ."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import chuyen_forms_sang_phan_mem as cv
         if str(ten).lower().endswith(".csv"):
             van_ban = du_lieu.decode("utf-8-sig")
@@ -68,11 +69,13 @@ class FormsNapMixin:
 
     @staticmethod
     def _co_bien_the(de):
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import phan_tich_cau_hoi as pt
         return any(len(pt.cac_bien_the(c)) > 1 for c in de["cau_lac_bo"] if c.get("de_thi"))
 
     def _mot_tep(self, ten, du_lieu, duong, de):
         """Thông tin một tệp: {ten, loai, bien_the_doan, loi}. `loi` = err(...) hoặc None."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import chuyen_forms_sang_phan_mem as cv
         d = {"ten": ten, "loai": "khong_ro", "bien_the_doan": None, "loi": None}
         try:
@@ -181,6 +184,7 @@ class FormsNapMixin:
 
         Trả {trang_thai: "xong"|"cho_xac_nhan", n_hoc_sinh, n_bai_thi, canh_bao, ghi_chu, cau_co_co, xem_truoc,
         cho_xac_nhan: {clb, bao_cao, thong_bao}?}. Lỗi đề / tệp -> `forms_khong_chuyen_duoc`, không ghi Sổ."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import chuyen_forms_sang_phan_mem as cv
         duong, loi = self._duong_forms()
         if loi:
@@ -277,6 +281,7 @@ class FormsNapMixin:
         """`KETQUA_NHAP_LIST.csv` (cho List KetQua): các dòng của `export_ly_do_csv` ghép email bằng
         `ghep_ket_qua_email.ghep` với `forms/nap/EMAIL_MA_HS.csv`. Thiếu tệp email -> `forms_thieu_email`
         (chạy bước 4 trước). Trả {path, n_rows, canh_bao: [chuỗi], canh_bao_ly_do: [err]}."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import ghep_ket_qua_email as gk
         duong, loi = self._duong_forms()
         if loi:
@@ -300,6 +305,7 @@ class FormsNapMixin:
         """Danh sách chưa đăng ký theo lớp: `file_base64` = CSV danh sách lớp (student_id, class_id); dùng mã học sinh đã đăng ký của lần nạp
         cuối ở bước 4 (`EMAIL_MA_HS.csv`). Ghi vào thư mục `chua_dang_ky/` trong Tải xuống (một tệp mỗi lớp còn em chưa đăng ký +
         `tong_hop.csv`). Trả {thu_muc, tep: [tên], n_lop, n_duoi, n_email, vuot_gioi_han}."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import danh_sach_chua_dang_ky as ds
         duong, loi = self._duong_forms()
         if loi:
@@ -328,6 +334,7 @@ class FormsNapMixin:
     def doi_chieu_hai_lan(self, cu_base64, moi_base64):
         """Đối chiếu hai lần xuất List (CSV cũ + mới) -> `DOI_CHIEU_LIST.xlsx` trong Tải xuống. Trả {path, dem: {loai: n},
         n_clb_la}. Tệp thiếu cột bắt buộc -> `forms_khong_chuyen_duoc`, không ghi gì."""
+        forms_dot.nap_mau_forms()   # SF-A3 (ST-A-007): đưa mau_forms_thi_clb vào sys.path TRƯỚC khi nhập
         import chuyen_forms_sang_phan_mem as cv
         import doi_chieu_lists as dc
         duong, loi = self._duong_forms()

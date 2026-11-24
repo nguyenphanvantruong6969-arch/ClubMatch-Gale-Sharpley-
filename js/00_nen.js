@@ -334,6 +334,12 @@ function thoiGianToastMs(message) {
   return Math.min(TOAST_DAI_NHAT_MS, TOAST_THANH_CONG_MS + them);
 }
 
+/* ST-B-012: thông báo đã dịch sẵn thành chuỗi (kèm tham số), không dịch lại được: đổi ngôn ngữ thì đóng các thông báo
+   đang hiện, để không còn chữ sai ngôn ngữ trên màn hình (nút "Hoàn tác" của thông báo cũ cũng đi theo). */
+window.addEventListener("langchange", () => {
+  document.querySelectorAll("#toastStack .toast").forEach((x) => { if (x.goBo) x.goBo(); x.remove(); });
+});
+
 function showToast(message, type, opts) {
   /* Tham so thu ba: mang loi (tu showErrorToast) hoac tuy chon
      {sticky, ghim, khiDong, errors, canhBao}. */
@@ -488,6 +494,44 @@ function showErrorToast(errors, khoaMau) {
   nhacHoiPhienNeuCan(errors);
   const cau = trErrs(errors).join(" ");
   showToast(khoaMau ? t(khoaMau, { errors: cau }) : cau, "error", errors);
+}
+
+/* SF-B6 (ST-B-007): xác nhận LẦN HAI khi xoá một mục đã có nguyện vọng / kết quả. Backend từ chối lần đầu (mã
+   `cannot_delete_club_referenced` / `cannot_delete_student_matched`); thanh này nói rõ hệ quả rồi chỉ gọi tiếp
+   khi người dùng bấm xác nhận. Huỷ (nút, hoặc Esc) thì không gọi gì. Mỗi lúc chỉ có một thanh (id `xoaKemBar`). */
+function boXoaKemBar() {
+  const cu = el("xoaKemBar");
+  if (cu) cu.remove();
+}
+
+function hoiXacNhanXoaKem(neo, cau, khiDongY, viTri) {
+  boXoaKemBar();
+  const bar = document.createElement("div");
+  bar.id = "xoaKemBar";
+  bar.className = "run-confirm-bar xoa-kem-bar";
+  bar.setAttribute("role", "group");
+  const msg = document.createElement("span");
+  msg.textContent = cau;
+  const dongY = document.createElement("button");
+  dongY.type = "button";
+  dongY.className = "btn btn-primary";
+  dongY.textContent = t("xoa_kem_nut");
+  const huy = document.createElement("button");
+  huy.type = "button";
+  huy.className = "btn btn-ghost";
+  huy.textContent = t("btn_cancel");
+  dongY.addEventListener("click", () => {
+    dongY.disabled = true;
+    boXoaKemBar();
+    khiDongY();
+  });
+  huy.addEventListener("click", boXoaKemBar);
+  bar.addEventListener("keydown", (ev) => { if (ev.key === "Escape") boXoaKemBar(); });
+  bar.append(msg, dongY, huy);
+  neo.insertAdjacentElement(viTri || "beforebegin", bar);
+  bar.scrollIntoView({ block: "nearest" });
+  huy.focus();      /* hành động phá huỷ: con trỏ mặc định ở "Huỷ" */
+  return bar;
 }
 
 function feedbackErrors(node, errors) {

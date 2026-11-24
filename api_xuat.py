@@ -1992,7 +1992,27 @@ class XuatKetQuaMixin:
         Trả {path, n_trang} hoặc {thu_muc, n_tep, n_trang}."""
         return self._khoa_xuat(self._export_phieu_giai_trinh_pdf_da_khoa, output_path, lop, theo_lop, student_ids)
 
+    # SF-A5 (ST-A-008): tiến độ xuất phiếu PDF cho khung giao diện hỏi ĐỊNH KỲ trong lúc xuất (hàm đọc này KHÔNG lấy
+    # `_khoa_ghi`, nên trả lời ngay cả khi lần xuất đang giữ khoá). Gán nguyên một dict mới mỗi lần đổi (đọc không rách).
+    _tien_do_xuat = None
+
+    def get_tien_do_xuat(self):
+        """Tiến độ lần xuất phiếu giải trình PDF đang chạy: {dang_xuat, xong, tong, ten}. `xong`/`tong` đếm HỌC SINH
+        (cộng dồn qua các lớp khi `theo_lop`), `ten` là lớp đang dựng (None: một tệp, hoặc em chưa có lớp).
+        Không xuất gì: {dang_xuat: False, xong: 0, tong: 0, ten: None}. Chỉ đọc."""
+        t = self._tien_do_xuat
+        return _ok(dict(t) if t else {"dang_xuat": False, "xong": 0, "tong": 0, "ten": None})
+
+    def _dat_tien_do_xuat(self, xong, tong, ten=None):
+        self._tien_do_xuat = {"dang_xuat": True, "xong": xong, "tong": tong, "ten": ten}
+
     def _export_phieu_giai_trinh_pdf_da_khoa(self, output_path, lop, theo_lop, student_ids=None):
+        try:
+            return self._export_phieu_giai_trinh_pdf_bao(output_path, lop, theo_lop, student_ids)
+        finally:
+            self._tien_do_xuat = None
+
+    def _export_phieu_giai_trinh_pdf_bao(self, output_path, lop, theo_lop, student_ids=None):
         import phieu_giai_trinh
         import xuat_pdf
         thu_muc, da_tao = None, False
@@ -2008,8 +2028,10 @@ class XuatKetQuaMixin:
                     ten_mac_dinh = "phieu_giai_trinh_%s.pdf" % self._cat_ten_tep(
                         self._ten_file_an_toan(chon[0], "hs"), 60)
                 duong = self._duong_xuat(output_path, ten_mac_dinh)
+                self._dat_tien_do_xuat(0, len(chon))
                 duong = phieu_giai_trinh.dung_phieu_pdf(
-                    self._phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua), duong, so_ngay)
+                    self._phieu_cac_em(du_lieu, thong_tin_hs, chon, ma_cua), duong, so_ngay,
+                    khi_xong_em=lambda k: self._dat_tien_do_xuat(k, len(chon)))
                 return _ok({"path": duong, "n_trang": xuat_pdf.dem_trang(duong)})
             nhom: dict = {}
             for sid in chon:                      # `chon` đã xếp theo lớp tự nhiên
@@ -2019,12 +2041,16 @@ class XuatKetQuaMixin:
             da_tao = True                         # từ đây thư mục là CỦA lần xuất này
             da_dung: set = {"_chua_co_lop"}       # giữ chỗ trước: lớp tên "_chua_co_lop" không đè
             n_trang = 0
+            da_xong = 0                           # SF-A5: số em đã xong ở các lớp trước (tiến độ cộng dồn)
             for lop_nay, cac_sid in nhom.items():
                 ten = "_chua_co_lop" if lop_nay is None else self._ten_chua_dung(
                     self._cat_ten_tep(self._ten_file_an_toan(str(lop_nay), "lop")), da_dung)
+                self._dat_tien_do_xuat(da_xong, len(chon), lop_nay)
                 duong = phieu_giai_trinh.dung_phieu_pdf(
                     self._phieu_cac_em(du_lieu, thong_tin_hs, cac_sid, ma_cua),
-                    os.path.join(thu_muc, ten + ".pdf"), so_ngay)
+                    os.path.join(thu_muc, ten + ".pdf"), so_ngay,
+                    khi_xong_em=lambda k, d=da_xong, t=lop_nay: self._dat_tien_do_xuat(d + k, len(chon), t))
+                da_xong += len(cac_sid)
                 n_trang += xuat_pdf.dem_trang(duong)
             return _ok({"thu_muc": thu_muc, "n_tep": len(nhom), "n_trang": n_trang})
         except xuat_pdf.ThieuThuVienPdf:

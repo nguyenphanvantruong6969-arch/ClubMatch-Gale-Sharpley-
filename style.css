@@ -1941,7 +1941,7 @@ html.tat-hieu-ung .status-strip:hover {
    ========================================================================== */
 
 /* Bảng rộng phải cuộn TRONG khung của nó, không đẩy cả trang trượt ngang. */
-.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }   /* ST-B-013: chữ .sr-only (absolute) trong bảng không thoát ra làm cả trang cuộn ngang */
 
 .data-table th.num, .data-table td.num {
   text-align: right;
@@ -2214,6 +2214,8 @@ html.tat-hieu-ung .status-strip:hover {
 .main:has(#view-scoring.is-active) { width: 100%; box-sizing: border-box; } /* SG-11a L4: Nhập điểm dùng chung bề rộng nội dung với thẻ Kết quả */
 .main { min-width: 0; }                                /* cột 1fr của lưới không được nở theo bảng rộng: bảng tự cuộn ngang trong .scroll-x, trang thì không */
 .kq-chon-hang { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.kq-chon-lop-goi { display: inline-flex; align-items: center; gap: 8px; }   /* UX1F-L4: bọc nhãn + ô chọn lớp, vẫn cùng hàng với các nút */
+.kq-chon-lop-goi[hidden] { display: none; }
 .kq-chon-hang-phu { margin-bottom: 14px; }
 .kq-chon-hang-phu[hidden] { display: none; }   /* .search-row đặt display:flex nên đè thuộc tính hidden */
 .kq-seg { display: inline-flex; border: 1px solid var(--hairline); border-radius: var(--radius-md); overflow: hidden; background: var(--paper); }
@@ -2251,6 +2253,8 @@ html.tat-hieu-ung .status-strip:hover {
    thanh ben len tren thanh mot dai ngang, o nhap duoc xuong dong. */
 @media (max-width: 900px) {
   .app-shell { grid-template-columns: 1fr; }
+  /* ST-B-013: .main có margin-inline:auto nên co theo nội dung (fit-content) và rộng hơn màn hình; ép bằng cột. */
+  .main { width: 100%; box-sizing: border-box; }
   .sidebar {
     position: static;
     height: auto;
@@ -3421,6 +3425,9 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 /* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
 .mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .mt2-cong-tac-ten { font-weight: 600; }
+
+/* SF-B7 (ST-A-001): cảnh báo thiếu dữ liệu dưới các thẻ chế độ ở Cài đặt */
+.ux1a-canh-bao { margin-top: 10px; }
 /* UX5B: thẻ Xếp CLB / Nhập nguyện vọng / Nhập điểm. Hick: mục ít dùng gập lại; Von Restorff: một nút vàng, việc kế tiếp có dòng trạng thái. */
 .ux5b-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }
 .ux5b-gap { margin: 8px 0 0; font-size: 13px; }

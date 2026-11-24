@@ -211,8 +211,8 @@ MESSAGES = {
         "en": "{score_p} can't be imported from a preferences file, so the {score_l} columns here were ignored. Put the {score_pl} in the test {slot_l} file instead.",
     },
     "csv_student_id_case_conflict": {
-        "vi": "Mã {student_id} và mã {da_co} chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai {person_l}. Nếu là cùng một {person_l}, hãy viết mã giống nhau ở cả hai tệp.",
-        "en": "The codes {student_id} and {da_co} differ only in upper and lower case, so they count as two {person_pl}. If both codes belong to one {person_l}, write the code the same way in both files.",
+        "vi": "Mã {student_id} gần như trùng mã {da_co}: chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai {person_l}. Nếu là cùng một {person_l}, hãy viết mã giống nhau ở cả hai tệp.",
+        "en": "The code {student_id} nearly duplicates {da_co}: they differ only in upper and lower case, so they count as two {person_pl}. If both codes belong to one {person_l}, write the code the same way in both files.",
     },
     "csv_student_id_maybe_truncated": {
         "vi": "Mã {student_id} có {do_dai} chữ số, trong khi phần lớn mã khác có {do_dai_pho_bien}. Có thể Excel đã bỏ số 0 ở đầu. Mở tệp gốc, đặt cột mã ở dạng Text rồi nạp lại.",
@@ -346,6 +346,18 @@ MESSAGES = {
     },
 
     # --- validation (surfaced directly to the kiosk operator) ---
+    "che_do_thieu_du_lieu": {
+        "vi": "Đã đổi chế độ, nhưng dữ liệu {slot_l} đã nạp còn thiếu thứ chế độ này cần: {n_thieu_loai} {slot_l} chưa có Loại, {n_buoi_thieu_tu_do} buổi chưa có {slot_l} Tự do, {n_thieu_diem_san} {slot_l} Tuyển chọn chưa có điểm sàn, {n_huy_chuong_sai} {person_l} có huy chương chưa hợp lệ. Lần chạy xếp sẽ bị chặn tới khi đủ. Hãy nạp lại sổ có các cột đó (khi đang ở chế độ này) hoặc đặt Loại ở Quản lý.",
+        "en": "The mode was changed, but the stored {slot_l} data is missing what this mode needs: {n_thieu_loai} {slot_l}(s) without a Type, {n_buoi_thieu_tu_do} session(s) without a Free {slot_l}, {n_thieu_diem_san} selective {slot_l}(s) without a floor score, {n_huy_chuong_sai} {person_l}(s) with invalid medals. The allocation run will be blocked until this is complete. Reload a workbook that has those columns (while in this mode) or set the Type in Manage.",
+    },
+    "club_capacity_not_integer": {
+        "vi": "Chỉ tiêu và Suất ưu tiên phải là số nguyên (không có phần thập phân hay chữ).",
+        "en": "Quota and reserved seats must be whole numbers (no decimals or letters).",
+    },
+    "capacity_too_large": {
+        "vi": "Chỉ tiêu quá lớn: tối đa {max}.",
+        "en": "Quota is too large: the maximum is {max}.",
+    },
     "capacity_must_be_positive": {
         "vi": "Chỉ tiêu phải lớn hơn 0.",
         "en": "Quota must be more than 0.",
@@ -403,8 +415,8 @@ MESSAGES = {
         "en": "Enter the {person_l} ID.",
     },
     "cannot_delete_club_referenced": {
-        "vi": "Không xoá được {slot_sl} {club_id} vì {slot_sl} này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước.",
-        "en": "{slot} {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first.",
+        "vi": "Không xoá được {slot_sl} {club_id} vì {slot_sl} này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước: xác nhận xoá kèm (nguyện vọng bị bỏ, kết quả hiện tại thành cũ và cần xếp lại, có sao lưu), hoặc nạp lại Dữ liệu từ sổ đã sửa.",
+        "en": "{slot} {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first: confirm the delete-with-data option (the preferences are dropped, current results become outdated and must be rerun, a backup is taken), or reload the data from a corrected workbook.",
     },
     "student_not_found": {
         "vi": "Không tìm thấy {person_l} {student_id}.",
@@ -455,8 +467,8 @@ MESSAGES = {
         "en": "This {slot_l} is already in the preference list.",
     },
     "cannot_delete_student_matched": {
-        "vi": "Không xoá được {person_l} {student_id} vì {person_l} này có trong kết quả sắp xếp gần nhất. Hãy xử lý xong rồi sắp xếp lại.",
-        "en": "{person} {student_id} can't be deleted because the {person_l} is in the latest results. Sort that out, then run the allocation again.",
+        "vi": "Không xoá được {person_l} {student_id} vì {person_l} này đang có {slot_l} trong kết quả sắp xếp gần nhất. Muốn xoá (ví dụ {person_l} rút), hãy xác nhận xoá kèm kết quả: dòng kết quả của {person_l} này bị bỏ (có sao lưu), kết quả hiện tại thành cũ nên cần xếp lại.",
+        "en": "{person} {student_id} can't be deleted because the {person_l} holds a {slot_l} in the latest results. To delete anyway (for example a withdrawal), confirm the delete-with-results option: this {person_l}'s result rows are removed (a backup is taken) and the current results become outdated, so run the allocation again.",
     },
 
     # --- pipeline step details (shown in the stepper, not just errors) ---
@@ -1224,6 +1236,22 @@ MESSAGES = {
     "so_nhap_canh_bao_xoa_diem": {
         "vi": "{n} {score_l} đã chấm trong phần mềm sẽ bị xoá, vì sổ ghi \"thi\" (chưa có {score_l}) ở các ô đó. Muốn giữ {score_l} thì xuất lại dữ liệu đầu vào thành sổ mới rồi sửa trên sổ đó.",
         "en": "{n} {score_l}(s) already entered in the app will be removed, because the workbook says \"thi\" (no {score_l} yet) in those cells. To keep them, export the current input data to a new workbook and edit that one.",
+    },
+    "csdl_hong_can_khoi_phuc": {
+        "vi": "Tệp dữ liệu của phần mềm không qua được bước kiểm tra toàn vẹn, nên phần mềm dừng lại, không chạy và không sao lưu đè lên các bản còn tốt. Hãy đóng phần mềm rồi mở lại để vào trang phục hồi (khôi phục từ bản sao lưu nguyên vẹn gần nhất).",
+        "en": "The app's data file failed the integrity check, so the app stops: it will not run and will not overwrite the good backups. Close the app and reopen it to reach the recovery page (restore from the newest intact backup).",
+    },
+    "so_nhap_canh_bao_giu_diem": {
+        "vi": "Sổ này không có cột {score_l} thi, nên {n} ô chọn thi (và {score_l} kèm theo) đã lưu của các {person_l} trong sổ được giữ nguyên, không bị xoá.",
+        "en": "This workbook has no test {score_l} column, so the {n} test selection(s) (and any {score_l}) already stored for the {person_l}(s) in it are kept, not deleted.",
+    },
+    "so_nhap_canh_bao_mat_diem": {
+        "vi": "{n} ô chọn thi đã lưu (kèm {score_l} nếu có) sẽ bị xoá, vì sổ không đánh dấu thi ở các ô đó. Muốn giữ thì xuất lại dữ liệu đầu vào thành sổ mới rồi sửa trên sổ đó.",
+        "en": "{n} stored test selection(s) (with their {score_l}, if any) will be removed, because the workbook does not mark them as tests. To keep them, export the current input data to a new workbook and edit that one.",
+    },
+    "so_nhap_canh_bao_o_bo_qua": {
+        "vi": "{n} ô có chữ nằm ở cột không có tên tiêu đề nên không được đọc (thường là sổ mất hàng tiêu đề thứ hai: {score_l} thi và Huy chương nằm ở đó). Kiểm lại hàng tiêu đề của sheet {person_l} trước khi nhập.",
+        "en": "{n} filled cell(s) sit in columns with no header and are not read (usually the workbook lost its second header row, where the test {score_l} and medal columns are). Check the header rows of the {person_l} sheet before importing.",
     },
     "so_nhap_canh_bao_bo_nhom": {
         "vi": "{n} {person_l} đang có {group} sẽ bị bỏ nhóm, vì ô {group} của những {person_l} đó trong sổ để trống.",

@@ -137,13 +137,17 @@
       });
     });
 
+    /* ST-B-010: khôi phục thành công rồi thì bấm lại KHÔNG chạy lần hai (nó sẽ thay câu thành công bằng "tệp vẫn đọc được"). */
+    let daKhoiPhuc = false;
     el("btnRestoreBackup").addEventListener("click", () => {
+      if (daKhoiPhuc) return;
       clearStatus();
       setButtonsDisabled(true);
       showStatus("pending", t("recovery_working"));
       callApi("restore_from_backup").then((res) => {
         setButtonsDisabled(false);
         if (res.ok) {
+          daKhoiPhuc = true;
           showStatus("success", `${trErr(res.data.detail)} ${t("recovery_please_restart")}`);
         } else {
           showStatus("error", trErr(res.errors[0]));

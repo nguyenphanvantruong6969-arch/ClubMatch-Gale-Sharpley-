@@ -40,6 +40,7 @@ def test_chua_co_tai_khoan_che_do_hoc_sinh_khong_khoa_gi(api):
     ma = _dung(api)
     r = api.vao_che_do_hoc_sinh()
     assert r["ok"] and r["data"]["khoa"] is False
+    assert r["data"]["can_tao_tai_khoan"] is True        # SF-A2 (ST-B-009): giao diện dẫn tới tạo tài khoản
     assert api.get_run_history()["ok"]                       # vẫn như GT1 DONE
     assert api.tra_cuu_hoc_sinh("s1", ma["s1"])["ok"]
     assert api.thoat_che_do_hoc_sinh("", "")["ok"]

@@ -52,6 +52,7 @@ xuat_ket_qua_list
 get_san_sang_huy_chuong get_chia_loai get_san_sang_loai
 get_giai_trinh_hoc_sinh export_phieu_giai_trinh
 export_bao_cao_tong_hop export_phieu_giai_trinh_pdf export_bao_cao_tong_hop_pdf
+get_tien_do_xuat
 """.split()  # I1: GT1 tra cứu / phiếu
 
 # Ghi dữ liệu, cấu hình, xoá, đổi chỗ, nạp tệp, tài khoản.

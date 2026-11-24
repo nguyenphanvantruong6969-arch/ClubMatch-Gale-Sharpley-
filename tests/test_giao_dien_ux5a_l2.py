@@ -17,7 +17,7 @@ def test_ngan_sach_hick_tung_khung(mo_ux5a, vai):  # noqa: F811
     gt = dem(page, "#gtPanel")
     assert len(gt) <= (2 if vai == "quan_tri" else 1), gt
     ux = dem(page, "#ux1bPanel")
-    assert ux == ["ux1bLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in ▾"
+    assert ux == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in ▾"
     tong = dem(page, "#view-results")
     assert len(tong) <= (10 if vai == "quan_tri" else 9), tong
     assert not loi, loi

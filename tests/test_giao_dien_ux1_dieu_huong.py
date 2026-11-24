@@ -103,6 +103,8 @@ def test_tieu_chi_va_thu_nam_trong_tab_cach_xep_khong_con_muc_gap(mo):
 
 def test_man_hoc_sinh_phu_kin_ca_bon_nhom(mo):
     page, api, mo_trang, loi = mo
+    # SF-B (ST-B-009): lớp phủ chỉ dựng khi đã có tài khoản (khoá thật).
+    assert api.tao_tai_khoan("qt_nen", MK, "quan_tri")["ok"] and api.dang_nhap("qt_nen", MK)["ok"]
     mo_trang()
     page.click('.nav-item[data-tab="results"]')
     mo_gap_ma(page)

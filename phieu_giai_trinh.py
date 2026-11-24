@@ -182,7 +182,9 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
     if gt.get("tom_tat_dong"):
         k.append(xp.dong_khoa_gia_tri("Tóm tắt", gt["tom_tat_dong"]))
     fa = bool(gt.get("fa_bat"))                           # UX1B-L7: cột Huy chương chỉ ở chế độ huy chương
-    for b in gt["buoi"]:
+    i_cuoi = None                                         # UX1F-L2: CẢ buổi cuối (từ tiêu đề) + chú thích + chân phiếu đi liền nhau
+    for i_buoi, b in enumerate(gt["buoi"]):
+        i_cuoi = len(k)
         nhan = _nhan_buoi(b["buoi"])
         if nhan:
             k.append(xp.tieu_de(nhan))
@@ -210,6 +212,8 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
             k.append(xp.tieu_de("Điểm các CLB em đã thi"))
             k.append(xp.bang(["CLB", "Điểm thi", "Mức vào được"], [
                 [x["ten_clb"], _so(x["diem_em"]), _o_chuan(x)] for x in b["diem_da_thi"]], [2, 1, 1]))
+        if i_buoi < len(gt["buoi"]) - 1:                  # mỗi buổi liền một khối: tiêu đề buổi không nằm một mình ở đáy trang
+            k[i_cuoi:] = [xp.giu_cung(k[i_cuoi:])]
     if fa and gt["buoi"] and gt.get("chu_thich_huy_chuong"):
         k.append(xp.dong_khoa_gia_tri("Ghi chú", gt["chu_thich_huy_chuong"]))
     if gt.get("buoc_tiep"):
@@ -221,15 +225,26 @@ def _khoi_pdf(xp, gt, hs, so_ngay, ma_tra_cuu, tieu_de):
         (" trong %s ngày." % so_ngay if so_ngay else ".")))
     if ma_tra_cuu:
         k.append(xp.dong_khoa_gia_tri("Mã tra cứu", ma_tra_cuu))
+    if i_cuoi is not None:
+        k[i_cuoi:] = [xp.giu_cung(k[i_cuoi:])]
     return k
 
 
-def dung_phieu_pdf(cac_em, duong, so_ngay=None, tieu_de="Phiếu giải trình kết quả xếp CLB") -> str:
-    """Như `dung_phieu_html` nhưng ra PDF (A4 dọc, mỗi học sinh bắt đầu một trang mới). Trả đường dẫn thật đã ghi."""
+def dung_phieu_pdf(cac_em, duong, so_ngay=None, tieu_de="Phiếu giải trình kết quả xếp CLB", khi_xong_em=None) -> str:
+    """Như `dung_phieu_html` nhưng ra PDF (A4 dọc, mỗi học sinh bắt đầu một trang mới). Trả đường dẫn thật đã ghi.
+    `khi_xong_em(k)` (tuỳ chọn, SF-A5): báo đã dựng xong phiếu của `k` em (k = 1, 2, ..., rồi đủ số em khi ghi xong)."""
     import xuat_pdf
     khoi = []
+    xong = [0]
+
+    def qua_mot_em():
+        xong[0] += 1
+        khi_xong_em(xong[0])
     for gt, hs, ma in cac_em:
         if khoi:
-            khoi.append(xuat_pdf.ngat_trang())
+            khoi.append(xuat_pdf.ngat_trang(qua_mot_em if khi_xong_em else None))
         khoi.extend(_khoi_pdf(xuat_pdf, gt, hs, so_ngay, ma, tieu_de))
-    return xuat_pdf.dung_pdf(duong, khoi)
+    duong_that = xuat_pdf.dung_pdf(duong, khoi)
+    if khi_xong_em:
+        khi_xong_em(len(cac_em))
+    return duong_that

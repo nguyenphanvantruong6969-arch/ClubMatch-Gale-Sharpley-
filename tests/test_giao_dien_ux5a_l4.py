@@ -16,7 +16,7 @@ TU_CAM = re.compile(r"Chọi|cấu hình|[Qq]uỹ|\d{4}-\d\d-\d\d[ T]\d\d:|CLB n
 NGAN_SACH_THE = {("results", "quan_tri"): 10, ("results", "giao_vien"): 9,
                  ("others", "quan_tri"): 21, ("others", "giao_vien"): 19}
 ID_PHAI_CON = (
-    "gtTim", "gtMaFold", "btnGtTaoMa", "btnGtXuatMa", "btnGtCheDoHs", "btnGtInMot", "btnGtInLop", "btnGtPdfMot", "ux1bLop",
+    "gtTim", "gtMaFold", "btnGtTaoMa", "btnGtXuatMa", "btnGtCheDoHs", "btnGtInMot", "btnGtInLop", "btnGtPdfMot",
     "btnUx1bXuatLop", "btnUx1bBaoCao", "btnUx1bPhieuLop", "btnUx1bBaoCaoPdf", "btnKqTaiBang", "kqChonLop", "kqChonClb", "kqTimKiem",
     "btnXuatTuyChon", "btnXuatTheoLop", "xuatMenu", "btnXuatLyDo", "btnXuatNhuCau", "btnXuatGoiY", "btnXuatBienBan", "btnPdfDsClb",
     "btnPdfDsLop", "btnPdfPhieuLop", "pdfLop", "xuatKetQua", "xuatKemCsv", "xuatDauVao", "xuatThayDoi", "xuatHocSinh",
@@ -77,7 +77,7 @@ def test_giao_vien_van_toi_duoc_tra_cuu_theo_lop_va_xuat_theo_lop(mo_ux5a):  # n
     assert page.locator("#btnKqTaiBang").is_visible()
     for k in ("lop", "clb", "ma"):
         assert page.locator('#kqTang1 [data-kq="%s"]' % k).is_visible()
-    page.locator("#ux1bLop").select_option("10A1")
+    page.locator("#kqChonLop").select_option("10A1")
     page.click("#btnUx1bXuatLop")
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.trim().length > 0")
     page.click("#ux1bThemTom")

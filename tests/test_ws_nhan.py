@@ -70,6 +70,9 @@ MA_MOI_SAU_ANH_CHUP = {
     "gt2_chua_co_lan_chinh_thuc", "gt2_lan_chay_khong_co", "gt2_so_sanh_lan_cu", "gt2_ap_dung_khong_khop", "gt2_thu_chua_ho_tro_fa",
     "gt2_thu_stb_chua_day", "gt2_tieu_chi_khong_hop_le",
     # === end GT2 ===
+    # SF-A1..A3 (mã mới: nạp sổ giữ điểm / ô bị bỏ qua, CSDL hỏng, chỉ tiêu, đổi chế độ thiếu dữ liệu)
+    "so_nhap_canh_bao_giu_diem", "so_nhap_canh_bao_mat_diem", "so_nhap_canh_bao_o_bo_qua", "csdl_hong_can_khoi_phuc",
+    "club_capacity_not_integer", "capacity_too_large", "che_do_thieu_du_lieu",
     # UX1A-L5 (mã mới: sổ có cột Huy chương mà chế độ tắt)
     "so_nhap_canh_bao_huy_chuong_che_do_tat",
 
@@ -235,6 +238,25 @@ SUA_CO_Y = {
          'Câu lạc bộ chưa khai buổi: {n_seats} chỗ cho {n_students} học sinh, ít nhất {n_short} học sinh sẽ không có chỗ. Khai buổi cho chúng hoặc tăng chỉ tiêu.'),
         ('Clubs with no session set have {n_seats} seats in total, but {n_students} student(s) ranked these clubs. At least {n_short} student(s) will certainly get no seat among them. Clubs with no session set are matched together as one separate session. Set their session in Manage clubs, raise capacity, or accept it.',
          "Clubs with no session set: {n_seats} seats for {n_students} students, at least {n_short} won't get one. Set their session or raise capacity."),
+    ],
+    # SF-A1/SF-A3: câu của ba mã lỗi nay nói rõ lối thoát / tên mã gần trùng (chủ ý đổi chữ; chuỗi đã điền nhãn mặc định).
+    ("loi", 'csv_student_id_case_conflict'): [
+        ('Mã {student_id} và mã {da_co} chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai học sinh. Nếu là cùng một học sinh, hãy viết mã giống nhau ở cả hai tệp.',
+         'Mã {student_id} gần như trùng mã {da_co}: chỉ khác nhau ở chữ hoa, chữ thường nên đang được tính là hai học sinh. Nếu là cùng một học sinh, hãy viết mã giống nhau ở cả hai tệp.'),
+        ('The codes {student_id} and {da_co} differ only in upper and lower case, so they count as two students. If both codes belong to one student, write the code the same way in both files.',
+         'The code {student_id} nearly duplicates {da_co}: they differ only in upper and lower case, so they count as two students. If both codes belong to one student, write the code the same way in both files.'),
+    ],
+    ("loi", 'cannot_delete_club_referenced'): [
+        ('Không xoá được CLB {club_id} vì CLB này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước.',
+         'Không xoá được CLB {club_id} vì CLB này đang có trong {n_prefs} nguyện vọng và {n_matches} kết quả. Hãy xử lý các dữ liệu đó trước: xác nhận xoá kèm (nguyện vọng bị bỏ, kết quả hiện tại thành cũ và cần xếp lại, có sao lưu), hoặc nạp lại Dữ liệu từ sổ đã sửa.'),
+        ("Club {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first.",
+         "Club {club_id} can't be deleted because it's still in {n_prefs} preference(s) and {n_matches} result(s). Deal with that data first: confirm the delete-with-data option (the preferences are dropped, current results become outdated and must be rerun, a backup is taken), or reload the data from a corrected workbook."),
+    ],
+    ("loi", 'cannot_delete_student_matched'): [
+        ('Không xoá được học sinh {student_id} vì học sinh này có trong kết quả sắp xếp gần nhất. Hãy xử lý xong rồi sắp xếp lại.',
+         'Không xoá được học sinh {student_id} vì học sinh này đang có câu lạc bộ trong kết quả sắp xếp gần nhất. Muốn xoá (ví dụ học sinh rút), hãy xác nhận xoá kèm kết quả: dòng kết quả của học sinh này bị bỏ (có sao lưu), kết quả hiện tại thành cũ nên cần xếp lại.'),
+        ("Student {student_id} can't be deleted because the student is in the latest results. Sort that out, then run the allocation again.",
+         "Student {student_id} can't be deleted because the student holds a club in the latest results. To delete anyway (for example a withdrawal), confirm the delete-with-results option: this student's result rows are removed (a backup is taken) and the current results become outdated, so run the allocation again."),
     ],
     # SM2-L2: một nút sổ mẫu (bỏ "Tải sổ mẫu có huy chương"), câu gợi ý nói sổ có đủ cột (chủ ý đổi chữ).
     ("ui", "import_hint"): [

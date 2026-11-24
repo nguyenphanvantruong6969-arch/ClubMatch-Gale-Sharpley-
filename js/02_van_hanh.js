@@ -886,7 +886,9 @@ function initCsvImportHandlers() {
   const input = el("fileAny");
   if (!zone || !input) return;
 
-  zone.addEventListener("click", () => { if (!khoaVungTha()) input.click(); });
+  /* SF-B8: `#fileAny` nằm TRONG `#dropZone`, nên `input.click()` nổi bọt lên đây và gọi `input.click()` lần hai.
+     Bỏ qua cú bấm xuất phát từ chính ô chọn tệp: mỗi lần mở hộp chọn tệp chỉ gọi MỘT lần. */
+  zone.addEventListener("click", (ev) => { if (ev.target !== input && !khoaVungTha()) input.click(); });
   zone.addEventListener("keydown", (ev) => {
     if (ev.key === "Enter" || ev.key === " ") {
       ev.preventDefault();
@@ -923,6 +925,7 @@ function initCsvImportHandlers() {
 
 function boHangDoiNhap() {
   importQueue = [];
+  tepBoQuaGanNhat = [];
   /* Tep dang doc do dang (Excel qua backend, nhan dien loai) se tu
      them vao hang doi khi doc xong — tuc la tep nguoi dung vua xoa
      lai hien ve va bi nhap. Doi the he de cac lan doc cu tu bo. */
@@ -1001,6 +1004,7 @@ function themFileVaoHangDoi(fileList) {
   const files = Array.prototype.slice.call(fileList || []);
   if (!files.length) return;
   const file = files.find((f) => laFileExcel(f.name)) || files[0];
+  tepBoQuaGanNhat = files.filter((f) => f !== file).map((f) => f.name);
   theHeHangDoi += 1;
   const theHe = theHeHangDoi;
   canhBaoNhapGanNhat = [];
@@ -1039,6 +1043,7 @@ function themFileVaoHangDoi(fileList) {
 /* Canh bao cua lan nhap gan nhat — giu DANG GOC (mang doi tuong loi),
    dich lai moi lan ve. */
 let canhBaoNhapGanNhat = [];
+let tepBoQuaGanNhat = [];   /* ST-B-005: tên các tệp thả cùng lúc mà không được đọc */
 
 function veCanhBaoNhap() {
   const box = el("importWarnings");
@@ -1104,6 +1109,14 @@ function veHangDoi() {
     ganChiTietKyThuat(chiTiet, muc.loiRaw);
   } else chiTiet.textContent = tomTatSo(muc.tomTat);
   trai.appendChild(chiTiet);
+
+  /* ST-B-005: thả nhiều tệp một lần thì chỉ đọc MỘT: nói rõ tệp nào bị bỏ qua. */
+  if (tepBoQuaGanNhat.length) {
+    const bo = document.createElement("div");
+    bo.className = "queue-detail";
+    bo.textContent = t("so_nhap_bo_qua_tep", { n: tepBoQuaGanNhat.length, ten: tepBoQuaGanNhat.join(", ") });
+    trai.appendChild(bo);
+  }
 
   /* Sổ đọc được nhưng có lỗi: liệt kê từng lỗi kèm sheet, dòng. */
   if (muc.loiRaw && muc.tomTat && !muc.xong) {

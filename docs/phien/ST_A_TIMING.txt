@@ -1,0 +1,16 @@
+800x20 {'run_pipeline': 0.06, 'rerun': 0.07, 'get_match_results': 0.0, 'get_data_health_report': 0.02, 'get_dashboard_status': 0.0, 'list_students_admin': 0.0, 'export_ket_qua': 0.43, 'export_csv': 0.29, 'export_danh_sach_pdf': 0.85, 'export_bao_cao_tong_hop_pdf': 0.09}
+3000x60 {'run_pipeline': 0.26, 'rerun': 0.23, 'get_match_results': 0.01, 'get_data_health_report': 0.07, 'get_dashboard_status': 0.0, 'list_students_admin': 0.01, 'export_ket_qua': 1.17, 'export_csv': 1.07, 'export_danh_sach_pdf': 1.82, 'export_bao_cao_tong_hop_pdf': 0.23}
+book 800 huy_chuong/True {'import_so_nhap': 0.39, 'run_pipeline': 0.56, 'get_data_health_report': 0.03, 'export_ket_qua': 0.51, 'export_phieu_giai_trinh_pdf': 18.36}
+book 3000 huy_chuong/True {'import_so_nhap': 1.63, 'run_pipeline': 6.26, 'get_data_health_report': 0.18, 'export_ket_qua': 2.08, 'export_phieu_giai_trinh_pdf': 75.57}
+book 800 chia_100/False {'import_so_nhap': 0.41, 'run_pipeline': 0.2, 'get_data_health_report': 0.05, 'export_ket_qua': 0.5, 'export_phieu_giai_trinh_pdf': 16.24}
+book 3000 chia_100/False {'import_so_nhap': 1.22, 'run_pipeline': 2.06, 'get_data_health_report': 0.17, 'export_ket_qua': 2.11, 'export_phieu_giai_trinh_pdf': 68.27}
+book 800 huy_chuong/True {'import_so_nhap': 0.38, 'run_pipeline': 0.59, 'get_data_health_report': 0.03, 'export_ket_qua': 0.47, 'export_phieu_giai_trinh_pdf': 6.52}
+book 3000 huy_chuong/True {'import_so_nhap': 1.15, 'run_pipeline': 5.85, 'get_data_health_report': 0.12, 'export_ket_qua': 1.79, 'export_phieu_giai_trinh_pdf': 26.28}
+book 800 chia_100/False {'import_so_nhap': 0.37, 'run_pipeline': 0.22, 'get_data_health_report': 0.05, 'export_ket_qua': 0.51, 'export_phieu_giai_trinh_pdf': 5.76}
+book 3000 chia_100/False {'import_so_nhap': 1.21, 'run_pipeline': 2.04, 'get_data_health_report': 0.16, 'export_ket_qua': 1.98, 'export_phieu_giai_trinh_pdf': 24.26}
+800x20 {'run_pipeline': 0.08, 'rerun': 0.08, 'get_match_results': 0.0, 'get_data_health_report': 0.02, 'get_dashboard_status': 0.0, 'list_students_admin': 0.0, 'export_ket_qua': 0.31, 'export_csv': 0.29, 'export_danh_sach_pdf': 0.23, 'export_bao_cao_tong_hop_pdf': 0.06}
+3000x60 {'run_pipeline': 0.37, 'rerun': 0.28, 'get_match_results': 0.01, 'get_data_health_report': 0.06, 'get_dashboard_status': 0.0, 'list_students_admin': 0.01, 'export_ket_qua': 1.07, 'export_csv': 0.92, 'export_danh_sach_pdf': 0.68, 'export_bao_cao_tong_hop_pdf': 0.21}
+book 800 huy_chuong/True {'import_so_nhap': 0.43, 'run_pipeline': 0.52, 'get_data_health_report': 0.06, 'export_ket_qua': 0.64, 'export_phieu_giai_trinh_pdf': 6.11}
+book 3000 huy_chuong/True {'import_so_nhap': 1.22, 'run_pipeline': 6.13, 'get_data_health_report': 0.17, 'export_ket_qua': 2.14, 'export_phieu_giai_trinh_pdf': 28.06}
+book 800 chia_100/False {'import_so_nhap': 0.43, 'run_pipeline': 0.26, 'get_data_health_report': 0.05, 'export_ket_qua': 0.5, 'export_phieu_giai_trinh_pdf': 6.14}
+book 3000 chia_100/False {'import_so_nhap': 1.24, 'run_pipeline': 2.02, 'get_data_health_report': 0.19, 'export_ket_qua': 2.23, 'export_phieu_giai_trinh_pdf': 24.03}

@@ -358,7 +358,14 @@
     moLopHs();
     vaoXong = callApi("vao_che_do_hoc_sinh");
     vaoXong.then((res) => {
-      if (!res.ok && hsDangMo) { thoatHs(); showErrorToast(res.errors); }
+      if (!res.ok && hsDangMo) { thoatHs(); showErrorToast(res.errors); return; }
+      /* ST-B-009: chưa có tài khoản thì lớp phủ chỉ là hình (F5 là thoát, API không khoá): không giữ nó, dẫn tới việc
+         tạo tài khoản quản trị trước; bấm lại "Chế độ học sinh" sau đó thì khoá thật. */
+      if (res.ok && res.data && res.data.can_tao_tai_khoan && hsDangMo) {
+        thoatHs();
+        showToast(t("gt_hs_can_tai_khoan"), "warn");
+        if (typeof window.tkMoHopTaoDau === "function") window.tkMoHopTaoDau();
+      }
     });
   }
 

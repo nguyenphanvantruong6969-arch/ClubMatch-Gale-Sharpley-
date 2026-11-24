@@ -99,15 +99,15 @@ def test_thoat_can_quan_tri_giao_vien_va_mat_khau_sai_deu_bi_giu_lai(mo):
     assert loi == []
 
 
-def test_khong_co_tai_khoan_thoat_nhu_cu(mo):
+def test_khong_co_tai_khoan_dan_toi_tao_tai_khoan_quan_tri(mo):
+    """SF-B (ST-B-009): chưa có tài khoản thì lớp phủ chỉ là hình (F5 là thoát): không dựng nó, mở hộp tạo quản trị."""
     page, loi, vao = mo
     vao(False)
     mo_gap_ma(page)
     page.click("#btnGtCheDoHs")
-    page.click("#btnGtHsThoat")
-    page.click("#btnGtHsCo")
+    page.wait_for_selector("#tkFormTao")
+    assert page.locator("#gtHs").is_hidden()
     page.wait_for_function("document.querySelector('.app-shell').inert === false")
-    assert page.locator("#gtHsQuanTri").is_hidden() and page.locator("#gtHs").is_hidden()
     assert loi == []
 
 

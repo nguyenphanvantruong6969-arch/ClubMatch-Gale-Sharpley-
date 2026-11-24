@@ -16,6 +16,10 @@ _GOC = getattr(sys, "_MEIPASS", None) or os.path.dirname(os.path.abspath(__file_
 _THU_MUC_PHONG = os.path.join(_GOC, "assets", "fonts")
 _PHONG = {"BeVietnamPro": "BeVietnamPro-Regular.ttf", "BeVietnamPro-Bold": "BeVietnamPro-Bold.ttf"}
 _da_dang_ky = False
+LE_MM = 12                       # UX1F-L2: lề trái/phải/trên/dưới tối thiểu 12 mm (trước: 18/18/16/18)
+_CO_O = 8.5                      # cỡ chữ trong bảng (>= 8,5 pt)
+_LEADING_O = 10.5                # dòng cách trong ô bảng (cùng kiểu "o" của Paragraph)
+_DEM_NGANG_PT = 4                # đệm trái/phải ô, dùng để tính độ rộng tối thiểu của cột
 
 
 class ThieuThuVienPdf(Exception):
@@ -69,17 +73,68 @@ def _kieu(ten):
 def _tao_kieu(ten):
     from reportlab.lib.styles import ParagraphStyle
     mau = {
-        "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=15, leading=20, spaceAfter=8),
-        "kv": dict(fontName="BeVietnamPro", fontSize=10, leading=14, spaceAfter=2),
-        "o": dict(fontName="BeVietnamPro", fontSize=9, leading=12),
-        "o_dau": dict(fontName="BeVietnamPro-Bold", fontSize=9, leading=12),
+        "tieu_de": dict(fontName="BeVietnamPro-Bold", fontSize=13, leading=16, spaceBefore=3, spaceAfter=3),
+        "kv": dict(fontName="BeVietnamPro", fontSize=9.5, leading=12, spaceAfter=1),
+        "o": dict(fontName="BeVietnamPro", fontSize=_CO_O, leading=_LEADING_O),
+        "o_dau": dict(fontName="BeVietnamPro-Bold", fontSize=_CO_O, leading=_LEADING_O),
     }
     return ParagraphStyle(ten, **mau[ten])
 
 
+_LOP_DOAN = None
+
+
+def _lop_doan():
+    """`Paragraph` nhớ kết quả `wrap` theo bề rộng (SF-A4, ST-A-008). Một ô bảng bị đo lại 2-3 lần (đo chiều cao
+    bảng, đo lúc vẽ khung, đo lúc vẽ ô); mỗi lần là `breakLines` đo từng từ bằng `stringWidth` — chiếm phần lớn
+    thời gian PDF cả trường (3 000 phiếu). `wrap` chỉ phụ thuộc bề rộng; `blPara` còn nguyên từ lần đo cuối nên
+    chỉ dùng lại khi bề rộng GIỐNG lần đo cuối."""
+    global _LOP_DOAN
+    if _LOP_DOAN is None:
+        from reportlab.platypus import Paragraph
+
+        class _DoanNho(Paragraph):
+            def wrap(self, availWidth, availHeight):
+                c = self.__dict__.get("_wrap_nho")
+                if c is not None and c[0] == availWidth:
+                    # `split` có thể đã xoá `blPara` (rồi mới gọi lại `wrap` cùng bề rộng): dựng lại đủ trạng thái.
+                    self.width, self.height = c[1]
+                    self.blPara = c[2]
+                    return c[1]
+                kq = Paragraph.wrap(self, availWidth, availHeight)
+                self._wrap_nho = (availWidth, kq, self.__dict__.get("blPara"))
+                return kq
+
+        _LOP_DOAN = _DoanNho
+    return _LOP_DOAN
+
+
 def _p(chu, kieu):
-    from reportlab.platypus import Paragraph
-    return Paragraph(escape("" if chu is None else str(chu)), _kieu(kieu))
+    return _lop_doan()(escape("" if chu is None else str(chu)), _kieu(kieu))
+
+
+_CHUOI_NHO: dict = {}
+
+
+def _o_chuoi(chu, kieu, rong):
+    """Nội dung một ô bảng: chuỗi đã xuống dòng bằng `simpleSplit` (khoảng trắng gộp như `Paragraph`); từ nào dài
+    hơn `rong` thì trả `Paragraph` (tự cắt từ dài)."""
+    khoa = (chu, kieu, round(rong, 3))
+    if khoa in _CHUOI_NHO:
+        return _CHUOI_NHO[khoa]
+    from reportlab.lib.utils import simpleSplit
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    ten_phong = "BeVietnamPro-Bold" if kieu == "o_dau" else "BeVietnamPro"
+    van = " ".join(("" if chu is None else str(chu)).split())
+    dong = simpleSplit(van, ten_phong, _CO_O, rong) if van else [""]
+    if any(len(d.split()) == 1 and stringWidth(d, ten_phong, _CO_O) > rong for d in dong):
+        kq = _p(chu, kieu)
+    else:
+        kq = "\n".join(dong)
+    if len(_CHUOI_NHO) > 50000:
+        _CHUOI_NHO.clear()
+    _CHUOI_NHO[khoa] = kq
+    return kq
 
 
 def tieu_de(chu):
@@ -89,14 +144,66 @@ def tieu_de(chu):
 
 def dong_khoa_gia_tri(khoa, gia_tri):
     _dang_ky_phong()
-    from reportlab.platypus import Paragraph
-    return Paragraph(f"<b>{escape(str(khoa))}:</b> {escape('' if gia_tri is None else str(gia_tri))}",
-                     _kieu("kv"))
+    return _lop_doan()(f"<b>{escape(str(khoa))}:</b> {escape('' if gia_tri is None else str(gia_tri))}",
+                       _kieu("kv"))
 
 
-def ngat_trang():
+def ngat_trang(khi_qua=None):
+    """Ngắt trang. `khi_qua` (tuỳ chọn, SF-A5): hàm không đối số, `dung_pdf` gọi NGAY SAU khi ngắt trang này xong —
+    dùng để báo tiến độ (mỗi học sinh một ngắt trang)."""
     from reportlab.platypus import PageBreak
-    return PageBreak()
+    if khi_qua is None:
+        return PageBreak()
+
+    class _NgatTrangBao(PageBreak):
+        pass
+    kq = _NgatTrangBao()
+    kq.khi_qua = khi_qua
+    return kq
+
+
+def _tai_lieu_bao_tien_do():
+    from reportlab.platypus import SimpleDocTemplate
+
+    class _Doc(SimpleDocTemplate):
+        def afterFlowable(self, flowable):
+            khi_qua = getattr(flowable, "khi_qua", None)
+            if khi_qua is not None:
+                khi_qua()
+    return _Doc
+
+
+def giu_cung(khoi):
+    """Giữ các khối liền nhau trên MỘT trang (nếu vừa): tránh chú thích/chân phiếu bị đẩy một mình sang trang sau."""
+    from reportlab.platypus import KeepTogether
+    return KeepTogether(list(khoi))
+
+
+def _rong_toi_thieu(tieu_de_cot):
+    """Độ rộng (pt) mỗi cột tối thiểu để TỪ DÀI NHẤT của tiêu đề cột nằm gọn một dòng (chỉ được xuống dòng ở dấu cách)."""
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    return [max((stringWidth(w, "BeVietnamPro-Bold", _CO_O) for w in str(c or "").split()), default=0)
+            + 2 * _DEM_NGANG_PT + 1 for c in tieu_de_cot]
+
+
+def _chia_cot(tong, ti_le, toi_thieu):
+    """Chia `tong` theo `ti_le`, nhưng không cột nào dưới `toi_thieu`; phần thiếu lấy từ các cột còn dư theo tỉ lệ."""
+    cot = [tong * t / sum(ti_le) for t in ti_le]
+    ghim = [False] * len(cot)
+    for _ in range(len(cot)):
+        thieu = [i for i, c in enumerate(cot) if not ghim[i] and c < toi_thieu[i]]
+        if not thieu:
+            break
+        for i in thieu:
+            cot[i], ghim[i] = toi_thieu[i], True
+        con = tong - sum(cot[i] for i in range(len(cot)) if ghim[i])
+        tl = sum(ti_le[i] for i in range(len(cot)) if not ghim[i])
+        if tl <= 0:
+            break
+        for i in range(len(cot)):
+            if not ghim[i]:
+                cot[i] = con * ti_le[i] / tl
+    return cot
 
 
 def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
@@ -108,21 +215,30 @@ def bang(tieu_de_cot, hang, do_rong=None, cot_dau_mm=None):
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
     from reportlab.platypus import Table, TableStyle
-    rong = A4[0] - 36 * mm
+    rong = A4[0] - 2 * LE_MM * mm
     n = len(tieu_de_cot)
     ti_le = do_rong or [1] * n
+    toi_thieu = _rong_toi_thieu(tieu_de_cot)
     if cot_dau_mm is not None and n > 1:
         con_lai = rong - cot_dau_mm * mm
-        cot = [cot_dau_mm * mm] + [con_lai * t / sum(ti_le[1:]) for t in ti_le[1:]]
+        cot = [cot_dau_mm * mm] + _chia_cot(con_lai, ti_le[1:], toi_thieu[1:])
     else:
-        cot = [rong * t / sum(ti_le) for t in ti_le]
-    du_lieu = [[_p(c, "o_dau") for c in tieu_de_cot]] + [[_p(o, "o") for o in h] for h in hang]
+        cot = _chia_cot(rong, ti_le, toi_thieu)
+    # SF-A4 (ST-A-008): ô là CHUỖI đã tự xuống dòng (cache theo chữ + bề rộng), không phải `Paragraph`: bảng phiếu
+    # cả trường có hàng chục nghìn ô, mỗi `Paragraph` tốn dựng + đo + vẽ. Ô có từ dài hơn bề rộng cột vẫn dùng
+    # `Paragraph` (nó tự cắt từ dài); chuỗi thì tràn ra ngoài ô.
+    ngang = [c - 2 * _DEM_NGANG_PT for c in cot]      # trừ đệm trái + phải của ô (UX1F-L2: _DEM_NGANG_PT)
+    du_lieu = ([[_o_chuoi(c, "o_dau", ngang[i]) for i, c in enumerate(tieu_de_cot)]]
+               + [[_o_chuoi(o, "o", ngang[i]) for i, o in enumerate(h)] for h in hang])
     b = Table(du_lieu, colWidths=cot, repeatRows=1)
     b.setStyle(TableStyle([
+        ("FONTNAME", (0, 0), (-1, 0), "BeVietnamPro-Bold"), ("FONTNAME", (0, 1), (-1, -1), "BeVietnamPro"),
+        ("FONTSIZE", (0, 0), (-1, -1), _CO_O), ("LEADING", (0, 0), (-1, -1), _LEADING_O),
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E8ECF0")),
         ("GRID", (0, 0), (-1, -1), 0.4, colors.HexColor("#9AA5B1")),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+        ("LEFTPADDING", (0, 0), (-1, -1), _DEM_NGANG_PT), ("RIGHTPADDING", (0, 0), (-1, -1), _DEM_NGANG_PT),
     ]))
     return b
 
@@ -146,7 +262,7 @@ def _canvas_so_trang():
             for tt in self._trang:
                 self.__dict__.update(tt)
                 self.setFont("BeVietnamPro", 8)
-                self.drawRightString(A4[0] - 18 * mm, 10 * mm, f"Trang {self._pageNumber}/{n}")
+                self.drawRightString(A4[0] - LE_MM * mm, 6 * mm, f"Trang {self._pageNumber}/{n}")
                 super().showPage()
             super().save()
     return _C
@@ -164,15 +280,22 @@ def dung_pdf(duong, khoi):
     _dang_ky_phong()
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import mm
-    from reportlab.platypus import SimpleDocTemplate
     thu_muc = os.path.dirname(os.path.abspath(duong))
     os.makedirs(thu_muc, exist_ok=True)
     fd, tam = tempfile.mkstemp(suffix=".pdf.tmp", dir=thu_muc)
     os.close(fd)
+    from reportlab import rl_config
+    a85_cu = rl_config.useA85
     try:
-        doc = SimpleDocTemplate(tam, pagesize=A4, leftMargin=18 * mm, rightMargin=18 * mm,
-                                topMargin=16 * mm, bottomMargin=18 * mm)
-        doc.build(list(khoi), canvasmaker=_canvas_so_trang())
+        doc = _tai_lieu_bao_tien_do()(tam, pagesize=A4, leftMargin=LE_MM * mm, rightMargin=LE_MM * mm,
+                                      topMargin=LE_MM * mm, bottomMargin=LE_MM * mm)
+        # SF-A5 (ST-A-008): luồng trang chỉ nén Flate, KHÔNG bọc thêm ASCII85 (mã hoá bằng Python thuần chiếm ~10 %
+        # thời gian PDF cả trường và làm tệp to thêm ~25 %). Chữ và số trang không đổi; trả cấu hình lại ngay sau đó.
+        rl_config.useA85 = 0
+        try:
+            doc.build(list(khoi), canvasmaker=_canvas_so_trang())
+        finally:
+            rl_config.useA85 = a85_cu
         dich = duong_dan_khong_de(os.path.abspath(duong))
         os.replace(tam, dich)
         return dich
