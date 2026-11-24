@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-24 — CB1-L3: giao diện "Văn bản phương án xếp" (tab Cách xếp của Quản lý)
+
+- `index.html`: khung `#paPanel` (quản trị) sau khung Cài đặt: nút "Chốt phương án" (hộp xác nhận liệt kê mục tiêu và luật sẽ chốt; chốt lại cũng hỏi lại), "Xuất bản dự kiến", "Xuất bản chốt" (khoá kèm lý do cho tới khi đủ điều kiện), ô "In hạt giống" (tắt mặc định, chỉ bật cho bản chốt đã khoá số bốc thăm), dòng trạng thái và cảnh báo. Mới `js/2x_phuong_an.js` (nạp trước `08_khoi_dong.js`; `initPhuongAn` ở `08_khoi_dong.js`; `datTabConQl` làm mới khi mở tab Cách xếp; giáo viên không gọi API để khỏi để lại dòng "bị từ chối"). `style.css`: `.run-confirm-bar[hidden]`. `i18n.js`: khoá `cb1_*` vi + en.
+- Test mới: `tests/test_cb1_ui.py` (7 ca, một Chromium, một trang dùng chung).
+
 ## 2026-11-24 — CB1-L2: API + PDF "Văn bản phương án xếp"
 
 - Mới `api_phuong_an.py` (`PhuongAnMixin`, nối vào `PipelineAPI`): `get_phuong_an_xep()` (chỉ đọc), `chot_phuong_an()` (MỘT hàng `workspace_settings` khoá `chot_phuong_an` = `{nguoi, vai, luc, bam_luat, muc_tieu, luat_xep}`; `luat_xep` là chuỗi `luat_xep_de_ghi(rules)` lúc chốt, thêm so với kế hoạch để so được với `run_history.luat_xep`; dòng nhật ký do cổng `phan_quyen`), `export_van_ban_phuong_an_pdf(output_path, ban, in_hat_giong)`. Bản chốt cần: đã chốt + có lần xếp chính thức + đã khoá số bốc thăm; hạt giống chỉ ở bản chốt đã khoá. Không đụng `run_history`, `match_results`, `stb_lock`, cấu hình; `doc_cau_hinh` chỉ đọc khoá `config`.

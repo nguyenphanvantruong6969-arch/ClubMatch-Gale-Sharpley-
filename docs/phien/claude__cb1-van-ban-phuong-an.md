@@ -58,7 +58,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
   `tests/test_cb1_api_pdf.py`: leak test (PDF text has no student_id/name/score/stb of any student, sample data),
   seed absent by default and in dự kiến, warning after config change, `run_thu` + `chon_muc_tieu` never rewrite
   `chot_phuong_an`, teacher role refused, `run_history` row count unchanged by chốt/export. **MILESTONE 1.**
-- [ ] **L3 (must) UI tab Quản lý** — near the MT1 cards / GT2 block in `index.html`, new `js/2x_phuong_an.js`:
+- [x] **L3 (must) UI tab Quản lý** — near the MT1 cards / GT2 block in `index.html`, new `js/2x_phuong_an.js`:
   button "Chốt phương án" (confirm dialog shows rules summary; re-chốt asks again), state line (who/when, warnings),
   buttons "Xuất bản dự kiến" / "Xuất bản chốt" (disabled + reason until allowed), checkbox "In hạt giống" (OFF,
   enabled only for bản chốt after lock). One Chromium test file `tests/test_cb1_ui.py`, one shared page fixture.
@@ -73,7 +73,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1, L2 done (coder, 2026-11-24). Waiting for lead on MILESTONE 1; next L3 UI.
+- L1, L2 done (coder, 2026-11-24). M1 sent; L3 UI done; next L4 docs, then MILESTONE 2.
 
 ## Needs Truong
 - (empty)
@@ -93,3 +93,4 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 | 2026-11-24 | Opus | plan: branch file + protocol | answers Q1–Q4 above |
 | 2026-11-24 | Sonnet | L1 pure builder + 20 tests | kiem_nhanh 7/7 |
 | 2026-11-24 | Sonnet | L2 API + PDF + 23 tests | 4 older tests adjusted (counts/lists), no weakening |
+| 2026-11-24 | Sonnet | L3 UI + 7 Chromium tests | .run-confirm-bar[hidden] CSS fix |

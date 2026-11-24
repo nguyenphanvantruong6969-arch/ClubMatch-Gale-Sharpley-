@@ -285,3 +285,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1F-L4 (một ô Chọn lớp) | xong (chờ checker) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
 | CB1-L1 (bộ dựng nội dung văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | phuong_an_xep.py, CHANGELOG.md | tests/test_cb1_noi_dung.py | kiem_nhanh 7/7 |
 | CB1-L2 (API + PDF văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | api_phuong_an.py, phuong_an_xep.py, xuat_pdf.py, api.py, phan_quyen.py, i18n_errors.py, i18n.js, i18n_loi.js | tests/test_cb1_api_pdf.py (+ 4 test cũ cập nhật) | kiem_nhanh 7/7 |
+| CB1-L3 (UI văn bản phương án xếp) | xong (chờ checker M2) | 2026-11-24 | index.html, js/2x_phuong_an.js, js/08_khoi_dong.js, js/05_quan_ly.js, style.css, i18n.js | tests/test_cb1_ui.py | kiem_nhanh 7/7 |

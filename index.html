@@ -1291,6 +1291,25 @@
         <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
         <div class="panel-body" id="ux1aCaiDatThan"></div>
       </div>
+      <!-- CB1-L3: văn bản phương án xếp (js/2x_phuong_an.js): chốt phương án + xuất PDF bản dự kiến / bản chốt -->
+      <div class="panel" id="paPanel" data-quyen="quan_tri">
+        <div class="panel-head"><h2 data-i18n="cb1_tieu_de">Văn bản phương án xếp</h2></div>
+        <div class="panel-body">
+          <p class="hint-text" data-i18n="cb1_mo_ta">Một văn bản bằng lời thường cho học sinh, phụ huynh và nhà trường: luật xếp và quy trình minh bạch.</p>
+          <p id="paTrangThai" role="status"></p>
+          <div id="paCanhBao" class="canh-bao-vang" role="status" hidden></div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" id="paChot" type="button" data-i18n="cb1_chot">Chốt phương án</button>
+            <button class="btn btn-secondary" id="paXuatDuKien" type="button" data-i18n="cb1_xuat_du_kien">Xuất bản dự kiến</button>
+            <button class="btn btn-secondary" id="paXuatChot" type="button" data-i18n="cb1_xuat_chot">Xuất bản chốt</button>
+          </div>
+          <p class="hint-text" id="paLyDo" role="status" hidden></p>
+          <label class="check-hang"><input type="checkbox" id="paHatGiong" disabled> <span data-i18n="cb1_in_hat_giong">In hạt giống (chỉ ở bản chốt)</span></label>
+          <p class="hint-text" id="paLyDoHat"></p>
+          <div id="paXacNhan" class="run-confirm-bar" role="group" hidden></div>
+          <div id="paPhanHoi" class="save-feedback" role="status"></div>
+        </div>
+      </div>
             <details class="ux1a-nang-cao" id="ux1aNangCao">
         <summary class="btn btn-secondary" data-i18n="ux4_tuy_chinh_them">Tuỳ chỉnh thêm</summary>
       <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
@@ -1579,6 +1598,7 @@
 <script src="js/18_cai_dat.js"></script><!-- UX1A -->
 <script src="js/19_ux1b_gv.js"></script><!-- UX1B -->
 <script src="js/19_muc_tieu.js"></script><!-- MT1 -->
+<script src="js/2x_phuong_an.js"></script><!-- CB1 -->
 <script src="js/08_khoi_dong.js"></script>
 </body>
 </html>

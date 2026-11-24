@@ -1650,6 +1650,7 @@ html.tat-hieu-ung .status-strip:hover {
 }
 
 .run-confirm-bar .btn-primary { background: var(--rust); border-color: var(--rust); }
+.run-confirm-bar[hidden] { display: none; }   /* CB1: display:flex đè thuộc tính hidden */
 
 /* ============================================================
    PHÂN TRANG
