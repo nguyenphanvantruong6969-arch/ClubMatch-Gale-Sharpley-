@@ -216,6 +216,108 @@ def test_k0_clb_khong_doi_chieu_duoc(capsys, bo):
     assert ma == 1 and trang_thai(out, "K0") == "FAIL", out
 
 
+def test_k0_club_id_gia_dung_ten(capsys, bo):
+    """Mã CLB của Sổ nhập đã điền: `club_id` xuất không thuộc tập mã thì K0 FAIL, dù tên đúng."""
+    d = doc(bo)
+    for r in d[1:]:
+        if r[3]:
+            r[3] = "XXX_BOGUS"
+            break
+    ghi(bo, d)
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    assert ma == 1 and trang_thai(out, "K0") == "FAIL", out
+
+
+def test_k0_dung_club_id_sai_ten(capsys, bo):
+    """Đúng `club_id` nhưng tên là của CLB khác: K0 FAIL."""
+    clb = doc_so_nhap_clb()
+    d = doc(bo)
+    for r in d[1:]:
+        if r[3]:
+            r[4] = next(v[0] for k, v in clb.items() if k != r[3])
+            break
+    ghi(bo, d)
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    assert ma == 1 and trang_thai(out, "K0") == "FAIL", out
+
+
+def _dong_k3(out):
+    return next(d for d in out.splitlines() if d.startswith("K3 "))
+
+
+def _club_co_suat(d, clb):
+    """(club_id, nhóm chuẩn hoá) của CLB có Suất ưu tiên."""
+    c = next(c for c, r in clb.items() if r[3])
+    return c, kdl.khoa_nhom(clb[c][4])
+
+
+def test_k3_chi_vuot_suat_khong_lech_nhom(capsys, bo):
+    """Các em được đổi sang Dự trữ ĐÃ đúng nhóm của CLB: chỉ phép kiểm suất có thể FAIL."""
+    clb = doc_so_nhap_clb()
+    d = doc(bo)
+    c, nhom = _club_co_suat(d, clb)
+    hien = sum(1 for r in d[1:] if r[3] == c and r[6] == "Dự trữ")
+    can = clb[c][3] - hien + 1
+    ung_vien = [r for r in d[1:] if r[3] == c and r[6] == "Thường" and kdl.khoa_nhom(r[7]) == nhom]
+    assert len(ung_vien) >= can, "dữ liệu không đủ em cùng nhóm để đột biến"
+    for r in ung_vien[:can]:
+        r[6] = "Dự trữ"
+    ghi(bo, d)
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    k3 = _dong_k3(out)
+    assert ma == 1 and k3.split()[1] == "FAIL", out
+    assert "dự trữ" in k3 and ">" in k3 and "nhóm" not in k3.split(":", 1)[1], k3
+
+
+def test_k3_lech_nhom_khong_vuot_suat(capsys, bo, tmp_path):
+    """Một em Dự trữ đổi nhóm ở CẢ Sổ nhập lẫn tệp xuất (nên hai bên vẫn khớp nhau), số em dự trữ không đổi:
+    chỉ phép 'nhóm em dự trữ = nhóm CLB' có thể FAIL."""
+    d = doc(bo)
+    em = next(r for r in d[1:] if r[6] == "Dự trữ")
+    em[7] = "khoi_khac"
+    ghi(bo, d)
+    wb = openpyxl.load_workbook(SO_NHAP_TEST)
+    ws = wb["2. Học sinh"]
+    for row in ws.iter_rows(min_row=2):
+        if row[0].value == em[0]:
+            row[2].value = "khoi_khac"
+    so = str(tmp_path / "so_nhap_doi_nhom.xlsx")
+    wb.save(so)
+    ma, out = chay(capsys, so, bo)
+    k3 = _dong_k3(out)
+    assert ma == 1 and k3.split()[1] == "FAIL", out
+    assert "nhóm không khớp CLB" in k3 and ">" not in k3, k3
+
+
+def test_k3_nhom_xuat_khac_so_nhap(capsys, bo):
+    """Chỉ cột `nhom_du_tru` của tệp xuất lệch Sổ nhập (em Thường): chỉ phép 'nhóm xuất = nhóm Sổ nhập' FAIL."""
+    d = doc(bo)
+    em = next(r for r in d[1:] if r[6] == "Thường" and not r[7])
+    em[7] = "chinh_sach"
+    ghi(bo, d)
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    k3 = _dong_k3(out)
+    assert ma == 1 and k3.split()[1] == "FAIL", out
+    assert "nhóm xuất khác Sổ nhập" in k3, k3
+
+
+def test_thieu_thu_muc_theo_clb_k6_fail_ma_1(capsys, bo):
+    shutil.rmtree(os.path.splitext(bo)[0] + "_theo_club")
+    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    assert ma == 1 and trang_thai(out, "K6") == "FAIL", out
+
+
+def test_khong_ghi_duoc_ra_thoat_2(capsys, bo, tmp_path):
+    ra = str(tmp_path / "khong_co_thu_muc" / "ra.csv")
+    assert kdl.main(["--so-nhap", SO_NHAP_TEST, "--ket-qua", bo, "--ra", ra]) == 2
+
+
+def test_loi_dau_vao_in_mot_lan(capsys, tmp_path):
+    kdl.main(["--so-nhap", SO_NHAP_TEST, "--ket-qua", str(tmp_path / "khong_co.csv")])
+    cap = capsys.readouterr()
+    assert (cap.out + cap.err).count("LỖI ĐẦU VÀO") == 1
+
+
 def test_nhieu_buoi_thoat_2(capsys, bo):
     d = doc(bo)
     d = [r[:3] + ["Thứ 2"] + r[3:] for r in d]

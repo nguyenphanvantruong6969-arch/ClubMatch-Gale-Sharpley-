@@ -5,6 +5,7 @@ unhandled rejections + failed API calls). Every test must end with `ui.kiem_loi(
 """
 import os
 import sys
+import tempfile
 
 import pytest
 
@@ -21,7 +22,8 @@ from api import PipelineAPI  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 
 SO_150 = os.path.join(GOC, "du_lieu_test", "SO_NHAP_DOI_CHE_DO_150HS.xlsx")
-ANH = os.path.join(GOC, "docs", "phien", "anh_st_b")
+# SFB-L3: ảnh chụp mặc định ghi vào thư mục tạm (trước đây đè lên các PNG đã theo dõi trong docs/phien/anh_st_b); muốn lưu vào kho thì đặt RBDA_ANH_ST_B.
+ANH = os.environ.get("RBDA_ANH_ST_B") or os.path.join(tempfile.gettempdir(), "rbda_anh_st_b")
 
 HOOK = """
 window.__loi = [];
