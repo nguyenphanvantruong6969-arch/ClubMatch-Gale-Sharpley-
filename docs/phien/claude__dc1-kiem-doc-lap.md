@@ -4,6 +4,14 @@
 > Truong chose option **B** (conservation checks only). Option C (two-pool stability check) is parked; open it
 > only if the judges ask for an independent priority check.
 
+Status: DONE d22075b CI pending 2026-11-24
+
+**Tóm tắt (tiếng Việt):** Đã làm L1–L4: script `du_lieu_test/kiem_doc_lap/kiem_doc_lap.py` (chỉ thư viện chuẩn + openpyxl) đối chiếu Sổ nhập với bộ CSV xuất, in bảng K0–K7 và ghi `dau_vao_ket_qua.csv`;
+19 test (đột biến từng phép kiểm, cô lập import, ba bộ hợp lệ đều PASS); README và hai mục tài liệu giải trình. Không đổi mã sản phẩm, không đổi hợp đồng CSV.
+Không làm: kiểm luật ưu tiên / ổn định, nhiều buổi (thoát mã 2), sổ huy chương.
+Truong thử: (1) nạp `SO_NHAP_TEST.xlsx` ở không gian mặc định (tắt điểm quyết tâm), chạy xếp, xuất bộ CSV; (2) chạy lệnh ở `HUONG_DAN_CHAY.md` mục 10;
+(3) đọc bảng K0–K7 và mở `dau_vao_ket_qua.csv`, đối chiếu HS001–HS003 với `CA_MAU.md`.
+
 ## Feature / goal
 DC1: an INDEPENDENT verification script for judges and the school. It reads only the Sổ nhập (.xlsx) and the
 default export set (`export_csv`: `ket_qua_phan_bo.csv`, `<goc>_theo_club/`, `<goc>_tong_hop.csv`), imports only
