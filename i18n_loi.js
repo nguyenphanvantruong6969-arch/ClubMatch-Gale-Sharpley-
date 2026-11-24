@@ -1199,8 +1199,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "{n} filled cell(s) sit in columns with no header and are not read (usually the workbook lost its second header row, where the test {score_l} and medal columns are). Check the header rows of the {person_l} sheet before importing."
   },
   "so_nhap_canh_bao_cot_la": {
-    "vi": "Sheet {sheet} có {n} cột phần mềm không nhận ra nhưng có dữ liệu ({ten}); các cột này KHÔNG được nhập. Nếu đó là dữ liệu cần dùng, hãy đổi tên cột đúng tiêu đề của sổ hoặc nhập bằng tay.",
-    "en": "Sheet {sheet} has {n} column(s) the software does not recognise but which contain data ({ten}); they are NOT imported. To keep that data, rename the column to a standard heading or enter it manually."
+    "vi": "Sheet {sheet} có {n} cột phần mềm không nhận ra nhưng có dữ liệu ({ten}); các cột này sẽ không được nhập. Nếu đó là dữ liệu cần dùng, hãy đổi tên cột đúng tiêu đề của sổ hoặc nhập bằng tay.",
+    "en": "Sheet {sheet} has {n} column(s) the software does not recognise but which contain data ({ten}); they will not be imported. To keep that data, rename the column to a standard heading or enter it manually."
   },
   "so_nhap_canh_bao_bo_nhom": {
     "vi": "{n} {person_l} đang có {group} sẽ bị bỏ nhóm, vì ô {group} của những {person_l} đó trong sổ để trống.",
