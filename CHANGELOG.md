@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — SFB-L2: menu UX5A không còn bị cắt ở màn hình hẹp (CSS, commit riêng để revert được)
+
+- `style.css`: một khối `@media (max-width: 800px)` cuối tệp, gồm hai luật. (1) `.menu-khac-hop.ux5a-hop-rong` thành hộp `position: fixed` sát đáy (`left/right: 12px`, `max-height: 70vh`): sửa "Báo cáo và phiếu in ▾" (Kết quả) và "Xuất tệp khác ▾" (Chi tiết) bị cắt mép trái (x = -132 ở 390 px; -12 ở 768 px không chọn lớp). (2) `.panel:has(.menu-khac[open] > .ux5a-hop-rong):hover { transform: none; transition: none; }`: luật (1) một mình CHƯA ĐỦ — hiệu ứng nhấc 2 px khi rê chuột (`.panel:hover`) biến `.panel` thành khung chứa của `position: fixed`, nên hộp lệch (top = -127) ngay khi chuột còn ở trên panel; chỉ panel đang mở menu rộng mất hiệu ứng nhấc. Màn hình > 800 px không đổi (test khẳng định vẫn `position: absolute`, rộng ≤ 360 px). Không đổi chữ, id, i18n.
+- Test mới `tests/test_giao_dien_sfb_menu_hep.py` (6 ca: 390/768 × có/không ô chọn lớp, và 1280 giữ nguyên neo tuyệt đối; đỏ trước khi sửa). `test_b4_do_rong_man_hinh[390,768]` nay đạt.
+- Ảnh cho Truong xem: `docs/ke_hoach/ux/anh/sfb/` (390 px Kết quả, 390 px Chi tiết, 1280 px). Dữ liệu MÔ PHỎNG.
+
 ## 2026-11-24 — SFB-L1: `tests_stress/b` chạy lại được sau UX4/UX5 (chỉ sửa test)
 
 - Áp `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.patch`: `ho_tro.py` thêm `mo_the_che_do`, `mo_menu_them`, `tab_ql_hien`, `clic_tab_ql`; `test_b1`, `test_b2_quan_ly`, `test_b4_hien_thi` theo giao diện UX4-L2/L3/L4 (menu "Thêm ▾", "Thêm tuỳ chọn", ô Buổi là ô thả xuống, nút Gán ẩn khi chưa tick). Không bỏ/skip/xfail test nào, không nới ngưỡng thời gian.
