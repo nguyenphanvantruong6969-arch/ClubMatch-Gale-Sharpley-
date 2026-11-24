@@ -1,0 +1,1915 @@
+"""Sổ nhập CLB — MỘT tệp Excel thay cho ba tệp nạp cũ.
+
+Ban giám khảo nhận xét bước nhập quá rối: ba tệp riêng, tên cột tiếng Anh,
+gõ tay mã CLB (gõ sai một ký tự là mất cả học sinh), và mẫu .xlsx chỉ có bản
+một buổi. Sổ nhập gom tất cả về một tệp, hai sheet, tiêu đề tiếng Việt:
+
+  `1. CLB`        Tên CLB · Buổi · Chỉ tiêu · Suất ưu tiên · Nhóm ưu tiên · Mã CLB
+  `2. Học sinh`   Mã HS · Họ tên · Nhóm ưu tiên · NV1 · Điểm 1 · NV2 · Điểm 2 · …
+
+Ô NV là danh sách thả xuống tên CLB. Ô Điểm đứng ngay cạnh NV cùng số:
+có điểm (hoặc chữ `thi`) nghĩa là em đã dự thi CLB đó; trống là không thi.
+Vì thế tệp "chọn CLB muốn thi" cũ biến mất — nó chỉ còn là các ô điểm.
+
+Một danh sách NV chung cho mọi buổi: buổi của từng nguyện vọng suy ra từ cột
+Buổi của CLB, và thuật toán luôn lọc nguyện vọng theo buổi trước khi dùng
+(xem `import_preferences_csv`). Nhờ vậy mẫu KHÔNG phụ thuộc trường có mấy buổi.
+
+Tệp này là NGUỒN DUY NHẤT mô tả sổ nhập. Bốn nơi dùng chung nó: phần mềm
+(api_nhap.py — đọc sổ), mẫu (mau_csv/tao_so_nhap.py), xuất dữ liệu đầu vào
+(api_xuat.py) và hai skill sinh/xử lí dữ liệu. Sửa định dạng thì chỉ sửa ở đây.
+
+Không phụ thuộc gì ngoài openpyxl, i18n_errors và nhan_ws (nhan_ws không phụ thuộc gì) —
+để skill đóng gói được. KHÔNG import cau_hinh_ws: cấu hình workspace (`cfg`) được truyền
+vào dưới dạng dict thô — {"labels": {...}, "rules": {...}} — thiếu gì thì lấy mặc định
+trường học, nên `cfg=None` cho ra đúng sổ như trước khi có workspace.
+"""
+
+from __future__ import annotations
+
+import csv
+import io
+import itertools
+import math
+import re
+import unicodedata
+
+from i18n_errors import err
+from nhan_ws import dang_chu
+
+# ---------------------------------------------------------------------------
+# Tên sheet, tiêu đề cột
+# ---------------------------------------------------------------------------
+SHEET_CLB = "1. CLB"
+SHEET_HS = "2. Học sinh"
+SHEET_HD = "Hướng dẫn"
+SHEET_GIU_CHO = "Giữ chỗ"                  # FA-1: sheet TUỲ CHỌN (Mã CLB, Mã học sinh)
+COT_FA = ["Loại", "Điểm sàn", "Tối thiểu", "Sức chứa phòng"]    # FA-1: cột CLB tuỳ chọn
+KHOA_FA = ("loai", "diem_san", "so_toi_thieu", "suc_chua_phong")
+# SG-6 (H1): giờ và địa điểm sinh hoạt — cột CLB TUỲ CHỌN, chỉ để hiển thị / xuất. Vắng cột (hoặc
+# CLB không mang khoá) = giữ giá trị đang lưu; sổ cũ không có chúng.
+COT_GIO = ["Giờ", "Địa điểm"]
+KHOA_GIO = ("gio", "dia_diem")
+
+# Số cột NV mặc định của mẫu trống. Trần nguyện vọng của phần mềm là 10 MỖI
+# BUỔI; 15 đủ cho trường một-hai buổi mà dòng vẫn vừa màn hình. Mẫu sinh từ
+# dữ liệu có sẵn tự nới theo số buổi và số NV dài nhất.
+SO_NV_MAC_DINH = 15
+# Trần MỖI BUỔI của phần mềm (rbda_priority_pipeline.TRAN_NGUYEN_VONG_MOI_BUOI,
+# TRAN_CLB_THI_MOI_BUOI). Chép lại ở đây vì tệp này phải chạy được một mình
+# trong bản đóng gói của skill; tests/test_so_nhap.py canh hai bên bằng nhau.
+# SF-A3 (ST-A-003): chỉ tiêu một CLB tối đa 2^31 - 1 (số nguyên 32 bit). Lớn hơn là gõ nhầm, và >= 2^63 làm
+# SQLite từ chối ghi ('Python int too large') sau khi xem trước đã báo ổn.
+TRAN_SUC_CHUA = 2 ** 31 - 1
+TRAN_NV_MOI_BUOI = 10
+TRAN_THI_MOI_BUOI = 5
+SO_DONG_CLB_TRONG = 60
+SO_DONG_HS_TRONG = 1500
+TU_DANH_DAU_THI = "thi"
+
+COT_CLB = ["Tên CLB", "Buổi", "Chỉ tiêu", "Suất ưu tiên", "Nhóm ưu tiên", "Mã CLB"]
+COT_HS_DAU = ["Mã HS", "Họ tên", "Nhóm ưu tiên"]
+# Sheet học sinh có HAI hàng tiêu đề (A13.4). Hàng 1: ô gộp "Nguyện vọng k" trên mỗi nhóm cột.
+# Hàng 2: tên từng cột trong nhóm. Dữ liệu bắt đầu từ hàng 3.
+TIEU_DE_NHOM = "Nguyện vọng"
+TEN_COT_QUYET_TAM = "Điểm quyết tâm"      # trong mã vẫn là điểm Wharton (cột CSV wp_k)
+TEN_COT_HUY_CHUONG = "Huy chương (60/30/10)"   # FG-2: cùng cột đó, nhãn của sổ mẫu chế độ FA
+HANG_DAU_DU_LIEU_HS = 3
+
+# Nhãn buổi trong danh sách thả xuống -> mã buổi lưu trong CSDL.
+NHAN_BUOI = [
+    ("Thứ 2", "thu_2"), ("Thứ 3", "thu_3"), ("Thứ 4", "thu_4"),
+    ("Thứ 5", "thu_5"), ("Thứ 6", "thu_6"), ("Thứ 7", "thu_7"),
+    ("Chủ nhật", "chu_nhat"),
+]
+
+
+# ---------------------------------------------------------------------------
+# Từ vựng của workspace (cfg) -> tên sheet, tiêu đề cột, trần
+# ---------------------------------------------------------------------------
+def _cfg(cfg) -> dict:
+    """Rút `cfg` (dict thô, có thể thiếu/None) thành những thứ sổ nhập cần.
+
+    Thiếu gì lấy mặc định trường học: nhãn mặc định, trần 10/5, điểm theo từng CLB.
+    `max_tests` bằng None là KHÔNG GIỚI HẠN — khác với thiếu khoá (mặc định 5).
+    """
+    cfg = cfg if isinstance(cfg, dict) else {}
+    nhan = cfg.get("labels") if isinstance(cfg.get("labels"), dict) else {}
+    luat = cfg.get("rules") if isinstance(cfg.get("rules"), dict) else {}
+    mc = luat.get("max_choices", TRAN_NV_MOI_BUOI)
+    mt = luat["max_tests"] if "max_tests" in luat else TRAN_THI_MOI_BUOI
+    return {
+        "nhan": nhan,
+        "max_choices": mc if isinstance(mc, int) and not isinstance(mc, bool) else TRAN_NV_MOI_BUOI,
+        "max_tests": mt if (mt is None or (isinstance(mt, int) and not isinstance(mt, bool)))
+        else TRAN_THI_MOI_BUOI,
+        "per_person": luat.get("score_scope") == "per_person",
+        # Điểm Wharton (mục A13): thêm cột "Điểm W k" sau "Điểm k". Chỉ có nghĩa khi điểm theo
+        # từng CLB (cau_hinh_ws không cho bật cùng per_person); thiếu khoá = tắt.
+        "wharton": luat.get("wharton") is True and luat.get("score_scope") != "per_person",
+        # Workspace CÓ THỂ bật tính năng (cùng điều kiện `dung_wharton` / `cau_hinh_ws._chuan_hoa`):
+        # điểm theo từng CLB và priority là score hoặc score+tier. Sổ mẫu chỉ có cột W khi có thể (A13.8).
+        "wharton_bat_duoc": luat.get("score_scope") != "per_person"
+        and luat.get("priority", "score") in ("score", "score+tier"),
+    }
+
+
+def _ten_sheet(ten: str) -> str:
+    """Tên sheet Excel hợp lệ: bỏ ký tự cấm `[ ] : * ? / \\`, tối đa 31 ký tự.
+
+    Đọc lại cũng đi qua hàm này, nên nhãn dài hay có ký tự cấm vẫn khớp."""
+    return "".join("-" if c in '[]:*?/\\' else c for c in ten).strip()[:31]
+
+
+def ten_sheet_clb(cfg=None) -> str:
+    """'1. CLB' với mặc định trường học; 1. <nhãn chỗ xếp> với workspace khác."""
+    return _ten_sheet("1. " + dang_chu(_cfg(cfg)["nhan"], "slot", "s", "vi"))
+
+
+def ten_sheet_hs(cfg=None) -> str:
+    """'2. Học sinh' với mặc định trường học; 2. <nhãn người> với workspace khác."""
+    return _ten_sheet("2. " + dang_chu(_cfg(cfg)["nhan"], "person", "", "vi"))
+
+
+def nhan_nhom(cfg=None) -> str:
+    """Tiêu đề cột nhóm ưu tiên: nhãn của danh từ 'group' ('Nhóm ưu tiên' mặc định)."""
+    return dang_chu(_cfg(cfg)["nhan"], "group", "", "vi")
+
+
+def nhan_lop(cfg=None) -> str:
+    """Tiêu đề cột lớp (A14): nhãn `cohort` tiếng Việt ("Lớp" mặc định)."""
+    return dang_chu(_cfg(cfg)["nhan"], "cohort", "", "vi")
+
+
+def nhan_diem(cfg=None) -> str:
+    """Tiêu đề cột điểm: nhãn của danh từ 'score' ('Điểm' mặc định)."""
+    return dang_chu(_cfg(cfg)["nhan"], "score", "", "vi")
+
+
+def cot_clb(cfg=None) -> list:
+    """Tiêu đề sheet CLB; cột nhóm đặt theo nhãn nhóm của workspace."""
+    c = list(COT_CLB)
+    c[c.index("Nhóm ưu tiên")] = nhan_nhom(cfg)
+    return c
+
+
+def cot_hs_dau(cfg=None) -> list:
+    c = list(COT_HS_DAU)
+    c[c.index("Nhóm ưu tiên")] = nhan_nhom(cfg)
+    return c
+
+
+def _bien_the(cfg, danh_tu: str) -> set:
+    """Mọi cách gọi `danh_tu` đã bỏ dấu: nhãn vi, nhãn en, dạng viết tắt ('clb')."""
+    nhan = _cfg(cfg)["nhan"]
+    return {bo_dau(dang_chu(nhan, danh_tu, co, lang))
+            for co in ("", "s") for lang in ("vi", "en")} - {""}
+
+
+def bo_dau(chuoi) -> str:
+    """'Mã HS *' -> 'ma hs'. Bỏ dấu, hạ chữ thường, gọn khoảng trắng.
+
+    CHỈ dùng để so TIÊU ĐỀ CỘT (người dùng gõ lại tiêu đề không dấu, viết
+    hoa cả cột…). Không dùng làm khoá tên CLB: nó bỏ cả phần trong ngoặc và
+    mọi ký hiệu, nên "Bóng đá (nam)" với "Bóng đá (nữ)", hay "C++" với "C#",
+    thành một — xem `khoa_ten`.
+    """
+    s = unicodedata.normalize("NFD", str(chuoi or ""))
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = s.replace("đ", "d").replace("Đ", "D").lower()
+    s = re.sub(r"\(.*?\)", " ", s)          # "(bắt buộc)" và chú thích kiểu đó
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return " ".join(s.split())
+
+
+def khong_dau(chuoi) -> str:
+    """'Bóng đá (Nữ)' -> 'bong da (nu)'. Chỉ bỏ dấu, hoa/thường, khoảng trắng
+    thừa; GIỮ ngoặc và ký hiệu — khác `bo_dau`, vốn chỉ dành cho tiêu đề cột."""
+    s = unicodedata.normalize("NFD", str(chuoi or ""))
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = s.replace("đ", "d").replace("Đ", "D").casefold()
+    return " ".join(s.split())
+
+
+def khoa_long(chuoi) -> str:
+    """Khoá so "gõ lỏng" cho ô NV: bỏ dấu, hoa/thường, và coi `_ - .` như
+    khoảng trắng ("clb tin hoc", "CLB-Tin-Hoc" khớp mã `clb_tin_hoc`). GIỮ
+    ngoặc và ký hiệu khác: "(nữ)" khác "(nam)", "C#" khác "C++"."""
+    return " ".join(re.sub(r"[_.\-]+", " ", khong_dau(chuoi)).split())
+
+
+def khoa_ten(ten) -> str:
+    """Khoá so TÊN CLB: chỉ bỏ khác biệt hoa/thường và khoảng trắng thừa.
+
+    Giữ dấu, ngoặc và ký hiệu: hai tên chỉ khác nhau ở đó là hai CLB khác
+    nhau thật ("Bóng đá (nam)" / "Bóng đá (nữ)", "C++" / "C#", "Toán" / "Toan").
+    """
+    s = unicodedata.normalize("NFC", str(ten or "")).casefold()
+    return " ".join(s.split())
+
+
+def tao_ma_clb(ten: str) -> str:
+    """'CLB Bóng đá (nữ)' -> 'clb_bong_da_nu'. Tất định: cùng tên, cùng mã.
+
+    Giữ phần trong ngoặc; '+' -> 'plus', '#' -> 'sharp' để "C++" và "C#"
+    ra hai mã khác nhau. Không tự thêm _2 khi trùng: số thêm vào phụ thuộc
+    thứ tự dòng, sắp lại dòng là hai CLB đổi mã cho nhau. Trùng thì người
+    dùng phải điền Mã CLB (lỗi `so_nhap_ma_tu_sinh_trung`).
+    """
+    s = unicodedata.normalize("NFD", str(ten or ""))
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = s.replace("đ", "d").replace("Đ", "D").lower()
+    s = s.replace("+", " plus ").replace("#", " sharp ")
+    s = "_".join(re.sub(r"[^a-z0-9]+", " ", s).split()) or "clb"
+    return s if s.startswith("clb") else "clb_" + s
+
+
+_THU = {"2": 2, "hai": 2, "3": 3, "ba": 3, "4": 4, "tu": 4, "5": 5, "nam": 5,
+        "6": 6, "sau": 6, "7": 7, "bay": 7}
+
+
+def ma_buoi(nhan) -> str:
+    """'Thứ 2' / 'thu 2' / 'T2' / 'Chủ nhật' -> 'thu_2' / 'chu_nhat'.
+
+    Trống -> '' (trường một buổi). Chỉ đổi khi CẢ nhãn là một thứ trong
+    tuần: 'thu_3_tiet_9' là một buổi riêng của trường, gộp nó vào 'thu_3'
+    là biến hai buổi khác giờ thành trùng giờ. Nhãn khác giữ nguyên, chuẩn
+    hoá đúng như `chuan_hoa_buoi` của phần mềm.
+    """
+    tho = " ".join(str(nhan or "").split()).strip()
+    if not tho:
+        return ""
+    # Dấu câu là dấu tách ("Thứ-2", "T.2", "Thứ 2." đều là thứ Hai), nhưng
+    # CHỮ trong ngoặc được giữ: bo_dau bỏ cả phần trong ngoặc nên "Thứ 3
+    # (sáng)" và "Thứ 3 (chiều)" từng thành một buổi — hai giờ khác nhau bị
+    # coi là trùng giờ.
+    c = re.sub(r"[^a-z0-9]+", "_", khong_dau(tho)).strip("_")
+    if c in ("cn", "chu_nhat"):
+        return "chu_nhat"
+    # "thu" + số hoặc chữ (thu_2, thu_hai); "t" CHỈ đi với số (t2, t_2):
+    # "tba" (to be announced) hay "thai" không phải thứ Ba, thứ Hai.
+    m = re.fullmatch(r"thu_?([a-z0-9]+)|t_?([0-9])", c)
+    con_lai = (m.group(1) or m.group(2)) if m else None
+    if con_lai in _THU:
+        return f"thu_{_THU[con_lai]}"
+    return tho.lower().replace(" ", "_")
+
+
+def nhan_buoi(ma) -> str:
+    """'thu_2' -> 'Thứ 2'. Mã lạ giữ nguyên; trống giữ trống."""
+    for nhan, m in NHAN_BUOI:
+        if m == ma:
+            return nhan
+    return ma or ""
+
+
+def doc_diem(chuoi):
+    """Một ô điểm -> float, hoặc None nếu không phải số.
+
+    Nhận dấu phẩy thập phân (Excel tiếng Việt lưu 8,5). Chỉ đổi khi có ĐÚNG
+    một dấu phẩy và không có dấu chấm — "1,234.5" là cách viết nghìn.
+    """
+    chuoi = str(chuoi if chuoi is not None else "").strip()
+    if not chuoi:
+        return None
+    if chuoi.count(",") == 1 and "." not in chuoi:
+        chuoi = chuoi.replace(",", ".")
+    try:
+        so = float(chuoi)
+    except (TypeError, ValueError):
+        return None
+    return so if so == so and so not in (float("inf"), float("-inf")) else None
+
+
+def o_thanh_chu(gia_tri) -> str:
+    """Ô Excel -> chuỗi. 20.0 -> '20' (int('20.0') ném lỗi)."""
+    if gia_tri is None:
+        return ""
+    if isinstance(gia_tri, bool):
+        return "1" if gia_tri else ""
+    if isinstance(gia_tri, float) and gia_tri.is_integer():
+        return str(int(gia_tri))
+    return str(gia_tri).strip()
+
+
+# ---------------------------------------------------------------------------
+# Nhận ra cột
+# ---------------------------------------------------------------------------
+_TEN_COT_CLB = {
+    "name": {"ten clb", "ten cau lac bo", "ten", "clb", "cau lac bo"},
+    "buoi": {"buoi", "buoi sinh hoat", "ngay", "thu"},
+    "capacity": {"chi tieu", "so cho", "so luong", "chi tieu tong"},
+    "reserve_capacity": {"suat uu tien", "chi tieu uu tien", "cho uu tien",
+                         "suat du tru"},
+    "reserve_group": {"nhom uu tien", "nhom du tru", "doi tuong uu tien"},
+    "club_id": {"ma clb", "ma", "ma cau lac bo"},
+    # FA-DAA (FA-1): cột TUỲ CHỌN. Vắng cột = giữ giá trị đang lưu; sổ cũ không có chúng.
+    "loai": {"loai", "loai clb", "kieu", "kieu clb"},
+    "diem_san": {"diem san"},
+    "so_toi_thieu": {"toi thieu", "so toi thieu"},
+    "suc_chua_phong": {"suc chua phong"},
+    "gio": {"gio", "gio sinh hoat"},
+    "dia_diem": {"dia diem", "noi sinh hoat"},
+}
+_TEN_COT_HS = {
+    "student_id": {"ma hs", "ma hoc sinh", "ma", "ma so", "ma so hoc sinh"},
+    "name": {"ho ten", "ho va ten", "ten", "ten hoc sinh"},
+    "reserve_group": {"nhom uu tien", "nhom du tru", "doi tuong uu tien"},
+    # A14: lớp (chỉ để hiển thị / sắp / lọc / xuất; thuật toán không đọc).
+    "class_id": {"lop", "ma lop", "class", "class id"},
+}
+_MAU_NV = re.compile(r"^(?:nv|nguyen vong)\s*(\d+)$")
+_MAU_DIEM = re.compile(r"^diem(?: nv| thi)?\s*(\d+)$")
+
+
+def _ten_cot_clb(cfg=None) -> dict:
+    """`_TEN_COT_CLB` nới thêm bằng nhãn của workspace (đã bỏ dấu). Tiêu đề cũ của
+    trường học VẪN được nhận: chỉ THÊM, không bao giờ bớt."""
+    ra = {k: set(v) for k, v in _TEN_COT_CLB.items()}
+    chi = _bien_the(cfg, "slot")
+    ra["name"] |= chi | {"ten " + x for x in chi}
+    ra["club_id"] |= {"ma " + x for x in chi}
+    ra["reserve_group"] |= _bien_the(cfg, "group")
+    return ra
+
+
+def _ten_cot_hs(cfg=None) -> dict:
+    ra = {k: set(v) for k, v in _TEN_COT_HS.items()}
+    nguoi = _bien_the(cfg, "person")
+    ra["student_id"] |= {"ma " + x for x in nguoi}
+    ra["name"] |= {"ten " + x for x in nguoi}
+    ra["reserve_group"] |= _bien_the(cfg, "group")
+    ra["class_id"] |= _bien_the(cfg, "cohort")
+    return ra
+
+
+def _mau_diem(cfg=None):
+    """`_MAU_DIEM` nới thêm bằng nhãn điểm: 'Điểm 1', 'Score 1', '<nhãn> thi 1'…"""
+    cac = sorted({"diem"} | _bien_the(cfg, "score"), key=len, reverse=True)
+    return re.compile(r"^(?:%s)(?: nv| thi)?\s*(\d+)$" % "|".join(re.escape(x) for x in cac))
+
+
+def _tim_sheet(ten_cac_sheet, ten_chuan, *ten_khac):
+    """Tìm sheet theo tên đã bỏ dấu: '1. CLB', '1 clb', 'CLB' đều khớp.
+
+    `ten_khac`: các tên thay thế cũng nhận (nhãn của workspace). Tên chuẩn cũ vẫn
+    luôn được nhận — sổ của trường học cũ nạp vào workspace nào cũng được."""
+    mau = []
+    for ten in (ten_chuan, *ten_khac):
+        muc = bo_dau(ten)
+        mau.append((muc, re.sub(r"^\d+ ", "", muc)))
+    for ten in ten_cac_sheet:
+        b = bo_dau(ten)
+        b_ngan = re.sub(r"^\d+ ", "", b)
+        if any(b == muc or b_ngan == muc_ngan for muc, muc_ngan in mau):
+            return ten
+    return None
+
+
+def _cac_ten_sheet_clb(cfg=None) -> tuple:
+    return tuple(_ten_sheet("1. " + x) for x in sorted(_ten_dai_ngan(cfg, "slot")))
+
+
+def _cac_ten_sheet_hs(cfg=None) -> tuple:
+    return tuple(_ten_sheet("2. " + x) for x in sorted(_ten_dai_ngan(cfg, "person")))
+
+
+def _ten_dai_ngan(cfg, danh_tu: str) -> set:
+    """Nhãn (chưa bỏ dấu) mà một sheet có thể mang: vi, en, dạng viết tắt."""
+    nhan = _cfg(cfg)["nhan"]
+    return {dang_chu(nhan, danh_tu, co, lang)
+            for co in ("", "s") for lang in ("vi", "en")}
+
+
+def la_so_nhap(ten_cac_sheet, cfg=None) -> bool:
+    """Tệp có đủ hai sheet của sổ nhập không."""
+    return bool(_tim_sheet(ten_cac_sheet, SHEET_CLB, *_cac_ten_sheet_clb(cfg))
+                and _tim_sheet(ten_cac_sheet, SHEET_HS, *_cac_ten_sheet_hs(cfg)))
+
+
+def _khop_cot(tieu_de, bang_ten):
+    """{khoá: chỉ số cột} theo bảng tên. Cột đầu khớp được giữ."""
+    vi_tri = {}
+    # Cột lớp và cột nhóm ưu tiên có thể TRÙNG tên (cấu hình cũ đặt hai nhãn giống nhau). Khi đó
+    # gán theo thứ tự cột mà `ghi_so_nhap` ghi (Lớp trước Nhóm); chỉ MỘT cột trùng tên thì là
+    # Nhóm — như trước khi có cột Lớp.
+    mo_ho = [i for i, t in enumerate(tieu_de)
+             if {"class_id", "reserve_group"} <= {k for k, ten in bang_ten.items()
+                                                  if bo_dau(t) in ten}]
+    ep = {}
+    if len(mo_ho) >= 2:
+        ep[mo_ho[0]] = "class_id"
+        ep.update({i: "reserve_group" for i in mo_ho[1:]})
+    else:
+        ep.update({i: "reserve_group" for i in mo_ho})
+    for i, t in enumerate(tieu_de):
+        b = bo_dau(t)
+        for khoa, cac_ten in bang_ten.items():
+            if i in ep and khoa != ep[i]:
+                continue
+            if b in cac_ten and khoa not in vi_tri:
+                vi_tri[khoa] = i
+                break
+    return vi_tri
+
+
+def _ten_cot_la(tieu_de, da_nhan, co_du_lieu) -> list:
+    """SN-COT-LA: tên các cột CÓ tiêu đề mà phần mềm không nhận ra (chỉ số không thuộc `da_nhan`)
+    và có ít nhất một ô chứa chữ (chỉ số có trong `co_du_lieu`). Chỉ để NÓI — không đổi gì được đọc."""
+    return [str(t).strip() for i, t in enumerate(tieu_de)
+            if str(t or "").strip() and i not in da_nhan and i in co_du_lieu]
+
+
+def _cac_dong(ws):
+    """(số dòng Excel, [ô đã thành chuỗi]) — bỏ dòng trống hoàn toàn."""
+    for so_dong, hang in enumerate(ws.iter_rows(values_only=True), start=1):
+        o = [o_thanh_chu(v) for v in hang]
+        if any(o):
+            yield so_dong, o
+
+
+def _chu_cot(i: int) -> str:
+    """Chỉ số cột (từ 0) -> chữ cột Excel: 0 -> A, 26 -> AA."""
+    chu, i = "", i + 1
+    while i:
+        i, du = divmod(i - 1, 26)
+        chu = chr(65 + du) + chu
+    return chu
+
+
+_MAU_NHOM_NV = re.compile(r"^nguyen vong\s*(\d+)$")        # hàng 1 của sổ hai hàng
+_TEN_QUYET_TAM = {"diem quyet tam", "commitment points", "preference points", "diem w",
+                  "huy chuong"}      # FG-2: tiêu đề "Huy chương (60/30/10)" của sổ mẫu chế độ FA
+
+
+def _loai_cot_nhom(o, cfg=None):
+    """Ô hàng 2 -> 'nv' (cột CLB), 'diem' (điểm thi), 'w' (điểm quyết tâm) hay None."""
+    b = bo_dau(o)
+    if not b:
+        return None
+    if b in _bien_the(cfg, "slot") | {"clb", "cau lac bo"}:
+        return "nv"
+    if b in _TEN_QUYET_TAM:
+        return "w"
+    diem = {"diem", "diem thi"} | _bien_the(cfg, "score")
+    if b in diem or b in {x + " thi" for x in diem}:
+        return "diem"
+    return None
+
+
+def _la_hai_hang(h1, h2, cfg=None) -> bool:
+    """Sổ hai hàng? Nhận dạng bằng hàng 1 (có ô "Nguyện vọng k") và hàng 2 đứng đúng dưới ô đầu
+    của mỗi nhóm là tên cột CLB. Sổ một hàng cũ ("NV1", "Điểm 1") không bao giờ thoả."""
+    if not h2:
+        return False
+    dau = [i for i, t in enumerate(h1) if _MAU_NHOM_NV.match(bo_dau(t))]
+    return bool(dau) and all(i < len(h2) and _loai_cot_nhom(h2[i], cfg) == "nv" for i in dau)
+
+
+def _tieu_de_hai_hang(h1, h2, loi, ten_sheet, cfg=None):
+    """Ghép hai hàng tiêu đề thành MỘT hàng theo cách gọi cũ ('NV k', 'Điểm k', 'Điểm W k'), để
+    phần đọc phía sau không phải biết có mấy hàng. Cột nằm dưới nhóm nào do ô "Nguyện vọng k"
+    đứng bên trái nó quyết định (ô gộp đọc ở chế độ chỉ-đọc chỉ còn ô trái nhất).
+
+    Cột trong nhóm mà tiêu đề hàng 2 không nhận ra (hay để trống, hay trùng), và nhóm thiếu
+    cột mà nhóm khác có, đều là lỗi: nạp bỏ qua chúng thì mất điểm mà không báo.
+
+    Trả (tiêu đề đã ghép, {chỉ số cột: tên cột để nói với người dùng}). Tên hiển thị là
+    "Điểm thi (Nguyện vọng 2)", để thông báo không lộ tên ghép nội bộ như "Điểm W 2"."""
+    n = max(len(h1), len(h2))
+    h1 = list(h1) + [""] * (n - len(h1))
+    h2 = list(h2) + [""] * (n - len(h2))
+    dau = [(i, int(_MAU_NHOM_NV.match(bo_dau(t)).group(1)))
+           for i, t in enumerate(h1) if _MAU_NHOM_NV.match(bo_dau(t))]
+    tieu_de = [(a or b) for a, b in zip(h1, h2)]
+    ten_cot = {"nv": dang_chu(_cfg(cfg)["nhan"], "slot", "s", "vi"),
+               "diem": nhan_diem(cfg) + (" thi" if nhan_diem(cfg) == "Điểm" else ""),
+               "w": TEN_COT_QUYET_TAM}
+    mau = {"nv": "NV%d", "diem": "Điểm %d", "w": "Điểm W %d"}
+    cac_nhom, da_gap, ten_hien = [], set(), {}
+    for vi_tri, (i, k) in enumerate(dau):
+        if k in da_gap:
+            continue
+        da_gap.add(k)
+        if vi_tri + 1 < len(dau):
+            cuoi = dau[vi_tri + 1][0] - 1
+        else:
+            cuoi = max(j for j in range(i, n) if h2[j] or j == i)
+            if vi_tri >= 1:
+                # Nhóm cuối rộng bằng nhóm liền trước: cột phụ ("Ghi chú"…) bên phải không thuộc
+                # nhóm nào, bị bỏ qua thay vì làm cả sổ bị từ chối. Cột lạ NẰM TRONG chiều rộng
+                # đó vẫn là lỗi (sai chữ cột điểm).
+                cuoi = min(cuoi, i + (dau[vi_tri][0] - dau[vi_tri - 1][0]) - 1)
+        nhom = {"k": k, "ten": str(h1[i]).strip(), "cot": {}}
+        for j in range(i, cuoi + 1):
+            loai = _loai_cot_nhom(h2[j], cfg)
+            if loai is None or loai in nhom["cot"]:
+                loi.append(err("so_nhap_cot_lech_nhom", sheet=ten_sheet, cot=_chu_cot(j), k=k,
+                               nhom=nhom["ten"]))
+                tieu_de[j] = ""
+                continue
+            nhom["cot"][loai] = j
+            tieu_de[j] = mau[loai] % k
+            ten_hien[j] = "%s (%s)" % (str(h2[j]).strip(), nhom["ten"])
+        cac_nhom.append(nhom)
+    co_gi = set().union(*[set(g["cot"]) for g in cac_nhom]) if cac_nhom else set()
+    for g in cac_nhom:
+        for loai in ("nv", "diem", "w"):
+            if loai in co_gi and loai not in g["cot"]:
+                loi.append(err("so_nhap_nhom_thieu_cot", sheet=ten_sheet, k=g["k"],
+                               nhom=g["ten"], cot=ten_cot[loai]))
+    return tieu_de, ten_hien
+
+
+# ---------------------------------------------------------------------------
+# ĐỌC sổ nhập
+# ---------------------------------------------------------------------------
+def doc_so_nhap(wb, clb_da_co=None, ma_da_co=None, clb_cu=None, cfg=None) -> dict:
+    """Đọc sổ nhập (openpyxl Workbook) thành dữ liệu thuần, KHÔNG ghi gì.
+
+    Trả về {"clubs": [...], "students": [...], "loi": [...]}.
+    `loi` khác rỗng nghĩa là sổ có lỗi phải sửa — phần mềm KHÔNG nạp gì cả.
+    Nạp một nửa sổ còn tệ hơn không nạp: người dùng tưởng đã xong.
+
+    clubs:    {club_id, name, capacity, reserve_capacity, reserve_group, buoi, dong}
+    students: {student_id, name, reserve_group, dong,
+               nv: [{club_id, thi: bool, diem: str}]}
+
+    clb_da_co: {khoa_ten(tên): club_id} của các CLB đã có trong phần mềm.
+    Dòng CLB bỏ trống Mã CLB mà tên trùng một CLB đã có thì dùng mã của CLB
+    đó — nạp lại sổ không đẻ ra CLB thứ hai.
+    ma_da_co:  {club_id: tên} của mọi CLB đã có. Mã TỰ TẠO trùng (bỏ hoa/thường)
+    mã một CLB đã có (mà tên khác) là lỗi: nạp vào sẽ đè lên CLB đó.
+    clb_cu:    {club_id: {buoi, reserve_capacity, reserve_group}} của CLB đã có.
+    Sheet CLB THIẾU HẲN cột Buổi / Suất ưu tiên / Nhóm ưu tiên thì CLB đã có
+    giữ giá trị cũ (cột vắng mặt = "không biết"; cột có mà ô trống = "không có").
+
+    cfg: cấu hình workspace (dict thô, xem `_cfg`). Có nó thì sổ có thể dùng tên sheet
+    và tiêu đề cột theo nhãn của workspace — và vẫn nhận tiêu đề CŨ của trường học.
+    Trần nguyện vọng / số CLB thi mỗi buổi lấy từ `rules`; `max_tests` None = không
+    giới hạn. Điểm theo từng người (`score_scope = per_person`) thì đọc MỘT cột điểm
+    chung và gán cho mọi nguyện vọng của người đó (xem `_doc_sheet_hs`).
+    """
+    loi: list = []
+    ten_cac_sheet = list(wb.sheetnames)
+    ten_clb = _tim_sheet(ten_cac_sheet, SHEET_CLB, *_cac_ten_sheet_clb(cfg))
+    ten_hs = _tim_sheet(ten_cac_sheet, SHEET_HS, *_cac_ten_sheet_hs(cfg))
+    # Báo lỗi bằng tên sheet CHUẨN của workspace (mặc định: "1. CLB" / "2. Học sinh").
+    chuan_clb, chuan_hs = ten_sheet_clb(cfg), ten_sheet_hs(cfg)
+    for ten, chuan in ((ten_clb, chuan_clb), (ten_hs, chuan_hs)):
+        if not ten:
+            loi.append(err("so_nhap_thieu_sheet", sheet=chuan))
+    if loi:
+        return {"clubs": [], "students": [], "loi": loi}
+
+    meta_clb: dict = {}
+    clubs = _doc_sheet_clb(wb[ten_clb], loi, clb_da_co or {}, ma_da_co or {}, clb_cu or {},
+                           cfg, chuan_clb, meta_clb)
+    meta_hs: dict = {}
+    students = _doc_sheet_hs(wb[ten_hs], clubs, loi, cfg, chuan_hs, meta_hs)
+    ra = {"clubs": [c for c in clubs if not c.get("hong")],
+          "students": students, "loi": loi,
+          # SF-A1 (ST-B-003/ST-A-004): hình dạng sheet học sinh — không có cột điểm thi thì nạp sổ
+          # KHÔNG xoá ô tick/điểm đã lưu; ô nằm ở cột không tên bị bỏ qua thì báo.
+          "co_cot_thi": meta_hs.get("co_cot_thi", False),
+          "n_o_bo_qua": meta_hs.get("n_o_bo_qua", 0),
+          # SN-COT-LA: cột có tiêu đề lạ mà có chữ, theo sheet — chỉ để NÓI.
+          "cot_la": [(chuan_clb, meta_clb.get("cot_la", [])), (chuan_hs, meta_hs.get("cot_la", []))],
+          # UX1A-L5: chỉ để NÓI (xem trước): sổ có cột Huy chương không? Không ảnh hưởng gì được lưu.
+          "co_cot_huy_chuong": _sheet_co_cot_huy_chuong(wb[ten_hs])}
+    # FA-1: sheet "Giữ chỗ" tuỳ chọn. Có sheet thì khoá `giu_cho` có mặt (kể cả rỗng = xoá hết).
+    ten_gc = _tim_sheet(ten_cac_sheet, SHEET_GIU_CHO, "Giu cho")
+    if ten_gc:
+        ra["giu_cho"] = _doc_sheet_giu_cho(wb[ten_gc], loi)
+    return ra
+
+
+def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHEET_CLB, meta=None) -> list:
+    dong_iter = _cac_dong(ws)
+    dau = next(dong_iter, None)
+    if dau is None:
+        # Sheet trống hẳn: sổ không có CLB nào. Không phải lỗi (A13.9) — api_nhap báo cảnh báo
+        # `so_nhap_canh_bao_khong_co_clb` thay vì chặn nạp.
+        return []
+    _, tieu_de = dau
+    cot = _khop_cot(tieu_de, _ten_cot_clb(cfg))
+    for khoa, nhan in (("name", "Tên CLB"), ("capacity", "Chỉ tiêu")):
+        if khoa not in cot:
+            loi.append(err("so_nhap_thieu_cot", sheet=ten_sheet, cot=nhan))
+    if loi:
+        return []
+
+    def lay(o, khoa):
+        i = cot.get(khoa)
+        return o[i].strip() if i is not None and i < len(o) else ""
+
+    tho = []
+    co_du_lieu_la: set = set()
+    la = [i for i, t in enumerate(tieu_de) if str(t or "").strip() and i not in set(cot.values())]
+    for so_dong, o in dong_iter:
+        ten = lay(o, "name")
+        if not ten and not lay(o, "club_id"):
+            continue        # dòng chỉ có buổi/chỉ tiêu lạc: coi như trống
+        co_du_lieu_la.update(i for i in la if i < len(o) and o[i].strip())
+        tho.append((so_dong, o, ten))
+    if meta is not None:
+        meta["cot_la"] = _ten_cot_la(tieu_de, set(cot.values()), co_du_lieu_la)
+
+    clubs, ten_da_gap, ma_da_gap = [], {}, {}
+    for so_dong, o, ten in tho:
+        if not ten:
+            loi.append(err("so_nhap_clb_thieu_ten", sheet=ten_sheet, dong=so_dong))
+            continue
+        k_ten = khoa_ten(ten)
+        if k_ten in ten_da_gap:
+            loi.append(err("so_nhap_clb_trung_ten", sheet=ten_sheet, dong=so_dong,
+                           dong_truoc=ten_da_gap[k_ten], ten=ten))
+            continue
+        ma = lay(o, "club_id")
+        tu_sinh = False
+        if not ma:
+            # Mã lấy lại của CLB cùng tên đã có là mã THẬT trong phần mềm,
+            # so như mã người dùng điền (phân biệt hoa/thường). Chỉ mã vừa
+            # tạo từ tên mới là "tự sinh".
+            ma = clb_da_co.get(k_ten)
+            if ma is None:
+                tu_sinh = True
+                ma = tao_ma_clb(ten)
+                # Mã tự tạo trùng mã một CLB KHÁC đã có trong phần mềm: nạp vào
+                # là đổi tên, chỉ tiêu, buổi của CLB đó và chuyển cả nguyện vọng
+                # của học sinh sang — không một cảnh báo nào. Bắt điền Mã CLB.
+                # Gợi ý MÃ THẬT của CLB đó (CLB_TIN, không phải clb_tin vừa
+                # tạo): mã phân biệt hoa/thường, điền clb_tin là tạo CLB mới.
+                ma_cu = ma if ma in ma_da_co else next(
+                    (k for k in ma_da_co if k.lower() == ma.lower()), None)
+                if ma_cu is not None:
+                    loi.append(err("so_nhap_ma_tu_sinh_trung_clb_da_co", sheet=ten_sheet,
+                                   dong=so_dong, ten=ten, ma=ma, ma_cu=ma_cu,
+                                   ten_cu=ma_da_co[ma_cu]))
+                    continue
+        # Phần mềm phân biệt hoa/thường ở mã (clb_a và CLB_A là hai CLB), nên
+        # hai mã người dùng tự điền chỉ khác hoa/thường KHÔNG trùng — sổ xuất
+        # từ một CSDL như thế phải nạp lại được. Mã TỰ TẠO thì so không phân
+        # biệt hoa/thường: hàm nạp khớp mã lệch hoa/thường về mã đã có.
+        trung = ma_da_gap.get(ma) or next(
+            (v for k, v in ma_da_gap.items()
+             if k.lower() == ma.lower() and (tu_sinh or v[1])), None)
+        if trung:
+            dong_truoc, truoc_tu_sinh = trung
+            # Mã tự sinh đụng nhau: báo để người dùng điền Mã CLB, đừng tự
+            # đánh số — số phụ thuộc thứ tự dòng.
+            ma_loi = ("so_nhap_ma_tu_sinh_trung" if (tu_sinh or truoc_tu_sinh)
+                      else "so_nhap_clb_trung_ma")
+            loi.append(err(ma_loi, sheet=ten_sheet, dong=so_dong,
+                           dong_truoc=dong_truoc, ma=ma, ten=ten))
+            continue
+        ten_da_gap[k_ten] = so_dong
+        ma_da_gap[ma] = (so_dong, tu_sinh)
+
+        cu = clb_cu.get(ma, {})
+
+        def lay_hoac_cu(khoa, mac_dinh, o=o, cu=cu):
+            # Cột VẮNG MẶT: giữ giá trị của CLB đã có (mới thì mặc định).
+            # Không thế thì một sheet chỉ có Tên CLB + Chỉ tiêu xoá buổi và
+            # suất ưu tiên của mọi CLB — trường nhiều buổi thành một buổi.
+            return lay(o, khoa) if khoa in cot else cu.get(khoa, mac_dinh)
+
+        chi_tieu = lay(o, "capacity")
+        uu_tien = str(lay_hoac_cu("reserve_capacity", 0) or "0")
+        try:
+            f_chi_tieu, f_uu_tien = float(chi_tieu), float(uu_tien)
+            # "inf", "1e999", "nan" đọc được thành float nhưng không thành
+            # chỉ tiêu: int(inf) ném OverflowError, nan so sánh luôn sai.
+            hop_le = (math.isfinite(f_chi_tieu) and math.isfinite(f_uu_tien)
+                      and f_chi_tieu.is_integer() and f_uu_tien.is_integer())
+            n_chi_tieu = int(f_chi_tieu) if hop_le else 0
+            n_uu_tien = int(f_uu_tien) if hop_le else 0
+            hop_le = hop_le and 0 < n_chi_tieu <= TRAN_SUC_CHUA and 0 <= n_uu_tien <= n_chi_tieu
+        except (ValueError, OverflowError):
+            hop_le = False
+        if not hop_le:
+            loi.append(err("so_nhap_chi_tieu_sai", sheet=ten_sheet, dong=so_dong,
+                           ten=ten, chi_tieu=chi_tieu or "0", uu_tien=uu_tien))
+            # Vẫn giữ tên để tra NV: một lỗi chỉ tiêu không được kéo theo
+            # một loạt lỗi "không có CLB" ở sheet học sinh.
+            clubs.append({"club_id": ma, "name": ten, "hong": True})
+            continue
+        fa, loi_fa = _doc_cot_fa(o, cot, lay, ten_sheet, so_dong, ten)
+        if loi_fa:
+            loi.extend(loi_fa)
+            clubs.append({"club_id": ma, "name": ten, "hong": True})
+            continue
+        clubs.append({
+            "club_id": ma, "name": ten, "capacity": n_chi_tieu,
+            "reserve_capacity": n_uu_tien,
+            "reserve_group": lay_hoac_cu("reserve_group", "") or "",
+            "buoi": ma_buoi(lay(o, "buoi")) if "buoi" in cot else (cu.get("buoi") or ""),
+            "dong": so_dong,
+            **fa,
+            # SG-6: khoá CHỈ có khi sổ có cột đó; ô trống = xoá (None), cột vắng = giữ giá trị cũ.
+            **{k: (lay(o, k) or None) for k in KHOA_GIO if k in cot},
+        })
+
+    return clubs
+
+
+# ---------------------------------------------------------------------------
+# FA-DAA (FA-1): kiểu CLB và kiểm thuộc tính. Ở đây (không ở fa_daa.py) để so_nhap.py chạy được
+# một mình trong skill đóng gói; fa_daa.py nhập lại từ đây.
+# ---------------------------------------------------------------------------
+TU_DO, GIOI_HAN, TUYEN_CHON = "TU_DO", "GIOI_HAN", "TUYEN_CHON"
+CAC_LOAI = (TU_DO, GIOI_HAN, TUYEN_CHON)
+_NHAN_LOAI = {"tu do": TU_DO, "free": TU_DO, "gioi han": GIOI_HAN, "limited": GIOI_HAN,
+              "tuyen chon": TUYEN_CHON, "selective": TUYEN_CHON}
+NHAN_LOAI_HIEN_THI = {TU_DO: "Tự do", GIOI_HAN: "Giới hạn", TUYEN_CHON: "Tuyển chọn"}
+DIEM_SAN_TOI_DA = 10
+
+
+def chuan_hoa_loai(nhan):
+    """Nhãn (`Tự do`, `Giới hạn`, `Tuyển chọn`, hoặc mã) -> mã; trống/None -> None.
+
+    Nhãn lạ ném ValueError: tệp nhập phải báo lỗi chứ không đoán.
+    """
+    if nhan is None or not str(nhan).strip():
+        return None
+    k = bo_dau(nhan)
+    if k in _NHAN_LOAI:
+        return _NHAN_LOAI[k]
+    raise ValueError("Loại CLB không hợp lệ: %r" % (nhan,))
+
+
+def _la_nguyen(v) -> bool:
+    if isinstance(v, bool):
+        return False
+    if isinstance(v, int):
+        return True
+    return isinstance(v, float) and v.is_integer()
+
+
+def kiem_thuoc_tinh(loai, diem_san, so_toi_thieu, suc_chua_phong, **ngu_canh) -> list:
+    """Kiểm bốn thuộc tính FA của MỘT CLB (None = không đặt). Trả danh sách lỗi `err(...)`.
+
+    Chỉ kiểm giá trị từng ô; ràng buộc giữa các CLB là việc của `fa_daa.kiem_truoc_fa`.
+    `ngu_canh` (vd dong=, club_id=) gắn vào lỗi.
+    """
+    loi = []
+    if loai is not None and loai not in CAC_LOAI:
+        loi.append(err("fa_loai_sai", loai=str(loai), **ngu_canh))
+    if diem_san is not None and not (_la_nguyen(diem_san) and 0 <= diem_san <= DIEM_SAN_TOI_DA):
+        loi.append(err("fa_diem_san_sai", diem_san=str(diem_san), **ngu_canh))
+    if so_toi_thieu is not None and not (_la_nguyen(so_toi_thieu) and so_toi_thieu >= 0):
+        loi.append(err("fa_toi_thieu_sai", so_toi_thieu=str(so_toi_thieu), **ngu_canh))
+    if suc_chua_phong is not None and not (_la_nguyen(suc_chua_phong) and suc_chua_phong > 0):
+        loi.append(err("fa_suc_chua_phong_sai", suc_chua_phong=str(suc_chua_phong), **ngu_canh))
+    return loi
+
+
+
+def _doc_cot_fa(o, cot, lay, ten_sheet, so_dong, ten):
+    """Bốn cột FA tuỳ chọn của một dòng CLB -> ({khoá có cột: giá trị|None}, [lỗi]).
+
+    Cột vắng mặt thì khoá vắng (giữ giá trị đang lưu). Ô trống = None (xoá). Sai giá trị = lỗi
+    `so_nhap_fa_*` kèm sheet, dòng — sổ có lỗi thì không nạp gì (như mọi lỗi sổ khác).
+    """
+    ra, loi = {}, []
+    for khoa in KHOA_FA:
+        if khoa not in cot:
+            continue
+        tho = lay(o, khoa)
+        if khoa == "loai":
+            try:
+                ra[khoa] = chuan_hoa_loai(tho)
+            except ValueError:
+                ra[khoa] = None
+                loi.append(err("so_nhap_fa_loai_sai", sheet=ten_sheet, dong=so_dong, ten=ten,
+                               gia_tri=tho))
+            continue
+        if not tho:
+            ra[khoa] = None
+            continue
+        try:
+            f = float(tho)
+            ra[khoa] = int(f) if math.isfinite(f) and f.is_integer() else tho
+        except (ValueError, OverflowError):
+            ra[khoa] = tho                  # để kiem_thuoc_tinh từ chối
+    if not loi:
+        bao = {"diem_san": "so_nhap_fa_diem_san_sai", "so_toi_thieu": "so_nhap_fa_toi_thieu_sai",
+               "suc_chua_phong": "so_nhap_fa_suc_chua_phong_sai"}
+        sai = {e["code"]: e for e in kiem_thuoc_tinh(
+            None, ra.get("diem_san"), ra.get("so_toi_thieu"), ra.get("suc_chua_phong"))}
+        for ma_fa, khoa in (("fa_diem_san_sai", "diem_san"), ("fa_toi_thieu_sai", "so_toi_thieu"),
+                            ("fa_suc_chua_phong_sai", "suc_chua_phong")):
+            if ma_fa in sai:
+                loi.append(err(bao[khoa], sheet=ten_sheet, dong=so_dong, ten=ten,
+                               gia_tri=str(ra[khoa])))
+    return ra, loi
+
+
+def _doc_sheet_giu_cho(ws, loi) -> list:
+    """Sheet "Giữ chỗ" tuỳ chọn -> [(club_id, student_id)] theo thứ tự dòng, bỏ trùng."""
+    dong_iter = _cac_dong(ws)
+    dau = next(dong_iter, None)
+    if dau is None:
+        return []
+    cot = {}
+    for i, t in enumerate(dau[1]):
+        b = bo_dau(t)
+        if b in ("ma clb", "ma cau lac bo", "club id") and "c" not in cot:
+            cot["c"] = i
+        elif b in ("ma hs", "ma hoc sinh", "student id") and "s" not in cot:
+            cot["s"] = i
+    if len(cot) < 2:
+        loi.append(err("so_nhap_thieu_cot", sheet=SHEET_GIU_CHO, cot="Mã CLB, Mã học sinh"))
+        return []
+    cap = []
+    for _, o in dong_iter:
+        c = o[cot["c"]].strip() if cot["c"] < len(o) else ""
+        h = o[cot["s"]].strip() if cot["s"] < len(o) else ""
+        if c and h:
+            cap.append((c, h))
+    return list(dict.fromkeys(cap))
+
+
+def _mau_diem_w(cfg=None):
+    """Tiêu đề cột điểm Wharton, đã bỏ dấu: 'Điểm W 1', 'diem w1', '<nhãn điểm> W 1'…
+
+    Cố ý không khớp `_mau_diem`: sau "diem" mẫu kia chỉ nhận " nv" / " thi" rồi số, còn ở đây
+    bắt buộc có chữ `w`. Nhận ở MỌI workspace — bật hay tắt Wharton là việc của bước nạp.
+    """
+    cac = sorted({"diem"} | _bien_the(cfg, "score"), key=len, reverse=True)
+    return re.compile(r"^(?:%s)\s*w\s*(\d+)$" % "|".join(re.escape(x) for x in cac))
+
+
+# UX1A-L5b: chữ thay cho 60/30/10 ở ô huy chương (đã bỏ dấu, hạ chữ thường; vi và en).
+CHU_HUY_CHUONG = {"vang": "60", "gold": "60", "bac": "30", "silver": "30", "dong": "10", "bronze": "10"}
+
+
+def chuan_hoa_chu_huy_chuong(du_lieu: dict) -> int:
+    """Đổi Vàng/Bạc/Đồng (và vang/bac/dong, gold/silver/bronze, mọi kiểu hoa/thường) trong ô huy chương
+    (`diem_w`) về "60"/"30"/"10", TẠI CHỖ. Chữ lạ giữ nguyên (sẽ báo `fa_huy_chuong_gia_tri_sai`). Trả số ô đã đổi."""
+    n = 0
+    for s in du_lieu.get("students", []):
+        for x in s.get("nv", []):
+            w = x.get("diem_w")
+            if isinstance(w, str) and w.strip():
+                moi = CHU_HUY_CHUONG.get(bo_dau(w))
+                if moi is not None:
+                    x["diem_w"] = moi
+                    n += 1
+    return n
+
+
+def _sheet_co_cot_huy_chuong(ws) -> bool:
+    """UX1A-L5: một trong hai hàng đầu của sheet học sinh có ô tiêu đề "Huy chương…" (không phân biệt dấu/hoa)."""
+    for i, dong in enumerate(ws.iter_rows(values_only=True)):
+        if i >= 2:
+            break
+        if any(isinstance(c, str) and "huy chuong" in bo_dau(c) for c in dong):
+            return True
+    return False
+
+
+def _doc_sheet_hs(ws, clubs, loi, cfg=None, ten_sheet=SHEET_HS, meta=None) -> list:
+    """`meta` (dict, tuỳ chọn) nhận hai điều về hình dạng sheet, chỉ để NÓI và để KHÔNG xoá nhầm:
+    `co_cot_thi` (sheet có cột điểm thi nào không) và `n_o_bo_qua` (số ô có chữ nằm ở cột KHÔNG có
+    tiêu đề, tức không được đọc — thường là sổ mất hàng tiêu đề thứ hai)."""
+    if meta is None:
+        meta = {}
+    meta.update(co_cot_thi=False, n_o_bo_qua=0, cot_la=[])
+    dong_iter = _cac_dong(ws)
+    dau = next(dong_iter, None)
+    if dau is None:
+        return []           # chưa có học sinh: nạp riêng danh sách CLB
+    so_dau, tieu_de = dau
+    # Ba dạng sổ: một hàng cũ ("NV1", "Điểm 1"), một hàng có "Điểm W 1" của vòng 2, và hai hàng
+    # mới ("Nguyện vọng 1" gộp ở hàng 1, tên cột ở hàng 2). Hai dạng đầu đọc như cũ; dạng hai
+    # hàng được ghép về dạng một hàng, nên mọi phần đọc phía sau giữ nguyên.
+    tiep = next(dong_iter, None)
+    ten_hien: dict = {}              # chỉ có ở sổ hai hàng: tên cột nói với người dùng
+    if tiep and tiep[0] == so_dau + 1 and _la_hai_hang(tieu_de, tiep[1], cfg):
+        n_loi = len(loi)
+        tieu_de, ten_hien = _tieu_de_hai_hang(tieu_de, tiep[1], loi, ten_sheet, cfg)
+        if len(loi) > n_loi:
+            return []
+    elif tiep:
+        dong_iter = itertools.chain([tiep], dong_iter)
+    from rbda_priority_pipeline import chuan_hoa_lop     # nhập muộn như `tu_csv` (xem sap_buoi)
+
+    cot = _khop_cot(tieu_de, _ten_cot_hs(cfg))
+    cau_hinh = _cfg(cfg)
+    ca_nhan = cau_hinh["per_person"]
+    mau_diem = _mau_diem(cfg)
+    mau_diem_w = _mau_diem_w(cfg)
+    nhan_diem_ca_nhan = {"diem"} | _bien_the(cfg, "score")
+    cot_nv, cot_diem, cot_diem_cn = {}, {}, None
+    cot_w: dict = {}                 # k -> chỉ số cột "Điểm W k" (điểm Wharton, mục A13)
+    cot_sai_che_do: list = []
+    for i, t in enumerate(tieu_de):
+        b = bo_dau(t)
+        m = _MAU_NV.match(b)
+        if m:
+            cot_nv.setdefault(int(m.group(1)), i)
+            continue
+        m = mau_diem_w.match(b)
+        if m:
+            if ca_nhan:
+                cot_sai_che_do.append(i)    # điểm Wharton cần điểm theo từng CLB
+            else:
+                cot_w.setdefault(int(m.group(1)), i)
+            continue
+        # Điểm theo người: MỘT cột tên đúng nhãn điểm ("Điểm"), không kèm số.
+        if ca_nhan and cot_diem_cn is None and b in nhan_diem_ca_nhan:
+            cot_diem_cn = i
+            continue
+        m = mau_diem.match(b)
+        if m and not ca_nhan:
+            cot_diem.setdefault(int(m.group(1)), i)
+        elif m or (not ca_nhan and b in nhan_diem_ca_nhan):
+            # Cột điểm KHÔNG đúng kiểu chấm của workspace: "Điểm 1…" ở workspace chấm theo
+            # người, hoặc một cột "Điểm" đơn ở workspace chấm theo CLB. Không dùng được; có dữ
+            # liệu trong đó thì phải báo (xem vòng đọc dòng), không lặng lẽ bỏ.
+            cot_sai_che_do.append(i)
+    if "student_id" not in cot:
+        loi.append(err("so_nhap_thieu_cot", sheet=ten_sheet, cot="Mã HS"))
+    if not cot_nv:
+        loi.append(err("so_nhap_thieu_cot", sheet=ten_sheet, cot="NV1"))
+    if "student_id" not in cot or not cot_nv:
+        return []
+
+    # Ô NV nhận TÊN CLB (danh sách thả xuống) hoặc MÃ CLB. Khớp đúng tên
+    # (bỏ hoa/thường) trước; gõ thiếu dấu thì chỉ nhận khi ra ĐÚNG MỘT CLB —
+    # không bao giờ đoán giữa "Bóng đá (nam)" và "Bóng đá (nữ)".
+    # Thứ tự: tên đúng TỪNG KÝ TỰ (danh sách thả xuống và sổ xuất ra đều ghi
+    # tên), rồi mã đúng từng ký tự (clb_a và CLB_A là hai CLB khác nhau), rồi
+    # mới bỏ hoa/thường. Khớp mã bỏ hoa/thường chỉ khi ra đúng một CLB.
+    dung_ten = {c["name"]: c["club_id"] for c in clubs}
+    dung_ma = {c["club_id"]: c["club_id"] for c in clubs}
+    ma_bo_hoa: dict = {}
+    for c in clubs:
+        ma_bo_hoa.setdefault(khoa_ten(c["club_id"]), set()).add(c["club_id"])
+    tra = {k: next(iter(v)) for k, v in ma_bo_hoa.items() if len(v) == 1}
+    for c in clubs:
+        tra[khoa_ten(c["name"])] = c["club_id"]
+    # Khoá "gõ thiếu dấu" chỉ bỏ dấu, GIỮ ngoặc và ký hiệu: "Bóng đá (nữ)"
+    # không được rơi vào "Bóng đá (nam)", "C#" không được rơi vào "C++".
+    tra_long: dict = {}
+    for c in clubs:
+        for k in {khoa_long(c["name"]), khoa_long(c["club_id"])}:
+            tra_long.setdefault(k, set()).add(c["club_id"])
+    buoi_cua = {c["club_id"]: c.get("buoi", "") for c in clubs if not c.get("hong")}
+
+    def tim_clb(gia_tri):
+        ma = (dung_ten.get(gia_tri) or dung_ma.get(gia_tri)
+              or tra.get(khoa_ten(gia_tri)))
+        if ma is None:
+            ung_vien = tra_long.get(khoa_long(gia_tri), set())
+            ma = next(iter(ung_vien)) if len(ung_vien) == 1 else None
+        return ma
+
+    def lay(o, i):
+        return o[i].strip() if i is not None and i < len(o) else ""
+
+    meta["co_cot_thi"] = bool(cot_diem) or cot_diem_cn is not None
+    cot_khong_ten = [i for i, t in enumerate(tieu_de) if not str(t or "").strip()]
+    da_nhan = (set(cot.values()) | set(cot_nv.values()) | set(cot_diem.values())
+               | set(cot_w.values()) | set(cot_sai_che_do)
+               | ({cot_diem_cn} if cot_diem_cn is not None else set()))
+    ung_vien_la = [i for i, t in enumerate(tieu_de) if str(t or "").strip() and i not in da_nhan]
+    co_du_lieu_la: set = set()
+    students, ma_da_gap = [], {}
+    for so_dong, o in dong_iter:
+        sid = lay(o, cot["student_id"])
+        if not sid:
+            loi.append(err("so_nhap_thieu_ma_hs", sheet=ten_sheet, dong=so_dong))
+            continue
+        meta["n_o_bo_qua"] += sum(1 for i in cot_khong_ten if lay(o, i))
+        co_du_lieu_la.update(i for i in ung_vien_la if lay(o, i))
+        # Trùng ĐÚNG từng ký tự mới là trùng. "hs01" và "HS01" là hai học
+        # sinh với phần mềm; hàm nạp vẫn cảnh báo cặp mã như thế.
+        if sid in ma_da_gap:
+            loi.append(err("so_nhap_hs_trung", sheet=ten_sheet, dong=so_dong,
+                           dong_truoc=ma_da_gap[sid], student_id=sid))
+            continue
+        ma_da_gap[sid] = so_dong
+
+        for i in cot_sai_che_do:
+            if lay(o, i):
+                loi.append(err("so_nhap_diem_sai_che_do", sheet=ten_sheet, dong=so_dong,
+                               student_id=sid, cot=ten_hien.get(i) or tieu_de[i]))
+                break
+
+        nv, da_chon = [], {}
+        diem_w_mo_coi: list = []         # "Điểm W k" có chữ mà NV k trống
+        # Điểm theo NGƯỜI: một ô cho cả dòng, kiểm một lần. Có điểm (hoặc chữ `thi`) =
+        # người đó "đã thi" — và nó áp cho MỌI nguyện vọng của người đó.
+        o_diem_ca_nhan, diem_ca_nhan_hong = "", False
+        if cot_diem_cn is not None:
+            o_diem_ca_nhan = lay(o, cot_diem_cn)
+            if o_diem_ca_nhan and o_diem_ca_nhan.lower() != TU_DANH_DAU_THI:
+                so = doc_diem(o_diem_ca_nhan)
+                if so is None or so < 0:
+                    loi.append(err("so_nhap_diem_ca_nhan_sai", sheet=ten_sheet, dong=so_dong,
+                                   student_id=sid, gia_tri=o_diem_ca_nhan))
+                    diem_ca_nhan_hong = True
+        for k in sorted(set(cot_nv) | set(cot_diem) | set(cot_w)):
+            o_nv = lay(o, cot_nv.get(k))
+            o_diem = lay(o, cot_diem.get(k))
+            o_w = lay(o, cot_w.get(k))
+            if not o_nv:
+                if o_diem:
+                    loi.append(err("so_nhap_diem_khong_nv", sheet=ten_sheet,
+                                   dong=so_dong, student_id=sid, k=k))
+                elif o_w:
+                    diem_w_mo_coi.append(ten_hien.get(cot_w[k]) or str(tieu_de[cot_w[k]]).strip())
+                continue
+            ma = tim_clb(o_nv)
+            if ma is None:
+                loi.append(err("so_nhap_clb_khong_co", sheet=ten_sheet, dong=so_dong,
+                               student_id=sid, k=k, gia_tri=o_nv))
+                continue
+            if ma in da_chon:
+                loi.append(err("so_nhap_nv_trung", sheet=ten_sheet, dong=so_dong,
+                               student_id=sid, k=k, k_truoc=da_chon[ma], gia_tri=o_nv))
+                continue
+            da_chon[ma] = k
+            if cot_diem_cn is not None:
+                # Điểm theo người KHÔNG thuộc nguyện vọng nào: nó nằm ở `diem_ca_nhan` của
+                # người đó (ghi vào students.diem_ca_nhan, mở rộng ra các CLB lúc xếp).
+                nv.append({"club_id": ma, "thi": False, "diem": ""})
+                continue
+            thi = bool(o_diem)
+            if thi and o_diem.lower() != TU_DANH_DAU_THI:
+                so = doc_diem(o_diem)
+                if so is None or so < 0:
+                    loi.append(err("so_nhap_diem_sai", sheet=ten_sheet, dong=so_dong,
+                                   student_id=sid, k=k, gia_tri=o_diem))
+                    continue
+            diem = "" if (not thi or o_diem.lower() == TU_DANH_DAU_THI) else o_diem
+            x = {"club_id": ma, "thi": thi, "diem": diem}
+            if cot_w:
+                # Điểm Wharton: chuỗi GỐC của ô, chưa kiểm. Ô không phải số nguyên >= 0 thì
+                # đi tiếp xuống bước nạp CSV thành cảnh báo `csv_wp_khong_hop_le` (có đủ mã
+                # học sinh và CLB), thay vì chặn cả sổ.
+                x["diem_w"] = o_w
+            nv.append(x)
+        # Trần MỖI BUỔI: soát ngay ở bước đọc thử. Để tới lúc nạp thì hàm nạp
+        # chỉ bỏ cả buổi của em kèm cảnh báo, còn nguyện vọng cũ của em vẫn
+        # nằm trong CSDL — sổ "sẵn sàng" mà kết quả lại khác.
+        #
+        # Trần lấy từ cấu hình workspace (mặc định 10 và 5). `max_tests` None là không
+        # giới hạn. Điểm theo người thì KHÔNG có "thi từng CLB" để mà đếm — mọi nguyện
+        # vọng cùng chung một điểm — nên bỏ phép đếm thi.
+        gioi_han = [("nv", cau_hinh["max_choices"], "so_nhap_qua_tran_nv")]
+        if cau_hinh["max_tests"] is not None and not ca_nhan:
+            gioi_han.append(("thi", cau_hinh["max_tests"], "so_nhap_qua_tran_thi"))
+        for khoa_dem, tran, ma_loi in gioi_han:
+            dem: dict = {}
+            for x in nv:
+                if khoa_dem == "thi" and not x["thi"]:
+                    continue
+                if x["club_id"] in buoi_cua:
+                    b = buoi_cua[x["club_id"]]
+                    dem[b] = dem.get(b, 0) + 1
+            for b, n in dem.items():
+                if n > tran:
+                    loi.append(err(ma_loi, sheet=ten_sheet, dong=so_dong, student_id=sid,
+                                   buoi=nhan_buoi(b) or "-", n=n, tran=tran))
+        hs_moi = {
+            "student_id": sid,
+            "name": lay(o, cot.get("name")),
+            # Cột Nhóm ưu tiên VẮNG MẶT -> None = "không biết", giữ nhóm cũ.
+            # Cột có mà ô trống -> "" = em không thuộc nhóm nào.
+            "reserve_group": (lay(o, cot["reserve_group"])
+                              if "reserve_group" in cot else None),
+            # A14: lớp. None = sổ KHÔNG có cột lớp (giữ lớp cũ); "" = có cột mà ô trống
+            # (cũng giữ lớp cũ, nhưng được đếm vào cảnh báo thiếu lớp); còn lại là lớp đã chuẩn hoá.
+            "class_id": (chuan_hoa_lop(lay(o, cot["class_id"])) or ""
+                         if "class_id" in cot else None),
+            "nv": nv, "dong": so_dong,
+            # Điểm theo người (chế độ per_person): chuỗi gốc của ô — số, chữ `thi` hay
+            # trống. None = sổ không có cột điểm chung (điểm theo từng CLB, ở `nv`).
+            "diem_ca_nhan": (None if cot_diem_cn is None or diem_ca_nhan_hong
+                             else o_diem_ca_nhan),
+        }
+        if cot_w:
+            hs_moi["diem_w_mo_coi"] = diem_w_mo_coi
+            if not diem_w_mo_coi:
+                del hs_moi["diem_w_mo_coi"]
+        students.append(hs_moi)
+    meta["cot_la"] = _ten_cot_la(tieu_de, da_nhan, co_du_lieu_la)
+    return students
+
+
+# ---------------------------------------------------------------------------
+# Sổ -> ba văn bản CSV mà ba hàm nạp cũ đã hiểu (và đã được test kỹ)
+# ---------------------------------------------------------------------------
+def _csv(dong) -> str:
+    buf = io.StringIO()
+    csv.writer(buf, lineterminator="\n").writerows(dong)
+    return buf.getvalue()
+
+
+def thanh_csv(du_lieu: dict) -> dict:
+    """{"clubs": csv, "test_selection": csv | "", "preferences": csv | ""}.
+
+    MỌI học sinh có trong sổ đều có mặt ở cả hai tệp học sinh, kể cả em
+    không thi CLB nào: sổ là bản đầy đủ, nạp lại sổ phải xoá được lựa chọn
+    thi cũ của em đã bỏ thi.
+    """
+    # FA-1: cột FA chỉ khi sổ CÓ cột đó (khoá có mặt); không thì tệp giống từng byte như cũ.
+    cot_fa = [k for k in KHOA_FA if any(k in c for c in du_lieu["clubs"])]
+    cot_fa += [k for k in KHOA_GIO if any(k in c for c in du_lieu["clubs"])]   # SG-6: cùng quy tắc
+    clubs = [["club_id", "name", "capacity", "reserve_capacity", "reserve_group", "buoi"] + cot_fa]
+    for c in du_lieu["clubs"]:
+        clubs.append([c["club_id"], c["name"], c["capacity"], c["reserve_capacity"],
+                      c["reserve_group"], c["buoi"]]
+                     + [("" if c.get(k) is None else c[k]) for k in cot_fa])
+
+    hs = du_lieu["students"]
+    if not hs:
+        return {"clubs": _csv(clubs), "test_selection": "", "preferences": ""}
+
+    n_thi = max([sum(1 for x in s["nv"] if x["thi"]) for s in hs] + [1])
+    n_nv = max([len(s["nv"]) for s in hs] + [1])
+    # Sổ có cột "Điểm W k" thì tệp nguyện vọng có thêm `wp_k` đi cặp `pref_k` (mục A13).
+    co_w = any("diem_w" in x for s in hs for x in s["nv"])
+    # A14: cột `class_id` CHỈ khi có em có lớp; không lớp thì tệp giống từng byte như cũ.
+    co_lop = any(s.get("class_id") for s in hs)
+    thi = [["student_id", "name", "reserve_group"] + (["class_id"] if co_lop else [])
+           + [c for k in range(1, n_thi + 1) for c in (f"test_club_{k}", f"score_{k}")]]
+    nv = [["student_id", "name", "reserve_group"] + (["class_id"] if co_lop else [])
+          + [f"pref_{k}" for k in range(1, n_nv + 1)]
+          + ([f"wp_{k}" for k in range(1, n_nv + 1)] if co_w else [])]
+    for s in hs:
+        dau = [s["student_id"], s["name"], s["reserve_group"] or ""]
+        if co_lop:
+            dau.append(s.get("class_id") or "")
+        o_thi = [v for x in s["nv"] if x["thi"] for v in (x["club_id"], x["diem"])]
+        thi.append(dau + o_thi + [""] * (2 * n_thi - len(o_thi)))
+        o_nv = [x["club_id"] for x in s["nv"]]
+        o_w = [x.get("diem_w", "") for x in s["nv"]] if co_w else []
+        nv.append(dau + o_nv + [""] * (n_nv - len(o_nv))
+                  + (o_w + [""] * (n_nv - len(o_w)) if co_w else []))
+    return {"clubs": _csv(clubs), "test_selection": _csv(thi), "preferences": _csv(nv)}
+
+
+def diem_cua_nguoi(s: dict):
+    """Điểm theo người của một dòng học sinh trong sổ: số, hoặc None (không có cột điểm
+    chung, ô trống, hay chữ `thi` = đã thi mà chưa có điểm)."""
+    o = (s.get("diem_ca_nhan") or "").strip()
+    if not o or o.lower() == TU_DANH_DAU_THI:
+        return None
+    so = doc_diem(o)
+    return None if so is None or so < 0 else so
+
+
+def tom_tat(du_lieu: dict) -> dict:
+    hs = du_lieu["students"]
+    return {
+        "n_clb": len(du_lieu["clubs"]),
+        "n_hoc_sinh": len(hs),
+        "n_buoi": len({c["buoi"] for c in du_lieu["clubs"]}),
+        "n_nguyen_vong": sum(len(s["nv"]) for s in hs),
+        "n_thi": sum(1 for s in hs for x in s["nv"] if x["thi"]),
+        "n_diem": sum(1 for s in hs for x in s["nv"] if x["diem"])
+        + sum(1 for s in hs if diem_cua_nguoi(s) is not None),
+    }
+
+
+# ---------------------------------------------------------------------------
+# GHI sổ nhập (mẫu trống, mẫu có sẵn CLB, xuất dữ liệu đầu vào, skill)
+# ---------------------------------------------------------------------------
+# Dấu đánh dấu chỗ chèn ghi chú cột Điểm quyết tâm của sổ MẪU (A13.8, thay việc dò chữ "Bước 5."):
+# đứng ngay trước dòng trống ngăn Bước 4 với Bước 5, bị bỏ đi khi trả ra (xem `huong_dan`).
+CHO_CHEN_GHI_CHU_W = "\x00CHO_CHEN_GHI_CHU_W"
+
+_HUONG_DAN_CO_DAU = [
+    "SỔ NHẬP CLB: một tệp duy nhất để nạp vào phần mềm",
+    "",
+    "Bước 1. Sheet \"1. CLB\": mỗi câu lạc bộ một dòng.",
+    "        Tên CLB và Chỉ tiêu là bắt buộc. Buổi chọn trong danh sách thả xuống",
+    "        (trường chỉ có một buổi thì để trống cả cột).",
+    "        Suất ưu tiên / Nhóm ưu tiên: chỉ điền nếu CLB giữ chỗ cho một nhóm",
+    "        học sinh (ví dụ nhóm chinh_sach). Mã CLB để trống, phần mềm tự tạo.",
+    "",
+    "Bước 2. Sheet \"2. Học sinh\": mỗi học sinh một dòng.",
+    "        Mã HS là bắt buộc và không được trùng.",
+    "        Nhóm ưu tiên: chỉ điền với học sinh thuộc nhóm đó.",
+    "",
+    "Bước 3. Tiêu đề của sheet này có HAI hàng. Hàng 1 là các ô gộp \"Nguyện vọng 1\",",
+    "        \"Nguyện vọng 2\"…; hàng 2 là tên các cột nằm dưới mỗi ô gộp: CLB, Điểm thi.",
+    "        Dữ liệu bắt đầu từ hàng 3.",
+    "        Cột CLB: chọn tên CLB trong danh sách thả xuống, theo thứ tự thích nhất",
+    "        trước. Không cần điền kín.",
+    "        Trường nhiều buổi: cứ điền chung một danh sách, phần mềm tự chia",
+    "        theo buổi của từng CLB.",
+    "        Đừng chèn hay xoá cột trong một nhóm: phần mềm sẽ báo lỗi vì cột lệch nhóm.",
+    "",
+    "Bước 4. Cột Điểm thi nằm ngay bên phải cột CLB cùng nhóm.",
+    "        Có điểm = đã thi CLB đó. Để trống = không thi.",
+    "        Thi rồi mà chưa có điểm: gõ chữ  thi  rồi chấm sau trong phần mềm.",
+    CHO_CHEN_GHI_CHU_W,
+    "",
+    "Bước 5. Lưu tệp (giữ định dạng .xlsx).",
+    "",
+    "Bước 6. Mở phần mềm → màn hình Vận hành → kéo tệp này vào ô nạp",
+    "        → xem lại phần tóm tắt → bấm Nhập.",
+    "",
+    "Sổ có lỗi (CLB trùng tên, NV ghi tên CLB không có, điểm không phải số…)",
+    "thì phần mềm KHÔNG nạp gì cả và chỉ rõ sheet, dòng cần sửa.",
+    "Nạp lại sổ đã sửa là cập nhật, không tạo trùng.",
+    "Phần mềm vẫn đọc được sổ cũ chỉ có MỘT hàng tiêu đề (NV1, Điểm 1…).",
+    "",
+    "Ví dụ một dòng học sinh:",
+    "                                  Nguyện vọng 1           Nguyện vọng 2",
+    "  Mã HS   Họ tên          CLB          Điểm thi   CLB           Điểm thi",
+    "  HS001   Nguyễn Văn An   CLB Tin học  9,5        CLB Bóng rổ",
+    "  → An thích Tin học nhất và đã thi được 9,5; nguyện vọng 2 là Bóng rổ,",
+    "    CLB không thi tuyển.",
+]
+HUONG_DAN = [d for d in _HUONG_DAN_CO_DAU if d != CHO_CHEN_GHI_CHU_W]
+
+
+def huong_dan(cfg=None, ghi_chu_cot_w: bool = False, co_lop: bool = False) -> list:
+    """Các dòng sheet "Hướng dẫn". `ghi_chu_cot_w` (sổ MẪU luôn có cột Điểm quyết tâm, A13.7)
+    thêm đoạn nói cột đó chỉ dùng khi bật tính năng; workspace đã bật thì đã có đoạn riêng, và
+    workspace không thể bật tính năng (điểm theo người, `priority = "tier"`) thì không có cột
+    nên cũng không có đoạn này.
+
+    Chỗ chèn đoạn là dòng đánh dấu `CHO_CHEN_GHI_CHU_W` do `_huong_dan_co_dau` đặt sẵn.
+    `co_lop` (sổ có cột Lớp, A14): thêm MỘT dòng nói cột đó tuỳ chọn, cuối Bước 2.
+    """
+    ra = _huong_dan_co_dau(cfg)
+    if co_lop:
+        n_lop = _cfg(cfg)
+        b3 = next(i for i, d in enumerate(ra) if d.startswith("Bước 3."))
+        ra = ra[:b3 - 1] + [
+            "        Cột %s (tuỳ chọn): ghi tự do, ví dụ 10A1. Dùng để xem và xuất danh sách theo %s." % (
+                nhan_lop(cfg), dang_chu(n_lop["nhan"], "cohort", "l", "vi"))] + ra[b3 - 1:]
+    n = _cfg(cfg)
+    ghi_chu = []
+    if ghi_chu_cot_w and not n["wharton"] and n["wharton_bat_duoc"]:
+        slot_l = dang_chu(n["nhan"], "slot", "l", "vi")
+        diem_l = dang_chu(n["nhan"], "score", "l", "vi")
+        ghi_chu = [
+            "        Cột %s (nằm sau cột %s): CHỈ dùng khi phần mềm bật tính năng %s." % (
+                TEN_COT_QUYET_TAM, ten_cot_diem_thi(cfg), TEN_COT_QUYET_TAM),
+            "        Khi bật, mỗi người chia 100 điểm cho mỗi quỹ ở mỗi buổi: quỹ 1 cho các %s có %s," % (
+                slot_l, diem_l),
+            "        quỹ 2 cho các %s còn lại. Khi tắt: phần mềm bỏ qua cột này, kết quả xếp không đổi." % slot_l,
+        ]
+    i = ra.index(CHO_CHEN_GHI_CHU_W)
+    return ra[:i] + ghi_chu + ra[i + 1:]
+
+
+def ten_cot_diem_thi(cfg=None) -> str:
+    """Tên cột điểm trong mỗi nhóm nguyện vọng: "Điểm thi" (hoặc nhãn điểm + " thi")."""
+    d = nhan_diem(cfg)
+    return d + (" thi" if d == "Điểm" else "")
+
+
+def _huong_dan_co_dau(cfg=None) -> list:
+    """Các dòng sheet "Hướng dẫn" KÈM dòng đánh dấu `CHO_CHEN_GHI_CHU_W` (chưa có ghi chú cột
+    Điểm quyết tâm của sổ mẫu). `cfg=None` (hay mặc định trường học) cho ra `HUONG_DAN` ở trên
+    cộng dòng đánh dấu; workspace khác thì nhãn trong câu đổi theo, và điểm theo người có đoạn
+    riêng. Các tiêu đề cột không đổi nhãn (Tên CLB, Chỉ tiêu, Mã HS, Mã CLB, Buổi) giữ nguyên
+    chữ như trên sheet."""
+    n = _cfg(cfg)
+    nhan = n["nhan"]
+    if not cfg or (ten_sheet_clb(cfg) == SHEET_CLB and ten_sheet_hs(cfg) == SHEET_HS
+                   and nhan_nhom(cfg) == "Nhóm ưu tiên" and nhan_diem(cfg) == "Điểm"
+                   and not n["per_person"] and not n["wharton"]
+                   and dang_chu(nhan, "slot", "l", "vi") == "câu lạc bộ"
+                   and dang_chu(nhan, "person", "l", "vi") == "học sinh"):
+        return list(_HUONG_DAN_CO_DAU)
+
+    def d(*a):
+        return dang_chu(nhan, *a)
+
+    clb, hs = ten_sheet_clb(cfg), ten_sheet_hs(cfg)
+    slot_l, slot_u = d("slot", "l", "vi"), d("slot", "su", "vi")
+    nguoi_l, nhom = d("person", "l", "vi"), nhan_nhom(cfg)
+    diem, diem_l = nhan_diem(cfg), d("score", "l", "vi")
+    ten_cot_nv = d("slot", "s", "vi")
+    ten_cot_diem = diem + (" thi" if diem == "Điểm" else "")
+    ra = [
+        "SỔ NHẬP %s: một tệp duy nhất để nạp vào phần mềm" % slot_u,
+        "",
+        "Bước 1. Sheet \"%s\": mỗi %s một dòng." % (clb, slot_l),
+        "        Tên CLB và Chỉ tiêu là bắt buộc. Buổi chọn trong danh sách thả xuống",
+        "        (chỉ có một buổi thì để trống cả cột).",
+        "        Suất ưu tiên / %s: chỉ điền nếu %s giữ chỗ cho một nhóm" % (nhom, slot_l),
+        "        %s (ví dụ nhóm chinh_sach). Mã CLB để trống, phần mềm tự tạo." % nguoi_l,
+        "",
+        "Bước 2. Sheet \"%s\": mỗi %s một dòng." % (hs, nguoi_l),
+        "        Mã HS là bắt buộc và không được trùng.",
+        "        %s: chỉ điền với %s thuộc nhóm đó." % (nhom, nguoi_l),
+        "",
+        "Bước 3. Tiêu đề của sheet này có HAI hàng. Hàng 1 là các ô gộp \"Nguyện vọng 1\",",
+        "        \"Nguyện vọng 2\"…; hàng 2 là tên các cột nằm dưới mỗi ô gộp. Dữ liệu bắt đầu từ hàng 3.",
+        "        Cột %s: chọn tên %s trong danh sách thả xuống," % (d("slot", "s", "vi"), slot_l),
+        "        theo thứ tự thích nhất trước. Không cần điền kín.",
+        "        Nhiều buổi: cứ điền chung một danh sách, phần mềm tự chia",
+        "        theo buổi của từng %s." % slot_l,
+        "        Đừng chèn hay xoá cột trong một nhóm: phần mềm sẽ báo lỗi vì cột lệch nhóm.",
+        "",
+    ]
+    if n["per_person"]:
+        ra += [
+            "Bước 4. Cột \"%s\" (đứng sau cột %s): %s của cả người đó, MỘT ô cho cả dòng." % (diem, nhom, diem_l),
+            "        Có %s = đã thi, và %s ấy áp cho mọi nguyện vọng của dòng. Để trống = không thi." % (diem_l, diem_l),
+            "        Thi rồi mà chưa có %s: gõ chữ  thi  rồi chấm sau trong phần mềm." % diem_l,
+        ]
+        vd = ["                                  Nguyện vọng 1   Nguyện vọng 2",
+              "  Mã HS   Họ tên          %s   %s         %s" % (diem, ten_cot_nv, ten_cot_nv),
+              "  HS001   Nguyễn Văn An   9,5      Tin học         Bóng rổ",
+              "  → An có %s 9,5 cho cả hai nguyện vọng: Tin học rồi Bóng rổ." % diem_l]
+    else:
+        ra += [
+            "Bước 4. Cột %s: %s của %s ngay bên trái, cùng nhóm." % (ten_cot_diem, diem_l, slot_l),
+            "        Có %s = đã thi %s đó. Để trống = không thi." % (diem_l, slot_l),
+            "        Thi rồi mà chưa có %s: gõ chữ  thi  rồi chấm sau trong phần mềm." % diem_l,
+        ]
+        vd = ["                                 Nguyện vọng 1          Nguyện vọng 2",
+              "  Mã HS   Họ tên          %s          %s   %s           %s"
+              % (ten_cot_nv, ten_cot_diem, ten_cot_nv, ten_cot_diem),
+              "  HS001   Nguyễn Văn An   Tin học      9,5      Bóng rổ",
+              "  → Nguyện vọng 1 là Tin học, đã thi được 9,5; nguyện vọng 2 là Bóng rổ,",
+              "    không thi tuyển."]
+        if n["wharton"]:
+            ra += [
+                "        Cột %s: điểm tự chia cho từng nguyện vọng." % TEN_COT_QUYET_TAM,
+                "        Mỗi %s có HAI quỹ, mỗi quỹ đúng 100 điểm cho MỖI BUỔI:" % nguoi_l,
+                "        quỹ 1 chia cho các %s có thi (có %s), chỉ dùng để phá hoà khi bằng %s;"
+                % (slot_l, diem_l, diem_l),
+                "        quỹ 2 chia cho các %s không thi, quyết định thứ tự giữa các %s không thi."
+                % (slot_l, nguoi_l),
+                "        Số nguyên không âm, mỗi quỹ cộng đúng 100. Quỹ nào chỉ có một %s thì để"
+                " trống, phần mềm tự điền 100;" % slot_l,
+                "        quỹ có từ hai %s trở lên mà để trống cả quỹ thì lần chạy xếp bị chặn." % slot_l,
+            ]
+            vd = ["                                 Nguyện vọng 1                    Nguyện vọng 2",
+                  "  Mã HS   Họ tên          %s   %s   %s   %s   %s   %s"
+                  % (ten_cot_nv, ten_cot_diem, TEN_COT_QUYET_TAM, ten_cot_nv, ten_cot_diem,
+                     TEN_COT_QUYET_TAM),
+                  "  HS001   Nguyễn Văn An   Tin học   9,5      100        Bóng rổ            100",
+                  "  → Tin học có thi: 100 điểm quỹ 1 dồn vào đó; Bóng rổ không thi: 100 điểm quỹ 2."]
+    ra += [
+        CHO_CHEN_GHI_CHU_W,
+        "",
+        "Bước 5. Lưu tệp (giữ định dạng .xlsx).",
+        "",
+        "Bước 6. Mở phần mềm → màn hình Vận hành → kéo tệp này vào ô nạp",
+        "        → xem lại phần tóm tắt → bấm Nhập.",
+        "",
+        "Sổ có lỗi (%s trùng tên, NV ghi tên %s không có, %s không phải số…)" % (slot_l, slot_l, diem_l),
+        "thì phần mềm KHÔNG nạp gì cả và chỉ rõ sheet, dòng cần sửa.",
+        "Nạp lại sổ đã sửa là cập nhật, không tạo trùng.",
+        "",
+        "Ví dụ một dòng:",
+    ] + vd
+    return ra
+
+
+def _huong_dan_fa(ra: list, cfg=None) -> list:
+    """Hướng dẫn của sổ MẪU chế độ FA-DAA (FG-2): bỏ lời về "hai quỹ 100 điểm" của Wharton, thêm
+    lời về cột Loại và cột Huy chương (60/30/10), và một ví dụ đúng với huy chương."""
+    n = _cfg(cfg)
+    slot_l = dang_chu(n["nhan"], "slot", "l", "vi")
+    ten_cot_nv = dang_chu(n["nhan"], "slot", "s", "vi")
+    cuoi = next((i for i, d in enumerate(ra) if d.startswith("Ví dụ một dòng")), len(ra))
+    ra = [d for d in ra[:cuoi] if "quỹ" not in d and TEN_COT_QUYET_TAM not in d
+          and not d.startswith("        Số nguyên không âm; ô trống")]
+    b5 = next(i for i, d in enumerate(ra) if d.startswith("Bước 5."))
+    fa = [
+        "        Sheet \"%s\", cột Loại: Tự do, Giới hạn hoặc Tuyển chọn (bắt buộc ở chế độ này);" % ten_sheet_clb(cfg),
+        "        mỗi buổi cần ít nhất một %s Tự do. Giới hạn / Tuyển chọn cần Chỉ tiêu lớn hơn 0;" % slot_l,
+        "        Tuyển chọn cần thêm Điểm sàn.",
+        "        Cột %s (sau cột %s): mỗi em đặt tối đa ba huy chương cho mỗi buổi:" % (
+            TEN_COT_HUY_CHUONG, ten_cot_diem_thi(cfg)),
+        "        Vàng / Bạc / Đồng hoặc 60 / 30 / 10, mỗi huy chương một lần mỗi buổi, chỉ đặt vào %s" % slot_l,
+        "        em đã xếp trong nguyện vọng và không phải %s Tự do. Ô trống = không đặt." % slot_l,
+        "        Sổ này chỉ dùng được khi chế độ \"Xếp theo loại %s và huy chương\" đang BẬT ở Cài đặt." % slot_l,
+        "",
+    ]
+    ra = ra[:b5] + fa + ra[b5:]
+    return ra + [
+        "Ví dụ một dòng:",
+        "                                 Nguyện vọng 1                       Nguyện vọng 2",
+        "  Mã HS   Họ tên          %s   %s   %s   %s   %s   %s"
+        % (ten_cot_nv, ten_cot_diem_thi(cfg), TEN_COT_HUY_CHUONG, ten_cot_nv,
+           ten_cot_diem_thi(cfg), TEN_COT_HUY_CHUONG),
+        "  HS001   Nguyễn Văn An   Tin học   9,5      60                  Bóng rổ            30",
+    ]
+
+
+def ten_khong_trung(clubs) -> int:
+    """Đổi tên CLB (tại chỗ) để không hai CLB nào trùng `khoa_ten`. Trả số tên đã đổi.
+
+    Sổ chọn CLB theo TÊN, nên tên phải riêng. Dữ liệu từ nơi khác thì không
+    chắc: trường mở "CLB Cờ vua" cả Thứ 2 lẫn Thứ 5, hay CSDL có "Toán" và
+    "toán". CLB gặp đầu tiên giữ tên; CLB sau thêm buổi vào tên ("CLB Cờ vua
+    (Thứ 5)"), cùng buổi thì thêm mã CLB. Tên trống lấy mã CLB.
+    """
+    da_dung, n_doi = set(), 0
+    for c in clubs:
+        c["name"] = (c.get("name") or "").strip() or c.get("club_id") or ""
+    for c in clubs:
+        goc = c["name"]
+        if khoa_ten(goc) not in da_dung:
+            da_dung.add(khoa_ten(goc))
+            continue
+        ung_vien = [nhan_buoi(c.get("buoi") or ""), c.get("club_id") or ""]
+        ten = next((f"{goc} ({x})" for x in ung_vien
+                    if x and khoa_ten(f"{goc} ({x})") not in da_dung), None)
+        k = 2
+        while ten is None or khoa_ten(ten) in da_dung:
+            ten, k = f"{goc} ({k})", k + 1
+        c["name"] = ten
+        da_dung.add(khoa_ten(ten))
+        n_doi += 1
+    return n_doi
+
+
+# SM2: từ điển cột của sổ mẫu đầy đủ (nguồn duy nhất; `du_lieu_test/tao_so_nhap_day_du.py` dùng lại).
+# (trang, cột, bắt buộc?, chế độ dùng, giá trị hợp lệ / ghi chú)
+TU_DIEN_COT = [
+    ("1. CLB", "Tên CLB", "Bắt buộc", "Mọi chế độ", "Tên hiển thị; không trùng trong cùng buổi."),
+    ("1. CLB", "Buổi", "Bắt buộc nếu trường có nhiều buổi", "Mọi chế độ", "Chọn trong danh sách: Thứ 2 … Chủ nhật."),
+    ("1. CLB", "Chỉ tiêu", "Bắt buộc", "Mọi chế độ", "Số nguyên > 0: số chỗ của CLB."),
+    ("1. CLB", "Suất ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Số chỗ dành cho Nhóm ưu tiên (≤ Chỉ tiêu). Chế độ FA bỏ qua: dùng sheet Giữ chỗ."),
+    ("1. CLB", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Tên nhóm được hưởng Suất ưu tiên (vd. chinh_sach)."),
+    ("1. CLB", "Mã CLB", "Tuỳ chọn", "Mọi chế độ", "Để trống thì phần mềm tự tạo; giữ nguyên khi nạp lại để không mất dữ liệu."),
+    ("1. CLB", "Loại", "Bắt buộc ở chế độ FA", "Chỉ FA", "Tự do / Giới hạn / Tuyển chọn. Mỗi buổi cần ít nhất một CLB Tự do."),
+    ("1. CLB", "Điểm sàn", "Bắt buộc với CLB Tuyển chọn", "Chỉ FA", "Số nguyên 0–10. Dưới điểm sàn hoặc chưa thi thì không được xét CLB đó."),
+    ("1. CLB", "Tối thiểu", "Tuỳ chọn", "Chỉ FA", "CLB Giới hạn / Tuyển chọn: số thành viên ít nhất để CLB mở."),
+    ("1. CLB", "Sức chứa phòng", "Tuỳ chọn", "Chỉ FA", "CLB Tự do: đông hơn số này thì chia nhóm theo số bốc thăm."),
+    ("1. CLB", "Giờ", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất (vd. 14:00–15:30)."),
+    ("1. CLB", "Địa điểm", "Tuỳ chọn", "Mọi chế độ", "Chỉ để hiển thị và xuất."),
+    ("2. Học sinh", "Mã HS", "Bắt buộc", "Mọi chế độ", "Duy nhất cho mỗi học sinh."),
+    ("2. Học sinh", "Họ tên", "Bắt buộc", "Mọi chế độ", ""),
+    ("2. Học sinh", "Lớp", "Tuỳ chọn", "Mọi chế độ", "Dùng để lọc, sắp, xuất theo lớp và in phiếu cả lớp."),
+    ("2. Học sinh", "Nhóm ưu tiên", "Tuỳ chọn", "Chỉ RB-DA thường", "Trùng tên với Nhóm ưu tiên của CLB thì học sinh được xét Suất ưu tiên."),
+    ("2. Học sinh", "NV k", "Ít nhất 1", "Mọi chế độ", "Chọn tên CLB trong danh sách thả xuống; NV1 là muốn nhất. Tối đa 10 NV mỗi buổi."),
+    ("2. Học sinh", "Điểm k", "Tuỳ chọn", "Mọi chế độ", "Có điểm (hoặc chữ 'thi') = học sinh đã thi CLB đó; trống = không thi. Tối đa 5 CLB thi mỗi buổi."),
+    ("2. Học sinh", "Huy chương / Điểm quyết tâm k", "Tuỳ chọn", "FA: Huy chương · RB-DA bật điểm quyết tâm: Điểm quyết tâm", "FA: chỉ 60 / 30 / 10, mỗi giá trị tối đa một lần mỗi buổi, không đặt ở CLB Tự do."),
+    ("Giữ chỗ", "Mã CLB, Mã học sinh", "Tuỳ chọn", "Chỉ FA", "Mỗi dòng một chỗ giữ trước; học sinh phải có CLB đó trong nguyện vọng."),
+]
+
+
+_TU_DIEN_W = {
+    True: ("2. Học sinh", TEN_COT_HUY_CHUONG + " k", "Tuỳ chọn", "Chỉ chế độ huy chương",
+           "Chỉ Vàng / Bạc / Đồng (hoặc 60 / 30 / 10), mỗi giá trị tối đa một lần mỗi buổi, không đặt ở CLB Tự do."),
+    False: ("2. Học sinh", TEN_COT_QUYET_TAM + " k", "Tuỳ chọn", "Khi bật điểm quyết tâm",
+            "Số nguyên từ 0; mỗi quỹ cộng đúng 100."),
+}
+
+
+def _ghi_tu_dien_cot(wb, tieu_de="TỪ ĐIỂN CỘT", ghi_chu=(), che_do_fa=None):
+    """SM2: thêm bảng "TỪ ĐIỂN CỘT" (`TU_DIEN_COT`) vào cuối sheet Hướng dẫn, rồi các dòng `ghi_chu`.
+
+    `che_do_fa` None = dòng cột thứ ba nói cả hai nghĩa (sổ mẫu đầy đủ của `du_lieu_test`); True / False =
+    chỉ nghĩa của chế độ đó (sổ mẫu FA không được nói về quỹ điểm quyết tâm, FG-2)."""
+    from openpyxl.styles import Font, PatternFill
+    ws = wb[SHEET_HD]
+    r = ws.max_row + 2
+    ws.cell(row=r, column=1, value=tieu_de).font = Font(bold=True, size=12)
+    r += 1
+    for j, t in enumerate(["Trang", "Cột", "Bắt buộc?", "Dùng ở chế độ", "Giá trị hợp lệ / ghi chú"], 1):
+        o = ws.cell(row=r, column=j, value=t)
+        o.font = Font(bold=True)
+        o.fill = PatternFill("solid", fgColor="E8E2D0")
+    for dong in TU_DIEN_COT:
+        if che_do_fa is not None and dong[1].startswith("Huy chương / "):
+            dong = _TU_DIEN_W[bool(che_do_fa)]
+        r += 1
+        for j, v in enumerate(dong, 1):
+            ws.cell(row=r, column=j, value=v)
+    r += 2
+    for dong in ghi_chu:
+        ws.cell(row=r, column=1, value=dong)
+        r += 1
+    for cot, rong in zip("ABCDE", (14, 30, 30, 34, 90)):
+        ws.column_dimensions[cot].width = max(ws.column_dimensions[cot].width or 0, rong)
+
+
+def ghi_so_nhap(duong_dan_hoac_tep, clubs=(), students=(), so_nv=None, co_nhom=True,
+                cfg=None, luon_co_cot_w: bool = False, co_lop: bool = False, giu_cho=None,
+                che_do_fa: bool = False, day_du: bool = False):
+    """Ghi sổ nhập ra tệp .xlsx (đường dẫn hoặc tệp nhị phân đang mở).
+
+    clubs:    dict có name, capacity, reserve_capacity, reserve_group, buoi, club_id
+    students: dict có student_id, name, reserve_group,
+              nv: [{club_id, thi, diem}] (diem: số, chuỗi, hoặc '')
+    so_nv:    số cặp NV/Điểm; mặc định nới theo dữ liệu, tối thiểu SO_NV_MAC_DINH.
+              Có `cfg` với trần nguyện vọng dưới 10 thì mặc định chỉ bằng đúng trần (nhân
+              số buổi) — cột nào cũng điền được, không cột thừa.
+    co_nhom:  False thì bỏ hẳn cột Nhóm ưu tiên ở sheet học sinh. Dùng cho sổ
+              sinh từ biểu mẫu: biểu mẫu không hỏi nhóm, và cột VẮNG MẶT nghĩa
+              là phần mềm giữ nhóm đã gán; cột có mà ô trống là BỎ nhóm.
+    giu_cho:  FA-1. None -> không có sheet "Giữ chỗ". Danh sách [(club_id, student_id)] -> thêm
+              sheet đó. Cột FA (Loại, Điểm sàn, Tối thiểu, Sức chứa phòng) của sheet CLB chỉ
+              được ghi khi có CLB mang khoá `loai` / `diem_san` / `so_toi_thieu` / `suc_chua_phong`;
+              không thì sổ giống từng byte như cũ.
+    cfg:      cấu hình workspace (dict thô, xem `_cfg`; KHÔNG import cau_hinh_ws).
+              None -> đúng sổ như trước khi có workspace. Có cfg thì:
+                * tên sheet "1. <chỗ xếp>" / "2. <người>" theo nhãn;
+                * số cột NV theo `rules.max_choices`;
+                * điểm theo CHỖ XẾP (per_slot): cột "<điểm> n" cạnh mỗi NV như cũ;
+                  điểm theo NGƯỜI (per_person): MỘT cột "<điểm>" sau cột nhóm;
+                * tiêu đề cột nhóm = nhãn của nhóm ưu tiên.
+              Cấu hình của trường học mặc định cho ra sổ GIỐNG HỆT cfg=None.
+    co_lop:   True thì thêm cột "Lớp" (nhãn `cohort`) NGAY SAU "Họ tên" (A14). Mặc định False =
+              sổ y như cũ. Cột vắng mặt khi đọc nghĩa là giữ lớp cũ.
+    luon_co_cot_w: True thì sổ CÓ cột "Điểm quyết tâm" dù workspace tắt tính năng (A13.7: sổ
+              MẪU phát cho người dùng), kèm ghi chú trong sheet Hướng dẫn. Mặc định False = như
+              cũ: cột chỉ có khi `rules.wharton` bật. Không có tác dụng với điểm theo người.
+    che_do_fa: FG-2. True (chỉ sổ MẪU của workspace bật FA-DAA) thì cột CLB có đủ bốn cột FA
+              (Loại…), cột điểm quyết tâm đổi nhãn thành "Huy chương (60/30/10)" (chỉ nhận 60, 30,
+              10) và Hướng dẫn nói về huy chương. Mặc định False = sổ y như cũ từng byte.
+    day_du:   SM2. True (sổ MẪU duy nhất của nút "Tải sổ mẫu") thì sổ luôn đủ cấu trúc: bốn cột FA,
+              Giờ, Địa điểm, sheet Giữ chỗ (chỉ tiêu đề nếu `giu_cho` None) và bảng "TỪ ĐIỂN CỘT" ở
+              Hướng dẫn. Nhãn cột thứ ba của nhóm NV vẫn theo `che_do_fa`. Mặc định False = như cũ.
+    """
+    from openpyxl import Workbook
+    from openpyxl.formatting.rule import FormulaRule
+    from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+    from openpyxl.utils import get_column_letter
+    from openpyxl.worksheet.datavalidation import DataValidation
+
+    # Bản sao: đổi tên cho khỏi trùng mà không đụng dữ liệu của bên gọi.
+    clubs, students = [dict(c) for c in clubs], list(students)
+    ten_khong_trung(clubs)
+    so_buoi = len({c.get("buoi") or "" for c in clubs}) or 1
+    n_cfg = _cfg(cfg)
+    ca_nhan = n_cfg["per_person"]
+    max_choices = n_cfg["max_choices"] if cfg else 0
+    dai_nhat = [len(s.get("nv") or []) for s in students]
+    if so_nv:
+        pass
+    elif cfg and max_choices < TRAN_NV_MOI_BUOI:
+        # Trần thấp (vd 3): chỉ đúng bằng số được xếp mỗi buổi, không cột thừa.
+        so_nv = max([max_choices * so_buoi] + dai_nhat)
+    else:
+        so_nv = max([max(SO_NV_MAC_DINH, max_choices), 2 * so_buoi] + dai_nhat)
+    sheet_clb, sheet_hs = ten_sheet_clb(cfg), ten_sheet_hs(cfg)
+    ten_diem = nhan_diem(cfg)
+
+    NEN_TIEU_DE = PatternFill("solid", fgColor="1F3A5F")
+    NEN_TIEU_DE_2 = PatternFill("solid", fgColor="35577F")
+    NEN_NHAP = PatternFill("solid", fgColor="FFF8DC")
+    NEN_DIEM = PatternFill("solid", fgColor="EAF4EA")
+    NEN_DIEM_W = PatternFill("solid", fgColor="E8EEF8")
+    CHU_TIEU_DE = Font(bold=True, color="FFFFFF", size=11)
+    VIEN = Border(bottom=Side(style="thin", color="D0D0D0"),
+                  right=Side(style="thin", color="D0D0D0"))
+    GIUA = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+    wb = Workbook()
+
+    # ---- 1. CLB ---------------------------------------------------------
+    ws = wb.active
+    ws.title = sheet_clb
+    # FA-1: cột FA chỉ khi có CLB mang chúng.
+    co_fa = che_do_fa or day_du or any(k in c for c in clubs for k in KHOA_FA)
+    ten_w = TEN_COT_HUY_CHUONG if che_do_fa else TEN_COT_QUYET_TAM
+    # SG-6: hai cột Giờ / Địa điểm chỉ khi có CLB mang khoá `gio` / `dia_diem`; không thì sổ y như cũ.
+    co_gio = day_du or any(k in c for c in clubs for k in KHOA_GIO)
+    ws.append(cot_clb(cfg) + (COT_FA if co_fa else []) + (COT_GIO if co_gio else []))
+    for c in clubs:
+        hang_fa = []
+        if co_fa:
+            hang_fa = [NHAN_LOAI_HIEN_THI.get(c.get("loai"), c.get("loai")) or None,
+                       c.get("diem_san"), c.get("so_toi_thieu"), c.get("suc_chua_phong")]
+        if co_gio:
+            hang_fa += [c.get("gio") or None, c.get("dia_diem") or None]
+        ws.append([c.get("name", ""), nhan_buoi(c.get("buoi") or ""),
+                   c.get("capacity", ""), c.get("reserve_capacity") or None,
+                   c.get("reserve_group") or None, c.get("club_id") or None] + hang_fa)
+    so_dong_clb = max(len(clubs) + 1 + 20, SO_DONG_CLB_TRONG)
+    for i, rong in enumerate([30, 12, 10, 13, 16, 18], start=1):
+        ws.column_dimensions[get_column_letter(i)].width = rong
+    for o in ws[1]:
+        o.fill, o.font, o.alignment = NEN_TIEU_DE, CHU_TIEU_DE, GIUA
+    ws.row_dimensions[1].height = 30
+    for r in range(2, so_dong_clb + 1):
+        for col in range(1, 7 + (len(COT_FA) if che_do_fa or day_du else 0)):
+            o = ws.cell(row=r, column=col)
+            o.fill, o.border = NEN_NHAP, VIEN
+    ws.freeze_panes = "A2"
+
+    dv_buoi = DataValidation(
+        type="list", formula1='"' + ",".join(n for n, _ in NHAN_BUOI) + '"',
+        allow_blank=True, showErrorMessage=False)
+    dv_buoi.add(f"B2:B{so_dong_clb}")
+    dv_chi_tieu = DataValidation(
+        type="whole", operator="greaterThan", formula1="0", allow_blank=True,
+        showErrorMessage=True, errorTitle="Chỉ tiêu",
+        error="Chỉ tiêu phải là số nguyên lớn hơn 0.")
+    dv_chi_tieu.add(f"C2:C{so_dong_clb}")
+    dv_uu_tien = DataValidation(
+        type="whole", operator="greaterThanOrEqual", formula1="0", allow_blank=True,
+        showErrorMessage=True, errorTitle="Suất ưu tiên",
+        error="Suất ưu tiên là số nguyên, không lớn hơn Chỉ tiêu.")
+    dv_uu_tien.add(f"D2:D{so_dong_clb}")
+    for dv in (dv_buoi, dv_chi_tieu, dv_uu_tien):
+        ws.add_data_validation(dv)
+    ws.conditional_formatting.add(
+        f"A2:A{so_dong_clb}",
+        FormulaRule(formula=[f'AND(A2<>"",COUNTIF($A$2:$A${so_dong_clb},A2)>1)'],
+                    fill=PatternFill("solid", fgColor="F4B6B6")))
+
+    # ---- 2. Học sinh ----------------------------------------------------
+    wh = wb.create_sheet(sheet_hs)
+    cot_dau = cot_hs_dau(cfg) if co_nhom else cot_hs_dau(cfg)[:2]
+    if co_lop:
+        cot_dau = cot_dau[:2] + [nhan_lop(cfg)] + cot_dau[2:]
+    if ca_nhan:
+        cot_dau = cot_dau + [ten_diem]        # MỘT cột điểm chung, ngay sau cột nhóm
+    nv1 = len(cot_dau) + 1                    # số thứ tự cột NV1 (tính từ 1)
+    # thêm cột "Điểm W k" (điểm Wharton, mục A13); sổ mẫu thì luôn thêm (A13.7)
+    co_w = n_cfg["wharton"] or (luon_co_cot_w and n_cfg["wharton_bat_duoc"])
+    buoc = 1 if ca_nhan else (3 if co_w else 2)   # khoảng cách giữa hai cột NV liên tiếp
+    # HAI hàng tiêu đề (A13.4). Hàng 1: các cột đầu, rồi ô gộp "Nguyện vọng k" trên mỗi nhóm.
+    # Hàng 2: tên từng cột trong nhóm ("CLB", "Điểm thi", và "Điểm quyết tâm" khi bật). Cột đầu
+    # gộp dọc hai hàng. Điểm theo người: nhóm chỉ có cột CLB (điểm chung nằm ở cột đầu).
+    ten_cot_nv = dang_chu(n_cfg["nhan"], "slot", "s", "vi")
+    ten_cot_diem = ten_diem + (" thi" if ten_diem == "Điểm" else "")
+    cot_nhom = [ten_cot_nv] if ca_nhan else (
+        [ten_cot_nv, ten_cot_diem] + ([ten_w] if co_w else []))
+    hang_1 = cot_dau + [c for k in range(1, so_nv + 1)
+                        for c in [f"{TIEU_DE_NHOM} {k}"] + [None] * (buoc - 1)]
+    hang_2 = [None] * len(cot_dau) + cot_nhom * so_nv
+    tieu_de = hang_1                           # độ dài = số cột
+    wh.append(hang_1)
+    wh.append(hang_2)
+    for col in range(1, nv1):
+        wh.merge_cells(start_row=1, end_row=2, start_column=col, end_column=col)
+    if buoc > 1:
+        for k in range(so_nv):
+            c1 = nv1 + buoc * k
+            wh.merge_cells(start_row=1, end_row=1, start_column=c1, end_column=c1 + buoc - 1)
+
+    def diem_w_o(x):
+        """Ô điểm Wharton của một nguyện vọng: số nguyên, chuỗi gốc (để người nhập thấy ô sai),
+        hay trống."""
+        w = x.get("diem_w")
+        if w in (None, ""):
+            return None
+        # Chỉ chữ số 0-9: `str.isdigit()` còn đúng với "²", "①", "٣"…, mà `int()` ném ValueError
+        # (hay đọc "٣" thành 3 và làm mất ô gốc). Ô như vậy giữ nguyên chuỗi để người nhập thấy.
+        if isinstance(w, str) and re.fullmatch(r"[0-9]+", w.strip()):
+            return int(w.strip())
+        return w
+
+    def diem_o(x):
+        """Ô điểm của một nguyện vọng: số, chữ thi, hay trống."""
+        diem = x.get("diem")
+        if diem in (None, ""):
+            return TU_DANH_DAU_THI if x.get("thi") else None
+        if isinstance(diem, str):
+            so = doc_diem(diem)
+            return (int(so) if so.is_integer() else so) if so is not None else diem
+        if isinstance(diem, float) and diem.is_integer():
+            return int(diem)
+        return diem
+
+    for s in students:
+        hang = [s.get("student_id", ""), s.get("name", "")]
+        if co_lop:
+            hang.append(s.get("class_id") or None)
+        if co_nhom:
+            hang.append(s.get("reserve_group") or None)
+        if ca_nhan:
+            # Điểm theo người: lấy `diem_ca_nhan` nếu có, không thì điểm đầu tiên của
+            # các nguyện vọng (cả dòng chung một điểm).
+            if s.get("diem_ca_nhan") is not None:
+                hang.append(diem_o({"diem": s["diem_ca_nhan"], "thi": bool(s["diem_ca_nhan"])}))
+            else:
+                co = next((x for x in (s.get("nv") or []) if x.get("diem") not in (None, "")
+                           or x.get("thi")), None)
+                hang.append(diem_o(co) if co else None)
+            for x in (s.get("nv") or [])[:so_nv]:
+                hang.append(next((c["name"] for c in clubs if c.get("club_id") == x["club_id"]),
+                                 x["club_id"]))
+            wh.append(hang)
+            continue
+        for x in (s.get("nv") or [])[:so_nv]:
+            ten = next((c["name"] for c in clubs if c.get("club_id") == x["club_id"]),
+                       x["club_id"])
+            hang += [ten, diem_o(x)] + ([diem_w_o(x)] if co_w else [])
+        wh.append(hang)
+    so_dong_hs = max(len(students) + HANG_DAU_DU_LIEU_HS - 1 + 200, SO_DONG_HS_TRONG)
+    cot_cuoi = len(tieu_de)
+    wh.column_dimensions["A"].width = 11
+    wh.column_dimensions["B"].width = 24
+    if co_lop:
+        wh.column_dimensions["C"].width = 10
+    if co_nhom:
+        wh.column_dimensions[get_column_letter(3 + bool(co_lop))].width = 13
+    if ca_nhan:
+        wh.column_dimensions[get_column_letter(nv1 - 1)].width = 10   # cột điểm chung
+    for col in range(nv1, cot_cuoi + 1):
+        wh.column_dimensions[get_column_letter(col)].width = (
+            22 if (ca_nhan or (col - nv1) % buoc == 0) else 8)
+    for o in wh[1]:
+        o.fill, o.font, o.alignment = NEN_TIEU_DE, CHU_TIEU_DE, GIUA
+    for o in wh[2]:
+        o.fill, o.font, o.alignment = NEN_TIEU_DE_2, CHU_TIEU_DE, GIUA
+    wh.row_dimensions[1].height = 30
+    wh.row_dimensions[2].height = 22
+    for r in range(HANG_DAU_DU_LIEU_HS, so_dong_hs + 1):
+        for col in range(1, cot_cuoi + 1):
+            o = wh.cell(row=r, column=col)
+            la_cot_diem = (col == nv1 - 1) if ca_nhan else (col >= nv1 and (col - nv1) % buoc == 1)
+            la_cot_w = co_w and col >= nv1 and (col - nv1) % buoc == 2
+            o.fill = NEN_DIEM_W if la_cot_w else (NEN_DIEM if la_cot_diem else NEN_NHAP)
+            o.border = VIEN
+        # Mã HS là CHỮ: để Excel tự nhận thì 0012345 thành 12345.
+        wh.cell(row=r, column=1).number_format = "@"
+    wh.freeze_panes = f"{get_column_letter(nv1)}{HANG_DAU_DU_LIEU_HS}"
+
+    # Danh sách thả xuống: tên CLB lấy THẲNG từ sheet 1, nên thêm CLB ở
+    # sheet 1 là danh sách cập nhật ngay, không phải sinh lại mẫu.
+    ten_sheet_trong_cong_thuc = sheet_clb.replace("'", "''")
+    dv_nv = DataValidation(
+        type="list", formula1=f"'{ten_sheet_trong_cong_thuc}'!$A$2:$A${so_dong_clb}",
+        allow_blank=True, showErrorMessage=True, errorStyle="warning",
+        errorTitle="Tên CLB",
+        error=f"Hãy chọn tên {dang_chu(n_cfg['nhan'], 'slot', 'sl', 'vi')} trong danh sách "
+              f"(sheet {sheet_clb}).")
+    wh.add_data_validation(dv_nv)
+    diem_l = dang_chu(n_cfg["nhan"], "score", "l", "vi")
+    R0 = HANG_DAU_DU_LIEU_HS                  # hàng dữ liệu đầu tiên của sheet học sinh
+
+    def them_kiem_diem(c_d, cuoi):
+        # Công thức tham chiếu CHÍNH cột điểm đó, nên mỗi cột một quy tắc.
+        dv = DataValidation(
+            type="custom", allow_blank=True, showErrorMessage=True,
+            errorTitle=ten_diem,
+            error=f"{ten_diem} là một số (vd 8,5) hoặc chữ  thi  nếu chưa có {diem_l}.",
+            formula1=f'OR(ISNUMBER({c_d}{R0}),LOWER({c_d}{R0})="thi")')
+        dv.add(f"{c_d}{R0}:{c_d}{cuoi}")
+        wh.add_data_validation(dv)
+
+    if ca_nhan:
+        them_kiem_diem(get_column_letter(nv1 - 1), so_dong_hs)
+    for k in range(so_nv):
+        c_nv = get_column_letter(nv1 + buoc * k)
+        dv_nv.add(f"{c_nv}{R0}:{c_nv}{so_dong_hs}")
+        if not ca_nhan:
+            them_kiem_diem(get_column_letter(nv1 + 1 + buoc * k), so_dong_hs)
+        if co_w:
+            c_w = get_column_letter(nv1 + 2 + buoc * k)
+            if che_do_fa:
+                dv_w = DataValidation(
+                    type="list", formula1='"Vàng,Bạc,Đồng,60,30,10"', allow_blank=True,
+                    showErrorMessage=True, errorTitle=ten_w,
+                    error="Huy chương chỉ nhận Vàng, Bạc, Đồng (hoặc 60, 30, 10).")
+            else:
+                dv_w = DataValidation(
+                    type="whole", operator="greaterThanOrEqual", formula1="0", allow_blank=True,
+                    showErrorMessage=True, errorTitle=TEN_COT_QUYET_TAM,
+                    error="Điểm quyết tâm là số nguyên từ 0 trở lên (mỗi quỹ cộng đúng 100).")
+            dv_w.add(f"{c_w}{R0}:{c_w}{so_dong_hs}")
+            wh.add_data_validation(dv_w)
+    # Cùng một CLB chọn hai lần trên một dòng -> tô đỏ.
+    for k in range(so_nv):
+        c = get_column_letter(nv1 + buoc * k)
+        dem = "+".join(f'(${get_column_letter(nv1 + buoc * j)}{R0}={c}{R0})' for j in range(so_nv))
+        wh.conditional_formatting.add(
+            f"{c}{R0}:{c}{so_dong_hs}",
+            FormulaRule(formula=[f'AND({c}{R0}<>"",({dem})>1)'],
+                        fill=PatternFill("solid", fgColor="F4B6B6")))
+    wh.conditional_formatting.add(
+        f"A{R0}:A{so_dong_hs}",
+        FormulaRule(formula=[f'AND(A{R0}<>"",COUNTIF($A${R0}:$A${so_dong_hs},A{R0})>1)'],
+                    fill=PatternFill("solid", fgColor="F4B6B6")))
+
+    # ---- Hướng dẫn ------------------------------------------------------
+    hd = wb.create_sheet(SHEET_HD)
+    hd.column_dimensions["A"].width = 90
+    dong_hd = huong_dan(cfg, ghi_chu_cot_w=luon_co_cot_w, co_lop=co_lop)
+    if che_do_fa:
+        dong_hd = _huong_dan_fa(dong_hd, cfg)
+    for i, dong in enumerate(dong_hd, start=1):
+        o = hd.cell(row=i, column=1, value=dong)
+        if i == 1:
+            o.font = Font(bold=True, size=14, color="1F3A5F")
+        elif dong.startswith("Bước"):
+            o.font = Font(bold=True)
+
+    # FA-1: sheet "Giữ chỗ" tuỳ chọn (chỉ khi người gọi truyền `giu_cho`).
+    wg = None
+    if day_du and giu_cho is None:
+        giu_cho = []
+    if giu_cho is not None:
+        wg = wb.create_sheet(SHEET_GIU_CHO)
+        wg.append(["Mã CLB", "Mã học sinh"])
+        for c, h in giu_cho:
+            wg.append([c, h])
+        wg.column_dimensions["A"].width = 16
+        wg.column_dimensions["B"].width = 16
+        for o in wg[1]:
+            o.fill, o.font, o.alignment = NEN_TIEU_DE, CHU_TIEU_DE, GIUA
+
+    # Tên bắt đầu bằng "=" (vd học sinh tên "=1+1") phải là CHỮ, không thành
+    # công thức Excel — vừa sai dữ liệu, vừa là lối chèn công thức độc.
+    for trang in (ws, wh) + ((wg,) if wg is not None else ()):
+        for hang in trang.iter_rows(min_row=2, max_row=trang.max_row):
+            for o in hang:
+                if isinstance(o.value, str) and o.value.startswith("="):
+                    o.data_type = "s"
+
+    # SM2 (checker lỗi 1): từ điển viết bằng từ vựng trường học ("1. CLB", "Mã HS", "học sinh"), nên chỉ
+    # ghi khi sổ dùng đúng từ vựng đó; workspace đặt nhãn riêng (vd. công ty) thì bỏ, để không chỉ tới
+    # sheet / cột không có trong tệp.
+    tu_vung_truong = (sheet_clb, sheet_hs) == (SHEET_CLB, SHEET_HS) and cot_clb(cfg) == COT_CLB \
+        and cot_hs_dau(cfg) == COT_HS_DAU and nhan_lop(cfg) == "Lớp"
+    if day_du and tu_vung_truong:
+        _ghi_tu_dien_cot(wb, che_do_fa=che_do_fa)
+    wb.active = 0
+    wb.save(duong_dan_hoac_tep)
+
+
+def tu_csv(clubs_rows, thi_rows, nv_rows):
+    """Dữ liệu ba tệp CSV cũ (dict từ csv.DictReader) -> (clubs, students)
+    cho `ghi_so_nhap`. Dùng để sinh sổ ví dụ từ các bộ CSV mẫu đã có, và để
+    chuyển bộ ba tệp cũ của một trường sang sổ nhập.
+
+    Nguyện vọng theo buổi (`thu_2_pref_1`…) được nối theo thứ tự buổi —
+    đúng cách phần mềm vẫn ghi chúng vào CSDL. Trả thêm danh sách
+    (student_id, club_id) thi một CLB KHÔNG có trong nguyện vọng: sổ nhập
+    không chứa được những ô đó.
+    """
+    from rbda_priority_pipeline import chuan_hoa_lop, sap_buoi
+
+    clubs = [{
+        "club_id": r["club_id"], "name": r.get("name") or r["club_id"],
+        "capacity": int(float(r.get("capacity") or 0)),
+        "reserve_capacity": int(float(r.get("reserve_capacity") or 0)),
+        "reserve_group": r.get("reserve_group") or "",
+        "buoi": (r.get("buoi") or "").strip(),
+    } for r in clubs_rows]
+
+    hs: dict = {}
+
+    def lay_hs(r):
+        sid = (r.get("student_id") or "").strip()
+        s = hs.setdefault(sid, {"student_id": sid, "name": "", "reserve_group": "",
+                                "class_id": None, "nv": [], "_thi": {}})
+        s["name"] = s["name"] or (r.get("name") or "")
+        s["reserve_group"] = s["reserve_group"] or (r.get("reserve_group") or "")
+        s["class_id"] = s.get("class_id") or chuan_hoa_lop(r.get("class_id"))
+        return s
+
+    for r in nv_rows:
+        if not (r.get("student_id") or "").strip():
+            continue
+        s = lay_hs(r)
+        cot = list(r.keys())
+        theo_buoi: dict = {}
+        for c in cot:
+            m = re.match(r"^(?P<b>.+)_pref_(?P<k>\d+)$", c or "")
+            if m:
+                theo_buoi.setdefault(m.group("b"), []).append((int(m.group("k")), c))
+        if theo_buoi:
+            thu_tu = [c for b in sap_buoi(theo_buoi) for _, c in sorted(theo_buoi[b])]
+        else:
+            thu_tu = sorted([c for c in cot if (c or "").startswith("pref_")],
+                            key=lambda c: int(c.split("_")[1]))
+        if "club_id" in cot:                    # dạng dài
+            s.setdefault("_dai", []).append(
+                (int(r.get("rank") or 999), r["club_id"]))
+            continue
+        for c in thu_tu:
+            v = (r.get(c) or "").strip()
+            if v and v not in [x["club_id"] for x in s["nv"]]:
+                s["nv"].append({"club_id": v, "thi": False, "diem": ""})
+    for s in hs.values():
+        for _, cid in sorted(s.pop("_dai", [])):
+            if cid not in [x["club_id"] for x in s["nv"]]:
+                s["nv"].append({"club_id": cid, "thi": False, "diem": ""})
+
+    for r in thi_rows:
+        if not (r.get("student_id") or "").strip():
+            continue
+        s = lay_hs(r)
+        if "club_id" in r:
+            if r.get("club_id"):
+                s["_thi"][r["club_id"]] = r.get("score") or ""
+            continue
+        for c, v in r.items():
+            m = re.match(r"^test_club_(\d+)$", c or "")
+            if m and (v or "").strip():
+                s["_thi"][v.strip()] = (r.get(f"score_{m.group(1)}") or "").strip()
+
+    ngoai_nv = []
+    for s in hs.values():
+        thi = s.pop("_thi")
+        for x in s["nv"]:
+            if x["club_id"] in thi:
+                x["thi"], x["diem"] = True, thi[x["club_id"]]
+        trong_nv = {x["club_id"] for x in s["nv"]}
+        ngoai_nv += [(s["student_id"], c) for c in thi if c not in trong_nv]
+    return clubs, list(hs.values()), ngoai_nv

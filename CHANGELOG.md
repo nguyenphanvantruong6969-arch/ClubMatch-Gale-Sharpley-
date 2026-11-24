@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — TRICH-XUAT: bản sao mã nguồn dạng chữ để nộp/đọc (không có mã mục, Truong yêu cầu trực tiếp)
+
+- Thư mục mới `Trich xuat ma nguon/`: `Thuat toan cot loi/` (lõi RB-DA, FA-DAA, giải trình + 3 tệp phụ trợ để nạp độc lập) và `Ma nguon phan mem/` (mọi tệp chạy theo `kiosk.spec`: .py, giao diện, phông, `mau_forms_thi_clb/` mô-đun, `requirements.txt`); mỗi thư mục có `README.md` tiếng Việt.
+- Là BẢN SAO tĩnh (không tự đồng bộ); không đổi mã sản phẩm. `pyproject.toml` (ruff extend-exclude, coverage omit) và `kiem_nhanh.py` (THU_MUC_BO_QUA) bỏ qua thư mục này để độ phủ CI không tụt.
+- Kiểm: hai thư mục nạp được khi tách khỏi kho; test lõi chạy trên bản sao đạt (lỗi còn lại chỉ do thiếu `docs/`, `du_lieu_test/`). Không có test mới.
+
 ## 2026-11-24 — CI-WIN-PYPDF: sửa bộ test Windows trong workflow build exe (không có mã mục, Truong yêu cầu trực tiếp)
 
 - Lỗi: run #21 của *Build Windows executable (rbda-kiosk)* đỏ ở `tests/test_cb1_pdf_trung_tinh.py::test_pdf_in_ten_truong_len_bang_dau_trang_khi_co` — `ModuleNotFoundError: No module named 'pypdf'`. Bước cài đặt của workflow này thiếu `pypdf`, trong khi `tests.yml` (job Windows) đã có.

@@ -64,7 +64,7 @@ def danh_sach_seed(n):
 BO_DU_LIEU_MAC_DINH = 3
 BANG_NHAT_KY = ("run_history", "wharton_nhat_ky", "fa_dieu_chinh")
 THU_MUC_BO_QUA = {".git", ".venv", ".venv_build", "build", "dist", "node_modules", "__pycache__",
-                  "tests", "docs"}
+                  "tests", "docs", "Trich xuat ma nguon"}  # bản sao mã để nộp, không phải mã chạy
 
 
 # ---------------------------------------------------------------------------

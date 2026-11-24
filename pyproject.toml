@@ -9,7 +9,7 @@ markers = ["giu_ma: chạy ở chế độ giữ mã trong tiêu đề biểu m�
 
 [tool.ruff]
 target-version = "py311"
-extend-exclude = [".venv", ".venv_build", "build", "dist"]
+extend-exclude = [".venv", ".venv_build", "build", "dist", "Trich xuat ma nguon"]
 
 [tool.ruff.lint]
 # Chi cac luat bat LOI THAT, khong bat van phong:
@@ -35,6 +35,7 @@ omit = [
     "docs/*",   # kich ban tham khao cua goi ke hoach, khong phai ma san pham
     "tao_logo.py",   # cong cu ve bieu tuong, chay tay mot lan
     "tao_bao_cao_docx.py",   # dung bao cao .docx tu trang HTML bang Chromium, chay tay
+    "Trich xuat ma nguon/*",   # ban sao ma nguon de nop/doc, khong phai ma chay
 ]
 
 [tool.coverage.report]

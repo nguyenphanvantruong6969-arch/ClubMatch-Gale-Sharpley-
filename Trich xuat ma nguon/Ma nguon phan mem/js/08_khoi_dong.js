@@ -1,0 +1,55 @@
+/* js/08_khoi_dong.js — Khởi động: init() và cổng chờ backend (choBackend ở chung.js).
+
+   Một phần của giao diện chính, tách từ app.js cũ. Các tệp js/ là SCRIPT
+   THƯỜNG (không phải ES module) nạp theo đúng thứ tự trong index.html và
+   dùng chung một phạm vi — như một tệp duy nhất trước đây. Không dùng ES
+   module vì mở trang bằng file:// thì trình duyệt chặn chúng.
+*/
+"use strict";
+
+/* ------------------------------------------------------------------ *
+ * 9. KHỞI ĐỘNG
+ * ------------------------------------------------------------------ */
+
+function init() {
+  window.I18N.applyStaticText();
+  initLangToggle();
+  initMotionToggle();
+  window.addEventListener("langchange", reapplyDynamicTextForLangChange);
+  initTabs();
+  initPipelineHandlers();
+  initResultsHandlers();
+  initFallbackHandlers();
+  initAdminHandlers();
+  initScoringHandlers();
+  initKetQuaHandlers();
+  khoiTaoTieuChi();  // GT2 (js/15_tieu_chi.js)
+  initWorkspace();   // nút đổi workspace ở thanh bên + màn chọn (js/075_workspace.js)
+  initTaiKhoan();    // GT3: đăng nhập + tài khoản (js/16_tai_khoan.js); chưa có tài khoản = không màn đăng nhập
+  initViecTiepTheo(); // UX1A-L1
+  initCaiDat();       // UX1A-L2b (js/18_cai_dat.js)
+  initMucTieu();      // MT1-L4 (js/19_muc_tieu.js)
+  initPhuongAn();     // CB1-L3 (js/2x_phuong_an.js)
+  ux2QuanSatBang(["resultsTableBody", "adminStudentTableBody", "adminClubTableBody", "historyTableBody"]); // UX2-L8
+  loadPipelineTab(); // tab mặc định đang mở khi khởi động
+}
+
+function baoVaoOSucKhoe(cau) {
+  const o = el("healthSummary");
+  if (o) {
+    o.className = "health-summary is-warn";
+    o.textContent = cau;
+  }
+}
+
+/* Cong khoi dong dung chung voi man hinh phuc hoi — xem choBackend trong
+   chung.js. `get_last_run_info` chac chan co trong PipelineAPI va init()
+   goi ngay, nen dung no lam phep thu "backend da goi duoc chua". */
+choBackend("get_last_run_info", init, baoVaoOSucKhoe, (cau) => {
+  baoVaoOSucKhoe(cau);
+  const oDb = el("dbStatusLine");
+  if (oDb) {
+    oDb.textContent = t("backend_khong_ket_noi");
+    oDb.hidden = false;
+  }
+});
