@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-24 — DC1-FIX1: sửa hai test tài liệu đỏ trên CI
+
+- `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: bỏ mã nội bộ K0/K7 và dấu nháy quanh tên tệp sinh ra (`test_gt3_tai_lieu.py`); `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 401 → 402 tệp test (`test_a13_12_tai_lieu.py`). Không đổi mã.
+
 ## 2026-11-24 — DC1-L4: phép kiểm K7 (tệp tổng hợp)
 
 - `kiem_doc_lap.py`: K7 đối chiếu "Đã xếp" và "Trong đó diện dự trữ" của mục "TỪNG …" trong `_tong_hop.csv` với số đếm từ tệp chính; README và hai tài liệu giải trình đổi K0–K6 → K0–K7.
