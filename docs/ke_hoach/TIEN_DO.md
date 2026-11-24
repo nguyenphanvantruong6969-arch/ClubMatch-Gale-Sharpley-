@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| SEC-1 (CodeQL path-injection, browser_host.py; Truong yêu cầu) | xong (chờ CI + PR vào main) | 2026-11-24 | browser_host.py, CHANGELOG.md | tests/test_browser_host.py (+1 ca) | kiem_nhanh 7/7; cảnh báo đóng sau khi vào main |
 | MT1-X1-L3 (kiểm chứng D5 + tài liệu) | xong (chờ checker) | 2026-11-21 | api_xuat.py (docstring), CHANGELOG.md | — (so ô 3 bộ dữ liệu: trùng khít) | mục MT1-X1 trọn vẹn sau CI xanh |
 | MT1-X1-L2 (sheet "Giữ chỗ" + khứ hồi đầy đủ) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`export_du_lieu_dau_vao`), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py (+3 ca) | cổng D2: chỉ khi FA bật; bảng rỗng = sheet chỉ có tiêu đề |
 | MT1-X1-L1 (Sổ nhập xuất mang cột FA của CLB) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`_du_lieu_so_nhap`), tests/test_mt1_dong_bo_loai_clb.py (bỏ xfail), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py | cổng D1: chỉ khi FA bật hoặc có CLB đã khai; còn "Giữ chỗ" ở L2 |

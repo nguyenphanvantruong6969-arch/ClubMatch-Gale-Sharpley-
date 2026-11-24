@@ -244,12 +244,18 @@ class _Handler(http.server.SimpleHTTPRequestHandler):
         tuong_doi = unquote(path).lstrip("/")
         if os.path.splitext(tuong_doi)[1].lower() not in _DUOI_DUOC_PHUC_VU:
             return None
+        if "\x00" in tuong_doi:
+            return None
         goc = os.path.realpath(self.directory)
         that = os.path.realpath(os.path.join(goc, tuong_doi))
         try:
             if os.path.commonpath([goc, that]) != goc:
                 return None
         except ValueError:          # Windows: khác ổ đĩa
+            return None
+        # Chốt thứ hai, đúng mẫu CodeQL (py/path-injection) nhận là rào chắn: đường dẫn đã chuẩn hoá
+        # phải nằm DƯỚI thư mục tài nguyên (có dấu phân cách, nên `goc + "x"` không lọt).
+        if not that.startswith(goc + os.sep):
             return None
         return that if os.path.isfile(that) else None
 
@@ -391,6 +397,12 @@ class _Handler(http.server.SimpleHTTPRequestHandler):
             # trang van giu nguyen URL, nen nguoi dung khong bi anh huong.
             if not self._token_trong_url():
                 self.send_error(403)
+                return
+            # Rào chắn lặp lại NGAY trước khi mở tệp (`_tep_tinh` đã kiểm; chốt lần nữa ở chỗ đọc để mã
+            # quét và người đọc thấy rõ đường dẫn mở luôn nằm trong thư mục tài nguyên).
+            full = os.path.realpath(full)
+            if not full.startswith(os.path.realpath(self.directory) + os.sep):
+                self.send_error(404)
                 return
             with open(full, "r", encoding="utf-8") as f:
                 html = f.read()
