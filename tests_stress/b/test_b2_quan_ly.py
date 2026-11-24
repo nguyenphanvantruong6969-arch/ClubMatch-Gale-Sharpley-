@@ -3,7 +3,7 @@ việc sau khi xếp. SIMULATED data."""
 import sqlite3
 
 
-from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui, so_dong_run)
+from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui, so_dong_run, clic_tab_ql)
 from ho_tro_tep import CAC_TEP
 
 TRACEBACK = ("Traceback", "invalid literal", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "IndexError",
@@ -34,11 +34,14 @@ def _vao_clb(ui):
 
 def _luu_clb(ui, id_, ten, cap, rc="", buoi=""):
     p = ui.page
+    if not p.locator("#clubFormId").is_visible():          # UX4-L3: Mã CLB và chỗ dành riêng nằm sau "Thêm tuỳ chọn"; có lần lưu làm nó gập lại
+        p.locator("#clubFormThemTuyChon").click()
     p.fill("#clubFormId", id_)
     p.fill("#clubFormName", ten)
     p.evaluate("v => { const e = document.getElementById('clubFormCapacity'); e.value = v; }", cap)
     p.fill("#clubFormReserveCapacity", rc)
-    p.fill("#clubFormBuoi", buoi)
+    if buoi:                               # UX4-L3: Buổi là ô thả xuống, không còn là ô gõ
+        p.select_option("#clubFormBuoi", value=buoi)
     p.locator("#btnSaveClub").click()
     p.wait_for_timeout(900)
     p.locator("#clubForm").evaluate("e => (e.closest('section,div.panel,div') || document.body).parentElement.innerText")
@@ -346,10 +349,8 @@ def test_b2_hoc_sinh_phan_trang_tim_kiem_gan_nhom(mo):
     p.locator("#btnBulkAssign").click()
     p.wait_for_timeout(1500)
     assert q(ui, "select count(*) from students where lower(reserve_group)='nhom_a'")[0][0] == 0
-    # không tick mà bấm gán: báo lỗi, không gọi lên máy chủ
-    p.locator("#btnBulkAssign").click()
-    p.wait_for_timeout(500)
-    assert "tick" in p.locator("#toastStack").inner_text().lower() or p.locator("#toastStack").inner_text().strip()
+    # UX4-L3: chưa chọn học sinh nào thì nút Gán ẩn (không còn đường "bấm không tick rồi báo lỗi")
+    assert p.locator("#btnBulkAssign").is_hidden()
     assert not khoa_tho(ui)
     ui.kiem_loi()
 
@@ -384,7 +385,7 @@ def test_b2_diem_quyet_tam_sua_luu_va_khoa_sau_xep(mo):
     chon_cach(ui, "huy_chuong")
     nap_so_150(ui)
     ui.tab("admin")
-    p.locator("#qlTabWh").click()
+    clic_tab_ql(p, "#qlTabWh")
     p.locator("#btnWhXemTatCa").click()
     p.wait_for_selector("#whQlBody tr")
     p.locator("#whQlBody tr").first.click()
@@ -403,7 +404,7 @@ def test_b2_diem_quyet_tam_sua_luu_va_khoa_sau_xep(mo):
     # chạy xếp → điểm bị khoá → sửa phải bị từ chối rõ ràng
     chay_ui(ui)
     ui.tab("admin")
-    p.locator("#qlTabWh").click()
+    clic_tab_ql(p, "#qlTabWh")
     p.wait_for_timeout(800)
     if p.locator("#btnWhXemTatCa").is_visible():
         p.locator("#btnWhXemTatCa").click()
@@ -422,7 +423,7 @@ def test_b2_xoa_du_lieu_hai_buoc(mo):
     nap_so_150(ui)
     chay_ui(ui)
     ui.tab("admin")
-    p.locator("#qlTabDuLieu").click()
+    clic_tab_ql(p, "#qlTabDuLieu")
     for nut, kiem in (("#btnResetStudents", lambda: dem_db(ui, "students")[0] == 0), ("#btnResetAll", lambda: dem_db(ui, "clubs")[0] == 0)):
         b = p.locator(nut)
         nhan0 = b.inner_text()
@@ -439,7 +440,7 @@ def test_b2_xoa_du_lieu_hai_buoc(mo):
         if nut == "#btnResetStudents":
             nap_so_150(ui)       # có dữ liệu lại để thử nút thứ hai
             ui.tab("admin")
-            p.locator("#qlTabDuLieu").click()
+            clic_tab_ql(p, "#qlTabDuLieu")
     ui.tab("pipeline")
     stat = p.locator("#statStudents").inner_text()
     assert stat in ("0", "—"), stat
