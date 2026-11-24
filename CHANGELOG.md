@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-24 — DC1-L1+L2: script kiểm độc lập đầu vào ⇄ kết quả (phạm vi B, chỉ bảo toàn)
+
+- Mục DC1 (chưa có trong sổ đăng ký; xem "Needs Truong" ở tệp nhánh). Không đổi mã sản phẩm, không đổi hợp đồng CSV.
+- Mới: `du_lieu_test/kiem_doc_lap/kiem_doc_lap.py` — chỉ dùng thư viện chuẩn + openpyxl; đọc Sổ nhập và bộ xuất CSV mặc định;
+  in bảng K0–K6 (PASS/FAIL) và ghi `dau_vao_ket_qua.csv`. Mã thoát 0 / 1 (có FAIL) / 2 (nhiều buổi hoặc không đọc được).
+- G2 đo trên 3 bộ: em không còn nguyện vọng nào vẫn có một dòng (chưa xếp); thứ hạng = vị trí trong danh sách nguyện vọng.
+- Test mới: `tests/test_dc1_kiem_doc_lap.py` (18: 8 đột biến K0–K6, thoát 2 hai ca, cô lập import bằng ast, 3 bộ hợp lệ × 2).
+
 ## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
 
 - Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).

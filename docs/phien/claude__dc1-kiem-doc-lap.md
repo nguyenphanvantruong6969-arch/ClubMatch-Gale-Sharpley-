@@ -69,12 +69,12 @@ feedback "đối chiếu được đầu vào với kết quả". It does NOT ch
   log only in CHANGELOG + TIEN_DO, and keep the "Needs Truong" line below.
 
 ## Plan (lots; ticked by the coder)
-- [ ] **L1 (must)** Readers + checks K0–K6. Test file `tests/test_dc1_kiem_doc_lap.py` FIRST: mutation tests on a
+- [x] **L1 (must)** Readers + checks K0–K6. Test file `tests/test_dc1_kiem_doc_lap.py` FIRST: mutation tests on a
   valid `SO_NHAP_TEST` export (drop a row → K1; duplicate a row → K1; move one student into a full club → K2;
   set a non-reserve student to "Dự trữ" over quota → K3; club outside preferences → K4; delete a row from one
   per-club file → K6), each asserts THAT check is FAIL; isolation test (ast: imports ⊂ `sys.stdlib_module_names`
   ∪ {openpyxl}, no relative import, no `sys.path` edits); multi-session file → exit 2.
-- [ ] **L2 (must)** PASS/FAIL table + footer (D5) + `dau_vao_ket_qua.csv` (cols: `student_id, ho_ten, nhom,
+- [x] **L2 (must)** PASS/FAIL table + footer (D5) + `dau_vao_ket_qua.csv` (cols: `student_id, ho_ten, nhom,
   nv_1..nv_k, diem_1..diem_k, club_id_nhan, ten_clb_nhan, dien, hang_nhan`; k = max over students; utf-8-sig).
   Tests: false-positive on the 3 datasets of D6 (all PASS, exit 0); CSV has one row per Sổ nhập student and
   `club_id_nhan` equals the export.
@@ -93,7 +93,9 @@ Mutation tests FAIL the right check; 3 valid datasets PASS fully; ast isolation 
 - DC1 is not in the 33-item registry: approve adding it (planner recommends: yes, as a verification item, no sector).
 
 ## Current state
-- Plan written; no code yet.
+- L1+L2 done in one commit (script + table + CSV were written together). 18 tests green; kiem_nhanh 7/7; ruff clean.
+- G2 observed: a student with no valid preference still has a (unplaced) row; unknown/duplicate clubs in a row make import reject the whole book, so rank = position in the list. K5 is exact (FAIL, not INFO).
+- soat-ma: tiers 1–3 not applicable (no product code); tier 4 = tests + docs only.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
