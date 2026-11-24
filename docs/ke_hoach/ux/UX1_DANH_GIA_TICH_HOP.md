@@ -54,3 +54,17 @@
 3. Gộp hai ô "Chọn lớp" thành một (vấn đề 4).
 4. Truong quyết định có cần giới hạn giáo viên theo lớp không (vấn đề 5; nếu có thì là mục mới, đụng mô hình vai).
 5. Thêm `pypdf` vào `requirements-dev.txt` để CI không bỏ qua các test đọc chữ trong PDF ("Needs Truong" mục 5).
+
+## UX1F — đo lại sau sửa (lead, 2026-11-20, nhánh `claude/ux1-sua-pdf`, dữ liệu MÔ PHỎNG)
+Chạy lại `chup_tich_hop.py` (120 HS, 3 lớp, seed 42) và các test UX1F; không lỗi JavaScript.
+| Điểm | Trước | Sau |
+|---|---|---|
+| pypdf trong test | bỏ qua (skip) | chạy thật: 4 tệp, 70 test qua, 0 skip (cả Windows CI) |
+| Phiếu 1 em | tràn trang 2 gần trống, "Huy ch/ương" | HS004: 1 trang; tiêu đề cột không ngắt giữa từ |
+| Phiếu cả lớp | 40 HS (FA, seed 3): 74 trang; 800 HS: 1519 | 40 trang; 800 HS: 1278; không trang < 200 ký tự |
+| Phiếu cả lớp (kịch bản 120 HS) | — | DQT 48 trang, FA 41 trang |
+| Giáo viên "Lưu PDF" 1 em | không có nút | 3 bấm (tìm → chọn → Lưu PDF); PDF chỉ chứa em đó; vai học sinh bị từ chối |
+| Ô "Chọn lớp" trên Kết quả | 2 ô (`#ux1bLop`, `#kqChonLop`) | 1 ô `#kqChonLop` cho quản trị và giáo viên |
+Còn lại (nhỏ): "Xuất theo lớp" và "Báo cáo tổng hợp" vẫn cho toàn trường (backend không nhận lớp), nằm cạnh ô
+chọn lớp nhưng không dùng nó; nút "Lưu PDF" chỉ hiện sau khi chọn em; phiếu có buổi cực dài (10 NV × ~600 ký tự)
+có thể để trang 1 chỉ còn tiêu đề.

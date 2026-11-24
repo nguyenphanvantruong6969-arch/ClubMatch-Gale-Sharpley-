@@ -106,7 +106,7 @@ function kqDongBoDieuKhien() {
   });
   /* T3-16: chưa có lớp nào thì không có nút "Theo lớp" (chỉ hiện khi có ít nhất một lớp). */
   document.querySelector('#kqTang1 [data-kq="lop"]').hidden = !kq.nLop;
-  el("kqChonLopHang").hidden = kq.tang1 !== "lop";
+  el("kqChonLopHang").hidden = !kq.nLop;                 // UX1F-L4: ô chọn lớp duy nhất nằm ở khối "Theo lớp và báo cáo", luôn hiện khi có lớp
   el("kqChonClbHang").hidden = kq.tang1 !== "clb";
   el("kqTimHang").hidden = kq.tang1 !== "ma";
   el("btnKqTaiBang").disabled = !kq.coKq || (kq.tang1 === "lop" && kq.lop === null) || (kq.tang1 === "clb" && !kq.nClb);
@@ -121,6 +121,7 @@ function kqNapOLop(d) {
   if (kq.lop === null || !co(kq.lop)) kq.lop = sel.options.length ? sel.options[0].value : null;
   if (kq.lop !== null) sel.value = kq.lop;
   sel.disabled = !d.classes.length;
+  if (typeof ux1bDongBoNut === "function") ux1bDongBoNut();
 }
 
 /* Buổi giữ thứ tự backend (đã theo ngày trong tuần); trong một buổi sắp theo tên. */
@@ -322,7 +323,17 @@ function initKetQuaHandlers() {
     const tr = ev.target.closest("tr");
     if (tr && tr.dataset.studentId && typeof window.gtMoHocSinh === "function") window.gtMoHocSinh(tr.dataset.studentId);
   });
-  el("kqChonLop").addEventListener("change", (ev) => { kq.lop = ev.target.value; luuKqXem(); veKetQua(); });
+  el("kqChonLop").addEventListener("change", (ev) => {
+    kq.lop = ev.target.value;
+    /* UX1F-L4: chọn lớp ở khối trên cũng mở bảng "Theo lớp" của lớp đó (trước là ô #ux1bLop riêng) */
+    if (kq.tang1 !== "lop") {
+      const nut = document.querySelector('#kqTang1 [data-kq="lop"]');
+      if (nut && !nut.hidden) nut.click();
+    }
+    luuKqXem();
+    veKetQua();
+    if (typeof ux1bDongBoNut === "function") ux1bDongBoNut();
+  });
   el("kqChonClb").addEventListener("change", (ev) => { kq.clb = ev.target.value; luuKqXem(); veKetQua(); });
   el("kqTimKiem").addEventListener("input", debounce(() => veKetQua(), 250));
   el("btnKqTaiBang").addEventListener("click", () => {

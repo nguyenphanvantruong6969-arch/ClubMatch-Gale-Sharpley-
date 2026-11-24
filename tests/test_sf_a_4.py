@@ -27,7 +27,7 @@ def test_o_chuoi_giu_nguyen_chu_va_xuong_dong():
     assert _chu(kq) == "".join(van.split())
     for dong in kq.split("\n"):
         from reportlab.pdfbase.pdfmetrics import stringWidth
-        assert stringWidth(dong, "BeVietnamPro", 9) <= 80 + 0.5
+        assert stringWidth(dong, "BeVietnamPro", xuat_pdf._CO_O) <= 80 + 0.5
 
 
 def test_o_chuoi_gop_khoang_trang_va_xuong_dong_nhu_paragraph():

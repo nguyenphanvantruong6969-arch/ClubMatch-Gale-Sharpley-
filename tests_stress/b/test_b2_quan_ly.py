@@ -488,6 +488,8 @@ def test_b2_cham_diem_gia_tri_bien(mo):
 def _tao_hs(ui, ma, ten):
     p = ui.page
     ui.tab("fallback")
+    if p.locator("#ux5bTaoMoi").get_attribute("open") is None:      # UX5B-L3: ô tạo học sinh mới gập
+        p.locator("#ux5bTaoMoi > summary").click()
     p.fill("#newStudentId", ma)
     p.fill("#newStudentName", ten)
     p.locator("#btnCreateStudent").click()

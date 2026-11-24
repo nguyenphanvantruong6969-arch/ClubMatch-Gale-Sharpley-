@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
+
+- Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).
+- `xuat_pdf.py`: giữ ĐỒNG THỜI bố cục UX1F (`LE_MM`, `_chia_cot`, `_rong_toi_thieu`, `_DEM_NGANG_PT`) và tăng tốc SF-A4/A5 (ô chuỗi `_o_chuoi`, bộ nhớ đệm, `useA85 = 0` có khôi phục, `khi_xong_em`). Lỗi giữa hai bên (git không báo): ô chuỗi của SF ghi cứng chữ 9 pt / dòng cách 12 làm phiếu 40 em thành 51 trang; nay dùng `_CO_O` (8,5) và `_LEADING_O` (10,5). Đo (DỮ LIỆU MÔ PHỎNG, `SO_NHAP_FA_MAU_120HS.xlsx`, seed 3, 40 em): bản nền UX1F 40 trang, 73 590 ký tự; SF cũ 75 trang; sau gộp 40 trang, 73 590 ký tự (chữ y hệt), tệp 126 602 byte (nền 144 561, nhờ tắt ASCII85).
+- Sửa test (không đổi mã giao diện): `tests/test_giao_dien_sf_b_lo2.py` (st_b_006 mở "Thêm tuỳ chọn" cho Mã CLB; st_b_004 mở `#ux5bTaoMoi`), `tests_stress/b/test_b2_quan_ly.py::_tao_hs` (cùng nếp UX5B-L3), `tests/test_sf_a_4.py` (cỡ chữ đọc từ `xuat_pdf._CO_O`).
+
 ## 2026-11-24 — SF+UX5: gộp nhánh SF vào main (sửa hai chỗ test của SF theo giao diện UX4/UX5)
 
 - Gộp `origin/main` (đã có UX5) vào nhánh SF; xung đột chỉ ở CHANGELOG.md, TIEN_DO.md, đếm tệp test (nay 398) và style.css (giữ cả hai bên).
@@ -120,6 +126,12 @@
 
 - `du_lieu_test/tao_so_nhap_doi_che_do.py` → `du_lieu_test/SO_NHAP_DOI_CHE_DO_150HS.xlsx` (DỮ LIỆU MÔ PHỎNG, 150 em, 2 buổi × 7 CLB: 1 Tự do, 3 Giới hạn, 3 Tuyển chọn). Một sổ hợp lệ cho Chỉ xếp / Chia 100 / Huy chương và bật/tắt chia loại: huy chương 60/30/10 nằm trọn trong một quỹ (= 100). Nạp khi workspace đang ở chế độ Huy chương. Đã kiểm bằng API thật: 0 cảnh báo nhập, 8 lần đổi chế độ + 3 lần bật/tắt chia loại đều chạy được.
 - `docs/phien/ST_GIAO_THUC.md`: giao thức stress test hai nhánh con (`-st-a` backend, `-st-b` giao diện), chỉ báo lỗi, không sửa mã sản phẩm. Không đổi mã sản phẩm, không thêm test vào `tests/`.
+
+## 2026-11-24 — UX1F vào main: gộp nhánh `ux1-tich-hop` (sau UX5), sửa test theo giao diện mới
+
+- Gộp `origin/claude/ux1-tich-hop` (UX1F-L1..L5: pypdf cho test PDF, phiếu PDF vừa một trang, giáo viên lưu PDF một em, MỘT ô Chọn lớp `#kqChonLop`) vào `main` đã có UX5. Xung đột chữ: `.github/workflows/tests.yml` (gộp cả `pytest-xdist` và `pypdf`), CHANGELOG.md, TIEN_DO.md, đếm tệp test (nay 392).
+- Xung đột ngữ nghĩa với UX5A (git không báo): UX1F-L4 bỏ ô `#ux1bLop` để dùng `#kqChonLop`. Sửa test UX5A cho khớp: `tests/test_giao_dien_ux5a_l2.py` (danh sách điều khiển của khối Theo lớp), `tests/test_giao_dien_ux5a_l4.py` (bỏ `ux1bLop` khỏi danh sách id phải còn; chọn lớp bằng `#kqChonLop`).
+- Hai test CÓ SẴN lỗi trên `main` (không do UX1F): `tests/test_ux1i_i3_phieu_bao_cao.py::test_giao_vien_in_phieu_lop_pdf_mot_lan_bam_sau_khi_vao` và `::test_giao_vien_bao_cao_tong_hop_pdf_mot_lan_bam`, vì UX5A-L2 gập các nút này vào nếp "Báo cáo và phiếu in". Sửa test: mở nếp (`#ux1bThemTom`) trước khi bấm. Chỉ đổi test, không đổi mã sản phẩm.
 
 ## 2026-11-23 — UX5B-FIX1 (checker vòng 1): không mất điểm im lặng khi bấm "‹ Danh sách"
 
@@ -541,6 +553,35 @@
 
 - Mới: `du_lieu_test/do_muc_tieu_mt0.py` (gọi `run_rbda`, `verify_stability` thật; 3 kịch bản × 20 seed), `docs/fable/08_MT0_MEMO.md`.
 - Không đổi mã sản phẩm, không test mới. Số liệu MÔ PHỎNG.
+
+## 2026-11-20 — UX1F-L4: một ô "Chọn lớp" ở thẻ Kết quả
+
+- `index.html`, `js/09_the_xem.js`, `js/19_ux1b_gv.js`, `style.css`: bỏ `#ux1bLop`; ô `#kqChonLop` (bọc trong `#kqChonLopHang`) chuyển lên khối "Theo lớp và báo cáo" và hiện ở mọi tầng khi có lớp. Chọn lớp ở tầng khác tự mở "Theo lớp" (như `#ux1bLop` trước đây); "In phiếu cả lớp" dùng đúng giá trị này và tắt khi chọn "Chưa có lớp". "Xuất theo lớp" và "Báo cáo tổng hợp" vốn là việc cả trường nên không nhận lớp (không đổi hành vi). Bỏ chú thích cũ trên `#ux1bPanel`. Khoá i18n `ux1b_chon_lop` không còn dùng trong HTML (để lại, không hại).
+- Test: `tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py` (4 ca; quản trị và giáo viên đúng MỘT ô, chọn lớp lọc bảng và quyết định phiếu cả lớp: PDF đúng các em của lớp đó; đỏ trước khi sửa); đổi selector `#ux1bLop` → `#kqChonLop` trong `test_giao_dien_ux1b_vai_gv.py`, `test_ux1i_i3_phieu_bao_cao.py`, `docs/ke_hoach/ux/chup_tich_hop.py`; `test_giao_dien_t2_ket_qua.py::test_tang1_ba_nut…` nay mong ô chọn lớp hiện ở mọi tầng. Bản đồ mã: 355 → 356 tệp test.
+
+## 2026-11-20 — UX1F-L3: giáo viên lưu PDF phiếu của MỘT học sinh
+
+- `index.html`: `#btnGtPdfMot` bỏ `data-quyen="quan_tri"`, giáo viên thấy nút "Lưu PDF" ở khung tra cứu. Backend không đổi: `phan_quyen.QUYEN["export_phieu_giai_trinh_pdf"]` vốn đã là giáo viên; chế độ học sinh vẫn bị chặn (`gt3_che_do_hoc_sinh`), chưa đăng nhập bị chặn (`gt3_can_dang_nhap`).
+- Riêng tư: tệp chỉ chứa em đã chọn (`student_ids=[mã]`).
+- Test mới: `tests/test_ux1f_l3_giao_vien_pdf_mot_em.py` (3 ca backend + 1 ca Chromium: giáo viên tìm → chọn → Lưu PDF = 3 lần bấm, tệp chỉ có em đó). Ca Chromium đỏ trước khi sửa (nút ẩn). Bản đồ mã: 354 → 355 tệp test.
+
+## 2026-11-20 — UX1F-L2 fix1: tiêu đề buổi không nằm một mình ở đáy trang
+
+- `phieu_giai_trinh.py` (`_khoi_pdf`): mỗi buổi là MỘT khối `giu_cung` (từ tiêu đề buổi); buổi cuối gộp luôn chú thích, khiếu nại, mã tra cứu. Trước đó khối giữ chung chỉ bắt đầu ở bảng nên "Thứ 6" có thể ở đáy trang 10 còn bảng ở trang 11.
+- Test: thêm `test_tieu_de_buoi_cuoi_khong_mot_minh_o_day_trang` (quét 3–8 buổi × 4 độ dài lời giải thích; đỏ trước khi sửa). 800 em vẫn 1278 trang.
+
+## 2026-11-20 — UX1F-L2: bố cục phiếu giải trình PDF (một trang, tiêu đề cột không gãy từ)
+
+- `xuat_pdf.py`: lề 12 mm (trước 18/18/16/18), chữ bảng 8,5 pt (trước 9), đoạn và đệm ô chặt hơn; `bang` tính độ rộng tối thiểu từng cột từ TỪ DÀI NHẤT của tiêu đề (`_rong_toi_thieu`, `_chia_cot`) nên tiêu đề chỉ xuống dòng ở dấu cách ("Huy chương", "Mức vào được" không còn gãy "Huy ch/ương"); thêm `giu_cung` (KeepTogether).
+- `phieu_giai_trinh.py` (`_khoi_pdf`): bảng cuối + ghi chú + khiếu nại + mã tra cứu đi liền nhau (`giu_cung`), không để chú thích/chân phiếu rơi một mình sang trang sau. Nội dung phiếu không đổi, chỉ bố cục.
+- `.github/workflows/tests.yml`: job test-windows cài thêm `pypdf>=4,<6` (chỉ CI; không đụng `requirements.txt`, `kiosk.spec`).
+- Số trang (dữ liệu MÔ PHỎNG, seed 3): 40 em của `SO_NHAP_FA_MAU_120HS.xlsx` 74 → 40 trang (đo lại trước khi sửa: 74, kế hoạch ghi 75; mỗi em một trang, trang ngắn nhất 1577 ký tự); toàn bộ 120 em 225 trang trước đó; 800 em `SO_NHAP_DQT_800HS_HOP_LE.xlsx`: 1519 → 1278 trang (phiếu quá 3 buổi vẫn cần 2 trang; trang 2 luôn có bảng cuối + chú thích, không chỉ chân trang).
+- Test mới: `tests/test_ux1f_l2_phieu_pdf_bo_cuc.py` (3 ca: ≤ 44 trang, mỗi trang ≥ 200 ký tự, tiêu đề không gãy giữa từ). Bản đồ mã: 353 → 354 tệp test.
+
+## 2026-11-20 — UX1F-L1: pypdf là phụ thuộc DEV
+
+- `requirements-dev.txt`: thêm `pypdf>=4,<6` (CHỈ tệp dev; không đụng `requirements.txt`, `kiosk.spec`). CI (`tests.yml`) cài `requirements-dev.txt` nên các test đọc PDF nay chạy thật thay vì tự bỏ qua.
+- Kiểm cục bộ: `tests/test_xp1_phieu_pdf.py`, `test_xp1_danh_sach_pdf.py`, `test_xp1_pdf_loi.py`, `test_ux1i_i3_phieu_bao_cao.py` → 70 qua, 0 bỏ qua. Không có test mới (chỉ bật test sẵn có).
 
 ## 2026-11-19 — UX1I-I4 fix1: CI #1 (shard 3) đỏ vì bản đồ mã
 

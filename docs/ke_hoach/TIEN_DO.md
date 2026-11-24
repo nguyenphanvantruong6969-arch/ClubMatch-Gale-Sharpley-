@@ -279,3 +279,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX5B-L3 (Nhập nguyện vọng ba mục gập + Nhập điểm) | xong, checker PASS (vòng 2) | 2026-11-23 | index.html, js/00_nen.js, js/04_nhap_tai_cho.js, js/06_cham_diem.js, i18n.js, style.css | tests/test_giao_dien_ux5b_l3.py | số ô 7/6 (trước 27/23); số đo mô phỏng |
 | UX5B-L4 (test Hick/Von Restorff ba thẻ, hai vai, cùng payload) | xong, checker PASS (vòng 2) | 2026-11-23 | tests/test_giao_dien_ux5b_l4.py, tests/_ux5b_chung.py, CHANGELOG.md | tests/test_giao_dien_ux5b_l4.py (11) | MILESTONE 2; số đo mô phỏng |
 | UX5B-FIX1 (checker vòng 1: điểm chưa lưu khi quay lại danh sách) | xong, checker PASS | 2026-11-23 | js/06_cham_diem.js, index.html, i18n.js | tests/test_giao_dien_ux5b_l3.py (+2) | kiem_nhanh 7/7 |
+| UX1F-L1 (pypdf dev-only) | xong (chờ checker) | 2026-11-20 | requirements-dev.txt, CHANGELOG.md | (bật test pypdf sẵn có: 70 qua) | |
+| UX1F-L2 (bố cục phiếu PDF) | xong (chờ checker) | 2026-11-20 | xuat_pdf.py, phieu_giai_trinh.py, .github/workflows/tests.yml, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_ux1f_l2_phieu_pdf_bo_cuc.py | |
+| UX1F-L3 (giáo viên Lưu PDF một em) + L2 fix1 | xong (chờ checker) | 2026-11-20 | index.html, phieu_giai_trinh.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_ux1f_l3_giao_vien_pdf_mot_em.py, tests/test_ux1f_l2_phieu_pdf_bo_cuc.py | |
+| UX1F-L4 (một ô Chọn lớp) | xong (chờ checker) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
