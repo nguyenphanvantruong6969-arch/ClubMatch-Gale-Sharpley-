@@ -232,7 +232,11 @@ class DoiChieu:
     def _ghep(self, r):
         if not r["clb"]:
             return None
-        return self.theo_ma.get(r["clb"]) or self.theo_ten.get(khoa_ten(r["ten_clb"]))
+        c = self.theo_ma.get(r["clb"])
+        if c is not None:          # Mã CLB của Sổ nhập đã điền: tên xuất phải là tên của đúng CLB đó
+            return c if khoa_ten(r["ten_clb"]) == khoa_ten(c["ten"]) else None
+        c = self.theo_ten.get(khoa_ten(r["ten_clb"]))
+        return c if c is not None and not c["ma"] else None   # chỉ rơi sang tên khi Sổ nhập để trống Mã CLB
 
     def kiem(self):
         return [self.k0(), self.k1(), self.k2(), self.k3(), self.k4(), self.k5(), self.k6(), self.k7()]
@@ -400,7 +404,6 @@ def main(argv=None):
         bang = dc.kiem()
     except DauVaoKhongDung as e:
         print(f"LỖI ĐẦU VÀO: {e}", file=sys.stderr)
-        print(f"LỖI ĐẦU VÀO: {e}")
         return 2
     xep = sum(1 for r in kq if r["clb"])
     print(f"Sổ nhập: {a.so_nhap} | Kết quả: {a.ket_qua}")
@@ -411,7 +414,11 @@ def main(argv=None):
     n_fail = sum(1 for _, tt, _ in bang if tt == "FAIL")
     print(f"Tổng: {len(bang) - n_fail} PASS, {n_fail} FAIL")
     ra = a.ra or os.path.join(os.path.dirname(os.path.abspath(a.ket_qua)), "dau_vao_ket_qua.csv")
-    ghi_dau_vao(ra, dc)
+    try:
+        ghi_dau_vao(ra, dc)
+    except OSError as e:
+        print(f"LỖI ĐẦU RA: không ghi được {ra}: {e.strerror}", file=sys.stderr)
+        return 2
     print(f"Đã ghi {ra}")
     print(CHU_THICH)
     return 1 if n_fail else 0

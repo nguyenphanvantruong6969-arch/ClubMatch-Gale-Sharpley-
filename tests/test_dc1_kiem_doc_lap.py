@@ -258,10 +258,11 @@ def test_k3_chi_vuot_suat_khong_lech_nhom(capsys, bo):
     c, nhom = _club_co_suat(d, clb)
     hien = sum(1 for r in d[1:] if r[3] == c and r[6] == "Dự trữ")
     can = clb[c][3] - hien + 1
-    ung_vien = [r for r in d[1:] if r[3] == c and r[6] == "Thường" and kdl.khoa_nhom(r[7]) == nhom]
+    # Em Thường ở CLB khác nhưng cùng nhóm với CLB này: chuyển sang làm diện Dự trữ ở đây.
+    ung_vien = [r for r in d[1:] if r[3] and r[3] != c and r[6] == "Thường" and kdl.khoa_nhom(r[7]) == nhom]
     assert len(ung_vien) >= can, "dữ liệu không đủ em cùng nhóm để đột biến"
     for r in ung_vien[:can]:
-        r[6] = "Dự trữ"
+        r[3], r[4], r[6] = c, clb[c][0], "Dự trữ"
     ghi(bo, d)
     ma, out = chay(capsys, SO_NHAP_TEST, bo)
     k3 = _dong_k3(out)
@@ -322,9 +323,10 @@ def test_nhieu_buoi_thoat_2(capsys, bo):
     d = doc(bo)
     d = [r[:3] + ["Thứ 2"] + r[3:] for r in d]
     ghi(bo, d)
-    ma, out = chay(capsys, SO_NHAP_TEST, bo)
+    ma = kdl.main(["--so-nhap", SO_NHAP_TEST, "--ket-qua", bo])
+    cap = capsys.readouterr()
     assert ma == 2
-    assert "nhiều buổi" in (out + capsys.readouterr().err)
+    assert "nhiều buổi" in (cap.out + cap.err)
 
 
 def test_thieu_tep_thoat_2(capsys, tmp_path):

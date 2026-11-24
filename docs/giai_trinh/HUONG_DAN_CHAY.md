@@ -138,5 +138,5 @@ Bộ CSV do `export_csv` ghi (tệp chính + thư mục `*_theo_club` + `*_tong_
 .venv/bin/python du_lieu_test/kiem_doc_lap/kiem_doc_lap.py --so-nhap du_lieu_test/SO_NHAP_TEST.xlsx --ket-qua <thư mục xuất>/ket_qua_phan_bo.csv
 ```
 
-Mong đợi: bảng các phép kiểm đều PASS, mã thoát 0, và tệp dau_vao_ket_qua.csv (mỗi học sinh một dòng: nguyện vọng, điểm, CLB nhận).
+Nếu thiếu thư mục theo CLB hoặc tệp tổng hợp cạnh tệp kết quả, hai phép kiểm tương ứng báo FAIL và mã thoát là 1. Mong đợi: bảng các phép kiểm đều PASS, mã thoát 0, và tệp dau_vao_ket_qua.csv (mỗi học sinh một dòng: nguyện vọng, điểm, CLB nhận).
 Ý nghĩa từng phép kiểm và giới hạn: `du_lieu_test/kiem_doc_lap/README.md`.

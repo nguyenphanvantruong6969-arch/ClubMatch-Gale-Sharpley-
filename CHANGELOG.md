@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — DC1-FIX2: sửa theo báo cáo checker
+
+- `kiem_doc_lap.py`: K0 đối chiếu cả `club_id` lẫn tên khi Sổ nhập đã điền Mã CLB (trước đây rơi sang tên, lọt `club_id` giả); lỗi đầu vào in một lần; không ghi được `--ra` → mã thoát 2.
+- Test mới (+8, nay 27 trong `tests/test_dc1_kiem_doc_lap.py`): hai đột biến K0, ba test khoá riêng từng phép con của K3 (đã thử tắt từng phép: đúng một test đỏ), thiếu thư mục theo CLB → K6 FAIL mã 1, `--ra` không ghi được → 2, lỗi in một lần.
+- README và `HUONG_DAN_CHAY.md` mục 10: nói rõ Mã CLB và hành vi khi thiếu tệp đi kèm (giữ FAIL, mã 1). Số tệp test 403.
+
 ## 2026-11-24 — DC1-FIX1: sửa hai test tài liệu đỏ trên CI
 
 - `docs/giai_trinh/HUONG_DAN_CHAY.md`, `KICH_BAN_DEMO.md`: bỏ mã nội bộ K0/K7 và dấu nháy quanh tên tệp sinh ra (`test_gt3_tai_lieu.py`); `docs/ke_hoach/CLAUDE_CHI_TIET.md`: 401 → 402 tệp test (`test_a13_12_tai_lieu.py`). Không đổi mã.

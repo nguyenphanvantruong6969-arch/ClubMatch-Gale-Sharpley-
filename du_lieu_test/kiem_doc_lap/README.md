@@ -15,15 +15,16 @@ Một tệp Python (`kiem_doc_lap.py`) dành cho giám khảo và nhà trường
 ```
 
 Tệp kết quả phải nằm cạnh `ket_qua_phan_bo_theo_club/` và `ket_qua_phan_bo_tong_hop.csv` (bộ do `export_csv` ghi).
+Thiếu thư mục `*_theo_club/` hoặc tệp `*_tong_hop.csv` thì K6 hoặc K7 báo FAIL và mã thoát là 1 (không tách biệt được với vi phạm thật; muốn bỏ qua thì không chạy script khi thiếu tệp đi kèm).
 Không có `--ra` thì `dau_vao_ket_qua.csv` được ghi cạnh tệp kết quả. Windows: `.venv\Scripts\python`.
 
-Mã thoát: `0` mọi phép kiểm PASS · `1` có FAIL · `2` đầu vào không đọc được hoặc ngoài phạm vi (nhiều buổi).
+Mã thoát: `0` mọi phép kiểm PASS · `1` có FAIL · `2` đầu vào không đọc được, ngoài phạm vi (nhiều buổi) hoặc không ghi được tệp `--ra`.
 
 ## Các phép kiểm
 
 | Mã | Nội dung |
 |---|---|
-| K0 | Đọc được cả hai tệp; một buổi; mọi CLB trong kết quả khớp một CLB của Sổ nhập (theo Mã CLB, nếu trống thì theo tên) |
+| K0 | Đọc được cả hai tệp; một buổi; mọi CLB trong kết quả khớp một CLB của Sổ nhập. Sổ nhập đã điền Mã CLB thì `club_id` xuất phải là mã đó **và** tên xuất phải là tên của CLB mang mã đó; chỉ khi Mã CLB của Sổ nhập để trống mới ghép theo tên (không phân biệt hoa/thường, khoảng trắng) |
 | K1 | Mỗi học sinh của Sổ nhập có đúng một dòng; không dòng lạ, không dòng lặp |
 | K2 | Số em xếp vào mỗi CLB ≤ Chỉ tiêu (CLB không có Chỉ tiêu bị bỏ qua, có ghi chú) |
 | K3 | Số em diện "Dự trữ" ≤ Suất ưu tiên của CLB; nhóm của em dự trữ = Nhóm ưu tiên của CLB; cột "Nhóm dự trữ" khớp Sổ nhập |
