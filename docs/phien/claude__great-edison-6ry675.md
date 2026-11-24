@@ -25,7 +25,7 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 ## Decisions and gotchas
 - Truong approved (2026-11-24): the 5 new UX5B wordings, all six UX5B judgement calls, UX5 UI from six screenshots.
 - UX4/UX5 fold fields behind closed sections, which breaks tests that fill/click them directly: "Thêm tuỳ chọn" (`#clubFormThemTuyChon` -> `#clubFormId`), tab `#qlTabCachXep` + "Tuỳ chỉnh thêm" (`#ux1aNangCao` -> `#ux1aHuyChuong`), `#ux5bTaoMoi > summary` -> `#newStudentId`, `#ux1bThemTom` -> `#btnUx1bPhieuLop`/`#btnUx1bBaoCaoPdf`. Open the fold only if closed.
-- `tests_stress/b/` is NOT in CI (not in testpaths) and was written for the old UI: 19 tests in `test_b2_quan_ly.py` fail on the merged tree; other files in that folder not run.
+- `tests_stress/b/` is NOT in CI (not in testpaths) and was written for the old UI: 19 tests in `test_b2_quan_ly.py` fail on the merged tree; other files in that folder not run. Cause inferred (not checked per test): fields hidden behind UX4/UX5 folds; two sibling tests in CI failed for exactly that and passed once the fold was opened. Truong was asked whether to inspect each of the 19 or leave it to the next session (no answer yet); Truong said it is fine to leave everything visible in the handoff.
 - `test_a13_12_browser_host.py::test_tai_lai_trang_khong_tat_may_chu` failed once on Windows 8/9 in run 45302117321; passed in #32's run; browser_host.py unchanged by the PR -> likely timing flake (not proven).
 - CI cancels the previous run on every push; full matrix ~12-20 min; push once per round.
 - All numbers are SIMULATED data.
@@ -47,3 +47,4 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 |---|---|---|---|
 | 2026-11-23 | Sonnet | Status reports; PRs #29/#30 recorded; UX5B approvals and ticks | docs only |
 | 2026-11-24 | Sonnet | PR #31 (SF+UX5 merge, test fixes), PR #32 (UX1F), CI diagnosis, self-run prompts, deep check that #32 is redundant | context over 400k, handoff written |
+| 2026-11-24 | Sonnet | Explained the 19 failing tests_stress/b tests to Truong; handoff refreshed | context still over 400k; no new work |
