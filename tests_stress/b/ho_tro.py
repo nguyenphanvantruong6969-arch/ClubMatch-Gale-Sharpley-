@@ -6,10 +6,43 @@ from conftest import SO_150
 CACH = {"chi_xep": "ux1aChiXep", "chia_100": "ux1aChia100", "huy_chuong": "ux1aHuyChuong"}
 
 
+def _trong_menu_them(page, sel):
+    return page.locator(sel).evaluate("e => !!e.closest('#qlThemMenu')")
+
+
+def mo_menu_them(page):
+    """UX4-L2: tab Điểm quyết tâm, Điểm chuẩn, Bảng điểm, Dữ liệu nằm trong menu "Thêm ▾" (#qlNutThem); mở nếu đang đóng."""
+    nut = page.locator("#qlNutThem")
+    if nut.get_attribute("aria-expanded") != "true":
+        nut.click()
+
+
+def tab_ql_hien(page, sel):
+    """Tab con của Quản lý có đang hiện không (mở menu "Thêm ▾" trước nếu tab nằm trong đó)?"""
+    if _trong_menu_them(page, sel):
+        mo_menu_them(page)
+    return page.locator(sel).is_visible()
+
+
+def clic_tab_ql(page, sel):
+    if _trong_menu_them(page, sel):
+        mo_menu_them(page)
+    page.locator(sel).click()
+
+
+def mo_the_che_do(page):
+    """UX4-L4: ba thẻ chế độ nằm ở tab Cách xếp, trong mục gập "Tuỳ chỉnh thêm" (#ux1aNangCao); mở ra nếu đang gập."""
+    page.locator("#qlTabCachXep").click()
+    page.wait_for_selector("#ux1aNangCao > summary", state="visible")
+    if page.locator("#ux1aNangCao").get_attribute("open") is None:
+        page.locator("#ux1aNangCao > summary").click()
+
+
 def chon_cach(ui, ma, cho=True):
     """Click a mode card on Cài đặt (view admin). Waits for the card to be checked."""
     p = ui.page
     ui.tab("admin")
+    mo_the_che_do(p)
     p.wait_for_selector("#ux1a" + {"chi_xep": "ChiXep", "chia_100": "Chia100", "huy_chuong": "HuyChuong"}[ma], state="visible")
     nut = p.locator("#" + CACH[ma])
     if nut.get_attribute("aria-checked") != "true":

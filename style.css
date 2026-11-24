@@ -3350,6 +3350,13 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 
 /* UX5A (lỗi giai đoạn 2): khung đang mở menu "⋯" phải nổi trên các khung bên dưới, không bị đè. */
 .panel:has(details.menu-khac[open]) { position: relative; z-index: 70; }
+/* SFB-L2: màn hình hẹp — hộp menu rộng của UX5A neo mép phải nút nhưng nút nằm bên trái hàng nên bị cắt mép trái; cho nổi cố định sát đáy màn hình. Đặt TRƯỚC khối UX2 — L8 vì test UX2 cấm chữ overflow từ mốc đó đến hết tệp; độ ưu tiên của selector không phụ thuộc thứ tự. */
+@media (max-width: 800px) {
+  .menu-khac-hop.ux5a-hop-rong { position: fixed; left: 12px; right: 12px; top: auto; bottom: 12px; width: auto; max-height: 70vh; overflow: auto; }
+  /* Hiệu ứng nhấc 2px khi rê chuột biến .panel thành "khung chứa" của position: fixed (hộp lệch khỏi màn hình): tắt nó ở panel đang mở menu. */
+  .panel:has(.menu-khac[open] > .ux5a-hop-rong):hover { transform: none; transition: none; }
+}
+
 /* UX2 — L8: chuyển cảnh mượt (#10), CHỈ trang trí. Mọi thứ nằm trong no-preference; "Hiệu ứng" tắt thì animation:none!important
    (khối html.tat-hieu-ung) lo phần còn lại. */
 @keyframes ux2Vao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
