@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-24 — SN-COT-LA: cảnh báo cột lạ có dữ liệu khi nạp Sổ nhập (mã mục tạm, chờ Truong xác nhận)
+
+- Trước đây cột có tiêu đề mà phần mềm không nhận ra (vd "Email", "Ghi chú", "Phòng") bị bỏ qua IM LẶNG; chỉ cột không tiêu đề mới có cảnh báo. Nay `so_nhap_canh_bao_cot_la` (sheet, số cột, tối đa 3 tên) báo ở xem trước lẫn nạp thật, cho cả sheet CLB và sheet học sinh; cột lạ trống thì không báo.
+- Chỉ thêm cảnh báo: không đổi dữ liệu được đọc/ghi, không đổi CSV/schema (mặc định giữ nguyên hành vi cũ).
+- Files: `so_nhap.py` (`_ten_cot_la`, khoá `cot_la`), `api_nhap.py` (`_canh_bao_so_nhap`), `i18n_errors.py` + `i18n_loi.js`. Test mới: `tests/test_so_nhap_cot_la.py`.
+- Chưa làm: lượt thi ngoài nguyện vọng vẫn không vào Sổ (đã có thông báo `xuat_kq_dau_vao_thieu`); đổi cần mục riêng vì đụng hợp đồng Sổ nhập.
+
 ## 2026-11-24 — CB1-FIX3: sửa giao diện khung "Văn bản phương án xếp" sau khi xem ảnh; bỏ nhãn "Đề xuất" (Truong yêu cầu)
 
 - Mục: CB1 (đợt sửa sau chụp ảnh). Tệp: `index.html`, `js/2x_phuong_an.js`, `js/18_cai_dat.js`, `style.css`, `i18n.js`, `api_phuong_an.py`, tests (xem dưới).

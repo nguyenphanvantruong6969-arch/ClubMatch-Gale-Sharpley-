@@ -178,6 +178,8 @@ MA_MOI_SAU_ANH_CHUP = {
     "nhan_trung_danh_tu", "so_nhap_canh_bao_nhan_trung",
     # A14 sửa A4: giới hạn đầu vào lớp.
     "lop_sai_kieu", "lop_qua_dai", "canh_bao_lop_bi_cat",
+    # SN-COT-LA: cột lạ có dữ liệu bị bỏ qua khi nạp Sổ nhập.
+    "so_nhap_canh_bao_cot_la",
 }
 
 

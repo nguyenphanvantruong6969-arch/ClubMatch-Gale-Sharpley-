@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| SN-COT-LA (cảnh báo cột lạ có dữ liệu khi nạp Sổ nhập; mã tạm, chờ Truong xác nhận) | xong (đã đẩy lên nhánh, chưa PR) | 2026-11-24 | so_nhap.py (`_ten_cot_la`, khoá `cot_la`), api_nhap.py (`_canh_bao_so_nhap`), i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_so_nhap_cot_la.py (5 ca) | chỉ thêm cảnh báo, dữ liệu đọc/ghi không đổi; 546 test liên quan đạt; kiem_nhanh 7/7; 24 tổ hợp sổ hợp lệ không báo nhầm. Lượt thi ngoài nguyện vọng: GIỮ NGUYÊN (Truong chọn cách A, 24/11), đã có thông báo lúc xuất |
 | CB1-FIX3 (sửa giao diện khung phương án xếp, bỏ nhãn Đề xuất; Truong yêu cầu) | xong (chờ CI) | 2026-11-24 | index.html, js/2x_phuong_an.js, js/18_cai_dat.js, style.css, i18n.js, api_phuong_an.py, CHANGELOG.md | tests/test_cb1_ui.py, tests/test_cb1_api_pdf.py (thêm assert) | ngân sách nút Cách xếp 9 lên 11; kiem_nhanh 7/7 |
 | SEC-1 (CodeQL path-injection, browser_host.py; Truong yêu cầu) | xong (chờ CI + PR vào main) | 2026-11-24 | browser_host.py, CHANGELOG.md | tests/test_browser_host.py (+1 ca) | kiem_nhanh 7/7; cảnh báo đóng sau khi vào main |
 | MT1-X1-L3 (kiểm chứng D5 + tài liệu) | xong (chờ checker) | 2026-11-21 | api_xuat.py (docstring), CHANGELOG.md | — (so ô 3 bộ dữ liệu: trùng khít) | mục MT1-X1 trọn vẹn sau CI xanh |
