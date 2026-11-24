@@ -174,7 +174,8 @@ class PhuongAnMixin:
             if in_hat_giong and (ban != "chot" or hat is None):
                 return _fail(err("cb1_hat_giong_chua_khoa"))
             nd = pa.dung_noi_dung(ban, tieu_chi.mo_ta_tieu_chi(cfg["rules"], "vi"), self._muc_tieu_hien_tai(cfg),
-                                  moc, moc["_chot_day_du"], pa.bam_luat(cfg), bool(in_hat_giong), hat, "vi")
+                                  moc, moc["_chot_day_du"], pa.bam_luat(cfg), bool(in_hat_giong), hat, "vi",
+                                  truong=cfg.get("name"))
             duong = self._duong_xuat(output_path, "phuong_an_xep_%s.pdf" % ban)
             duong = pa.dung_pdf(nd, duong)
             return _ok({"path": duong, "n_trang": xuat_pdf.dem_trang(duong), "ban": ban,

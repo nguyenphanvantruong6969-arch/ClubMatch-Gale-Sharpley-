@@ -15,7 +15,7 @@ import fa_bien_ban
 
 BAN = ("du_kien", "chot")
 KHOA_NOI_DUNG = frozenset({"ban", "lang", "tieu_de", "muc_tieu", "tieu_chi", "ghi_chu", "quy_trinh", "chot",
-                           "dau_van_tay", "hat_giong", "canh_bao", "buoc_le", "cau"})
+                           "dau_van_tay", "hat_giong", "canh_bao", "buoc_le", "cau", "truong"})
 MOC = ("cong_bo", "chot_du_lieu", "boc_hat_giong", "chay_xep", "cong_bo_ket_qua")
 
 # Câu của văn bản, mỗi ngôn ngữ một bộ (cùng kiểu `tieu_chi.GHI_CHU`). Xuất tệp luôn bằng tiếng Việt;
@@ -176,7 +176,7 @@ def _cau_muc_tieu(muc_tieu, lang):
     return {"id": mtg["id"], "tieu_de": the["tieu_de"][ln], "cau": cau}
 
 
-def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong, hat_giong, lang="vi") -> dict:
+def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong, hat_giong, lang="vi", truong=None) -> dict:
     """Nội dung văn bản (dict chỉ gồm khoá trong `KHOA_NOI_DUNG`).
 
     `ban`: "du_kien" | "chot" (khác: ValueError). `tieu_chi`: kết quả `tieu_chi.mo_ta_tieu_chi(rules, lang)`.
@@ -198,6 +198,8 @@ def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong
         "canh_bao": _canh_bao(ban, chot, bam_hien_tai, moc, ln),
         "buoc_le": list(fa_bien_ban.THU_TU_LE),
     }
+    if truong and str(truong).strip():
+        nd["truong"] = str(truong).strip()        # tên trường/không gian làm việc, in lên băng đầu trang
     if ban == "chot":
         if chot:
             nd["chot"] = {"nguoi": chot.get("nguoi"), "luc": chot.get("luc"), "bam_luat": chot.get("bam_luat")}
@@ -209,10 +211,9 @@ def dung_noi_dung(ban, tieu_chi, muc_tieu, moc, chot, bam_hien_tai, in_hat_giong
     return nd
 
 
-# Bảng màu của PDF (cùng tông giao diện: nền tối, vàng nhấn, xanh rêu, giấy).
-_MAU = {"ink": "#1D2421", "ink2": "#3A423F", "slate": "#5A6663", "gold": "#C8871A", "gold_nhat": "#FBF3E0",
-        "moss": "#1F6B4A", "moss_nhat": "#DCE9E0", "giay": "#F3F4F1", "vien": "#DBDCD5", "rust": "#B4402F",
-        "rust_nhat": "#F3DCD9"}
+# Bảng màu của PDF: CHỈ các mức xám (Truong, 24/11: không dùng màu), nên in đen trắng vẫn đọc được.
+_MAU = {"ink": "#141414", "ink2": "#333333", "slate": "#666666", "nhan": "#4D4D4D", "nhat": "#BDBDBD",
+        "nen": "#F5F5F5", "nen2": "#E9E9E9", "vien": "#CFCFCF"}
 _RONG_MM = 186          # A4 210 mm trừ lề 12 mm mỗi bên (`xuat_pdf.LE_MM`)
 _THUT_MM = 10           # thụt hai bên cho phần thân (banner ăn hết bề ngang)
 
@@ -258,8 +259,8 @@ def dung_pdf(nd: dict, duong: str) -> str:
         return Paragraph(html, st(ten, **kw))
 
     def tieu(chu):
-        return [Spacer(1, 14), p(chu, "h2", fontName=dam, fontSize=14.5, leading=19, textColor=mau["ink"]),
-                HRFlowable(width=16 * mm, thickness=2.2, color=mau["gold"], spaceBefore=3, spaceAfter=7, hAlign="LEFT")]
+        return [Spacer(1, 11), p(chu, "h2", fontName=dam, fontSize=14.5, leading=19, textColor=mau["ink"]),
+                HRFlowable(width=16 * mm, thickness=2.2, color=mau["nhan"], spaceBefore=3, spaceAfter=7, hAlign="LEFT")]
 
     def the(noi_dung, nen, vien=None, vach=None, rong=None, dem=10):
         t = Table([[noi_dung]], colWidths=[rong or (_RONG_MM - 2 * _THUT_MM) * mm])
@@ -275,16 +276,16 @@ def dung_pdf(nd: dict, duong: str) -> str:
 
     def cham(xong):
         d = Drawing(14, 14)
-        d.add(Circle(7, 7, 5.2, fillColor=mau["moss"] if xong else colors.white,
-                     strokeColor=mau["moss"] if xong else mau["slate"], strokeWidth=1.4))
+        d.add(Circle(7, 7, 5.2, fillColor=mau["ink"] if xong else colors.white,
+                     strokeColor=mau["ink"] if xong else mau["slate"], strokeWidth=1.4))
         if xong:
             d.add(Circle(7, 7, 1.9, fillColor=colors.white, strokeColor=colors.white))
         return d
 
     def so(n):
         d = Drawing(16, 16)
-        d.add(Circle(8, 8, 7.4, fillColor=mau["gold"], strokeColor=mau["gold"]))
-        d.add(String(8, 4.6, str(n), fontName=dam, fontSize=9, fillColor=mau["ink"], textAnchor="middle"))
+        d.add(Circle(8, 8, 7.4, fillColor=mau["nhan"], strokeColor=mau["nhan"]))
+        d.add(String(8, 4.6, str(n), fontName=dam, fontSize=9, fillColor=colors.white, textAnchor="middle"))
         return d
 
     def gio(x):
@@ -299,31 +300,33 @@ def dung_pdf(nd: dict, duong: str) -> str:
     # ---- băng đầu trang
     nhan = Table([[p(c["nhan_ban"][nd["ban"]], "nhan", fontName=dam, fontSize=9.5, leading=12, textColor=mau["ink"])]],
                  colWidths=[(34 if nd["ban"] == "chot" else 38) * mm])
-    nhan.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), mau["gold"]), ("LEFTPADDING", (0, 0), (-1, -1), 9),
+    nhan.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.white), ("LEFTPADDING", (0, 0), (-1, -1), 9),
                               ("RIGHTPADDING", (0, 0), (-1, -1), 9), ("TOPPADDING", (0, 0), (-1, -1), 3),
                               ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
     nhan.hAlign = "LEFT"
-    ten_ban = Table([[p(c["banner"], "bn", fontName=dam, fontSize=8.5, leading=11, textColor=mau["gold"])],
-                     [p(nd["tieu_de"].split(" — ")[0], "bt", fontName=dam, fontSize=21, leading=26, textColor=colors.white)],
-                     [nhan]], colWidths=[_RONG_MM * mm])
+    ten_ban = Table([[p(c["banner"], "bn", fontName=dam, fontSize=8.5, leading=11, textColor=mau["nhat"])],
+                     [p(nd["tieu_de"].split(" — ")[0], "bt", fontName=dam, fontSize=21, leading=26, textColor=colors.white)]]
+                    + ([[p(nd["truong"], "tr", fontSize=12.5, leading=17, textColor=mau["nhat"])]] if nd.get("truong") else [])
+                    + [[nhan]], colWidths=[_RONG_MM * mm])
     ten_ban.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), mau["ink"]),
                                  ("LEFTPADDING", (0, 0), (-1, -1), _THUT_MM * mm),
                                  ("RIGHTPADDING", (0, 0), (-1, -1), _THUT_MM * mm),
                                  ("TOPPADDING", (0, 0), (0, 0), 14), ("BOTTOMPADDING", (0, 0), (0, 0), 2),
                                  ("TOPPADDING", (0, 1), (0, 1), 2), ("BOTTOMPADDING", (0, 1), (0, 1), 8),
-                                 ("TOPPADDING", (0, 2), (0, 2), 0), ("BOTTOMPADDING", (0, 2), (0, 2), 16)]))
+                                 ("TOPPADDING", (0, 2), (0, -1), 0), ("BOTTOMPADDING", (0, 2), (0, -2), 8),
+                                 ("BOTTOMPADDING", (0, -1), (0, -1), 16)]))
     khoi += [ten_ban, Spacer(1, 12), Indenter(left=_THUT_MM * mm, right=_THUT_MM * mm),
              p(nd["cau"], "gt", fontSize=11.5, leading=18, textColor=mau["ink2"])]
     for cb in nd["canh_bao"]:
-        khoi += [Spacer(1, 8), the(p(cb["chu"], "cb", fontName=dam, textColor=mau["rust"]),
-                                   mau["rust_nhat"], vach=mau["rust"])]
+        khoi += [Spacer(1, 8), the(p(cb["chu"], "cb", fontName=dam, textColor=mau["ink"]),
+                                   mau["nen2"], vach=mau["ink"])]
 
     # ---- mục tiêu
     if nd["muc_tieu"]:
         mt = nd["muc_tieu"]
         khoi += tieu(c["muc_tieu"])
-        khoi.append(the([p(mt["tieu_de"], "mt", fontName=dam, fontSize=14, leading=18, textColor=mau["moss"]),
-                         Spacer(1, 3), p(mt["cau"], "mt2", fontSize=11, leading=16)], mau["gold_nhat"], vach=mau["gold"]))
+        khoi.append(the([p(mt["tieu_de"], "mt", fontName=dam, fontSize=14, leading=18, textColor=mau["ink"]),
+                         Spacer(1, 3), p(mt["cau"], "mt2", fontSize=11, leading=16)], mau["nen"], vach=mau["nhan"]))
 
     # ---- thứ tự xét: hai cột
     khoi += tieu(c["tieu_chi"])
@@ -337,7 +340,7 @@ def dung_pdf(nd: dict, duong: str) -> str:
         mo_ta = c[nhom]
         if len(cot) == 1:                       # chỉ xét một nhóm (luật "chỉ theo nhóm ưu tiên")
             tt, mo_ta = c["tang_chung_tt"], c["tang_chung"]
-        hang = [[p(tt.upper(), "ct", fontName=dam, fontSize=8.5, leading=11, textColor=mau["gold"]), ""],
+        hang = [[p(tt.upper(), "ct", fontName=dam, fontSize=8.5, leading=11, textColor=mau["slate"]), ""],
                 [p(mo_ta, "cm", fontName=dam, fontSize=11, leading=15, textColor=mau["ink"]), ""]]
         for d in cot[nhom]:
             hang.append([so(d["thu_tu"]), p(d["chu"], "cd", fontSize=10.5, leading=14.5)])
@@ -351,21 +354,21 @@ def dung_pdf(nd: dict, duong: str) -> str:
     nhom_co = [n for n in ("tang_1", "tang_2") if n in cot]
     if len(nhom_co) == 2:
         rc = (rong_in - 6 * mm) / 2
-        trai = the(cot_the(nhom_co[0], rc - 22), mau["giay"], vien=mau["vien"], rong=rc)
-        phai = the(cot_the(nhom_co[1], rc - 22), mau["giay"], vien=mau["vien"], rong=rc)
+        trai = the(cot_the(nhom_co[0], rc - 22), mau["nen"], vien=mau["vien"], rong=rc)
+        phai = the(cot_the(nhom_co[1], rc - 22), mau["nen"], vien=mau["vien"], rong=rc)
         hai = Table([[trai, "", phai]], colWidths=[rc, 6 * mm, rc])
         hai.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
                                  ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0),
                                  ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
         khoi.append(hai)
     elif nhom_co:
-        khoi.append(the(cot_the(nhom_co[0], rong_in - 22), mau["giay"], vien=mau["vien"]))
+        khoi.append(the(cot_the(nhom_co[0], rong_in - 22), mau["nen"], vien=mau["vien"]))
     if khong_dung:
         khoi += [Spacer(1, 6), p(c["khong_dung"], "kd", fontName=dam, fontSize=9.5, textColor=mau["slate"])]
         khoi += [p("– " + d["chu"], "kd2", fontSize=9.5, leading=13, textColor=mau["slate"]) for d in khong_dung]
-    khoi += [Spacer(1, 8), the([p(c["luu_y"].upper(), "ly", fontName=dam, fontSize=8.5, leading=11, textColor=mau["moss"]),
+    khoi += [Spacer(1, 8), the([p(c["luu_y"].upper(), "ly", fontName=dam, fontSize=8.5, leading=11, textColor=mau["ink"]),
                                 Spacer(1, 2), p(nd["ghi_chu"], "ly2", fontSize=10.5, leading=15, textColor=mau["ink"])],
-                               mau["moss_nhat"], vach=mau["moss"], dem=9)]
+                               mau["nen2"], vach=mau["ink"], dem=9)]
 
     # ---- quy trình: chấm trạng thái, giờ nhỏ bên dưới, chữ Đã làm / Chưa làm bên phải
     hang = []
@@ -373,11 +376,11 @@ def dung_pdf(nd: dict, duong: str) -> str:
         luc = [p(gio(m["luc"]), "gio", fontSize=8.5, leading=11, textColor=mau["slate"])] if m["luc"] else []
         hang.append([cham(m["da"]), [p(m["chu"], "mc", fontName=dam if m["da"] else thuong, textColor=mau["ink"])] + luc,
                      p(c["da"] if m["da"] else c["chua"], "tt", fontName=dam, fontSize=9.5, leading=13,
-                       textColor=mau["moss"] if m["da"] else mau["slate"], alignment=2)])
+                       textColor=mau["ink"] if m["da"] else mau["slate"], alignment=2)])
     qt = Table(hang, colWidths=[9 * mm, rong_in - 9 * mm - 24 * mm, 24 * mm])
     qt.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                            ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 6),
-                            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 4),
+                            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
                             ("LINEBELOW", (1, 0), (-1, -2), 0.5, mau["vien"])]))
     khoi.append(KeepTogether(tieu(c["quy_trinh"]) + [qt]))
 
@@ -406,7 +409,7 @@ def dung_pdf(nd: dict, duong: str) -> str:
                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
         khoi.append(KeepTogether(tieu(c["xac_nhan"]) + [
             the([bang, Spacer(1, 4), p(c["xac_nhan_mo_ta"], "xm", fontSize=9, leading=12.5, textColor=mau["slate"])],
-                mau["giay"], vien=mau["vien"])]))
+                mau["nen"], vien=mau["vien"])]))
 
     # ---- bốc thăm có người chứng kiến
     buoc = [[so(i), p(b, "bl")] for i, b in enumerate(nd["buoc_le"], 1)]
