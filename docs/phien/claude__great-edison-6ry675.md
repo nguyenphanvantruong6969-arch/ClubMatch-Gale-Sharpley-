@@ -33,7 +33,7 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 ## Next steps (priority order)
 1. Ask/confirm Truong: close PR #32 without merging. Tell the other session to stop work on it.
 2. Check CI of `main` (run for 60142c8); if red, read failed job logs and fix on a new branch.
-3. New small item: update `tests_stress/b/` to the UX4/UX5 folded UI (own branch + `docs/phien/<branch>.md`, Opus plans per CLAUDE.md rule 12). Agreed approach (option 1): run the WHOLE folder (each dir separately; conftest clashes with tests_stress/a), classify each failure from its message, add ONE helper in `tests_stress/b/ho_tro.py` that opens a fold only if closed (club form `#clubFormThemTuyChon`->`#clubFormId`; tab `#qlTabCachXep` + `#ux1aNangCao` summary -> mode cards; `#ux5bTaoMoi > summary` -> `#newStudentId`; `#ux1bThemTom` -> `#btnUx1bPhieuLop`), fix each test, rerun to 0 failures. Do NOT auto-open every `<details>` in a fixture and do NOT skip/xfail tests.
+3. DONE ANALYSIS (see `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.md` + `.patch`): the real count is 54 of 65 failing, 53 from the single helper `chon_cach`; test-side fixes verified; ALSO a REAL UI bug found (UX5A-L2 dropdowns cut off at 390 px) with a verified CSS candidate. Next: new branch + `docs/phien/<branch>.md`; Opus plans, Sonnet applies the patch and reviews; Truong approves the CSS visually.
 4. Truong decision (privacy): teachers are not class-scoped; any teacher can print every class's slips (with lookup codes). Keep as is, or add per-class teacher scoping as a new item.
 5. Truong hand-tests UX3/UX4/UX5 UI (marked "chờ Truong thử tay"); decide `claude/ux1-tich-hop` is now fully merged (it is an ancestor of main).
 6. Optional SF leftovers: progress-bar UI for `get_tien_do_xuat`, dedicated zip error code (ST-B-011), pypdf now in requirements-dev (done by UX1F).
@@ -49,3 +49,4 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 | 2026-11-24 | Sonnet | PR #31 (SF+UX5 merge, test fixes), PR #32 (UX1F), CI diagnosis, self-run prompts, deep check that #32 is redundant | context over 400k, handoff written |
 | 2026-11-24 | Sonnet | Explained the 19 failing tests_stress/b tests to Truong; handoff refreshed | context still over 400k; no new work |
 | 2026-11-24 | Sonnet | Proposed how to fix the 19 tests_stress/b failures (option 1, recorded in Next steps) | handoff refreshed again; no new work |
+| 2026-11-24 | Sonnet | Deep analysis of tests_stress/b (all 65 run), verified test fixes, found real 390 px menu overflow bug, saved memo+patch | context far over 400k; no product code changed |

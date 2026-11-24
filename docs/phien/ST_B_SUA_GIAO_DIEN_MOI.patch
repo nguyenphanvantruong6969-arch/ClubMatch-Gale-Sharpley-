@@ -1,0 +1,185 @@
+diff --git a/tests_stress/b/ho_tro.py b/tests_stress/b/ho_tro.py
+index bf622a9..51d7780 100644
+--- a/tests_stress/b/ho_tro.py
++++ b/tests_stress/b/ho_tro.py
+@@ -6,10 +6,43 @@ from conftest import SO_150
+ CACH = {"chi_xep": "ux1aChiXep", "chia_100": "ux1aChia100", "huy_chuong": "ux1aHuyChuong"}
+ 
+ 
++def _trong_menu_them(page, sel):
++    return page.locator(sel).evaluate("e => !!e.closest('#qlThemMenu')")
++
++
++def mo_menu_them(page):
++    """UX4-L2: tab Điểm quyết tâm, Điểm chuẩn, Bảng điểm, Dữ liệu nằm trong menu "Thêm ▾" (#qlNutThem); mở nếu đang đóng."""
++    nut = page.locator("#qlNutThem")
++    if nut.get_attribute("aria-expanded") != "true":
++        nut.click()
++
++
++def tab_ql_hien(page, sel):
++    """Tab con của Quản lý có đang hiện không (mở menu "Thêm ▾" trước nếu tab nằm trong đó)?"""
++    if _trong_menu_them(page, sel):
++        mo_menu_them(page)
++    return page.locator(sel).is_visible()
++
++
++def clic_tab_ql(page, sel):
++    if _trong_menu_them(page, sel):
++        mo_menu_them(page)
++    page.locator(sel).click()
++
++
++def mo_the_che_do(page):
++    """UX4-L4: ba thẻ chế độ nằm ở tab Cách xếp, trong mục gập "Tuỳ chỉnh thêm" (#ux1aNangCao); mở ra nếu đang gập."""
++    page.locator("#qlTabCachXep").click()
++    page.wait_for_selector("#ux1aNangCao > summary", state="visible")
++    if page.locator("#ux1aNangCao").get_attribute("open") is None:
++        page.locator("#ux1aNangCao > summary").click()
++
++
+ def chon_cach(ui, ma, cho=True):
+     """Click a mode card on Cài đặt (view admin). Waits for the card to be checked."""
+     p = ui.page
+     ui.tab("admin")
++    mo_the_che_do(p)
+     p.wait_for_selector("#ux1a" + {"chi_xep": "ChiXep", "chia_100": "Chia100", "huy_chuong": "HuyChuong"}[ma], state="visible")
+     nut = p.locator("#" + CACH[ma])
+     if nut.get_attribute("aria-checked") != "true":
+diff --git a/tests_stress/b/test_b1_dieu_huong_cai_dat.py b/tests_stress/b/test_b1_dieu_huong_cai_dat.py
+index bbc5b21..6fbbda0 100644
+--- a/tests_stress/b/test_b1_dieu_huong_cai_dat.py
++++ b/tests_stress/b/test_b1_dieu_huong_cai_dat.py
+@@ -5,7 +5,7 @@ import random
+ import pytest
+ 
+ from conftest import SO_150
+-from ho_tro import chon_cach, rules, nap_so_150, chay_ui, so_dong_run, ket_qua_db, ket_qua_ui, khoa_tho, _doc_bang
++from ho_tro import chon_cach, rules, nap_so_150, chay_ui, so_dong_run, ket_qua_db, ket_qua_ui, khoa_tho, _doc_bang, clic_tab_ql
+ 
+ 
+ def test_b1_moi_tab_va_tab_con(mo):
+@@ -21,7 +21,7 @@ def test_b1_moi_tab_va_tab_con(mo):
+     subs = p.evaluate("[...document.querySelectorAll('#qlTabs [data-ql-tab]')].filter(b=>!b.hidden).map(b=>b.id)")
+     assert len(subs) >= 3
+     for s in subs * 2:
+-        p.locator("#" + s).click()
++        clic_tab_ql(p, "#" + s)
+         p.wait_for_timeout(120)
+         assert p.locator("#" + s).get_attribute("aria-selected") == "true"
+     # nhóm thanh bên (nút nhóm): bấm không được làm hỏng điều hướng
+diff --git a/tests_stress/b/test_b2_quan_ly.py b/tests_stress/b/test_b2_quan_ly.py
+index 76bf244..3250f2c 100644
+--- a/tests_stress/b/test_b2_quan_ly.py
++++ b/tests_stress/b/test_b2_quan_ly.py
+@@ -3,7 +3,7 @@ việc sau khi xếp. SIMULATED data."""
+ import sqlite3
+ 
+ 
+-from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui, so_dong_run)
++from ho_tro import (chon_cach, nap_so_150, nap_tep, dem_db, khoa_tho, chay_ui, ket_qua_db, ket_qua_ui, so_dong_run, clic_tab_ql)
+ from ho_tro_tep import CAC_TEP
+ 
+ TRACEBACK = ("Traceback", "invalid literal", "sqlite3.", "KeyError", "TypeError", "AttributeError", "ValueError", "IndexError",
+@@ -34,11 +34,14 @@ def _vao_clb(ui):
+ 
+ def _luu_clb(ui, id_, ten, cap, rc="", buoi=""):
+     p = ui.page
++    if not p.locator("#clubFormId").is_visible():          # UX4-L3: Mã CLB và chỗ dành riêng nằm sau "Thêm tuỳ chọn"; có lần lưu làm nó gập lại
++        p.locator("#clubFormThemTuyChon").click()
+     p.fill("#clubFormId", id_)
+     p.fill("#clubFormName", ten)
+     p.evaluate("v => { const e = document.getElementById('clubFormCapacity'); e.value = v; }", cap)
+     p.fill("#clubFormReserveCapacity", rc)
+-    p.fill("#clubFormBuoi", buoi)
++    if buoi:                               # UX4-L3: Buổi là ô thả xuống, không còn là ô gõ
++        p.select_option("#clubFormBuoi", value=buoi)
+     p.locator("#btnSaveClub").click()
+     p.wait_for_timeout(900)
+     p.locator("#clubForm").evaluate("e => (e.closest('section,div.panel,div') || document.body).parentElement.innerText")
+@@ -346,10 +349,8 @@ def test_b2_hoc_sinh_phan_trang_tim_kiem_gan_nhom(mo):
+     p.locator("#btnBulkAssign").click()
+     p.wait_for_timeout(1500)
+     assert q(ui, "select count(*) from students where lower(reserve_group)='nhom_a'")[0][0] == 0
+-    # không tick mà bấm gán: báo lỗi, không gọi lên máy chủ
+-    p.locator("#btnBulkAssign").click()
+-    p.wait_for_timeout(500)
+-    assert "tick" in p.locator("#toastStack").inner_text().lower() or p.locator("#toastStack").inner_text().strip()
++    # UX4-L3: chưa chọn học sinh nào thì nút Gán ẩn (không còn đường "bấm không tick rồi báo lỗi")
++    assert p.locator("#btnBulkAssign").is_hidden()
+     assert not khoa_tho(ui)
+     ui.kiem_loi()
+ 
+@@ -384,7 +385,7 @@ def test_b2_diem_quyet_tam_sua_luu_va_khoa_sau_xep(mo):
+     chon_cach(ui, "huy_chuong")
+     nap_so_150(ui)
+     ui.tab("admin")
+-    p.locator("#qlTabWh").click()
++    clic_tab_ql(p, "#qlTabWh")
+     p.locator("#btnWhXemTatCa").click()
+     p.wait_for_selector("#whQlBody tr")
+     p.locator("#whQlBody tr").first.click()
+@@ -403,7 +404,7 @@ def test_b2_diem_quyet_tam_sua_luu_va_khoa_sau_xep(mo):
+     # chạy xếp → điểm bị khoá → sửa phải bị từ chối rõ ràng
+     chay_ui(ui)
+     ui.tab("admin")
+-    p.locator("#qlTabWh").click()
++    clic_tab_ql(p, "#qlTabWh")
+     p.wait_for_timeout(800)
+     if p.locator("#btnWhXemTatCa").is_visible():
+         p.locator("#btnWhXemTatCa").click()
+@@ -422,7 +423,7 @@ def test_b2_xoa_du_lieu_hai_buoc(mo):
+     nap_so_150(ui)
+     chay_ui(ui)
+     ui.tab("admin")
+-    p.locator("#qlTabDuLieu").click()
++    clic_tab_ql(p, "#qlTabDuLieu")
+     for nut, kiem in (("#btnResetStudents", lambda: dem_db(ui, "students")[0] == 0), ("#btnResetAll", lambda: dem_db(ui, "clubs")[0] == 0)):
+         b = p.locator(nut)
+         nhan0 = b.inner_text()
+@@ -439,7 +440,7 @@ def test_b2_xoa_du_lieu_hai_buoc(mo):
+         if nut == "#btnResetStudents":
+             nap_so_150(ui)       # có dữ liệu lại để thử nút thứ hai
+             ui.tab("admin")
+-            p.locator("#qlTabDuLieu").click()
++            clic_tab_ql(p, "#qlTabDuLieu")
+     ui.tab("pipeline")
+     stat = p.locator("#statStudents").inner_text()
+     assert stat in ("0", "—"), stat
+diff --git a/tests_stress/b/test_b4_hien_thi.py b/tests_stress/b/test_b4_hien_thi.py
+index c34f218..49382eb 100644
+--- a/tests_stress/b/test_b4_hien_thi.py
++++ b/tests_stress/b/test_b4_hien_thi.py
+@@ -8,7 +8,7 @@ import time
+ 
+ import pytest
+ 
+-from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
++from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO, tab_ql_hien, clic_tab_ql
+ from ho_tro_tep import so_nhan_ban
+ from conftest import SO_150
+ 
+@@ -60,9 +60,9 @@ def test_b4_vi_en_moi_man_hinh_khoa_tho_chua_dich_va_tran_chu(mo):
+             subs = ["#qlTabClb", "#qlTabHs", "#qlTabWh", "#qlTabDc", "#qlTabDuLieu"] if t == "admin" else [None]
+             for sub in subs:
+                 if sub:
+-                    if not p.locator(sub).is_visible():
++                    if not tab_ql_hien(p, sub):
+                         continue
+-                    p.locator(sub).click()
++                    clic_tab_ql(p, sub)
+                 p.wait_for_timeout(500)
+                 ds = p.evaluate(JS_VAN_BAN_TINH)
+                 for tag, txt in ds:
+@@ -123,9 +123,9 @@ def test_b4_do_rong_man_hinh(mo, rong):
+         subs = ["#qlTabClb", "#qlTabHs", "#qlTabWh", "#qlTabDuLieu"] if t == "admin" else [None]
+         for sub in subs:
+             if sub:
+-                if not p.locator(sub).is_visible():
++                if not tab_ql_hien(p, sub):
+                     continue
+-                p.locator(sub).click()
++                clic_tab_ql(p, sub)
+             p.wait_for_timeout(500)
+             r = p.evaluate(JS_TRAN_TRANG)
+             if t == "admin" and rong < 700:
