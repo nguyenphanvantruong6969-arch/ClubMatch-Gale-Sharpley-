@@ -40,6 +40,8 @@ def test_st_b_006_chi_tieu_thap_phan_bao_loi_o_chi_tieu(trang, api):
     page.locator('.nav-item[data-tab="admin"]').click()
     page.wait_for_selector("#btnSaveClub", state="attached")
     n_truoc = len(api.list_clubs_admin()["data"])
+    if not page.locator("#clubFormId").is_visible():      # UX4-L3: Mã CLB gập sau "Thêm tuỳ chọn"
+        page.locator("#clubFormThemTuyChon").click()
     page.fill("#clubFormId", "T4")
     page.fill("#clubFormName", "Thập phân")
     page.fill("#clubFormCapacity", "1.5")
@@ -100,6 +102,8 @@ def test_st_b_004_nhap_tai_cho_ma_khac_hoa_thuong_hoi_lai(trang, api):
     with api._ket_noi_doc() as cur:
         ma = cur.execute("SELECT student_id FROM students LIMIT 1").fetchone()[0]
     page.locator('.nav-item[data-tab="fallback"]').click()
+    if page.locator("#ux5bTaoMoi").get_attribute("open") is None:   # UX5B-L3: ô tạo học sinh mới gập
+        page.locator("#ux5bTaoMoi > summary").click()
     page.wait_for_selector("#newStudentId", state="visible")
     bien = ma.swapcase() if ma.swapcase() != ma else ma.lower() + "x"
     page.fill("#newStudentId", bien)
