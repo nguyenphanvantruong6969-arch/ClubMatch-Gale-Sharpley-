@@ -122,3 +122,37 @@ HS002 (chinh_sach) 4th pref Âm nhạc, Thường, rank 4; HS003 (chinh_sach) Ti
 |---|---|---|---|
 | 2026-11-24 | Opus (planner) | Read export/Sổ nhập code, wrote this file + DC1_GIAO_THUC.md | no product code |
 | 2026-11-24 | Sonnet (coder) | L1–L4: script K0–K7, tests (19), README, docs, CHANGELOG/TIEN_DO | soat-ma: tiers 1–3 n/a (no product code) |
+
+## Checker report (2026-11-24, Sonnet checker, head 9d4cf1a)
+
+Chỉ soát, không sửa mã/test/sổ đăng ký. Dữ liệu dùng là dữ liệu MÔ PHỎNG (`SO_NHAP_TEST.xlsx`, seed 3).
+
+**Kết quả chạy:** `pytest` 3 tệp = 50 passed; `ruff check .` sạch; `kiem_nhanh.py` 7/7; `git diff --stat origin/main...HEAD` chỉ gồm
+`CHANGELOG.md`, `docs/**`, `du_lieu_test/kiem_doc_lap/*`, `tests/test_dc1_kiem_doc_lap.py` (đúng phạm vi Acceptance). Script chỉ import thư viện chuẩn + openpyxl.
+
+**Kết luận: không có blocker.** Có 3 mục "nên sửa" và 4 nit.
+
+### Nên sửa (should fix)
+1. **K0 không đối chiếu `club_id` với tên CLB (D3 dương tính giả/âm tính giả ngược: lọt lỗi thật).** `_ghep` tra `theo_ma` rồi *rơi sang tra theo tên* dù Mã CLB của Sổ nhập đã điền.
+   Repro (bộ hợp lệ seed 3, sửa tệp chính `ket_qua_phan_bo.csv`):
+   (a) đổi `club_id` của một dòng đã xếp thành `XXX_BOGUS`, giữ nguyên `ten_clb` → mã thoát 0, "8 PASS, 0 FAIL";
+   (b) giữ đúng `club_id`, đổi `ten_clb` thành tên CLB khác → mã thoát 0, "8 PASS, 0 FAIL".
+   `dau_vao_ket_qua.csv` còn in `club_id_nhan` sai. README ghi "theo Mã CLB, nếu trống thì theo tên" — không đúng với mã (rơi sang tên cả khi mã không khớp). Đề nghị: khi Mã CLB của Sổ nhập đã điền, `club_id` xuất phải thuộc tập mã đó (nếu không → K0 FAIL "không đối chiếu được"), và `ten_clb` xuất phải khớp tên của CLB có mã đó; chỉ rơi sang tên khi Mã CLB của Sổ nhập trống. Thêm test đột biến (a) và (b).
+2. **`test_k3_vuot_suat_du_tru` đỏ do nguyên nhân phụ.** K3 có ba phép con (quỹ dự trữ ≤ suất; nhóm em dự trữ = nhóm CLB; nhóm xuất = nhóm Sổ nhập). Test đổi vài em "Thường"→"Dự trữ" nên vừa vượt suất vừa lệch nhóm. Tôi vô hiệu hoá riêng phép kiểm suất (`if dem.get(...) > c["du_tru"]`) rồi riêng phép kiểm nhóm: cả hai lần test vẫn passed (1 passed). Tức không test nào khoá từng phép con. Đề nghị thêm hai test: (i) chọn em đã đúng nhóm CLB để chỉ vượt suất; (ii) đổi cột `nhom_du_tru`/diện của một em dự trữ mà không vượt suất. (Ghi chú: các đột biến phía Sổ nhập của tôi — đổi nhóm em HS003, đổi Nhóm ưu tiên CLB Tin học, hạ Suất ưu tiên về 0, hạ Chỉ tiêu 12→11 — đều bị FAIL đúng phép K3/K2, nên script đúng; chỉ test yếu.)
+3. **K6/K7 FAIL khi thiếu tệp đi kèm, trong khi D4 ghi K7 là "optional lot".** Chỉ đưa tệp chính (không có `*_theo_club/` hoặc `*_tong_hop.csv`) → K6 FAIL "không thấy thư mục", K7 FAIL, mã thoát 1, không phân biệt được với vi phạm thật. README nói tệp phải nằm cạnh nhau nhưng không nói điều gì xảy ra khi thiếu; HUONG_DAN_CHAY mục 10 cũng chưa nói. Đề nghị chọn một: ghi rõ trong README/HUONG_DAN ("thiếu tệp đi kèm → K6/K7 báo FAIL, mã 1"), hoặc đổi thành "BỎ QUA" (không tính FAIL). Quyết định thuộc Truong/Opus; hiện hành vi là FAIL.
+
+### Nit
+- N1. K2 bỏ qua CLB có Chỉ tiêu trống/0/không đọc được số (vd. "12 chỗ"); đúng D4 và có ghi "bỏ qua N CLB", nhưng CLB Chỉ tiêu 0 có người xếp vẫn ra PASS. Repro: đặt Chỉ tiêu CLB Bóng đá = 0 → 8 PASS.
+- N2. Mã học sinh được `strip()` nên "HS001␠" vẫn khớp (PASS); mã khác hoa/thường thì FAIL K1 (đúng). Không phải lỗi, chỉ ghi nhận.
+- N3. `main` in thông báo lỗi đầu vào hai lần (stderr và stdout); `ghi_dau_vao` không bắt `OSError` (đường `--ra` không ghi được → traceback thay vì mã 2).
+- N4. KICH_BAN_DEMO 13b chỉ `CA_MAU.md` mục 1–2 đối chiếu HS001–HS003 (đúng với mục "Ca 1/4/5"), nhưng `CA_MAU.md` dùng hạt giống 42 còn tự kiểm dùng seed 3; kết quả ba em khớp ở cả hai, nhưng tài liệu không nói hạt giống nào cần dùng.
+
+### Đối chiếu từng mục được giao
+- **K0–K7 so với D4:** đúng, ngoài mục 1 ở trên. K1 (thiếu/lạ/lặp), K2 (Chỉ tiêu), K4, K5, K6 (khớp theo nội dung, không theo tên tệp), K7 chạy đúng trên các đột biến của tôi.
+- **D2 mã thoát:** 0/1/2 đúng (tệp 9 cột, Sổ nhập nhiều buổi, thiếu tệp → 2). **D5:** `CHU_THICH` trùng nguyên văn D5. **Không import mô-đun của repo:** có test ast.
+- **Đột biến của tôi (tất cả trên bộ hợp lệ seed 3):** em chưa xếp được thêm vào tệp theo CLB → K6 FAIL ✔; em dự trữ đổi `nhom_du_tru` → K3 FAIL ✔; hoán đổi CLB của hai em (giữ bảo toàn) → K3/K4/K5/K6/K7 FAIL ✔; Thường→Dự trữ → K3 FAIL ✔; em đã xếp bị xoá CLB chỉ ở tệp chính → K6, K7 FAIL ✔; dòng thừa HS999 → K1 FAIL ✔; chỉ có tiêu đề → K1 FAIL ✔; xoá Mã CLB cả cột Sổ nhập (khớp theo tên) → PASS ✔; tên CLB IN HOA + NBSP, Mã CLB trống → PASS ✔ (D3 đúng); đổi nhóm HS003 → K3 FAIL ✔; bỏ nguyện vọng 1 của em đã nhận → K4, K5 FAIL ✔. Lọt lỗi: chỉ mục 1 (và N1 theo thiết kế).
+- **Tài liệu:** README, HUONG_DAN_CHAY mục 10, KICH_BAN_DEMO 13b bằng tiếng Việt, chỉ nêu dữ kiện, có ghi "Dữ liệu mô phỏng", không có nhận xét/kết luận. Sai lệch duy nhất với script: câu về Mã CLB ở README (mục 1) và thiếu nói về hành vi khi thiếu tệp (mục 3).
+
+| Date | Model | What was done | Notes |
+|---|---|---|---|
+| 2026-11-24 | Sonnet (checker) | Soát DC1: không blocker; 3 should-fix, 4 nit | chỉ docs, không sửa mã |
