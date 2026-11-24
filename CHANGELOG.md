@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-24 — SFB-L3: dọn sau các lần gộp SF/UX5/UX1F (chỉ tài liệu và hạ tầng test)
+
+- Xoá `docs/phien/claude__great-edison-6ry675__TU_CHAY.md` và `claude__ux1-tich-hop-vao-main__TU_CHAY.md` (việc đã xong, nội dung đã ở main).
+- `docs/ke_hoach/TIEN_DO.md`: các dòng SF-*, UX5B-FIX-CI, UX1F-L* còn ghi "chờ CI/chờ checker" sửa theo thực tế (đã gộp vào main, CI #1522 xanh); thêm dòng SFB. `CLAUDE_CHI_TIET.md`: đếm tệp test = 402.
+- `tests_stress/b/conftest.py`: ảnh chụp mặc định ghi vào thư mục tạm (đặt `RBDA_ANH_ST_B` để lưu vào kho) nên chạy stress không còn sửa các PNG đã theo dõi.
+- SFB-L4 (tiến trình PDF, mã lỗi zip riêng) là lô tuỳ chọn: BỎ, để mục riêng.
+
 ## 2026-11-24 — SFB-L2: menu UX5A không còn bị cắt ở màn hình hẹp (CSS, commit riêng để revert được)
 
 - `style.css`: một khối `@media (max-width: 800px)` cuối tệp, gồm hai luật. (1) `.menu-khac-hop.ux5a-hop-rong` thành hộp `position: fixed` sát đáy (`left/right: 12px`, `max-height: 70vh`): sửa "Báo cáo và phiếu in ▾" (Kết quả) và "Xuất tệp khác ▾" (Chi tiết) bị cắt mép trái (x = -132 ở 390 px; -12 ở 768 px không chọn lớp). (2) `.panel:has(.menu-khac[open] > .ux5a-hop-rong):hover { transform: none; transition: none; }`: luật (1) một mình CHƯA ĐỦ — hiệu ứng nhấc 2 px khi rê chuột (`.panel:hover`) biến `.panel` thành khung chứa của `position: fixed`, nên hộp lệch (top = -127) ngay khi chuột còn ở trên panel; chỉ panel đang mở menu rộng mất hiệu ứng nhấc. Màn hình > 800 px không đổi (test khẳng định vẫn `position: absolute`, rộng ≤ 360 px). Không đổi chữ, id, i18n.
