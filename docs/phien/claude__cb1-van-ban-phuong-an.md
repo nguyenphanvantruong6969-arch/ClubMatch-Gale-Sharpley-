@@ -73,7 +73,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1, L2 done (coder, 2026-11-24). M1 NO BUGS; L3, L4 done; MILESTONE 2 sent.
+- L1, L2 done (coder, 2026-11-24). Status: DONE 0594da8 CI green 2026-11-24 (Tests rbda-kiosk run 1554 success; M1+M2 checker NO BUGS). The separate Windows-executable build workflow was not triggered on this branch.
 
 ## Needs Truong
 - (empty)
@@ -96,3 +96,10 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 | 2026-11-24 | Sonnet | L3 UI + 7 Chromium tests | .run-confirm-bar[hidden] CSS fix |
 | 2026-11-24 | Sonnet | L4 docs + demo script | M1 verdict NO BUGS |
 | 2026-11-24 | Sonnet | CI run 1546 red: 4 tests (tai_lieu code map, a14_the_xem list, ux4_l4 control budget + single yellow button) fixed in product/docs, no test weakened | waiting CI rerun |
+
+## Tóm tắt cho Truong (CB1)
+- Khung "Văn bản phương án xếp" ở Quản lý → Cách xếp → "Tuỳ chỉnh thêm" (chỉ quản trị); CI xanh, hai lượt checker không có lỗi.
+- Thử 1: nạp `SO_NHAP_MAU_120HS_3BUOI.xlsx`, bấm "Xuất bản dự kiến": PDF có luật bằng lời, các bước quy trình đều "Chưa làm", không có hạt giống.
+- Thử 2: bấm "Chốt phương án" (xem hộp xác nhận), chạy xếp chính thức, bấm "Xuất bản chốt": PDF có người chốt, thời điểm, dấu vân tay; ô "In hạt giống" tắt thì không có hạt giống.
+- Thử 3: đổi mục tiêu sang "Cơ hội như nhau" rồi mở lại khung: hiện cảnh báo "Phương án đã đổi sau khi chốt".
+- Kịch bản 5 bước đầy đủ: `docs/ke_hoach/CB1_KICH_BAN_DEMO.md`. Không có việc nào chờ Truong quyết định.
