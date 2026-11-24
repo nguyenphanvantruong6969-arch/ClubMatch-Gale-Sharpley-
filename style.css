@@ -1652,6 +1652,21 @@ html.tat-hieu-ung .status-strip:hover {
 .run-confirm-bar .btn-primary { background: var(--rust); border-color: var(--rust); }
 .run-confirm-bar[hidden] { display: none; }   /* CB1: display:flex đè thuộc tính hidden */
 
+/* CB1-FIX3: khung văn bản phương án xếp. Hộp xác nhận trung tính (không đỏ: chốt không xoá gì), nút dưới danh sách. */
+.pa-xac-nhan { background: var(--paper); border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-top: 12px; font-size: 14px; color: var(--ink-soft); }
+.pa-xac-nhan[hidden] { display: none; }
+.pa-xac-nhan > p { margin: 0 0 8px 0; }
+.pa-luat { margin: 6px 0 12px 0; }
+.pa-luat p { margin: 0; }
+.pa-luat-muc-tieu { font-weight: 600; margin-bottom: 8px !important; }
+.pa-luat-tieu-de { margin-top: 8px !important; font-weight: 600; font-size: 13px; color: var(--slate); }
+.pa-luat ul { margin: 4px 0 0 0; padding-left: 20px; }
+.pa-xac-nhan-nut { display: flex; gap: 10px; align-items: center; }
+#paPanel .panel-actions + .hint-text { margin-top: 10px; }
+#paPanel .check-hang { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+#paPanel #paLyDoHat { margin-top: 6px; }
+
 /* ============================================================
    PHÂN TRANG
    ============================================================ */
@@ -3409,8 +3424,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 .ql-thanh-chon[hidden] { display: none; }
 .club-field[hidden] { display: none; }
 .nut-i.nut-i-chu { width: auto; height: auto; padding: 4px 12px; border-radius: 14px; font-size: 12.5px; }
-.ux4-de-xuat { display: inline-block; margin-top: 6px; padding: 1px 8px; border: 1px solid var(--gold-text); border-radius: 10px;
-  color: var(--gold-text); font-size: 11.5px; font-weight: 600; }
 .gt-buoc[hidden], .gt2-buoc[hidden] { display: none; }
 #ux1aNangCao { margin: 0 0 16px; }
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }

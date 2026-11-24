@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-24 — CB1-FIX3: sửa giao diện khung "Văn bản phương án xếp" sau khi xem ảnh; bỏ nhãn "Đề xuất" (Truong yêu cầu)
+
+- Mục: CB1 (đợt sửa sau chụp ảnh). Tệp: `index.html`, `js/2x_phuong_an.js`, `js/18_cai_dat.js`, `style.css`, `i18n.js`, `api_phuong_an.py`, tests (xem dưới).
+- Khung "Văn bản phương án xếp" ra khỏi mục gập "Tuỳ chỉnh thêm": nút Chốt và Xuất bản dự kiến hiện ngay. Ngân sách nút ở tab Cách xếp (`tests/test_giao_dien_ux4_l4.py`) nâng từ 9 lên 11 (thêm đúng hai nút đó); vẫn một nút vàng (`gt2ThuChay`).
+- Hộp xác nhận chốt: tiêu chí hiện theo hai nhóm có tiêu đề ("Học sinh đã có điểm thi của CLB" / "chưa có") thay vì một danh sách lặp dòng (API thêm `tom_tat_luat_tang`; `tom_tat_luat` giữ nguyên); hộp trung tính thay vì đỏ; nút Chốt và Huỷ nằm dưới danh sách.
+- Khoảng cách dòng gợi ý dưới ba nút và dưới ô "In hạt giống".
+- Bỏ nhãn "Đề xuất" ở thẻ "Chia 100 điểm" (`js/18_cai_dat.js`, `style.css`, khoá `ux4_de_xuat` vi và en).
+- Test: `tests/test_cb1_ui.py` (hai tiêu đề nhóm, hộp không đỏ, nút dưới danh sách), `tests/test_cb1_api_pdf.py` (`tom_tat_luat_tang`), `tests/test_giao_dien_ux1_cai_dat.py` (không còn "Đề xuất"). 66 ca liên quan đạt; `kiem_nhanh.py` 7/7. Thuật toán không đụng.
+
 ## 2026-11-24 — CB1: sửa 4 lỗi CI của vòng 1 (tests.yml run 1546)
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md`: tên `workspace_settings` không để trong dấu huyền (test bản đồ mã chỉ chấp nhận tên có trong mã Python). `js/_danh_sach.txt`: thêm `2x_phuong_an` trước `08_khoi_dong` (khớp thứ tự `<script>` ở `index.html`). `index.html`: khung `#paPanel` chuyển vào mục "Tuỳ chỉnh thêm" (gập sẵn) và nút "Chốt phương án" đổi sang `btn-secondary`, để tab Cách xếp giữ đúng ngân sách điều khiển (≤ 9) và MỘT nút vàng duy nhất của `test_giao_dien_ux4_l4`. `tests/test_cb1_ui.py` mở mục đó trước. Không sửa test cũ.

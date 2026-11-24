@@ -1291,8 +1291,6 @@
         <div class="panel-head"><h2 id="ux1aCaiDatTen"></h2></div>
         <div class="panel-body" id="ux1aCaiDatThan"></div>
       </div>
-            <details class="ux1a-nang-cao" id="ux1aNangCao">
-        <summary class="btn btn-secondary" data-i18n="ux4_tuy_chinh_them">Tuỳ chỉnh thêm</summary>
       <!-- CB1-L3: văn bản phương án xếp (js/2x_phuong_an.js): chốt phương án + xuất PDF bản dự kiến / bản chốt -->
       <div class="panel" id="paPanel" data-quyen="quan_tri">
         <div class="panel-head"><h2 data-i18n="cb1_tieu_de">Văn bản phương án xếp</h2></div>
@@ -1308,10 +1306,12 @@
           <p class="hint-text" id="paLyDo" role="status" hidden></p>
           <label class="check-hang"><input type="checkbox" id="paHatGiong" disabled> <span data-i18n="cb1_in_hat_giong">In hạt giống (chỉ ở bản chốt)</span></label>
           <p class="hint-text" id="paLyDoHat"></p>
-          <div id="paXacNhan" class="run-confirm-bar" role="group" hidden></div>
+          <div id="paXacNhan" class="pa-xac-nhan" role="group" hidden></div>
           <div id="paPhanHoi" class="save-feedback" role="status"></div>
         </div>
       </div>
+            <details class="ux1a-nang-cao" id="ux1aNangCao">
+        <summary class="btn btn-secondary" data-i18n="ux4_tuy_chinh_them">Tuỳ chỉnh thêm</summary>
       <!-- GT2: tiêu chí xếp (chỉ đổi trong tập cho phép; js/15_tieu_chi.js). Lưu qua update_workspace_config. -->
       <div class="panel gt-ui" id="gt2TieuChiPanel">
         <div class="panel-head"><h2 data-i18n="gt2_tc_tieu_de">Tuỳ chỉnh chi tiết</h2></div>

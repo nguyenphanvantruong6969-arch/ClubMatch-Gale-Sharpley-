@@ -603,7 +603,6 @@
 
       ux4_so_sanh_khac: "So sánh với lần khác",
 
-      ux4_de_xuat: "Đề xuất",
 
       ux4_giai_thich: "Giải thích",
 
@@ -2218,7 +2217,6 @@
 
       ux4_so_sanh_khac: "Compare with another run",
 
-      ux4_de_xuat: "Suggested",
 
       ux4_giai_thich: "Explain",
 

@@ -61,17 +61,34 @@ function paHoiChot() {
   clear(bar);
   const hoi = document.createElement("p");
   hoi.textContent = t(d.co_chot ? "cb1_xac_nhan_lai" : "cb1_xac_nhan");
-  const ds = document.createElement("ul");
+  const ds = document.createElement("div");
+  ds.className = "pa-luat";
   if (d.muc_tieu) {
-    const li = document.createElement("li");
-    li.textContent = t("cb1_muc_tieu", { ten: d.muc_tieu.tieu_de });
-    ds.appendChild(li);
+    const mt = document.createElement("p");
+    mt.className = "pa-luat-muc-tieu";
+    mt.textContent = t("cb1_muc_tieu", { ten: d.muc_tieu.tieu_de });
+    ds.appendChild(mt);
   }
-  (d.tom_tat_luat || []).forEach((c) => {
-    const li = document.createElement("li");
-    li.textContent = c;
-    ds.appendChild(li);
+  /* Hai nhóm có tiêu đề (CB1-FIX3); backend cũ không có `tom_tat_luat_tang` thì rơi về danh sách phẳng. */
+  const tang = (d.tom_tat_luat_tang && d.tom_tat_luat_tang.length)
+    ? d.tom_tat_luat_tang : [{ tieu_de: "", dong: d.tom_tat_luat || [] }];
+  tang.forEach((nhom) => {
+    if (nhom.tieu_de) {
+      const h = document.createElement("p");
+      h.className = "pa-luat-tieu-de";
+      h.textContent = nhom.tieu_de;
+      ds.appendChild(h);
+    }
+    const ul = document.createElement("ul");
+    nhom.dong.forEach((c) => {
+      const li = document.createElement("li");
+      li.textContent = c;
+      ul.appendChild(li);
+    });
+    ds.appendChild(ul);
   });
+  const hang = document.createElement("div");
+  hang.className = "pa-xac-nhan-nut";
   const dongY = document.createElement("button");
   dongY.type = "button";
   dongY.className = "btn btn-primary";
@@ -89,7 +106,8 @@ function paHoiChot() {
   }));
   huy.addEventListener("click", () => { paBo(); el("paChot").focus(); });
   bar.addEventListener("keydown", (ev) => { if (ev.key === "Escape") { paBo(); el("paChot").focus(); } });
-  bar.append(hoi, ds, dongY, huy);
+  hang.append(dongY, huy);
+  bar.append(hoi, ds, hang);
   bar.hidden = false;
   huy.focus();
 }

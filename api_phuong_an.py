@@ -113,7 +113,20 @@ class PhuongAnMixin:
             "co_the_in_hat_giong": self._hat_giong_khoa(moc) is not None,
             "muc_tieu": nd["muc_tieu"],
             "tom_tat_luat": [d["chu"] for d in nd["tieu_chi"] if d["nhom"] != "khong_dung"],
+            # CB1-FIX3: hộp xác nhận hiện theo HAI nhóm có tiêu đề (trước đây hai nhóm gộp một danh sách, các dòng giống
+            # nhau lặp lại nên trông như lỗi)
+            "tom_tat_luat_tang": self._tom_tat_theo_tang(cfg["rules"], nd["tieu_chi"]),
         })
+
+    @staticmethod
+    def _tom_tat_theo_tang(rules, tieu_chi_dong):
+        tieu_de = tieu_chi.tieu_de_tang(rules)
+        ra = []
+        for tang in ("tang_1", "tang_2"):
+            dong = [d["chu"] for d in tieu_chi_dong if d["nhom"] == tang]
+            if dong:
+                ra.append({"tieu_de": tieu_de[tang]["vi"], "dong": dong})
+        return ra
 
     # ------------------------------------------------------------------ chốt
     def chot_phuong_an(self):

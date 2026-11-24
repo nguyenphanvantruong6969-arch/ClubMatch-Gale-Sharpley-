@@ -146,6 +146,7 @@ def test_get_trang_thai_truoc_va_sau_chot(tmp_path):
     assert t["co_chot"] is False and t["co_the_xuat"]["du_kien"] is True and t["co_the_xuat"]["chot"] is False
     assert t["co_the_xuat"]["ly_do_chot"] == "cb1_chua_du_dieu_kien_ban_chot"
     assert t["co_the_in_hat_giong"] is False and len(t["quy_trinh"]) == 5 and t["tom_tat_luat"]
+    assert t["tom_tat_luat_tang"] and all(g["tieu_de"] and g["dong"] for g in t["tom_tat_luat_tang"])   # CB1-FIX3
     assert str(SEED) not in str(t)
     _xep(a)
     a.chot_phuong_an()

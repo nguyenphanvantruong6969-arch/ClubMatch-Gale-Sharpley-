@@ -84,6 +84,10 @@ def test_2_huy_thi_khong_chot(trang):
     page.click("#paChot")
     page.wait_for_selector("#paXacNhan", state="visible")
     assert page.locator("#paXacNhan li").count() >= 1       # có liệu luật sẽ chốt
+    # CB1-FIX3: tiêu chí hiện theo hai nhóm có tiêu đề, hộp trung tính (không đỏ), nút nằm dưới danh sách
+    assert page.locator("#paXacNhan .pa-luat-tieu-de").count() == 2
+    assert page.locator("#paXacNhan.pa-xac-nhan").count() == 1 and page.locator("#paXacNhan.run-confirm-bar").count() == 0
+    assert page.evaluate("document.querySelector('#paXacNhan .pa-xac-nhan-nut').getBoundingClientRect().top >= document.querySelector('#paXacNhan .pa-luat').getBoundingClientRect().bottom")
     page.click("#paHuy")
     assert not page.locator("#paXacNhan").is_visible()
     assert _chot_db(api) == []

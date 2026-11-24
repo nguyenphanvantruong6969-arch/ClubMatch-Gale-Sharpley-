@@ -34,7 +34,8 @@ def _luat(api):
 def test_ngan_sach_hick_va_mot_nut_vang_o_cach_xep(mo):  # noqa: F811
     page, api, db, loi = _vao(mo)
     ds = page.evaluate(JS_DEM)
-    assert len(ds) <= 9, ds
+    assert len(ds) <= 11, ds   # CB1-FIX3: 9 + hai nút của khung "Văn bản phương án xếp" (Chốt, Xuất bản dự kiến) hiện ngay, không gập
+    assert "paChot" in ds and "paXuatDuKien" in ds
     assert "gt2TcPriority" not in ds and "gt2ThuChay" in ds
     for nhom in page.locator("#ux1aCaiDat [role=radiogroup]").all():
         n = nhom.locator("[role=radio]").count()
