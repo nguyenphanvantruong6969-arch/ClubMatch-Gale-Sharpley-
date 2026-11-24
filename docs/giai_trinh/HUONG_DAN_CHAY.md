@@ -127,3 +127,16 @@ Thẻ Kết quả, nút xuất Excel (`export_ket_qua`): tệp có các trang *H
 ```
 
 Mong đợi: `7/7 mục ĐẠT`, trong đó `trung_khit`: 60 ca (3 bộ × 20 hạt giống) trùng khít với nhánh so sánh.
+
+## 10. Kiểm độc lập kết quả (tuỳ chọn, DC1)
+
+Một tệp riêng đối chiếu Sổ nhập với bộ CSV xuất mặc định, không dùng mã của phần mềm. Áp dụng cho không gian mặc định, một buổi
+(sổ mẫu `du_lieu_test/SO_NHAP_TEST.xlsx`, phải tắt điểm quyết tâm vì không gian mới bật sẵn mà sổ này không có cột đó, nếu không lần chạy bị chặn; trong mã: `rules.wharton = false`).
+Bộ CSV do `export_csv` ghi (tệp chính + thư mục `*_theo_club` + `*_tong_hop.csv`):
+
+```bash
+.venv/bin/python du_lieu_test/kiem_doc_lap/kiem_doc_lap.py --so-nhap du_lieu_test/SO_NHAP_TEST.xlsx --ket-qua <thư mục xuất>/ket_qua_phan_bo.csv
+```
+
+Mong đợi: bảng K0–K6 đều PASS, mã thoát 0, và tệp `dau_vao_ket_qua.csv` (mỗi học sinh một dòng: nguyện vọng, điểm, CLB nhận).
+Ý nghĩa từng phép kiểm và giới hạn: `du_lieu_test/kiem_doc_lap/README.md`.

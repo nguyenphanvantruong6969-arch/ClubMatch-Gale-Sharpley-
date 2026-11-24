@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-24 — DC1-L3: tài liệu cho script kiểm độc lập
+
+- Mới `du_lieu_test/kiem_doc_lap/README.md`; thêm mục 10 vào `docs/giai_trinh/HUONG_DAN_CHAY.md` và bước tuỳ chọn 13b vào `docs/giai_trinh/KICH_BAN_DEMO.md`. Chỉ tài liệu; không test mới.
+
 ## 2026-11-24 — DC1-L1+L2: script kiểm độc lập đầu vào ⇄ kết quả (phạm vi B, chỉ bảo toàn)
 
 - Mục DC1 (chưa có trong sổ đăng ký; xem "Needs Truong" ở tệp nhánh). Không đổi mã sản phẩm, không đổi hợp đồng CSV.

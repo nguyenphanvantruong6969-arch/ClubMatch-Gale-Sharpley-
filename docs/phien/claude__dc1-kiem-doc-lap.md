@@ -78,7 +78,7 @@ feedback "đối chiếu được đầu vào với kết quả". It does NOT ch
   nv_1..nv_k, diem_1..diem_k, club_id_nhan, ten_clb_nhan, dien, hang_nhan`; k = max over students; utf-8-sig).
   Tests: false-positive on the 3 datasets of D6 (all PASS, exit 0); CSV has one row per Sổ nhập student and
   `club_id_nhan` equals the export.
-- [ ] **L3 (must)** Docs: `du_lieu_test/kiem_doc_lap/README.md` (how to run, what each K means, scope B limits:
+- [x] **L3 (must)** Docs: `du_lieu_test/kiem_doc_lap/README.md` (how to run, what each K means, scope B limits:
   one session, default mode, no FA, no stability); `docs/giai_trinh/HUONG_DAN_CHAY.md` new short section;
   `docs/giai_trinh/KICH_BAN_DEMO.md` one optional step (default workspace, `SO_NHAP_TEST.xlsx`, Xuất CSV, run the
   script, show the table) with "Dữ liệu mô phỏng" and a pointer to `CA_MAU.md` §3–§5 for the cases. Vietnamese.
