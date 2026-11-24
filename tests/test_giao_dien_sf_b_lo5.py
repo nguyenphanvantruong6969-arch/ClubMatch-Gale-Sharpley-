@@ -79,9 +79,17 @@ def _goi(api, ten):
     return goi
 
 
+def _mo_tuy_chon(page):
+    """UX4-L3: Mã CLB và chỉ tiêu dự phòng nằm sau nút "Thêm tuỳ chọn"; mở ra nếu đang gập."""
+    page.wait_for_selector("#clubFormThemTuyChon", state="visible")
+    if not page.locator("#clubFormId").is_visible():
+        page.locator("#clubFormThemTuyChon").click()
+
+
 def _vao_clb(page):
     page.locator('.nav-item[data-tab="admin"]').click()
     page.locator("#qlTabClb").click()
+    _mo_tuy_chon(page)
     page.wait_for_selector("#clubFormId", state="visible")
 
 
@@ -173,11 +181,20 @@ def test_st_b_007_xoa_hoc_sinh_co_ket_qua_hoi_lan_hai_roi_xoa_va_huy_thi_con_ngu
     assert not loi, loi
 
 
+def _mo_tuy_chinh_them(page):
+    """UX4-L4: ba thẻ chế độ nằm ở tab Cách xếp, trong mục gập "Tuỳ chỉnh thêm" (#ux1aNangCao); mở ra nếu đang gập."""
+    page.locator("#qlTabCachXep").click()
+    page.wait_for_selector("#ux1aNangCao > summary", state="visible")
+    if page.locator("#ux1aNangCao").get_attribute("open") is None:
+        page.locator("#ux1aNangCao > summary").click()
+
+
 # ------------------------------------------------------------------ ST-A-001
 
 def test_st_a_001_canh_bao_thieu_du_lieu_duoi_the_che_do_roi_het_khi_doi_lai(trang_ws):
     page, loi = trang_ws
     page.locator('.nav-item[data-tab="admin"]').click()
+    _mo_tuy_chinh_them(page)
     page.wait_for_selector("#ux1aHuyChuong", state="visible")
     assert page.locator("#ux1aCanhBaoDuLieu").is_hidden()
     page.locator("#ux1aHuyChuong").click()                              # sổ nạp ở Chia 100: thiếu thứ Huy chương cần
@@ -193,6 +210,7 @@ def test_st_a_001_vung_canh_bao_khong_trung_id_voi_the_muc_tieu(trang_ws):
     """Lần đầu thêm vùng cảnh báo bằng id `ux1aCanhBao`... trùng `#ux1aMtCanhBao` của thẻ mục tiêu MT1 (CI Linux 6/6)."""
     page, loi = trang_ws
     page.locator('.nav-item[data-tab="admin"]').click()
+    _mo_tuy_chinh_them(page)
     page.wait_for_selector("#ux1aHuyChuong", state="visible")
     trung = page.evaluate("""() => { const dem = {}; document.querySelectorAll('[id]').forEach(e => { dem[e.id] = (dem[e.id] || 0) + 1; });
         return Object.keys(dem).filter(k => dem[k] > 1 && k.startsWith('ux1a')); }""")

@@ -99,6 +99,7 @@ def test_vong_xoay_tinh_khi_giam_chuyen_dong(api):
         url = browser_host.serve(api, base.GOC, "index.html", open_browser=False)
         page = br.new_page(bypass_csp=True, reduced_motion="reduce")
         page.goto(url)
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#chonBuoiChip .buoi-chip")
         page.evaluate(DAT_NUT)
         page.evaluate("() => { window.__chayThu(() => new Promise(() => {})); }")

@@ -53,13 +53,14 @@ def test_giao_vien_vao_the_ket_qua_va_thay_ca_hai_viec(mo):
     assert page.locator('.nav-item[data-tab="results"]').get_attribute("class").count("is-active")
     assert page.locator("#ux1bPanel").is_visible()
     assert page.locator("#btnUx1bXuatLop").inner_text().strip().startswith("Xuất theo")
-    assert page.locator("#btnUx1bBaoCao").inner_text().strip() == "Báo cáo tổng hợp"
+    assert page.locator("#btnUx1bBaoCao").text_content().strip() == "Báo cáo tổng hợp"      # UX5A-L2: trong nếp
     assert not loi, loi
 
 
 def test_mot_lan_bam_ra_bao_cao_tong_hop(mo):
     page, api, loi = mo
-    page.locator("#btnUx1bBaoCao").click()                                   # 1 lần bấm
+    page.locator("#ux1bThemTom").click()                                   # UX5A-L2: nếp "Báo cáo và phiếu in", rồi 1 lần bấm
+    page.locator("#btnUx1bBaoCao").click()
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.includes('.html')")
     assert "bao_cao_tong_hop" in page.locator("#ux1bPhanHoi").inner_text()
     with api._ket_noi_doc() as cur:

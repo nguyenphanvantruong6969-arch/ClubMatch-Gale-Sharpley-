@@ -13,6 +13,22 @@ function gt2TcLang() {
 }
 
 /* Vẽ thứ tự hai tầng + dòng "chưa dùng" từ dữ liệu get_tieu_chi theo ngôn ngữ hiện tại. */
+/* UX4-L4: chữ do backend trả (nhãn lựa chọn, tiêu đề ô, dòng thứ tự, dòng "chưa dùng") được thay bằng chữ dễ hiểu theo MÃ;
+   không có khoá `ux4_*` tương ứng thì dùng đúng chữ backend. Giá trị gửi đi vẫn là mã cũ. */
+function gt2TcChu(khoa, goc) {
+  const v = t(khoa);
+  return v === khoa ? goc : v;
+}
+
+/* Ô nào không áp dụng cho lựa chọn "ai được xét trước" hiện tại thì ẨN (không chỉ vô hiệu): giá trị của ô vẫn giữ nguyên để lưu. */
+function gt2TcAnHien() {
+  const p = el("gt2TcPriority").value;
+  const an = (id, bo) => { const o = el(id).closest(".club-field"); if (o) o.hidden = bo; };
+  an("gt2TcTierMode", p === "score");
+  an("gt2TcTiers", p === "score");
+  an("gt2TcScoreScope", p === "tier");
+}
+
 function gt2TcVeDanhSach() {
   const d = gt2TcDuLieu;
   if (!d) return;
@@ -31,7 +47,7 @@ function gt2TcVeDanhSach() {
     dong.forEach((m) => {
       const li = document.createElement("li");
       li.dataset.ma = m.ma;
-      li.textContent = m.chu;
+      li.textContent = gt2TcChu("ux4_tc_chu_" + m.ma, m.chu);
       ol.appendChild(li);
     });
     khung.appendChild(h);
@@ -47,7 +63,7 @@ function gt2TcVeDanhSach() {
     const ul = document.createElement("ul");
     kd.forEach((m) => {
       const li = document.createElement("li");
-      li.textContent = m.chu;
+      li.textContent = gt2TcChu("ux4_tc_kd_" + m.khoa, m.chu);
       ul.appendChild(li);
     });
     hop.appendChild(tde);
@@ -68,13 +84,13 @@ function gt2TcVeDieuKhien() {
       lc.gia_tri.forEach((gt) => {
         const o = document.createElement("option");
         o.value = gt;
-        o.textContent = lc.nhan[gt][lang];
+        o.textContent = gt2TcChu("ux4_tc_" + khoa + "_" + gt.replace("+", "_"), lc.nhan[gt][lang]);
         sel.appendChild(o);
       });
       sel.value = d.luat[khoa];
-      el(id + "Nhan").textContent = lc.tieu_de[lang];
+      el(id + "Nhan").textContent = gt2TcChu("ux4_tc_tt_" + khoa, lc.tieu_de[lang]);
     });
-  el("gt2TcTiersNhan").textContent = d.lua_chon.tiers.tieu_de[lang];
+  el("gt2TcTiersNhan").textContent = gt2TcChu("ux4_tc_tt_tiers", d.lua_chon.tiers.tieu_de[lang]);
 }
 
 function gt2TcDatGiaTri() {
@@ -103,6 +119,7 @@ function taiTieuChi() {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
     gt2TcDatGiaTri();
+    gt2TcAnHien();
     gt2CanhBao();
     return gt2SsTai(false);
   });
@@ -158,7 +175,7 @@ function gt2SsVeLuaChon() {
     luaChon.forEach((x) => {
       const o = document.createElement("option");
       o.value = String(x.run_id);
-      o.textContent = gt2SsNhan(x) + (x.run_at ? " — " + dinhDangGio(x.run_at) : "");
+      o.textContent = gt2SsNhan(x) + (x.run_at ? " (" + dinhDangGio(x.run_at) + ")" : "");   /* UX4-L4: dd/mm/yyyy HH:mm */
       sel.appendChild(o);
     });
     if (cu && luaChon.some((x) => String(x.run_id) === cu)) sel.value = cu;
@@ -469,11 +486,13 @@ function khoiTaoTieuChi() {
   khoiTaoThuCauHinh();
   el("gt2TcLuu").addEventListener("click", gt2TcLuu);
   ["gt2TcPriority", "gt2TcTierMode"].forEach((id) => el(id).addEventListener("change", gt2CanhBao));
+  el("gt2TcPriority").addEventListener("change", gt2TcAnHien);
   el("gt2TcTiers").addEventListener("input", gt2CanhBao);
   window.addEventListener("langchange", () => {
     gt2TcVeDanhSach();
     gt2TcVeDieuKhien();
     if (gt2TcDuLieu) gt2TcDatGiaTri();
+    gt2TcAnHien();
     gt2CanhBao();
   });
 }

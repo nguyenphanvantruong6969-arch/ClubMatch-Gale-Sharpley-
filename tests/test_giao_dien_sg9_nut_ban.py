@@ -41,6 +41,7 @@ def _chuan_bi(api, co_xep=False):
 
 
 def _dien_clb(page):
+    page.click("#clubFormThemTuyChon")   # UX4-L3
     page.fill("#clubFormId", "ZZ")
     page.fill("#clubFormName", "CLB thử")
     page.fill("#clubFormCapacity", "5")

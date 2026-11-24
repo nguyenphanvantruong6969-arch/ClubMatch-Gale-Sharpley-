@@ -69,7 +69,8 @@ def mo(tmp_path):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.evaluate("document.getElementById('ux1aNangCao').open = true")  # UX1A-L2: Nâng cao đóng mặc định
+        page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
+        page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)
         page.wait_for_selector("#gt2TcDanhSach li")
         return page, api, db, loi
 
@@ -94,7 +95,7 @@ def test_chay_thu_hien_bang_so_sanh_va_khong_doi_ket_qua_chinh_thuc(mo):
     page.wait_for_selector("#gt2ThuKetQua table")
     assert _sql(db, "SELECT COUNT(*) FROM run_history WHERE loai_chay = 'thu'") == [(1,)]
     chu = page.locator("#gt2ThuKetQua").inner_text()
-    assert "Chạy thử số" in chu and "Chính thức số" in chu
+    assert "Thử lần" in chu and "Xếp chính thức lần" in chu   # UX4-L4: tên lần chạy mới
     assert page.locator("#gt2ThuKetQua table").count() == 5
     assert page.locator("#gt2ThuPhanHoi").inner_text().startswith("Đã chạy thử xong")
     assert _sql(db, "SELECT * FROM match_results ORDER BY student_id, buoi") == truoc
@@ -135,7 +136,7 @@ def test_doi_ngon_ngu_ve_lai_va_xuat_trang_so_sanh(mo, tmp_path):
     page.wait_for_selector("#gt2ThuKetQua table")
     assert "không suất nào đổi chỗ" in page.locator("#gt2SsKetLuan").inner_text()
     page.evaluate("window.I18N.setLang('en')")
-    page.wait_for_function("document.querySelector('#gt2ThuChay').textContent === 'Run a trial'")
+    page.wait_for_function("document.querySelector('#gt2ThuChay').textContent === 'Try this way'")   # UX4-L4
     chu = page.locator("#gt2ThuKetQua").inner_text()
     assert "Official" in chu and "Trial" in chu and "Overview" in chu
     assert "no place changed" in page.locator("#gt2SsKetLuan").inner_text()
@@ -157,12 +158,12 @@ def test_dung_tieu_chi_cua_lan_thu_hoi_truoc_roi_luu_khong_doi_ket_qua(mo):
     page.locator("#gt2ThuApDungDs button").click()
     chu = page.locator("#gt2ThuApDungXacNhan").inner_text()
     assert "Thứ tự sẽ là" in chu and page.locator("#gt2ThuApDungXacNhan li").count() >= 1
-    page.get_by_text("Không lưu").click()                          # hủy: không ghi gì
+    page.locator("#gt2ThuApDungXacNhan button", has_text="Không dùng").click()   # UX4-L4                          # hủy: không ghi gì
     assert cau_hinh_ws.doc_cau_hinh(db)["rules"]["priority"] == cu
     page.locator("#gt2ThuApDungDs button").click()
     page.locator("#gt2ThuApDungXacNhanNut").click()
     page.wait_for_function("document.querySelector('#gt2ThuApDungPhanHoi').innerText.length > 0")
-    assert page.locator("#gt2ThuApDungPhanHoi").inner_text().startswith("Đã lưu tiêu chí")
+    assert page.locator("#gt2ThuApDungPhanHoi").inner_text().startswith("Đã lưu. Kết quả chính thức chưa đổi")   # UX4-L4: đổi chữ
     assert cau_hinh_ws.doc_cau_hinh(db)["rules"]["priority"] == "tier"
     assert _sql(db, "SELECT * FROM match_results ORDER BY student_id, buoi") == truoc
     _sach(page)

@@ -54,6 +54,7 @@ def _clb(api):
 def _vao(page):
     """Mở Cài đặt, đợi cả hai câu hỏi vẽ xong."""
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aChia100", state="visible")
     page.wait_for_selector('#ux1aCaiDatThan .ux1a-the[aria-checked="true"]')
     page.wait_for_selector("#ux1aMtNangLuc", state="visible")
@@ -96,9 +97,9 @@ def test_cau_hoi_thu_hai_nam_duoi_cau_hoi_dau_cung_thanh_phan_va_thay_dong_cach_
         "e => { const s = getComputedStyle(e); return [s.padding, s.borderRadius, s.borderWidth, s.fontSize, s.gap]; }")
     assert kieu("#ux1aChia100") == kieu("#ux1aMtNangLuc")                  # cùng một khuôn thẻ
     assert kieu("#ux1aChia100 .ux1a-the-tt") == kieu("#ux1aMtNangLuc .ux1a-the-tt")
-    assert page.locator("#ux1aMtCauHoi").inner_text().strip() == "Khi một CLB đông người, trường ưu tiên điều gì?"
+    assert page.locator("#ux1aMtCauHoi").inner_text().strip() == "Khi CLB hết chỗ, ai được xét trước?"   # UX4-L4: câu hỏi và tên thẻ đổi chữ
     assert [t.strip() for t in page.locator("#ux1aMtLuoi .ux1a-the-tt").all_inner_texts()] == \
-        ["Theo năng lực", "Cơ hội như nhau", "Dành chỗ cho một nhóm"]
+        ["Điểm bài thi cao hơn", "Bốc thăm", "Dành chỗ cho một nhóm"]
     assert _the_hien_tai(page) == ["nang_luc"]                              # mặc định
     assert page.locator("#ux1aCaiDatThan > *").count() >= 2 and not page.locator('[role="dialog"]').count()
     assert not loi, loi
@@ -113,7 +114,7 @@ def test_the_giong_trong_trinh_tao_workspace_buoc_3(mo_trang):  # noqa: F811
     page.locator("#wzTiep").click()                                         # bước 3: luật
     page.wait_for_selector("#wzMtCauHoi")
     assert [t.strip() for t in page.locator("#wzMtLuoi .ux1a-the-tt").all_inner_texts()] == \
-        ["Theo năng lực", "Cơ hội như nhau", "Dành chỗ cho một nhóm"]
+        ["Điểm bài thi cao hơn", "Bốc thăm", "Dành chỗ cho một nhóm"]
     assert page.locator("#wzMtDanhCho").is_disabled()                       # chưa có danh sách học sinh để chọn nhóm
     assert page.locator("#wzMtNangLuc").get_attribute("aria-checked") == "true"
     assert page.locator("#wzMtGhiChu").is_hidden()
@@ -188,12 +189,12 @@ def test_bam_the_khac_khi_dang_cho_chon_nhom_an_cac_nut_nhom_va_thong_bao_cu_con
     _nap(api)
     _vao(page)
     page.locator("#ux1aMtCoHoi").click()
-    page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").wait_for()
+    page.locator(".toast", has_text="Đã chuyển sang Bốc thăm").wait_for()
     _cho_chon(page, "CoHoi")
     page.locator("#ux1aMtDanhCho").click()                                  # đang chờ chọn nhóm
     page.wait_for_selector("#ux1aMtNhom button")
     assert _the_hien_tai(page) == ["co_hoi"]                                # thẻ đã lưu vẫn có ✓
-    assert page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").count() == 1   # thông báo của nó còn
+    assert page.locator(".toast", has_text="Đã chuyển sang Bốc thăm").count() == 1   # thông báo của nó còn
     page.locator("#ux1aMtNangLuc").click()                                  # bấm thẻ khác: nút nhóm biến mất
     page.wait_for_selector("#ux1aMtNhom", state="hidden")
     _cho_chon(page, "NangLuc")
@@ -231,7 +232,7 @@ def test_toast_hoan_tac_tra_dung_luat_va_tung_clb_hai_lan_lien_tiep(mo_trang):  
     _cho_chon(page, "NangLuc")
     assert (_cfg(api), _clb(api)) == (cfg0, clb0)
     page.locator("#ux1aMtCoHoi").click()
-    page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau").wait_for()
+    page.locator(".toast", has_text="Đã chuyển sang Bốc thăm").wait_for()
     page.locator(".toast .toast-hanh-dong", has_text="Hoàn tác").click()    # hoàn tác lần 2 (thẻ khác)
     _cho_chon(page, "NangLuc")
     assert (_cfg(api), _clb(api)) == (cfg0, clb0)
@@ -247,7 +248,7 @@ def test_thong_bao_cu_bi_thay_boi_lan_chon_moi_va_hoan_tac_dung_lan_moi_nhat(mo_
     sau_danh_cho = (_cfg(api), _clb(api))
     page.locator(".toast", has_text="Đã chuyển sang Dành chỗ cho một nhóm").wait_for()
     page.locator("#ux1aMtCoHoi").click()
-    moi = page.locator(".toast", has_text="Đã chuyển sang Cơ hội như nhau")
+    moi = page.locator(".toast", has_text="Đã chuyển sang Bốc thăm")
     moi.wait_for()
     page.wait_for_function("document.querySelectorAll('.toast').length === 1")      # chỉ còn thông báo mới nhất
     assert page.locator(".toast", has_text="Dành chỗ cho một nhóm").count() == 0
@@ -509,7 +510,7 @@ def test_chu_thuong_khong_lo_ten_noi_bo_va_dung_hai_ngon_ngu(mo_trang):  # noqa:
     en = page.locator("#ux1aMtBlock").inner_text()
     assert not any(c in en for c in CAM)
     assert [t.strip() for t in page.locator("#ux1aMtLuoi .ux1a-the-tt").all_inner_texts()] == \
-        ["By ability", "Equal chance", "Seats kept for a group"]
+        ["Higher exam score", "Lottery", "Seats kept for a group"]
     assert not loi, loi
 
 
@@ -550,7 +551,7 @@ def test_ban_phim_tab_den_the_enter_chon_vong_tieu_diem_3px(mo_trang):  # noqa: 
     _nap(api)
     _vao(page)
     page.locator("#ux1aMtNangLuc").focus()
-    page.keyboard.press("Tab")                                              # Tab tới thẻ kế: "Cơ hội như nhau"
+    page.keyboard.press("Tab")                                              # Tab tới thẻ kế: "Bốc thăm"
     assert page.evaluate("document.activeElement.id") == "ux1aMtCoHoi"
     assert page.locator("#ux1aMtCoHoi").evaluate("e => getComputedStyle(e).outlineWidth") == "3px"
     page.keyboard.press("Enter")                                            # Enter chọn
@@ -590,6 +591,7 @@ def test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai(mo_trang):  # 
     page.reload()
     page.wait_for_selector("#dropZone")
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     dong = page.locator('.ux1a-ss-dong[data-clb]').first
     dong.wait_for(state="visible")
     cid = dong.get_attribute("data-clb")

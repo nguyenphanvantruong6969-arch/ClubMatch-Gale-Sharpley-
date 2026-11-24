@@ -31,6 +31,7 @@ function apDungLuatChamDiem(luat) {
 
 function loadScoringTab() {
   el("scoringWorkArea").hidden = true;
+  el("chuaLuuDiem").hidden = true;
   currentScoringClub = null;
   el("scoringClubPanel").hidden = LUAT_CHAM_DIEM.theoNguoi;
   el("scoringPersonArea").hidden = !LUAT_CHAM_DIEM.theoNguoi;
@@ -86,6 +87,12 @@ function loadScoringOverview() {
     const emptyState = el("scoringOverviewEmpty");
     clear(body);
     const withApplicants = res.ok ? res.data.filter((c) => c.n_applicants > 0) : [];
+    /* UX5B-L3: dòng trạng thái ("còn m CLB chưa chấm xong" hoặc "Đã chấm xong hết") và MỘT nút vàng "Chấm tiếp"
+       ở CLB đầu tiên chưa chấm xong (Von Restorff); các nút "Chấm" còn lại là nút thường. */
+    const chuaXong = withApplicants.filter((c) => c.n_scored < c.n_applicants);
+    const dong = el("ux5bTtDiem");
+    if (dong) dong.textContent = !withApplicants.length ? "" : chuaXong.length
+      ? t("ux5b_tt_diem", { m: chuaXong.length }) : t("ux5b_tt_diem_xong");
     if (!res.ok || !withApplicants.length) {
       emptyState.hidden = false;
       return;
@@ -99,8 +106,9 @@ function loadScoringOverview() {
       tr.appendChild(tdProgress);
       const tdAction = document.createElement("td");
       const btn = document.createElement("button");
-      btn.className = "btn btn-secondary btn-row-link";
-      btn.textContent = t("btn_score_link");
+      const tiep = chuaXong.length > 0 && c === chuaXong[0];
+      btn.className = (tiep ? "btn btn-primary" : "btn btn-secondary") + " btn-row-link";
+      btn.textContent = t(tiep ? "ux5b_cham_tiep" : "btn_score_link");
       btn.addEventListener("click", () => openScoringClub(c.club_id));
       tdAction.appendChild(btn);
       tr.appendChild(tdAction);
@@ -117,6 +125,9 @@ function openScoringClub(clubId) {
     }
     currentScoringClub = clubId;
     el("scoringWorkArea").hidden = false;
+    clearTimeout(choQuayLaiDiem);
+    choQuayLaiDiem = null;
+    el("scoringClubPanel").hidden = true;   /* UX5B-L3: đang chấm một CLB thì danh sách lui đi; nút "‹ Danh sách" đưa về */
     el("scoringClubLabel").textContent = `${res.data.club_name} (${res.data.club_id})`;
 
     const body = el("scoringTableBody");
@@ -138,15 +149,42 @@ function openScoringClub(clubId) {
       input.className = "score-input";
       input.dataset.studentId = a.student_id;
       if (a.score !== null && a.score !== undefined) input.value = a.score;
+      input.dataset.cu = input.value;   /* UX5B-FIX1: giá trị đã lưu, để biết còn điểm chưa lưu */
       tdInput.appendChild(input);
       tr.innerHTML = `<td>${esc(a.student_id)}</td><td>${esc(a.name)}</td>`;
       tr.appendChild(tdInput);
       body.appendChild(tr);
     });
+    veChuaLuuDiem();
   });
 }
 
+/* UX5B-FIX1: điểm gõ rồi mà chưa Lưu thì nút "‹ Danh sách" hỏi trước (bấm lần hai trong 4 giây mới bỏ), như thẻ Nhập nguyện vọng. */
+let choQuayLaiDiem = null;
+function diemChuaLuu() {
+  return Array.from(document.querySelectorAll("#scoringTableBody .score-input")).some((i) => i.value !== (i.dataset.cu || ""));
+}
+function veChuaLuuDiem() {
+  el("chuaLuuDiem").hidden = el("scoringWorkArea").hidden || !diemChuaLuu();
+}
+
 function initScoringHandlers() {
+  /* UX5B-L3 (D4): lối quay về danh sách; dùng lại loadScoringTab nên tiến độ được nạp mới. */
+  el("btnScoringQuayLai").addEventListener("click", () => {
+    if (!el("scoringWorkArea").hidden && diemChuaLuu() && !choQuayLaiDiem) {
+      showToast(t("ux5b_diem_chua_luu_canh_bao"), "warn");
+      choQuayLaiDiem = setTimeout(() => { choQuayLaiDiem = null; }, 4000);
+      return;
+    }
+    clearTimeout(choQuayLaiDiem);
+    choQuayLaiDiem = null;
+    loadScoringTab();
+  });
+  el("scoringTableBody").addEventListener("input", veChuaLuuDiem);
+  window.addEventListener("langchange", () => {
+    if (!el("scoringWorkArea").hidden || LUAT_CHAM_DIEM.theoNguoi) return;
+    if (el("view-scoring").classList.contains("is-active")) loadScoringOverview();
+  });
   el("btnSavePersonScores").addEventListener("click", () => {
     const inputs = document.querySelectorAll("#scoringPersonBody .score-input");
     inputs.forEach((input) => {
@@ -222,6 +260,9 @@ function initScoringHandlers() {
         } else {
           feedback(el("scoringFeedback"), t("feedback_scores_saved", { n: res.data.n_saved }), false);
         }
+        /* UX5B-FIX1: ô đã lưu (không bị đánh lỗi) thành giá trị "đã lưu" mới */
+        inputs.forEach((i) => { if (!i.__ux2Loi) i.dataset.cu = i.value; });
+        veChuaLuuDiem();
         loadScoringOverview();
       } else {
         /* Khong luu duoc dong nao vi o sai: to do dung cac o do (nhu nhanh luu mot phan). */

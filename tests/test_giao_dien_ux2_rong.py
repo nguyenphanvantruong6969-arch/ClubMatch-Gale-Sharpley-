@@ -103,7 +103,7 @@ def test_the_quan_ly_rong_co_nut_dua_con_tro_den_o_dung(trong):
     assert tt["chu"] and tt["huong"] and tt["nut"] == 1
     page.focus("#adminClubEmptyState .ux2-rong-nut")                         # bàn phím: nút Tab tới được
     page.keyboard.press("Enter")
-    page.wait_for_function("document.activeElement && document.activeElement.id === 'clubFormId'")
+    page.wait_for_function("document.activeElement && document.activeElement.id === 'clubFormName'")
     # học sinh rỗng: nút đi sang thẻ nhập nguyện vọng và nhắm vào ô mã học sinh mới
     _mo_tab(page, "admin")
     page.click("#qlTabHs")                                                   # mục con "Học sinh" của thẻ Quản lý

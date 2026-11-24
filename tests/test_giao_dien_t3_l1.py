@@ -74,6 +74,7 @@ def test_sau_khi_khoa_chi_con_mot_dong_bao_da_boc_tham(api, mo):
     assert api.run_pipeline(42)["ok"]
     page, _ = mo()
     page.wait_for_function("document.querySelector('#stbLockLine').textContent.indexOf('Đã bốc thăm lúc') !== -1")
+    page.locator("#nangCao > summary").click()   # UX5B-L2: dòng khoá bốc thăm nằm trong mục gập "Tuỳ chọn khi chạy"
     dong = page.inner_text("#stbLockLine")
     assert re.search(r"Đã bốc thăm lúc \d{2}/\d{2}/\d{4} \d{2}:\d{2}\.", dong), dong
     assert "Bốc thăm lại" in dong and "số khởi tạo" not in dong.lower()
@@ -113,7 +114,7 @@ def test_bo_ten_thuat_toan_khoi_giao_dien_va_doi_ten_tab_xoa(api, mo):
     assert page.title() == "Sắp xếp Câu lạc bộ" and "RB-DA" not in page.title()
     assert page.inner_text('.nav-item[data-tab="pipeline"]').strip().endswith("Xếp CLB")
     page.locator('[data-tab="admin"]').click()
-    assert page.inner_text("#qlTabDuLieu").strip() == "Xoá dữ liệu"
+    assert page.text_content("#qlTabDuLieu").strip() == "Làm lại từ đầu"   # UX4-L2
 
 
 # ---------------------------------------------------------------- T3-36
@@ -124,6 +125,11 @@ def test_bang_tien_do_cham_bo_cot_ma_clb_va_nut_cham_khong_mui_ten(api, mo):
     page.wait_for_selector("#scoringOverviewBody .btn-row-link")
     dau = page.eval_on_selector_all("#scoringClubPanel thead th", "e => e.map(x => x.textContent.trim())")
     assert "Mã CLB" not in dau and dau[0] == "Tên"
-    nut = page.locator("#scoringOverviewBody .btn-row-link").first
-    assert nut.inner_text().strip() == "Chấm" and "btn-secondary" in nut.get_attribute("class")
+    # UX5B-L3: CLB đầu tiên chưa chấm xong mang nút vàng "Chấm tiếp"; các nút còn lại vẫn là "Chấm" thường.
+    nuts = page.locator("#scoringOverviewBody .btn-row-link")
+    chu = [x.strip() for x in nuts.all_inner_texts()]
+    assert chu and set(chu) <= {"Chấm", "Chấm tiếp"} and chu.count("Chấm tiếp") <= 1
+    for i, ten in enumerate(chu):
+        lop = nuts.nth(i).get_attribute("class")
+        assert ("btn-primary" in lop) == (ten == "Chấm tiếp") and ("btn-secondary" in lop) == (ten == "Chấm")
     assert page.locator("#scoringOverviewBody .scoring-progress-bar").count() == 0

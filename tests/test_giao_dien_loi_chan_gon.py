@@ -24,6 +24,7 @@ from _wharton import bat_wharton, chen_bids, dong_bids, dung_clb, dung_hs  # noq
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 N = 30
 SAI = ["HS%03d" % i for i in range(1, 27)]          # HS001..HS026 chia thiếu
@@ -98,7 +99,7 @@ def _chay_bi_chan(page):
 def _sang_tab_wh(page):
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#adminWhartonBlock:not([hidden])", state="attached")
-    page.locator('#qlTabs [data-ql-tab="wh"]').click()
+    tab_ql(page, "wh")
     page.wait_for_selector("#whQlBody tr")
 
 
@@ -153,7 +154,7 @@ def test_nut_mo_danh_sach_sang_tab_con_voi_bo_loc_chi_ho_so_co_van_de(mo):
     _chay_bi_chan(page)
     page.locator("#logBox .log-mo-ds").click()
     page.wait_for_selector("#view-admin.is-active")
-    page.wait_for_selector('#qlTabs [data-ql-tab="wh"][aria-selected="true"]')
+    page.wait_for_selector('#qlTabs [data-ql-tab="wh"][aria-selected="true"]', state="attached")
     assert page.locator("#whLocChiLoi").is_checked()
     page.wait_for_selector("#whQlBody tr")
     page.wait_for_function(

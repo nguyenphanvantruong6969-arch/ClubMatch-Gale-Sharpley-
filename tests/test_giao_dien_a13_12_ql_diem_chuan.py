@@ -56,6 +56,7 @@ def test_3_10_luu_clb_lam_moi_bang_tai_theo_buoi_va_lich_tuan(mo):  # noqa: F811
     page.wait_for_timeout(500)
     dem_tai = _yeu_cau_dem(page, "get_tai_theo_buoi")
     dem_buoi = _yeu_cau_dem(page, "get_danh_sach_buoi")
+    page.click("#clubFormThemTuyChon")   # UX4-L3
     page.fill("#clubFormId", "Z")
     page.fill("#clubFormName", "CLB Z")
     page.fill("#clubFormCapacity", "5")

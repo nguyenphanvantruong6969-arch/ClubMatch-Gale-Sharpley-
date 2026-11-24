@@ -9,6 +9,7 @@ bước 3 là "Huy chương" thay cho điểm quyết tâm.
 Dữ liệu MÔ PHỎNG.
 """
 import itertools
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 import pytest
 
@@ -34,7 +35,8 @@ def _du_lieu_tat(api, bat=True):
 
 
 def _cho(page):
-    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon")
+    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon", state="attached")
+    mo_muc(page, "b3")
 
 
 def _o(page, diem):
@@ -54,7 +56,7 @@ def _db(api):
 def test_fa_tat_khong_co_buoc_huy_chuong(mo):  # noqa: F811 (fixture dùng lại)
     page, _, loi = mo(du_lieu=_du_lieu_tat)
     _chon(page, "HS1")
-    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung")
+    page.wait_for_selector("#fbWhartonStep:not([hidden]) .wh-khung", state="attached")
     assert page.locator("#fbHuyChuongStep").is_hidden()
     assert not loi, loi
 

@@ -65,20 +65,20 @@ def test_hat_giong_sai_loi_tai_o_va_go_chu_thi_xoa(man):
 
 
 def test_form_clb_thieu_o_to_dung_o_va_focus_o_dau(man):
+    # UX4-L3: Mã CLB tự điền từ tên và nằm trong "Thêm tuỳ chọn", nên chỉ ô Số chỗ còn thiếu bị tô và nhận focus
     page, api, loi = man
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#btnSaveClub", state="visible")
     page.fill("#clubFormName", "Chỉ có tên")
     page.click("#btnSaveClub")
-    page.wait_for_selector("#clubFormId.is-loi")
+    page.wait_for_selector("#clubFormCapacity.is-loi")
     cau = _t(page, "feedback_club_form_required")
-    a, c = _trang_thai(page, "#clubFormId"), _trang_thai(page, "#clubFormCapacity")
-    assert a["inv"] == c["inv"] == "true" and a["focus"] and not c["focus"]      # focus ô ĐẦU TIÊN
-    assert a["chu"] == cau and c["chu"] == cau
+    c = _trang_thai(page, "#clubFormCapacity")
+    assert c["inv"] == "true" and c["focus"] and c["chu"] == cau                 # focus ô còn thiếu đầu tiên
     assert _trang_thai(page, "#clubFormName")["inv"] is None                     # ô đã điền: không bị tô
-    page.type("#clubFormId", "x")
-    assert _trang_thai(page, "#clubFormId")["inv"] is None
-    assert _trang_thai(page, "#clubFormCapacity")["inv"] == "true"
+    assert _trang_thai(page, "#clubFormId")["inv"] is None                       # Mã đã tự điền
+    page.type("#clubFormCapacity", "5")
+    assert _trang_thai(page, "#clubFormCapacity")["inv"] is None
     assert loi == [], loi
 
 
@@ -86,6 +86,7 @@ def test_form_clb_loi_backend_theo_ma_ve_dung_o_ma_la_thi_khung_phan_hoi(man):
     page, api, loi = man
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#btnSaveClub", state="visible")
+    page.click("#clubFormThemTuyChon")                                           # UX4-L3: Mã nằm trong "Thêm tuỳ chọn"
     page.fill("#clubFormId", "clb_z")
     page.fill("#clubFormName", "CLB Z")
     page.fill("#clubFormCapacity", "0")                                          # backend: capacity_must_be_positive
@@ -107,6 +108,7 @@ def test_form_clb_loi_backend_theo_ma_ve_dung_o_ma_la_thi_khung_phan_hoi(man):
 def test_form_them_hoc_sinh_thieu_o(man):
     page, api, loi = man
     page.locator('[data-tab="fallback"]').click()
+    page.locator("#ux5bTaoMoi > summary").click()          # UX5B-L3: "Tạo học sinh mới" là mục gập
     page.wait_for_selector("#btnCreateStudent", state="visible")
     page.fill("#newStudentName", "Chỉ có tên")
     page.click("#btnCreateStudent")
@@ -186,18 +188,18 @@ def test_doi_ngon_ngu_form_clb_va_hat_giong_chu_loi_doi_theo(man):
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#btnSaveClub", state="visible")
     page.click("#btnSaveClub")
-    page.wait_for_selector("#clubFormId.is-loi")
-    assert _chu_loi(page, "#clubFormId") == _t(page, "feedback_club_form_required")
+    page.wait_for_selector("#clubFormName.is-loi")        # UX4-L3: Mã tự điền theo tên nên không tô riêng
+    assert _chu_loi(page, "#clubFormName") == _t(page, "feedback_club_form_required")
     page.evaluate("() => window.I18N.setLang('en')")
-    for sel, khoa in (("#clubFormId", "feedback_club_form_required"), ("#clubFormCapacity", "feedback_club_form_required"),
+    for sel, khoa in (("#clubFormCapacity", "feedback_club_form_required"),
                       ("#clubFormName", "feedback_club_form_required"), ("#seedInput", "hat_giong_khong_hop_le")):
         assert _trang_thai(page, sel)["inv"] == "true", sel                        # lỗi VẪN còn
         assert _chu_loi(page, sel) == _t(page, khoa), sel                           # chữ đã sang tiếng Anh
-    assert _chu_loi(page, "#clubFormId").startswith("Enter")
+    assert _chu_loi(page, "#clubFormName").startswith("Enter")
     page.evaluate("() => window.I18N.setLang('vi')")
-    assert _chu_loi(page, "#clubFormId") == _t(page, "feedback_club_form_required")
-    page.type("#clubFormId", "x")                                                   # vẫn xoá được khi gõ sau khi đổi ngôn ngữ
-    assert _trang_thai(page, "#clubFormId")["inv"] is None
+    assert _chu_loi(page, "#clubFormName") == _t(page, "feedback_club_form_required")
+    page.type("#clubFormName", "x")                                                 # vẫn xoá được khi gõ sau khi đổi ngôn ngữ
+    assert _trang_thai(page, "#clubFormName")["inv"] is None
     assert loi == [], loi
 
 
@@ -205,6 +207,7 @@ def test_loi_backend_theo_ma_doi_ngon_ngu_dich_lai_tu_ma_va_tham_so(man):
     page, api, loi = man
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#btnSaveClub", state="visible")
+    page.click("#clubFormThemTuyChon")                                           # UX4-L3: Mã nằm trong "Thêm tuỳ chọn"
     page.fill("#clubFormId", "clb_z")
     page.fill("#clubFormName", "CLB Z")
     page.fill("#clubFormCapacity", "0")

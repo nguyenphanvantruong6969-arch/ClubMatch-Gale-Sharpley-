@@ -87,7 +87,7 @@ const UX2_RONG_THE_XEM = {
     gv: { huongDan: "ux2_rong_huong_ket_qua_gv" },
     nut: { nhan: "ux2_rong_nut_xep", quyen: "quan_tri", tab: "pipeline", oId: "dropZone" } },
   kq_khong_co_clb: { huongDan: "ux2_rong_huong_clb", gv: { huongDan: "ux2_rong_huong_clb_gv" },
-    nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormId" } },
+    nut: { nhan: "ux2_rong_nut_quan_ly", quyen: "quan_tri", tab: "admin", oId: "clubFormName" } },
   kq_tim_khong_thay: { huongDan: "ux2_rong_huong_tim" },
 };
 

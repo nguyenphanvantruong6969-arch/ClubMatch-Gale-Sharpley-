@@ -18,9 +18,17 @@ def q(ui, sql, *a):
         c.close()
 
 
+def _mo_tuy_chon(page):
+    """UX4-L3: Mã CLB và chỉ tiêu dự phòng nằm sau nút "Thêm tuỳ chọn"; mở ra nếu đang gập."""
+    page.wait_for_selector("#clubFormThemTuyChon", state="visible")
+    if not page.locator("#clubFormId").is_visible():
+        page.locator("#clubFormThemTuyChon").click()
+
+
 def _vao_clb(ui):
     ui.tab("admin")
     ui.page.locator("#qlTabClb").click()
+    _mo_tuy_chon(ui.page)
     ui.page.wait_for_selector("#clubFormId", state="visible")
 
 

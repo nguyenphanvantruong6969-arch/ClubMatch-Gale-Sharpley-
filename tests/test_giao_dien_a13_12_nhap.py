@@ -10,6 +10,7 @@
 """
 
 import pytest
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 pytest.importorskip("playwright", reason="chưa cài playwright")
 
@@ -79,6 +80,7 @@ def test_luu_tick_phan_hoi_ve_muon_khong_ghi_moc_len_em_khac(mo):  # noqa: F811
     page, api, loi = mo(du_lieu=_du_lieu_hai_em)
     _chon(page, "HS1")
     giu, tha = _giu_yeu_cau(page, "submit_test_selection")
+    mo_muc(page, "thi")
     page.locator("#btnSubmitTestSelection").click()
     page.wait_for_function("() => true")
     for _ in range(40):
@@ -109,7 +111,9 @@ def test_bam_them_clb_trong_luc_cho_luu_nguyen_vong_thi_clb_do_van_chua_luu(mo):
     tha()
     page.wait_for_function(
         "() => document.getElementById('preferencesFeedback').textContent.includes('Đã lưu')")
-    assert page.locator("#chuaLuuNv").is_visible(), "CLB thêm trong lúc chờ bị coi là đã lưu"
+    # UX5B-L3: lưu Bước 2 xong thì Bước 3 tự mở, Bước 2 gập lại và dòng tóm tắt của nó báo "Chưa lưu"
+    assert page.evaluate("nvChuaLuu()"), "CLB thêm trong lúc chờ bị coi là đã lưu"
+    assert page.locator("#fbBuoc2 .ux5b-muc-tom-chu").inner_text() == "• Chưa lưu"
     assert not loi, loi
 
 

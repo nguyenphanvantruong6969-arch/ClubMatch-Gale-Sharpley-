@@ -263,12 +263,55 @@ SUA_CO_Y = {
         ('(hoặc "Tải sổ mẫu có huy chương" nếu chế độ huy chương đang bật)',
          '(sổ có đủ mọi cột và bảng giải thích từng cột)'),
         ('(or "Download the medal workbook" if medal mode is on)',
-         '(it has every column and a table explaining each one)')],
+         '(it has every column and a table explaining each one)'),
+        # UX5B-L2: bản ngắn hơn, nói đúng việc làm (áp dụng sau hai thay thế trên)
+        ('Chưa có sổ nhập? Bấm "Tải sổ nhập mẫu" (sổ có đủ mọi cột và bảng giải thích từng cột), điền xong rồi kéo vào ô bên dưới.',
+         'Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.'),
+        ('No intake workbook yet? Press "Download the input workbook" (it has every column and a table explaining each one), fill it in, then drag it into the box below.',
+         'No workbook yet? Download the sample, fill it in, then drag it into the box below.')],
     ("ui", "health_panel_hint"): [
         ("Những điểm dưới đây không chặn việc sắp xếp nhưng có thể làm kết quả sai lệch.",
          'Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch.'),
         ("These don't stop the allocation, but they can skew the results.",
-         'Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results.')],
+         'Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results.'),
+        # UX5B-L2: một ý mỗi câu (áp dụng sau thay thế trên)
+        ('Mục "Nghiêm trọng" sẽ chặn việc chạy cho đến khi sửa xong; các mục còn lại không chặn nhưng có thể làm kết quả sai lệch. Nên xem trước khi chạy.',
+         'Cảnh báo "Nghiêm trọng" chặn việc chạy cho đến khi sửa xong. Các cảnh báo khác không chặn.'),
+        ('Items marked "Serious" block the run until they are fixed; the others don\'t stop it but can skew the results. Check them before running.',
+         '"Serious" warnings block the run until fixed. Other warnings do not block it.')],
+    # UX4-L2: chủ ý đổi chữ của thẻ Quản lý (bảng từ ngữ docs/ke_hoach/ux/UX4_TU_NGU.md); chuỗi đã điền nhãn mặc định.
+    ("ui", "admin_desc"): [
+        ("Thêm hoặc sửa CLB, chỉ tiêu và suất ưu tiên. Nhóm ưu tiên của học sinh chỉ được hưởng suất khi cùng nhãn với CLB.",
+         "Sửa danh sách CLB và học sinh, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới."),
+        ("Add or edit clubs, quotas and priority seats. A priority group only gets those seats in a club with the same label.",
+         "Edit the list of clubs and students, choose how places are given out, or start over. Pick a section below.")],
+    ("ui", "ql_tab_clb"): [("CLB", "Danh sách CLB")],
+    ("ui", "ql_tab_du_lieu"): [("Xoá dữ liệu", "Làm lại từ đầu"), ("Delete data", "Start over")],
+    ("ui", "danger_zone_title"): [("Vùng nguy hiểm: xoá dữ liệu để làm lại", "Làm lại từ đầu"),
+                                  ("Danger zone: delete data to start over", "Start over")],
+    # UX5A-L3: chủ ý đổi chữ thẻ Chi tiết và xuất tệp (bỏ "suất", "Chọi"); docs/ke_hoach/ux/UX5A_TU_NGU.md.
+    ("ui", 'fill_sap_xep_choi'): [('Chọi cao nhất', 'Nhiều học sinh muốn nhất'), ('Most competitive', 'Most students wanting it')],
+    ("ui", 'xuat_opt_dau_vao'): [('Dữ liệu đầu vào hiện tại: một Sổ nhập CLB nạp lại được', 'Dữ liệu đầu vào hiện tại, một Sổ nhập CLB để nạp lại'), ('Current input data: one Club Input Workbook that can be imported again', 'Current input data, one workbook that can be loaded again')],
+    ("ui", 'xuat_opt_ket_qua'): [('Kết quả sắp xếp: một tệp Excel (danh sách học sinh, từng CLB, học sinh chưa có chỗ, thống kê)', 'Kết quả xếp, một tệp Excel (danh sách học sinh, từng CLB, học sinh chưa có chỗ, thống kê)'), ('Placement results: one Excel file (student list, each club, students without a place, statistics)', 'Placement result, one Excel file (students, each club, students without a place, statistics)')],
+    ("ui", 'xuat_title'): [('Xuất dữ liệu', 'Tải kết quả về máy'), ('Export data', 'Save results')],
+    # UX4-L3: chủ ý đổi chữ (Học sinh, form CLB, Buổi); chuỗi đã điền nhãn mặc định.
+    ("ui", 'admin_reserve_assign_title'): [('Gán nhóm ưu tiên và xuất hồ sơ học sinh', 'Học sinh và nhóm ưu tiên'), ('Priority groups and student profile export', 'Students and priority groups')],
+    ("ui", 'btn_admin_xuat_hs'): [('Xuất CSV học sinh đã đánh dấu', 'Xuất danh sách học sinh đã chọn (CSV)'), ('Export ticked students as CSV', 'Export the selected students (CSV)')],
+    ("ui", 'btn_bulk_assign'): [('Gán cho học sinh đã đánh dấu', 'Gán nhóm ưu tiên cho học sinh đã chọn'), ('Assign to ticked students', 'Give the selected students a priority group')],
+    ("ui", 'buoi_chua_chia'): [('Chưa chia buổi', 'Một buổi chung'), ('No session set', 'One shared session')],
+    ("ui", 'buoi_hint_form'): [('Hai CLB cùng buổi là trùng giờ, mỗi học sinh chỉ vào được một. Để trống nếu trường chỉ có một buổi.', 'Hai CLB cùng buổi thì trùng giờ, mỗi học sinh chỉ vào được một. Chọn "Một buổi chung" nếu trường chỉ có một buổi.'), ('Two clubs in the same session clash, so a student can join only one. Leave it blank if the school has a single session.', 'Two clubs in the same session clash, so a student can join only one. Choose "One shared session" if the school has only one session.')],
+    ("ui", 'th_current_reserve_group'): [('Nhóm ưu tiên hiện tại', 'Nhóm ưu tiên'), ('Current priority group', 'Priority group')],
+    ("ui", 'ti_le_choi_giai_thich'): [('Tỉ lệ chọi tính theo số học sinh, không theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.', 'Số học sinh trên mỗi chỗ tính theo số học sinh, không tính theo số nguyện vọng, vì mỗi học sinh chỉ nhận một chỗ mỗi buổi.'), ('Applicants per seat counts students, not preferences, because each student gets at most one seat per session.', 'Applicants per place counts students, not preferences, because each student gets at most one place per session.')],
+    # UX5B-L2: chủ ý đổi chữ thẻ Xếp CLB (đánh số ba bước, ngắn gọn); docs/ke_hoach/ux/UX5B_TU_NGU.md §2.1. Chuỗi đã điền nhãn mặc định.
+    ("ui", 'pipeline_desc'): [('Nhập sổ nhập, bấm Chạy để xếp học sinh vào CLB, rồi tải kết quả.', 'Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy.'),
+                              ('Import the intake workbook, press Run to place students in clubs, then download the results.', 'Do three things in order: import the workbook, read the warnings, press Run.')],
+    ("ui", 'import_panel_title'): [('Nhập dữ liệu', '1. Nhập sổ'), ('Import data', '1. Import the workbook')],
+    ("ui", 'health_panel_title'): [('Cảnh báo dữ liệu', '2. Xem cảnh báo'), ('Data warnings', '2. Read the warnings')],
+    ("ui", 'btn_validate'): [('Kiểm tra lại dữ liệu', 'Kiểm tra lại'), ('Re-check data', 'Re-check')],
+    ("ui", 'steps_panel_title'): [('Các bước xử lý', '3. Chạy xếp'), ('Processing steps', '3. Run')],
+    ("ui", 'btn_toggle'): [('Hiện/ẩn', 'Xem lịch sử'), ('Show/hide', 'Show history')],
+    # UX5B-L3: chủ ý đổi chữ thẻ Nhập nguyện vọng ("Tạo" chuyển sang mục gập riêng); docs/ke_hoach/ux/UX5B_TU_NGU.md §2.2. Chuỗi đã điền nhãn mặc định.
+    ("ui", 'fallback_step0_title'): [('Tìm hoặc tạo học sinh', 'Tìm học sinh'), ('Find or create a student', 'Find a student')],
 }
 
 
@@ -530,7 +573,7 @@ def test_mau_20_chuoi_mac_dinh_giong_het_truoc_day(anh_chup):
     ra = _chay_js({"khoa": MAU_20, "tham_so": tham_so})
     for lang in ("vi", "en"):
         for k in MAU_20:
-            mong_doi = anh_chup["ui"][lang][k]
+            mong_doi = _sua_co_y("ui", k, anh_chup["ui"][lang][k])   # UX4: cùng danh sách đổi chữ có chủ ý
             for ten, gia_tri in tham_so.items():
                 mong_doi = mong_doi.replace("{%s}" % ten, str(gia_tri))
             assert ra[lang][k] == mong_doi, (lang, k)
@@ -539,7 +582,7 @@ def test_mau_20_chuoi_mac_dinh_giong_het_truoc_day(anh_chup):
 @can_node
 def test_giao_dien_cong_ty(anh_chup):
     ra = _chay_js({"khoa": ["label_students", "nav_scoring", "toast_run_success", "th_score",
-                            "admin_desc", "fallback_step0_title", "pipeline_desc"],
+                            "admin_desc", "fallback_step0_title", "pipeline_desc", "ux5b_tt_buoc_chay"],
                    "tham_so": {"n_matched": 8, "n_total": 9, "rounds": 2},
                    "nhan": CONG_TY})
     assert ra["vi"]["label_students"] == "nhân viên"
@@ -548,10 +591,12 @@ def test_giao_dien_cong_ty(anh_chup):
     assert ra["vi"]["toast_run_success"] == "Sắp xếp xong: 8/9 nhân viên có dự án, sau 2 vòng."
     assert ra["en"]["toast_run_success"] == \
         "Allocation finished: 8/9 employees placed in 2 round(s)."
-    assert ra["en"]["fallback_step0_title"] == "Find or create an employee"   # a -> an
+    assert ra["en"]["fallback_step0_title"] == "Find an employee"   # a -> an (UX5B-L3: bỏ "or create")
     assert "học sinh" not in ra["vi"]["pipeline_desc"] and "CLB" not in ra["vi"]["pipeline_desc"]
-    assert ra["vi"]["pipeline_desc"] == \
-        "Nhập sổ nhập, bấm Chạy để xếp nhân viên vào dự án, rồi tải kết quả."
+    # UX5B-L2: pipeline_desc không còn chỗ giữ của ngành; kiểm sự thay nhãn bằng câu trạng thái có {person_l}.
+    assert ra["vi"]["pipeline_desc"] == "Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy."
+    assert ra["vi"]["ux5b_tt_buoc_chay"] == 'Đã nạp {n} nhân viên. Xem cảnh báo rồi bấm "Chạy sắp xếp".'
+    assert ra["en"]["ux5b_tt_buoc_chay"] == '{n} employees loaded. Read the warnings, then press "Run allocation".'
 
 
 @can_node

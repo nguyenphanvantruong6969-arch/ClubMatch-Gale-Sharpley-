@@ -13,7 +13,7 @@
 
 const UX1A_CACH = [
   { ma: "chi_xep", wharton: false, fa: false, id: "ChiXep", tt: "ux1a_the_chi_xep_tt", mt: "ux1a_the_chi_xep_mt" },
-  { ma: "chia_100", wharton: true, fa: false, id: "Chia100", tt: "ux1a_the_chia_100_tt", mt: "ux1a_the_chia_100_mt" },
+  { ma: "chia_100", deXuat: true, wharton: true, fa: false, id: "Chia100", tt: "ux1a_the_chia_100_tt", mt: "ux1a_the_chia_100_mt" },
   { ma: "huy_chuong", wharton: true, fa: true, id: "HuyChuong", tt: "ux1a_the_huy_chuong_tt", mt: "ux1a_the_huy_chuong_mt" },
 ];
 const UX1A_CO_SAU_XEP = ["fa_diem_danh", "fa_khieu_nai", "fa_vong_2", "fa_phan_hoi", "fa_vong_doi_cho"];
@@ -52,7 +52,8 @@ function ux1aTaoThe(tienTo, khiChon, bo, khoaCauHoi, moiTheTab) {
     const b = ux1aEl("button", { type: "button", role: "radio", class: "ux1a-the", id: tienTo + c.id,
       "data-cach": c.ma, "aria-checked": "false" },
       ux1aEl("span", { class: "ux1a-the-tt", "data-i18n": c.tt, text: t(c.tt) }),
-      ux1aEl("span", { class: "ux1a-the-mt", "data-i18n": c.mt, text: t(c.mt) }));
+      ux1aEl("span", { class: "ux1a-the-mt", "data-i18n": c.mt, text: t(c.mt) }),
+      ...(c.deXuat ? [ux1aEl("span", { class: "ux4-de-xuat", "data-i18n": "ux4_de_xuat", text: t("ux4_de_xuat") })] : []));   /* UX4-L4: nhãn "Đề xuất" duy nhất */
     b.addEventListener("click", () => { if (b.getAttribute("aria-checked") !== "true" && !b.disabled) khiChon(c.ma); });
     nut[c.ma] = b;
     luoi.append(b);
@@ -260,11 +261,12 @@ function ux1aTenCach(ma) { return t(UX1A_CACH.find((c) => c.ma === ma).tt); }
 
 function ux1aMoNangCao() {
   switchTab("admin");
+  /* UX4-L2: tiêu chí xếp nằm trong tab "Cách xếp" (không còn mục gập "Nâng cao"). */
+  if (typeof datTabConQl === "function") datTabConQl("cach_xep", { luu: true });
   const d = el("ux1aNangCao");
-  if (d) {
-    d.open = true;
-    el("gt2TieuChiPanel").scrollIntoView({ block: "start" });
-  }
+  if (d) d.open = true;                       /* UX4-L4: "Tuỳ chỉnh thêm" là mục gập; mở ra để thấy tiêu chí */
+  const p = el("gt2TieuChiPanel");
+  if (p) p.scrollIntoView({ block: "start" });
 }
 
 function ux1aApDungSong(cfg) {

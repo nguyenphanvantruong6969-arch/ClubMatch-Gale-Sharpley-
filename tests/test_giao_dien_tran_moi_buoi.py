@@ -14,6 +14,7 @@ Máy nào không có playwright/Chromium thì bỏ qua cả tệp.
 """
 
 import os
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 import pytest
 
@@ -52,12 +53,13 @@ def trang(api):
         page.click("#btnStudentSearch")
         page.wait_for_selector("#studentSearchResults >> text=HS001")
         page.locator("#studentSearchResults >> text=HS001").first.click()
-        page.wait_for_selector("#testSelectionGrid .option-row")
+        page.wait_for_selector("#testSelectionGrid .option-row", state="attached")   # UX5B-L3: Bước 1 có thể đang gập
         yield page, loi, api
         br.close()
 
 
 def _o_thi(page, cid):
+    mo_muc(page, "thi")
     return page.locator('#testSelectionGrid .option-row[data-club-id="%s"]' % cid)
 
 
@@ -102,6 +104,7 @@ class TestTranClbThiTrenManHinh:
 class TestTranNguyenVongTrenManHinh:
 
     def _bam_nv(self, page, cid):
+        mo_muc(page, "nv")
         page.locator('#rankingSourceGrid .option-row[data-club-id="%s"]' % cid).click()
 
     def test_muoi_moi_buoi_qua_hai_buoi_deu_duoc(self, trang):

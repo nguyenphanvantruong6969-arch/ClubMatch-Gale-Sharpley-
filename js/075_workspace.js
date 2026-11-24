@@ -306,6 +306,8 @@ function wsDongWorkspace(w) {
 function wsMoTinhNangDangMo() {
   if (!wsTrangThai || !wsTrangThai.enabled) return;
   switchTab("admin");
+  /* UX4: trang Cài đặt nằm trong tab "Cách xếp"; mở tab đó trước, nếu không khung vẫn ẩn. */
+  if (typeof datTabConQl === "function") datTabConQl("cach_xep", { luu: true });
   viecChoRoiLam(() => el("ux1aCaiDat") && !el("ux1aCaiDat").hidden, () => el("ux1aCaiDat").scrollIntoView({ block: "start" }));
 }
 

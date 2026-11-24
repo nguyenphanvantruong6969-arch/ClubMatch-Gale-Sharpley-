@@ -80,6 +80,7 @@ def test_r1b_it_em_sai_giu_tung_dong_va_thanh_khong_nhay_sang_cai_dat(mo_trang):
     assert not any("chưa có huy chương hợp lệ" in c for c in chu), chu
     assert page.locator("#viecTiepTheo").get_attribute("data-trang-thai") != "huy_chuong_sai"
     page.locator('.nav-item[data-tab="admin"]').click()               # khung Cài đặt: câu "một phần" + nút, VẪN đặt loại được
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aSsHuyChuongSai")
     assert "Gần như cả sổ" not in page.locator("#ux1aSsHuyChuongSai").inner_text()
     assert page.locator("#ux1bSsQuayLai").is_visible()
@@ -106,6 +107,7 @@ def test_r1c_khong_ten_clb_thi_khong_in_vi_du_o_rong(mo_trang):  # noqa: F811
 def test_r2_ca_so_sai_chi_hien_tai_so_mau_va_quay_lai_an_nut_loai(mo_trang):  # noqa: F811
     page, api, loi = _huy_chuong_tren_so_dqt(mo_trang)
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aSsHuyChuongSai")
     chu = page.locator("#ux1aSsHuyChuongSai").inner_text()
     assert "Gần như cả sổ" in chu and "120/120" in chu
@@ -150,7 +152,7 @@ def test_r4_khung_tra_cuu_o_tim_to_o_dau_va_ma_tra_cuu_gap(mo_trang):  # noqa: F
     page.wait_for_selector("#gtTim", state="visible")
     assert page.locator("#gtTim").bounding_box()["height"] >= 44
     assert page.locator("#gtBuocHuongDan").is_hidden() and page.locator("#btnGtTaoMa").is_hidden()
-    assert page.locator("#gtMaFold > summary").inner_text().strip() == "Mã tra cứu…"
+    assert page.locator("#gtMaFold > summary").inner_text().strip() == "Mã tra cứu cho học sinh tự xem…"   # UX5A-L2
     assert page.get_attribute("#gtTim", "placeholder") != page.get_attribute("#kqTimKiem", "placeholder")
     assert page.locator("#gtTim").bounding_box()["y"] < page.locator("#gtMaFold").bounding_box()["y"]
     page.locator("#gtMaFold > summary").click()

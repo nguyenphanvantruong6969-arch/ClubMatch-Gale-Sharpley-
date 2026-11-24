@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-24 — SF+UX5: gộp nhánh SF vào main (sửa hai chỗ test của SF theo giao diện UX4/UX5)
+
+- Gộp `origin/main` (đã có UX5) vào nhánh SF; xung đột chỉ ở CHANGELOG.md, TIEN_DO.md, đếm tệp test (nay 398) và style.css (giữ cả hai bên).
+- `tests/test_giao_dien_sf_b_lo5.py`: mở "Thêm tuỳ chọn" (Mã CLB nằm sau nút này theo UX4-L3) và tab Cách xếp + "Tuỳ chỉnh thêm" (ba thẻ chế độ theo UX4-L4) trước khi thao tác. Chỉ đổi test, không đổi mã sản phẩm.
+- `tests_stress/b/test_b2_quan_ly.py`: mở "Thêm tuỳ chọn" ở `_vao_clb`. Các test giao diện khác của `tests_stress/b/` (không nằm trong CI) còn lỗi vì viết theo giao diện cũ: xem hồ sơ nhánh.
+
 ## 2026-11-23 — SF-B9: CI Linux 6/6 (id trùng `ux1aMtCanhBao`), sửa lỗi của SF-B7
 
 - Nguyên nhân gốc: vùng cảnh báo của SF-B7 đặt id `tienTo + "CanhBao"` trong `ux1aTaoThe`, mà thẻ mục tiêu MT1 cũng dùng `ux1aTaoThe` (tiền tố `ux1aMt`) và đã có `#ux1aMtCanhBao` (`js/19_muc_tieu.js`): hai phần tử cùng id làm `tests/test_giao_dien_mt1.py::test_che_do_huy_chuong_khoa_co_hoi_mot_dong_ly_do_va_uoc_tinh_khong_co` lỗi strict mode (chạy cục bộ tái hiện đỏ trước khi sửa). Bộ test liên quan em chạy trước khi push không có tệp này.
@@ -115,6 +121,111 @@
 - `du_lieu_test/tao_so_nhap_doi_che_do.py` → `du_lieu_test/SO_NHAP_DOI_CHE_DO_150HS.xlsx` (DỮ LIỆU MÔ PHỎNG, 150 em, 2 buổi × 7 CLB: 1 Tự do, 3 Giới hạn, 3 Tuyển chọn). Một sổ hợp lệ cho Chỉ xếp / Chia 100 / Huy chương và bật/tắt chia loại: huy chương 60/30/10 nằm trọn trong một quỹ (= 100). Nạp khi workspace đang ở chế độ Huy chương. Đã kiểm bằng API thật: 0 cảnh báo nhập, 8 lần đổi chế độ + 3 lần bật/tắt chia loại đều chạy được.
 - `docs/phien/ST_GIAO_THUC.md`: giao thức stress test hai nhánh con (`-st-a` backend, `-st-b` giao diện), chỉ báo lỗi, không sửa mã sản phẩm. Không đổi mã sản phẩm, không thêm test vào `tests/`.
 
+## 2026-11-23 — UX5B-FIX1 (checker vòng 1): không mất điểm im lặng khi bấm "‹ Danh sách"
+
+- `js/06_cham_diem.js`, `index.html`, `i18n.js`: ô điểm nhớ giá trị đã lưu (`data-cu`); có điểm chưa lưu thì hiện "• Chưa lưu" (`#chuaLuuDiem`) cạnh nút Lưu điểm và nút "‹ Danh sách" bấm lần đầu chỉ cảnh báo (khoá mới `ux5b_diem_chua_luu_canh_bao`, vi + en), bấm lại trong 4 giây mới bỏ; lưu xong thì hết dấu và quay lại không hỏi. Chữ cảnh báo là chữ mới ngoài bảng duyệt (Truong cân nhắc).
+- Test mới trong `tests/test_giao_dien_ux5b_l3.py` (+2).
+
+## 2026-11-23 — UX5B-L4: test Hick + Von Restorff cả ba thẻ, vai quản trị và giáo viên; test cùng payload (MILESTONE 2)
+
+- Chỉ test (không sửa mã sản phẩm): `tests/test_giao_dien_ux5b_l4.py` (11 ca): số ô ≤ 7 (Nhập nguyện vọng: quản trị ≤ 7, giáo viên ≤ 6, trạng thái "đã chọn một em"; Nhập điểm: danh sách ≤ 7, đang chấm ≤ 2), tối đa một nút vàng mỗi thẻ, không nút đỏ, không nút bị làm mờ thay vì ẩn, giáo viên không thấy thẻ Xếp CLB/Tạo mới/điểm quyết tâm; test từ cấm và chữ trần "i"; "cùng payload": ba lần Lưu gọi đúng `submit_test_selection`, `submit_preferences`, `submit_wharton` (giáo viên: hai lần đầu) với đúng tham số, Lưu Bước 1 không kéo theo lưu Bước 2. Cách đếm: ngoài hàng bảng, ngoài dữ liệu dạng danh sách (thẻ kết quả tìm và phân trang, hàng thứ tự nguyện vọng, lưới CLB) và nút "Sửa" của mục gập (điều hướng giữa các bước). Số đo là dữ liệu MÔ PHỎNG.
+
+## 2026-11-23 — UX5B-L3: thẻ Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm (Hick + Von Restorff)
+
+- `index.html`, `js/04_nhap_tai_cho.js`, `js/06_cham_diem.js`, `js/00_nen.js`, `i18n.js`, `style.css` (khối `/* UX5B */`): D2 ba bước là ba mục gập, MỘT mục mở (nút Lưu của mục đó là nút vàng duy nhất); mục gập còn dòng "Đã lưu: …" hoặc "• Chưa lưu" + nút "Sửa"; Lưu Bước 1 thì Bước 2 tự mở, Lưu Bước 2 thì Bước 3 (nếu có) tự mở. Ba lời gọi lưu giữ riêng, tham số y như cũ.
+- D3: giáo viên không thấy mục "Điểm quyết tâm" (`data-quyen="quan_tri"` trên `#fbWhartonStep`) và thấy câu mô tả cũ; quản trị thấy bản "Tìm …". D6: "Xoá hết" chỉ hiện khi đã có nguyện vọng. "Tạo {person_l} mới ▾" thành mục gập (`#ux5bTaoMoi`, giữ id ba ô và nút Tạo); `ux2DiToi` mở mọi `<details>` chứa ô cần đưa con trỏ tới. Nút "i" của khối quyết tâm đọc "Giải thích".
+- Nhập điểm: dòng trạng thái `#ux5bTtDiem`, nút vàng "Chấm tiếp" ở CLB đầu tiên chưa chấm xong, D4 nút `#btnScoringQuayLai` (đang chấm một CLB thì danh sách lui đi).
+- Khoá i18n mới `ux5b_*` (vi + en); đổi tại chỗ `fallback_step0_title`; ghi vào `SUA_CO_Y` của `tests/test_ws_nhan.py` (ghi chú UX5B, không nới lỏng).
+- Test mới: `tests/test_giao_dien_ux5b_l3.py` (13); `tests/_mo_muc.py` (mở đúng bước trước khi thao tác). Test cũ chỉnh vì UI đổi: 15 tệp giao diện (mở đúng bước/mục gập, chờ lưới ở trạng thái `attached`), `test_giao_dien_t3_l1.py` (nút "Chấm tiếp"). Số ô (ngoài danh sách dữ liệu và nút "Sửa"): quản trị 7, giáo viên 6 (trước: 27 và 23). Số đo là dữ liệu MÔ PHỎNG.
+
+## 2026-11-23 — UX5B-FIX-CI (sửa CI nền run #1443, commit L2 8441218)
+
+- Nguyên nhân gốc 1: L2 đổi chữ catalog `i18n.js` (`import_panel_title`, `import_hint`, `health_panel_title`, `btn_validate`, `health_panel_hint`, `steps_panel_title`, `btn_toggle`) nhưng chữ dự phòng trong `index.html` còn bản cũ → `tests/test_t3_l1_chu_du_phong.py` đỏ (Linux 4/6, Windows 5/9). Sửa: `index.html` khớp catalog.
+- Nguyên nhân gốc 2: `pipeline_desc` mới không còn chỗ giữ của ngành, nên `tests/test_ws_nhan_giao_dien.py` (2 ca) đòi câu mô tả cũ (Linux 6/6). Sửa test: kiểm tên bước `step_title_rbda` ("Xếp nhân viên vào dự án" / "Place employees in projects") để vẫn chứng minh từ của ngành lên màn hình. Không nới lỏng.
+
+## 2026-11-23 — UX5B-L2: thẻ Xếp CLB (Hick + Von Restorff); đã nhập `origin/main` (MT2) trước
+
+- P0: gộp `origin/main` (có MT2) vào nhánh; xung đột `CHANGELOG`, `CLAUDE_CHI_TIET`, `TIEN_DO` (giữ hai bên), `index.html`, `style.css` (giữ công tắc MT2 và thẻ UX4/UX5A). CI run #1435 xanh.
+- `index.html`, `js/02_van_hanh.js`, `js/05_quan_ly.js`, `i18n.js`, `style.css` (khối `/* UX5B */`): dòng trạng thái `#ux5bTtPipeline` (nhập sổ / có tệp chờ / đã nạp N / đã xếp xong); mục gập "Tuỳ chọn khi chạy" (`#nangCao`) giờ chứa mã bốc thăm, dòng khoá bốc thăm và "Buổi sẽ xếp"; chọn một phần buổi thì dòng nhắc `#ux5bBuoiTom` hiện ngoài mục gập; danh sách cảnh báo trong `#healthChiTiet` (tự mở khi có mục nghiêm trọng). Số ô thấy được: 3 / 5 / 7 (trước 3 / 8 / 10). Chữ đổi theo bảng UX5B §2.1; nút "Chạy" và mọi `id` giữ nguyên, không đụng backend.
+- Ghi chú: câu "{n} cảnh báo, {s} nghiêm trọng" đã có sẵn ở `#healthSummary`; mục gập chỉ mang nhãn "Xem chi tiết" (khoá `ux5b_xem_chi_tiet`) để không lặp hai lần.
+- Test mới: `tests/test_giao_dien_ux5b_l2.py` (8), dùng `tests/_ux5b_chung.py`. Test cũ chỉnh vì UI đổi (mở `#nangCao` trước khi thao tác chip/khoá bốc thăm; nhãn "Kiểm tra lại"); `test_ws_nhan.py`: `SUA_CO_Y` ghi chú UX5B.
+
+## 2026-11-23 — UX5B: Truong duyệt MILESTONE 1; prompt tự động L2-L4
+
+- Chỉ tài liệu: ghi duyệt M1 (từ ngữ, D1-D6, câu hỏi mở theo mặc định) trong `docs/ke_hoach/ux/UX5B_TU_NGU.md`, hồ sơ nhánh, `TIEN_DO.md`; thêm `docs/phien/UX5B_L2_L4_AUTO_PROMPT.md` (P0 nhập main, L2-L4, checker tự động, vòng CI). Không đổi mã.
+
+## 2026-11-22 — Sửa CI đỏ trên nhánh UX5B (run #1401): gộp bản sửa UX5A, bỏ chạy đua trong một test
+
+- Nguyên nhân: nhánh UX5B rẽ ra từ `edf7526`, trước 16 commit sửa của UX5A (trả từ về "Chỉ tiêu" / "Suất ưu tiên", nút 44px, chữ dự phòng `index.html`, số tệp test trong tài liệu). Nền UX4 có chữ mới nhưng test đòi chữ cũ nên 7 lỗi ở Linux 1-6 và Windows 3, 5 (`test_giao_dien_ux2_nut`, `ux1_nhap_so`, `sg2_diem_quyet_tam`, `t3_l3`, `fa_quan_ly`, `ux1_tiep_theo`, `fg8_cau_chu`, `t3_l1_chu_du_phong`, `a13_12_tai_lieu`).
+- Cách sửa: gộp `claude/ux5a-ket-qua-de-hieu` vào nhánh (chỉ xung đột `CHANGELOG.md`, `TIEN_DO.md`; giữ cả hai bên). Không sửa mã ngoài bản gộp.
+- Lỗi riêng: `tests/test_giao_dien_a13_10_nhan.py::test_nhan_moi_en_co_mat_nhan_cu_het` chỉ chờ tiêu đề h2 đổi sang tiếng Anh, còn bảng Tổng quan vẽ lại sau khi gọi lại API nên test chụp chữ lúc bảng còn tiếng Việt (đỏ ổn định ở máy chậm/nhanh khác CI). Thêm bước chờ bảng có "By test score".
+
+## 2026-11-22 — UX5B-L1: kiểm kê + bảng từ ngữ + bản đồ lựa chọn (Xếp CLB, Nhập nguyện vọng, Nhập điểm)
+
+- Chỉ tài liệu: `docs/ke_hoach/ux/UX5B_TU_NGU.md` (số ô và số nút vàng đo bằng Chromium thật, vai quản trị và giáo viên; bảng từ ngữ; bản đồ lựa chọn; sáu quyết định D1–D6) và ba ảnh hiện trạng trong `docs/ke_hoach/ux/anh/ux5b/`. Chưa sửa mã. Chờ Truong duyệt (MILESTONE 1).
+- Phát hiện chính: Nhập nguyện vọng có 3 nút vàng cùng một màn (27 ô; giáo viên 2 vàng, 23 ô); Xếp CLB có 2 vàng khi có tệp chờ; giáo viên thấy ô điểm quyết tâm nhưng không có nút Lưu.
+
+## 2026-11-22 — Sửa test đỏ trên nhánh UX5A (Truong chọn B2: giữ từ cũ "Chỉ tiêu" / "Suất ưu tiên")
+
+- Từ giao diện: trả `ux4_so_cho`, `ux4_cho_rieng`, `ux4_cho_rieng_cot`, `dc_thuong`, `dc_du_tru` và họ `du_tru_*`, `dem_suat`, `kpi_du_tru_thua`, `legend_*` về chữ cũ; bỏ 7 dòng đổi chữ tương ứng trong `tests/test_ws_nhan.py`; `index.html` đồng bộ chữ dự phòng với `i18n.js` (26 chỗ).
+- Lỗi thật: nút "mở tính năng" ở khung lỗi chạy không mở tab "Cách xếp" (`wsMoTinhNangDangMo`, js/075_workspace.js); nút `tkNutMoHop` cao 36 px (nay ≥ 44 px, style.css); quy tắc `.panel:has(details.menu-khac[open])` đặt trước khối UX2-L8.
+- Test cập nhật: `test_giao_dien_ux1_tiep_theo.py` (nút "Xử lý" là nút cảnh báo từ UX4), `test_giao_dien_ux4_l3.py`, `test_giao_dien_ux5a_l3.py`/`l4.py` (bỏ cấm chữ "suất"), số tệp test trong `CLAUDE_CHI_TIET.md`.
+- Test cập nhật theo chữ mới của UX4/UX5A (chưa có lệnh trả chữ, Truong có thể đổi ý): `test_giao_dien_fg8_cau_chu.py` ("Một buổi chung"), `test_ux1i_i2_xp1_trong_menu.py` ("Xuất tệp khác ▾").
+
+## 2026-11-22 — UX5A giai đoạn 2: soát tổng thể, đo lại, sửa lỗi
+
+- Lỗi tìm khi kiểm tay bằng Chromium: menu "Báo cáo và phiếu in ▾" bị khung bên dưới đè; dòng "Chọn thêm tệp để xuất" dính sát hàng nút. Sửa trong `style.css` (`.panel:has(details.menu-khac[open])` nổi lên; margin cho `summary`).
+- Hai test cũ do UX5A đổi: `test_giao_dien_xp1_xuat_pdf.py` (nhãn menu), `test_giao_dien_fa_gap5_phan_hoi.py` (câu "khó nhất" nay trong nếp "Thêm ý kiến").
+- Test mới: `tests/test_giao_dien_ux5a_loi.py` (7 ca: menu không bị đè × 2 vai, menu xuất, khoảng cách, tiếng Anh × 4).
+- Báo cáo: `docs/ke_hoach/BAO_CAO_SOAT_MA_UX5A.md` (số đo trước/sau, 12 test đỏ có sẵn từ UX4, điểm còn mở). `kiem_nhanh.py` 7/7.
+
+## 2026-11-22 — UX5A-L4: thẻ Kết quả + Chi tiết cho giáo viên, bài test Hick / Von Restorff / từ cấm
+
+- Không đổi mã sản phẩm: lô này khoá hành vi bằng test, cho cả quản trị lẫn giáo viên. Giáo viên: không thấy phần `data-quyen="quan_tri"`, không có nút chết, vẫn tới tra cứu, "Theo lớp", "Xuất theo lớp", báo cáo (≤ 2 lần bấm).
+- Test mới: `tests/test_giao_dien_ux5a_l4.py` (13 ca: một nút vàng + không đỏ + ngân sách tổng mỗi thẻ × 2 vai, từ cấm × 2 thẻ × 2 vai, id còn nguyên, nút của quản trị ≤ 2 lần bấm). Banner cảnh báo không vàng.
+- Không đổi backend.
+
+## 2026-11-22 — UX5A-L3: thẻ Chi tiết và xuất tệp (đúng một nút vàng, bỏ "suất"/"Chọi", gợi ý gọn, nút theo hàng đã chọn)
+
+- Chữ: "Tải kết quả về máy" (tiêu đề khung xuất), "Chọn thêm tệp để xuất", menu "Xuất tệp khác ▾"; "suất" → "chỗ dành riêng/chỗ thường" ở chú giải, khung "Chỗ dành riêng đã dùng", số đếm và dòng tóm tắt; "Chọi cao nhất" → "Nhiều học sinh muốn nhất"; dòng mục tiêu "Được vào CLB mình chọn đầu tiên: x%". Khoá mới `ux5a_nhom_chi_tiet`, `ux5a_xuat_canh_bao` (khoá cũ `xuat_canh_bao_diem` giữ cho thẻ Nhập tại chỗ). Bỏ đề xuất đổi "Học sinh trên mỗi chỗ" (cũ đã rõ).
+- Bố cục: tiêu đề nhóm "Số liệu chi tiết" trên 7 khung gập; gợi ý huy chương chuyển vào trong menu "Xuất tệp khác"; chỉ còn một đoạn gợi ý + một dòng cảnh báo đỏ trong khung xuất; "Chạy vòng 2" và "Gửi khiếu nại" thành nút thường (D2) → đúng một nút vàng ("Xuất kết quả (Excel)").
+- D4: "Xuất CSV học sinh đã chọn", "Bỏ chọn" và ô tick "Hồ sơ học sinh đã chọn" ẩn tới khi tick ít nhất một em (vẫn giữ id; `disabled` giữ nguyên).
+- File: index.html, style.css, i18n.js, js/03_ket_qua.js. Không đổi backend; `kiem_nhanh.py` 7/7.
+- Test mới: `tests/test_giao_dien_ux5a_l3.py` (12 ca). Test cũ sửa có chủ: `test_giao_dien_ux1_ket_qua.py` (nhãn menu), `test_ws_nhan.py` (`SUA_CO_Y`, nhãn UX5A, 11 khoá).
+
+## 2026-11-22 — UX5A-L2: thẻ Kết quả (một nút vàng, nếp "Báo cáo và phiếu in", chữ dễ hiểu)
+
+- "Tải bảng này (Excel)" là nút vàng duy nhất của thẻ; "Khoá máy cho học sinh tự tra cứu" (trước là vàng) thành nút thường (D1). "Gửi" ở khung phản hồi thành nút thường (D2).
+- Khung "Theo lớp và báo cáo": 5 → 3 điều khiển; "Báo cáo tổng hợp", "In phiếu cả lớp", "Báo cáo tổng hợp (PDF)" vào nếp `ux1bThemMenu` (id nút giữ nguyên, 2 lần bấm).
+- Chữ: `kq_desc`, `gt_tim_ph`, `ux1b_ma_tra_cuu`, `gt_che_do_hs`, `gt_buoc_3`, `ux1b_bao_cao_hint`, `ph_tieu_de`, `ph_cau_kho` đổi tại chỗ; khoá mới `ux5a_gt_mo_ta`, `ux5a_ux1b_them`, `ux5a_kq_mo_bang`, `ux5a_ph_them`. `kq_desc` giữ cụm "bảng này"/"tra cứu" (test GT4 đòi). O1: câu "khó nhất" của khung phản hồi vào nếp "Thêm ý kiến ▾".
+- File: index.html, style.css, i18n.js. Không đổi backend; `kiem_nhanh.py` 7/7 (cần `git fetch origin main` để có nhánh so sánh).
+- Test mới: `tests/test_giao_dien_ux5a_l2.py` (+ `tests/_ux5a_chung.py`, 9 ca: ngân sách Hick, một nút vàng, nếp báo cáo, chữ, EN). Test cũ sửa có chủ: `test_giao_dien_ux1b_vai_gv.py` (báo cáo nay 2 lần bấm), `test_giao_dien_ux1b_l5c.py` (nhãn "Mã tra cứu…").
+- Đã có sẵn từ UX4, không phải của lô này: `test_giao_dien_t3_l3.py::test_chu_giao_dien_dung_chu_cua_so_nhap_khong_con_du_tru` đỏ (đòi "Chỉ tiêu" trong thẻ Quản lý); xử lý ở giai đoạn 2.
+
+## 2026-11-22 — UX5A-L1: đo thẻ Kết quả + Chi tiết và xuất tệp, bảng từ ngữ, bản đồ lựa chọn (chưa có mã)
+
+- Tài liệu `docs/ke_hoach/ux/UX5A_TU_NGU.md`: số điều khiển nhìn thấy hiện nay (quản trị và giáo viên, nếp đóng/mở), sáu quyết định D1–D6 kèm mặc định, bảng từ ngữ VI/EN, bản đồ lựa chọn (một nút vàng mỗi thẻ).
+- Không đổi mã, không đổi backend. Chờ Truong duyệt (MILESTONE 1) trước khi làm L2.
+
+## 2026-11-22 — UX4-L4: tab Cách xếp (một câu hỏi, "Tuỳ chỉnh thêm", "Thử cách xếp này")
+
+- Câu hỏi MT1 thành "Khi CLB hết chỗ, ai được xét trước?" với ba thẻ "Điểm bài thi cao hơn · Bốc thăm · Dành chỗ cho một nhóm" (quyết định D1: không dựng bộ thẻ thứ hai; vẫn lưu qua `chon_muc_tieu` có Hoàn tác). Nút "Thay đổi…" ẩn (id giữ), thay bằng mục gập "Tuỳ chỉnh thêm" (`#ux1aNangCao` lại là `<details>`, chỉ chứa bảng Tiêu chí). Thẻ mặc định "Chia 100 điểm" mang nhãn "Đề xuất".
+- Ba ô chọn cũ (`gt2TcPriority/TierMode/ScoreScope`) giữ nguyên giá trị gửi đi; nhãn và tiêu đề đọc dễ hiểu theo mã (`gt2TcChu` + khoá `ux4_tc_*`, không sửa `tieu_chi.py`); ô không áp dụng thì ẩn (`gt2TcAnHien`): chọn "điểm" thì ẩn cách dùng nhóm + danh sách nhóm, chọn "nhóm" thì ẩn phạm vi điểm. Lưu đi cùng ba giá trị như trước (test so payload).
+- Thử cách xếp: nút vàng duy nhất "Thử cách xếp này" (tự so với lần chính thức gần nhất như trước); hai ô chọn lần chạy, So sánh/Xuất và danh sách "Dùng cách xếp này" vào mục gập "So sánh với lần khác"; ba bước hướng dẫn ẩn. Tên lần chạy "Xếp chính thức lần {id} (dd/mm/yyyy HH:mm)" / "Thử lần {id} (...)".
+- Chữ tuỳ chọn: Điểm quyết tâm (giờ khoá dd/mm/yyyy, "Tự cộng cho đủ 100", "Có thi / Không thi", nút "Giải thích" thay chữ "i"), Điểm chuẩn ("Theo điểm thi / Theo điểm quyết tâm", "Chưa có ai", "Chưa cần điểm (còn n chỗ trống)"). Chưa làm ngân sách Hick cho hai khung này (tuỳ chọn).
+- File: index.html, style.css, i18n.js, js/05_quan_ly.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js. Không đổi backend; `kiem_nhanh.py` 7/7.
+- Test mới: `tests/test_giao_dien_ux4_l4.py` (9 ca: ngân sách Hick, một nút vàng, ô ẩn theo lựa chọn, nhãn, payload lưu 4 tổ hợp, chữ cấm + bất biến 2, ngày giờ). Test cũ sửa có chủ đích: gt2_thu, gt2_tieu_chi, gt4_tieu_chi (mở hai mục gập; tên lần chạy; "Không dùng"), mt1 (tên thẻ, câu hỏi), ux1_cai_dat ("Đề xuất", `ux1aMoNangCao`), ux1_dieu_huong, a13_10_diem_chuan, a13_10_nhan, diem_chuan (nhãn mới, "Chưa có ai"), wharton_quan_ly ("Đã khoá từ", "Kind of points"), xoa_du_lieu; `test_ws_nhan.py` (`SUA_CO_Y`, UX4).
+- Bỏ qua so với bảng L1: dòng "Với lựa chọn này:" trước dòng tác động của MT1 (nhiều test MT1 so đúng chữ); `test_a13_10_nhan::test_nhan_moi_en_...` có lúc chớp đỏ (vẽ lại bảng sau khi đổi ngôn ngữ), chạy lại thì xanh.
+
+## 2026-11-22 — UX4-L2 + L3: thẻ Quản lý dễ hiểu (luật Hick + Von Restorff), chỉ giao diện và chữ
+
+- L2 (cấu trúc): dải tab còn 4 mục "Danh sách CLB · Học sinh · Cách xếp · Thêm ▾"; Điểm quyết tâm*, Điểm chuẩn*, Bảng điều khiển* và "Làm lại từ đầu" nằm trong "Thêm ▾" (id và `data-ql-tab` giữ nguyên; `rbda_ql_tab_con` cũ vẫn mở đúng khung). Khung Cài đặt (thẻ MT1) và Tiêu chí/Thử chuyển vào tab Cách xếp, bỏ mục gập "Nâng cao" (`#ux1aNangCao` thành `div`). Mỗi tab con có một dòng mục đích và một dòng trạng thái (`#qlTtClb`, `#qlTtHs`, `#qlTtCachXep`, `#qlTtDuLieu`). Nút thanh "Việc tiếp theo" đổi từ vàng sang kiểu cảnh báo (`.btn-canh-bao`); "Lưu tiêu chí" và hai nút xoá điểm quyết tâm của tất cả thành nút thường (đỏ chỉ còn ở "Làm lại từ đầu").
+- L3 (CLB + Học sinh): form CLB còn Tên, Số chỗ, Buổi (ô thả xuống: "Một buổi chung", các buổi đã có, "Thêm buổi mới…") và "Lưu CLB"; Mã (tự điền từ tên, không ghi đè mã đã có), Chỗ dành riêng, Nhóm gập trong "Thêm tuỳ chọn" (tự mở khi sửa CLB hoặc khi có lỗi ở các ô đó). Cột buổi có nhãn "Buổi sinh hoạt". Học sinh: nút Gán (vàng) và Xuất chỉ hiện khi đã chọn ≥ 1 em ("Đã chọn n học sinh"); "Sắp xếp" vào "Thêm tuỳ chọn". Nút ở trạng thái rỗng dẫn tới ô Tên.
+- File: index.html, style.css, i18n.js, js/00_nen.js, js/03_ket_qua.js, js/05_quan_ly.js, js/09_the_xem.js, js/18_cai_dat.js, js/19_ux1b_gv.js. Không đổi backend/API/schema; `kiem_nhanh.py` 7/7 (so với nhánh gốc 7e9d673 vì máy không có `origin/main`).
+- Test mới: `tests/test_giao_dien_ux4_l2.py` (7 ca), `tests/test_giao_dien_ux4_l3.py` (7 ca); trợ giúp `tab_ql` trong `tests/_trinh_duyet.py`.
+- Test cũ sửa có chủ đích (cấu trúc/chữ mới, đi qua "Thêm ▾" hoặc "Thêm tuỳ chọn" hoặc tab Cách xếp): test_giao_dien_quan_ly_tab_con, ux1_dieu_huong, ux1_cai_dat, mt1, mt1_bang_loai, ux1b_l5c, gt2_thu, gt2_tieu_chi, gt4_tieu_chi, fa_gap8_dashboard, a13_8_quan_ly, a13_10_diem_chuan, a13_10_nhan, a13_12_ql_diem_chuan, a14_lop, diem_chuan, diem_quyet_tam_gon, doi_ngon_ngu, loi_chan_gon, sg9_nut_ban, t3_l0, t3_l1, t3_l2_van_hanh, ux2_chuyen_canh, ux2_loi_o, ux2_rong, ux_xuat, wharton_quan_ly, xoa_du_lieu, test_khoi_dong_backend; `test_ws_nhan.py` (`SUA_CO_Y`, chú thích UX4).
+- Đã có từ trước (không do UX4): `tests/test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px` đỏ ở nhánh gốc 7e9d673 (`tkNutMoHop` 216×36).
+- Khác bảng từ ngữ L1: dòng trạng thái Học sinh chỉ ghi "{n} học sinh" (số "đã có nhóm" cần thêm API); thêm dòng trạng thái cho "Làm lại từ đầu".
 ## 2026-11-22 — MT2-CI1: vùng bấm 44 px của nút khối tài khoản ở thanh bên
 
 - CI (PR #28, shard Linux 1/6) đỏ 5 ca `test_giao_dien_ux2_nut.py::test_moi_nut_nhin_thay_co_vung_bam_44px[*]` (`tkNutMoHop 216x36`). Nguyên nhân gốc: mã UX3 trên nhánh này (commit 91a5453, khối tài khoản thành lưới hai cột) để nút `#tkNutMoHop` cao 36 px; điểm thử cách tâm 21 px rơi vào `.sidebar-footer` (không phải nút). Không phải lỗi MT2.

@@ -46,6 +46,7 @@ def _mo(api):
     loi = []
     page.on("pageerror", lambda e: loi.append(str(e)))
     page.goto(url)
+    page.evaluate("document.getElementById('nangCao').open = true")
     page.wait_for_selector("#stbLockLine .lock-dot")
     return pw, br, page, loi
 
@@ -105,6 +106,7 @@ def test_bam_ve_lai_thi_mo_o_va_ve_xong_thi_khoa_o_hat_giong_moi(api_co_du_lieu)
     try:
         page.wait_for_function(
             "document.getElementById('seedInput').readOnly === true")
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.locator("#stbLockLine .redraw-toggle").click()
         page.wait_for_function(
             "document.getElementById('seedInput').readOnly === false")

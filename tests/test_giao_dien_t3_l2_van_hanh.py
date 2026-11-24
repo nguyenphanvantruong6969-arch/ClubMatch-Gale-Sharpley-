@@ -11,6 +11,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 import browser_host  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from _wharton import bat_wharton, dung_clb, dung_hs, tat_wharton  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -115,7 +116,7 @@ def test_chi_con_mot_nut_kiem_tra_nam_trong_khung_canh_bao(api, mo):
     assert page.locator("#btnHealthRecheck").count() == 0
     assert page.locator("#btnValidate").count() == 1
     assert page.locator(".panel:has(#healthList) #btnValidate").count() == 1
-    assert page.locator("#btnValidate").inner_text() == "Kiểm tra lại dữ liệu"
+    assert page.locator("#btnValidate").inner_text() == "Kiểm tra lại"   # UX5B-L2: chủ ý đổi chữ
     page.click("#btnValidate")
     page.wait_for_selector(".toast.is-success, .toast.is-warn")  # cảnh báo nghiêm trọng về điểm thi -> toast vàng
     assert page.locator("#healthSummary").inner_text().strip() != ""
@@ -198,6 +199,7 @@ def test_nhap_tai_cho_hang_hoc_sinh_moi_nam_ngay_duoi_o_tim_va_menu_ba_cham(api,
     _mo_tab(page, "fallback")
     page.wait_for_selector("#studentSearchInput")
     y_tim = page.locator("#studentSearchInput").bounding_box()["y"]
+    page.locator("#ux5bTaoMoi > summary").click()        # UX5B-L3: "Tạo học sinh mới" là mục gập
     y_moi = page.locator("#newStudentId").bounding_box()["y"]
     assert 0 < y_moi - y_tim < 120, (y_tim, y_moi)       # T3-32: cùng cụm với ô tìm, không nằm dưới danh sách
     page.fill("#newStudentId", "HS99")
@@ -223,9 +225,9 @@ def test_nhap_tai_cho_khong_in_ma_tho_clb_va_khong_con_cau_hai_buoc(api, mo):
     page.fill("#studentSearchInput", "HS01")
     page.click("#btnStudentSearch")
     page.locator("#studentSearchResults .hs-card").first.click()
-    page.wait_for_selector("#testSelectionGrid .option-row")
+    page.wait_for_selector("#testSelectionGrid .option-row", state="attached")   # UX5B-L3: Bước 1 có thể đang gập
     for sel in ("#testSelectionGrid", "#rankingSourceGrid"):
-        assert "clb_a" not in page.inner_text(sel), sel       # T3-35: bỏ mã thô
+        assert "clb_a" not in page.evaluate("(s) => document.querySelector(s).textContent", sel), sel       # T3-35: bỏ mã thô
     assert "không phụ thuộc nhau" not in page.inner_text("#view-fallback")
     assert not loi
 
@@ -259,7 +261,7 @@ def test_diem_quyet_tam_mac_dinh_chi_hien_ho_so_co_van_de_co_dem_va_xem_tat_ca(a
     assert api.submit_wharton("HS1", {}, {"A": 50, "B": 50})["ok"]   # HS1 hợp lệ; HS2 thi A mà chưa chia điểm
     page, loi = mo()
     _mo_tab(page, "admin")
-    page.locator('#qlTabWh').click()
+    tab_ql(page, "wh")
     page.wait_for_selector("#whQlBody tr")
     assert page.is_checked("#whLocChiLoi")
     assert page.locator("#whQlBody tr").evaluate_all("rs => rs.map(r => r.dataset.studentId)") == ["HS2"]

@@ -48,20 +48,20 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Never use accent colour for decoration (headings, icons, counts).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
+- [x] **L1 Wording + choice map (MUST, stop point).** `docs/ke_hoach/ux/UX4_TU_NGU.md`: (1) table of every visible
       string of the Quản lý tab: key | old VI | new VI | new EN | why; (2) a "choice map" per panel (incl. which ONE control is gold): controls visible
       now (count) → visible after redesign (count) → where each hidden one goes. Keep sector placeholders
       (`{person_l}` etc.). **MILESTONE 1: Truong approves words + choice map before any code.**
-- [ ] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
+- [x] **L2 Structure (MUST).** One plain subtitle for the tab. Sub-tab strip = **3 items + "Thêm ▾"**:
       "Danh sách CLB", "Học sinh", "Cách xếp"; "Thêm ▾" holds Điểm quyết tâm*, Điểm chuẩn*, Làm lại từ đầu
       (* only when the feature is on, as now). "Tiêu chí xếp" + "Thử cấu hình" leave the "Nâng cao" fold and live in
       "Cách xếp". Each sub-tab: one-line purpose + live status line (e.g. "3 CLB · 30 chỗ · 1 buổi"). Keep ids and
       remember-tab (`localStorage`, try/catch; old saved values still open the right panel).
-- [ ] **L3 CLB + Học sinh (MUST).** CLB form shows 3 fields: Tên, Số chỗ, Buổi (dropdown of existing sessions +
+- [x] **L3 CLB + Học sinh (MUST).** CLB form shows 3 fields: Tên, Số chỗ, Buổi (dropdown of existing sessions +
       "Thêm buổi mới…", via `get_danh_sach_buoi`) + one "Lưu CLB" button. Mã CLB auto-filled from the name (editable,
       UI only; backend validation unchanged) and Chỗ dành riêng / Nhóm ưu tiên live under "Thêm tuỳ chọn".
       Label the session column. Học sinh: assign/export buttons hidden until ≥ 1 row ticked ("Đã chọn n học sinh").
-- [ ] **L4 Cách xếp (MUST) + score panels (OPTIONAL).** Replace the three selects with ONE question
+- [x] **L4 Cách xếp (MUST) + score panels (OPTIONAL).** Replace the three selects with ONE question
       "Khi CLB hết chỗ, ai được xét trước?" and ≤ 3 cards (pattern of `js/18_cai_dat.js`): "Điểm bài thi cao hơn"
       (default), "Học sinh thuộc nhóm ưu tiên", "Cả hai". Each card maps to existing `priority` values; tier_mode,
       score_scope and the group list appear only when they apply, under "Tuỳ chỉnh thêm". Live sentence
@@ -108,7 +108,25 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 - Teacher role never sees this tab (unchanged).
 
 ## Current state
-- Planned only (2026-11-22, Opus). No code yet.
+- L1–L4 all done and pushed (head d2a8190, base 7e9d673). Truong was sent 3 "after" screenshots (`docs/phien/anh_ux4/sau_*.png`) and must approve them.
+- Tests: ux4_l2/l3/l4 green; with test_ws_nhan + test_i18n_sync 79 pass; ~34 old UI test files migrated on purpose (list in CHANGELOG). kiem_nhanh 7/7 (compared to 7e9d673; no origin/main locally). Soat report: `docs/phien/claude__ux4-quan-ly-de-hieu__soat.md` (short form).
+- Full suite NOT run locally (CI does).
+
+## Decisions and gotchas
+- D1: reuse MT1 three-card question (retitled "Khi CLB hết chỗ, ai được xét trước?"); no second card set. D2: delete-all wharton buttons are `.btn-secondary` (red only in "Làm lại từ đầu"). D3: Cài đặt panel lives in Cách xếp tab. D4: dashboard under "Thêm ▾". D5: backend labels overridden in UI by code (`ux4_tc_*`), `tieu_chi.py` untouched.
+- Deviations from L1 sheet: no "Với lựa chọn này:" prefix; HS status line only "{n} học sinh"; extra status line for "Làm lại từ đầu"; Điểm quyết tâm/Điểm chuẩn got wording only (no Hick restructure, optional part).
+- Closed `<details>` content still has client rects in Chromium: tests count visibility with `checkVisibility()`.
+- `tab_ql(page, ma)` in tests/_trinh_duyet.py opens "Thêm ▾" for wh/dc/db/du_lieu.
+- Pre-existing red (also on base 7e9d673): tests/test_giao_dien_ux2_nut.py (tkNutMoHop 216x36). Flaky once: test_giao_dien_a13_10_nhan EN test (re-render race), green on rerun.
+- Backend business name for new Mã CLB is auto slug; collisions get `_2`, `_3`.
+
+## Next steps (ordered)
+1. Truong approves/rejects screenshots (5-second test).
+2. Truong pastes the checker prompt from `docs/phien/UX4_GIAO_THUC.md` §4 in a new session (base 7e9d673, head d2a8190); max 2 FIX rounds, then "Needs Truong".
+3. After PASS: watch CI (coverage ≥ 85 %, full suite); optional leftover: Hick budgets for Điểm quyết tâm/Điểm chuẩn panels; remove unused key `ux1a_nang_cao` from i18n.js.
+
+## Files touched
+index.html, style.css, i18n.js, js/00_nen.js, js/03_ket_qua.js, js/05_quan_ly.js, js/09_the_xem.js, js/15_tieu_chi.js, js/18_cai_dat.js, js/19_muc_tieu.js, js/19_ux1b_gv.js; tests: new test_giao_dien_ux4_l2/l3/l4.py, helper in _trinh_duyet.py, ~34 migrated; docs: ke_hoach/ux/UX4_TU_NGU.md, CHANGELOG.md, TIEN_DO.md, phien/anh_ux4/*.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -116,3 +134,7 @@ matters. Works with Hick: Hick cuts the number of choices, Von Restorff marks th
 | 2026-11-22 | Opus | Audit of Quản lý tab, plan + protocol | UX3-L3 rename "Nhập thủ công" shipped separately |
 | 2026-11-22 | Opus | Plan revised for Hick's law (budgets, 3 tabs + Thêm, one-question rules panel) | replaces "6 sub-tabs" idea |
 | 2026-11-22 | Opus | Added Von Restorff rule (one gold per panel, red isolated, badge on default) | |
+| 2026-11-22 | Sonnet | L1 wording sheet + choice map (measured counts with Chromium) | Found MT1 three-card question overlaps L4 (D1) |
+| 2026-11-22 | Sonnet | L1 approved; L2 + L3 implemented, ~30 old tests migrated | `tab_ql` helper in tests/_trinh_duyet.py |
+| 2026-11-22 | Sonnet | L4 implemented, soat-ma (report only), 3 after-screenshots | |
+| 2026-11-22 | Sonnet | Handoff at ~400k tokens; no new work | Next: Truong approves screenshots, then checker |

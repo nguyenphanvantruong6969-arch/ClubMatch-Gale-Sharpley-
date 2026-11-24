@@ -82,6 +82,7 @@ def trang(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#chonBuoiChip .buoi-chip")
         yield page, loi, api
         br.close()
@@ -229,6 +230,7 @@ def trang_tron_buoi(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#chonBuoiChip .buoi-chip")
         yield page, loi
         br.close()
