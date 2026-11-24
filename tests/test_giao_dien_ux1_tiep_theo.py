@@ -193,7 +193,7 @@ def test_so_that_con_hoc_sinh_chua_co_cho_van_tai_ket_qua_bon_lan_bam(mo, api):
     _trang_thai(page, "xu_ly")                                       # seed mặc định: còn em chưa có CLB
     assert page.locator("#viecTiepTheoNut").inner_text().startswith("Xử lý")
     assert page.locator("#viecTiepTheoNut2").is_visible()
-    assert "btn-primary" in page.locator("#viecTiepTheoNut").get_attribute("class")
+    assert "btn-canh-bao" in page.locator("#viecTiepTheoNut").get_attribute("class")
     assert "btn-primary" not in page.locator("#viecTiepTheoNut2").get_attribute("class")
     page.locator("#viecTiepTheoNut2").click()                        # 4: Xuất kết quả (nút phụ)
     page.wait_for_function("() => document.getElementById('xuatFeedback').textContent.trim() !== ''")

@@ -70,6 +70,8 @@ function loadHealthReport() {
     const summary = el("healthSummary");
     const list = el("healthList");
     clear(list);
+    const gap = el("healthChiTiet");   /* UX5B-L2: danh sách cảnh báo nằm trong mục gập; tự mở khi có mục nghiêm trọng */
+    gap.hidden = true;
 
     if (!res.ok) {
       summary.className = "health-summary is-warn";
@@ -151,6 +153,8 @@ function loadHealthReport() {
         }
         list.appendChild(row);
       });
+    gap.hidden = false;
+    gap.open = nCao > 0;
   }));
   return hoi;
 }
@@ -158,7 +162,19 @@ function loadHealthReport() {
 /* T3-10: moi luc dung MOT nut mau chinh. Chua co du lieu -> "Nhap du lieu" noi bat, hai khung kia lui
    xuong; co du lieu chua chay -> "Chay sap xep"; da chay xong -> dong ket qua (T3-06), Chay tro thanh nut phu. */
 let trangThaiVanHanh = "trong";
+let ux5bSoNguoi = 0;
+/* UX5B-L2: dòng trạng thái của thẻ Xếp CLB: việc đã xong và việc tiếp theo (cùng nguồn với nút vàng: capNhatKhoaVanHanh). */
+function ux5bVeTrangThaiPipeline() {
+  const o = el("ux5bTtPipeline");
+  if (!o) return;
+  const cho = importQueue[0] && importQueue[0].b64 && !importQueue[0].xong;
+  o.textContent = cho ? t("ux5b_tt_buoc_cho_nhap")
+    : trangThaiVanHanh === "xong" ? t("ux5b_tt_buoc_xong")
+    : trangThaiVanHanh === "san_sang" ? t("ux5b_tt_buoc_chay", { n: ux5bSoNguoi })
+    : t("ux5b_tt_buoc_nhap");
+}
 function datTrangThaiVanHanh(d) {
+  ux5bSoNguoi = d.n_students || 0;
   trangThaiVanHanh = (!d.n_students || !d.n_clubs) ? "trong" : (d.n_matched > 0 ? "xong" : "san_sang");
   const v = el("view-pipeline");
   if (v) v.dataset.trangThai = trangThaiVanHanh;
@@ -191,6 +207,7 @@ function refreshDashboardStats() {
 function hienChuaCoDuLieu() {
   const summary = el("healthSummary");
   clear(el("healthList"));
+  el("healthChiTiet").hidden = true;
   summary.className = "health-summary is-warn is-empty";
   summary.textContent = t("health_chua_co_du_lieu");
 }
@@ -483,6 +500,7 @@ function capNhatKhoaVanHanh() {
   el("btnImportAll").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnClearQueue").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnTaiSoMau").disabled = khoa.dangChay || khoa.dangNhap;
+  ux5bVeTrangThaiPipeline();
   if (el("btnXuatTuyChon")) el("btnXuatTuyChon").disabled = khoa.dangChay || khoa.dangXuat;
   if (typeof capNhatNutXuatTheoLop === "function") capNhatNutXuatTheoLop();
 

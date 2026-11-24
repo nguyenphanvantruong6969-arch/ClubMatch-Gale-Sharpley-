@@ -51,6 +51,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 # Hạn chờ mà js/*.js dùng trong test. Bản chạy thật là 20 giây; để nguyên thì
 # riêng ca "backend không bao giờ tới" phải ngồi đợi 20 giây.
@@ -219,7 +220,7 @@ def test_nut_hai_buoc_chi_gan_mot_trinh_xu_ly(mo):
     hai chụp CSDL ĐÃ RỖNG, ăn mất một suất trong _MAX_BACKUPS = 10."""
     trang = mo(t1=20, t2=60)
     trang.page.click('.nav-item[data-tab="admin"]')
-    trang.page.click('#qlTabs [data-ql-tab="du_lieu"]')
+    tab_ql(trang.page, "du_lieu")
     trang.page.click("#btnResetAll")   # lần 1: chỉ lên nòng
     trang.page.click("#btnResetAll")   # lần 2: mới thật sự xoá
     trang.page.wait_for_timeout(200)

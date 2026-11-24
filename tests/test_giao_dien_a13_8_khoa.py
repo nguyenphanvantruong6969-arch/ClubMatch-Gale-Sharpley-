@@ -3,6 +3,7 @@
 thì nút bình thường. Dữ liệu MÔ PHỎNG dựng trong test."""
 
 import pytest
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 pytest.importorskip("playwright", reason="chưa cài playwright")
 
@@ -22,9 +23,11 @@ def test_khoa_va_em_co_diem_thi_hai_nut_luu_bi_vo_hieu_va_co_ghi_chu(mo):  # noq
     _khoa_db(api)
     _chon(page, "HS1")
     _cho_buoc_3(page)
+    mo_muc(page, "thi")                       # UX5B-L3: mỗi lần chỉ một bước mở
     assert page.locator("#btnSubmitTestSelection").is_disabled()
-    assert page.locator("#btnSubmitPreferences").is_disabled()
     assert page.locator("#testSelectionKhoa").is_visible()
+    mo_muc(page, "nv")
+    assert page.locator("#btnSubmitPreferences").is_disabled()
     assert page.locator("#preferencesKhoa").is_visible()
     assert "khoá" in page.locator("#preferencesKhoa").inner_text()
     assert not loi, loi

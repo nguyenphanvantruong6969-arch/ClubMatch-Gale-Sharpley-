@@ -44,7 +44,7 @@ function mt1TaoCauHoi(tienTo, khiDoiCauDau) {
   const nhom = ux1aEl("div", { class: "mt1-nhom", id: tt + "Nhom", role: "group", hidden: true,
     "aria-label": t("mt1_chon_nhom") });
   const hieuQua = ux1aEl("p", { class: "mt1-dong", id: tt + "HieuQua", hidden: true });
-  const thayDoi = ux1aEl("button", { type: "button", class: "btn btn-ghost btn-nho mt1-nut", id: tienTo + "ThayDoi",
+  const thayDoi = ux1aEl("button", { type: "button", class: "btn btn-ghost btn-nho mt1-nut", id: tienTo + "ThayDoi", hidden: true,   /* UX4-L4: thay bằng mục "Tuỳ chỉnh thêm" (id giữ nguyên) */
     "data-i18n": "ux1a_cd_thay_doi", text: t("ux1a_cd_thay_doi"), onclick: ux1aMoNangCao });
   const dong = ux1aEl("div", { class: "mt1-hang" }, hieuQua, thayDoi);
   const canhBao = ux1aEl("div", { id: tt + "CanhBao" });

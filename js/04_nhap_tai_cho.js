@@ -141,6 +141,44 @@ function veDauChuaLuu() {
   el("chuaLuuNv").hidden = !nvChuaLuu();
   el("chuaLuuWharton").hidden = !whartonChuaLuu();
   el("kioskLopChuaLuu").hidden = !lopChuaLuu();
+  ux5bVeMuc();
+}
+
+/* UX5B-L3 (D2): ba bước là ba mục gập, MỘT mục mở (nút Lưu vàng của mục đó); mục gập còn một dòng tóm tắt + nút "Sửa".
+   "thi" = Bước 1, "nv" = Bước 2, "b3" = Bước 3 (điểm quyết tâm hoặc huy chương, tuỳ workspace). Ba lời gọi lưu vẫn riêng. */
+let ux5bMucMo = "nv";
+function ux5bCoB3() {
+  return (!!whartonState && !el("fbWhartonStep").hidden) || (!!huyChuongState && !el("fbHuyChuongStep").hidden);
+}
+function ux5bTomTat(st) {
+  const chua = t("fallback_chua_luu");
+  const xong = (tt) => t("ux5b_buoc_xong", { tom_tat: tt });
+  const co = (m) => !!m && Object.keys(m).length > 0;
+  switch (st.id) {
+    case "fbBuoc1": return thiChuaLuu() ? chua : xong(t("ux5b_tom_thi", { n: daLuuThi.length }));
+    case "fbBuoc2": return nvChuaLuu() ? chua : xong(t("ux5b_tom_nv", { n: daLuuNv.length }));
+    case "fbWhartonStep": {
+      const w = whartonState && whartonState.wharton;
+      return !whartonChuaLuu() && w && (co(w.w1) || co(w.w2)) ? xong(t("ux5b_tom_w")) : chua;
+    }
+    default: {
+      const hc = huyChuongState && huyChuongState.huy_chuong;
+      return hc && co(hc.da_luu) ? xong(t("ux5b_tom_hc")) : chua;
+    }
+  }
+}
+function ux5bVeMuc() {
+  if (ux5bMucMo === "b3" && !ux5bCoB3()) ux5bMucMo = "nv";
+  document.querySelectorAll("#fallbackWorkArea .fallback-step[data-muc]").forEach((st) => {
+    const dong = st.dataset.muc !== ux5bMucMo;
+    st.classList.toggle("ux5b-dong", dong);
+    const chu = st.querySelector(".ux5b-muc-tom-chu");
+    if (chu && dong) chu.textContent = ux5bTomTat(st);
+  });
+}
+function ux5bMoMuc(k) {
+  ux5bMucMo = k;
+  ux5bVeMuc();
 }
 
 /* Chay `hanhDong` neu khong con gi chua luu; neu con, lan bam dau chi
@@ -181,6 +219,7 @@ function loadFallbackTab() {
 
 function boChonHocSinhDuPhong() {
   currentFallbackStudent = null;
+  el("ux5bTtNhap").hidden = false;
   hcNhacSid = null;
   currentRanking = [];
   daLuuThi = [];
@@ -193,6 +232,11 @@ function boChonHocSinhDuPhong() {
 }
 
 function initFallbackHandlers() {
+  /* UX5B-L3: nút "Sửa" mở lại mục đã gập; đổi ngôn ngữ thì vẽ lại dòng tóm tắt. */
+  document.querySelectorAll("#fallbackWorkArea .ux5b-muc-sua").forEach((nut) => {
+    nut.addEventListener("click", () => ux5bMoMuc(nut.dataset.muc));
+  });
+  window.addEventListener("langchange", () => ux5bVeMuc());
   /* Bước 3 (Wharton) là chữ do JS ghi nên applyStaticText() không dịch được; đổi ngôn ngữ thì vẽ
      lại từ trạng thái đang có, giữ điểm đã gõ (không nạp lại CSDL, để không mất thao tác chưa lưu).
      Nghe ở ĐÂY chứ không sửa reapplyDynamicTextForLangChange: tệp đó ngoài phạm vi của mục A13. */
@@ -289,6 +333,7 @@ function initFallbackHandlers() {
         if (conMo) {
           daLuuThi = checked.slice().sort();
           if (lop !== null) daLuuLop = lop;
+          ux5bMucMo = "nv";           /* UX5B-L3 (D2): lưu xong Bước 1 thì Bước 2 tự mở */
           veDauChuaLuu();
           lamMoiBuoc3(true);          /* doi o tick la doi quy cua tung CLB o Buoc 3 */
           const m = res.data.n_scores_removed || 0;
@@ -363,6 +408,7 @@ function initFallbackHandlers() {
         if (conMo) {
           daLuuNv = chup;
           if (lop !== null) daLuuLop = lop;
+          if (ux5bCoB3()) ux5bMucMo = "b3";   /* UX5B-L3: lưu xong Bước 2 thì Bước 3 (nếu có) tự mở */
           veDauChuaLuu();
         }
         /* FA-P2: huy chuong cua em `sid` van luu khi nguoi nhap da sang em khac (chi khong ve lai) */
@@ -563,6 +609,7 @@ function selectFallbackStudent(studentId) {
     ["testSelectionFeedback", "preferencesFeedback"].forEach((id) => feedback(el(id), "", false));
 
     el("fallbackWorkArea").hidden = false;
+    el("ux5bTtNhap").hidden = true;
     veOLopKiosk(stateRes.data.class_id);
     daLuuLop = el("kioskLopHang").hidden ? "" : el("kioskLop").value;
     const nhan = el("currentStudentLabel");
@@ -576,6 +623,8 @@ function selectFallbackStudent(studentId) {
     renderRankingList();
     el("whartonFeedback").textContent = "";
     renderWhartonStep(stateRes.data);
+    /* UX5B-L3: em mới (chưa lưu gì) mở Bước 1; em đã có dữ liệu mở Bước 2. */
+    ux5bMucMo = (!daLuuThi.length && !daLuuNv.length) ? "thi" : "nv";
     veDauChuaLuu();
     /* T3-32: chon hoac tao xong thi cuon thang toi phieu, khoi tu cuon 900 px. */
     const phieu = el("fallbackWorkArea");
@@ -738,8 +787,8 @@ function whartonVeKhung(goc, w, tuyChon) {
       /* Câu giải thích dài nằm sau nút (i): bấm mới hiện. */
       const nutI = document.createElement("button");
       nutI.type = "button";
-      nutI.className = "nut-i wh-i";
-      nutI.textContent = "i";
+      nutI.className = "nut-i nut-i-chu wh-i";
+      nutI.textContent = t("ux5b_giai_thich");   /* UX5B-L3: chữ trần "i" -> "Giải thích" (như UX4 ở thẻ Quản lý) */
       nutI.setAttribute("aria-expanded", "false");
       nutI.setAttribute("aria-controls", idKhung + "G");
       nutI.setAttribute("aria-label", t("wharton_giai_thich"));
@@ -1137,6 +1186,7 @@ function renderRankingList() {
   const list = el("rankingList");
   clear(list);
   veChiBaoPhuBuoi(currentRanking);
+  el("btnClearRanking").hidden = !currentRanking.length;   /* UX5B-L3 (D6) */
   if (el("chuaLuuNv")) veDauChuaLuu();
   /* Danh dau ngay tren luoi nguon CLB nao da xep, thu may — de khong
      phai doi chieu qua lai voi danh sach ben duoi. */

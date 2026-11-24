@@ -13,6 +13,7 @@ hình (xem kế hoạch "UI review"):
 """
 
 import csv
+from _mo_muc import mo_muc  # noqa: E402,F401
 import os
 import sqlite3
 
@@ -26,6 +27,7 @@ import browser_host  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 @pytest.fixture
@@ -170,12 +172,12 @@ def test_4_the_04_tieu_de_va_dem_danh_dau(trang):
     mo_the(page, "admin")
     page.locator('#qlTabs [data-ql-tab="hs"]').click()
     page.wait_for_selector(".admin-row-checkbox")
-    assert "xuất hồ sơ" in page.text_content('[data-i18n="admin_reserve_assign_title"]')
+    assert "nhóm ưu tiên" in page.text_content('[data-i18n="admin_reserve_assign_title"]')   # UX4-L3: đổi tiêu đề
     assert page.text_content("#adminDemDanhDau") == ""
     page.locator('.admin-row-checkbox[data-student-id="HS02"]').check()
-    assert page.text_content("#adminDemDanhDau") == "Đã đánh dấu 1 học sinh"
+    assert page.text_content("#adminDemDanhDau") == "Đã chọn 1 học sinh"   # UX4-L3
     page.check("#adminChonTatCa")
-    assert page.text_content("#adminDemDanhDau") == "Đã đánh dấu 6 học sinh"
+    assert page.text_content("#adminDemDanhDau") == "Đã chọn 6 học sinh"   # UX4-L3
     page.click("#btnAdminXuatHs")
     page.wait_for_function(
         "() => document.getElementById('adminXuatFeedback').textContent.includes('Hồ sơ 6 học sinh')")
@@ -199,6 +201,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     assert page.is_hidden("#chuaLuuThi") and page.is_hidden("#chuaLuuNv")
 
     # Bỏ tick clb_c -> hiện "Chưa lưu".
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="clb_c"]').click()
     assert page.is_visible("#chuaLuuThi")
     # Tick lại -> đúng như đã lưu -> dấu biến mất.
@@ -233,6 +236,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     assert ticks == [("clb_a",), ("clb_c",)]
 
     # Đổi nguyện vọng rồi LƯU -> đi ngay, không cảnh báo.
+    mo_muc(page, "nv")
     page.click("#btnClearRanking")
     assert page.is_visible("#chuaLuuNv")
     page.locator('#rankingSourceGrid .option-row[data-club-id="clb_c"]').click()
@@ -244,6 +248,7 @@ def test_7_thay_doi_chua_luu_khong_bi_mat_im_lang(trang):
     # Xuất em đang có thay đổi chưa lưu -> nhắc lưu trước, không xuất.
     mo_the(page, "fallback")
     mo_hs_the_03(page, "HS03")
+    mo_muc(page, "thi")
     page.locator('#testSelectionGrid .option-row[data-club-id="clb_a"]').click()
     page.click("#menuHocSinh > summary")
     page.click("#btnXuatEmNay")
@@ -276,7 +281,7 @@ def test_xoa_du_lieu_thi_tap_hoc_sinh_da_chon_duoc_don(trang):
     assert "1 học sinh" in page.text_content("#xuatHocSinhDem")
 
     mo_the(page, "admin")
-    page.locator('#qlTabs [data-ql-tab="du_lieu"]').click()
+    tab_ql(page, "du_lieu")
     nut = page.locator("#btnResetStudents")
     nut.click()
     nut.click()                                   # xác nhận hai bước

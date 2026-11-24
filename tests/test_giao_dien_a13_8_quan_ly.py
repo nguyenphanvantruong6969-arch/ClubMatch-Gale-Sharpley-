@@ -68,6 +68,7 @@ def test_loi_that_khong_an_tab_va_co_thong_bao(trinh):
     _chan(page, "get_diem_chuan", "error_wharton_quan_ly")
     _mo_ql(page)
     page.wait_for_selector(".toast.is-error", state="attached")
+    page.click("#qlNutThem")      # UX4-L2: hai tab điểm nằm trong Thêm ▾
     assert page.locator("#qlTabWh").is_visible()
     assert page.locator("#qlTabDc").is_visible()
     assert not loi, loi
@@ -109,7 +110,7 @@ def test_tat_tinh_nang_khong_goi_api_diem_quyet_tam(trinh):
 def test_bat_tinh_nang_van_goi_api(trinh):
     page, api, loi, goi = trinh(True)
     _mo_ql(page)
-    page.wait_for_selector("#qlTabWh:not([hidden])")
+    page.wait_for_selector("#qlTabWh:not([hidden])", state="attached")   # UX4-L2: nằm trong menu Thêm ▾
     assert "list_wharton_canh_bao" in goi and "get_diem_chuan" in goi
     assert not loi, loi
 

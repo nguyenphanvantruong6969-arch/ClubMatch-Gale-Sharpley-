@@ -71,6 +71,7 @@ def mo_trang(api):
             loi = []
             page.on("pageerror", lambda e: loi.append(str(e)))
             page.goto(url)
+            page.evaluate("document.getElementById('nangCao').open = true")
             page.wait_for_selector("#chonBuoiChip .buoi-chip")
             return page, loi
 
@@ -201,12 +202,15 @@ class TestThongBaoDocDuoc:
     def test_nhac_ve_lai_con_hien_khi_che_do_con_bat(self, api, mo_trang):
         assert api.run_pipeline(seed=42)["ok"]      # có khoá -> có nút vẽ lại
         page, loi = mo_trang()
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#stbLockLine .redraw-toggle")
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.click("#stbLockLine .redraw-toggle")
         page.wait_for_selector(".toast.is-warn")
         page.wait_for_timeout(5000)
         assert page.locator(".toast.is-warn").count() == 1
         # Bấm lần nữa = tắt chế độ -> lời nhắc phải biến mất theo.
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.click("#stbLockLine .redraw-toggle")
         page.wait_for_function("!document.querySelector('.toast.is-warn:not(.is-leaving)')")
         assert loi == [], loi
@@ -223,7 +227,9 @@ class TestNhacVeLaiKhongMatKhiConBat:
     def test_nhieu_thong_bao_khac_khong_go_loi_nhac(self, api, mo_trang):
         assert api.run_pipeline(seed=42)["ok"]
         page, loi = mo_trang()
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#stbLockLine .redraw-toggle")
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.click("#stbLockLine .redraw-toggle")
         page.wait_for_selector(".toast.is-warn")
         _bo_chon_het_buoi(page)
@@ -238,7 +244,9 @@ class TestNhacVeLaiKhongMatKhiConBat:
     def test_bam_dong_loi_nhac_la_tat_che_do(self, api, mo_trang):
         assert api.run_pipeline(seed=42)["ok"]
         page, loi = mo_trang()
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.wait_for_selector("#stbLockLine .redraw-toggle")
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.click("#stbLockLine .redraw-toggle")
         page.click(".toast.is-warn .toast-close")
         page.click("#btnRun")
@@ -308,6 +316,7 @@ class TestHatGiong:
         page, loi = mo_trang()
         page.wait_for_function("document.querySelector('#seedInput').value === '2026'")
         # Hạt giống khoá cùng bộ số bốc thăm: chỉ gõ được khi đã bật "Vẽ lại".
+        page.evaluate("document.getElementById('nangCao').open = true")
         page.click("#stbLockLine .redraw-toggle")
         page.evaluate("document.getElementById('nangCao').open = true")
         page.fill("#seedInput", "7")

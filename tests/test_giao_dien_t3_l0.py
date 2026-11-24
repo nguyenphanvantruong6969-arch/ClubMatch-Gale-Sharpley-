@@ -82,6 +82,7 @@ def test_go_tay_lai_ma_cu_chi_dien_ba_o_khong_xoa_ba_truong_con_lai(api, mo):
     api.create_or_update_club("clb_k", "CLB K", 10, 4, "chinh_sach", "thu_2")
     page, loi = mo()
     _vao_ql(page)
+    page.click("#clubFormThemTuyChon")           # UX4-L3: Mã CLB nằm trong "Thêm tuỳ chọn"
     page.fill("#clubFormId", "clb_k")
     page.fill("#clubFormName", "CLB K")
     page.fill("#clubFormCapacity", "20")
@@ -96,6 +97,7 @@ def test_go_tay_ma_cu_de_nguyen_o_suat_du_tru_mac_dinh_khong_xoa(api, mo):
     api.create_or_update_club("clb_k", "CLB K", 10, 4, "chinh_sach", "thu_2")
     page, loi = mo()
     _vao_ql(page)
+    page.click("#clubFormThemTuyChon")           # UX4-L3: Mã CLB nằm trong "Thêm tuỳ chọn"
     page.fill("#clubFormId", "clb_k")
     page.fill("#clubFormName", "CLB K")
     page.fill("#clubFormCapacity", "20")  # KHÔNG đụng ô suất dự trữ, nhãn, buổi
@@ -121,10 +123,11 @@ def test_sau_o_co_nhan_thuong_truc(api, mo):
     page, _ = mo()
     _vao_ql(page)
     nhan = page.eval_on_selector_all(
-        "#clubForm .club-field", "els => els.map(e => [e.querySelector('input').id, "
+        "#clubForm .club-field", "els => els.map(e => [e.querySelector('input, select').id, "
         "e.querySelector('.club-field-label').textContent.trim()])")
-    assert [i for i, _ in nhan] == ["clubFormId", "clubFormName", "clubFormCapacity",
-                                    "clubFormReserveCapacity", "clubFormReserveGroup", "clubFormBuoi"]
+    # UX4-L3: Tên, Số chỗ, Buổi (+ ô tên buổi mới) ở ngoài; Mã, Chỗ dành riêng, Nhóm trong "Thêm tuỳ chọn"
+    assert [i for i, _ in nhan] == ["clubFormName", "clubFormCapacity", "clubFormBuoi", "clubFormBuoiMoi",
+                                    "clubFormId", "clubFormReserveCapacity", "clubFormReserveGroup"]
     assert all(t for _, t in nhan)
 
 

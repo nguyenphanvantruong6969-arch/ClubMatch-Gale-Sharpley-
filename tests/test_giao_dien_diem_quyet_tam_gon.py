@@ -27,6 +27,7 @@ from test_giao_dien_wharton_quan_ly import _mo_thao_tac_khac  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 
 def _thanh(page, quy):
@@ -161,7 +162,7 @@ def mo_ql(tmp_path, api):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.locator('#qlTabs [data-ql-tab="wh"]').click()
+        tab_ql(page, "wh")
         page.wait_for_selector("#adminWhartonBlock:not([hidden]) #whQlBody tr")
         return page, api, loi
 

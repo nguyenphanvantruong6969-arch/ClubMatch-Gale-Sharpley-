@@ -28,6 +28,7 @@ def _tat(api):
 def test_fa_tat_khong_co_khung(mo):  # noqa: F811
     page, _, loi = mo(_tat)
     page.locator('[data-tab="admin"]').click()
+    assert page.locator("#qlTabDb").is_hidden()   # UX4-L2: FA tắt thì mục Bảng điều khiển không có
     page.wait_for_selector("#adminClubTableBody tr", state="attached")
     page.wait_for_timeout(300)
     assert page.locator("#dashboardPanel[hidden]").count() == 1
@@ -37,6 +38,8 @@ def test_fa_tat_khong_co_khung(mo):  # noqa: F811
 def test_bang_chi_so_va_xuat(mo):  # noqa: F811
     page, _, loi = mo(_co_ket_qua)
     page.locator('[data-tab="admin"]').click()
+    page.click("#qlNutThem")
+    page.click("#qlTabDb")   # UX4-L2: Bảng điều khiển nằm trong Thêm ▾
     page.wait_for_selector("#dashboardPanel:not([hidden]) #dbBangBody tr")
     hang = page.locator("#dbBangBody tr")
     assert [hang.nth(i).get_attribute("data-ma") for i in range(hang.count())] == THU_TU

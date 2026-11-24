@@ -7,6 +7,7 @@ huy chương (V§6.1, D2).
 Không có suy diễn ở máy chủ: trình duyệt gọi `submit_huy_chuong`. Dữ liệu MÔ PHỎNG.
 """
 import time
+from _mo_muc import mo_muc  # noqa: E402,F401
 
 import pytest
 
@@ -45,6 +46,7 @@ def _luu_nv(page):
 def test_em_luoi_luu_nguyen_vong_la_co_huy_chuong_mac_dinh(mo):  # noqa: F811
     page, api, loi = mo(du_lieu=_du_lieu(nv=None))
     _chon(page, "HS1")
+    mo_muc(page, "nv")
     for cid in ("T", "S", "G1", "G2"):
         page.locator('#rankingSourceGrid .option-row[data-club-id="%s"]' % cid).click()
     page.locator("#btnSubmitPreferences").click()
@@ -59,7 +61,7 @@ def test_em_luoi_luu_nguyen_vong_la_co_huy_chuong_mac_dinh(mo):  # noqa: F811
 def test_doi_thu_tu_ma_chua_chinh_tay_thi_huy_chuong_di_theo(mo):  # noqa: F811
     page, api, loi = mo(du_lieu=_du_lieu({"S": 60, "G1": 30, "G2": 10}))
     _chon(page, "HS1")
-    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon")
+    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon", state="attached")
     page.locator("#rankingList li").nth(1).locator("button").click()       # bỏ S
     _luu_nv(page)
     assert _db(api) == {"G1": 60, "G2": 30}
@@ -70,7 +72,7 @@ def test_doi_thu_tu_ma_chua_chinh_tay_thi_huy_chuong_di_theo(mo):  # noqa: F811
 def test_da_chinh_tay_thi_giu_nguyen_va_nhac(mo):  # noqa: F811
     page, api, loi = mo(du_lieu=_du_lieu({"G2": 60, "S": 30, "G1": 10}))
     _chon(page, "HS1")
-    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon")
+    page.wait_for_selector("#fbHuyChuongStep:not([hidden]) select.hc-chon", state="attached")
     page.locator("#rankingList li").nth(1).locator("button").click()       # bỏ S
     _luu_nv(page)
     assert _db(api) == {"G2": 60, "G1": 10}                                 # giữ nguyên phần còn lại
@@ -94,6 +96,7 @@ def test_sang_em_khac_giua_luc_luu_van_luu_huy_chuong_em_truoc(mo, ham_giu):  # 
     phải có huy chương mặc định (FA-N2); màn hình HS2 không bị vẽ lại bằng dữ liệu HS1."""
     page, api, loi = mo(du_lieu=_hai_em)
     _chon(page, "HS1")
+    mo_muc(page, "nv")
     for cid in ("T", "S", "G1", "G2"):
         page.locator('#rankingSourceGrid .option-row[data-club-id="%s"]' % cid).click()
     page.evaluate("""(ham) => {   /* giữ lời gọi `ham` của HS1 tới khi thả; bọc cả Proxy của cầu nối */

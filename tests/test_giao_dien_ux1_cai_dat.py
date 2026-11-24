@@ -21,6 +21,7 @@ def _luat(api):
 
 def _vao_cai_dat(page):
     page.locator('.nav-item[data-tab="admin"]').click()
+    page.click("#qlTabCachXep")      # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aChia100", state="visible")
     page.wait_for_selector('.ux1a-the[aria-checked="true"]')      # cấu hình đã nạp xong
 
@@ -40,7 +41,7 @@ def test_workspace_moi_chon_san_chia_100_diem(mo_trang):  # noqa: F811
     assert _chon(page, "Chia100") == "true"
     assert _chon(page, "ChiXep") == "false" and _chon(page, "HuyChuong") == "false"
     assert page.locator("#ux1aCauHoi").inner_text().strip() == "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?"
-    assert "mặc định" in page.locator("#ux1aChia100").inner_text()
+    assert "Đề xuất" in page.locator("#ux1aChia100").inner_text()   # UX4-L4: nhãn "Đề xuất" thay "(mặc định)"
     assert "60 · 30 · 10" in page.locator("#ux1aHuyChuong").inner_text()
     page.wait_for_selector("#ux1aMtNangLuc")                        # MT1: câu hỏi thứ hai thay dòng "Cách xét khi đông"
     assert page.locator("#ux1aCachXet").count() == 0
@@ -214,10 +215,11 @@ def test_menu_ba_cham_cai_dat_mo_cung_ba_the(mo_trang):  # noqa: F811
 def test_thay_doi_mo_muc_nang_cao_voi_tieu_chi_xep(mo_trang):  # noqa: F811
     page, api, goc, loi = mo_trang()
     _vao_cai_dat(page)
-    assert not page.evaluate("document.getElementById('ux1aNangCao').open")
-    page.locator("#ux1aThayDoi").click()
+    page.click("#qlTabClb")          # UX4-L2: "Thay đổi…" mở tab Cách xếp (không còn mục gập "Nâng cao")
+    assert page.locator("#gt2TieuChiPanel").is_hidden()
+    page.click("#qlTabCachXep")
+    page.evaluate("ux1aMoNangCao()")     # UX4-L4: nút "Thay đổi…" ẩn, thay bằng mục "Tuỳ chỉnh thêm"; hàm vẫn mở đúng chỗ
     page.wait_for_selector("#gt2TieuChiPanel", state="visible")
-    assert page.evaluate("document.getElementById('ux1aNangCao').open")
     assert not loi, loi
 
 

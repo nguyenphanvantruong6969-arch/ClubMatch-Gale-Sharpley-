@@ -205,6 +205,7 @@ def test_ve_lai_cung_du_lieu_khong_hang_nao_truot_tai_lai_sap_xep_doi_ngon_ngu_t
     page.wait_for_function("document.querySelectorAll('#adminStudentTableBody tr').length >= 25")
     assert _so_vao(page) == 0
     page.evaluate("() => { window.__vao = []; }")
+    page.click("#adminHsThemTuyChon")   # UX4-L3
     page.select_option("#adminSapXep", index=1)                               # đổi thứ tự sắp
     page.wait_for_timeout(500)
     assert page.evaluate("() => document.querySelectorAll('#adminStudentTableBody tr').length") >= 25

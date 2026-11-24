@@ -22,6 +22,7 @@ from _wharton import bat_wharton, chen_bids, dung_clb  # noqa: E402
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from _trinh_duyet import CHROMIUM  # noqa: E402
+from _trinh_duyet import tab_ql  # noqa: E402  (UX4-L2)
 
 CU_VI = re.compile(r"[Tt]ầng\s*[12]\b")
 CU_EN = re.compile(r"\b[Tt]ier\s*[12]\b")
@@ -56,7 +57,7 @@ def mo(api):
         page.goto(url)
         page.wait_for_selector("#dropZone")
         page.locator('[data-tab="admin"]').click()
-        page.locator('#qlTabs [data-ql-tab="dc"]').click()
+        tab_ql(page, "dc")
         # T3-31: Điểm chuẩn là MỘT bảng; chi tiết (bảng + biểu đồ chấm) mở khi bấm "Xem chi tiết" ở một CLB.
         page.locator("#adminDiemChuanBlock:not([hidden]) .dc-chi-tiet-nut").first.click()
         page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcChiTiet:not([hidden])")
@@ -83,7 +84,7 @@ def _chu_nhin_thay(page):
 def test_nhan_moi_vi_co_mat_nhan_cu_het(mo):
     page, loi = mo()
     chu = _chu_nhin_thay(page)
-    assert "Xét điểm thi" in chu and "Xét điểm quyết tâm" in chu, chu
+    assert "Theo điểm thi" in chu and "Theo điểm quyết tâm" in chu, chu   # UX4-L4: đổi chữ
     assert not CU_VI.search(chu), CU_VI.search(chu)
     assert "Wharton" not in chu
     assert not loi, loi
@@ -93,8 +94,10 @@ def test_nhan_moi_en_co_mat_nhan_cu_het(mo):
     page, loi = mo()
     page.evaluate("window.I18N.setLang('en')")
     page.wait_for_function("() => document.querySelector('#adminDiemChuanBlock h2').textContent === 'Cut-off points'")
+    # Chữ tĩnh (h2) đổi ngay, còn bảng Tổng quan vẽ lại sau khi gọi lại API: chờ cả bảng, không thì chụp chữ lúc bảng còn tiếng Việt.
+    page.wait_for_function("() => document.querySelector('#adminDiemChuanBlock').textContent.includes('By test score')")
     chu = _chu_nhin_thay(page)
-    assert "Exam-based" in chu and "Commitment points" in chu, chu
+    assert "By test score" in chu and "By commitment points" in chu, chu   # UX4-L4
     assert not CU_EN.search(chu), CU_EN.search(chu)
     assert "Wharton" not in chu
     assert not loi, loi
@@ -108,7 +111,7 @@ def test_chuoi_i18n_dc_khong_con_nhan_cu_khong_xung_ho():
     assert len(cac) >= 50                                   # hai ngôn ngữ (T3-31 bỏ 3 mức + thanh 3 màu: 58 khoá)
     tang = [v for k, v in cac if k in ("dc_tang1", "dc_tang2")]
     assert sorted(tang) == sorted([
-        "Xét điểm thi", "Xét điểm quyết tâm", "Exam-based", "Commitment points"])
+        "Theo điểm thi", "Theo điểm quyết tâm", "By test score", "By commitment points"])   # UX4-L4
     for k, v in cac:
         assert not CU_VI.search(v) and not CU_EN.search(v), (k, v)
         assert not re.search(r"\btầng\b|\btier\b", v, re.I), (k, v)

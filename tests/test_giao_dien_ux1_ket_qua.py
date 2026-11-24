@@ -65,7 +65,7 @@ def test_mac_dinh_chi_hai_nut_xuat_hien_va_menu_chi_co_o_huy_chuong(mo, api):
     hien = page.evaluate("""() => Array.from(document.querySelectorAll('#xuatPanel .search-row button'))
         .filter(b => b.getClientRects().length && !b.closest('details:not([open])')).map(b => b.id)   // nút trong menu đóng không hiện""")
     assert hien == ["btnXuatTuyChon", "btnXuatTheoLop"], hien
-    assert page.locator("#xuatMenu").is_visible()          # UX1I-I2: menu "Xuất…" luôn có (ba mục PDF của XP1) cho quản trị
+    assert page.locator("#xuatMenu").is_visible()          # UX1I-I2: menu "Xuất tệp khác" luôn có (ba mục PDF của XP1) cho quản trị
     page.locator("#xuatMenu > summary").click()
     assert all(page.locator("#" + i).is_hidden() for i in ("btnXuatLyDo", "btnXuatNhuCau", "btnXuatGoiY", "btnXuatBienBan"))
     assert not loi, loi
@@ -77,7 +77,7 @@ def test_che_do_huy_chuong_co_menu_xuat_gom_bon_nut(mo, api):
     page, loi = mo()
     page.locator('.nav-item[data-tab="others"]').click()
     page.wait_for_selector("#xuatMenu", state="visible")
-    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất…"
+    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác ▾"   # UX5A-L3
     ids = ("btnXuatLyDo", "btnXuatNhuCau", "btnXuatGoiY", "btnXuatBienBan")
     assert all(page.locator("#" + i).is_hidden() for i in ids)      # menu đóng: chỉ còn hai nút chính
     page.locator("#xuatMenu > summary").click()

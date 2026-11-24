@@ -3344,6 +3344,8 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   .ux2-khung { animation: none; }
 }
 
+/* UX5A (lỗi giai đoạn 2): khung đang mở menu "⋯" phải nổi trên các khung bên dưới, không bị đè. */
+.panel:has(details.menu-khac[open]) { position: relative; z-index: 70; }
 /* UX2 — L8: chuyển cảnh mượt (#10), CHỈ trang trí. Mọi thứ nằm trong no-preference; "Hiệu ứng" tắt thì animation:none!important
    (khối html.tat-hieu-ung) lo phần còn lại. */
 @keyframes ux2Vao { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -3366,6 +3368,73 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   html.tat-hieu-ung ::details-content { animation: none !important; transition: none !important; }
 }
 
+/* UX4: thẻ Quản lý. Hick: dải tab ≤ 4 mục, mục ít dùng gom vào "Thêm ▾". Von Restorff: một nút vàng mỗi khung,
+   nút của thanh Việc tiếp theo là kiểu cảnh báo (viền, không nền vàng). */
+.ql-them { position: relative; }
+.ql-tab-them[aria-expanded="true"] { background: var(--paper-hover); color: var(--ink); }
+.ql-tab-them.is-chon {
+  background: var(--paper-raised);
+  border-color: var(--hairline);
+  color: var(--ink);
+  box-shadow: inset 0 2px 0 var(--gold);
+}
+.ql-them-menu {
+  position: absolute; top: 100%; left: 0; z-index: 20; min-width: 220px;
+  display: flex; flex-direction: column; gap: 2px; padding: 6px;
+  background: var(--paper-raised); border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.ql-them-menu[hidden] { display: none; }
+.ql-them-menu .ql-tab {
+  margin-bottom: 0; text-align: left; border: 1px solid transparent; border-radius: var(--radius-sm);
+}
+.ql-them-menu .ql-tab[aria-selected="true"] { box-shadow: none; border-color: var(--hairline); font-weight: 600; }
+.ql-mo-ta { margin: 0 0 4px; }
+.ql-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }   /* giữ chỗ để bố cục không nhảy khi dữ liệu về */
+.btn-canh-bao {
+  background: transparent; color: var(--gold-text); border: 2px solid var(--gold-text); font-weight: 600;
+}
+.btn-canh-bao:hover { background: var(--gold-soft); }
+.ux1a-nang-cao { margin-top: 0; }
+.club-them { grid-column: 1 / -1; }
+.club-them > summary { list-style: none; display: inline-block; cursor: pointer; }
+.club-them > summary::-webkit-details-marker { display: none; }
+.club-them[open] > summary { margin-bottom: 10px; }
+.ql-thanh-chon { align-items: center; margin: 10px 0; }
+.ql-thanh-chon[hidden] { display: none; }
+.club-field[hidden] { display: none; }
+.nut-i.nut-i-chu { width: auto; height: auto; padding: 4px 12px; border-radius: 14px; font-size: 12.5px; }
+.ux4-de-xuat { display: inline-block; margin-top: 6px; padding: 1px 8px; border: 1px solid var(--gold-text); border-radius: 10px;
+  color: var(--gold-text); font-size: 11.5px; font-weight: 600; }
+.gt-buoc[hidden], .gt2-buoc[hidden] { display: none; }
+#ux1aNangCao { margin: 0 0 16px; }
+#ux1aNangCao[open] > summary { margin-bottom: 12px; }
+#ux1aNangCao > summary { display: block; cursor: pointer; }
+#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }
+
+/* UX5A: nếp gập ít dùng của thẻ Kết quả / Chi tiết (Hick) */
+.ux5a-hop-rong { width: min(360px, 90vw); }
+.ux5a-hop-rong .hint-text { margin: 6px 10px 4px; }
+.nhom-tieu-de { margin: 28px 0 10px; font-size: 16px; font-weight: 600; color: var(--ink); }
+.ux5a-goi-y-fa { margin: 6px 10px 4px; }
+#xuatNangCao > summary { margin-bottom: 8px; }
 /* MT2: công tắc "Chia CLB theo loại" ở Quản lý › Câu lạc bộ */
 .mt2-cong-tac { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
 .mt2-cong-tac-ten { font-weight: 600; }
+/* UX5B: thẻ Xếp CLB / Nhập nguyện vọng / Nhập điểm. Hick: mục ít dùng gập lại; Von Restorff: một nút vàng, việc kế tiếp có dòng trạng thái. */
+.ux5b-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }
+.ux5b-gap { margin: 8px 0 0; font-size: 13px; }
+.ux5b-gap > summary { cursor: pointer; color: var(--ink-soft, var(--ink)); }
+#view-pipeline[data-trang-thai="trong"] .drop-zone { border-color: var(--gold); border-width: 3px; }
+#nangCao .stb-lock-line, #nangCao .chon-buoi { margin-top: 8px; }
+/* UX5B-L3: Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm */
+body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
+.ux5b-tao-moi { margin: 10px 0; }
+.ux5b-tao-moi > summary { list-style: none; }
+.ux5b-tao-moi > summary::-webkit-details-marker { display: none; }
+.ux5b-tao-moi .new-student-row { margin-top: 8px; }
+.fallback-step .ux5b-muc-tom { display: none; align-items: center; gap: 12px; flex-wrap: wrap; }
+.fallback-step.ux5b-dong .ux5b-muc-tom { display: flex; }
+.fallback-step.ux5b-dong > :not(h3):not(.ux5b-muc-tom) { display: none !important; }
+.fallback-step.ux5b-dong h3 { margin-bottom: 4px; }
+.ux5b-muc-tom-chu { color: var(--ink-soft, var(--ink)); }
