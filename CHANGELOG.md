@@ -26,6 +26,14 @@
   in bảng K0–K6 (PASS/FAIL) và ghi `dau_vao_ket_qua.csv`. Mã thoát 0 / 1 (có FAIL) / 2 (nhiều buổi hoặc không đọc được).
 - G2 đo trên 3 bộ: em không còn nguyện vọng nào vẫn có một dòng (chưa xếp); thứ hạng = vị trí trong danh sách nguyện vọng.
 - Test mới: `tests/test_dc1_kiem_doc_lap.py` (18: 8 đột biến K0–K6, thoát 2 hai ca, cô lập import bằng ast, 3 bộ hợp lệ × 2).
+
+## 2026-11-24 — SEC-1: sửa hai cảnh báo CodeQL "Uncontrolled data used in path expression" (browser_host.py)
+
+- Mục: SEC-1 (Truong yêu cầu trực tiếp, không thuộc sổ 33 mục). Tệp: `browser_host.py` (`_tep_tinh`, nhánh phục vụ trang HTML trong `do_GET`), `tests/test_browser_host.py`.
+- `_tep_tinh`: từ chối byte NUL; thêm rào `that.startswith(goc + os.sep)` trên đường dẫn đã `realpath` (mẫu CodeQL nhận là rào chắn) bên cạnh kiểm `commonpath` sẵn có. Trước khi `open(full)` chốt lại cùng rào. Hành vi cho đường dẫn hợp lệ không đổi; thuật toán không đụng.
+- Test mới: `test_duong_dan_la_deu_tra_404_khong_loi` (NUL, gạch chéo ngược, thư mục anh em). `tests/test_browser_host.py` 41 ca đạt; `kiem_nhanh.py` 7/7.
+- Còn mở: cảnh báo trên GitHub chỉ đóng sau khi bản sửa vào `main` và CodeQL quét lại.
+
 ## 2026-11-24 — SFB-L3: dọn sau các lần gộp SF/UX5/UX1F (chỉ tài liệu và hạ tầng test)
 
 - Xoá `docs/phien/claude__great-edison-6ry675__TU_CHAY.md` và `claude__ux1-tich-hop-vao-main__TU_CHAY.md` (việc đã xong, nội dung đã ở main).
