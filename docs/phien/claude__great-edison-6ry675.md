@@ -25,7 +25,7 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 ## Decisions and gotchas
 - Truong approved (2026-11-24): the 5 new UX5B wordings, all six UX5B judgement calls, UX5 UI from six screenshots.
 - UX4/UX5 fold fields behind closed sections, which breaks tests that fill/click them directly: "Thêm tuỳ chọn" (`#clubFormThemTuyChon` -> `#clubFormId`), tab `#qlTabCachXep` + "Tuỳ chỉnh thêm" (`#ux1aNangCao` -> `#ux1aHuyChuong`), `#ux5bTaoMoi > summary` -> `#newStudentId`, `#ux1bThemTom` -> `#btnUx1bPhieuLop`/`#btnUx1bBaoCaoPdf`. Open the fold only if closed.
-- `tests_stress/b/` is NOT in CI (not in testpaths) and was written for the old UI: 19 tests in `test_b2_quan_ly.py` fail on the merged tree; other files in that folder not run. Cause inferred (not checked per test): fields hidden behind UX4/UX5 folds; two sibling tests in CI failed for exactly that and passed once the fold was opened. Truong was asked whether to inspect each of the 19 or leave it to the next session (no answer yet); Truong said it is fine to leave everything visible in the handoff.
+- `tests_stress/b/` is NOT in CI (not in testpaths) and was written for the old UI: 54 of 65 tests fail on main (19 of them in `test_b2_quan_ly.py`); see the memo; other files in that folder not run. Cause inferred (not checked per test): fields hidden behind UX4/UX5 folds; two sibling tests in CI failed for exactly that and passed once the fold was opened. Truong was asked whether to inspect each of the 19 or leave it to the next session (no answer yet); Truong said it is fine to leave everything visible in the handoff.
 - `test_a13_12_browser_host.py::test_tai_lai_trang_khong_tat_may_chu` failed once on Windows 8/9 in run 45302117321; passed in #32's run; browser_host.py unchanged by the PR -> likely timing flake (not proven).
 - CI cancels the previous run on every push; full matrix ~12-20 min; push once per round.
 - All numbers are SIMULATED data.
@@ -39,6 +39,7 @@ Integration/coordination branch for Truong (2026-11-23/24): report status of UX5
 6. Optional SF leftovers: progress-bar UI for `get_tien_do_xuat`, dedicated zip error code (ST-B-011), pypdf now in requirements-dev (done by UX1F).
 
 ## Files touched
+- Added this turn: `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.md` (analysis: 54/65 tests_stress/b fail, causes, verified fixes, 390 px menu overflow bug + CSS candidate) and `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.patch` (test-only diff, applies on main; NOT applied to repo).
 - Docs/tests only by this session: docs/phien/*__TU_CHAY.md, tests/test_giao_dien_sf_b_lo2.py and lo5, tests_stress/b/test_b2_quan_ly.py (`_vao_clb`), CHANGELOG.md, docs/ke_hoach/TIEN_DO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md (test-file count), style.css (kept both blocks in merges), docs/phien/claude__ux5b-l3-l4-tu-dong.md (ticks and approvals).
 - No product code changed by this session except conflict resolution carried by other sessions (xuat_pdf.py kept UX1F layout + SF-A5 speed).
 
