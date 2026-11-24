@@ -81,6 +81,7 @@ def test_o_chon_lop_loc_bang_va_quyet_dinh_lop_in_phieu(mo_quan_tri, tmp_path):
     page.wait_for_selector("#kqBang", state="visible")
     assert page.locator('#kqTang1 [data-kq="lop"]').get_attribute("aria-pressed") == "true"   # chọn lớp mở "Theo lớp"
     assert page.locator("#kqChonLop").input_value() == "10A2"
+    page.locator("#ux1bThemTom").click()                                 # UX5A-L2: nút nằm trong nếp "Báo cáo và phiếu in"
     page.locator("#btnUx1bPhieuLop").click()
     page.wait_for_function("document.getElementById('ux1bPhanHoi').textContent.includes('.pdf')")
     tep = [t for t in os.listdir(api.thu_muc_xuat) if t.endswith(".pdf")]
