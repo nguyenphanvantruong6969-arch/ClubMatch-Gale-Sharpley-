@@ -38,6 +38,31 @@
 - Mới `phuong_an_xep.py`: `bam_luat(cfg)` (SHA-256 của `{rules, muc_tieu:{id,nhom}}`, bỏ `truoc` và mọi khoá ngoài luật), `trang_thai_quy_trinh(moc)` (năm mốc Đã/Chưa kèm thời điểm), `dung_noi_dung(...)` (dict chỉ gồm khoá danh sách trắng `KHOA_NOI_DUNG`). Bản dự kiến không bao giờ có hạt giống hay dấu vân tay dữ liệu; bản chốt chỉ có hạt giống khi tick và đã khoá. Câu chữ ở `CAU = {"vi", "en"}`; luật xếp lấy từ `tieu_chi.mo_ta_tieu_chi`, bước lễ dùng `fa_bien_ban.THU_TU_LE` (import, không chép). Không đụng thuật toán, CSV, schema.
 - Test mới: `tests/test_cb1_noi_dung.py` (20 ca, thuần).
 
+## 2026-11-24 — SEC-1: sửa hai cảnh báo CodeQL "Uncontrolled data used in path expression" (browser_host.py)
+
+- Mục: SEC-1 (Truong yêu cầu trực tiếp, không thuộc sổ 33 mục). Tệp: `browser_host.py` (`_tep_tinh`, nhánh phục vụ trang HTML trong `do_GET`), `tests/test_browser_host.py`.
+- `_tep_tinh`: từ chối byte NUL; thêm rào `that.startswith(goc + os.sep)` trên đường dẫn đã `realpath` (mẫu CodeQL nhận là rào chắn) bên cạnh kiểm `commonpath` sẵn có. Trước khi `open(full)` chốt lại cùng rào. Hành vi cho đường dẫn hợp lệ không đổi; thuật toán không đụng.
+- Test mới: `test_duong_dan_la_deu_tra_404_khong_loi` (NUL, gạch chéo ngược, thư mục anh em). `tests/test_browser_host.py` 41 ca đạt; `kiem_nhanh.py` 7/7.
+- Còn mở: cảnh báo trên GitHub chỉ đóng sau khi bản sửa vào `main` và CodeQL quét lại.
+
+## 2026-11-24 — SFB-L3: dọn sau các lần gộp SF/UX5/UX1F (chỉ tài liệu và hạ tầng test)
+
+- Xoá `docs/phien/claude__great-edison-6ry675__TU_CHAY.md` và `claude__ux1-tich-hop-vao-main__TU_CHAY.md` (việc đã xong, nội dung đã ở main).
+- `docs/ke_hoach/TIEN_DO.md`: các dòng SF-*, UX5B-FIX-CI, UX1F-L* còn ghi "chờ CI/chờ checker" sửa theo thực tế (đã gộp vào main, CI #1522 xanh); thêm dòng SFB. `CLAUDE_CHI_TIET.md`: đếm tệp test = 402.
+- `tests_stress/b/conftest.py`: ảnh chụp mặc định ghi vào thư mục tạm (đặt `RBDA_ANH_ST_B` để lưu vào kho) nên chạy stress không còn sửa các PNG đã theo dõi.
+- SFB-L4 (tiến trình PDF, mã lỗi zip riêng) là lô tuỳ chọn: BỎ, để mục riêng.
+
+## 2026-11-24 — SFB-L2: menu UX5A không còn bị cắt ở màn hình hẹp (CSS, commit riêng để revert được)
+
+- `style.css`: một khối `@media (max-width: 800px)` cuối tệp, gồm hai luật. (1) `.menu-khac-hop.ux5a-hop-rong` thành hộp `position: fixed` sát đáy (`left/right: 12px`, `max-height: 70vh`): sửa "Báo cáo và phiếu in ▾" (Kết quả) và "Xuất tệp khác ▾" (Chi tiết) bị cắt mép trái (x = -132 ở 390 px; -12 ở 768 px không chọn lớp). (2) `.panel:has(.menu-khac[open] > .ux5a-hop-rong):hover { transform: none; transition: none; }`: luật (1) một mình CHƯA ĐỦ — hiệu ứng nhấc 2 px khi rê chuột (`.panel:hover`) biến `.panel` thành khung chứa của `position: fixed`, nên hộp lệch (top = -127) ngay khi chuột còn ở trên panel; chỉ panel đang mở menu rộng mất hiệu ứng nhấc. Màn hình > 800 px không đổi (test khẳng định vẫn `position: absolute`, rộng ≤ 360 px). Không đổi chữ, id, i18n. CI vòng 1 (run #1549) đỏ ở `test_giao_dien_ux2_chuyen_canh.py::test_css_chuyen_canh_nam_trong_supports_...`: test đọc `style.css` từ mốc `/* UX2 — L8` đến hết tệp và cấm chữ `overflow`; khối SFB nằm cuối tệp nên lọt vào. Sửa: chuyển khối SFB lên TRƯỚC mốc UX2 — L8 (độ ưu tiên selector không phụ thuộc thứ tự), không đổi test.
+- Test mới `tests/test_giao_dien_sfb_menu_hep.py` (6 ca: 390/768 × có/không ô chọn lớp, và 1280 giữ nguyên neo tuyệt đối; đỏ trước khi sửa). `test_b4_do_rong_man_hinh[390,768]` nay đạt.
+- Ảnh cho Truong xem: `docs/ke_hoach/ux/anh/sfb/` (390 px Kết quả, 390 px Chi tiết, 1280 px). Dữ liệu MÔ PHỎNG.
+
+## 2026-11-24 — SFB-L1: `tests_stress/b` chạy lại được sau UX4/UX5 (chỉ sửa test)
+
+- Áp `docs/phien/ST_B_SUA_GIAO_DIEN_MOI.patch`: `ho_tro.py` thêm `mo_the_che_do`, `mo_menu_them`, `tab_ql_hien`, `clic_tab_ql`; `test_b1`, `test_b2_quan_ly`, `test_b4_hien_thi` theo giao diện UX4-L2/L3/L4 (menu "Thêm ▾", "Thêm tuỳ chọn", ô Buổi là ô thả xuống, nút Gán ẩn khi chưa tick). Không bỏ/skip/xfail test nào, không nới ngưỡng thời gian.
+- Chạy từng tệp (DỮ LIỆU MÔ PHỎNG): 63/65 đạt; 2 test `test_b4_do_rong_man_hinh[390,768]` còn đỏ vì lỗi giao diện thật (menu UX5A tràn trái), sửa ở SFB-L2.
+
 ## 2026-11-24 — SF: gộp UX1F vào nhánh SF, CI xanh vòng 1 (tự chạy)
 
 - Gộp `origin/claude/ux1-tich-hop-vao-main` (PR #32) để #31 và #32 merge theo thứ tự nào cũng được. Xung đột: `xuat_pdf.py`, CHANGELOG.md, đếm tệp test ở `CLAUDE_CHI_TIET.md` (nay 401).

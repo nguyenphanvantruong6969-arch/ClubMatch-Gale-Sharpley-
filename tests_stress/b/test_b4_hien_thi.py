@@ -8,7 +8,7 @@ import time
 
 import pytest
 
-from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO
+from ho_tro import chon_cach, khoa_tho, dem_db, nap_so_150, chay_ui, ket_qua_db, nap_tep, _KHOA_THO, tab_ql_hien, clic_tab_ql
 from ho_tro_tep import so_nhan_ban
 from conftest import SO_150
 
@@ -60,9 +60,9 @@ def test_b4_vi_en_moi_man_hinh_khoa_tho_chua_dich_va_tran_chu(mo):
             subs = ["#qlTabClb", "#qlTabHs", "#qlTabWh", "#qlTabDc", "#qlTabDuLieu"] if t == "admin" else [None]
             for sub in subs:
                 if sub:
-                    if not p.locator(sub).is_visible():
+                    if not tab_ql_hien(p, sub):
                         continue
-                    p.locator(sub).click()
+                    clic_tab_ql(p, sub)
                 p.wait_for_timeout(500)
                 ds = p.evaluate(JS_VAN_BAN_TINH)
                 for tag, txt in ds:
@@ -123,9 +123,9 @@ def test_b4_do_rong_man_hinh(mo, rong):
         subs = ["#qlTabClb", "#qlTabHs", "#qlTabWh", "#qlTabDuLieu"] if t == "admin" else [None]
         for sub in subs:
             if sub:
-                if not p.locator(sub).is_visible():
+                if not tab_ql_hien(p, sub):
                     continue
-                p.locator(sub).click()
+                clic_tab_ql(p, sub)
             p.wait_for_timeout(500)
             r = p.evaluate(JS_TRAN_TRANG)
             if t == "admin" and rong < 700:

@@ -5,7 +5,7 @@ import random
 import pytest
 
 from conftest import SO_150
-from ho_tro import chon_cach, rules, nap_so_150, chay_ui, so_dong_run, ket_qua_db, ket_qua_ui, khoa_tho, _doc_bang
+from ho_tro import chon_cach, rules, nap_so_150, chay_ui, so_dong_run, ket_qua_db, ket_qua_ui, khoa_tho, _doc_bang, clic_tab_ql
 
 
 def test_b1_moi_tab_va_tab_con(mo):
@@ -21,7 +21,7 @@ def test_b1_moi_tab_va_tab_con(mo):
     subs = p.evaluate("[...document.querySelectorAll('#qlTabs [data-ql-tab]')].filter(b=>!b.hidden).map(b=>b.id)")
     assert len(subs) >= 3
     for s in subs * 2:
-        p.locator("#" + s).click()
+        clic_tab_ql(p, "#" + s)
         p.wait_for_timeout(120)
         assert p.locator("#" + s).get_attribute("aria-selected") == "true"
     # nhóm thanh bên (nút nhóm): bấm không được làm hỏng điều hướng
