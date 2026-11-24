@@ -4,6 +4,7 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 
 | Mã | Trạng thái (chưa / đang / xong / chặn) | Ngày | Tệp đã sửa | Test mới | Ghi chú |
 |---|---|---|---|---|---|
+| CB1-FIX3 (sửa giao diện khung phương án xếp, bỏ nhãn Đề xuất; Truong yêu cầu) | xong (chờ CI) | 2026-11-24 | index.html, js/2x_phuong_an.js, js/18_cai_dat.js, style.css, i18n.js, api_phuong_an.py, CHANGELOG.md | tests/test_cb1_ui.py, tests/test_cb1_api_pdf.py (thêm assert) | ngân sách nút Cách xếp 9 lên 11; kiem_nhanh 7/7 |
 | SEC-1 (CodeQL path-injection, browser_host.py; Truong yêu cầu) | xong (chờ CI + PR vào main) | 2026-11-24 | browser_host.py, CHANGELOG.md | tests/test_browser_host.py (+1 ca) | kiem_nhanh 7/7; cảnh báo đóng sau khi vào main |
 | MT1-X1-L3 (kiểm chứng D5 + tài liệu) | xong (chờ checker) | 2026-11-21 | api_xuat.py (docstring), CHANGELOG.md | — (so ô 3 bộ dữ liệu: trùng khít) | mục MT1-X1 trọn vẹn sau CI xanh |
 | MT1-X1-L2 (sheet "Giữ chỗ" + khứ hồi đầy đủ) | xong (chờ checker) | 2026-11-21 | api_xuat.py (`export_du_lieu_dau_vao`), CHANGELOG.md | tests/test_mt1_x1_xuat_so_nhap.py (+3 ca) | cổng D2: chỉ khi FA bật; bảng rỗng = sheet chỉ có tiêu đề |
@@ -284,6 +285,10 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1F-L2 (bố cục phiếu PDF) | xong (chờ checker) | 2026-11-20 | xuat_pdf.py, phieu_giai_trinh.py, .github/workflows/tests.yml, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_ux1f_l2_phieu_pdf_bo_cuc.py | |
 | UX1F-L3 (giáo viên Lưu PDF một em) + L2 fix1 | xong (chờ checker) | 2026-11-20 | index.html, phieu_giai_trinh.py, CHANGELOG.md, docs/ke_hoach/CLAUDE_CHI_TIET.md | tests/test_ux1f_l3_giao_vien_pdf_mot_em.py, tests/test_ux1f_l2_phieu_pdf_bo_cuc.py | |
 | UX1F-L4 (một ô Chọn lớp) | xong (chờ checker) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
+| CB1-L1 (bộ dựng nội dung văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | phuong_an_xep.py, CHANGELOG.md | tests/test_cb1_noi_dung.py | kiem_nhanh 7/7 |
+| CB1-L2 (API + PDF văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | api_phuong_an.py, phuong_an_xep.py, xuat_pdf.py, api.py, phan_quyen.py, i18n_errors.py, i18n.js, i18n_loi.js | tests/test_cb1_api_pdf.py (+ 4 test cũ cập nhật) | kiem_nhanh 7/7 |
+| CB1-L3 (UI văn bản phương án xếp) | xong (chờ checker M2) | 2026-11-24 | index.html, js/2x_phuong_an.js, js/08_khoi_dong.js, js/05_quan_ly.js, style.css, i18n.js | tests/test_cb1_ui.py | kiem_nhanh 7/7 |
+| CB1-L4 (tài liệu) | xong (chờ checker M2) | 2026-11-24 | HUONG_DAN_SU_DUNG.md, docs/ke_hoach/CB1_KICH_BAN_DEMO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, CHANGELOG.md | | |
 | DC1-L1+L2 (script kiểm độc lập K0–K6 + dau_vao_ket_qua.csv) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (18) | kiem_nhanh 7/7 |
 | DC1-L3 (tài liệu script kiểm độc lập) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/README.md, docs/giai_trinh/HUONG_DAN_CHAY.md, docs/giai_trinh/KICH_BAN_DEMO.md, CHANGELOG.md | (không) | |
 | DC1-L4 (K7 tệp tổng hợp) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, README.md, docs/giai_trinh/*.md, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (+1) | |

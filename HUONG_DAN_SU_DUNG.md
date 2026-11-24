@@ -129,6 +129,18 @@ Sau khi xếp, ở **Chi tiết và xuất tệp** có MỘT dòng kết quả, 
 
 Sửa tay ở mục **Nâng cao** thì không thẻ nào sáng; hiện dòng xám "Đang dùng cài đặt riêng" và, nếu trước đó đã chọn một thẻ, nút **Về mục tiêu mẫu** (1 lần bấm) đưa về thẻ đó. Chỉ quản trị thấy phần này, giáo viên không thấy.
 
+### Văn bản phương án xếp (bản dự kiến và bản chốt)
+
+Ở **Quản lý → Cách xếp**, mở **Tuỳ chỉnh thêm**, khung **Văn bản phương án xếp** (chỉ quản trị) tạo MỘT tệp PDF bằng lời thường cho học sinh, phụ huynh, nhà trường và ban giám khảo: luật xếp đang cài và quy trình minh bạch (công bố phương án, chốt dữ liệu, bốc hạt giống có người chứng kiến, chạy xếp chính thức, công bố kết quả và hạn khiếu nại; mỗi bước ghi Đã làm / Chưa làm kèm thời điểm). Không có bảng so sánh các phương án và không có phụ lục.
+
+- **Xuất bản dự kiến**: dùng được bất cứ lúc nào, kể cả trước lần xếp đầu tiên. Không bao giờ có hạt giống.
+- **Chốt phương án**: hộp xác nhận liệt kê mục tiêu và luật sẽ chốt. Chốt ghi người chốt, thời điểm và dấu vân tay của luật (kèm một dòng nhật ký thao tác); không đổi luật, không chạy xếp. Chốt lại được, mỗi lần hỏi lại.
+- **Xuất bản chốt**: chỉ bật sau khi đã chốt phương án, đã chạy xếp chính thức và đã khoá số bốc thăm (lý do hiện ngay dưới nút). Bản chốt có người chốt, thời điểm, dấu vân tay luật và dấu vân tay dữ liệu.
+- **In hạt giống**: ô tick, mặc định TẮT; chỉ bật được cho bản chốt sau khi đã khoá số bốc thăm.
+- Đổi luật hoặc thẻ mục tiêu sau khi chốt thì khung và PDF báo "Phương án đã đổi sau khi chốt"; nếu lần xếp chính thức dùng luật khác luật đã chốt thì báo "Lần xếp chính thức không dùng phương án đã chốt". Chạy thử không ghi đè phần đã chốt.
+
+Biên bản bốc thăm có chữ ký (FA-9) vẫn là tài liệu riêng để ký; văn bản này không thay thế nó và không in mã băm danh sách bốc thăm hay dòng ký. PDF không có mã, tên, điểm hay số bốc thăm của học sinh nào.
+
 **"Chấm điểm mù" nghĩa là gì:** màn hình chấm điểm **chỉ hiện mã và họ tên**. Nó
 không hiện số bốc thăm, cũng không hiện em đó xếp CLB này là nguyện vọng thứ
 mấy. Người chấm không biết cho điểm này thì ai được lợi.

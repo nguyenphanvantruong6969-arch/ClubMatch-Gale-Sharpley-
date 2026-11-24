@@ -41,7 +41,7 @@ def test_workspace_moi_chon_san_chia_100_diem(mo_trang):  # noqa: F811
     assert _chon(page, "Chia100") == "true"
     assert _chon(page, "ChiXep") == "false" and _chon(page, "HuyChuong") == "false"
     assert page.locator("#ux1aCauHoi").inner_text().strip() == "Học sinh cho biết mình muốn CLB nào nhiều hơn bằng cách nào?"
-    assert "Đề xuất" in page.locator("#ux1aChia100").inner_text()   # UX4-L4: nhãn "Đề xuất" thay "(mặc định)"
+    assert "Đề xuất" not in page.locator("#ux1aChia100").inner_text()   # CB1-FIX3: bỏ nhãn "Đề xuất" (Truong, 24/11)
     assert "60 · 30 · 10" in page.locator("#ux1aHuyChuong").inner_text()
     page.wait_for_selector("#ux1aMtNangLuc")                        # MT1: câu hỏi thứ hai thay dòng "Cách xét khi đông"
     assert page.locator("#ux1aCachXet").count() == 0

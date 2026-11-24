@@ -1490,6 +1490,7 @@ function datTabConQl(ten, tuyChon) {
     tabConQlMong = muon;
     luuTabConQl(muon);
   }
+  if (ten === "cach_xep" && typeof paTai === "function") paTai();   /* CB1-L3: làm mới khung văn bản phương án */
   /* UX4-L2: tab nằm trong "Thêm ▾" thì nút Thêm hiện trạng thái đang chọn; chọn xong thì đóng menu. */
   const nutThem = el("qlNutThem");
   if (nutThem) {
