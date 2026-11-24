@@ -170,7 +170,7 @@ def test_get_canh_bao_sau_khi_doi_luat(tmp_path):
 def test_du_kien_xuat_duoc_khi_chua_chay_chua_chot(tmp_path):
     a, db = _mo(tmp_path)
     r = _xuat(a, tmp_path, "du_kien")
-    assert r["ok"] and r["data"]["ban"] == "du_kien" and r["data"]["n_trang"] >= 1
+    assert r["ok"] and r["data"]["ban"] == "du_kien" and r["data"]["n_trang"] == 1
     chu = _chu(r["data"]["path"])
     assert "BẢN DỰ KIẾN" in chu and "chưa chốt dữ liệu" in chu and "Chưa làm" in chu
 
@@ -194,6 +194,7 @@ def test_ban_chot_dau_van_tay_nguoi_thoi_gian_khoa_va_khong_hat_giong_mac_dinh(t
     chu = _chu(r["data"]["path"])
     dvt = _sql(db, "SELECT dau_van_tay FROM dau_van_tay_chay")[0][0]
     assert "BẢN CHỐT" in chu and dvt[:20] in chu.replace("\n", "")
+    assert r["data"]["n_trang"] == 1                       # CB1-FIX5: bản chốt đầy đủ vẫn vừa MỘT trang
     assert chu.count("BẢN CHỐT") == 1 and "Từng bước đi đến kết quả" in chu and "Dấu xác nhận" in chu   # CB1-FIX4: bố cục mới, nhãn không lặp
     assert pa.bam_luat(cau_hinh_ws.doc_cau_hinh(db))[:20] in chu.replace("\n", "")
     assert str(SEED) not in chu and "Hạt giống:" not in chu
