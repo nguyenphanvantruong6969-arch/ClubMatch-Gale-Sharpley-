@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-24 — CB1-L4: tài liệu văn bản phương án xếp
+
+- `HUONG_DAN_SU_DUNG.md`: mục "Văn bản phương án xếp (bản dự kiến và bản chốt)". `docs/ke_hoach/CB1_KICH_BAN_DEMO.md`: kịch bản 5 bước (dữ liệu MÔ PHỎNG, hạt giống 3). `CLAUDE_CHI_TIET.md`: hàng bản đồ mã CB1 và số tệp test. Không đổi mã.
+
 ## 2026-11-24 — CB1-L3: giao diện "Văn bản phương án xếp" (tab Cách xếp của Quản lý)
 
 - `index.html`: khung `#paPanel` (quản trị) sau khung Cài đặt: nút "Chốt phương án" (hộp xác nhận liệt kê mục tiêu và luật sẽ chốt; chốt lại cũng hỏi lại), "Xuất bản dự kiến", "Xuất bản chốt" (khoá kèm lý do cho tới khi đủ điều kiện), ô "In hạt giống" (tắt mặc định, chỉ bật cho bản chốt đã khoá số bốc thăm), dòng trạng thái và cảnh báo. Mới `js/2x_phuong_an.js` (nạp trước `08_khoi_dong.js`; `initPhuongAn` ở `08_khoi_dong.js`; `datTabConQl` làm mới khi mở tab Cách xếp; giáo viên không gọi API để khỏi để lại dòng "bị từ chối"). `style.css`: `.run-confirm-bar[hidden]`. `i18n.js`: khoá `cb1_*` vi + en.

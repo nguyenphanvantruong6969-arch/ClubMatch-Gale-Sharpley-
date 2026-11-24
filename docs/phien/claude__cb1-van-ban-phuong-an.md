@@ -62,7 +62,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
   button "Chốt phương án" (confirm dialog shows rules summary; re-chốt asks again), state line (who/when, warnings),
   buttons "Xuất bản dự kiến" / "Xuất bản chốt" (disabled + reason until allowed), checkbox "In hạt giống" (OFF,
   enabled only for bản chốt after lock). One Chromium test file `tests/test_cb1_ui.py`, one shared page fixture.
-- [ ] **L4 (optional docs, must-ship docs line)** — `HUONG_DAN_SU_DUNG.md` section; 5-step demo script in
+- [x] **L4 (optional docs, must-ship docs line)** — `HUONG_DAN_SU_DUNG.md` section; 5-step demo script in
   `docs/ke_hoach/` (simulated data `du_lieu_test/SO_NHAP_MAU_120HS_3BUOI.xlsx`, seed 3); `CLAUDE_CHI_TIET.md`
   code map + tests row; CHANGELOG `CB1-L<n>`, TIEN_DO rows. **MILESTONE 2** (final review, ≤ 3 screenshots).
 
@@ -73,7 +73,7 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 - Report text = facts only; no commentary for the student's science report (academic integrity).
 
 ## Current state
-- L1, L2 done (coder, 2026-11-24). M1 sent; L3 UI done; next L4 docs, then MILESTONE 2.
+- L1, L2 done (coder, 2026-11-24). M1 NO BUGS; L3, L4 done; MILESTONE 2 sent.
 
 ## Needs Truong
 - (empty)
@@ -94,3 +94,4 @@ Report/export only: no algorithm, priority, CSV or schema change. Size **M** (pr
 | 2026-11-24 | Sonnet | L1 pure builder + 20 tests | kiem_nhanh 7/7 |
 | 2026-11-24 | Sonnet | L2 API + PDF + 23 tests | 4 older tests adjusted (counts/lists), no weakening |
 | 2026-11-24 | Sonnet | L3 UI + 7 Chromium tests | .run-confirm-bar[hidden] CSS fix |
+| 2026-11-24 | Sonnet | L4 docs + demo script | M1 verdict NO BUGS |

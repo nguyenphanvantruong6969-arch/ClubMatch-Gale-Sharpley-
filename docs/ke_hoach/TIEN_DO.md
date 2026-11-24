@@ -286,3 +286,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | CB1-L1 (bộ dựng nội dung văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | phuong_an_xep.py, CHANGELOG.md | tests/test_cb1_noi_dung.py | kiem_nhanh 7/7 |
 | CB1-L2 (API + PDF văn bản phương án) | xong (chờ checker M1) | 2026-11-24 | api_phuong_an.py, phuong_an_xep.py, xuat_pdf.py, api.py, phan_quyen.py, i18n_errors.py, i18n.js, i18n_loi.js | tests/test_cb1_api_pdf.py (+ 4 test cũ cập nhật) | kiem_nhanh 7/7 |
 | CB1-L3 (UI văn bản phương án xếp) | xong (chờ checker M2) | 2026-11-24 | index.html, js/2x_phuong_an.js, js/08_khoi_dong.js, js/05_quan_ly.js, style.css, i18n.js | tests/test_cb1_ui.py | kiem_nhanh 7/7 |
+| CB1-L4 (tài liệu) | xong (chờ checker M2) | 2026-11-24 | HUONG_DAN_SU_DUNG.md, docs/ke_hoach/CB1_KICH_BAN_DEMO.md, docs/ke_hoach/CLAUDE_CHI_TIET.md, CHANGELOG.md | | |
