@@ -3465,3 +3465,135 @@ body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
 .fallback-step.ux5b-dong > :not(h3):not(.ux5b-muc-tom) { display: none !important; }
 .fallback-step.ux5b-dong h3 { margin-bottom: 4px; }
 .ux5b-muc-tom-chu { color: var(--ink-soft, var(--ink)); }
+
+/* ===== DK3 — cổng đăng ký (dang_ky.html, js/dang_ky_*.js). Dùng token của phần mềm, chỉ giao diện sáng. ===== */
+.dk-body { background: var(--paper); color: var(--ink); margin: 0; }
+.dk-app { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+.dk-khung { background: var(--paper-raised); border: 1px solid var(--hairline); border-radius: var(--radius-sm); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.dk-tieude { font-size: 20px; margin: 0; }
+.dk-phu { color: var(--slate); font-size: 13px; margin: 0; }
+.dk-nhom { display: flex; flex-wrap: wrap; gap: 8px; }
+.dk-form { display: flex; flex-direction: column; gap: 10px; }
+.dk-form.dk-ngang { flex-direction: row; flex-wrap: wrap; align-items: end; }
+.dk-truong { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-soft); }
+.dk-nhap { padding: 8px 10px; border: 1px solid var(--hairline); border-radius: var(--radius-sm); background: var(--paper-raised); color: var(--ink); font: inherit; }
+.dk-dau { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.dk-the { display: flex; gap: 4px; border-bottom: 1px solid var(--hairline); }
+.dk-the-nut { background: none; border: 0; padding: 10px 14px; cursor: pointer; font: inherit; color: var(--slate); border-bottom: 2px solid transparent; }
+.dk-the-nut[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
+.dk-noidung { display: flex; flex-direction: column; gap: 12px; }
+.dk-bang { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dk-bang th, .dk-bang td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--hairline); }
+.dk-ds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dk-ds > li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--hairline); }
+.dk-hang { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-thu { width: 24px; font-weight: 600; color: var(--gold-text); }
+.dk-ten { flex: 1 1 160px; }
+.dk-loai { font-style: normal; font-size: 12px; color: var(--slate); background: var(--paper); border-radius: 10px; padding: 1px 8px; white-space: nowrap; }
+.dk-dieu { display: inline-flex; gap: 2px; }
+.dk-thongbao { min-height: 20px; margin: 0; font-size: 13px; }
+.dk-thongbao.la-loi { color: var(--rust-text); }
+.dk-thongbao.la-ok { color: var(--moss); }
+@media (max-width: 480px) { .dk-khung { padding: 14px; } .dk-form.dk-ngang { flex-direction: column; align-items: stretch; } }
+
+/* DK4-L5: liên kết trong thanh bên ("Đăng ký CLB") trông như .nav-item; lối từ cổng về phần mềm. Chỉ dùng token ở :root. */
+a.nav-item { text-decoration: none; }
+.dk-ve-phan-mem { display: inline-block; margin-bottom: 12px; color: var(--ink-soft); font-weight: 600; text-decoration: none; }
+.dk-ve-phan-mem:hover { text-decoration: underline; }
+.dk-ve-phan-mem:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+/* ===== DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8 (chỉ dùng token của style.css; giao diện sáng, phông cục bộ) ===== */
+.dk-app { font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.dk-app h1, .dk-app h2, .dk-app h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+.dk-app h1.dk-tieude { font-size: 1.5rem; font-weight: 700; }
+.dk-app h2 { font-size: 1.15rem; font-weight: 600; }
+.dk-app h3 { font-size: 1rem; font-weight: 600; margin-top: 4px; }
+.dk-app .btn { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.dk-app .btn-ghost { text-decoration: none; color: var(--ink-soft); padding: 0 12px; }
+.dk-app .btn-ghost:hover:not(:disabled) { background: var(--paper-hover); }
+.dk-app .btn:focus-visible, .dk-app a:focus-visible, .dk-app .dk-nhap:focus-visible, .dk-thi input:focus-visible,
+.dk-the-nut:focus-visible, .dk-app summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.dk-app .dk-nhap { min-height: 44px; max-width: 100%; }
+.dk-app a { color: var(--focus-ring); }
+.dk-dau { border-bottom: 1px solid var(--hairline); padding-bottom: 8px; }
+.dk-gian { flex: 1 1 auto; }
+.dk-hang-nut { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dk-hang-nut > h2 { margin: 0; }
+.dk-ghichu { margin: 0; background: var(--paper-hover); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; color: var(--ink-soft); }
+.dk-rong { border: 1px dashed var(--hairline); border-radius: var(--radius-sm); padding: 18px; text-align: center; color: var(--slate); font-size: 14px; }
+.dk-the-nut { min-height: 44px; }
+/* chip */
+.dk-chip { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--paper-hover); color: var(--ink-soft); align-self: flex-start; }
+.dk-chip.on { background: var(--moss-soft); color: var(--moss); }
+.dk-chip.wait { background: var(--gold-soft); color: var(--gold-text); }
+.dk-chip.off { background: var(--rust-soft); color: var(--rust-text); }
+.dk-chip.m-vang { background: var(--gold-soft); color: var(--gold-text); }
+.dk-chip.m-bac { background: var(--paper-hover); color: var(--ink-soft); }
+.dk-chip.m-dong { background: var(--rust-soft); color: var(--rust-text); }
+/* thanh bước */
+.dk-buoc, .dk-gd { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; }
+.dk-buoc li { padding: 5px 12px; border-radius: 999px; background: var(--paper-hover); color: var(--slate); }
+.dk-buoc li.cur { background: var(--gold-soft); color: var(--gold-text); font-weight: 600; }
+.dk-buoc li.dk-buoc-buoi { background: var(--paper-raised); border: 1px solid var(--hairline); color: var(--ink); }
+.dk-gd { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.dk-gd li { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: var(--radius-sm); background: var(--paper-hover); color: var(--slate); font-weight: 600; min-width: 0; }
+.dk-gd li.xong { background: var(--moss-soft); color: var(--moss); }
+.dk-gd li.cur { background: var(--gold); color: var(--ink); }
+.dk-gd-so { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
+@media (max-width: 720px) { .dk-gd { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* hai cột: CLB còn chọn được | nguyện vọng của em; xếp chồng khi hẹp */
+.dk-chia { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 1023px) { .dk-chia { grid-template-columns: minmax(0, 1fr); } }
+.dk-cac-the { display: flex; flex-direction: column; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.dk-ds > li.dk-the-clb, .dk-the-clb { display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 12px;
+  border: 1px solid var(--hairline); border-radius: var(--radius-sm); padding: 12px 14px; background: var(--paper-raised); }
+.dk-the-clb > .btn { flex: 0 0 auto; }
+.dk-than { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 3px; overflow-wrap: anywhere; }
+.dk-ten-clb { font-weight: 600; }
+.dk-mota { font-size: 13px; }
+.dk-thi { cursor: pointer; align-items: center; }
+.dk-thi input { width: 22px; height: 22px; flex: none; accent-color: var(--gold); }
+.dk-xep { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.dk-xep > li.dk-hang { display: flex; align-items: center; flex-wrap: nowrap; gap: 6px; border: 1px solid var(--hairline); border-radius: var(--radius-sm); padding: 6px 6px 6px 12px; background: var(--paper-raised); }
+.dk-nv { font-family: var(--font-mono); font-weight: 500; color: var(--gold-text); width: 42px; flex: none; }
+.dk-nm { flex: 1 1 0; min-width: 0; font-weight: 500; overflow-wrap: anywhere; }
+.dk-xep .btn { background: var(--paper-raised); border: 1px solid var(--hairline); padding: 0; flex: none; }
+.dk-so { font-family: var(--font-mono); }
+/* huy chương */
+.dk-huychuong { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; }
+.dk-hc-ten { display: flex; align-items: center; gap: 8px; width: 120px; }
+.dk-huychuong select { flex: 1 1 200px; min-width: 0; }
+.dk-cham { width: 18px; height: 18px; border-radius: 50%; flex: none; }
+.m-vang .dk-cham { background: var(--gold); }
+.m-bac .dk-cham { background: var(--chart-khong-nhan); }
+.m-dong .dk-cham { background: var(--rust); }
+.dk-tt { display: flex; flex-direction: column; gap: 4px; }
+.dk-tt-dong { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-bien-nhan { font-size: 1.1rem; font-weight: 600; margin: 0; }
+/* quản trị */
+.dk-noidung > div { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.dk-noidung > div > .dk-bang, .dk-noidung > div > details, .dk-noidung > div > textarea { align-self: stretch; }
+.dk-noidung .dk-bang { border: 1px solid var(--hairline); border-radius: var(--radius-sm); background: var(--paper-raised); }
+.dk-bang th { background: var(--paper-hover); font-size: 12px; white-space: nowrap; }
+.dk-bang td .btn { margin-right: 6px; }
+.dk-han { margin: 0; background: var(--gold-soft); color: var(--gold-text); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; }
+.dk-tien { width: 100%; min-width: 100px; height: 10px; accent-color: var(--moss); }
+.dk-noidung summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+@media (max-width: 480px) { .dk-chia { gap: 12px; } .dk-the-clb { padding: 10px; } .dk-hc-ten { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .dk-app * { transition: none !important; animation: none !important; } }
+
+/* ===== DKL (cổng đăng ký): phiếu PIN, hộp xác nhận, danh sách kiểm ===== */
+.dk-in { display: none; }
+.dk-in.mo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+.dk-phieu { border: 1px dashed #666; border-radius: 6px; padding: 8px 10px; break-inside: avoid; font-size: 13px; }
+.dk-phieu-pin { font-size: 20px; letter-spacing: 2px; margin: 4px 0; }
+.dk-chua-di { color: var(--muted, #555); border-left: 3px solid var(--warn, #c60); padding-left: 8px; }
+.dk-xacnhan { border: 1px solid var(--line, #bbb); border-radius: 6px; padding: 8px 12px; margin-top: 8px; }
+.dk-xacnhan[hidden] { display: none; }
+.dk-so { max-width: 6rem; }
+.dk-diem { max-width: 5rem; }
+@media print {
+  body * { visibility: hidden; }
+  #dkIn.mo, #dkIn.mo * { visibility: visible; }
+  #dkIn.mo { position: absolute; left: 0; top: 0; width: 100%; }
+}

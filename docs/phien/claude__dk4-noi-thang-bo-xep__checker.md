@@ -1,0 +1,10 @@
+FIX | head cc8339a
+
+Checked (all green): tests/test_dk4_chot_va_xep + test_dk4_hai_duong_trung_khit (65 pass, 3 sets x 20 seeds, every match_results row equal), 3 DK3/DK4 Playwright files (7 pass), kiem_nhanh 7/7 incl. ruff. Manual: 2nd press same seed -> identical rows, run_history 1->2 rows; other seed -> dk_chot_that_bai, DB unchanged. CI run on this head was still in_progress.
+
+1. dang_ky_sang_xep.py, dk_chot_va_xep (except Exception branch): detail=str(e) puts raw exception text (paths, SQL) into the UI message. Return a fixed message and keep detail in the log only. Check: inject RuntimeError("C:\\x sqlite3...") in run_pipeline; the error params must not contain it.
+2. dang_ky_sang_xep.py, dk_chot_va_xep: self._backup_db() failure is swallowed (except Exception: pass), so invariant 5 (backup first) can silently be skipped. Fail with dk_chot_that_bai(buoc="sao_luu") unless the in-memory snapshot is the intended substitute (then say so in the docstring). Check: monkeypatch _backup_db to raise; expect a refusal.
+3. dk_chot_that_bai {detail}: for "xep"/"nhap" the detail is a raw internal code (e.g. hat_giong_da_khoa) shown to a teacher. Map the common codes (locked seed first) to their own i18n_errors message. Check: press with another seed; the message must be readable Vietnamese.
+4. dk_chot_va_xep, final ghi step: if the token expires/session check fails AFTER run_pipeline succeeded, results + run_history are written but phase stays and the call returns an error (half-done state). Do the phase change inside the same pipeline step or re-check the token before running. Check: expire token between steps (monkeypatch) and see the state.
+5. _dk_bao_dam_luat: silently turns on fa_daa + wharton in the persistent workspace config; later non-registration imports in the same DB use them. Surface it (da_bat_luat is returned but the UI does not show it) in the summary. Check: tests/test_giao_dien_dk4_chot_xep.py asserts the notice.
+6. Handoff file: no "READY | head <sha>" yet, L0 items (PIN attempt limit, hard-coded 10/5, error-detail leak) are still open, CI for cc8339a unfinished. Coder must finish these, confirm CI green, then write READY.

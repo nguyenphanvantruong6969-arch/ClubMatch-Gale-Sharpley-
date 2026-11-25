@@ -62,7 +62,7 @@ def test_bang_quyen_khong_co_ten_thua():
 
 def test_muc_quyen_hop_le_va_hai_nhom_khong_chong_nhau():
     assert set(pq.QUYEN.values()) == {pq.CONG_KHAI, pq.GIAO_VIEN, pq.QUAN_TRI}
-    assert {n for n, m in pq.QUYEN.items() if m == pq.CONG_KHAI} == {
+    assert {n for n, m in pq.QUYEN.items() if m == pq.CONG_KHAI and not n.startswith("dk_")} == {
         "dang_nhap", "dang_xuat", "get_phien_dang_nhap", "tao_tai_khoan", "doi_mat_khau",
         "tra_cuu_hoc_sinh", "thoat_che_do_hoc_sinh"}  # I1/I2: học sinh tự tra cứu
 

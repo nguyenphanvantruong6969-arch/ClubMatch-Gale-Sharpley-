@@ -410,7 +410,7 @@ def test_ma_loi_moi_co_vi_va_en():
     for ma in ("mt_cho_it", "mt_khong_co_khoang_cach", "mt_uoc_tinh_fa", "mt_chua_co_ket_qua"):
         m = i18n_errors.MESSAGES[ma]
         assert m["vi"].strip() and m["en"].strip(), ma
-    assert all(m.startswith("mt_") for m in [m for m in i18n_errors.MESSAGES if not m.startswith("cb1_")][-12:])   # khối cb1_ (CB1) nối sau
+    assert all(m.startswith("mt_") for m in [m for m in i18n_errors.MESSAGES if not m.startswith(("cb1_", "dk_"))][-12:])   # khối cb1_ (CB1), dk_ (DK3) nối sau
 
 
 def test_bao_cao_co_hoi_so_voi_luat_truoc_do_gom_ca_chia_100_diem(tmp_path, monkeypatch):
