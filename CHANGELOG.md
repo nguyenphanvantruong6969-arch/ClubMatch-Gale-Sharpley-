@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L0d: hoàn nguyên "Chốt và xếp" không làm mất dòng nhật ký chỉ-thêm
+
+- Chứng minh bằng test: hoàn nguyên cả CSDL từ ảnh chụp KHÔNG làm mất dòng `run_history` đã có trước khi bấm (ảnh chụp chứa chúng), nhưng LÀM MẤT dòng của chính lần xếp đã ghi rồi mới hỏng (vi phạm "mỗi lần chạy thêm một dòng").
+- `dang_ky_sang_xep._dk_hoan_nguyen`: trước khi trả ảnh chụp, đọc các dòng hiện có của `run_history`, `wharton_nhat_ky`, `fa_dieu_chinh`, sau đó chép lại (`INSERT OR IGNORE`, giữ nguyên rowid). Không UPDATE/DELETE các bảng này.
+- Test: `tests/test_dk4_l0d_hoan_nguyen_nhat_ky.py` (2).
+
 ## 2026-11-25 — DK4-L0c: giới hạn nguyện vọng / bài thi đọc từ phần mềm
 
 - `dk_trang_thai` trả thêm `toi_da_nv` và `toi_da_thi` (lấy từ `TOI_DA_NV_BUOI`, `TOI_DA_THI_BUOI`); `js/dang_ky_gv_hs.js` dùng hai trường này thay cho số 10 và 5 viết cứng.

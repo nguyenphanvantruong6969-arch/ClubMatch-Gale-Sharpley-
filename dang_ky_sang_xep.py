@@ -18,6 +18,8 @@ from i18n_errors import phan_hoi_loi as _fail
 
 _log = logging.getLogger(__name__)
 LUAT_BAT = ("fa_daa", "wharton")
+# Bảng nhật ký CHỈ THÊM (bất biến 4): hoàn nguyên không bao giờ được làm mất dòng nào trong đây.
+NHAT_KY_CHI_THEM = ("run_history", "wharton_nhat_ky", "fa_dieu_chinh")
 
 
 def so_nhap_b64_tu_dk(du_lieu_ban_mau: dict) -> str:
@@ -52,9 +54,25 @@ class DangKySangXepMixin:
         return anh
 
     def _dk_hoan_nguyen(self, anh):
+        """Trả CSDL về ảnh chụp, NHƯNG giữ nguyên mọi dòng của bảng nhật ký chỉ-thêm (`NHAT_KY_CHI_THEM`) đã có lúc này:
+        một lần xếp đã ghi `run_history` rồi mới hỏng vẫn là một lần chạy, dòng của nó không được biến mất (bất biến 4)."""
         dich = sqlite3.connect(self.db_path)
+        giu = {}
         try:
+            for ten in NHAT_KY_CHI_THEM:
+                try:
+                    cur = dich.execute("SELECT rowid, * FROM %s" % ten)
+                except sqlite3.Error:
+                    continue                      # bảng chưa có (CSDL cũ)
+                giu[ten] = ([d[0] for d in cur.description], cur.fetchall())
             anh.backup(dich)
+            for ten, (cot, dong) in giu.items():
+                ds = ", ".join('"%s"' % c for c in cot[1:])
+                try:
+                    dich.executemany('INSERT OR IGNORE INTO %s (rowid, %s) VALUES (%s)' % (ten, ds, ", ".join("?" * len(cot))), dong)
+                except sqlite3.Error:
+                    _log.exception("hoan nguyen: khong chep lai duoc dong cua %s", ten)
+            dich.commit()
         finally:
             dich.close()
 
