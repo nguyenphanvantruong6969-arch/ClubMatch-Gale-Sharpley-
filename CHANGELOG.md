@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK3-L3/L4: giao diện cổng đăng ký + xuất Sổ nhập
+
+- `dang_ky.html` + `js/dang_ky_nen.js`, `js/dang_ky_quan_tri.js`, `js/dang_ky_gv_hs.js` + khối CSS "DK3" cuối `style.css`: trang riêng (không đụng `index.html`), DOM dựng bằng `textContent`. Quản trị: ba thẻ "Việc bây giờ · Danh sách · Thêm", mỗi giai đoạn đúng một nút vàng. Giáo viên: đăng ký CLB ba bước. Học sinh: từng buổi, + Thêm / ↑ / ↓ / ✕, huy chương mặc định + ô chọn ghi đè, tự đăng xuất sau 60 giây không thao tác và 30 giây sau khi nộp. Đóng gói: `kiosk.spec` và danh sách soát của workflow có `dang_ky.html`.
+- L4: `dk_xuat_ban_mau` / `dk_xuat_so_nhap` (`api_dang_ky.py`) → JSON `dinhDang` 1 → `dk2_so_nhap.ghi_tu_ban_mau`; còn bài thi chưa điểm thì từ chối.
+- Test: `tests/test_giao_dien_dk3_cong.py` (5, một trang dùng chung), thêm ca xuất trong `tests/test_dk3_api.py` (nhập 0 lỗi + xếp được). Đếm tệp test: 414.
+
 ## 2026-11-25 — DK3-L2: API cổng đăng ký (`api_dang_ky.py`)
 
 - `DangKyMixin` (`dk_*`, hợp đồng `{ok,data,errors}`): khởi tạo + mật khẩu quản trị, đăng nhập ba vai (token trong bộ nhớ, quản trị khoá sau 2 phút nghỉ), giai đoạn + hạn chót tự đóng (D1), điều kiện mở cho học sinh (D2), phòng (D5), giáo viên tự đăng ký / quản trị tạo (D13), một GV một CLB mỗi buổi (D14), luật CLB (D15), duyệt (D18), sửa sau khi mở có đếm "N học sinh bị ảnh hưởng" (D19), danh sách học sinh thêm/thay (D6), nguyện vọng ≤ 10 mỗi buổi, đúng khối (D21), ≤ 5 bài thi mỗi buổi (D44), huy chương mặc định + ghi đè (D2 đường A), điểm nhập tay / dán, tiến độ (D31). PIN và mật khẩu chỉ lưu băm PBKDF2 + muối.

@@ -3465,3 +3465,33 @@ body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
 .fallback-step.ux5b-dong > :not(h3):not(.ux5b-muc-tom) { display: none !important; }
 .fallback-step.ux5b-dong h3 { margin-bottom: 4px; }
 .ux5b-muc-tom-chu { color: var(--ink-soft, var(--ink)); }
+
+/* ===== DK3 — cổng đăng ký (dang_ky.html, js/dang_ky_*.js). Dùng token của phần mềm, chỉ giao diện sáng. ===== */
+.dk-body { background: var(--paper); color: var(--ink); margin: 0; }
+.dk-app { max-width: 880px; margin: 0 auto; padding: 24px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+.dk-khung { background: var(--paper-raised); border: 1px solid var(--hairline); border-radius: var(--radius-sm); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.dk-tieude { font-size: 20px; margin: 0; }
+.dk-phu { color: var(--slate); font-size: 13px; margin: 0; }
+.dk-nhom { display: flex; flex-wrap: wrap; gap: 8px; }
+.dk-form { display: flex; flex-direction: column; gap: 10px; }
+.dk-form.dk-ngang { flex-direction: row; flex-wrap: wrap; align-items: end; }
+.dk-truong { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-soft); }
+.dk-nhap { padding: 8px 10px; border: 1px solid var(--hairline); border-radius: var(--radius-sm); background: var(--paper-raised); color: var(--ink); font: inherit; }
+.dk-dau { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.dk-the { display: flex; gap: 4px; border-bottom: 1px solid var(--hairline); }
+.dk-the-nut { background: none; border: 0; padding: 10px 14px; cursor: pointer; font: inherit; color: var(--slate); border-bottom: 2px solid transparent; }
+.dk-the-nut[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
+.dk-noidung { display: flex; flex-direction: column; gap: 12px; }
+.dk-bang { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dk-bang th, .dk-bang td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--hairline); }
+.dk-ds { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.dk-ds > li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--hairline); }
+.dk-hang { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-thu { width: 24px; font-weight: 600; color: var(--gold-text); }
+.dk-ten { flex: 1 1 160px; }
+.dk-loai { font-style: normal; font-size: 12px; color: var(--slate); background: var(--paper); border-radius: 10px; padding: 1px 8px; white-space: nowrap; }
+.dk-dieu { display: inline-flex; gap: 2px; }
+.dk-thongbao { min-height: 20px; margin: 0; font-size: 13px; }
+.dk-thongbao.la-loi { color: var(--rust-text); }
+.dk-thongbao.la-ok { color: var(--moss); }
+@media (max-width: 480px) { .dk-khung { padding: 14px; } .dk-form.dk-ngang { flex-direction: column; align-items: stretch; } }

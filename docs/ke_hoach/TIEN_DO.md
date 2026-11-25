@@ -305,3 +305,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK2 (cầu nối JSON bản mẫu → Sổ nhập; bản mẫu v8: D39–D41, D44, thiết kế khớp phần mềm) | xong, chờ CI | 2026-11-25 | dk2_so_nhap.py, docs/phien/DK1_BAN_MAU_V8.html, docs/huong_dan/DK2_CAU_NOI.md, CHANGELOG.md, docs/ | tests/test_dk2_so_nhap.py (6), tests/test_giao_dien_dk2_ban_mau.py (5) | |
 | DK3-L1 (bảng dk_* của cổng đăng ký) | xong, chờ CI | 2026-11-25 | dang_ky_schema.py, rbda_priority_pipeline.py, CHANGELOG.md | tests/test_dk3_schema.py (2) | |
 | DK3-L2 (api_dang_ky.py, mã lỗi dk_*) | xong, chờ CI | 2026-11-25 | api_dang_ky.py, api.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk3_api.py (11) | |
+| DK3-L3 (giao diện dang_ky.html) + DK3-L4 (xuất Sổ nhập) | xong, chờ CI | 2026-11-25 | dang_ky.html, js/dang_ky_*.js, style.css, api_dang_ky.py, kiosk.spec, CHANGELOG.md | tests/test_giao_dien_dk3_cong.py (5), tests/test_dk3_api.py (+1) | |
