@@ -307,3 +307,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK3-L2 (api_dang_ky.py, mã lỗi dk_*) | xong, chờ CI | 2026-11-25 | api_dang_ky.py, api.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk3_api.py (11) | |
 | DK3-L3 (giao diện dang_ky.html) + DK3-L4 (xuất Sổ nhập) | xong, chờ CI | 2026-11-25 | dang_ky.html, js/dang_ky_*.js, style.css, api_dang_ky.py, kiosk.spec, CHANGELOG.md | tests/test_giao_dien_dk3_cong.py (5), tests/test_dk3_api.py (+1) | |
 | DK4-L1 + DK4-L2 (dang_ky_sang_xep.py, Chốt và xếp) | xong, chờ CI | 2026-11-25 | dang_ky_sang_xep.py, api.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk4_chot_va_xep.py (5) | |
+| DK4-L3 + DK4-L4 (hai đường trùng khít, nút Chốt và xếp) | xong, chờ CI | 2026-11-25 | dang_ky_sang_xep.py, js/dang_ky_quan_tri.js, CHANGELOG.md, docs | tests/test_dk4_hai_duong_trung_khit.py (60), tests/test_giao_dien_dk4_chot_xep.py (1) | |

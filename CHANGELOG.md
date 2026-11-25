@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L3/L4: hai đường trùng khít + nút "Chốt và xếp"
+
+- `dk_ket_qua_xep` (chỉ đọc) + `dk_chot_va_xep(token, seed=None)`: không chỉ định seed thì dùng lại seed lần xếp trước (đã khoá), mặc định 42.
+- `js/dang_ky_quan_tri.js`: giai đoạn Nhập điểm có đúng một nút vàng "Chốt và xếp" (thay "Chốt điểm"); giai đoạn Xuất hiện bảng tóm tắt theo buổi (đã xếp / chưa xếp / theo nguyện vọng) + "Xuất Sổ nhập" + "Xếp lại (cùng hạt giống)".
+- Test: `tests/test_dk4_hai_duong_trung_khit.py` (60: 3 bộ MÔ PHỎNG × 20 seed, đường A `dk_chot_va_xep` = đường B xuất Sổ + `import_so_nhap` + `run_pipeline`, mọi dòng `match_results` bằng nhau), `tests/test_giao_dien_dk4_chot_xep.py` (1, Chromium). Đếm tệp test: 417.
+
 ## 2026-11-25 — DK4-L1/L2: nối đăng ký → Sổ nhập → "Chốt và xếp"
 
 - `dang_ky_sang_xep.py` (mới): `so_nhap_b64_tu_dk` (dữ liệu đăng ký → `dk2_so_nhap.ghi_tu_ban_mau` → base64, đi đúng đường `import_so_nhap`); `DangKySangXepMixin.dk_chot_va_xep(token, seed)`: quản trị, từ giai đoạn Nhập điểm, thiếu điểm thì từ chối; sao lưu → bảo đảm luật FA+Wharton (chỉ ghi khi chưa bật) → nhập Sổ (một giao dịch) → `run_pipeline` (khoá STB + xếp + ghi một giao dịch) → giai đoạn "xuat". Hỏng sau khi nhập: CSDL hoàn nguyên bằng ảnh chụp trong bộ nhớ, trả `dk_chot_that_bai`. Hạt giống đã khoá thì seed khác bị từ chối (như `run_pipeline`).

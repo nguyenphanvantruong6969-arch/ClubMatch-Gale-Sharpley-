@@ -71,16 +71,27 @@ class DangKySangXepMixin:
                 "theo_nguyen_vong": hang})
         return {"so_hoc_sinh": tong, "theo_buoi": theo_buoi}
 
-    def dk_chot_va_xep(self, token, seed=42):
+    def dk_ket_qua_xep(self, token):
+        """Quản trị: tóm tắt lần xếp gần nhất (chỉ đọc). `da_xep` False nếu chưa xếp lần nào."""
+        def lam(cur, p):
+            r = cur.execute("SELECT run_id, seed, run_at, n_matched, n_total FROM run_history ORDER BY run_id DESC LIMIT 1").fetchone()
+            if not r:
+                return {"da_xep": False}
+            return {"da_xep": True, "run_id": r[0], "seed": r[1], "run_at": r[2], "n_matched": r[3], "n_total": r[4],
+                    **self._dk_tom_tat_xep(cur)}
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_chot_va_xep(self, token, seed=None):
         """Quản trị: nút "Chốt và xếp". Từ giai đoạn Nhập điểm; còn bài thi chưa có điểm thì từ chối.
 
         Thứ tự (bất biến 5): sao lưu (nhập sổ + chạy xếp đều sao lưu) -> soát -> nhập Sổ nhập (MỘT giao dịch) ->
         khoá/vẽ STB, xếp, ghi kết quả (MỘT giao dịch trong `run_pipeline`) -> chuyển giai đoạn "xuat".
         Hỏng sau khi đã nhập: hoàn nguyên CSDL về ảnh chụp trước khi bấm, trả `dk_chot_that_bai`."""
-        try:
-            seed = int(seed)
-        except (TypeError, ValueError):
-            return _fail(err("dk_chot_seed_sai"))
+        if seed is not None:
+            try:
+                seed = int(seed)
+            except (TypeError, ValueError):
+                return _fail(err("dk_chot_seed_sai"))
 
         def doc(cur, p):
             if CAC_GIAI_DOAN.index(self._dk_gd) < CAC_GIAI_DOAN.index("nhap_diem"):
@@ -88,11 +99,14 @@ class DangKySangXepMixin:
             thieu = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE thi = 1 AND diem IS NULL").fetchone()[0]
             if thieu:
                 raise _Loi("dk_thieu_diem", n=thieu)
-            return self._dk_ban_mau(cur), self._dk_gd
+            if seed is None:       # chưa chỉ định: dùng lại hạt giống của lần xếp trước (đã khoá), không có thì 42
+                r = cur.execute("SELECT seed FROM run_history ORDER BY run_id DESC LIMIT 1").fetchone()
+                return self._dk_ban_mau(cur), self._dk_gd, (r[0] if r and r[0] is not None else 42)
+            return self._dk_ban_mau(cur), self._dk_gd, seed
         r = self._dk_chay(doc, QUAN_TRI, ghi=False, token=token)
         if not r["ok"]:
             return r
-        ban_mau, giai_doan_cu = r["data"]
+        ban_mau, giai_doan_cu, seed = r["data"]
         try:
             b64 = so_nhap_b64_tu_dk(ban_mau)
         except dk2_so_nhap.LoiBanMau as e:
@@ -127,6 +141,6 @@ class DangKySangXepMixin:
             self._dk_ghi_nk(cur, QUAN_TRI, "chot_va_xep", "seed %d, %s -> xuat" % (seed, giai_doan_cu))
             tt = self._dk_tom_tat_xep(cur)
             rid = cur.execute("SELECT MAX(run_id) FROM run_history").fetchone()[0]
-            return {"seed": seed, "run_id": rid, "da_bat_luat": da_bat_luat,
+            return {"da_xep": True, "seed": seed, "run_id": rid, "da_bat_luat": da_bat_luat,
                     "canh_bao": nap["data"].get("warnings", []), **tt}
         return self._dk_chay(ghi, QUAN_TRI, token=token)

@@ -68,11 +68,27 @@
     if (gd === "nhap_diem") {
       const thieu = (await goi("dk_diem_thieu", T)).data || [];
       return h("div", {}, h("p", {}, thieu.length ? "Còn " + thieu.length + " bài thi chưa có điểm." : "Đã đủ điểm."),
-        bang(["Mã", "Họ tên", "CLB"], thieu.map((x) => [x.ma, x.ho_ten, x.clb])), chuyen("xuat", "Chốt điểm"));
+        bang(["Mã", "Họ tên", "CLB"], thieu.map((x) => [x.ma, x.ho_ten, x.clb])), nutXep("Chốt và xếp", true));
     }
     const kq = h("p#dkKq");
-    return h("div", {}, DK.nutVang("Xuất Sổ nhập", function () { DK.chay(this, async () => {
-      const r = await goi("dk_xuat_so_nhap", T); if (r.ok) kq.textContent = "Đã ghi " + r.data.duong_dan + " (" + r.data.so_clb + " CLB, " + r.data.so_hs + " học sinh)."; return r; }); }), kq);
+    const tomTat = (await goi("dk_ket_qua_xep", T)).data || {};
+    return h("div", {}, tomTat.da_xep ? bangKetQua(tomTat) : h("p", {}, "Chưa xếp lần nào."),
+      DK.nutVang("Xuất Sổ nhập", function () { DK.chay(this, async () => {
+        const r = await goi("dk_xuat_so_nhap", T); if (r.ok) kq.textContent = "Đã ghi " + r.data.duong_dan + " (" + r.data.so_clb + " CLB, " + r.data.so_hs + " học sinh)."; return r; }); }),
+      nutXep("Xếp lại (cùng hạt giống)", false), kq);
+  }
+
+  /* DK4-L4: "Chốt và xếp" — một nút; xong thì vẽ lại màn (giai đoạn Xuất kèm bảng tóm tắt). */
+  function nutXep(chu, vang) {
+    const lam = function () { DK.chay(this, async () => {
+      const r = await DK.goi("dk_chot_va_xep", DK.S.token); if (r.ok) DK.quanTri(); return r; }); };
+    return vang ? DK.nutVang(chu, lam, { id: "dkChot" }) : DK.nutNhe(chu, lam);
+  }
+
+  function bangKetQua(t) {
+    const nv = (m) => Object.keys(m).sort().map((k) => "NV" + k + ": " + m[k]).join(" · ") || "—";
+    return h("div#dkKetQua", {}, h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
+      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
   }
 
   function hienPin(ds, tieuDe) {

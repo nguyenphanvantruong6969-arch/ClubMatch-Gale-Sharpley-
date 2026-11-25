@@ -47,6 +47,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | DK1 | Bản mẫu cổng đăng ký (Quản lý / Giáo viên / Học sinh), dữ liệu giả (thêm 25/11/2026) | Bản mẫu · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK2 | Cầu nối bản mẫu → Sổ nhập thật (thêm 25/11/2026) | Sửa mã · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK3 | Cổng đăng ký thật (bảng dk_*, api_dang_ky, dang_ky.html) (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| DK4 | Nối thẳng đăng ký → xếp: `dang_ky_sang_xep.py`, nút "Chốt và xếp" (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
