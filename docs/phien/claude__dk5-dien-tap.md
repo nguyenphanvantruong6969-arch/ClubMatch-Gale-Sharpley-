@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK5_GIAO_THUC.md` (size M: coder + checker, no lead). Loop context: `docs/phien/DK3_DK4_VONG_TU_DONG.md`.
 
-Status: NOT STARTED
+Status: IN PROGRESS (L1 done; L2, L3 next)
 
 ## Feature / goal
 DK5 = full rehearsal ("diễn tập") of the registration-to-allocation flow on SIMULATED data (798 students, 40 clubs),
@@ -20,7 +20,7 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `M�
   allowed: report instead).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] L1 (must) `du_lieu_test/dien_tap_dk5.py` + `tests/test_dk5_dien_tap.py`: seeded generator (seed fixed, crc32 not
+- [x] L1 (must) `du_lieu_test/dien_tap_dk5.py` + `tests/test_dk5_dien_tap.py`: seeded generator (seed fixed, crc32 not
   `hash()`), 798 students / 40 clubs; scenario through the API only: setup → teachers sign up/are created → admin
   approves → students submit INTERLEAVED (round-robin over ≥ 4 simulated kiosks) → scores entered → "Chốt và xếp" →
   export. Asserts: every call `{ok:true, errors:[]}`; one `match_results` row per student; `run_history` +1;
@@ -54,11 +54,13 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `M�
 - Full suite is NOT run locally (CI does, ~22 min). Token rules: `_GIAO_THUC_GON.md` §3.
 
 ## Current state (overwrite)
-- Done so far: nothing.
+- Preconditions: DK3/DK4 code was missing -> merged `origin/claude/dk4-noi-thang-bo-xep` (head 88ff2ba) into this branch (merge 1265e5a). A previous run's L1 commits were lost (push 403); L1 redone from the protocol.
+- L1 done: `du_lieu_test/dien_tap_dk5.py` + `tests/test_dk5_dien_tap.py` (6 tests, ~10 s locally; phases: cai_dat 1.3, giao_vien 0.2, duyet 0.1, hoc_sinh_nop 6.5, nhap_diem 0.02, chot_va_xep 2.2 s). ruff clean, soat-ma kiem_nhanh 7/7.
 
 ## Needs Truong (one line each + recommendation)
-- (none)
+- BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
+| 2026-11-26 | Sonnet | L1 done and committed | merged DK4 first; found dk_phong_luu lastrowid bug |

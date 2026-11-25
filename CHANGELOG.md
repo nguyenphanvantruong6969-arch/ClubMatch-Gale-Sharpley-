@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — DK5-L1: diễn tập toàn trình 798 HS / 40 CLB (chỉ tệp mới)
+
+- `du_lieu_test/dien_tap_dk5.py`: bộ sinh tất định (`random.Random(seed)`, không `hash()`) + `chay()` đi qua API DK3/DK4: cài đặt → giáo viên (một nửa tự đăng ký, một nửa quản trị tạo) → duyệt → 798 em nộp xen kẽ 4 máy → nhập điểm → «Chốt và xếp» → xuất Sổ nhập. Dữ liệu MÔ PHỎNG.
+- Test mới: `tests/test_dk5_dien_tap.py` (6): sinh tất định, 1 dòng kết quả/em/buổi, `run_history` +1, nộp xen kẽ ≥ 4 máy, xuất Sổ nhập, ngân sách thời gian (≈ 10 s ở máy này).
+- Không sửa tệp sản phẩm. Phát hiện (chưa sửa): `dk_phong_luu` trả `phong_id` = `lastrowid` SAU dòng nhật ký nên lệch 1 — xem "Needs Truong" ở tệp nhánh.
+
 ## 2026-11-26 — DKL-G: bốn khoảng cách còn lại với bản mẫu v8 (cổng đăng ký)
 
 - **G1 xác nhận danh tính** (`js/dang_ky_gv_hs.js`, `js/dang_ky_nen.js`): sau đăng nhập học sinh thấy «Đúng là em chứ?» (tên, «Lớp … · Khối … · Mã …», câu «Em đã gửi lúc … lần gửi cuối cùng được tính.» nếu đã nộp), nút «Đúng là em» / «Không phải em» (đăng xuất). Dùng dữ liệu đăng nhập đã trả về (`ten`, `lop`, `khoi`, `id`); không lưu PIN.
