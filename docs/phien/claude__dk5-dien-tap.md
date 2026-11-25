@@ -66,6 +66,8 @@ MILESTONE 2 READY | head 38d8f84 | base c084f20
 
 - soat-ma (report only): diff touches NO product file (tiers 1-3 n/a: algorithm, backend, UI untouched). Tier 4: ruff clean, kiem_nhanh 7/7, no `hash()`/`sleep` in new files, docs updated (CHANGELOG, TIEN_DO, registry row, test-file count 431). Mutation check: 4 temporary product breaks all turned the matching DK5 test red (skip `anh.backup` in `_dk_hoan_nguyen` -> 2e; drop old-row DELETE in `dk_hs_luu` -> 2d; idle limit 120->1200 -> 2b; drop stage check in `dk_hs_luu` -> 2c), reverted, `git status` clean. UI file run 3x in a row: green each time.
 
+- CI run 1683 (head e017bce) RED: `dk_het_phien_nghi` in test_dk5_dien_tap fixture — on Windows CI the 798-student phase exceeded the 120 s admin idle limit (file took 292 s). Fix: generator re-logs the admin in at the start of `duyet`, `hoc_sinh_nop`, `nhap_diem`. Verified locally with an injected 40x-fast idle clock. No test weakened. Re-check CI on the new head.
+
 ## Needs Truong (one line each + recommendation)
 - BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
@@ -75,3 +77,4 @@ MILESTONE 2 READY | head 38d8f84 | base c084f20
 | 2026-11-26 | Sonnet | L1 done and committed | merged DK4 first; found dk_phong_luu lastrowid bug |
 | 2026-11-26 | Sonnet | L2 done and committed | wharton_nhat_ky kept by design |
 | 2026-11-26 | Sonnet | L3 done and committed | MILESTONE 2 below |
+| 2026-11-25 | Sonnet | CI fix: admin re-login per phase | CI run 1683 red, cause above |

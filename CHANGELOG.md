@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-26 — DK5-CI: sửa đỏ run 1683 (chỉ `du_lieu_test/dien_tap_dk5.py`)
+
+- Máy CI Windows chạy pha «học sinh nộp» (798 em) lâu hơn 120 s nên phiên quản trị hết giờ nghỉ (`dk_het_phien_nghi`). Bộ sinh nay đăng nhập quản trị lại đầu mỗi pha `duyet`, `hoc_sinh_nop`, `nhap_diem`. Không đổi test, không đổi mã sản phẩm.
+
 ## 2026-11-26 — DK5-L3: diễn tập qua giao diện, ba vai trò (chỉ tệp mới)
 
 - `tests/test_giao_dien_dk5_toan_trinh.py` (4, Playwright): giáo viên tạo CLB Tự do bằng giao diện và chỉ thấy CLB của mình → quản trị «Đóng ngay», duyệt, «Mở cho học sinh» → học sinh H01 chọn ba CLB, đánh dấu thi, gửi, thấy «Đã gửi lúc …» và link bài thi → quản trị dán điểm, «Chốt và xếp», thấy «Đã xếp». Bộ dữ liệu nhỏ (24 em, 3 CLB), MÔ PHỎNG.

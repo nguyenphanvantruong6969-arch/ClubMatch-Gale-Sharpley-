@@ -125,10 +125,12 @@ def chay(api, du_lieu, so_kiosk=4, seed_xep=7, tu_dang_ky_gv=0.5, dong_ho=None, 
             ids[c["ten"]] = ok(api.dk_clb_luu(tk[c["gv"]], d))["clb_id"]
         ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     with dh.do("duyet"):
+        qt = ok(api.dk_dang_nhap("quan_tri", "", MAT_KHAU))["token"]       # phiên mới: máy chậm có thể làm phiên cũ hết giờ nghỉ
         for cid in ids.values():
             ok(api.dk_clb_duyet(qt, cid, "duyet"))
         ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
     with dh.do("hoc_sinh_nop"):
+        qt = ok(api.dk_dang_nhap("quan_tri", "", MAT_KHAU))["token"]       # phiên mới: máy chậm có thể làm phiên cũ hết giờ nghỉ
         pins = {}
         for h in du_lieu["hs"]:
             pins[h["ma"]] = ok(api.dk_hs_dat_lai_pin(qt, h["ma"]))["pin"]
@@ -149,6 +151,8 @@ def chay(api, du_lieu, so_kiosk=4, seed_xep=7, tu_dang_ky_gv=0.5, dong_ho=None, 
                     kiosk[k] = (h["ma"], ok(api.dk_dang_nhap("hoc_sinh", h["ma"], pins[h["ma"]]))["token"])
         kq["thu_tu_nop"] = thu_tu
     with dh.do("nhap_diem"):
+        # Máy chậm (CI Windows): pha học sinh nộp có thể dài hơn 120 s nên phiên quản trị đã bị khoá vì nghỉ (đúng thiết kế).
+        qt = ok(api.dk_dang_nhap("quan_tri", "", MAT_KHAU))["token"]
         ok(api.dk_chuyen_giai_doan(qt, "nhap_diem"))
         theo_clb = {}
         for m, c, d in du_lieu["diem"]:
