@@ -17,6 +17,9 @@ the v8 prototype. New SQLite tables `dk_*`, `api_dang_ky.py`, `js/dang_ky_*.js`,
 - L1–L4 done: tests/test_dk3_schema.py, test_dk3_api.py, test_giao_dien_dk3_cong.py (needs `pip install playwright`). UI is a separate page `dang_ky.html` (not linked from index.html on purpose: no change to existing frames). Open it at `<base url>/dang_ky.html?t=<token>` in browser mode, or `window.location` from a launcher; Truong may want a link later. `kiem_nhanh` trung_khit fails only because env has no `origin/main`
   (not caused by this branch).
 
+## Status
+READY | head becd8fc (CI of this head not yet confirmed green; earlier runs were cancelled by newer pushes)
+
 ## Needs Truong
 - (none)
 
