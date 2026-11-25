@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-H: giải thích giới hạn nguyện vọng và bài thi tính riêng từng buổi (cổng đăng ký)
+
+- `js/dang_ky_gv_hs.js` (`vRank`, `vTests`): câu «Giới hạn N CLB tính riêng cho từng buổi (không phải cả tuần)» ở bước xếp nguyện vọng; khi đủ: «Buổi X đã đủ N CLB … bấm ✕ để bỏ bớt», nút «+ Thêm» khoá có `title` nêu lý do. Bước bài kiểm tra: câu «Giới hạn M bài thi tính riêng cho từng buổi», khi đủ «Buổi X đã tick đủ M bài thi … bỏ tick một CLB trước», ô tick bị khoá có `title`. Không đổi backend, schema, CSV hay thuật toán.
+- Test mới: `test_giao_dien_dkl_hoc_sinh.py::test_3d_gioi_han_nguyen_vong_va_bai_thi_noi_ro_la_tinh_rieng_tung_buoi` (đặt giới hạn 3 và 1 để chạm trần, trả 10 và 5 ở cuối).
+
 ## 2026-11-26 — DKL-G: bốn khoảng cách còn lại với bản mẫu v8 (cổng đăng ký)
 
 - **G1 xác nhận danh tính** (`js/dang_ky_gv_hs.js`, `js/dang_ky_nen.js`): sau đăng nhập học sinh thấy «Đúng là em chứ?» (tên, «Lớp … · Khối … · Mã …», câu «Em đã gửi lúc … lần gửi cuối cùng được tính.» nếu đã nộp), nút «Đúng là em» / «Không phải em» (đăng xuất). Dùng dữ liệu đăng nhập đã trả về (`ten`, `lop`, `khoi`, `id`); không lưu PIN.

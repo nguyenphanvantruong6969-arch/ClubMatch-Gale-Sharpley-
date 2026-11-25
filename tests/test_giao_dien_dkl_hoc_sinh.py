@@ -161,6 +161,45 @@ def test_3c_moi_buoi_toi_da_7_the_roi_xem_them(cong):
     assert not pg.loi, pg.loi
 
 
+def test_3d_gioi_han_nguyen_vong_va_bai_thi_noi_ro_la_tinh_rieng_tung_buoi(cong):
+    """Giới hạn 10 nguyện vọng / 5 bài thi tính riêng TỪNG BUỔI: giao diện phải nói rõ, và khi nút bị khoá phải có lý do.
+    Đặt giới hạn nhỏ (3 và 1) để chạm trần với dữ liệu ít; trả về mặc định ở cuối. Dữ liệu MÔ PHỎNG."""
+    pg = cong
+    _ok(pg.api.dk_dat_gioi_han(pg.qt, 3, 1))
+    try:
+        _vao_hs(pg, "H2")
+        pg.wait_for_selector("text=Xếp nguyện vọng")
+        chu = pg.locator("#dkApp").inner_text()
+        assert "tính riêng cho từng buổi" in chu and "0/3" in chu            # nói rõ phạm vi, chưa đủ thì chưa báo "đã đủ"
+        assert "đã đủ" not in chu.lower()
+        for _ in range(2):                                                    # buổi T2 có hai CLB
+            pg.locator("button:has-text('+ Thêm')").first.click()
+            pg.wait_for_timeout(100)
+        for _ in range(4):                                                    # tới bước bài kiểm tra T2
+            if pg.get_by_role("heading", name="Buổi T2 · Bài kiểm tra").count():
+                break
+            pg.locator("#dkApp .btn-primary:visible").first.click()
+            pg.wait_for_timeout(120)
+        assert "Giới hạn 1 bài thi tính riêng cho từng buổi" in pg.locator("#dkApp").inner_text()
+        pg.locator("input[type=checkbox]").first.check()
+        chu = pg.locator("#dkApp").inner_text()
+        assert "Buổi T2 đã tick đủ 1 bài thi" in chu and "bỏ tick" in chu
+        pg.locator("#dkApp .btn-primary:visible").first.click()              # sang buổi T3
+        pg.wait_for_selector("text=Buổi T3 · Xếp nguyện vọng")
+        for _ in range(3):
+            pg.locator("button:has-text('+ Thêm'):not([disabled])").first.click()
+            pg.wait_for_timeout(100)
+        chu = pg.locator("#dkApp").inner_text()
+        assert "Buổi T3 đã đủ 3 CLB" in chu and "tính riêng cho từng buổi" in chu and "✕" in chu
+        khoa = pg.locator("button:has-text('+ Thêm')[disabled]").first
+        assert "đủ 3 CLB" in khoa.get_attribute("title")                      # nút khoá có lý do ngay trên nút
+        pg.get_by_role("button", name="Đăng xuất").click()
+        pg.wait_for_selector("text=Chọn vai trò")
+        assert not pg.loi, pg.loi
+    finally:
+        _ok(pg.api.dk_dat_gioi_han(pg.qt, 10, 5))
+
+
 def test_4_het_han_hien_cau_nguyen_vong_da_gui_van_duoc_tinh(cong):
     pg = cong
     _ok(pg.api.dk_chuyen_giai_doan(pg.qt, "nhap_diem"))

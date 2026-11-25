@@ -167,7 +167,7 @@
         h("span.dk-phu", {}, [c.giao_vien, c.phong, khoiChu(c.khoi_tu, c.khoi_den)].filter(Boolean).join(" · ")),
         c.mo_ta ? h("span.dk-mota", {}, c.mo_ta) : null,
         c.yeu_cau && c.yeu_cau.trim().toLowerCase() !== "không" ? h("span.dk-mota", {}, h("b", {}, "Yêu cầu: "), c.yeu_cau) : null),
-      DK.nut("+ Thêm", () => { ds.push({ clb_id: c.clb_id, thi: false, hc: null }); ve(); }, { disabled: day }));
+      DK.nut("+ Thêm", () => { ds.push({ clb_id: c.clb_id, thi: false, hc: null }); ve(); }, { disabled: day, title: day ? "Buổi " + b + " đã đủ " + tt.toi_da_nv + " CLB. Bấm ✕ ở cột bên cạnh để bỏ bớt một CLB." : null }));
       const hang = ds.map((x, k) => h("li.dk-hang", {}, h("span.dk-nv", {}, "NV" + (k + 1)),
         h("span.dk-nm", {}, cua(x.clb_id).ten, h("span.dk-phu", {}, " · " + cua(x.clb_id).loai)),
         DK.nutNhe("↑", () => doi(k, k - 1), { "aria-label": "Lên", disabled: k === 0 }),
@@ -184,8 +184,9 @@
             chua.length ? h("ul.dk-ds.dk-cac-the", {}, (moHet.has(b) ? chua : chua.slice(0, TOI_DA_THE)).map(the)) : h("div.dk-rong", {}, ds.length ? "Em đã thêm hết CLB của buổi này." : "Buổi này không có CLB nào cho khối của em."),
             chua.length > TOI_DA_THE && !moHet.has(b) ? DK.nutNhe("Xem thêm (" + (chua.length - TOI_DA_THE) + ")", () => { moHet.add(b); ve(); }) : null),
           h("section.dk-khung", {}, h("h2", {}, "Nguyện vọng " + b + " ", h("span.dk-phu.dk-so", {}, ds.length + "/" + tt.toi_da_nv)),
+            h("p.dk-phu", {}, "Giới hạn " + tt.toi_da_nv + " CLB tính riêng cho từng buổi (không phải cả tuần): sang buổi khác em chọn lại từ đầu."),
             ds.length ? h("ol.dk-xep", {}, hang) : h("div.dk-rong", {}, "Chưa chọn. Bấm \"+ Thêm\" ở bên cạnh."),
-            day ? h("p.dk-phu", {}, "Đã đủ " + tt.toi_da_nv + " nguyện vọng cho buổi này.") : null)),
+            day ? h("p.dk-ghichu", {}, "Buổi " + b + " đã đủ " + tt.toi_da_nv + " CLB (giới hạn tính riêng cho từng buổi). Muốn thêm CLB khác, bấm ✕ để bỏ bớt một CLB.") : null)),
         h("div.dk-hang-nut", {}, i > 0 ? DK.nutNhe("← Buổi trước", () => di("tests", i - 1)) : null, h("span.dk-gian"),
           DK.nutVang("Tiếp: đặt huy chương", () => di("medals"))),
       ];
@@ -228,10 +229,12 @@
       return [bar(), h("h1.dk-tieude", {}, "Buổi " + b + " · Bài kiểm tra"),
         h("p.dk-phu", {}, "CLB Tuyển chọn có bài kiểm tra trên Google Forms; link hiện sau khi em gửi. Mỗi buổi tick tối đa " + tt.toi_da_thi +
           " CLB em sẽ làm bài. ", h("b", {}, "Không làm bài, hoặc dưới mốc điểm, thì em không được xét vào CLB đó"), " và phần mềm xét nguyện vọng tiếp theo."),
+        h("p.dk-phu", {}, "Giới hạn " + tt.toi_da_thi + " bài thi tính riêng cho từng buổi (không phải cả tuần)."),
+        dem >= tt.toi_da_thi ? h("p.dk-ghichu", {}, "Buổi " + b + " đã tick đủ " + tt.toi_da_thi + " bài thi (giới hạn tính riêng cho từng buổi). Muốn chọn CLB khác, bỏ tick một CLB trước.") : null,
         chuaTick.length ? h("p.dk-ghichu", {}, "CLB Tuyển chọn em xếp nhưng chưa tick sẽ không được xét: " + chuaTick.join(", ") + ".") : null,
         h("section.dk-khung", {}, h("div.dk-hang-nut", {}, h("h2.dk-gian", {}, "CLB Tuyển chọn trong nguyện vọng"), chip(dem + "/" + tt.toi_da_thi, dem >= tt.toi_da_thi ? "off" : "wait")),
           ung.length ? h("div.dk-cac-the", {}, ung.map((x) => h("label.dk-thi.dk-the-clb", {},
-            h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= tt.toi_da_thi, onchange: (e) => { x.thi = e.target.checked; ve(); } }),
+            h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= tt.toi_da_thi, title: !x.thi && dem >= tt.toi_da_thi ? "Đã đủ " + tt.toi_da_thi + " bài thi cho buổi này. Bỏ tick một CLB khác trước." : null, onchange: (e) => { x.thi = e.target.checked; ve(); } }),
             h("span.dk-than", {}, h("strong", {}, cua(x.clb_id).ten), " ", cua(x.clb_id).diem_san === null || cua(x.clb_id).diem_san === undefined ? null : h("span.chip.off.dk-san", {}, "Dưới " + cua(x.clb_id).diem_san + " thì không xét"), h("span.dk-phu", {}, ghiChuLoai(cua(x.clb_id)))))))
             : h("div.dk-rong", {}, "Nguyện vọng buổi này không có CLB Tuyển chọn nào. Em bấm tiếp.")),
         h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("medals")), h("span.dk-gian"),
