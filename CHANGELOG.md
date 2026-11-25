@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — KD1-L1: Windows thiếu WebView2 thì dùng cửa sổ Edge/Chrome thay vì MSHTML
+
+- Lỗi: pywebview lặng lẽ vẽ bằng MSHTML (IE11) khi máy thiếu WebView2 Runtime; IE11 không chạy nổi JS của app nên giao diện đứng hình, không bấm được.
+- Sửa: `main._show_ui` (win32) đọc `webview.platforms.winforms.renderer`; nếu `mshtml` thì ghi một dòng vào `loi_khoi_dong.txt` và đi thẳng `browser_host.serve`. Thêm `_renderer_winforms`, `_DungMshtml`. Không đổi thuật toán, schema, API, CSV.
+- Test mới: `tests/test_kd1_khoi_dong.py` (4, dùng module webview giả).
+
 ## 2026-11-24 — CI-WIN-PYPDF: sửa bộ test Windows trong workflow build exe (không có mã mục, Truong yêu cầu trực tiếp)
 
 - Lỗi: run #21 của *Build Windows executable (rbda-kiosk)* đỏ ở `tests/test_cb1_pdf_trung_tinh.py::test_pdf_in_ten_truong_len_bang_dau_trang_khi_co` — `ModuleNotFoundError: No module named 'pypdf'`. Bước cài đặt của workflow này thiếu `pypdf`, trong khi `tests.yml` (job Windows) đã có.

@@ -17,7 +17,7 @@ Secondary (if WebView2 exists): `private_mode=True` default = fresh WebView2 pro
 scanning `_internal` DLLs on first run. Not fixed in KD1 (measure first, via L2 log).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] L1 (must) `main._show_ui`: on win32, after `import webview`, import `webview.platforms.winforms` and read
+- [x] L1 (must) `main._show_ui`: on win32, after `import webview`, import `webview.platforms.winforms` and read
       its `renderer`. If `"mshtml"`: log one clear line (no traceback) and go straight to `browser_host.serve`
       (Edge/Chrome `--app=` window). Otherwise unchanged. Import failure keeps today's path (except → fallback).
 - [ ] L2 (must) Startup timing in `loi_khoi_dong.txt`: renderer name, and elapsed ms since process start at:

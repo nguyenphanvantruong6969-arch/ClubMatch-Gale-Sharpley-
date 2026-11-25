@@ -299,3 +299,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX1F-L4 (một ô Chọn lớp) | xong, đã gộp vào main (CI #1522 xanh) | 2026-11-20 | index.html, style.css, js/09_the_xem.js, js/19_ux1b_gv.js, CHANGELOG.md | tests/test_giao_dien_ux1f_l4_mot_o_chon_lop.py | |
 | SFB (L1 test `tests_stress/b` theo UX4/UX5; L2 menu UX5A hẹp; L3 dọn) | xong lô, chờ CI | 2026-11-24 | tests_stress/b/*.py, style.css, tests/test_giao_dien_sfb_menu_hep.py, CHANGELOG.md, docs/ | tests/test_giao_dien_sfb_menu_hep.py (6); tests_stress/b: 65/65 đạt khi chạy từng tệp | L4 bỏ (tuỳ chọn); số đo mô phỏng |
 | DC1-FIX2 (sửa theo checker: K0 mã+tên, test K3, ghi chú K6/K7, --ra) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, README.md, docs/giai_trinh/HUONG_DAN_CHAY.md, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (+8) | |
+| KD1-L1 (MSHTML → trình duyệt dự phòng) | xong, chờ CI | 2026-11-25 | main.py, CHANGELOG.md | tests/test_kd1_khoi_dong.py (4) | |

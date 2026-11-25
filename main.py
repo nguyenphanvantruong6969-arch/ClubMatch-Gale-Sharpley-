@@ -163,6 +163,12 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
     try:
         import webview
 
+        if sys.platform == "win32" and _renderer_winforms() == "mshtml":
+            # KD1: thieu WebView2 Runtime -> pywebview LANG LE ve MSHTML (IE11), khong parse noi JS cua ta
+            # (=>, const) nen giao dien dung hinh, khong bam duoc. Khong co ngoai le nao de bat -> tu chon du phong.
+            chan_doan.ghi(BASE_DIR, "renderer mshtml: may thieu Microsoft Edge WebView2 Runtime, "
+                          "chuyen sang cua so Edge/Chrome (--app=)")
+            raise _DungMshtml()
         window = webview.create_window(
             title, os.path.join(RESOURCE_DIR, page), js_api=js_api,
             width=width, height=height, min_size=min_size,
@@ -182,6 +188,8 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
         webview.start()
         chan_doan.ghi(BASE_DIR, "cua so goc (pywebview) da dong binh thuong")
         return
+    except _DungMshtml:
+        pass
     except (KeyboardInterrupt, SystemExit):
         # Nguoi dung CHU DONG dung (Ctrl+C, dong tien trinh) — khong phai
         # pywebview hong. Truoc day nhanh duoi nuot ca hai va mo luon che do
@@ -208,6 +216,17 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
 
     chan_doan.ghi(BASE_DIR, "dang chay bang CHE DO TRINH DUYET (du phong)")
     browser_host.serve(js_api, RESOURCE_DIR, page, width=width, height=height)
+
+
+class _DungMshtml(Exception):
+    """Tin hieu noi bo trong `_show_ui`: bo qua pywebview, di thang sang browser_host."""
+
+
+def _renderer_winforms() -> str:
+    """Ten renderer pywebview da chon tren Windows ("edgechromium" | "mshtml"). Nhap loi -> ngoai le (da co du phong)."""
+    import webview.platforms.winforms as wf
+
+    return str(getattr(wf, "renderer", "") or "")
 
 
 def main() -> None:
