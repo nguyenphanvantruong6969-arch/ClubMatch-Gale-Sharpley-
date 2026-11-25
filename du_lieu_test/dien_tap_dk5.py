@@ -87,8 +87,8 @@ class Dong_ho:
         return _C()
 
 
-def chay(api, du_lieu, so_kiosk=4, seed_xep=7, tu_dang_ky_gv=0.5, dong_ho=None):
-    """Chạy toàn trình qua API. Trả `{pha, ids, token_qt, so_hs, so_kiosk, thu_tu_nop, ...}`; mọi lời gọi phải `ok` và rỗng lỗi."""
+def chay(api, du_lieu, so_kiosk=4, seed_xep=7, tu_dang_ky_gv=0.5, dong_ho=None, dung_den="xep"):
+    """Chạy toàn trình qua API (`dung_den="nhap_diem"`: dừng ngay sau khi nhập điểm, chưa «Chốt và xếp»). Trả `{pha, ids, token_qt, so_hs, so_kiosk, thu_tu_nop, ...}`; mọi lời gọi phải `ok` và rỗng lỗi."""
     dh = dong_ho or Dong_ho()
     kq = {"nhan": NHAN}
     with dh.do("cai_dat"):
@@ -157,8 +157,11 @@ def chay(api, du_lieu, so_kiosk=4, seed_xep=7, tu_dang_ky_gv=0.5, dong_ho=None):
             r = ok(api.dk_diem_dan(qt, ids[c], "\n".join(dong)))
             assert r["loi"] == [], r
         assert ok(api.dk_diem_thieu(qt)) == []
-    with dh.do("chot_va_xep"):
-        kq["xep"] = ok(api.dk_chot_va_xep(qt, seed_xep))
+    if dung_den != "xep":
+        kq["xep"] = None
+    else:
+        with dh.do("chot_va_xep"):
+            kq["xep"] = ok(api.dk_chot_va_xep(qt, seed_xep))
     kq.update(pha=dh.pha, ids=ids, token_qt=qt, so_hs=len(du_lieu["hs"]), so_kiosk=so_kiosk, pin_hs=pins)
     return kq
 

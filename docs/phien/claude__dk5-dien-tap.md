@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK5_GIAO_THUC.md` (size M: coder + checker, no lead). Loop context: `docs/phien/DK3_DK4_VONG_TU_DONG.md`.
 
-Status: IN PROGRESS (L1 done; L2, L3 next)
+Status: IN PROGRESS (L1, L2 done; L3 next)
 
 ## Feature / goal
 DK5 = full rehearsal ("diá»…n táº­p") of the registration-to-allocation flow on SIMULATED data (798 students, 40 clubs),
@@ -26,7 +26,7 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `MÃ
   export. Asserts: every call `{ok:true, errors:[]}`; one `match_results` row per student; `run_history` +1;
   time per phase logged (budget: whole scenario < 120 s on CI; log, do not fail on a slower laptop).
   **â†’ MILESTONE 1**
-- [ ] L2 (must) robustness, same test file or `tests/test_dk5_vung_chiu_loi.py`:
+- [x] L2 (must) robustness, same test file or `tests/test_dk5_vung_chiu_loi.py`:
   (a) backup â†’ restore â†’ `match_results` identical to before (every row);
   (b) idle lock: lock engages after the idle limit (inject the clock, never `sleep`);
   (c) deadline auto-close: submission after the deadline is refused with a clear error code;
@@ -57,6 +57,8 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `MÃ
 - Preconditions: DK3/DK4 code was missing -> merged `origin/claude/dk4-noi-thang-bo-xep` (head 88ff2ba) into this branch (merge 1265e5a). A previous run's L1 commits were lost (push 403); L1 redone from the protocol.
 - L1 done: `du_lieu_test/dien_tap_dk5.py` + `tests/test_dk5_dien_tap.py` (6 tests, ~10 s locally; phases: cai_dat 1.3, giao_vien 0.2, duyet 0.1, hoc_sinh_nop 6.5, nhap_diem 0.02, chot_va_xep 2.2 s). ruff clean, soat-ma kiem_nhanh 7/7.
 
+- L2 done: `tests/test_dk5_vung_chiu_loi.py` (6 tests, ~12 s). Note (e): `_dk_hoan_nguyen` keeps append-only logs on purpose, so `wharton_nhat_ky` gains a row on a failed run; the test asserts prefix-preserved, not equal. Injection point = `api.luat_xep_de_ghi` (inside the write transaction); the pipeline rolls back by itself and returns `dk_chot_that_bai`.
+
 ## Needs Truong (one line each + recommendation)
 - BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
@@ -64,3 +66,4 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `MÃ
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-26 | Sonnet | L1 done and committed | merged DK4 first; found dk_phong_luu lastrowid bug |
+| 2026-11-26 | Sonnet | L2 done and committed | wharton_nhat_ky kept by design |

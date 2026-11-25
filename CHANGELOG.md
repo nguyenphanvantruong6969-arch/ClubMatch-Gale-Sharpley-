@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-26 — DK5-L2: vùng chịu lỗi của diễn tập (chỉ tệp mới)
+
+- `tests/test_dk5_vung_chiu_loi.py` (6): (a) sao lưu → khôi phục (chép `.bak` sang chỗ khác) giống từng dòng 7 bảng; (b) khoá khi nghỉ (đồng hồ giả `_dong_ho`: 119 s còn dùng, +121 s khoá); (c) quá hạn chót (đồng hồ giả `_dk_bay_gio`): nộp bị từ chối `dk_hs_chua_mo`, lần nộp cũ còn nguyên; (d) nộp lại chỉ giữ lần cuối; (e) lỗi giả lập TRONG giao dịch ghi của `run_pipeline` (sau kết quả + khoá STB, trước `run_history`) → mọi bảng nguyên trạng (băm), `stb_lock` chưa khoá, +1 dòng `dk_nhat_ky`; (f) `run_history` chỉ thêm, hạt giống khác bị từ chối.
+- `dien_tap_dk5.chay(..., dung_den="nhap_diem")` để dừng trước «Chốt và xếp». Không sửa tệp sản phẩm.
+
 ## 2026-11-26 — DK5-L1: diễn tập toàn trình 798 HS / 40 CLB (chỉ tệp mới)
 
 - `du_lieu_test/dien_tap_dk5.py`: bộ sinh tất định (`random.Random(seed)`, không `hash()`) + `chay()` đi qua API DK3/DK4: cài đặt → giáo viên (một nửa tự đăng ký, một nửa quản trị tạo) → duyệt → 798 em nộp xen kẽ 4 máy → nhập điểm → «Chốt và xếp» → xuất Sổ nhập. Dữ liệu MÔ PHỎNG.
