@@ -41,7 +41,6 @@ def trang():
 
 def _du_lieu(pg, kieu):
     return pg.evaluate("""k => {seed(k);save();ACT.fakeApprove();ACT.fakeRegs();ACT.fakeScores();
-        missingScores().forEach(m=>(S.scores[m.cid]=S.scores[m.cid]||{})[m.sid]=7);  // đủ điểm: FA chặn CLB Tuyển chọn chưa có điểm
         return JSON.stringify(buildExport().json)}""", kieu)
 
 

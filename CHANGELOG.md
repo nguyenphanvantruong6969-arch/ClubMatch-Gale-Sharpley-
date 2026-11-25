@@ -2,7 +2,7 @@
 
 ## 2026-11-25 — DK2: cầu nối bản mẫu cổng đăng ký → Sổ nhập thật
 
-- `dk2_so_nhap.py` (mới): JSON xuất của bản mẫu (`dinhDang` 1) → `SO_NHAP_CLB.xlsx` CHỈ qua `so_nhap.ghi_so_nhap` (chế độ huy chương, cột Lớp). Soát trước khi ghi (mã trùng, loại, chỉ tiêu, điểm sàn nguyên 0–10 theo `kiem_thuoc_tinh`, huy chương, trần 10 NV / 5 bài mỗi buổi); lỗi thì không ghi tệp. CLI `python dk2_so_nhap.py vao.json ra.xlsx`. Không đổi hợp đồng cột, schema, thuật toán.
+- `dk2_so_nhap.py` (mới): JSON xuất của bản mẫu (`dinhDang` 1) → `SO_NHAP_CLB.xlsx` CHỈ qua `so_nhap.ghi_so_nhap` (chế độ huy chương, cột Lớp). Soát trước khi ghi (mã trùng, loại, chỉ tiêu, điểm sàn nguyên 0–10 theo `kiem_thuoc_tinh`, huy chương, trần 10 NV / 5 bài mỗi buổi); lỗi thì không ghi tệp. NV Tuyển chọn không thi / không điểm bị bỏ (cùng kết quả DA; tránh `fa_clb_tuyen_chon_chua_co_diem`, lỗi thấy ở CI). CLI `python dk2_so_nhap.py vao.json ra.xlsx`. Không đổi hợp đồng cột, schema, thuật toán.
 - `docs/phien/DK1_BAN_MAU_V8.html` (mới, từ v7): xuất một dãy NV1…NVk theo buổi; học sinh đi từng buổi (xếp → huy chương → bài kiểm tra) rồi xem lại (D39); nhãn loại ngắn + câu giải thích xuống dòng (D40); bỏ mã biên nhận, ghi "Đã gửi lúc" (D41); tối đa 5 bài thi mỗi buổi + cảnh báo (D44); thiết kế khớp phần mềm: phông cục bộ `assets/fonts`, chỉ giao diện sáng, bo góc 6/10 px.
 - Hướng dẫn `docs/huong_dan/DK2_CAU_NOI.md`. Test: `tests/test_dk2_so_nhap.py` (6), `tests/test_giao_dien_dk2_ban_mau.py` (5; dữ liệu xuất "Demo nhỏ" và "Cả trường" nhập 0 lỗi và chạy xếp được).
 

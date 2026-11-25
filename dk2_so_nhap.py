@@ -93,7 +93,7 @@ def _doc_clb(ds, loi):
     return clubs, buoi_cua
 
 
-def _doc_hs(ds, clubs, buoi_cua, thu_tu_buoi, loi):
+def _doc_hs(ds, clubs, buoi_cua, thu_tu_buoi, loi, bo):
     loai_cua = {c["club_id"]: c["loai"] for c in clubs}
     students, da_co = [], set()
     for i, h in enumerate(ds, start=1):
@@ -144,6 +144,11 @@ def _doc_hs(ds, clubs, buoi_cua, thu_tu_buoi, loi):
                 else:
                     d["hc"].add(hc)
                     v["diem_w"] = HUY_CHUONG[hc]
+            if loai_cua[cid] == so_nhap.TUYEN_CHON and v["diem"] == "":
+                # Bản mẫu: không thi / không điểm thì không được xét CLB Tuyển chọn đó (D35). Bỏ NV này cho cùng
+                # kết quả (DA từ chối chắc chắn, không ảnh hưởng ai) và tránh fa_clb_tuyen_chon_chua_co_diem.
+                bo.append((ma, cid))
+                continue
             nv.append(v)
         for d in dem.values():
             if d["nv"] > so_nhap.TRAN_NV_MOI_BUOI or d["thi"] > so_nhap.TRAN_THI_MOI_BUOI:
@@ -159,8 +164,10 @@ def _doc_hs(ds, clubs, buoi_cua, thu_tu_buoi, loi):
     return students
 
 
-def tu_ban_mau(du_lieu):
-    """JSON của bản mẫu -> (clubs, students) đúng dạng `so_nhap.ghi_so_nhap`. Sai -> LoiBanMau."""
+def tu_ban_mau(du_lieu, bo=None):
+    """JSON của bản mẫu -> (clubs, students) đúng dạng `so_nhap.ghi_so_nhap`. Sai -> LoiBanMau.
+
+    `bo` (list, tuỳ chọn) nhận các cặp (mã HS, mã CLB) NV Tuyển chọn bị bỏ vì không thi / không điểm."""
     if not isinstance(du_lieu, dict) or du_lieu.get("dinhDang") != DINH_DANG:
         raise LoiBanMau([f"Không phải dữ liệu xuất của bản mẫu (cần dinhDang = {DINH_DANG})."])
     if not isinstance(du_lieu.get("clb"), list) or not du_lieu["clb"]:
@@ -170,7 +177,7 @@ def tu_ban_mau(du_lieu):
     thu_tu_buoi = {}
     for b in [so_nhap.ma_buoi(x) for x in du_lieu.get("buoi") or []] + [c["buoi"] for c in clubs]:
         thu_tu_buoi.setdefault(b, len(thu_tu_buoi))
-    students = _doc_hs(du_lieu.get("hocSinh") or [], clubs, buoi_cua, thu_tu_buoi, loi)
+    students = _doc_hs(du_lieu.get("hocSinh") or [], clubs, buoi_cua, thu_tu_buoi, loi, [] if bo is None else bo)
     if loi:
         raise LoiBanMau(loi)
     return clubs, students
@@ -178,10 +185,11 @@ def tu_ban_mau(du_lieu):
 
 def ghi_tu_ban_mau(du_lieu, duong_dan) -> dict:
     """Ghi Sổ nhập (.xlsx) từ JSON bản mẫu. Lỗi -> LoiBanMau, không ghi tệp. Trả số CLB, học sinh."""
-    clubs, students = tu_ban_mau(du_lieu)
+    bo = []
+    clubs, students = tu_ban_mau(du_lieu, bo)
     so_nhap.ghi_so_nhap(duong_dan, clubs, students, co_nhom=False, co_lop=True,
                         che_do_fa=True, luon_co_cot_w=True)
-    return {"so_clb": len(clubs), "so_hs": len(students)}
+    return {"so_clb": len(clubs), "so_hs": len(students), "so_nv_bo": len(bo)}
 
 
 def main(argv=None) -> int:
@@ -202,6 +210,8 @@ def main(argv=None) -> int:
             print(" - " + dong, file=sys.stderr)
         return 1
     print(f"Đã ghi {a.ra}: {ket_qua['so_clb']} CLB, {ket_qua['so_hs']} học sinh.")
+    if ket_qua["so_nv_bo"]:
+        print(f"Bỏ {ket_qua['so_nv_bo']} nguyện vọng Tuyển chọn không thi hoặc không có điểm (không được xét).")
     return 0
 
 

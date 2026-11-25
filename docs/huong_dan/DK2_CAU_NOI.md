@@ -28,7 +28,8 @@ Không vào sổ: link bài thi, giáo viên, mô tả CLB (việc xếp không 
 ## Luật cần biết
 - Điểm sàn là số nguyên 0–10 (như phần mềm). CLB Tự do: phần mềm luôn có chỗ, chỉ tiêu trong sổ
   là sức chứa phòng cho đủ cột.
-- CLB Tuyển chọn có em đăng ký thi thì phải nhập điểm trước khi xếp; thiếu hẳn điểm, phần mềm
-  báo `fa_clb_tuyen_chon_chua_co_diem` và không xếp.
+- Nguyện vọng Tuyển chọn mà em không thi hoặc không có điểm bị bỏ khỏi sổ (em không được xét CLB đó;
+  kết quả xếp như nhau). Lệnh báo số nguyện vọng đã bỏ. Nhờ vậy phần mềm không chặn vì
+  `fa_clb_tuyen_chon_chua_co_diem`.
 - Mỗi buổi tối đa 10 nguyện vọng và 5 bài thi; mỗi buổi một Vàng, một Bạc, một Đồng; Tự do không
   nhận huy chương.
