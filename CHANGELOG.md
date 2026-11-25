@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## 2026-11-25 — KD1-L1 fix: dò renderer an toàn (không đổi đường cũ khi không biết)
+
+- CI Windows đỏ: test `test_do_phu_bo_sung.py` tiêm module `webview` giả (không phải package) nên `_renderer_winforms()` ném lỗi trước `create_window`. Nay `_renderer_winforms()` bắt `Exception` và trả `""` (không biết); chỉ `"mshtml"` mới chuyển sang `browser_host`. Log `renderer <tên|unknown>`.
+- Test: sửa `test_nhap_winforms_loi_thi_duong_cu_khong_doi`, thêm 3 ca tái hiện test_do_phu_bo_sung với `sys.platform="win32"`. Cập nhật đếm tệp test (409) trong `CLAUDE_CHI_TIET.md`.
+
+## 2026-11-25 — KD1-L3: hướng dẫn cài đặt + mục KD1 trong sổ đăng ký
+
+- `HUONG_DAN_CAI_DAT.md`: ghi chú 2 dòng về `renderer mshtml` / WebView2 Runtime. `SO_DANG_KY_33_MUC.md`: dòng + mục KD1 (theo mẫu MT2, `ke_hoach_thay_doi.json` không có MT2 nên không thêm). Chỉ tài liệu.
+
+## 2026-11-25 — KD1-L2: nhật ký khởi động có tên renderer và mốc thời gian
+
+- `loi_khoi_dong.txt` ghi thêm `renderer <tên>` (win32) và `moc <bước> +<n> ms` tại: main bắt đầu, workspace đã mở, trước `webview.start`, trước `browser_host.serve`. Thêm `_T0`, `_ghi_moc` trong `main.py`. Không đổi hành vi nào khác.
+- Test mới: 4 test trong `tests/test_kd1_khoi_dong.py` (tổng 8).
+
+## 2026-11-25 — KD1-L1: Windows thiếu WebView2 thì dùng cửa sổ Edge/Chrome thay vì MSHTML
+
+- Lỗi: pywebview lặng lẽ vẽ bằng MSHTML (IE11) khi máy thiếu WebView2 Runtime; IE11 không chạy nổi JS của app nên giao diện đứng hình, không bấm được.
+- Sửa: `main._show_ui` (win32) đọc `webview.platforms.winforms.renderer`; nếu `mshtml` thì ghi một dòng vào `loi_khoi_dong.txt` và đi thẳng `browser_host.serve`. Thêm `_renderer_winforms`, `_DungMshtml`. Không đổi thuật toán, schema, API, CSV.
+- Test mới: `tests/test_kd1_khoi_dong.py` (4, dùng module webview giả).
+
 ## 2026-11-24 — CI-WIN-PYPDF: sửa bộ test Windows trong workflow build exe (không có mã mục, Truong yêu cầu trực tiếp)
 
 - Lỗi: run #21 của *Build Windows executable (rbda-kiosk)* đỏ ở `tests/test_cb1_pdf_trung_tinh.py::test_pdf_in_ten_truong_len_bang_dau_trang_khi_co` — `ModuleNotFoundError: No module named 'pypdf'`. Bước cài đặt của workflow này thiếu `pypdf`, trong khi `tests.yml` (job Windows) đã có.

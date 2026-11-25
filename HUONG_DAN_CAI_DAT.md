@@ -125,6 +125,9 @@ hai lớp đó không ăn.
 **Nếu vẫn ở chế độ dự phòng:** mở tệp **`loi_khoi_dong.txt`** nằm cạnh
 `PhanBoCauLacBo.exe` — trong đó có nguyên văn lý do. Gửi lại nội dung tệp đó.
 
+> Nếu `loi_khoi_dong.txt` có dòng `renderer mshtml`, máy thiếu **Microsoft Edge WebView2 Runtime**
+> nên app tự mở bằng cửa sổ Edge riêng. Cài WebView2 Runtime (miễn phí, từ Microsoft) để quay lại cửa sổ gốc.
+
 > Chạy ở chế độ dự phòng **không thiếu tính năng nào** — mọi thứ hoạt động y hệt.
 > Khác biệt duy nhất là máy phải có sẵn Edge hoặc Chrome.
 
