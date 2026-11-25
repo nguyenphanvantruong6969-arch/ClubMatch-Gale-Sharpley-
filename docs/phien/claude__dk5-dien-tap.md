@@ -61,6 +61,9 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `MÃ
 
 - L3 done: `tests/test_giao_dien_dk5_toan_trinh.py` (4 tests, ~6 s). Registry row DK5 + test-file count (431) updated.
 
+MILESTONE 1 READY | head c084f20 | base 1265e5a
+MILESTONE 2 READY | head 38d8f84 | base c084f20
+
 ## Needs Truong (one line each + recommendation)
 - BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
