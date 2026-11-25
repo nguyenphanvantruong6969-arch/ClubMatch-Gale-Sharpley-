@@ -124,19 +124,25 @@
   };
 
   /* ---------- A6b + A7: giai đoạn học sinh đăng ký ---------- */
-  QT2.suaSauMo = function (ds) {
+  QT2.suaSauMo = function (ds, ph) {
+    /* Đổi phòng / xoá sau khi mở cho học sinh: lần gọi đầu chỉ báo "N học sinh bị ảnh hưởng"; đồng ý rồi mới ghi (D19). */
+    const xacNhan = async (c, ...tham) => {
+      const r = await DK.goi("dk_clb_sua_sau_mo", T(), c.clb_id, ...tham, false);
+      if (!r.ok || !r.data.can_xac_nhan) { if (r.ok) lamMoi(); return r; }
+      if (global.confirm && !global.confirm(r.data.anh_huong + " học sinh bị ảnh hưởng. Việc này ghi vào nhật ký. Tiếp tục?")) return r;
+      const r2 = await DK.goi("dk_clb_sua_sau_mo", T(), c.clb_id, ...tham, true);
+      if (r2.ok) lamMoi(); return r2;
+    };
     const dong = ds.filter((c) => c.trang_thai === "duyet").map((c) => {
       const ct = h("input.dk-nhap.dk-so", { type: "number", min: String(c.chi_tieu || 1), value: c.chi_tieu !== null ? c.chi_tieu : "", disabled: c.loai === "Tự do", "aria-label": "Chỉ tiêu " + c.ten });
+      const sel = h("select.dk-nhap", { "aria-label": "Phòng " + c.ten }, (ph || []).map((p) => h("option", { value: p.phong_id, selected: p.phong_id === c.phong_id }, p.ten + " (" + p.suc_chua + ")")));
       const luu = DK.nutNhe("Tăng chỉ tiêu", function () { DK.chay(this, async () => {
         const r = await DK.goi("dk_clb_sua_sau_mo", T(), c.clb_id, ct.value || null); if (r.ok) { DK.thongBao("Đã lưu."); lamMoi(); } return r; }); });
-      const xoa = DK.nutNhe("Xoá CLB", function () { DK.chay(this, async () => {
-        const r = await DK.goi("dk_clb_sua_sau_mo", T(), c.clb_id, null, null, null, true, false);
-        if (r.ok && r.data.can_xac_nhan) { if (!global.confirm || global.confirm("Xoá CLB này? " + r.data.anh_huong + " học sinh bị ảnh hưởng. Việc này ghi vào nhật ký.")) {
-          const r2 = await DK.goi("dk_clb_sua_sau_mo", T(), c.clb_id, null, null, null, true, true); if (r2.ok) lamMoi(); return r2; } }
-        return r; }); });
-      return [c.ten, c.buoi, c.loai, ct, h("span", {}, luu, xoa)];
+      const doiPhong = DK.nutNhe("Đổi phòng", function () { DK.chay(this, () => xacNhan(c, null, +sel.value, null, false)); });
+      const xoa = DK.nutNhe("Xoá CLB", function () { DK.chay(this, () => xacNhan(c, null, null, null, true)); });
+      return [c.ten, c.buoi, c.loai, ct, sel, h("span", {}, luu, doiPhong, xoa)];
     });
-    return h("details", {}, h("summary", {}, "Sửa CLB đã duyệt (" + dong.length + ")"), DK.bang(["CLB", "Buổi", "Loại", "Chỉ tiêu", ""], dong));
+    return h("details", {}, h("summary", {}, "Sửa CLB đã duyệt (" + dong.length + ")"), DK.bang(["CLB", "Buổi", "Loại", "Chỉ tiêu", "Phòng", ""], dong));
   };
   QT2.nhuCau = function (tdo, hs) {
     const chua = hs.filter((x) => !x.da_nop);

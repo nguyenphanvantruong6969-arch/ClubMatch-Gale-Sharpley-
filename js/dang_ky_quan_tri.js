@@ -86,11 +86,12 @@
       const tdo = (await goi("dk_tien_do", T)).data;
       const hs = (await goi("dk_hs_danh_sach", T)).data || [];
       const ds = (await goi("dk_clb_danh_sach", T)).data || [];
+      const phs = (await goi("dk_phong_danh_sach", T)).data || [];
       DK.QT2.tuLamMoi(true);
       return h("div", {}, hanChu(tt), h("h2", {}, "Tiến độ theo lớp (lớp chậm nhất ở trên)"),
         bang(["Lớp", "Đã nộp", "Tổng", ""], tdo.theo_lop.map((x) => [x.lop, x.da_nop, x.tong,
           h("progress.dk-tien", { max: String(x.tong || 1), value: String(x.da_nop || 0), "aria-label": "Lớp " + x.lop + ": " + x.da_nop + "/" + x.tong })])),
-        DK.QT2.nhuCau(tdo, hs), DK.QT2.suaSauMo(ds), ...khungHan("hs_dang_ky"), DK.QT2.giaHan("hs_dang_ky", tt.han_chot), chuyen("nhap_diem", "Đóng đăng ký học sinh"));
+        DK.QT2.nhuCau(tdo, hs), DK.QT2.suaSauMo(ds, phs), ...khungHan("hs_dang_ky"), DK.QT2.giaHan("hs_dang_ky", tt.han_chot), chuyen("nhap_diem", "Đóng đăng ký học sinh"));
     }
     if (gd === "nhap_diem") {
       const thieu = (await goi("dk_diem_thieu", T)).data || [];

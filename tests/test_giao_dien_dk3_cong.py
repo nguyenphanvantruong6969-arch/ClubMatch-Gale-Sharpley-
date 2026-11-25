@@ -75,6 +75,8 @@ def test_2_quan_tri_dung_du_lieu_va_mo_cho_giao_vien(cong):
     for t, sc in (("P1", 40), ("P2", 30), ("P3", 20)):
         _ok(api.dk_phong_luu(qt, t, sc))
     _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1"))
+    pg.get_by_role("tab", name="Danh sách").click()           # DKL-A8: nút chỉ hiện khi đủ phòng + học sinh; vẽ lại màn sau khi dựng bằng API
+    pg.get_by_role("tab", name="Việc bây giờ").click()
     pg.get_by_role("button", name="Mở đăng ký giáo viên").click()
     pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
     pg.fill("textarea", "Cô An\nCô Bê\nCô Chi")
@@ -101,6 +103,7 @@ def test_3_giao_vien_dang_ky_clb_ba_buoc(cong):
         pg.fill("input[type=number] >> nth=1", "12")
         if loai == "Tuyển chọn":
             pg.fill("input[type=number] >> nth=2", "6")
+            pg.fill("label:has-text('Đường dẫn bài thi') input", "https://forms.example/robot")   # DKL-S9: link https bắt buộc
         pg.get_by_role("button", name="Tiếp theo").click()
         pg.fill("label:has-text('Tên CLB') input", ten)
         pg.get_by_role("button", name="Gửi duyệt").click()
@@ -259,6 +262,11 @@ def test_10_giao_vien_ba_buoc_mot_nut_vang(cong):
     assert pg.locator("ol.dk-buoc li").count() == 3
     assert pg.locator("ol.dk-buoc li.cur").inner_text() == "1. Lịch và phòng"
     _mot_vang(pg)
+    pg.locator("select").nth(0).select_option("T3")           # buổi T2 đã hết phòng trống (DKL-S9); T3 còn phòng
+    pg.wait_for_function("document.querySelectorAll('select')[2].options.length > 0")
+    pg.get_by_role("button", name="Tiếp theo").click()
+    assert "Chỉ tiêu là số nguyên từ 1." in pg.locator("#dkThongBao").inner_text()      # DKL-S9: báo lỗi từng bước
+    pg.fill("input[type=number]", "10")
     pg.get_by_role("button", name="Tiếp theo").click()
     assert pg.locator("ol.dk-buoc li.cur").inner_text() == "2. Ai được tham gia"
     pg.get_by_role("button", name="Tiếp theo").click()

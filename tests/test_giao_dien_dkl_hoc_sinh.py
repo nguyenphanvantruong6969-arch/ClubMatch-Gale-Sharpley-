@@ -104,6 +104,7 @@ def test_2_gui_roi_bien_nhan_co_link_bai_thi_gio_gui_va_xong_thoat(cong):
     link = pg.get_by_role("link", name="Làm bài thi")
     assert link.count() == 1 and link.get_attribute("href") == "https://f.example/robot"      # S1
     assert pg.get_by_role("button", name="Xong, thoát").count() == 1
+    assert "2099" in pg.locator("#dkApp").inner_text()                          # S4: hạn chót hiện cho học sinh
     pg.get_by_role("button", name="Xong, thoát").click()
     pg.wait_for_selector("text=Chọn vai trò")
 
@@ -114,7 +115,6 @@ def test_3_nop_rong_co_canh_bao_va_han_chot_hien_cho_hoc_sinh(cong):
     pg.wait_for_selector("text=Buổi T2")
     _toi_xem_lai(pg)
     assert "Em chưa chọn CLB nào" in pg.locator("#dkApp").inner_text()          # S5
-    assert "2099" in pg.locator("#dkApp").inner_text() or pg.get_by_text("hạn chót", exact=False).count() >= 0
 
 
 def test_4_het_han_hien_cau_nguyen_vong_da_gui_van_duoc_tinh(cong):

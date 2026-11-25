@@ -85,11 +85,17 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 | 2026-11-25 | Opus | Answered feature-coverage question; added audit step 4b | no new work |
 
 ## DKL status (Sonnet, 2026-11-25 night; Truong asleep, "run CI later")
-- Built all four lots in one go (no checker round between). Scope = `DKL_GIAO_THUC.md` §2. Done: S1–S9, A1–A12 (A11 = "Sao lưu ngay" via `_backup_db`, NO restore UI/API: needs Truong's decision).
-- Local results: `test_dkl_cai_dat` 5, `test_giao_dien_dkl_quan_tri` 6, `..._giao_vien` 3, `..._hoc_sinh` 4 pass; related dk3/dk4/gt3/i18n tests green locally (see below), `ruff` clean, `kiem_nhanh` 7/7.
-- Changed existing test: `test_giao_dien_dk3_cong.py` test_3 now picks the FIRST free room (rooms are filtered by buổi). Test-file count 428.
-- Not verified: full suite, CI (Linux+Windows), pywebview on Windows, `window.print()` in WebView2 (copy button is the fallback), `confirm()` on "Xoá CLB" after opening to students.
-- Known simplifications: "Chốt điểm" only checks missing scores (the gold button stays «Chốt và xếp»); PIN slips print only from the just-created/reset list; per-grade fold and admin password change not built (not in v8 §2).
+- Built all four lots in one session (no checker round between). Scope = `DKL_GIAO_THUC.md` §2. CI NOT run, checker NOT run → NOT READY.
+- Row → test (all in `tests/`; Chromium tests need `pip install playwright`):
+  - S1 link bài thi · S2 "Dưới N thì không xét" · S3 thẻ CLB đủ thông tin/không lộ số đông · S4 hạn chót + hết hạn · S5 nộp rỗng · S6 "Đã gửi lúc"/"Xong, thoát": `test_giao_dien_dkl_hoc_sinh.py` test_1–test_4. S7 (bước tách riêng) DK4-UI, not re-tested.
+  - S8 sửa/xoá CLB, S9 báo lỗi từng bước + https + phòng trống: `test_giao_dien_dkl_giao_vien.py` test_1–test_3, `test_dkl_cai_dat.py::test_clb_xoa_va_phong_trong_theo_buoi`.
+  - A1 gia hạn/đóng ngay · A3 phiếu PIN · A4 thay cả danh sách · A5 xoá phòng · A6 duyệt kèm chỉ tiêu/phòng + sửa sau mở (tăng chỉ tiêu, đổi phòng, xoá CLB có xác nhận "N học sinh bị ảnh hưởng") · A7 nhu cầu + chưa đăng ký · A8 danh sách lý do: `test_giao_dien_dkl_quan_tri.py` test_1, test_2, test_3, test_7.
+  - A2 nhập điểm (gõ, dán, Dưới sàn, Chốt điểm): `test_giao_dien_dkl_quan_tri.py::test_4`; backend `test_dkl_cai_dat.py::test_bang_diem_xem_truoc_va_phien_ban_xuat`.
+  - A9 Cài đặt (mã trường, buổi/khối khoá, giới hạn): `test_5` + `test_dkl_cai_dat.py::test_cai_dat_doi_*`. A10 xem trước + phiên bản xuất: `test_6` + backend test. A11 sao lưu: `test_6` + `test_sao_luu_*`. A12 khoá quản trị: backend `GIAY_NGHI_QUAN_TRI` + message on `DK.henGio` (only the Cài đặt text is asserted, the timeout message itself is NOT tested).
+- Changed existing test expectations (recorded in CHANGELOG): `test_giao_dien_dk3_cong.py` test_2/test_3.
+- Test-file count 428. `ruff` clean, `kiem_nhanh.py` 7/7 (soat-ma tier 1 only: the four manual tiers were NOT run).
+- Not verified: full suite, CI (Linux+Windows), pywebview/Windows, `window.print()` in WebView2 (copy button is the fallback), `confirm()` behaviour in pywebview.
+- Simplifications: "Chốt điểm" only checks missing scores (gold button stays «Chốt và xếp»); PIN slips print only from the just-created/reset list; per-grade fold and admin password change not built.
 ## Needs Truong (DKL)
-- Backup RESTORE from the portal (v8 has it): not built; needs a decision (restore overwrites app.db).
-- Try the CI-built exe: score entry, PIN slip print, teacher edit/delete.
+- Backup RESTORE from the portal (v8 has it) not built: needs a decision (restore overwrites app.db). Also `_backup_db` keeps only `_MAX_BACKUPS` copies, so pressing «Sao lưu ngay» repeatedly can push out the backup taken before the last «Chốt và xếp».
+- Try the CI-built exe: score entry, PIN slip printing, teacher edit/delete.

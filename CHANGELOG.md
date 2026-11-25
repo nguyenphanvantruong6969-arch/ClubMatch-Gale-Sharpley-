@@ -6,8 +6,9 @@
 - **L3 giáo viên**: sửa/xoá CLB của mình khi còn «chờ duyệt» (`dk_clb_xoa` mới), báo lỗi từng bước bằng tiếng Việt, link bài thi phải bắt đầu `https://`, chỉ hiện phòng còn trống theo buổi.
 - **L1 học sinh**: dòng «Dưới N thì không xét» trên CLB Tuyển chọn; hết hạn hiện «Nguyện vọng em đã gửi vẫn được tính»; thêm test hành vi cho các hàng DK4-UI đã làm.
 - **L4 cài đặt**: thẻ «Cài đặt» (mã trường, buổi và khối chỉ đổi ở Chuẩn bị, giới hạn nguyện vọng/bài thi), xem trước Sổ nhập, số phiên bản mỗi lần xuất, «Sao lưu ngay», thông báo khoá quản trị. Hàm mới: `dk_cai_dat_doc`, `dk_cai_dat_doi`, `dk_xuat_xem_truoc`, `dk_sao_luu`.
-- Không đổi thuật toán, schema SQLite, hợp đồng CSV. Nhãn nhật ký `nkhd_dk_*` đủ vi/en cho 8 hàm mới.
-- Test mới: `tests/test_dkl_cai_dat.py` (5), `tests/test_giao_dien_dkl_quan_tri.py` (6), `tests/test_giao_dien_dkl_giao_vien.py` (3), `tests/test_giao_dien_dkl_hoc_sinh.py` (4). Sửa `test_giao_dien_dk3_cong.py` (chọn phòng trống đầu tiên). Chưa chạy bộ đầy đủ/CI.
+- Không đổi thuật toán, schema SQLite, hợp đồng CSV. Nhãn nhật ký `nkhd_dk_*` đủ vi/en cho 6 hàm mới (`dk_diem_danh_sach`, `dk_clb_xoa`, `dk_cai_dat_doc`, `dk_cai_dat_doi`, `dk_xuat_xem_truoc`, `dk_sao_luu`).
+- Đổi có chủ ý hai kỳ vọng cũ của `test_giao_dien_dk3_cong.py` theo bản mẫu v8: giáo viên chọn phòng trống ĐẦU TIÊN của buổi (phòng được lọc theo buổi); nút «Mở đăng ký giáo viên» chỉ hiện khi đã có phòng và danh sách học sinh (test vẽ lại màn sau khi dựng dữ liệu bằng API); bước 1 cần «Chỉ tiêu là số nguyên từ 1.» và CLB Tuyển chọn cần link `https://` mới sang bước kế (test_3, test_10 điền thêm).
+- Test mới: `tests/test_dkl_cai_dat.py` (5), `tests/test_giao_dien_dkl_quan_tri.py` (7), `tests/test_giao_dien_dkl_giao_vien.py` (3), `tests/test_giao_dien_dkl_hoc_sinh.py` (4). Sửa `test_giao_dien_dk3_cong.py` (chọn phòng trống đầu tiên). Chưa chạy bộ đầy đủ/CI.
 
 ## 2026-11-25 — DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8
 

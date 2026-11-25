@@ -86,7 +86,7 @@ def test_2_phong_chi_hien_phong_trong_buoi_va_sua_clb(cong):
     _vao(pg, "Cô Bê")
     # Robot (Cô An) đang giữ phòng đầu tiên ở buổi T2 -> Cô Bê chỉ thấy phòng còn lại
     opts = pg.locator("select").nth(2).locator("option").all_inner_texts()
-    assert len(opts) == 1 and "P1" not in opts[0] or len(opts) == 1
+    assert opts == ["P2 (30 chỗ)"], opts
     pg.locator("select").nth(1).select_option("Giới hạn")
     pg.fill("input[type=number]", "8")
     pg.get_by_role("button", name="Tiếp theo").click()

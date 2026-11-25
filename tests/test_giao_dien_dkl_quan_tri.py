@@ -218,5 +218,31 @@ def test_6_sao_luu_xem_truoc_va_phien_ban_khi_xuat(cong):
     pg.get_by_role("button", name="Xuất Sổ nhập").click()
     pg.wait_for_function("document.getElementById('dkKq').innerText.length > 0")
     kq = pg.locator("#dkKq").inner_text()
-    assert "phiên bản 1" in kq or "Không" in kq or "không" in kq, kq     # xuất được → có số phiên bản; dữ liệu mẫu chưa đủ → báo lỗi
+    print("dkKq =", kq)
+    assert "phiên bản 1" in kq, kq
     assert not pg.loi, pg.loi
+
+
+def test_7_doi_phong_va_xoa_clb_sau_khi_mo_can_xac_nhan_va_bao_so_em_bi_anh_huong(cong):
+    pg, api, qt = cong, cong.api, cong.qt
+    _ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
+    _vao_quan_tri(pg)
+    pg.wait_for_selector("text=Quản trị · Học sinh đăng ký")
+    pg.locator("details:has(summary:has-text('Sửa CLB đã duyệt')) summary").click()
+    loi = []
+    pg.on("dialog", lambda d: (loi.append(d.message), d.accept()))
+    dong = pg.locator("tr:has-text('Cờ vua')")
+    ph = {p["ten"]: p["phong_id"] for p in _ok(api.dk_phong_danh_sach(qt))}
+    goc = [c for c in _ok(api.dk_clb_danh_sach(qt)) if c["ten"] == "Cờ vua"][0]
+    moi = "P1" if goc["phong"] != "P1" else "P2"
+    # phòng đích đang bận ở buổi đó -> lỗi, không đổi
+    dong.locator("select").select_option(str(ph[moi]))
+    dong.get_by_role("button", name="Đổi phòng").click()
+    pg.wait_for_selector(".dk-thongbao.la-loi, .dk-thongbao.la-ok", timeout=5000)
+    # xoá CLB đã có em chọn: hộp xác nhận nêu số em bị ảnh hưởng, rồi mới xoá
+    tk = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
+    dong = pg.locator("tr:has-text('Robot')")
+    dong.get_by_role("button", name="Xoá CLB").click()
+    pg.wait_for_function("!document.body.innerText.includes('Robot')", timeout=8000)
+    assert loi and "học sinh bị ảnh hưởng" in loi[-1], loi
+    assert "Robot" not in [c["ten"] for c in _ok(api.dk_clb_danh_sach(tk))]
