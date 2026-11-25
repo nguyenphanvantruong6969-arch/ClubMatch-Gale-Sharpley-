@@ -759,7 +759,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Hiện trạng:** thiếu WebView2 Runtime thì pywebview lặng lẽ vẽ bằng MSHTML (IE11); JS của app không chạy nổi, cửa sổ đứng hình, không bấm được; không có ngoại lệ nên không rơi sang `browser_host`.
 - **Thay đổi:** trên win32, nếu `webview.platforms.winforms.renderer == "mshtml"` thì ghi một dòng và dùng `browser_host.serve` (cửa sổ Edge/Chrome `--app=`). `loi_khoi_dong.txt` ghi thêm tên renderer và mốc `+<n> ms`.
 - **Rủi ro:** thấp; không đổi thuật toán, schema, API, CSV. Chưa kiểm chứng trên máy Windows của Truong.
-- **Kiểm nhận:** tests/test_kd1_khoi_dong.py (8, webview giả); Truong chạy bản CI trên máy bị đứng và gửi lại `loi_khoi_dong.txt`.
+- **Kiểm nhận:** tests/test_kd1_khoi_dong.py (11, webview giả); Truong chạy bản CI trên máy bị đứng và gửi lại `loi_khoi_dong.txt`.
 - **Phụ thuộc:** không · **Ngành:** không áp dụng (lớp khởi động).
 
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
