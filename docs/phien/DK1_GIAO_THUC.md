@@ -22,15 +22,20 @@
 - Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push. No PR.
 
 ## 2. Acceptance (`kiem_nhan`)
-- L1: home shows 3 role doors; Admin can add / edit / delete a room (name unique, capacity integer > 0; a room
-  used by a club cannot be deleted); sees student and teacher lists; two switches (GV form, HS form) — when
-  off, that role's door shows "Đang đóng" and its form cannot be submitted.
+- L1: home shows 3 role doors; Admin "Quản lý" has a 5-step phase bar (Chuẩn bị → GV đăng ký → Duyệt CLB →
+  HS đăng ký → Đã đóng; see branch file "Workflow"). Admin can add / edit / delete a room (name unique,
+  capacity integer > 0; a room used by a club cannot be deleted); sees student and teacher lists; opens a
+  phase with a deadline (date+time), "Đóng ngay", "Gia hạn"; auto-close by clock on load and every 30 s
+  (test with a faked clock). A role whose phase is not active shows "Chưa mở" / "Đã đóng" and cannot submit.
 - L2: teacher logs in with name + mã GV (wrong code refused). Form: club name (unique, required), session,
   room (dropdown lists only rooms free in that session; taken ones shown disabled with the club using them),
   quota (integer 1…room capacity; above capacity → blocked with message), grades (≥ 1 ticked), test yes/no,
   description, requirements. "CLB của tôi" lists own clubs with status; editable while "Chờ duyệt".
   Admin approval table: approve / reject, admin quota (blank = teacher quota, still ≤ room capacity), change
-  room (same clash rule), shows teacher quota and admin quota side by side.
+  room (same clash rule), shows teacher quota and admin quota side by side. "Mở cho học sinh" is enabled only
+  in phase Duyệt CLB with ≥ 1 approved club; pending clubs must be approved or rejected first. In phase HS
+  đăng ký: teacher edit locked; admin may raise quota / change room; delete or session change of a club already
+  chosen shows "N học sinh bị ảnh hưởng" + confirm and adds a line to an on-screen admin log.
 - L3: student types mã HS → card "Họ tên · Lớp · Khối" + "Đúng là em" button; unknown code refused. Per-session
   tabs: left = approved clubs allowing the student's grade (card: name, room, teacher, description,
   requirements, "Có thi" badge); right = ranked list. Add by click or drag; reorder by drag or ↑/↓; remove ✕;

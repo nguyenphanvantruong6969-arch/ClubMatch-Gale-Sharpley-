@@ -24,6 +24,18 @@ In-kiosk entrance exams and the real integration are LATER (DK2), not this branc
   = not attending that session. Only approved clubs of the student's grade are shown.
 - Entrance tests: student ticks at most 5 clubs that have a test, chosen among clubs in their preferences.
 - Time budget: one night. Size S.
+- **Workflow = phases in tab "Quản lý" (Truong, 2026-11-25; replaces the two independent switches):**
+  `Chuẩn bị` (admin rooms + lists) → `GV đăng ký` (open, deadline) → `Duyệt CLB` (admin approves, edits quota
+  / room) → `HS đăng ký` (admin presses open; students see ONLY approved clubs from the teacher phase;
+  deadline) → `Đã đóng` (ready for allocation). One phase active at a time; a phase bar shows all five.
+- Deadline: admin sets date+time per open phase; auto-closes by the machine clock (checked on load and every
+  30 s); "Đóng ngay" and "Gia hạn" buttons. Auto-close of `GV đăng ký` moves to `Duyệt CLB`, never straight
+  to `HS đăng ký`.
+- After `HS đăng ký` opens: teachers cannot edit; admin may raise quota (≤ room capacity) or change room.
+  Deleting a club or changing its session when students already chose it → warning with the number of
+  affected students + confirm, and a line in an admin log (prototype: list on screen).
+- Later (DK2): collection mode exports Sổ nhập; the allocation machine imports it (backup → validate → …).
+  Not written straight to app.db. Open question for DK2: how many machines, LAN or USB.
 
 ## Insight from the reference site (keep / avoid)
 - KEEP: role picker home (3 doors); teacher self-registration; admin approval layer with "original quota"
@@ -36,7 +48,7 @@ In-kiosk entrance exams and the real integration are LATER (DK2), not this branc
   Gale–Shapley).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] L1 Shell + mock data + role picker + Admin: rooms CRUD, student/teacher lists (view), switches
+- [ ] L1 Shell + mock data + role picker + Admin: phase bar + deadlines, rooms CRUD, student/teacher lists
 - [ ] L2 Teacher registration (room/session clash, quota ≤ capacity, grades) + Admin approval table
 - [ ] L3 Student flow: login by mã HS → per-session ranking → tick ≤ 5 tests → confirm + receipt
 - [ ] L4 (optional) Admin export preview shaped like Sổ nhập sheets `1. CLB` / `2. Học sinh` + demand counts
