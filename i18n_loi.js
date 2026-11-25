@@ -1829,5 +1829,9 @@ window.I18N_ERROR_MESSAGES = {
   "dk_gioi_han_sai": {
     "vi": "Giới hạn phải là số từ 1 đến 30, và số bài thi không vượt số nguyện vọng.",
     "en": "Limits must be numbers from 1 to 30, and tests cannot exceed choices."
+  },
+  "dk_chot_loi_he_thong": {
+    "vi": "Chốt và xếp không thành công do lỗi hệ thống. Dữ liệu đã được trả về nguyên trạng. Hãy thử lại; nếu vẫn lỗi, báo người quản lý phần mềm.",
+    "en": "Lock and allocate failed because of a system error. Data has been restored unchanged. Try again; if it persists, tell the software administrator."
   }
 };

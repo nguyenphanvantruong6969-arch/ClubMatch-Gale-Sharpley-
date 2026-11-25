@@ -85,7 +85,7 @@ def test_l2_hong_giua_chung_thi_csdl_ve_nguyen_trang(cd, monkeypatch, hong):
     else:
         monkeypatch.setattr(api, "import_so_nhap", lambda b: {"ok": False, "errors": [{"code": "x", "params": {}}]})
     r = api.dk_chot_va_xep(qt)
-    assert ma(r) == "dk_chot_that_bai"
+    assert ma(r) == ("dk_chot_loi_he_thong" if hong == "xep" else "dk_chot_that_bai")
     assert {t: _bang(api, t) for t in ten} == truoc
     assert ok(api.dk_nhat_ky(qt, 1))[0]["hanh_dong"] == "chot_that_bai"     # chỉ thêm đúng một dòng nhật ký
     assert ok(api.dk_trang_thai())["giai_doan"] == gd
@@ -96,7 +96,7 @@ def test_l2_loi_la_khong_lo_chi_tiet_noi_bo(cd, monkeypatch):
     _dang_ky_va_cham(api, qt)
     monkeypatch.setattr(api, "run_pipeline", lambda **k: (_ for _ in ()).throw(RuntimeError("C:\\x sqlite3 SELECT")))
     r = api.dk_chot_va_xep(qt)
-    assert ma(r) == "dk_chot_that_bai" and "sqlite3" not in str(r["errors"])
+    assert ma(r) == "dk_chot_loi_he_thong" and "sqlite3" not in str(r["errors"])
     assert any("sqlite3" in x["chi_tiet"] for x in ok(api.dk_nhat_ky(qt)))     # chi tiết chỉ vào nhật ký
 
 
