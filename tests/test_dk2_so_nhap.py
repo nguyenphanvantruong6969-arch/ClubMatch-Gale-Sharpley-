@@ -55,7 +55,8 @@ def _nhap(api, p):
 def test_nhap_0_loi_va_xep_dung_diem_san(api, tmp_path, n_hs, n_clb):
     d = ban_mau(n_hs, n_clb)
     p = str(tmp_path / "so.xlsx")
-    assert dk.ghi_tu_ban_mau(d, p) == {"so_clb": n_clb, "so_hs": n_hs}
+    kq = dk.ghi_tu_ban_mau(d, p)
+    assert kq["so_clb"] == n_clb and kq["so_hs"] == n_hs and kq["so_nv_bo"] > 0
     ra = _nhap(api, p)
     assert ra["ok"] and ra["errors"] == [], ra
     con = sqlite3.connect(api.db_path)
@@ -90,7 +91,8 @@ def test_mot_day_nv_theo_buoi_huy_chuong_va_cot(tmp_path):
     for s in doc["students"]:
         thu_tu = [BUOI.index(buoi[x["club_id"]]) for x in s["nv"]]
         assert thu_tu == sorted(thu_tu)                       # NV1…NVk liền một dãy, không bắt đầu lại
-        trong_buoi = [x["clb"] for b in BUOI for x in goc[s["student_id"]]["nv"] if buoi[x["clb"]] == b]
+        trong_buoi = [x["clb"] for b in BUOI for x in goc[s["student_id"]]["nv"] if buoi[x["clb"]] == b
+                      and not (loai[x["clb"]] == "Tuyển chọn" and x["diem"] is None)]
         assert [x["club_id"] for x in s["nv"]] == trong_buoi  # trong buổi giữ thứ tự em xếp
         assert s["class_id"] == goc[s["student_id"]]["lop"]
         for x in s["nv"]:
@@ -112,6 +114,11 @@ def test_tu_ban_mau_chuyen_dung_kieu():
     d["hocSinh"][0]["nv"] = [{"clb": tc[0]["club_id"], "thi": True, "diem": "8,5", "huyChuong": "Bạc"}]
     _, hs = dk.tu_ban_mau(d)
     assert hs[0]["nv"] == [{"club_id": tc[0]["club_id"], "thi": True, "diem": 8.5, "diem_w": 30}]
+    d["hocSinh"][0]["nv"] = [{"clb": tc[0]["club_id"], "thi": False}, {"clb": "c1"},
+                             {"clb": tc[0]["club_id"] if len(tc) < 2 else tc[1]["club_id"], "thi": True, "diem": None}]
+    bo = []
+    _, hs = dk.tu_ban_mau(d, bo)
+    assert [x["club_id"] for x in hs[0]["nv"]] == ["c1"] and len(bo) == 2   # không thi / không điểm: bỏ
 
 
 def _sua(sua):
