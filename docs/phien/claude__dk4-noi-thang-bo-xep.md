@@ -38,6 +38,7 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - New SQLite tables for the portal approved; students register on the program's computers only (no LAN/phone).
 - Merge step by step (DK3 → main, then DK4 …). No PR/tag/release by Claude.
 - Checker rule: never PASS with CI pending; coder READY only with CI green on Linux and Windows.
+- Portal backup RESTORE (Truong, 2026-11-26): option A — NOT built in the portal; restore stays manual from the backup file. Closes the "Needs Truong" restore item. Still open: `_MAX_BACKUPS` can push out the pre-«Chốt và xếp» backup when «Sao lưu ngay» is pressed repeatedly.
 - Later options (not scheduled): DK4B direct table write only if "Chốt và xếp" > 60 s for 798 students;
   DK7 single source of truth (dk_* tables feed the app's manual screens).
 
