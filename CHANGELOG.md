@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L0a: không lộ chi tiết lỗi lên giao diện
+
+- `api_dang_ky._dk_chay` và `dang_ky_sang_xep.dk_chot_va_xep`: không còn gửi `str(e)` cho giao diện; chi tiết vào nhật ký (`logging`), giao diện nhận mã chung `dk_loi_chung` / `dk_chot_loi_he_thong` (mới, cuối `i18n_errors.py`, đã chạy `tao_i18n_js.py`).
+- Test: `tests/test_dk4_l0a_khong_lo_loi.py` (2); `tests/test_dk4_chot_va_xep.py` cập nhật mã mong đợi.
+
 ## 2026-11-25 — DK4-L5: cổng đăng ký mở từ phần mềm và ngược lại
 
 - `index.html`: thanh bên có "Đăng ký CLB" (`#navDangKy`, chỉ quản trị) mở `dang_ky.html` trong cùng cửa sổ. `js/01_khung.js`: liên kết không có `data-tab` không gọi `switchTab`; giữ `location.search` (token `?t=` của bản trình duyệt dự phòng); `#ket-qua` mở thẻ Kết quả. `i18n.js`: `nav_dang_ky` (vi/en).

@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import hmac
 import json
+import logging
 import os
 import re
 import secrets
@@ -21,6 +22,8 @@ import unicodedata
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
+
+_log = logging.getLogger(__name__)
 
 QUAN_TRI, GIAO_VIEN, HOC_SINH = "quan_tri", "giao_vien", "hoc_sinh"
 CAC_GIAI_DOAN = ("chuan_bi", "gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem", "xuat")
@@ -134,8 +137,9 @@ class DangKyMixin:
                 return _ok(ham(cur, phien))
         except _Loi as e:
             return _fail(e.loi)
-        except Exception as e:
-            return _fail(err("dk_loi_chung", detail=str(e)))
+        except Exception:
+            _log.exception("dk_chay: loi khong du kien (chi tiet chi ghi nhat ky, khong gui len giao dien)")
+            return _fail(err("dk_loi_chung"))
 
     # ------------------------------------------------------ khởi tạo, đăng nhập
     def dk_khoi_tao(self, mat_khau, ma_truong, buoi=None, khoi=None):

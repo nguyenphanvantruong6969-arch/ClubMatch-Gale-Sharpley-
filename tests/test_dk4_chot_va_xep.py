@@ -83,6 +83,6 @@ def test_l2_hong_giua_chung_thi_csdl_ve_nguyen_trang(cd, monkeypatch, hong):
         monkeypatch.setattr(api, "run_pipeline", lambda **k: (_ for _ in ()).throw(RuntimeError("no")))
     else:
         monkeypatch.setattr(api, "import_so_nhap", lambda b: {"ok": False, "errors": [{"code": "x", "params": {}}]})
-    assert ma(api.dk_chot_va_xep(qt)) == "dk_chot_that_bai"
+    assert ma(api.dk_chot_va_xep(qt)) == ("dk_chot_loi_he_thong" if hong == "xep" else "dk_chot_that_bai")
     assert {t: _bang(api, t) for t in ten} == truoc
     assert ok(api.dk_trang_thai())["giai_doan"] == gd

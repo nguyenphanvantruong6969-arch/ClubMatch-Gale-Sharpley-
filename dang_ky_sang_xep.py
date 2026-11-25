@@ -6,6 +6,7 @@ L2  `dk_chot_va_xep`      — "Chốt và xếp": sao lưu -> soát -> nhập ->
                             Hỏng ở bước nào thì CSDL về nguyên trạng trước khi bấm; `run_history` không bao giờ bị xoá.
 """
 import base64
+import logging
 import os
 import sqlite3
 import tempfile
@@ -15,6 +16,7 @@ from api_dang_ky import CAC_GIAI_DOAN, QUAN_TRI, _Loi
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 
+_log = logging.getLogger(__name__)
 LUAT_BAT = ("fa_daa", "wharton")
 
 
@@ -130,9 +132,10 @@ class DangKySangXepMixin:
                     self._dk_hoan_nguyen(anh)
                     return _fail(err("dk_chot_that_bai", buoc="xep", detail="; ".join(
                         str(e.get("code")) for e in xep["errors"][:3])))
-            except Exception as e:
+            except Exception:
+                _log.exception("dk_chot_va_xep: loi khong du kien, da hoan nguyen CSDL")
                 self._dk_hoan_nguyen(anh)
-                return _fail(err("dk_chot_that_bai", buoc="loi", detail=str(e)))
+                return _fail(err("dk_chot_loi_he_thong"))
             finally:
                 anh.close()
 

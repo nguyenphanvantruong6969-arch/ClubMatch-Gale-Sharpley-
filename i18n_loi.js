@@ -1817,5 +1817,9 @@ window.I18N_ERROR_MESSAGES = {
   "dk_chot_seed_sai": {
     "vi": "Hạt giống xếp phải là một số nguyên.",
     "en": "The allocation seed must be an integer."
+  },
+  "dk_chot_loi_he_thong": {
+    "vi": "Chốt và xếp không thành công do lỗi hệ thống. Dữ liệu đã được trả về nguyên trạng. Hãy thử lại; nếu vẫn lỗi, báo người quản lý phần mềm.",
+    "en": "Lock and allocate failed because of a system error. Data has been restored unchanged. Try again; if it persists, tell the software administrator."
   }
 };
