@@ -1,0 +1,1040 @@
+{
+ "seed": 42,
+ "suc_khoe": [],
+ "clb": [
+  {
+   "club_id": "THU_3_1",
+   "name": "CLB Đọc sách",
+   "capacity": 300,
+   "buoi": "thu_3",
+   "loai": "TU_DO",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_3_2",
+   "name": "CLB Bóng rổ",
+   "capacity": 60,
+   "buoi": "thu_3",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_3_3",
+   "name": "CLB Cờ vua",
+   "capacity": 50,
+   "buoi": "thu_3",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_3_4",
+   "name": "CLB Âm nhạc",
+   "capacity": 50,
+   "buoi": "thu_3",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_3_5",
+   "name": "CLB Robot",
+   "capacity": 30,
+   "buoi": "thu_3",
+   "loai": "TUYEN_CHON",
+   "diem_san": 5
+  },
+  {
+   "club_id": "THU_3_6",
+   "name": "CLB Toán chuyên đề",
+   "capacity": 30,
+   "buoi": "thu_3",
+   "loai": "TUYEN_CHON",
+   "diem_san": 6
+  },
+  {
+   "club_id": "THU_3_7",
+   "name": "CLB Tranh biện",
+   "capacity": 24,
+   "buoi": "thu_3",
+   "loai": "TUYEN_CHON",
+   "diem_san": 5
+  },
+  {
+   "club_id": "THU_6_1",
+   "name": "CLB Trồng cây",
+   "capacity": 300,
+   "buoi": "thu_6",
+   "loai": "TU_DO",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_6_2",
+   "name": "CLB Bóng đá",
+   "capacity": 60,
+   "buoi": "thu_6",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_6_3",
+   "name": "CLB Hội hoạ",
+   "capacity": 50,
+   "buoi": "thu_6",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_6_4",
+   "name": "CLB Nhiếp ảnh",
+   "capacity": 50,
+   "buoi": "thu_6",
+   "loai": "GIOI_HAN",
+   "diem_san": null
+  },
+  {
+   "club_id": "THU_6_5",
+   "name": "CLB Tin học",
+   "capacity": 30,
+   "buoi": "thu_6",
+   "loai": "TUYEN_CHON",
+   "diem_san": 5
+  },
+  {
+   "club_id": "THU_6_6",
+   "name": "CLB Tiếng Anh",
+   "capacity": 30,
+   "buoi": "thu_6",
+   "loai": "TUYEN_CHON",
+   "diem_san": 6
+  },
+  {
+   "club_id": "THU_6_7",
+   "name": "CLB Khoa học",
+   "capacity": 24,
+   "buoi": "thu_6",
+   "loai": "TUYEN_CHON",
+   "diem_san": 5
+  }
+ ],
+ "che_do": [
+  {
+   "khoa": "chi_xep",
+   "ten": "Chỉ xếp thứ tự",
+   "rules": {
+    "wharton": false,
+    "fa_daa": false,
+    "chia_loai": false,
+    "priority": "score"
+   },
+   "n_cho": 600,
+   "nv": {
+    "1": 364,
+    "2": 74,
+    "3": 37,
+    "4": 83,
+    "5": 29
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 13,
+   "ty_le_nv1": 60.7,
+   "ty_le_top3": 79.2
+  },
+  {
+   "khoa": "chia100",
+   "ten": "Chia 100 điểm",
+   "rules": {
+    "wharton": true,
+    "fa_daa": false,
+    "chia_loai": false,
+    "priority": "score"
+   },
+   "n_cho": 600,
+   "nv": {
+    "1": 189,
+    "2": 162,
+    "3": 110,
+    "4": 102,
+    "5": 25
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 12,
+   "ty_le_nv1": 31.5,
+   "ty_le_top3": 76.8
+  },
+  {
+   "khoa": "chia100_loai",
+   "ten": "Chia 100 điểm + Chia CLB theo loại",
+   "rules": {
+    "wharton": true,
+    "fa_daa": false,
+    "chia_loai": true,
+    "priority": "score"
+   },
+   "n_cho": 600,
+   "nv": {
+    "1": 189,
+    "2": 162,
+    "3": 110,
+    "4": 102,
+    "5": 25
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 12,
+   "ty_le_nv1": 31.5,
+   "ty_le_top3": 76.8
+  },
+  {
+   "khoa": "huy_chuong",
+   "ten": "Huy chương (Vàng/Bạc/Đồng)",
+   "rules": {
+    "wharton": true,
+    "fa_daa": true,
+    "chia_loai": true,
+    "priority": "score"
+   },
+   "n_cho": 600,
+   "nv": {
+    "1": 196,
+    "2": 154,
+    "3": 108,
+    "4": 98,
+    "5": 31
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 13,
+   "ty_le_nv1": 32.7,
+   "ty_le_top3": 76.3
+  }
+ ],
+ "khac_nhau": {
+  "chi_xep|chia100": 249,
+  "chi_xep|chia100_loai": 260,
+  "chi_xep|huy_chuong": 249,
+  "chia100|chia100_loai": 12,
+  "chia100|huy_chuong": 45,
+  "chia100_loai|huy_chuong": 34
+ },
+ "vi_du_doi_clb": [
+  {
+   "student_id": "DC001",
+   "buoi": "thu_6",
+   "ten": "Lê Quốc Phúc",
+   "chi_xep": "CLB Hội hoạ (NV1)",
+   "chia100": "CLB Nhiếp ảnh (NV3)",
+   "huy_chuong": "CLB Nhiếp ảnh (NV3)"
+  },
+  {
+   "student_id": "DC002",
+   "buoi": "thu_6",
+   "ten": "Hoàng Minh Phúc",
+   "chi_xep": "CLB Bóng đá (NV1)",
+   "chia100": "CLB Hội hoạ (NV2)",
+   "huy_chuong": "CLB Hội hoạ (NV2)"
+  },
+  {
+   "student_id": "DC003",
+   "buoi": "thu_6",
+   "ten": "Đặng Ngọc Dũng",
+   "chi_xep": "CLB Nhiếp ảnh (NV1)",
+   "chia100": "CLB Hội hoạ (NV4)",
+   "huy_chuong": "CLB Hội hoạ (NV4)"
+  },
+  {
+   "student_id": "DC004",
+   "buoi": "thu_6",
+   "ten": "Phạm Bảo Dũng",
+   "chi_xep": "CLB Hội hoạ (NV1)",
+   "chia100": "CLB Nhiếp ảnh (NV3)",
+   "huy_chuong": "CLB Nhiếp ảnh (NV3)"
+  },
+  {
+   "student_id": "DC007",
+   "buoi": "thu_6",
+   "ten": "Nguyễn Gia Vy",
+   "chi_xep": "CLB Nhiếp ảnh (NV1)",
+   "chia100": "CLB Hội hoạ (NV3)",
+   "huy_chuong": "CLB Hội hoạ (NV3)"
+  },
+  {
+   "student_id": "DC011",
+   "buoi": "thu_3",
+   "ten": "Lê Gia Linh",
+   "chi_xep": "CLB Âm nhạc (NV1)",
+   "chia100": "CLB Bóng rổ (NV3)",
+   "huy_chuong": "CLB Bóng rổ (NV3)"
+  },
+  {
+   "student_id": "DC012",
+   "buoi": "thu_6",
+   "ten": "Trần Thị Chi",
+   "chi_xep": "CLB Bóng đá (NV1)",
+   "chia100": "CLB Hội hoạ (NV2)",
+   "huy_chuong": "CLB Hội hoạ (NV2)"
+  },
+  {
+   "student_id": "DC013",
+   "buoi": "thu_6",
+   "ten": "Bùi Gia Bình",
+   "chi_xep": "CLB Tiếng Anh (NV1)",
+   "chia100": "CLB Tiếng Anh (NV1)",
+   "huy_chuong": "CLB Nhiếp ảnh (NV2)"
+  }
+ ],
+ "ca": {
+  "thanh_cong": {
+   "student_id": "DC002",
+   "buoi": [
+    {
+     "buoi": "thu_3",
+     "ket_qua": "CLB Tranh biện",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Tranh biện",
+       "loai": "TUYEN_CHON",
+       "huy_chuong": "Đồng",
+       "diem": 10.0,
+       "stb": 294,
+       "ma": "ACCEPTED",
+       "cau": "Em được xếp vào CLB Tranh biện – nguyện vọng 1 của em."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Toán chuyên đề",
+       "loai": "TUYEN_CHON",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 294,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Toán chuyên đề không cần xét."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Robot",
+       "loai": "TUYEN_CHON",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 294,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Robot không cần xét."
+      },
+      {
+       "hang": 4,
+       "clb": "CLB Đọc sách",
+       "loai": "TU_DO",
+       "huy_chuong": null,
+       "diem": null,
+       "stb": 294,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Đọc sách không cần xét."
+      }
+     ]
+    },
+    {
+     "buoi": "thu_6",
+     "ket_qua": "CLB Hội hoạ",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Bóng đá",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Đồng",
+       "diem": null,
+       "stb": 188,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Đồng; các bạn đặt Vàng ở CLB Bóng đá được xét trước."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Hội hoạ",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 188,
+       "ma": "ACCEPTED",
+       "cau": "Em được xếp vào CLB Hội hoạ – nguyện vọng 2 của em."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Nhiếp ảnh",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 188,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Nhiếp ảnh không cần xét."
+      },
+      {
+       "hang": 4,
+       "clb": "CLB Trồng cây",
+       "loai": "TU_DO",
+       "huy_chuong": null,
+       "diem": null,
+       "stb": 188,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Trồng cây không cần xét."
+      }
+     ]
+    }
+   ]
+  },
+  "khong_dat_huy_chuong_boc_tham": {
+   "student_id": "DC034",
+   "buoi": [
+    {
+     "buoi": "thu_3",
+     "ket_qua": "CLB Đọc sách",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Âm nhạc",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Đồng",
+       "diem": null,
+       "stb": 254,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Đồng; các bạn đặt Vàng ở CLB Âm nhạc được xét trước."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Bóng rổ",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 254,
+       "ma": "LOTTERY",
+       "cau": "Em bằng 88 bạn khác ở mọi tiêu chí, tranh 60 chỗ cuối; số bốc thăm của em chưa trúng. Em đứng thứ 13 danh sách chờ."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Cờ vua",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 254,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Bạc; các bạn đặt Vàng ở CLB Cờ vua được xét trước."
+      },
+      {
+       "hang": null,
+       "clb": "CLB Đọc sách",
+       "loai": "TU_DO",
+       "huy_chuong": null,
+       "diem": null,
+       "stb": 254,
+       "ma": "HET_NGUYEN_VONG",
+       "cau": "Các CLB em đã chọn ở buổi này đều đủ chỗ nên em được xếp vào CLB Đọc sách (CLB Tự do)."
+      }
+     ]
+    },
+    {
+     "buoi": "thu_6",
+     "ket_qua": "CLB Bóng đá",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Hội hoạ",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 101,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Bạc; các bạn đặt Vàng ở CLB Hội hoạ được xét trước."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Tiếng Anh",
+       "loai": "TUYEN_CHON",
+       "huy_chuong": null,
+       "diem": 3.0,
+       "stb": 101,
+       "ma": "BELOW_PASS",
+       "cau": "Em chưa đạt mốc 6 điểm của CLB Tiếng Anh."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Bóng đá",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 101,
+       "ma": "ACCEPTED",
+       "cau": "Em được xếp vào CLB Bóng đá – nguyện vọng 3 của em."
+      },
+      {
+       "hang": 4,
+       "clb": "CLB Nhiếp ảnh",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Đồng",
+       "diem": null,
+       "stb": 101,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Nhiếp ảnh không cần xét."
+      }
+     ]
+    }
+   ]
+  },
+  "khong_dat_diem": {
+   "student_id": "DC008",
+   "buoi": [
+    {
+     "buoi": "thu_3",
+     "ket_qua": "CLB Đọc sách",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Cờ vua",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 249,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Bạc; các bạn đặt Vàng ở CLB Cờ vua được xét trước."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Toán chuyên đề",
+       "loai": "TUYEN_CHON",
+       "huy_chuong": null,
+       "diem": 4.0,
+       "stb": 249,
+       "ma": "BELOW_PASS",
+       "cau": "Em chưa đạt mốc 6 điểm của CLB Toán chuyên đề."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Âm nhạc",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Đồng",
+       "diem": null,
+       "stb": 249,
+       "ma": "MEDAL",
+       "cau": "Em đặt huy chương Đồng; các bạn đặt Vàng ở CLB Âm nhạc được xét trước."
+      },
+      {
+       "hang": 4,
+       "clb": "CLB Bóng rổ",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 249,
+       "ma": "LOTTERY",
+       "cau": "Em bằng 88 bạn khác ở mọi tiêu chí, tranh 60 chỗ cuối; số bốc thăm của em chưa trúng. Em đứng thứ 11 danh sách chờ."
+      },
+      {
+       "hang": 5,
+       "clb": "CLB Đọc sách",
+       "loai": "TU_DO",
+       "huy_chuong": null,
+       "diem": null,
+       "stb": 249,
+       "ma": "ACCEPTED",
+       "cau": "Em được xếp vào CLB Đọc sách – nguyện vọng 5 của em."
+      }
+     ]
+    },
+    {
+     "buoi": "thu_6",
+     "ket_qua": "CLB Hội hoạ",
+     "lua_chon": [
+      {
+       "hang": 1,
+       "clb": "CLB Hội hoạ",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Vàng",
+       "diem": null,
+       "stb": 167,
+       "ma": "ACCEPTED",
+       "cau": "Em được xếp vào CLB Hội hoạ – nguyện vọng 1 của em."
+      },
+      {
+       "hang": 2,
+       "clb": "CLB Bóng đá",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Đồng",
+       "diem": null,
+       "stb": 167,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Bóng đá không cần xét."
+      },
+      {
+       "hang": 3,
+       "clb": "CLB Nhiếp ảnh",
+       "loai": "GIOI_HAN",
+       "huy_chuong": "Bạc",
+       "diem": null,
+       "stb": 167,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Nhiếp ảnh không cần xét."
+      },
+      {
+       "hang": 4,
+       "clb": "CLB Trồng cây",
+       "loai": "TU_DO",
+       "huy_chuong": null,
+       "diem": null,
+       "stb": 167,
+       "ma": "HIGHER_CHOICE_ACCEPTED",
+       "cau": "Em đã được xếp vào một CLB em xếp cao hơn nên CLB Trồng cây không cần xét."
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "seed_bang": [
+  {
+   "seed": 42,
+   "n_cho": 600,
+   "nv": {
+    "1": 364,
+    "2": 74,
+    "3": 37,
+    "4": 83,
+    "5": 29
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 13,
+   "ty_le_nv1": 60.7,
+   "ty_le_top3": 79.2,
+   "khac_seed42": 0
+  },
+  {
+   "seed": 7,
+   "n_cho": 600,
+   "nv": {
+    "1": 376,
+    "2": 72,
+    "3": 34,
+    "4": 79,
+    "5": 30
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 9,
+   "ty_le_nv1": 62.7,
+   "ty_le_top3": 80.3,
+   "khac_seed42": 222
+  },
+  {
+   "seed": 2026,
+   "n_cho": 600,
+   "nv": {
+    "1": 377,
+    "2": 63,
+    "3": 37,
+    "4": 74,
+    "5": 36
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 13,
+   "ty_le_nv1": 62.8,
+   "ty_le_top3": 79.5,
+   "khac_seed42": 229
+  },
+  {
+   "seed": 12345,
+   "n_cho": 600,
+   "nv": {
+    "1": 374,
+    "2": 70,
+    "3": 32,
+    "4": 80,
+    "5": 27
+   },
+   "nv_6_tro_len": 0,
+   "ngoai_nv": 17,
+   "ty_le_nv1": 62.3,
+   "ty_le_top3": 79.3,
+   "khac_seed42": 216
+  }
+ ],
+ "stb_mau": {
+  "42": {
+   "ds_buoi": [
+    "thu_3",
+    "thu_6"
+   ],
+   "hoc_sinh": [
+    {
+     "student_id": "DC001",
+     "name": "Lê Quốc Phúc",
+     "so": {
+      "thu_3": 37,
+      "thu_6": 135
+     }
+    },
+    {
+     "student_id": "DC002",
+     "name": "Hoàng Minh Phúc",
+     "so": {
+      "thu_3": 294,
+      "thu_6": 188
+     }
+    },
+    {
+     "student_id": "DC003",
+     "name": "Đặng Ngọc Dũng",
+     "so": {
+      "thu_3": 159,
+      "thu_6": 96
+     }
+    },
+    {
+     "student_id": "DC004",
+     "name": "Phạm Bảo Dũng",
+     "so": {
+      "thu_3": 271,
+      "thu_6": 55
+     }
+    },
+    {
+     "student_id": "DC005",
+     "name": "Bùi Quốc Dũng",
+     "so": {
+      "thu_3": 25,
+      "thu_6": 169
+     }
+    },
+    {
+     "student_id": "DC006",
+     "name": "Phạm Văn Dũng",
+     "so": {
+      "thu_3": 275,
+      "thu_6": 223
+     }
+    },
+    {
+     "student_id": "DC007",
+     "name": "Nguyễn Gia Vy",
+     "so": {
+      "thu_3": 32,
+      "thu_6": 63
+     }
+    },
+    {
+     "student_id": "DC008",
+     "name": "Đỗ Minh Phúc",
+     "so": {
+      "thu_3": 249,
+      "thu_6": 167
+     }
+    },
+    {
+     "student_id": "DC009",
+     "name": "Bùi Minh Hà",
+     "so": {
+      "thu_3": 149,
+      "thu_6": 166
+     }
+    },
+    {
+     "student_id": "DC010",
+     "name": "Nguyễn Minh Dũng",
+     "so": {
+      "thu_3": 259,
+      "thu_6": 249
+     }
+    }
+   ],
+   "tong_hoc_sinh": 300,
+   "seed": 42,
+   "che_do": "stb_ngay",
+   "cach_cu": false,
+   "nhieu_buoi": true,
+   "da_chay": true
+  },
+  "7": {
+   "ds_buoi": [
+    "thu_3",
+    "thu_6"
+   ],
+   "hoc_sinh": [
+    {
+     "student_id": "DC001",
+     "name": "Lê Quốc Phúc",
+     "so": {
+      "thu_3": 71,
+      "thu_6": 54
+     }
+    },
+    {
+     "student_id": "DC002",
+     "name": "Hoàng Minh Phúc",
+     "so": {
+      "thu_3": 174,
+      "thu_6": 19
+     }
+    },
+    {
+     "student_id": "DC003",
+     "name": "Đặng Ngọc Dũng",
+     "so": {
+      "thu_3": 93,
+      "thu_6": 295
+     }
+    },
+    {
+     "student_id": "DC004",
+     "name": "Phạm Bảo Dũng",
+     "so": {
+      "thu_3": 243,
+      "thu_6": 149
+     }
+    },
+    {
+     "student_id": "DC005",
+     "name": "Bùi Quốc Dũng",
+     "so": {
+      "thu_3": 2,
+      "thu_6": 269
+     }
+    },
+    {
+     "student_id": "DC006",
+     "name": "Phạm Văn Dũng",
+     "so": {
+      "thu_3": 176,
+      "thu_6": 189
+     }
+    },
+    {
+     "student_id": "DC007",
+     "name": "Nguyễn Gia Vy",
+     "so": {
+      "thu_3": 195,
+      "thu_6": 108
+     }
+    },
+    {
+     "student_id": "DC008",
+     "name": "Đỗ Minh Phúc",
+     "so": {
+      "thu_3": 87,
+      "thu_6": 36
+     }
+    },
+    {
+     "student_id": "DC009",
+     "name": "Bùi Minh Hà",
+     "so": {
+      "thu_3": 136,
+      "thu_6": 176
+     }
+    },
+    {
+     "student_id": "DC010",
+     "name": "Nguyễn Minh Dũng",
+     "so": {
+      "thu_3": 61,
+      "thu_6": 69
+     }
+    }
+   ],
+   "tong_hoc_sinh": 300,
+   "seed": 7,
+   "che_do": "stb_ngay",
+   "cach_cu": false,
+   "nhieu_buoi": true,
+   "da_chay": true
+  }
+ },
+ "loi": {
+  "loi_clb": {
+   "import_errors": [
+    {
+     "code": "so_nhap_chi_tieu_sai",
+     "params": {
+      "sheet": "1. CLB",
+      "dong": 3,
+      "ten": "CLB Bóng rổ",
+      "chi_tieu": "0",
+      "uu_tien": "0"
+     }
+    },
+    {
+     "code": "so_nhap_chi_tieu_sai",
+     "params": {
+      "sheet": "1. CLB",
+      "dong": 4,
+      "ten": "CLB Cờ vua",
+      "chi_tieu": "50",
+      "uu_tien": "80"
+     }
+    }
+   ]
+  },
+  "loi_hs": {
+   "import_errors": [
+    {
+     "code": "so_nhap_hs_trung",
+     "params": {
+      "sheet": "2. Học sinh",
+      "dong": 5,
+      "dong_truoc": 3,
+      "student_id": "DC001"
+     }
+    },
+    {
+     "code": "so_nhap_thieu_ma_hs",
+     "params": {
+      "sheet": "2. Học sinh",
+      "dong": 6
+     }
+    },
+    {
+     "code": "so_nhap_clb_khong_co",
+     "params": {
+      "sheet": "2. Học sinh",
+      "dong": 7,
+      "student_id": "DC005",
+      "k": 1,
+      "gia_tri": "CLB Bơi lội"
+     }
+    },
+    {
+     "code": "so_nhap_diem_sai",
+     "params": {
+      "sheet": "2. Học sinh",
+      "dong": 8,
+      "student_id": "DC006",
+      "k": 1,
+      "gia_tri": "chín"
+     }
+    }
+   ]
+  },
+  "thieu_xung_dot": {
+   "import_errors": [],
+   "health": [
+    {
+     "code": "health_student_no_preferences",
+     "params": {
+      "n": 1,
+      "sample": "DC007"
+     },
+     "severity": "medium"
+    },
+    {
+     "code": "fa_huy_chuong_trung_gia_tri",
+     "params": {
+      "student_id": "DC009",
+      "buoi": "thu_3",
+      "gia_tri": 60
+     },
+     "severity": "high"
+    }
+   ],
+   "run_errors": [
+    {
+     "code": "fa_huy_chuong_trung_gia_tri",
+     "params": {
+      "student_id": "DC009",
+      "buoi": "thu_3",
+      "gia_tri": 60
+     }
+    }
+   ],
+   "chay_duoc": false
+  },
+  "xung_dot_che_do": {
+   "run_errors": [
+    {
+     "code": "fa_thieu_clb_tu_do",
+     "params": {
+      "buoi": "thu_3"
+     }
+    },
+    {
+     "code": "fa_thieu_clb_tu_do",
+     "params": {
+      "buoi": "thu_6"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_1"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_2"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_3"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_4"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_5"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_6"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_3_7"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_1"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_2"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_3"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_4"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_5"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_6"
+     }
+    },
+    {
+     "code": "fa_clb_thieu_loai",
+     "params": {
+      "club_id": "THU_6_7"
+     }
+    }
+   ]
+  }
+ }
+}
