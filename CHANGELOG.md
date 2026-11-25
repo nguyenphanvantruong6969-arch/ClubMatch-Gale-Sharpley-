@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — DK3-L1: bảng của cổng đăng ký thật
+
+- `dang_ky_schema.py` (mới): tám bảng `dk_*` (cài đặt, giai đoạn, phòng, giáo viên, CLB đăng ký, học sinh, nguyện vọng + huy chương, nhật ký), toàn bảng mới; `di_tru_schema` thêm bước "dk3" (sao lưu trước nếu CSDL có dữ liệu, chạy lại không đổi).
+- Test: `tests/test_dk3_schema.py` (2).
+
 ## 2026-11-25 — DK2: cầu nối bản mẫu cổng đăng ký → Sổ nhập thật
 
 - `dk2_so_nhap.py` (mới): JSON xuất của bản mẫu (`dinhDang` 1) → `SO_NHAP_CLB.xlsx` CHỈ qua `so_nhap.ghi_so_nhap` (chế độ huy chương, cột Lớp). Soát trước khi ghi (mã trùng, loại, chỉ tiêu, điểm sàn nguyên 0–10 theo `kiem_thuoc_tinh`, huy chương, trần 10 NV / 5 bài mỗi buổi); lỗi thì không ghi tệp. CLI `python dk2_so_nhap.py vao.json ra.xlsx`. Không đổi hợp đồng cột, schema, thuật toán.
