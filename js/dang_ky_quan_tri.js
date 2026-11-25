@@ -89,6 +89,7 @@
   function bangKetQua(t) {
     const nv = (m) => Object.keys(m).sort().map((k) => "NV" + k + ": " + m[k]).join(" · ") || "—";
     return h("div#dkKetQua", {}, h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
+      t.da_bat_luat ? h("p#dkBatLuat.dk-phu", {}, "Lần này phần mềm đã tự bật hai luật cần cho đăng ký: giữ chỗ (fa_daa) và huy chương (wharton).") : null,
       bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
   }
 
@@ -102,10 +103,10 @@
     const [ph, gv, hs] = (await Promise.all([DK.goi("dk_phong_danh_sach", T), DK.goi("dk_gv_danh_sach", T), DK.goi("dk_hs_danh_sach", T)])).map((r) => r.data || []);
     const datLai = (ham, id, ten) => DK.nutNhe("Đặt lại PIN", function () { DK.chay(this, async () => {
       const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); });
-    return h("div", {}, h("details", { open: true }, h("summary", {}, "Phòng (" + ph.length + ")"), bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
     const moKhoa = (vai, ten) => DK.nutNhe("Mở khoá", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_mo_khoa", T, vai, ten); if (r.ok) { DK.thongBao("Đã mở khoá cho " + ten); DK.quanTri(); } return r; }); });
     const thaoTac = (x, nut, vai, ten) => x.bi_khoa ? h("span.dk-thao-tac", {}, nut, h("span.dk-phu", {}, " Đang khoá "), moKhoa(vai, ten)) : nut;
+    return h("div", {}, h("details", { open: true }, h("summary", {}, "Phòng (" + ph.length + ")"), bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
       h("details", {}, h("summary", {}, "Giáo viên (" + gv.length + ")"), bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
       h("details", {}, h("summary", {}, "Học sinh (" + hs.length + ")"), bang(["Mã", "Họ tên", "Lớp", "Đã nộp", ""], hs.map((x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)]))));
   }

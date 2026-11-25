@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L0e: luật tự bật được ghi nhật ký và hiện trong tóm tắt
+
+- `dk_chot_va_xep`: khi `_dk_bao_dam_luat` tự bật `fa_daa` và `wharton`, ghi dòng `bat_luat` vào `dk_nhat_ky`; kết quả trả `da_bat_luat`; `dk_ket_qua_xep` cũng trả `da_bat_luat` (lần "Chốt và xếp" gần nhất). `js/dang_ky_quan_tri.js`: dòng `#dkBatLuat` trong bảng tóm tắt.
+- Test: `tests/test_dk4_l0e_bat_luat_ghi_nhat_ky.py` (2); `tests/test_giao_dien_dk4_chot_xep.py` thêm một khẳng định.
+
 ## 2026-11-25 — DK4-L0d: hoàn nguyên "Chốt và xếp" không làm mất dòng nhật ký chỉ-thêm
 
 - Chứng minh bằng test: hoàn nguyên cả CSDL từ ảnh chụp KHÔNG làm mất dòng `run_history` đã có trước khi bấm (ảnh chụp chứa chúng), nhưng LÀM MẤT dòng của chính lần xếp đã ghi rồi mới hỏng (vi phạm "mỗi lần chạy thêm một dòng").

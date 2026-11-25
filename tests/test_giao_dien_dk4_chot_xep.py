@@ -40,6 +40,7 @@ def test_chot_va_xep_qua_giao_dien(tmp_path):
         pg.wait_for_selector("#dkKetQua")
         assert pg.locator("#dkApp .btn-primary:visible").count() == 1       # chỉ "Xuất Sổ nhập"
         assert "Đã xếp" in pg.inner_text("#dkKetQua")
+        assert "tự bật" in pg.inner_text("#dkBatLuat")                      # DK4-L0e: luật tự bật được báo rõ
         assert pg.locator("#dkKetQua tbody tr").count() >= 1               # có buổi T2
         assert not loi, loi
         br.close()

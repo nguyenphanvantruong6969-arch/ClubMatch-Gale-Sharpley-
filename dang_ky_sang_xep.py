@@ -97,8 +97,11 @@ class DangKySangXepMixin:
             r = cur.execute("SELECT run_id, seed, run_at, n_matched, n_total FROM run_history ORDER BY run_id DESC LIMIT 1").fetchone()
             if not r:
                 return {"da_xep": False}
+            # Lần "Chốt và xếp" gần nhất có tự bật luật không: dòng `bat_luat` ngay sau dòng `chot_va_xep` mới nhất.
+            nk = cur.execute("SELECT hanh_dong FROM dk_nhat_ky WHERE hanh_dong IN ('chot_va_xep', 'bat_luat') "
+                             "ORDER BY rowid DESC LIMIT 1").fetchone()
             return {"da_xep": True, "run_id": r[0], "seed": r[1], "run_at": r[2], "n_matched": r[3], "n_total": r[4],
-                    **self._dk_tom_tat_xep(cur)}
+                    "da_bat_luat": bool(nk and nk[0] == "bat_luat"), **self._dk_tom_tat_xep(cur)}
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
     def dk_chot_va_xep(self, token, seed=None):
@@ -160,6 +163,8 @@ class DangKySangXepMixin:
         def ghi(cur, p):
             self._dk_dat(cur, "giai_doan", "xuat")
             self._dk_ghi_nk(cur, QUAN_TRI, "chot_va_xep", "seed %d, %s -> xuat" % (seed, giai_doan_cu))
+            if da_bat_luat:
+                self._dk_ghi_nk(cur, "he_thong", "bat_luat", ", ".join(LUAT_BAT) + " (Chốt và xếp tự bật)")
             tt = self._dk_tom_tat_xep(cur)
             rid = cur.execute("SELECT MAX(run_id) FROM run_history").fetchone()[0]
             return {"da_xep": True, "seed": seed, "run_id": rid, "da_bat_luat": da_bat_luat,
