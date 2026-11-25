@@ -180,7 +180,7 @@
   /* ---------- A10: xem trước bản xuất ---------- */
   QT2.xemTruoc = async function () {
     const x = (await DK.goi("dk_xuat_xem_truoc", T())).data || { clb: [], hoc_sinh: [], tong_hoc_sinh: 0, so_lan_xuat: 0 };
-    return h("details#dkXemTruoc", {}, h("summary", {}, "Xem trước Sổ nhập (" + x.clb.length + " CLB, " + x.tong_hoc_sinh + " học sinh)"),
+    return h("details#dkXemTruoc", { open: true }, h("summary", {}, "Xem trước Sổ nhập (" + x.clb.length + " CLB, " + x.tong_hoc_sinh + " học sinh)"),
       h("p.dk-phu", {}, "Đã xuất " + x.so_lan_xuat + " lần. Mỗi lần xuất là một phiên bản mới."),
       h("h3", {}, "1. CLB"), DK.bang(["Tên", "Buổi", "Loại", "Chỉ tiêu", "Điểm sàn", "Mã", "Phòng", "Sức chứa phòng"], x.clb.map((r) => r.map((v) => (v === null ? "" : v)))),
       h("h3", {}, "2. Học sinh"), DK.bang(["Mã", "Họ tên", "Lớp", "Nguyện vọng"], x.hoc_sinh),

@@ -117,10 +117,11 @@
   }
 
   function bangKetQua(t) {
-    const nv = (m) => Object.keys(m).sort().map((k) => "NV" + k + ": " + m[k]).join(" · ") || "—";
+    const nv = (m) => Object.keys(m).sort((a, b) => (a === "ngoai") - (b === "ngoai") || (a < b ? -1 : a > b ? 1 : 0))
+      .map((k) => (k === "ngoai" ? "Ngoài nguyện vọng" : "NV" + k) + ": " + m[k]).join(" · ") || "—";
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
       h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
-      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
+      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
   }
 
   function hienPin(ds, tieuDe, vai) {

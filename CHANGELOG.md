@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-J: sửa ba lỗi màn «Xuất» do checker DKL tìm ra (cổng đăng ký)
+
+- `dang_ky_sang_xep.py` (`_dk_tom_tat_xep`): học sinh xếp bù (hạng NULL, ví dụ em không gửi nguyện vọng) nay có khoá `"ngoai"` thay cho `"None"`; mỗi buổi thêm `ten_buoi` (tên cổng đã khai, ví dụ «T2», ánh xạ ngược từ mã chuẩn «thu_2» bằng `so_nhap.ma_buoi`; `match_results` không đổi).
+- `js/dang_ky_quan_tri.js` (`bangKetQua`): cột «Theo nguyện vọng» in «Ngoài nguyện vọng: N» (xếp cuối) thay «NVNone: N»; cột «Buổi» in `ten_buoi`. `js/dang_ky_quan_tri_2.js` (`xemTruoc`): thẻ «Xem trước Sổ nhập» mở sẵn, không còn chỉ thấy tiêu đề.
+- Test: `test_dk4_chot_va_xep.py::test_tom_tat_xep_hang_null_la_ngoai_nguyen_vong_va_co_ten_buoi` (mới), `test_giao_dien_dk4_chot_xep.py` (thêm khẳng định NVNone/thu_2), `test_giao_dien_dkl_quan_tri.py` test_6 (bảng hiện sẵn) và test_4 (nhập «8.5» dấu chấm), `test_giao_dien_dkl_hoc_sinh.py::test_2b_khong_tick_bai_thi_thi_khong_co_link_lam_bai` (mới; fixture thêm học sinh H3).
+- Không đổi thuật toán, schema, CSV, `i18n_errors.py`.
+
 ## 2026-11-26 — DKL-I: lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu
 
 - `index.html` (khung «1. Nhập sổ»): đoạn `#ghiChuDangKy` + liên kết «Mở Đăng ký CLB», chỉ hiện khi thanh «Việc tiếp theo» ở trạng thái `nap_so` (chưa có dữ liệu); nói cổng làm gì (giáo viên lập CLB, học sinh đăng ký, xuất Sổ nhập tự động) và việc lần đầu (đặt mật khẩu quản trị cho cổng). `js/17_viec_tiep_theo.js` bật/tắt và giữ `?t=<token>`; `i18n.js` hai khoá `dk_loi_dan`, `dk_loi_dan_lien_ket` (vi, en).

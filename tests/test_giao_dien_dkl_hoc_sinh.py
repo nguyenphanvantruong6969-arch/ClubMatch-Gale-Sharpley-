@@ -30,7 +30,7 @@ def cong(tmp_path_factory):
     _ok(api.dk_phong_luu(qt, "P2", 30))
     for k in range(1, 8):
         _ok(api.dk_phong_luu(qt, "Q%d" % k, 20))
-    _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1"))
+    _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1\nH3\tChi\t10A1"))
     pin = {x["ten"]: x["pin"] for x in _ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nCô Bê\n" + "\n".join("Cô G%d" % k for k in range(1, 8))))["da_tao"]}
     _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     ph = {p["ten"]: p["phong_id"] for p in _ok(api.dk_phong_danh_sach(qt))}
@@ -114,6 +114,21 @@ def test_2_gui_roi_bien_nhan_co_link_bai_thi_gio_gui_va_xong_thoat(cong):
     assert "2099" in pg.locator("#dkApp").inner_text()                          # S4: hạn chót hiện cho học sinh
     pg.get_by_role("button", name="Xong, thoát").click()
     pg.wait_for_selector("text=Chọn vai trò")
+
+
+def test_2b_khong_tick_bai_thi_thi_khong_co_link_lam_bai(cong):
+    """S1: link bài thi chỉ hiện cho CLB Tuyển chọn em đã tick. Em chọn Robot nhưng KHÔNG tick thi -> không có link."""
+    pg = cong
+    _vao_hs(pg, "H3")
+    pg.wait_for_selector("text=Buổi T2")
+    for _ in range(2):
+        pg.locator("button:has-text('+ Thêm')").first.click()
+        pg.wait_for_timeout(120)
+    _toi_xem_lai(pg)
+    pg.locator("#dkGui").click()
+    pg.wait_for_selector("#dkBienNhan")
+    assert pg.get_by_role("link", name="Làm bài thi").count() == 0
+    assert not pg.loi, pg.loi
 
 
 def test_3_nop_rong_co_canh_bao_va_han_chot_hien_cho_hoc_sinh(cong):
