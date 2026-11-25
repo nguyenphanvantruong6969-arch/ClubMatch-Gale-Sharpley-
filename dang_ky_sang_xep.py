@@ -12,6 +12,7 @@ import sqlite3
 import tempfile
 
 import dk2_so_nhap
+import so_nhap
 from api_dang_ky import CAC_GIAI_DOAN, QUAN_TRI, _Loi
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
@@ -80,13 +81,15 @@ class DangKySangXepMixin:
         buoi = [r[0] for r in cur.execute("SELECT DISTINCT buoi FROM match_results ORDER BY buoi COLLATE THU_TU_BUOI")]
         tong = cur.execute("SELECT COUNT(DISTINCT student_id) FROM match_results").fetchone()[0]
         theo_buoi = []
+        # Tên buổi như cổng đã khai ("T2"): `match_results.buoi` là mã chuẩn của phần mềm xếp ("thu_2"). Chỉ để HIỂN THỊ.
+        ten_cong = {so_nhap.ma_buoi(t): t for t in self._dk_buoi_khoi(cur)[0]}
         for b in buoi:
             xep = cur.execute("SELECT COUNT(*) FROM match_results WHERE buoi = ? AND club_id IS NOT NULL", (b,)).fetchone()[0]
             hang = {}
             for h, n in cur.execute("SELECT rank_in_student_pref, COUNT(*) FROM match_results "
                                     "WHERE buoi = ? AND club_id IS NOT NULL GROUP BY 1", (b,)):
-                hang[str(h)] = n
-            theo_buoi.append({"buoi": b, "da_xep": xep, "chua_xep": cur.execute(
+                hang["ngoai" if h is None else str(h)] = n          # hạng NULL = xếp bù, ngoài danh sách nguyện vọng
+            theo_buoi.append({"buoi": b, "ten_buoi": ten_cong.get(b, b), "da_xep": xep, "chua_xep": cur.execute(
                 "SELECT COUNT(*) FROM match_results WHERE buoi = ? AND club_id IS NULL", (b,)).fetchone()[0],
                 "theo_nguyen_vong": hang})
         return {"so_hoc_sinh": tong, "theo_buoi": theo_buoi}

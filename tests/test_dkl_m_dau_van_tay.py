@@ -1,4 +1,4 @@
-"""DKL-J (API): `dk_dau_van_tay` — dấu vân tay rẻ của dữ liệu cổng, để màn quản trị biết "có đổi không" mà không phải tải lại tất cả.
+"""DKL-M (API): `dk_dau_van_tay` — dấu vân tay rẻ của dữ liệu cổng, để màn quản trị biết "có đổi không" mà không phải tải lại tất cả.
 Công khai (không token) như `dk_trang_thai`, và KHÔNG làm mới giờ nghỉ của phiên quản trị. Dữ liệu MÔ PHỎNG."""
 from api import PipelineAPI
 

@@ -140,3 +140,14 @@ def test_gioi_han_nguyen_vong_va_bai_thi_doi_duoc(cd):
     assert ok(api.dk_dat_gioi_han(qt, 3, 1)) == {"toi_da_nv": 3, "toi_da_thi": 1}
     assert ma(api.dk_dat_gioi_han(qt, 2, 5)) == "dk_gioi_han_sai"
     assert ma(api.dk_dat_gioi_han("sai", 3, 1)) == "dk_can_dang_nhap"
+
+
+def test_tom_tat_xep_hang_null_la_ngoai_nguyen_vong_va_co_ten_buoi(cd):
+    """Lỗi 1+2 của checker DKL: H3 không gửi nguyện vọng nên được xếp bù (hạng NULL); buổi hiện đúng tên cổng ("T2")."""
+    api, qt = cd
+    _dang_ky_va_cham(api, qt)
+    ok(api.dk_chot_va_xep(qt, 7))
+    for tt in (ok(api.dk_ket_qua_xep(qt)), ok(api.dk_chot_va_xep(qt, 7))):
+        b = tt["theo_buoi"][0]
+        assert b["theo_nguyen_vong"] == {"1": 2, "ngoai": 1}, b
+        assert b["ten_buoi"] == "T2" and b["buoi"] == "thu_2", b

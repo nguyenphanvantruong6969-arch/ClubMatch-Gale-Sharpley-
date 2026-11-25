@@ -292,7 +292,7 @@ class DangKyMixin:
         return self._dk_chay(lam)
 
     def dk_dau_van_tay(self):
-        """DKL-J. Công khai (như `dk_trang_thai`): dấu vân tay RẺ của dữ liệu — thời điểm sửa và kích thước của tệp CSDL và tệp WAL.
+        """DKL-M. Công khai (như `dk_trang_thai`): dấu vân tay RẺ của dữ liệu — thời điểm sửa và kích thước của tệp CSDL và tệp WAL.
         Mọi thay đổi (kể cả học sinh gửi nguyện vọng, không ghi nhật ký) làm dấu đổi; đọc thì không. Màn quản trị hỏi mỗi 5 giây và chỉ
         vẽ lại khi dấu đổi. Không mở CSDL, không cần phiên và KHÔNG làm mới giờ nghỉ của phiên quản trị. Không lộ dữ liệu cá nhân."""
         try:

@@ -180,7 +180,7 @@
   /* ---------- A10: xem trước bản xuất ---------- */
   QT2.xemTruoc = async function () {
     const x = (await DK.goi("dk_xuat_xem_truoc", T())).data || { clb: [], hoc_sinh: [], tong_hoc_sinh: 0, so_lan_xuat: 0 };
-    return h("details#dkXemTruoc", {}, h("summary", {}, "Xem trước Sổ nhập (" + x.clb.length + " CLB, " + x.tong_hoc_sinh + " học sinh)"),
+    return h("details#dkXemTruoc", { open: true }, h("summary", {}, "Xem trước Sổ nhập (" + x.clb.length + " CLB, " + x.tong_hoc_sinh + " học sinh)"),
       h("p.dk-phu", {}, "Đã xuất " + x.so_lan_xuat + " lần. Mỗi lần xuất là một phiên bản mới."),
       h("h3", {}, "1. CLB"), DK.bang(["Tên", "Buổi", "Loại", "Chỉ tiêu", "Điểm sàn", "Mã", "Phòng", "Sức chứa phòng"], x.clb.map((r) => r.map((v) => (v === null ? "" : v)))),
       h("h3", {}, "2. Học sinh"), DK.bang(["Mã", "Họ tên", "Lớp", "Nguyện vọng"], x.hoc_sinh),
@@ -196,7 +196,7 @@
       const r = await DK.goi("dk_sao_luu", T()); if (r.ok) kq.textContent = "Đã tạo bản sao lưu lúc " + r.data.luc.replace("T", " ") + "."; return r; }); }, { id: "dkSaoLuu" });
     return h("div", {}, h("h2", {}, "Sao lưu"), h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
   };
-  /* DKL-J: tự cập nhật trong vài giây. Mỗi 5 giây hỏi `dk_dau_van_tay` (công khai, rẻ, KHÔNG làm mới giờ nghỉ của phiên); chỉ vẽ
+  /* DKL-M: tự cập nhật trong vài giây. Mỗi 5 giây hỏi `dk_dau_van_tay` (công khai, rẻ, KHÔNG làm mới giờ nghỉ của phiên); chỉ vẽ
      lại khi dấu đổi — không có thay đổi thì không tải lại gì. Đang gõ vào ô nhập hoặc đang mở hộp xác nhận thì hoãn (dấu cũ giữ
      nguyên nên vòng sau thử lại). Vẽ lại bằng `DK.quanTri(true)`: không tính là thao tác, không đặt lại đồng hồ nghỉ của máy khách. */
   const CHU_KY_LAM_MOI_MS = 5000;

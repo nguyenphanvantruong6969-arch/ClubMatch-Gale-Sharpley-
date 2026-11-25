@@ -23,7 +23,7 @@
   const hanChu = (tt) => tt.han_chot ? h("p.dk-han#dkHan", {}, "Hạn chót ", h("b", {}, String(tt.han_chot).replace("T", " ")), " · " + conLai(tt.han_chot) + ". Đến hạn tự đóng.")
     : h("p.dk-han#dkHan", {}, "Chưa đặt hạn chót. Quản trị đóng đăng ký bằng nút bên dưới.");
 
-  DK.quanTri = async function (tuDong) {          // tuDong = tự làm mới (DKL-J: hỏi dấu vân tay mỗi 5 giây): KHÔNG tính là thao tác, không đặt lại đồng hồ nghỉ
+  DK.quanTri = async function (tuDong) {          // tuDong = tự làm mới (DKL-M: hỏi dấu vân tay mỗi 5 giây): KHÔNG tính là thao tác, không đặt lại đồng hồ nghỉ
     if (!tuDong) DK.henGio(DK.GIAY_NGHI_QUAN_TRI, "Đã khoá quản lý vì không thao tác.");   // = GIAY_NGHI_QUAN_TRI của api_dang_ky.py (120 s, v8: 2 phút)
     if (DK.QT2) DK.QT2.tuLamMoi(false);
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
@@ -37,7 +37,7 @@
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanhGd(tt.giai_doan), thanh, noiDung);
     const nd = await thanTheo[the]();
     if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
-    /* DKL-J: tự cập nhật ở thẻ «Việc bây giờ» của ba giai đoạn có người khác đang thay đổi dữ liệu. */
+    /* DKL-M: tự cập nhật ở thẻ «Việc bây giờ» của ba giai đoạn có người khác đang thay đổi dữ liệu. */
     if (DK.S.vai === "quan_tri" && the === "viec" && ["gv_dang_ky", "duyet", "hs_dang_ky"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
@@ -118,10 +118,11 @@
   }
 
   function bangKetQua(t) {
-    const nv = (m) => Object.keys(m).sort().map((k) => "NV" + k + ": " + m[k]).join(" · ") || "—";
+    const nv = (m) => Object.keys(m).sort((a, b) => (a === "ngoai") - (b === "ngoai") || (a < b ? -1 : a > b ? 1 : 0))
+      .map((k) => (k === "ngoai" ? "Ngoài nguyện vọng" : "NV" + k) + ": " + m[k]).join(" · ") || "—";
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
       h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
-      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
+      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
   }
 
   function hienPin(ds, tieuDe, vai) {

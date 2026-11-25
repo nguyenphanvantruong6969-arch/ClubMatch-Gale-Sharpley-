@@ -1,4 +1,4 @@
-"""DKL-J (Playwright + Chromium): màn quản trị tự cập nhật trong vài giây khi dữ liệu đổi (hỏi dấu vân tay mỗi 5 giây,
+"""DKL-M (Playwright + Chromium): màn quản trị tự cập nhật trong vài giây khi dữ liệu đổi (hỏi dấu vân tay mỗi 5 giây,
 chỉ vẽ lại khi đổi), ở giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký. Đồng hồ giả. Dữ liệu MÔ PHỎNG."""
 import os
 

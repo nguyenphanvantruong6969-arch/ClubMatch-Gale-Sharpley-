@@ -41,6 +41,9 @@ def test_chot_va_xep_qua_giao_dien(tmp_path):
         assert pg.locator("#dkApp .btn-primary:visible").count() == 1       # chỉ "Xuất Sổ nhập"
         assert "giữ chỗ và huy chương" in pg.inner_text("#dkLuuY")           # báo luật vừa được bật
         assert "Đã xếp" in pg.inner_text("#dkKetQua")
+        kq = pg.inner_text("#dkKetQua")
+        assert "NVNone" not in kq and "Ngoài nguyện vọng: 1" in kq and "NV1: 2" in kq     # lỗi 1: học sinh xếp bù
+        assert "thu_2" not in kq and "T2" in kq                                           # lỗi 2: tên buổi của cổng
         assert pg.locator("#dkKetQua tbody tr").count() >= 1               # có buổi T2
         assert not loi, loi
         br.close()
