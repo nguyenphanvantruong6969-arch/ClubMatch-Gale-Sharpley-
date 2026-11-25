@@ -89,7 +89,8 @@ READY | head 42b93af
 - [x] G4 D37 fold: ≤7 cards per buổi then "Xem thêm (N)" — `test_giao_dien_dkl_hoc_sinh.py::test_3c_moi_buoi_toi_da_7_the_roi_xem_them`
 - Changed expectations: `test_giao_dien_dk3_cong.py` (test_5, `_vao_hs`), `test_dk4_l0c_gioi_han_tu_backend.py` (extra click "Đúng là em").
 - soat-ma: `kiem_nhanh.py` 7/7; tier-3 eye check of the JS diff only (no XSS: all text via `h()`, PIN never stored). Tiers 1, 2, 4 untouched by this diff (no algorithm/backend/schema change), not re-run.
-- Not verified here: Windows/pywebview, full suite. CI on the pushed head: see below.
+- CI run 1673 (head b28afe9) green on Linux 1–6, Windows 1–9 and ruff. Not verified: pywebview/WebView2 by hand.
+- **DKL-G READY | head b28afe9** (only DKL-G; the whole DKL still needs the checker, DKL_GIAO_THUC §5).
 
 ## Needs Truong (DKL)
 - Backup RESTORE from the portal ("Khôi phục từ bản sao lưu", DKL-G item 5) NOT built, needs Truong's decision (restore overwrites app.db). Original note: backup RESTORE from the portal (v8 has it) not built: needs a decision (restore overwrites app.db). Also `_backup_db` keeps only `_MAX_BACKUPS` copies, so pressing «Sao lưu ngay» repeatedly can push out the backup taken before the last «Chốt và xếp».
