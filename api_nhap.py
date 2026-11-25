@@ -794,8 +794,8 @@ class NhapDuLieuMixin:
                         n_bo += 1
                         continue
                     try:
-                        capacity = int(row.get("capacity") or 0)
-                        reserve_capacity = int(row.get("reserve_capacity") or 0)
+                        capacity = int(so_nhap.chan_gach_duoi(row.get("capacity") or 0))
+                        reserve_capacity = int(so_nhap.chan_gach_duoi(row.get("reserve_capacity") or 0))
                     except ValueError:
                         canh_bao.append(err("csv_club_row_invalid", line=i,
                                             reason="capacity"))

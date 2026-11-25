@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — ST-DEM: ô số có dấu gạch dưới bị đọc sai im lặng (stress test đêm; mã tạm, ngoài sổ, Truong giao 25/11)
+
+- Lỗi (tái hiện): Python đọc `"1_5"` thành 15 và `"1_0"` thành 10 (PEP 515). Gõ nhầm vào ô điểm hoặc chỉ tiêu thì phần mềm lưu số sai, không báo gì. Gặp ở Sổ nhập (điểm, chỉ tiêu, suất ưu tiên, cột FA), CSV CLB (`capacity`, `reserve_capacity`), nhập tay (`create_or_update_club`, `submit_club_scores`).
+- `so_nhap.py`: hàm mới `chan_gach_duoi`; `doc_diem`, đọc chỉ tiêu và cột FA dùng nó. `api_nhap.py` (`import_clubs_csv`), `api_quan_ly.py` (`_so_nguyen`): dùng nó. Ô có gạch dưới nay bị báo sai bằng mã lỗi đã có (`so_nhap_diem_sai`, `so_nhap_chi_tieu_sai`, `csv_club_row_invalid`, `club_capacity_not_integer`, `score_not_a_number`). Không có mã lỗi, cột hay bảng mới.
+- Test: `tests/test_st_dem_gach_duoi.py` (11 ca). Trùng khít 3 bộ × 5 seed (bất biến 1).
+
 ## 2026-11-25 — DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8
 
 - `js/dang_ky_gv_hs.js`: học sinh đi theo từng buổi (Buổi k/N · Xếp nguyện vọng → Đặt huy chương → Bài kiểm tra), rồi Xem lại và gửi, biên nhận "Đã gửi lúc hh:mm, thứ …"; hai cột (CLB còn chọn | nguyện vọng NV1… với ↑ ↓ ✕), thẻ CLB có chip loại ngắn, giáo viên · phòng · khối, mô tả; nút kế tiếp là nút vàng duy nhất. Giáo viên: biểu mẫu ba bước có thanh bước, nút "Tiếp theo" màu vàng.

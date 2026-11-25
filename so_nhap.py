@@ -263,6 +263,17 @@ def nhan_buoi(ma) -> str:
     return ma or ""
 
 
+def chan_gach_duoi(chuoi) -> str:
+    """ST-DEM: Python đọc "1_5" thành 15 (PEP 515) — gõ nhầm thành số sai im lặng.
+
+    Trả lại chuỗi; có dấu gạch dưới thì ném ValueError để nơi gọi coi là ô sai.
+    """
+    chuoi = str(chuoi)
+    if "_" in chuoi:
+        raise ValueError("gạch dưới trong ô số: %r" % chuoi)
+    return chuoi
+
+
 def doc_diem(chuoi):
     """Một ô điểm -> float, hoặc None nếu không phải số.
 
@@ -275,7 +286,7 @@ def doc_diem(chuoi):
     if chuoi.count(",") == 1 and "." not in chuoi:
         chuoi = chuoi.replace(",", ".")
     try:
-        so = float(chuoi)
+        so = float(chan_gach_duoi(chuoi))
     except (TypeError, ValueError):
         return None
     return so if so == so and so not in (float("inf"), float("-inf")) else None
@@ -677,7 +688,7 @@ def _doc_sheet_clb(ws, loi, clb_da_co, ma_da_co, clb_cu, cfg=None, ten_sheet=SHE
         chi_tieu = lay(o, "capacity")
         uu_tien = str(lay_hoac_cu("reserve_capacity", 0) or "0")
         try:
-            f_chi_tieu, f_uu_tien = float(chi_tieu), float(uu_tien)
+            f_chi_tieu, f_uu_tien = float(chan_gach_duoi(chi_tieu)), float(chan_gach_duoi(uu_tien))
             # "inf", "1e999", "nan" đọc được thành float nhưng không thành
             # chỉ tiêu: int(inf) ném OverflowError, nan so sánh luôn sai.
             hop_le = (math.isfinite(f_chi_tieu) and math.isfinite(f_uu_tien)
@@ -788,7 +799,7 @@ def _doc_cot_fa(o, cot, lay, ten_sheet, so_dong, ten):
             ra[khoa] = None
             continue
         try:
-            f = float(tho)
+            f = float(chan_gach_duoi(tho))
             ra[khoa] = int(f) if math.isfinite(f) and f.is_integer() else tho
         except (ValueError, OverflowError):
             ra[khoa] = tho                  # để kiem_thuoc_tinh từ chối

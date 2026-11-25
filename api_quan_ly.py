@@ -375,7 +375,8 @@ class QuanLyMixin:
         if isinstance(v, int):
             return v
         try:
-            f = float(v.strip() if isinstance(v, str) else v)
+            # ST-DEM: chan_gach_duoi — float("1_0") == 10 (PEP 515), gõ nhầm thành chỉ tiêu sai im lặng.
+            f = float(so_nhap.chan_gach_duoi(v.strip()) if isinstance(v, str) else v)
         except (TypeError, ValueError):
             return None
         if not math.isfinite(f) or not f.is_integer():
