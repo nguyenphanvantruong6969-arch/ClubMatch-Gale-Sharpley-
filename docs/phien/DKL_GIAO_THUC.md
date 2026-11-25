@@ -25,6 +25,14 @@ The DK4-UI prompt text is not in the repo (given to Truong in chat). Boundary us
 - Overlap risk: both touch `js/dang_ky_*.js`. DKL coder `git fetch` + merge before starting each lot; keep new DOM in new helper
   functions (`DK.…`) rather than rewriting existing renderers.
 
+## 1b. After DK4-UI (cc80e00, merged at a03ec2a) — rows already covered, verified by grep in `js/dang_ky_gv_hs.js`
+S1 (Forms links on the receipt step, "Làm bài thi"), S3 (card shows teacher/room/khối, `mo_ta`, `yeu_cau`), S4 (deadline in `tt.han_chot`),
+S5 (step "Xem lại và gửi", empty-submit warning), S6 ("Đã gửi lúc …", "Xong, thoát"), S7 (separate steps) are DONE. **L1 shrinks to**:
+S2 (add the "Dưới sàn" chip and the rule line "Không làm bài, hoặc dưới mốc điểm, thì em không được xét vào CLB đó"; today only a
+sentence on the card) + one behavioural test per DONE row (the coder verifies each against v8, no rebuild) + S4 expired message
+"Nguyện vọng em đã gửi vẫn được tính". Still fully open: A1–A12 (admin: grep shows 0 hits for "Đóng ngay", "Gia hạn", "Chốt điểm",
+"Cài đặt", "phiếu"), S8, S9. DK4-UI note: "+ Thêm" is disabled (not hidden) at the limit; D37 ≤7 per frame not enforced on the club list.
+
 ## 2. v8 diff table (gap → v8 evidence → lot)
 | # | Gap in real portal | v8 evidence | Lot |
 |---|---|---|---|
