@@ -35,7 +35,24 @@ In-kiosk entrance exams and the real integration are LATER (DK2), not this branc
   Deleting a club or changing its session when students already chose it → warning with the number of
   affected students + confirm, and a line in an admin log (prototype: list on screen).
 - Later (DK2): collection mode exports Sổ nhập; the allocation machine imports it (backup → validate → …).
-  Not written straight to app.db. Open question for DK2: how many machines, LAN or USB.
+  Not written straight to app.db. One kiosk for now (throughput not a concern yet, Truong 2026-11-25).
+- **Round 3 (Truong, 2026-11-25):** scope = INPUT only (no post-allocation outputs).
+  - Phases become 6: `Chuẩn bị → GV đăng ký → Duyệt CLB → HS đăng ký → Nhập điểm → Xuất`.
+  - Tests are taken on Google Forms (not on the kiosk); admin enters scores in phase `Nhập điểm`: paste a
+    block copied from the Forms sheet (columns mã HS + score, one club at a time, matched by mã HS; unknown
+    IDs listed, not imported) AND a table students × ticked clubs to type / fix single scores.
+  - Scale = what the software uses today: any number ≥ 0, decimal comma or dot (`doc_diem` in `so_nhap.py`);
+    no fixed max; scores only compare within one club.
+  - Ticked but no score → counted as **0** at export, and listed in a warning panel ("đã tick thi nhưng chưa
+    có điểm") before export. Export enabled only after admin presses "Chốt điểm".
+  - Student identity = mã HS + 4-digit PIN (mock PINs in data; admin can view/print the PIN list).
+  - Up to **10 clubs per session**; at most 1 club won per session (already how multi-session allocation
+    works). Tests: tick ≤ 5 in total (Sổ nhập also caps 5 per session — compatible).
+  - Students may log in again and edit until the HS deadline; last submit counts; auto-logout after submit
+    and after 60 s idle.
+  - Export = one Sổ nhập after scores are locked. Real `.xlsx` needs a library in the browser (rule 7) →
+    prototype exports a preview + JSON only; real `.xlsx` is written in DK2 by Python (`so_nhap.py` already
+    writes workbooks).
 
 ## Insight from the reference site (keep / avoid)
 - KEEP: role picker home (3 doors); teacher self-registration; admin approval layer with "original quota"
@@ -50,8 +67,9 @@ In-kiosk entrance exams and the real integration are LATER (DK2), not this branc
 ## Plan (written by Opus; ticked by Sonnet)
 - [ ] L1 Shell + mock data + role picker + Admin: phase bar + deadlines, rooms CRUD, student/teacher lists
 - [ ] L2 Teacher registration (room/session clash, quota ≤ capacity, grades) + Admin approval table
-- [ ] L3 Student flow: login by mã HS → per-session ranking → tick ≤ 5 tests → confirm + receipt
-- [ ] L4 (optional) Admin export preview shaped like Sổ nhập sheets `1. CLB` / `2. Học sinh` + demand counts
+- [ ] L3 Student flow: mã HS + PIN → per-session ranking (≤ 10) → tick ≤ 5 tests → confirm + receipt
+- [ ] L4 Nhập điểm (paste + table, missing-score warnings, Chốt điểm) + export preview shaped like Sổ nhập
+      `1. CLB` / `2. Học sinh` + JSON download (must-ship; demand counts optional)
 
 ## Current state (overwrite each handoff)
 - Done so far: planning only (this file + `docs/phien/DK1_GIAO_THUC.md`).

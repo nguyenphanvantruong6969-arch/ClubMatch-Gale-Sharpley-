@@ -18,12 +18,12 @@
 ## 1. Branch and lots
 | Branch | Lots |
 |---|---|
-| `claude/gracious-johnson-pnqvrg` | L1 shell+admin · L2 teacher+approval · L3 student · L4 export preview (optional) |
+| `claude/gracious-johnson-pnqvrg` | L1 shell+admin · L2 teacher+approval · L3 student · L4 scores + export preview |
 - Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push. No PR.
 
 ## 2. Acceptance (`kiem_nhan`)
-- L1: home shows 3 role doors; Admin "Quản lý" has a 5-step phase bar (Chuẩn bị → GV đăng ký → Duyệt CLB →
-  HS đăng ký → Đã đóng; see branch file "Workflow"). Admin can add / edit / delete a room (name unique,
+- L1: home shows 3 role doors; Admin "Quản lý" has a 6-step phase bar (Chuẩn bị → GV đăng ký → Duyệt CLB →
+  HS đăng ký → Nhập điểm → Xuất; see branch file "Workflow" + "Round 3"). Admin can add / edit / delete a room (name unique,
   capacity integer > 0; a room used by a club cannot be deleted); sees student and teacher lists; opens a
   phase with a deadline (date+time), "Đóng ngay", "Gia hạn"; auto-close by clock on load and every 30 s
   (test with a faked clock). A role whose phase is not active shows "Chưa mở" / "Đã đóng" and cannot submit.
@@ -36,17 +36,22 @@
   in phase Duyệt CLB with ≥ 1 approved club; pending clubs must be approved or rejected first. In phase HS
   đăng ký: teacher edit locked; admin may raise quota / change room; delete or session change of a club already
   chosen shows "N học sinh bị ảnh hưởng" + confirm and adds a line to an on-screen admin log.
-- L3: student types mã HS → card "Họ tên · Lớp · Khối" + "Đúng là em" button; unknown code refused. Per-session
+- L3: student types mã HS + 4-digit PIN → card "Họ tên · Lớp · Khối" + "Đúng là em"; unknown code or wrong
+  PIN refused; admin can view the PIN list. Auto-logout after submit and after 60 s idle. Per-session
   tabs: left = approved clubs allowing the student's grade (card: name, room, teacher, description,
   requirements, "Có thi" badge); right = ranked list. Add by click or drag; reorder by drag or ↑/↓; remove ✕;
-  a club cannot appear twice; empty session allowed. Step 2: clubs with a test that are in the ranked lists,
+  a club cannot appear twice; max 10 per session (11th add blocked, counter "x/10"); empty session allowed. Step 2: clubs with a test that are in the ranked lists,
   tick ≤ 5 (6th checkbox disabled, counter "x/5"); note that an untested club is still considered but ranks
   behind students with a score. Step 3: summary per session + tests → "Gửi" → receipt with a code;
-  re-entering the same mã HS reopens the saved choices while the HS form is open. No demand counts anywhere
+  re-entering the same mã HS + PIN reopens the saved choices until the HS deadline (last submit counts). No demand counts anywhere
   in the student view.
-- L4 (optional): Admin tab "Xem trước xuất" renders two tables shaped like Sổ nhập `1. CLB`
-  (Tên CLB, Buổi, Chỉ tiêu, Mã CLB, + Phòng, Khối, Có thi) and `2. Học sinh` (Mã, Họ tên, Lớp, NV per session,
-  tests), approved clubs only, plus admin-only demand count per club. No file write needed.
+- L4 (must): phase Nhập điểm: (a) pick a club, paste a block "mã HS <tab> điểm" copied from the Forms sheet →
+  matched rows filled, unknown IDs / not-ticked students / bad numbers listed and skipped; (b) table students ×
+  ticked clubs, type/fix one score (number ≥ 0, comma or dot). Warning panel "đã tick thi nhưng chưa có điểm"
+  (export writes 0 for them). "Chốt điểm" → phase Xuất: tables shaped like Sổ nhập `1. CLB` (Tên CLB, Buổi,
+  Chỉ tiêu, Mã CLB, + Phòng, Khối, Có thi) and `2. Học sinh` (Mã, Họ tên, Lớp, NV1…NV10 per session with score
+  beside each tested club), approved clubs only, + "Tải JSON". No .xlsx (needs a library; DK2 via Python).
+  Optional: admin-only demand count per club.
 
 ## 3. Coder loop per lot
 Failing Playwright case in `tests/test_dk1_nguyen_mau.py` (load `nguyen_mau/dk1/index.html` via file URL,
