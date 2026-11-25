@@ -74,7 +74,19 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
 - Closed `<details>` children still have `offsetParent` in Chromium: Hick counters must exclude them.
 - Artifact viewer blocks downloads, print, `confirm()`: prototype uses copy buttons and in-page modals.
 
+## Truong feedback on v7, NOT yet built (2026-11-25, after handoff)
+- D39 Student flow **per session**: for each day in turn: rank clubs → place medals → tick tests, then next
+  day; final review covers all days. (Replaces the 4 global steps rank-all → medals-all → tests-all.)
+  Keep the ≤ 5 tests total cap logic visible per day (open question on the cap still stands).
+- D40 Bug: long type chip on student club cards ("Giới hạn 15 chỗ – …", "Tuyển chọn – … mốc …") overflows
+  the card and overlaps "+ Thêm". Shorten chip (e.g. "Giới hạn · 15 chỗ") and move the full sentence to a
+  second line of small text; let it wrap; button must not overlap at 1366 px and 390 px.
+- D41 Proposal to Truong (awaiting OK): drop "Mã biên nhận" (receipt code) — kiosk re-login with ID + PIN
+  already shows submission; replace with "Đã gửi lúc hh:mm, thứ …".
+
 ## Next steps (ordered)
+0. Apply D39–D41 to `docs/phien/DK1_BAN_MAU_V7.html` (republish the artifact if Truong wants it), re-run the
+   Hick/Von Restorff count (≤ 7 per frame, 1 gold) and the full flow.
 1. Ask Truong: update `DK1_GIAO_THUC.md` to match v7 (recommended), and keep or drop the 5-test cap.
 2. Rewrite the protocol from v7: either move `DK1_BAN_MAU_V7.html` into `nguyen_mau/dk1/` (split into
    index/css/js) and add Playwright tests per lot, or skip straight to DK2 planning (Truong decides).
