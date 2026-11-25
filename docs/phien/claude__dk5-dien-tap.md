@@ -64,6 +64,8 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `MÃ
 MILESTONE 1 READY | head c084f20 | base 1265e5a
 MILESTONE 2 READY | head 38d8f84 | base c084f20
 
+- soat-ma (report only): diff touches NO product file (tiers 1-3 n/a: algorithm, backend, UI untouched). Tier 4: ruff clean, kiem_nhanh 7/7, no `hash()`/`sleep` in new files, docs updated (CHANGELOG, TIEN_DO, registry row, test-file count 431). Mutation check: 4 temporary product breaks all turned the matching DK5 test red (skip `anh.backup` in `_dk_hoan_nguyen` -> 2e; drop old-row DELETE in `dk_hs_luu` -> 2d; idle limit 120->1200 -> 2b; drop stage check in `dk_hs_luu` -> 2c), reverted, `git status` clean. UI file run 3x in a row: green each time.
+
 ## Needs Truong (one line each + recommendation)
 - BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
