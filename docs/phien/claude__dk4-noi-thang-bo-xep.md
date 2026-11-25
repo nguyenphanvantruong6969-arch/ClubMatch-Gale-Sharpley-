@@ -15,6 +15,8 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [x] L5 sidebar "Đăng ký CLB" (admin only) ↔ portal "← Mở phần mềm xếp CLB" / "Xem kết quả trong phần mềm"
 - [x] L0 checker items: no str(e) to UI, PIN attempt limit, 10/5 limits as settings (DK4-FIX commits)
 - [ ] CI green (3 tests left, see Current state) → checker DK4 (PASS only with CI green Linux+Windows)
+- [x] Audit D1–D45 → `DK_DANH_GIA_TINH_NANG.md`; lot plan + prompts → `DKL_GIAO_THUC.md` (v8 diff table, 4 lots, same branch); CI green at 42b93af
+- [ ] DKL lot (coder+checker, after DK4-UI and CI green) then DK5
 - [ ] DK4-UI: portal look/guidance like v8 (prompt below) → registry row, test-file count, `READY | head <sha>`
 
 ## Current state (2026-11-25)
