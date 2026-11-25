@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK5_GIAO_THUC.md` (size M: coder + checker, no lead). Loop context: `docs/phien/DK3_DK4_VONG_TU_DONG.md`.
 
-Status: IN PROGRESS (L1, L2 done; L3 next)
+Status: IN PROGRESS (L1-L3 done; soat-ma + CI gate next)
 
 ## Feature / goal
 DK5 = full rehearsal ("diễn tập") of the registration-to-allocation flow on SIMULATED data (798 students, 40 clubs),
@@ -34,7 +34,7 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `M�
   (e) injected exception mid-"Chốt và xếp" (monkeypatch inside the write transaction) → rollback: DB byte-identical
       to before (hash of all tables), `run_history` unchanged, STB seed not consumed/locked by the failed run;
   (f) invariant 4: a second successful run appends a row; nothing in `run_history` is updated or deleted.
-- [ ] L3 (must) `tests/test_giao_dien_dk5_toan_trinh.py`: ONE Playwright file, one shared page fixture, three paths on a
+- [x] L3 (must) `tests/test_giao_dien_dk5_toan_trinh.py`: ONE Playwright file, one shared page fixture, three paths on a
   SMALL dataset (≤ 30 students; 798 is for L1): admin (setup → approve → "Chốt và xếp" → result), teacher (sign up →
   sees own club), student (kiosk → ranks → submit → "Đã gửi lúc …"). `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`.
   **→ MILESTONE 2** (L2 + L3)
@@ -59,6 +59,8 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `M�
 
 - L2 done: `tests/test_dk5_vung_chiu_loi.py` (6 tests, ~12 s). Note (e): `_dk_hoan_nguyen` keeps append-only logs on purpose, so `wharton_nhat_ky` gains a row on a failed run; the test asserts prefix-preserved, not equal. Injection point = `api.luat_xep_de_ghi` (inside the write transaction); the pipeline rolls back by itself and returns `dk_chot_that_bai`.
 
+- L3 done: `tests/test_giao_dien_dk5_toan_trinh.py` (4 tests, ~6 s). Registry row DK5 + test-file count (431) updated.
+
 ## Needs Truong (one line each + recommendation)
 - BUG (product, not edited): `api_dang_ky.dk_phong_luu` returns `phong_id = cur.lastrowid` AFTER `_dk_ghi_nk`, so it returns the nhat_ky row id (real id + 1 when counters align). Fix: capture `cur.lastrowid` before `_dk_ghi_nk`. DK5 works around it via `dk_phong_danh_sach`. Recommendation: one-line fix + test in a separate item.
 
@@ -67,3 +69,4 @@ Base: DK4 branch `claude/dk4-noi-thang-bo-xep` after PASS. All data labelled `M�
 |---|---|---|---|
 | 2026-11-26 | Sonnet | L1 done and committed | merged DK4 first; found dk_phong_luu lastrowid bug |
 | 2026-11-26 | Sonnet | L2 done and committed | wharton_nhat_ky kept by design |
+| 2026-11-26 | Sonnet | L3 done and committed | MILESTONE 2 below |

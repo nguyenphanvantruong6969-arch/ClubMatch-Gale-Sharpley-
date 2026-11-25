@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-26 — DK5-L3: diễn tập qua giao diện, ba vai trò (chỉ tệp mới)
+
+- `tests/test_giao_dien_dk5_toan_trinh.py` (4, Playwright): giáo viên tạo CLB Tự do bằng giao diện và chỉ thấy CLB của mình → quản trị «Đóng ngay», duyệt, «Mở cho học sinh» → học sinh H01 chọn ba CLB, đánh dấu thi, gửi, thấy «Đã gửi lúc …» và link bài thi → quản trị dán điểm, «Chốt và xếp», thấy «Đã xếp». Bộ dữ liệu nhỏ (24 em, 3 CLB), MÔ PHỎNG.
+- Sổ đăng ký: thêm hàng DK5; `CLAUDE_CHI_TIET.md`: 431 tệp test.
+
 ## 2026-11-26 — DK5-L2: vùng chịu lỗi của diễn tập (chỉ tệp mới)
 
 - `tests/test_dk5_vung_chiu_loi.py` (6): (a) sao lưu → khôi phục (chép `.bak` sang chỗ khác) giống từng dòng 7 bảng; (b) khoá khi nghỉ (đồng hồ giả `_dong_ho`: 119 s còn dùng, +121 s khoá); (c) quá hạn chót (đồng hồ giả `_dk_bay_gio`): nộp bị từ chối `dk_hs_chua_mo`, lần nộp cũ còn nguyên; (d) nộp lại chỉ giữ lần cuối; (e) lỗi giả lập TRONG giao dịch ghi của `run_pipeline` (sau kết quả + khoá STB, trước `run_history`) → mọi bảng nguyên trạng (băm), `stb_lock` chưa khoá, +1 dòng `dk_nhat_ky`; (f) `run_history` chỉ thêm, hạt giống khác bị từ chối.
