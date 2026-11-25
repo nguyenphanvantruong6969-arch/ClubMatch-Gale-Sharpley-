@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L0b: khoá đăng nhập sau 5 lần sai PIN
+
+- `dk_dang_nhap`: sai 5 lần liên tiếp cho cùng một mã (kể cả mã không có thật, cùng một mã lỗi) -> `dk_tam_khoa` 5 phút, đúng PIN trong lúc khoá cũng bị từ chối; đăng nhập đúng xoá bộ đếm. Bộ đếm lưu trong `dk_cai_dat` (khoá `dn_sai:<vai>:<mã>`, không đổi lược đồ), nên mở lại phần mềm không xoá khoá. Quản trị mở khoá bằng `dk_mo_khoa(token, vai, ten)` (ghi nhật ký `mo_khoa`).
+- `dk_gv_danh_sach` / `dk_hs_danh_sach` có trường `bi_khoa`; `js/dang_ky_quan_tri.js`: nút "Mở khoá" cạnh "Đặt lại PIN" khi đang khoá. Mã lỗi mới `dk_tam_khoa` (cuối `i18n_errors.py`).
+- Test: `tests/test_dk4_l0b_khoa_dang_nhap.py` (6), `tests/test_giao_dien_dk4_mo_khoa.py` (1).
+
 ## 2026-11-25 — DK4-L0a: không lộ chi tiết lỗi lên giao diện
 
 - `api_dang_ky._dk_chay` và `dang_ky_sang_xep.dk_chot_va_xep`: không còn gửi `str(e)` cho giao diện; chi tiết vào nhật ký (`logging`), giao diện nhận mã chung `dk_loi_chung` / `dk_chot_loi_he_thong` (mới, cuối `i18n_errors.py`, đã chạy `tao_i18n_js.py`).

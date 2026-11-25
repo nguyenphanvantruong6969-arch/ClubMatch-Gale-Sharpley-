@@ -1821,5 +1821,9 @@ window.I18N_ERROR_MESSAGES = {
   "dk_chot_loi_he_thong": {
     "vi": "Chốt và xếp không thành công do lỗi hệ thống. Dữ liệu đã được trả về nguyên trạng. Hãy thử lại; nếu vẫn lỗi, báo người quản lý phần mềm.",
     "en": "Lock and allocate failed because of a system error. Data has been restored unchanged. Try again; if it persists, tell the software administrator."
+  },
+  "dk_tam_khoa": {
+    "vi": "Nhập sai quá nhiều lần nên mã này tạm khoá, còn khoảng {phut} phút. Hãy chờ hoặc nhờ quản trị mở khoá.",
+    "en": "Too many wrong attempts: this ID is locked for about {phut} more minute(s). Wait, or ask the administrator to unlock it."
   }
 };

@@ -103,8 +103,11 @@
     const datLai = (ham, id, ten) => DK.nutNhe("Đặt lại PIN", function () { DK.chay(this, async () => {
       const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); });
     return h("div", {}, h("details", { open: true }, h("summary", {}, "Phòng (" + ph.length + ")"), bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
-      h("details", {}, h("summary", {}, "Giáo viên (" + gv.length + ")"), bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten)]))),
-      h("details", {}, h("summary", {}, "Học sinh (" + hs.length + ")"), bang(["Mã", "Họ tên", "Lớp", "Đã nộp", ""], hs.map((x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten)]))));
+    const moKhoa = (vai, ten) => DK.nutNhe("Mở khoá", function () { DK.chay(this, async () => {
+      const r = await DK.goi("dk_mo_khoa", T, vai, ten); if (r.ok) { DK.thongBao("Đã mở khoá cho " + ten); DK.quanTri(); } return r; }); });
+    const thaoTac = (x, nut, vai, ten) => x.bi_khoa ? h("span.dk-thao-tac", {}, nut, h("span.dk-phu", {}, " Đang khoá "), moKhoa(vai, ten)) : nut;
+      h("details", {}, h("summary", {}, "Giáo viên (" + gv.length + ")"), bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      h("details", {}, h("summary", {}, "Học sinh (" + hs.length + ")"), bang(["Mã", "Họ tên", "Lớp", "Đã nộp", ""], hs.map((x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)]))));
   }
 
   async function them(tt) {

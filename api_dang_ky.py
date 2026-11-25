@@ -35,6 +35,8 @@ TOI_DA_THI_BUOI = 5
 GIAY_NGHI_QUAN_TRI = 120
 GIAY_NGHI_KHAC = 60
 SO_VONG_PIN = 10_000
+SO_LAN_SAI_TOI_DA = 5
+PHUT_KHOA = 5
 BUOI_MAC_DINH = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6"]
 KHOI_MAC_DINH = [6, 12]
 
@@ -169,10 +171,46 @@ class DangKyMixin:
             return {"giai_doan": "chuan_bi"}
         return self._dk_chay(lam)
 
+    @staticmethod
+    def _dk_khoa_dn(vai, ten):
+        return "dn_sai:%s:%s" % (vai, str(ten or "").strip()[:64])
+
+    def _dk_con_khoa(self, cur, khoa):
+        """Số phút còn bị khoá (làm tròn lên) hoặc 0. Giá trị lưu: `số_lần_sai|hạn_khoá_ISO` (hạn rỗng = chưa khoá)."""
+        v = self._dk_cai_dat(cur, khoa)
+        han = v.split("|", 1)[1] if v and "|" in v else ""
+        if not han:
+            return 0
+        con = (datetime.datetime.fromisoformat(han) - self._dk_bay_gio()).total_seconds()
+        return int(-(-con // 60)) if con > 0 else 0
+
     def dk_dang_nhap(self, vai, ten, ma):
         """`vai` = quan_tri (ten bỏ qua, ma = mật khẩu) | giao_vien (ten, ma = PIN) | hoc_sinh (ten = mã học sinh, ma = PIN).
-        Trả `{token, vai, ten, ...}`. Sai thì cùng MỘT lỗi cho mọi trường hợp (không lộ tên nào có thật)."""
+        Trả `{token, vai, ten, ...}`. Sai thì cùng MỘT lỗi cho mọi trường hợp (không lộ tên nào có thật).
+        Sai `SO_LAN_SAI_TOI_DA` lần liên tiếp cho cùng một mã (kể cả mã không có thật) -> khoá `PHUT_KHOA` phút; trong
+        thời gian khoá, nhập đúng cũng bị từ chối. Quản trị mở khoá bằng `dk_mo_khoa`. Bộ đếm lưu trong `dk_cai_dat`
+        (không đổi lược đồ) nên mở lại phần mềm không xoá khoá."""
+        khoa = self._dk_khoa_dn(vai, ten)
+
         def lam(cur, _):
+            phut = self._dk_con_khoa(cur, khoa)
+            if phut:
+                return {"_khoa": phut}
+            kq = xac_thuc(cur)
+            if kq is not None:
+                cur.execute("DELETE FROM dk_cai_dat WHERE khoa = ?", (khoa,))
+                return kq
+            v = self._dk_cai_dat(cur, khoa)
+            n = (int(v.split("|", 1)[0]) if v else 0) + 1
+            han = ""
+            if n >= SO_LAN_SAI_TOI_DA:
+                han = (self._dk_bay_gio() + datetime.timedelta(minutes=PHUT_KHOA)).isoformat(timespec="seconds")
+                self._dk_ghi_nk(cur, "he_thong", "khoa_dang_nhap", "%s %s" % (vai, str(ten or "")[:64]))
+                n = 0
+            self._dk_dat(cur, khoa, "%d|%s" % (n, han))
+            return {"_sai": True}
+
+        def xac_thuc(cur):
             if self._dk_cai_dat(cur, "mk_bam") is None:
                 raise _Loi("dk_chua_khoi_tao")
             ma_s = str(ma or "")
@@ -193,11 +231,28 @@ class DangKyMixin:
                 ok, thong = False, {}
             if not ok:
                 _dung(ma_s, b"x", b"y")        # thời gian phản hồi như nhau
-                raise _Loi("dk_sai_dang_nhap")
+                return None
             token = secrets.token_urlsafe(24)
             self._dk_phien_dict()[token] = {"vai": vai, "luc": self._dk_dong_ho(), **thong}
             return {"token": token, "vai": vai, **thong}
-        return self._dk_chay(lam, ghi=False)
+            return None
+
+        r = self._dk_chay(lam, ghi=True)
+        if r["ok"] and r["data"].get("_khoa"):
+            return _fail(err("dk_tam_khoa", phut=r["data"]["_khoa"]))
+        if r["ok"] and r["data"].get("_sai"):
+            return _fail(err("dk_sai_dang_nhap"))
+        return r
+
+    def dk_mo_khoa(self, token, vai, ten):
+        """Quản trị: mở khoá đăng nhập của một giáo viên / học sinh (xoá bộ đếm sai)."""
+        def lam(cur, p):
+            if vai not in (QUAN_TRI, GIAO_VIEN, HOC_SINH):
+                raise _Loi("dk_khong_thay")
+            cur.execute("DELETE FROM dk_cai_dat WHERE khoa = ?", (self._dk_khoa_dn(vai, ten),))
+            self._dk_ghi_nk(cur, QUAN_TRI, "mo_khoa", "%s %s" % (vai, str(ten)[:64]))
+            return {}
+        return self._dk_chay(lam, QUAN_TRI, token=token)
 
     def dk_dang_xuat(self, token):
         self._dk_phien_dict().pop(token, None)
@@ -352,8 +407,9 @@ class DangKyMixin:
 
     def dk_gv_danh_sach(self, token):
         def lam(cur, p):
-            return [dict(gv_id=r[0], ten=r[1], cach_tao=r[2]) for r in cur.execute(
-                "SELECT gv_id, ten, cach_tao FROM dk_giao_vien ORDER BY ten")]
+            return [dict(gv_id=r[0], ten=r[1], cach_tao=r[2], bi_khoa=bool(self._dk_con_khoa(cur, self._dk_khoa_dn(GIAO_VIEN, r[1]))))
+                    for r in cur.execute(
+                "SELECT gv_id, ten, cach_tao FROM dk_giao_vien ORDER BY ten").fetchall()]
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
     # ------------------------------------------------------------ học sinh (danh sách)
@@ -429,8 +485,10 @@ class DangKyMixin:
 
     def dk_hs_danh_sach(self, token):
         def lam(cur, p):
-            return [dict(ma=r[0], ho_ten=r[1], lop=r[2], khoi=r[3], da_nop=bool(r[4])) for r in cur.execute(
-                "SELECT student_id, ho_ten, lop, khoi, nop_luc FROM dk_hoc_sinh ORDER BY lop, student_id")]
+            return [dict(ma=r[0], ho_ten=r[1], lop=r[2], khoi=r[3], da_nop=bool(r[4]),
+                         bi_khoa=bool(self._dk_con_khoa(cur, self._dk_khoa_dn(HOC_SINH, r[0]))))
+                    for r in cur.execute(
+                "SELECT student_id, ho_ten, lop, khoi, nop_luc FROM dk_hoc_sinh ORDER BY lop, student_id").fetchall()]
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
     # ------------------------------------------------------------ CLB
