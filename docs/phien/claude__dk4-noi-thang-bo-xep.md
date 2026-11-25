@@ -17,40 +17,21 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [x] CI green (run 1660, head 42b93af, success incl. DK4-L0a–e + merge of DK4-FIX) → checker DK4 (PASS only with CI green Linux+Windows)
 - [x] Audit D1–D45 → `DK_DANH_GIA_TINH_NANG.md`; lot plan + prompts → `DKL_GIAO_THUC.md` (v8 diff table, 4 lots, same branch); CI green at 42b93af
 - [x] DKL lots L2→L3→L1→L4 built locally by Sonnet in one session (2026-11-25 night); CI NOT yet run, checker NOT yet run
-- [ ] DKL: CI green on Linux+Windows → checker (prompt in DKL_GIAO_THUC §5) → `READY | head <sha>` → then DK5
+- [ ] DKL: CI green on Linux+Windows (CI on 5ac6d4f not read yet) → checker (prompt in DKL_GIAO_THUC §5) → `READY | head <sha>` → then DK5
 - [ ] DK4-UI: portal look/guidance like v8 (prompt below) → registry row, test-file count, `READY | head <sha>`
 
-## Current state (2026-11-25)
-- UPDATE: DK4-CI-2 (658dec9) targets the 3 red tests below; CI run 45645130466 on 6323281 was IN PROGRESS at
-  handoff. First action of the next session: read its result (failed_only logs ≤60 lines).
-- Earlier state at head 3eb51b7:
-- CI run 45639876967 RED in 3 tests (Linux + Windows), 13 jobs green:
-  1. `tests/test_gt3_nhat_ky.py::test_moi_ham_ghi_cua_bang_quyen_deu_duoc_ghi` — `dk_chuyen_giai_doan` (a WRITE
-     function) is treated as not logged; DK4-CI seems to have excluded dk_* wholesale in `nhat_ky.py`. Only
-     read-only dk_ functions may skip logging; writes need `nkhd_<fn>` labels vi+en. Audit log must never store
-     PIN/password/token (dk_dang_nhap, dk_khoi_tao, dk_gv_tu_dang_ky, *_dat_lai_pin).
-  2. `tests/test_giao_dien_fg9_ux_nho.py::test_thanh_ben_khong_con_so_thu_tu` and
-  3. `tests/test_giao_dien_a14_lop.py::test_thanh_ben_sau_khi_gop_va_bao_chua_co_ket_qua` — expected sidebar lists
-     lack the intended admin-only "Đăng ký CLB" link (L5, Opus). Update expected lists only.
-- `dang_ky_sang_xep.py` `_dk_tom_tat_xep` has `ORDER BY buoi`: check COLLATE THU_TU_BUOI is present (DK3 fixed its own).
-- L5 NOT tried in pywebview on Windows (browser only). Truong must try the CI-built exe.
-- UI review (Opus screenshots): app sidebar OK; portal works but is bare vs v8 (no step bar, no 6-phase bar,
-  no deadline, cards without description/teacher/room, no gold "next" button for students, cramped admin layout).
-- Other branches: DK2 (`claude/gracious-johnson-pnqvrg`) CI green. DK3 (`claude/dk3-cong-dang-ky-that`) CI GREEN at
-  bdb2be8 (confirmed by Opus). Its checker PASS (8715ba9) was written while CI was pending → re-run the DK3 checker
-  (prompt given to Truong) before merging DK3 → main. DK5/DK6 branches exist at 6234344 (plan only).
-- No orchestrator loop running: Truong wants PROMPTS for his collaborator, never auto-run sessions.
+## Current state (2026-11-25, end of night session)
+- Head `5ac6d4f` pushed. CI green earlier at `42b93af` (DK4 code). DKL lots L1–L4 built locally and pushed; CI on `5ac6d4f` was started by the push but its result is NOT read yet; checker NOT run.
+- DK4-UI (cc80e00) merged. DKL scope/row→test map: see "DKL status" below and `docs/phien/DKL_GIAO_THUC.md` §2.
+- 428 test files. Local: 106 related tests + 13 UI tests pass, ruff clean, kiem_nhanh 7/7. Full suite not run.
+- Pywebview/Windows untested: score entry, PIN slip print (`window.print()`), `confirm()` dialogs.
 
-## Next steps (ordered; each = a collaborator prompt, Truong runs them)
-1. DK4-CI-2 (prompt given to Truong 2026-11-25): fix the 3 tests above + PIN/token masking test; CI green.
-2. Checker DK4 (prompt A2) — PASS only if CI green on Linux AND Windows for the head.
-3. DK4-UI (prompt given to Truong): v8 look via style.css tokens; tests in test_giao_dien_dk3_cong.py.
-0. DK3: fresh checker PASS on bdb2be8+ → Truong merges DK3 → main → DK4 merges origin/main.
-4. DK4 → main after its checker PASS.
-4b. After DK4-UI: feature audit D1–D45 (read-only, writes docs/phien/DK_DANH_GIA_TINH_NANG.md; prompt given
-   to Truong). Likely gaps: PIN slips print (D8), live admin views (D31), receipt links (D24), auto-logout (D25),
-   medal swap UI (D34), export versions/step back (D3). Build important gaps as one lot before DK5.
-5. DK5 (prompt given: gate on DK4 PASS + green CI), DK6, then Truong tests the exe on Windows.
+## Next steps (ordered)
+1. Read CI for `5ac6d4f` (`mcp__github__actions_list`, failed_only logs ≤60 lines); fix reds only (no docs-only pushes while a run is in flight).
+2. Checker DKL: Truong pastes the checker prompt (DKL_GIAO_THUC §5). PASS needs CI green on Linux AND Windows.
+3. Write `READY | head <sha>` here; Truong merges DK3 → main, then DK4 (+DKL) → main. No PR/tag by Claude.
+4. DK5 (`claude/dk5-dien-tap`), DK6 (`claude/dk6-goi-phat-hanh`), then Truong tries the CI-built exe on Windows.
+5. Decide: portal backup RESTORE (not built), per-grade fold, admin password change.
 
 ## Decisions (Truong, 2026-11-25; do not re-ask)
 - Opus only writes prompts and plans; it runs sessions or pushes only when Truong explicitly says so.
@@ -104,3 +85,4 @@ READY | head 42b93af
 ## Needs Truong (DKL)
 - Backup RESTORE from the portal (v8 has it) not built: needs a decision (restore overwrites app.db). Also `_backup_db` keeps only `_MAX_BACKUPS` copies, so pressing «Sao lưu ngay» repeatedly can push out the backup taken before the last «Chốt và xếp».
 - Try the CI-built exe: score entry, PIN slip printing, teacher edit/delete.
+| 2026-11-25 | Sonnet | DKL v8 diff table, built L1–L4 + tests, pushed 5ac6d4f; handoff at ~400k context | CI/checker pending |
