@@ -117,3 +117,4 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
 | 2026-11-25 | Opus | Recorded Truong's v7 feedback as D39–D41 (per-day flow, chip overflow, drop receipt code) | not built; next session starts at Next steps 0 |
 | 2026-11-25 | Opus | Recorded D42: v7 export not yet a valid Sổ nhập; next = DK2 planning (Next steps 00) | no code; handoff final |
 | 2026-11-25 | Opus | Planned DK2 (Next step 00): protocol + branch file for `claude/dk2-cau-noi-so-nhap` | no code |
+| 2026-11-25 | Opus | DK2 built on THIS branch at Truong's request; see `claude__dk2-cau-noi-so-nhap.md` Current state | awaiting CI |

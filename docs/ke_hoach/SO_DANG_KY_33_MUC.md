@@ -44,6 +44,8 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | G5 | Đổi nguyện vọng và dòng liên tục (nâng cấp 5–6) | Viết mới · XL | — | – | – | – | – | – | O | – | – | – | – | R | – |
 | MT2 | Chia CLB theo loại (Tự do / Giới hạn / Tuyển chọn) bằng một công tắc, ghép với chỉ xếp và chia 100 điểm, không cần huy chương (thêm 22/11/2026) | Sửa mã · L | MT1 | – | – | – | – | – | – | – | – | O | – | – | – |
 | KD1 | Khởi động an toàn khi máy Windows thiếu WebView2 (thêm 25/11/2026) | Sửa mã · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| DK1 | Bản mẫu cổng đăng ký (Quản lý / Giáo viên / Học sinh), dữ liệu giả (thêm 25/11/2026) | Bản mẫu · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| DK2 | Cầu nối bản mẫu → Sổ nhập thật (thêm 25/11/2026) | Sửa mã · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
@@ -761,6 +763,21 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** thấp; không đổi thuật toán, schema, API, CSV. Chưa kiểm chứng trên máy Windows của Truong.
 - **Kiểm nhận:** tests/test_kd1_khoi_dong.py (11, webview giả); Truong chạy bản CI trên máy bị đứng và gửi lại `loi_khoi_dong.txt`.
 - **Phụ thuộc:** không · **Ngành:** không áp dụng (lớp khởi động).
+
+## DK1 — Bản mẫu cổng đăng ký (thêm 25/11/2026)
+- **Mức / quy mô:** Bản mẫu / S
+- **Tệp:** docs/phien/DK1_BAN_MAU_V7.html (thiết kế tham chiếu), docs/phien/claude__gracious-johnson-pnqvrg.md (quyết định D1–D42)
+- **Hiện trạng:** chưa có cổng cho phía đầu vào (giáo viên đăng ký CLB, quản lý duyệt, học sinh xếp nguyện vọng).
+- **Thay đổi:** bản mẫu một tệp HTML, dữ liệu giả trong trình duyệt; 6 giai đoạn; chế độ huy chương (ngoại lệ bất biến 2, D2 đường A).
+- **Rủi ro:** không chạm mã sản phẩm. **Kiểm nhận:** Truong đi thử cả quy trình. **Phụ thuộc:** không.
+
+## DK2 — Cầu nối bản mẫu → Sổ nhập thật (thêm 25/11/2026)
+- **Mức / quy mô:** Sửa mã / M
+- **Tệp:** dk2_so_nhap.py, docs/phien/DK1_BAN_MAU_V8.html, docs/huong_dan/DK2_CAU_NOI.md, tests/test_dk2_so_nhap.py, tests/test_giao_dien_dk2_ban_mau.py
+- **Hiện trạng:** dữ liệu xuất của bản mẫu v7 không phải sổ nhập hợp lệ (NV bắt đầu lại mỗi buổi, cột lệch).
+- **Thay đổi:** JSON `dinhDang` 1 → sổ nhập qua `so_nhap.ghi_so_nhap`; Phòng → Địa điểm, Lớp → cột Lớp; không đổi hợp đồng cột CSV, schema, thuật toán. Bản mẫu v8: đi từng buổi, nhãn ngắn, bỏ mã biên nhận, 5 bài mỗi buổi.
+- **Rủi ro:** thấp (tệp mới; mã cũ không đổi). **Kiểm nhận:** hai test trên; sổ từ dữ liệu "Demo nhỏ" và "Cả trường" nhập 0 lỗi ở chế độ huy chương và chạy xếp được.
+- **Phụ thuộc:** DK1 · **Ngành:** trường học (CLB).
 
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 

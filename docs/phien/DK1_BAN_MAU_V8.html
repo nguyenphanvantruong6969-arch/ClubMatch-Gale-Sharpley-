@@ -1,0 +1,830 @@
+<title>Cổng đăng ký CLB</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="../../assets/fonts/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one working column (max 1180px); sticky header with phase, admin gets a 6-step phase bar + tabs. Palette from rbda-kiosk style.css. */
+:root{
+  --ink:#1C2321; --ink-soft:#3A423F; --slate:#5B6570;
+  --paper:#F3F4F1; --raised:#FFFFFF; --hover:#E9EAE5; --hairline:#DBDCD5;
+  --gold:#C98A1F; --gold-soft:#F1DFB8; --gold-text:#7A5210;
+  --moss:#3F6B52; --moss-soft:#DCE9E0;
+  --rust:#B84A3E; --rust-soft:#F3DCD9; --rust-text:#9A3A30;
+  --focus:#173F8C; --overlay:rgba(28,35,33,.45);
+  --f-display:"Be Vietnam Pro",system-ui,sans-serif;
+  --f-body:"Be Vietnam Pro",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light; /* như style.css: kiosk chỉ có giao diện sáng */
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--raised)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:1.6rem;font-weight:700} h2{font-size:1.2rem;font-weight:600} h3{font-size:1rem;font-weight:600}
+p{margin:0}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--slate)} .small{font-size:.85rem}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--raised);border-bottom:1px solid var(--hairline)}
+.topin{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:10px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.05rem;background:none;border:0;color:var(--ink);cursor:pointer;padding:6px 0;min-height:44px}
+.spacer{flex:1}
+.demo{background:var(--gold-soft);color:var(--gold-text);font-size:.85rem}
+.demo .wrap{padding-block:6px}
+main .wrap{padding-block:20px 48px;display:flex;flex-direction:column;gap:20px}
+button,.btn{font:inherit;font-weight:600;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid var(--hairline);background:var(--raised);color:var(--ink);cursor:pointer}
+button:hover:not(:disabled){background:var(--hover)}
+button.pri{background:var(--gold);border-color:var(--gold);color:#1C2321}
+button.pri:hover:not(:disabled){filter:brightness(1.06);background:var(--gold)}
+button.ok{background:var(--moss);border-color:var(--moss);color:var(--raised)}
+button.bad{color:var(--rust-text);border-color:var(--rust)}
+button.ghost{background:none;border-color:transparent}
+button.sm{min-height:36px;padding:0 10px;font-size:.88rem}
+button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--raised);border:1px solid var(--hairline);border-radius:6px;padding:8px 10px;min-height:44px;max-width:100%}
+textarea{min-height:110px;width:100%;font-family:var(--f-mono);font-size:.85rem}
+label{display:flex;flex-direction:column;gap:4px;font-weight:500;font-size:.9rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.panel{background:var(--raised);border:1px solid var(--hairline);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.door{text-align:left;display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:10px;min-height:150px;border:1px solid var(--hairline);background:var(--raised)}
+.door .role{font-family:var(--f-display);font-size:1.3rem;font-weight:700}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:.8rem;font-weight:600;white-space:nowrap;background:var(--hover);color:var(--ink-soft)}
+.chip.on{background:var(--moss-soft);color:var(--moss)}
+.chip.wait{background:var(--gold-soft);color:var(--gold-text)}
+.chip.off{background:var(--rust-soft);color:var(--rust-text)}
+.err{background:var(--rust-soft);color:var(--rust-text);border-radius:6px;padding:10px 12px;font-size:.9rem}
+.err ul,.note ul{margin:4px 0 0;padding-left:18px}
+.note{background:var(--hover);border-radius:6px;padding:10px 12px;font-size:.9rem;color:var(--ink-soft)}
+.okmsg{background:var(--moss-soft);color:var(--moss);border-radius:6px;padding:10px 12px;font-size:.9rem}
+.tbl{overflow-x:auto;border:1px solid var(--hairline);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--hairline);text-align:left;vertical-align:middle}
+th{background:var(--hover);font-weight:600;white-space:nowrap;font-size:.8rem;letter-spacing:.02em}
+tr:last-child td{border-bottom:0}
+td input,td select{min-height:36px;padding:4px 8px}
+td input.q{width:64px}
+td select{max-width:170px}
+td:has(> input.q){white-space:nowrap}
+td:has(> select[data-chg="dSess"]),td.nw{white-space:nowrap}
+.phases{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;list-style:none;margin:0;padding:0;counter-reset:p}
+.phases li{padding:10px;border-radius:6px;background:var(--hover);font-size:.85rem;font-weight:600;color:var(--slate);display:flex;flex-direction:column;gap:2px;min-width:0}
+.phases li .k{font-family:var(--f-mono);font-size:.72rem;font-weight:500}
+.phases li.done{background:var(--moss-soft);color:var(--moss)}
+.phases li.cur{background:var(--gold);color:#1C2321}
+@media (max-width:720px){.phases{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--hairline)}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;color:var(--slate);padding:0 12px}
+.tabs button.cur{color:var(--ink);border-bottom-color:var(--gold)}
+.tabs .cnt{font-family:var(--f-mono);font-size:.75rem;margin-left:4px}
+.split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{border:1px solid var(--hairline);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;background:var(--raised)}
+.card .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;overflow-wrap:anywhere}
+.card>button{flex-shrink:0}
+.card .name{font-weight:600}
+.rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.rank li{display:flex;align-items:center;gap:8px;border:1px solid var(--hairline);border-radius:10px;padding:6px 8px 6px 12px;background:var(--raised)}
+.rank .nv{font-family:var(--f-mono);font-weight:500;color:var(--gold-text);width:42px;flex:none}
+.rank .nm{flex:1;min-width:0;font-weight:500}
+.empty{border:1px dashed var(--hairline);border-radius:10px;padding:18px;text-align:center;color:var(--slate);font-size:.9rem}
+.steps{display:flex;gap:8px;flex-wrap:wrap;font-size:.85rem}
+.steps span{padding:4px 10px;border-radius:999px;background:var(--hover);color:var(--slate)}
+.steps span.cur{background:var(--gold-soft);color:var(--gold-text);font-weight:600}
+.who{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.big{font-size:1.4rem;font-weight:700;font-family:var(--f-display)}
+.bar{height:8px;border-radius:4px;background:var(--hover);overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%;background:var(--moss)}
+.slips{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.slip{border:1px dashed var(--slate);border-radius:6px;padding:10px;font-size:.85rem;display:flex;flex-direction:column;gap:2px}
+.slip .pin{font-family:var(--f-mono);font-size:1.3rem;letter-spacing:.2em;font-weight:500}
+.modal{position:fixed;inset:0;background:var(--overlay);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal .panel{max-width:480px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;z-index:30;font-weight:500;max-width:calc(100% - 32px)}
+.idle{font-size:.85rem;color:var(--rust-text);font-weight:600}
+details summary{cursor:pointer;font-weight:600;min-height:32px}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--hover);align-self:flex-start;flex-wrap:wrap}
+.seg button{border:0;background:none;min-height:38px;color:var(--slate)}
+.seg button.cur{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.head{display:flex;flex-direction:column;gap:4px}
+.status{font-family:var(--f-mono);font-size:.85rem;color:var(--ink-soft)}
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--hairline);border-radius:10px}
+.check li{display:flex;align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid var(--hairline)}
+.check li:last-child{border-bottom:0}
+.tick{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;background:var(--gold-soft);color:var(--gold-text);flex:none}
+.tick.on{background:var(--moss-soft);color:var(--moss)}
+details.pop{position:relative}
+details.pop[open] > div{position:absolute;right:0;top:calc(100% + 4px);background:var(--raised);border:1px solid var(--hairline);border-radius:10px;padding:8px;z-index:3;box-shadow:0 6px 20px rgba(0,0,0,.15);flex-wrap:nowrap}
+details.pop summary{list-style:none;display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--hairline);border-radius:6px}
+details.pop summary::-webkit-details-marker{display:none}
+.sub-box{display:flex;flex-direction:column;gap:10px;margin-top:10px;padding:14px;border:1px solid var(--hairline);border-radius:10px;background:var(--paper)}
+.seg label{flex-direction:row;align-items:center;gap:6px;min-height:38px;padding:0 14px;border-radius:6px;cursor:pointer;color:var(--slate);font-weight:600}
+.seg label.cur{background:var(--raised);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg label input{width:16px;height:16px;min-height:auto;margin:0;accent-color:var(--gold)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+tr.bad-row td{background:var(--rust-soft)}
+tr.hl-row td{background:var(--moss-soft)}
+.preview{max-height:300px;overflow:auto}
+.narrow{max-width:480px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.stack{display:flex;flex-direction:column;gap:12px}
+button.back{padding:0 6px;color:var(--slate);font-weight:500}
+label.chk{flex-direction:row;align-items:center;gap:6px;font-weight:500}
+label.chk input{min-height:auto;width:20px;height:20px}
+.medals{display:flex;flex-direction:column;gap:10px}
+.medal{flex-direction:row;align-items:center;gap:12px;flex-wrap:wrap}
+.medal .mname{display:flex;align-items:center;gap:8px;width:150px}
+.medal select{flex:1;min-width:200px}
+.dot{width:18px;height:18px;border-radius:50%;flex:none}
+.m-vang .dot{background:#D4A017}.m-bac .dot{background:#A8B0B8}.m-dong .dot{background:#B87333}
+.chip.m-vang{background:var(--gold-soft);color:var(--gold-text)}.chip.m-bac{background:var(--hover);color:var(--ink-soft)}.chip.m-dong{background:var(--rust-soft);color:var(--rust-text)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.9rem}
+.kv dt{color:var(--slate)} .kv dd{margin:0}
+a{color:var(--focus)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top"><div class="wrap topin" id="top"></div></header>
+<div class="demo"><div class="wrap">Bản mẫu (DK2, v8) — dữ liệu giả, chỉ lưu trong trình duyệt này. Dùng để thử quy trình nhập liệu trước khi làm thật.</div></div>
+<main><div class="wrap" id="app"></div></main>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+const PH=['Chuẩn bị','GV đăng ký','Duyệt CLB','HS đăng ký','Nhập điểm','Xuất'];
+const KEY='dk1_state_v1', ADMIN_PW='admin123', MAX_NV=10, MAX_TEST=5;
+const IDLE={hs:60,gv:120,admin:120};
+let S=null;
+const V={screen:'home',tab:'bayGio',sub:{},authed:false,gv:{mode:'login',user:null,edit:null,draft:null,err:[]},hs:{step:'login',user:null,draft:null,tab:null,err:''},lastAct:Date.now(),modal:null,toast:null,tmp:{}};
+
+/* ---------- utils ---------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const p2=n=>String(n).padStart(2,'0');
+const fmt=ts=>{if(!ts)return '—';const d=new Date(ts);return `${p2(d.getDate())}/${p2(d.getMonth()+1)} ${p2(d.getHours())}:${p2(d.getMinutes())}`};
+const toInput=ts=>{const d=new Date(ts);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}`};
+const fromInput=v=>{const t=new Date(v).getTime();return isNaN(t)?null:t};
+const norm=s=>String(s||'').normalize('NFC').trim().replace(/\s+/g,' ').toLowerCase();
+function remain(ts){const ms=ts-Date.now();if(ms<=0)return 'đã hết hạn';const m=Math.round(ms/60000);if(m<60)return `còn ${m} phút`;const h=Math.floor(m/60);if(h<48)return `còn ${h} giờ ${m%60} phút`;return `còn ${Math.floor(h/24)} ngày`}
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function parseScore(v){const s=String(v??'').trim().replace(',','.');if(!/^\d+(\.\d+)?$/.test(s))return null;return Number(s)}
+const showScore=n=>n==null?'':String(n).replace('.',',');
+function gradeOf(lop){const m=String(lop||'').trim().match(/^(\d{1,2})/);if(!m)return null;const g=Number(m[1]);return S.grades.includes(g)?g:null}
+
+/* ---------- state ---------- */
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const t=localStorage.getItem(KEY);if(t){const o=JSON.parse(t);if(o&&o.v===2){S=o;return}}}catch(e){}seed('nho')}
+function log(who,msg){S.log.unshift({ts:Date.now(),who,msg});if(S.log.length>400)S.log.length=400}
+const HO=['Nguyễn','Trần','Lê','Phạm','Hoàng','Huỳnh','Phan','Vũ','Võ','Đặng','Bùi','Đỗ','Hồ','Ngô','Dương','Lý'];
+const DEM=['Văn','Thị','Minh','Ngọc','Gia','Quang','Thanh','Bảo','Đức','Khánh','Hoài','Anh','Thu','Hữu','Phương'];
+const TEN=['An','Bình','Châu','Dũng','Giang','Hà','Hải','Hân','Hiếu','Hoa','Huy','Khang','Khoa','Lan','Linh','Long','Mai','My','Nam','Ngân','Nhi','Phúc','Quân','Quỳnh','Sơn','Tâm','Thảo','Thư','Trang','Trí','Trung','Tú','Vy','Yến'];
+const CLBN=['Bóng rổ','Cờ vua','Robotics','Guitar','Hội hoạ','Khoa học Lên men','Toán Sáng tạo','MC & Thuyết trình','Bóng đá','Bóng bàn','Nấu ăn','In 3D','Kịch Lịch sử','Origami','Dance Workout','Canva','Nhiếp ảnh','Tiếng Anh Tranh biện','Lập trình Python','Thiên văn','Văn học Trẻ','Hợp xướng','Cầu lông','Bơi','Sân khấu','Mô phỏng Liên Hợp Quốc','Làm Xà phòng','Trồng cây','Báo chí','E-Sports','Vẽ truyện tranh','Hoá học Vui','Vật lý Makers','Sinh học Thực địa','Lịch sử Địa phương','Kinh tế Trẻ','Võ thuật','Yoga','Tô màu Chánh niệm','Kỹ sư Máy bay Giấy'];
+function seed(kind){
+  const r=rng(kind==='ca'?2026:11), pick=a=>a[Math.floor(r()*a.length)], pin=()=>String(Math.floor(r()*10000)).padStart(4,'0');
+  const big=kind==='ca';
+  const sessions=['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'].map((n,i)=>({id:'B'+(i+1),name:n}));
+  let rooms=[['P101',30],['P102',30],['P201',35],['Lab Hoá',20],['Lab Tin',25],['Sân bóng',40],['Thư viện',20],['Phòng nhạc',12]];
+  if(big)rooms=rooms.concat([['P103',30],['P104',30],['P202',35],['P203',35],['Phòng múa',25],['Nhà đa năng',45]]);
+  rooms=rooms.map((x,i)=>({id:'R'+(i+1),name:x[0],cap:x[1]}));
+  const students=[];let n=0;
+  const classes=big?[6,7,8,9,10,11,12].flatMap(g=>[1,2,3].map(k=>`${g}A${k}`)):['6A1','7A1','8A1','9A1','10A1'];
+  const per=big?38:6;
+  const usedNames=new Set();
+  for(const c of classes)for(let i=0;i<per;i++){n++;let nm;do{nm=`${pick(HO)} ${pick(DEM)} ${pick(TEN)}`}while(usedNames.has(nm)&&usedNames.size<4000);usedNames.add(nm);
+    students.push({id:'HS'+String(n).padStart(big?4:3,'0'),name:nm,lop:c,khoi:Number(c.match(/^\d+/)[0]),pin:pin()})}
+  const T=big?25:6, teachers=[];
+  for(let i=0;i<T;i++)teachers.push({id:'GV'+String(i+1).padStart(2,'0'),name:`${pick(['Cô','Thầy'])} ${pick(HO)} ${pick(TEN)}`,pin:pin(),ts:Date.now()});
+  const NC=big?40:10, clubs=[], perSess={};
+  for(let k=0;k<NC;k++){
+    const sess=sessions[k%5], j=perSess[sess.id]=(perSess[sess.id]||0); perSess[sess.id]++;
+    const room=rooms[(j*3+k%5)%rooms.length];
+    const lo=6+Math.floor(r()*4), hi=Math.min(12,lo+2+Math.floor(r()*4));
+    const grades=[];for(let g=lo;g<=hi;g++)grades.push(g);
+    const loai=j===0?'tudo':(j%2?'tuyen':'gioihan'), hasTest=loai==='tuyen', id='CLB'+String(k+1).padStart(3,'0');
+    clubs.push({id,name:'CLB '+CLBN[k%CLBN.length],teacherId:teachers[(k+Math.floor(k/25))%T].id,sessionId:sess.id,roomId:room.id,
+      quota:Math.min(room.cap,10+Math.floor(r()*21)),adminQuota:null,grades,loai,diemSan:hasTest?4+Math.floor(r()*3):null,hasTest,link:hasTest?`https://forms.gle/demo-${id.toLowerCase()}`:'',
+      desc:'Sinh hoạt hằng tuần, có sản phẩm cuối kỳ.',req:r()<0.5?'Không':'Biết kiến thức cơ bản về '+CLBN[k%CLBN.length].toLowerCase(),status:'cho',ts:Date.now()});
+  }
+  S={v:2,dataset:kind,phase:1,deadline:{1:Date.now()+2*864e5},sessions,grades:[6,7,8,9,10,11,12],rooms,students,teachers,clubs,
+    schoolCode:'TRUONG2026',regs:{},scores:{},exportVer:0,nextClub:NC+1,nextTeacher:T+1,lastBackup:Date.now(),log:[]};
+  log('Hệ thống',`Nạp dữ liệu mẫu "${big?'Cả trường':'Demo nhỏ'}": ${students.length} HS, ${clubs.length} CLB, ${rooms.length} phòng. Đang ở giai đoạn GV đăng ký.`);
+  save();
+}
+const club=id=>S.clubs.find(c=>c.id===id);
+const LOAI={tudo:'Tự do',gioihan:'Giới hạn',tuyen:'Tuyển chọn'};
+const isFree=c=>!!c&&c.loai==='tudo';
+function loaiChip(c){return c.loai==='tudo'?'<span class="chip on">Tự do</span>':c.loai==='tuyen'?`<span class="chip wait">Tuyển chọn · ${eq(c)} chỗ</span>`:`<span class="chip">Giới hạn · ${eq(c)} chỗ</span>`}
+function loaiNote(c){return c.loai==='tudo'?'Em chắc chắn có chỗ.':c.loai==='tuyen'?`Có kiểm tra đầu vào. Dưới ${c.diemSan} điểm thì không được xét.`:'Không kiểm tra. Nếu đông, xét huy chương rồi bốc thăm.'}
+const MEDALS=[['vang','Vàng',60],['bac','Bạc',30],['dong','Đồng',10]];
+function defaultMedals(pr){const nf=pr.filter(id=>club(id)&&!isFree(club(id)));return {vang:nf[0]||null,bac:nf[1]||null,dong:nf[2]||null}}
+function medalsOf(d,sid){const pr=(d.prefs&&d.prefs[sid])||[];const m=d.medalSet&&d.medalSet[sid]&&d.medals&&d.medals[sid]?{...d.medals[sid]}:defaultMedals(pr);for(const k in m)if(m[k]&&(!pr.includes(m[k])||isFree(club(m[k]))))m[k]=null;return m}
+function medalOfClub(d,sid,cid){const m=medalsOf(d,sid);return Object.keys(m).find(k=>m[k]===cid)||null}
+const testsIn=(d,sid)=>d.tests.filter(id=>club(id)?.sessionId===sid).length;
+const medalName=k=>k?MEDALS.find(m=>m[0]===k)[1]:'';
+function mix(a,b){let h=2166136261;for(const ch of a+'|'+b){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+const room=id=>S.rooms.find(r=>r.id===id);
+const sess=id=>S.sessions.find(s=>s.id===id);
+const teacher=id=>S.teachers.find(t=>t.id===id);
+const eq=c=>c.adminQuota??c.quota;
+const live=c=>c.status!=='tuchoi';
+function roomTaken(roomId,sessId,except){return S.clubs.find(c=>live(c)&&c.id!==except&&c.roomId===roomId&&c.sessionId===sessId)}
+function choosers(clubId){let n=0;for(const k in S.regs){const g=S.regs[k];if(Object.values(g.prefs).some(a=>a.includes(clubId)))n++}return n}
+function dropClubFromRegs(clubId){let n=0;for(const k in S.regs){const g=S.regs[k];let hit=false;for(const s in g.prefs){const i=g.prefs[s].indexOf(clubId);if(i>=0){g.prefs[s].splice(i,1);hit=true}}g.tests=g.tests.filter(x=>x!==clubId);if(hit)n++}delete S.scores[clubId];return n}
+
+/* ---------- phase engine ---------- */
+function tick(){
+  if(!S)return;let changed=false;
+  if((S.phase===1||S.phase===3)&&S.deadline[S.phase]&&Date.now()>=S.deadline[S.phase]){
+    const from=S.phase;S.phase=from+1;log('Hệ thống',`Hết hạn: tự đóng "${PH[from]}" → chuyển sang "${PH[S.phase]}".`);changed=true;
+  }
+  if(changed){save();if(V.screen==='hs'&&V.hs.user&&S.phase!==3&&V.hs.step!=='receipt'){V.hs.step='closed'}render()}
+}
+function setPhase(p,who,why){const from=S.phase;S.phase=p;log(who,`${why}: "${PH[from]}" → "${PH[p]}".`);save()}
+
+/* ---------- UI helpers ---------- */
+function toast(m){V.toast=m;renderOverlay();clearTimeout(V.tt);V.tt=setTimeout(()=>{V.toast=null;renderOverlay()},3200)}
+function ask(title,body,yes,onYes,danger){V.modal={title,body,yes,danger};V.onYes=onYes;renderOverlay()}
+function renderOverlay(){
+  let h='';
+  if(V.modal){const m=V.modal;h+=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="panel"><h2 id="mt">${esc(m.title)}</h2><div>${m.body}</div><div class="row"><button class="${m.danger?'bad':'pri'}" data-act="modalYes" id="myes">${esc(m.yes)}</button><button data-act="modalNo">Huỷ</button></div></div></div>`}
+  if(V.toast)h+=`<div class="toast" role="status">${esc(V.toast)}</div>`;
+  $('overlay').innerHTML=h;if(V.modal){const b=$('myes');b&&b.focus()}
+}
+function copyText(id){const el=$(id);if(!el)return;const t=el.value;
+  const fb=()=>{el.hidden=false;el.focus();el.select();toast('Đã chọn sẵn chữ, bấm Ctrl+C để chép.')};
+  try{navigator.clipboard.writeText(t).then(()=>toast('Đã chép vào bộ nhớ tạm.'),fb)}catch(e){fb()}}
+function phaseChip(role){ // role: gv|hs
+  const open=role==='gv'?S.phase===1:S.phase===3, before=role==='gv'?S.phase<1:S.phase<3;
+  if(open)return `<span class="chip on">Đang mở · ${remain(S.deadline[S.phase])}</span>`;
+  return before?`<span class="chip wait">Chưa mở</span>`:`<span class="chip off">Đã đóng</span>`;
+}
+
+/* ---------- render ---------- */
+let ptrDown=false, deferRender=false, pendingRender=false, rendering=false;
+function render(){
+  if(deferRender||rendering){pendingRender=true;return}
+  rendering=true;try{renderNow()}finally{rendering=false}
+  if(pendingRender&&!deferRender){pendingRender=false;setTimeout(render,0)}
+}
+function focusKey(a){if(!a||!a.closest||!a.closest('#app'))return null;if(a.id)return '#'+a.id;if(!a.dataset.chg)return null;
+  return `[data-chg="${a.dataset.chg}"]`+['id','c','s','m'].map(k=>a.dataset[k]?`[data-${k}="${a.dataset[k]}"]`:'').join('')}
+function renderNow(){const fk=focusKey(document.activeElement);_renderNow();if(fk){const el=document.querySelector('#app '+fk);if(el){el.focus();if(el.select&&el.tagName==='INPUT')el.select()}}}
+function _renderNow(){
+  if(V.gv.user&&!teacher(V.gv.user)){V.gv.user=null;V.gv.edit=null}
+  if(V.hs.user&&!S.students.some(s=>s.id===V.hs.user)){V.hs={step:'login',user:null,draft:null,tab:null,err:''}}
+  const who=V.screen==='admin'&&V.authed?'Quản lý':V.screen==='gv'&&V.gv.user?teacher(V.gv.user)?.name:V.screen==='hs'&&V.hs.user?S.students.find(s=>s.id===V.hs.user)?.name:'';
+  $('top').innerHTML=`<button class="brand" data-act="home">Cổng đăng ký CLB</button>
+    <span class="chip ${S.phase===5?'on':'wait'}">Giai đoạn ${S.phase+1}/6 · ${PH[S.phase]}</span><span class="spacer"></span>
+    <span class="idle" id="idle" aria-live="polite"></span>
+    ${who?`<span class="small muted">${esc(who)}</span><button class="sm" data-act="logout">Thoát</button>`:''}`;
+  const a=$('app');
+  if(V.screen==='home')a.innerHTML=homeView();
+  else if(V.screen==='admin')a.innerHTML=V.authed?adminView():adminLogin();
+  else if(V.screen==='gv')a.innerHTML=gvView();
+  else if(V.screen==='hs')a.innerHTML=hsView();
+  renderOverlay();
+}
+
+/* ---------- home ---------- */
+function homeView(){
+  const t=S.teachers[0], ss=[S.students[0],S.students[Math.floor(S.students.length/2)],S.students[S.students.length-1]];
+  const reg=Object.keys(S.regs).length;
+  return `<div><h1>Đăng ký câu lạc bộ</h1><p class="muted">Chọn vai trò của bạn. Học kỳ 1 · ${S.students.length} học sinh · ${S.clubs.filter(c=>c.status==='duyet').length}/${S.clubs.length} CLB đã duyệt</p></div>
+  <div class="doors">
+    <button class="door" data-act="go" data-s="hs"><span class="role">Học sinh</span><span class="muted">Chọn CLB theo từng buổi, đăng ký thi</span>${phaseChip('hs')}<span class="small muted">${reg} em đã gửi</span></button>
+    <button class="door" data-act="go" data-s="gv"><span class="role">Giáo viên</span><span class="muted">Đăng ký mở CLB, chọn phòng</span>${phaseChip('gv')}<span class="small muted">${S.teachers.length} giáo viên đã đăng ký tài khoản</span></button>
+    <button class="door" data-act="go" data-s="admin"><span class="role">Quản lý</span><span class="muted">Phòng, danh sách, duyệt CLB, nhập điểm, xuất sổ</span><span class="chip">Cần mật khẩu</span></button>
+  </div>
+  <section class="panel"><h2>Thông tin để thử</h2>
+    <dl class="kv"><dt>Mật khẩu quản lý</dt><dd class="mono">${ADMIN_PW}</dd>
+    <dt>Mã trường (GV tự đăng ký)</dt><dd class="mono">${esc(S.schoolCode)}</dd>
+    <dt>Giáo viên mẫu</dt><dd><span class="mono">${esc(t?.name||'—')}</span> · PIN <span class="mono">${esc(t?.pin||'')}</span></dd>
+    ${ss.map(s=>s?`<dt>Học sinh khối ${s.khoi}</dt><dd><span class="mono">${s.id}</span> · PIN <span class="mono">${s.pin}</span> · ${esc(s.name)}</dd>`:'').join('')}</dl>
+    <p class="small muted">Gợi ý thử: Quản lý → đóng GV đăng ký → duyệt CLB → mở cho học sinh → đăng nhập học sinh → nhập điểm → xuất. Trong Quản lý, mục "Thêm ▾ → Công cụ thử" điền nhanh dữ liệu giả.</p>
+    <div class="row"><span class="small">Dữ liệu mẫu đang dùng: <b>${S.dataset==='ca'?'Cả trường':'Demo nhỏ'}</b></span>
+    <button class="sm" data-act="reseed" data-k="nho">Đặt lại: Demo nhỏ (30 HS)</button><button class="sm" data-act="reseed" data-k="ca">Đặt lại: Cả trường (798 HS)</button></div>
+  </section>`;
+}
+
+/* ---------- admin ---------- */
+function adminLogin(){return narrow(`<section class="panel"><h2>Đăng nhập quản lý</h2>
+  <form data-form="adminLogin" class="stack"><label>Mật khẩu<input id="apw" type="password" autocomplete="off" required></label>
+  ${V.tmp.apErr?`<div class="err">${V.tmp.apErr}</div>`:''}<button class="pri">Vào</button></form><p class="small muted">Bản mẫu: mật khẩu là <span class="mono">${ADMIN_PW}</span>. Tự khoá sau 2 phút không thao tác.</p></section>`)}
+/* Admin v2 — Hick: tab strip ≤ 4, ≤ 3 per choice group, ≤ 7 per frame before "more", ≤ 9 per tab.
+   Von Restorff: one gold button per frame (the phase's next step); red only for deleting data. */
+const TABS=[['bayGio','Việc bây giờ'],['danhSach','Danh sách'],['caiDat','Cài đặt'],['them','Thêm ▾']];
+const SUBS={danhSach:[['phong','Phòng'],['hs','Học sinh'],['gv','Giáo viên']],them:[['nhatky','Nhật ký'],['saoluu','Sao lưu'],['lui','Lùi giai đoạn'],['thu','Công cụ thử']]};
+function sub(t){return V.sub[t]||SUBS[t][0][0]}
+function segs(t){return `<div class="seg" role="group" aria-label="Mục">${SUBS[t].map(([k,l])=>`<button class="${sub(t)===k?'cur':''}" data-act="sub" data-t="${t}" data-k="${k}" aria-pressed="${sub(t)===k}">${l}</button>`).join('')}</div>`}
+function adminView(){
+  const stale=Date.now()-S.lastBackup>3600e3;
+  return `<nav class="tabs" aria-label="Mục quản lý">${TABS.map(([k,l])=>`<button class="${V.tab===k?'cur':''}" data-act="tab" data-t="${k}">${l}</button>`).join('')}</nav>
+  ${stale&&V.tab!=='them'?`<div class="note row" style="align-items:center"><span style="flex:1">Chưa sao lưu trong 60 phút qua.</span><button class="sm" data-act="goto" data-t="them" data-k="saoluu">Sao lưu ngay</button></div>`:''}
+  ${({bayGio:tabBayGio,danhSach:tabDanhSach,caiDat:tabCaiDat,them:tabThem})[V.tab]()}`;
+}
+function phaseBar(){return `<ol class="phases" aria-label="Các giai đoạn">${PH.map((p,i)=>`<li class="${i<S.phase?'done':i===S.phase?'cur':''}" ${i===S.phase?'aria-current="step"':''}><span class="k">${i<S.phase?'✓':i+1}</span>${p}</li>`).join('')}</ol>`}
+function head(title,purpose,status){return `<div class="head"><h2>${title}</h2><p class="muted">${purpose}</p>${status?`<p class="status">${status}</p>`:''}</div>`}
+function waitFrame(){ // phases 1 and 3: open, waiting for the deadline
+  const p=S.phase;return `<div class="row" style="align-items:center"><span>Hạn chót <b class="mono">${fmt(S.deadline[p])}</b> · ${remain(S.deadline[p])}. Đến hạn tự đóng.</span><span class="spacer"></span>
+   <details class="pop"><summary>Gia hạn</summary><div class="row"><button class="sm" data-act="extend" data-h="1">+1 giờ</button><button class="sm" data-act="extend" data-h="24">+1 ngày</button></div></details>
+   <button data-act="closeNow">Đóng ngay</button></div>`}
+function tabBayGio(){
+  const p=S.phase, def=toInput(Date.now()+864e5);
+  const top=`<section class="panel">${phaseBar()}`;
+  if(p===0){const why=[];if(!S.rooms.length)why.push('chưa có phòng');if(!S.students.length)why.push('chưa có danh sách học sinh');
+    const nCls=new Set(S.students.map(s=>s.lop)).size, cap=S.rooms.reduce((a,r)=>a+r.cap,0);
+    return `${top}${head('Chuẩn bị','Kiểm tra ba mục dưới đây, rồi mở cho giáo viên đăng ký CLB.')}
+    <ul class="check">${[[S.rooms.length,`${S.rooms.length} phòng · tổng sức chứa ${cap}`,'danhSach','phong'],[S.students.length,`${S.students.length} học sinh · ${nCls} lớp · đã có PIN`,'danhSach','hs'],[S.schoolCode,`Mã trường cho giáo viên: <span class="mono">${esc(S.schoolCode)}</span>`,'caiDat','']].map(([ok,t,tb,k])=>`<li><span class="tick ${ok?'on':''}" aria-hidden="true">${ok?'✓':'!'}</span><span style="flex:1">${t}</span><button class="sm ghost" data-act="goto" data-t="${tb}" data-k="${k}">Sửa</button></li>`).join('')}</ul>
+    <div class="row"><label>Hạn chót giáo viên đăng ký<input type="datetime-local" id="dl" value="${def}"></label><button class="pri" data-act="openPhase" data-p="1" ${why.length?'disabled':''}>Mở đăng ký giáo viên</button></div>
+    ${why.length?`<p class="small muted">Chưa mở được: ${why.join('; ')}.</p>`:''}</section>`}
+  if(p===1){const cs=S.clubs.slice().sort((a,b)=>b.ts-a.ts);
+    return `${top}${head('Giáo viên đang đăng ký','Thầy cô tự tạo tài khoản bằng mã trường và gửi CLB. Không cần làm gì cho tới hạn chót.',`${S.teachers.length} giáo viên · ${S.clubs.length} CLB đã gửi`)}${waitFrame()}</section>
+    <section class="panel"><h3>CLB đã gửi</h3>${cs.length?`<div class="tbl"><table><thead><tr><th>CLB</th><th>Giáo viên</th><th>Buổi</th><th>Phòng</th><th>Nhận</th></tr></thead><tbody>${cs.map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(teacher(c.teacherId)?.name)}</td><td>${esc(sess(c.sessionId)?.name)}</td><td>${esc(room(c.roomId)?.name)}</td><td class="num">${isFree(c)?'Mọi em':c.quota}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Chưa có CLB nào. Danh sách hiện ở đây khi giáo viên gửi.</div>'}</section>`}
+  if(p===2){const n=k=>S.clubs.filter(c=>c.status===k).length, pend=n('cho'), ok=n('duyet'), miss=S.sessions.filter(s=>S.clubs.some(c=>c.status==='duyet'&&c.sessionId===s.id)&&!S.clubs.some(c=>c.status==='duyet'&&isFree(c)&&c.sessionId===s.id)).map(s=>s.name);
+    return `${top}${head('Duyệt CLB','Duyệt hoặc từ chối từng CLB; sửa số nhận và phòng nếu cần. Học sinh chỉ thấy CLB đã duyệt.',`${pend} chờ duyệt · ${ok} đã duyệt · ${n('tuchoi')} từ chối`)}
+    ${approvalTable(false)}
+    <div class="row"><label>Hạn chót học sinh đăng ký<input type="datetime-local" id="dl" value="${def}"></label><button class="pri" data-act="openPhase" data-p="3" ${pend||!ok||miss.length?'disabled':''}>Mở cho học sinh</button></div>
+    ${pend?`<p class="small muted">Duyệt hoặc từ chối hết ${pend} CLB đang chờ để mở cho học sinh.</p>`:''}${miss.length?`<p class="small muted">Mỗi buổi cần ít nhất một CLB Tự do đã duyệt để em nào cũng có chỗ. Còn thiếu: ${miss.join(', ')}.</p>`:''}</section>`}
+  if(p===3){const done=Object.keys(S.regs).length;
+    return `${top}${head('Học sinh đang đăng ký','Theo dõi lớp nào chưa đăng ký để nhắc. Học sinh không thấy các con số này.',`${done}/${S.students.length} em đã gửi`)}${waitFrame()}</section>
+    ${tabTheoDoi()}
+    <section class="panel"><details><summary>Sửa CLB đã duyệt</summary><p class="small muted" style="margin:8px 0">Chỉ tăng số nhận, đổi phòng, đổi buổi hoặc xoá CLB. Đổi buổi hay xoá sẽ báo số học sinh bị ảnh hưởng.</p>${approvalTable(true)}</details></section>`}
+  if(p===4){const miss=missingScores().length, tot=Object.values(S.regs).reduce((a,g)=>a+g.tests.length,0);
+    return `${top}${head('Nhập điểm','Nhập điểm bài kiểm tra (0–10) từ Google Forms. Dưới điểm sàn hoặc không có điểm thì em không được xét vào CLB Tuyển chọn đó.',`${tot-miss}/${tot} bài đã có điểm`)}
+    <div class="row"><button class="pri" data-act="lockScores">Chốt điểm</button></div></section>${tabDiem()}`}
+  const X=buildExport();
+  return `${top}${head(`Xuất Sổ nhập · v${S.exportVer}`,'Chép dữ liệu rồi nạp vào phần mềm xếp CLB.',`${X.cl.length} CLB · ${X.hs.length} học sinh · ${X.json.canhBao.chuaDangKy} em chưa đăng ký · ${X.json.canhBao.thiKhongDiem} bài không có điểm`)}
+   <textarea id="expJson" readonly hidden>${esc(JSON.stringify(X.json,null,1))}</textarea>
+   <div class="row"><button class="pri" data-act="copy" data-id="expJson">Chép dữ liệu xuất</button></div>
+   <p class="small muted">Dán dữ liệu vào tệp <span class="mono">vao.json</span> rồi chạy <span class="mono">python dk2_so_nhap.py vao.json SO_NHAP_CLB.xlsx</span> để có Sổ nhập cho phần mềm xếp.</p></section>${exportPreview(X)}`;
+}
+function approvalTable(late){
+  const rows=S.clubs.slice().sort((a,b)=>(a.status==='cho'?0:1)-(b.status==='cho'?0:1));
+  return `${V.tmp.dErr?`<div class="err">${V.tmp.dErr}</div>`:''}<div class="tbl"><table><thead><tr><th>CLB · Giáo viên</th><th>Buổi</th><th>Phòng</th><th>Khối</th><th>Loại</th><th>GV đề xuất</th><th>Số nhận</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+   ${rows.map(c=>{const r=room(c.roomId);return `<tr><td><b>${esc(c.name)}</b><br><span class="small muted">${esc(teacher(c.teacherId)?.name||'?')} · ${c.id}</span></td>
+    <td>${late?`<select data-chg="dSess" data-id="${c.id}" aria-label="Buổi">${S.sessions.map(s=>`<option value="${s.id}" ${s.id===c.sessionId?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`:esc(sess(c.sessionId)?.name)}</td>
+    <td><select data-chg="dRoom" data-id="${c.id}" aria-label="Phòng">${S.rooms.map(rm=>{const tk=roomTaken(rm.id,c.sessionId,c.id);return `<option value="${rm.id}" ${rm.id===c.roomId?'selected':''} ${tk?'disabled':''}>${esc(rm.name)} (${rm.cap})${tk?' · có '+esc(tk.name):''}</option>`}).join('')}</select></td>
+    <td class="small num">${c.grades.join(',')}</td><td class="small">${LOAI[c.loai]}${c.loai==='tuyen'?`<br><span class="muted">sàn ${c.diemSan}</span>`:''}</td><td class="num">${isFree(c)?'—':c.quota}</td>
+    ${isFree(c)?'<td class="small muted">Mọi em</td>':`<td><input class="q num" data-chg="dQuota" data-id="${c.id}" value="${c.adminQuota??''}" placeholder="${c.quota}" inputmode="numeric" aria-label="Số nhận"> <span class="small muted">/${r?.cap}</span></td>`}
+    <td>${statusChip(c.status)}</td>
+    <td style="white-space:nowrap">${late?`<button class="sm bad" data-act="dDel" data-id="${c.id}">Xoá</button>`:`${c.status!=='duyet'?`<button class="sm" data-act="dSet" data-id="${c.id}" data-v="duyet">✓ Duyệt</button> `:''}${c.status!=='tuchoi'?`<button class="sm" data-act="dSet" data-id="${c.id}" data-v="tuchoi">Từ chối</button>`:''}`}</td></tr>`}).join('')||'<tr><td colspan="9" class="muted">Chưa có CLB nào.</td></tr>'}
+   </tbody></table></div><p class="small muted">Số nhận để trống = dùng số giáo viên đề xuất. Không vượt sức chứa phòng.</p>`;
+}
+function tabTheoDoi(){
+  const cls=[...new Set(S.students.map(s=>s.lop))];
+  const byCls=cls.map(c=>{const all=S.students.filter(s=>s.lop===c);return {c,all:all.length,d:all.filter(s=>S.regs[s.id]).length}}).sort((a,b)=>a.d/a.all-b.d/b.all);
+  const dem=S.clubs.filter(c=>c.status==='duyet').map(c=>{let nv1=0,tot=0;for(const k in S.regs){const a=S.regs[k].prefs[c.sessionId]||[];if(a[0]===c.id)nv1++;if(a.includes(c.id))tot++}return {c,nv1,tot}}).sort((a,b)=>b.nv1/eq(b.c)-a.nv1/eq(a.c));
+  const notReg=S.students.filter(s=>!S.regs[s.id]), f=V.tmp.nrCls||'tat', nr=notReg.filter(s=>f==='tat'||s.lop===f);
+  return `<div class="grid2"><section class="panel"><h3>Tiến độ theo lớp <span class="muted small">(lớp chậm nhất ở trên)</span></h3><div class="tbl" style="max-height:340px;overflow:auto"><table><thead><tr><th>Lớp</th><th>Đã gửi</th><th></th></tr></thead><tbody>${byCls.map(x=>`<tr><td>${esc(x.c)}</td><td class="num">${x.d}/${x.all}</td><td style="width:45%"><div class="bar"><i style="width:${Math.round(100*x.d/x.all)}%"></i></div></td></tr>`).join('')}</tbody></table></div>
+   <details><summary>Ai chưa đăng ký (${notReg.length})</summary><div class="row" style="margin:8px 0"><label>Lớp<select data-chg="nrCls"><option value="tat">Tất cả</option>${cls.map(c=>`<option ${c===f?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>
+   <div class="tbl" style="max-height:300px;overflow:auto"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>Lớp</th></tr></thead><tbody>${nr.slice(0,150).map(s=>`<tr><td class="mono">${s.id}</td><td>${esc(s.name)}</td><td>${esc(s.lop)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">Mọi em đã gửi.</td></tr>'}</tbody></table></div></details></section>
+  <section class="panel"><h3>Nhu cầu theo CLB</h3><div class="tbl" style="max-height:420px;overflow:auto"><table><thead><tr><th>CLB</th><th>Buổi</th><th>Nhận</th><th>NV1</th><th>Tổng</th><th></th></tr></thead><tbody>${dem.map(x=>`<tr><td>${esc(x.c.name)}</td><td>${esc(sess(x.c.sessionId)?.name)}</td><td class="num">${isFree(x.c)?'Mọi em':eq(x.c)}</td><td class="num">${x.nv1}</td><td class="num">${x.tot}</td><td>${isFree(x.c)?'<span class="chip on">Tự do</span>':x.nv1>eq(x.c)?'<span class="chip off">NV1 vượt</span>':x.tot<eq(x.c)?'<span class="chip wait">Có thể thiếu</span>':'<span class="chip on">Ổn</span>'}</td></tr>`).join('')}</tbody></table></div></section></div>`;
+}
+function missingScores(){const out=[];for(const sid in S.regs)for(const cid of S.regs[sid].tests){const c=club(cid);if(!c||c.status!=='duyet')continue;if(S.scores[cid]?.[sid]==null)out.push({sid,cid})}return out}
+function tabDiem(){
+  const tc=S.clubs.filter(c=>c.status==='duyet'&&c.hasTest), cid=V.tmp.sc&&club(V.tmp.sc)?V.tmp.sc:tc[0]?.id, c=club(cid);
+  const who=c?Object.keys(S.regs).filter(sid=>S.regs[sid].tests.includes(cid)):[];const miss=missingScores();
+  if(!c)return `<section class="panel"><div class="empty">Không CLB nào có thi. Bấm "Chốt điểm" để sang Xuất.</div></section>`;
+  const got=who.filter(s=>S.scores[cid]?.[s]!=null).length;
+  return `<section class="panel"><div class="row"><label style="flex:1">CLB<select data-chg="sc">${tc.map(x=>{const t=Object.keys(S.regs).filter(s=>S.regs[s].tests.includes(x.id));const g=t.filter(s=>S.scores[x.id]?.[s]!=null).length;return `<option value="${x.id}" ${x.id===cid?'selected':''}>${esc(x.name)} · ${g}/${t.length} có điểm</option>`}).join('')}</select></label></div>
+   <details ${V.tmp.pasteRes?'open':''}><summary>Dán cả cột từ Google Forms</summary><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><p class="small muted">Mỗi dòng: Mã HS, dấu Tab, điểm. Chép hai cột từ trang tính là đúng dạng.</p>
+    <textarea id="pasteTxt" placeholder="${who[0]||'HS001'}&#9;8,5"></textarea><div><button data-act="pasteScores">Nạp điểm cho ${esc(c.name)}</button></div>
+    ${V.tmp.pasteRes?`<div class="${V.tmp.pasteRes.bad.length?'err':'okmsg'}">Đã nạp ${V.tmp.pasteRes.ok} điểm.${V.tmp.pasteRes.bad.length?` Bỏ qua ${V.tmp.pasteRes.bad.length} dòng:<ul>${V.tmp.pasteRes.bad.slice(0,10).map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`:''}</div>`:''}</div></details>
+   <div class="tbl" style="max-height:420px;overflow:auto"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Điểm (${got}/${who.length})</th></tr></thead><tbody>${who.map(sid=>{const s=S.students.find(x=>x.id===sid);const v=S.scores[cid]?.[sid];return `<tr><td class="mono">${sid}</td><td>${esc(s?.name)}</td><td>${esc(s?.lop)}</td><td><input class="q num" data-chg="score" data-c="${cid}" data-s="${sid}" value="${showScore(v)}" inputmode="decimal" aria-label="Điểm ${esc(s?.name)}">${v!=null&&c.diemSan!=null&&v<c.diemSan?' <span class="chip off">Dưới sàn</span>':''}</td></tr>`}).join('')||'<tr><td colspan="4" class="muted">Chưa em nào đăng ký thi CLB này.</td></tr>'}</tbody></table></div>
+   <p class="small muted">Điểm sàn của CLB này: <b>${c.diemSan??'—'}</b>. Điểm từ 0 đến 10, dấu phẩy hoặc chấm (8,5 = 8.5).</p>
+   <details><summary>Chưa có điểm, mọi CLB (${miss.length})</summary>${miss.length?`<div class="tbl" style="max-height:260px;overflow:auto;margin-top:8px"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>CLB</th></tr></thead><tbody>${miss.slice(0,200).map(m=>`<tr><td class="mono">${m.sid}</td><td>${esc(S.students.find(s=>s.id===m.sid)?.name)}</td><td>${esc(club(m.cid)?.name)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="okmsg" style="margin-top:8px">Mọi bài thi đã có điểm.</p>'}</details></section>`;
+}
+function buildExport(){
+  const cl=S.clubs.filter(c=>c.status==='duyet');
+  const maxNV={};S.sessions.forEach(s=>maxNV[s.id]=0);
+  const hs=S.students.filter(s=>S.regs[s.id]).map(s=>{const g=S.regs[s.id];const nv={};S.sessions.forEach(se=>{const a=(g.prefs[se.id]||[]).filter(id=>club(id)?.status==='duyet');maxNV[se.id]=Math.max(maxNV[se.id],a.length);nv[se.name]=a.map(id=>({clb:id,diem:g.tests.includes(id)?(S.scores[id]?.[s.id]??null):undefined,huyChuong:medalName(medalOfClub(g,se.id,id))||null}))});return {ma:s.id,hoTen:s.name,lop:s.lop,khoi:s.khoi,nguyenVong:nv}});
+  return {cl,hs,maxNV,json:{dinhDang:1,phienBan:S.exportVer,xuatLuc:new Date().toISOString(),duLieu:'MÔ PHỎNG',buoi:S.sessions.map(s=>s.name),
+    clb:cl.map(c=>({ma:c.id,ten:c.name,buoi:sess(c.sessionId)?.name,loai:LOAI[c.loai],diemSan:c.diemSan??null,chiTieu:isFree(c)?null:eq(c),phong:room(c.roomId)?.name,sucChuaPhong:room(c.roomId)?.cap,khoi:c.grades,coThi:c.hasTest,linkThi:c.link||null,giaoVien:teacher(c.teacherId)?.name})),
+    hocSinh:hs.map(h=>({ma:h.ma,hoTen:h.hoTen,lop:h.lop,nv:S.sessions.flatMap(se=>h.nguyenVong[se.name]).map(v=>({clb:v.clb,thi:v.diem!==undefined,diem:v.diem??null,huyChuong:v.huyChuong}))})),canhBao:{chuaDangKy:S.students.length-hs.length,thiKhongDiem:missingScores().length}}};
+}
+function exportPreview(X){
+  const H={Vàng:60,Bạc:30,Đồng:10}, nv=X.json.hocSinh, k=Math.max(0,...nv.map(h=>h.nv.length));
+  return `<section class="panel"><details><summary>Xem trước sheet "1. CLB" (${X.cl.length})</summary>
+   <div class="tbl" style="max-height:300px;overflow:auto;margin-top:8px"><table><thead><tr><th>Tên CLB</th><th>Buổi</th><th>Chỉ tiêu</th><th>Mã CLB</th><th>Loại</th><th>Điểm sàn</th><th>Sức chứa phòng</th><th>Địa điểm</th></tr></thead><tbody>${X.json.clb.map(c=>`<tr><td>${esc(c.ten)}</td><td>${esc(c.buoi)}</td><td class="num">${c.chiTieu??c.sucChuaPhong??''}</td><td class="mono">${c.ma}</td><td>${c.loai}</td><td class="num">${c.diemSan??''}</td><td class="num">${c.sucChuaPhong??''}</td><td>${esc(c.phong)}</td></tr>`).join('')}</tbody></table></div></details>
+   <details><summary>Xem trước sheet "2. Học sinh" (${nv.length})</summary>
+   <div class="tbl" style="max-height:380px;overflow:auto;margin-top:8px"><table><thead><tr><th rowspan="2">Mã HS</th><th rowspan="2">Họ tên</th><th rowspan="2">Lớp</th>${Array.from({length:k},(_,i)=>`<th colspan="3">Nguyện vọng ${i+1}</th>`).join('')}</tr><tr>${'<th>CLB</th><th>Điểm thi</th><th>Huy chương (60/30/10)</th>'.repeat(k)}</tr></thead>
+   <tbody>${nv.slice(0,60).map(h=>`<tr><td class="mono">${h.ma}</td><td>${esc(h.hoTen)}</td><td>${esc(h.lop)}</td>${Array.from({length:k},(_,i)=>{const v=h.nv[i];return v?`<td class="small">${esc(club(v.clb)?.name)}</td><td class="num">${v.diem==null?'':showScore(v.diem)}</td><td class="num">${H[v.huyChuong]||''}</td>`:'<td></td><td></td><td></td>'}).join('')}</tr>`).join('')||'<tr><td colspan="3" class="muted">Chưa có học sinh nào gửi.</td></tr>'}</tbody></table></div>${nv.length>60?`<p class="small muted">Xem trước 60 / ${nv.length} dòng; dữ liệu xuất có đủ.</p>`:''}</details></section>`;
+}
+
+function tabDanhSach(){
+  const k=sub('danhSach');
+  if(k==='phong'){const cap=S.rooms.reduce((a,r)=>a+r.cap,0);
+    return `<section class="panel">${segs('danhSach')}${head('Phòng','Giáo viên chỉ chọn được phòng còn trống ở buổi của CLB, và không nhận quá sức chứa.',`${S.rooms.length} phòng · tổng sức chứa ${cap}`)}
+    <form data-form="roomAdd" class="row"><label>Tên phòng<input id="rn" required></label><label>Sức chứa<input id="rc" class="q" inputmode="numeric" required></label><button class="pri">Thêm phòng</button></form>
+    <div class="tbl"><table><thead><tr><th>Tên phòng</th><th>Sức chứa</th><th>Đang dùng</th><th></th></tr></thead><tbody>${S.rooms.map(r=>{const u=S.clubs.filter(c=>live(c)&&c.roomId===r.id);return `<tr><td><input data-chg="roomName" data-id="${r.id}" value="${esc(r.name)}" aria-label="Tên phòng"></td><td><input class="q" data-chg="roomCap" data-id="${r.id}" value="${r.cap}" inputmode="numeric" aria-label="Sức chứa"></td><td class="small">${u.length?u.map(c=>`${esc(sess(c.sessionId)?.name)}: ${esc(c.name)}`).join('<br>'):'<span class="muted">Trống</span>'}</td><td>${u.length?'':`<button class="sm bad" data-act="roomDel" data-id="${r.id}">Xoá</button>`}</td></tr>`}).join('')}</tbody></table></div></section>`}
+  if(k==='hs'){const lock=S.phase>=3, pv=V.tmp.stuPrev, mode=V.tmp.stuMode||'them', cls=[...new Set(S.students.map(s=>s.lop))].sort((x,y)=>x.localeCompare(y,'vi',{numeric:true})), f=V.tmp.cls&&cls.includes(V.tmp.cls)?V.tmp.cls:cls[0]||'', list=S.students.filter(s=>s.lop===f), done=Object.keys(S.regs).length;
+    const n=k=>pv?pv.rows.filter(r=>r.kind===k).length:0, nm=n('moi'), nc=n('capnhat'), nl=n('loi');
+    const kindCell=r=>r.kind==='moi'?`<span class="chip on">Mới</span>${r.lopMoi?' <span class="small muted">lớp mới</span>':''}`:r.kind==='capnhat'?'<span class="chip wait">Đã có · cập nhật, giữ PIN</span>':`<span class="chip off">Lỗi</span> <span class="small">${r.err.join('; ')}</span>`;
+    const saveLbl=mode==='them'?[nm&&`Thêm ${nm} em`,nc&&`cập nhật ${nc} em`].filter(Boolean).join(', ')+(nl?` · bỏ qua ${nl} dòng lỗi`:''):`Thay cả danh sách bằng ${pv?pv.rows.length:0} em`;
+    const canSave=pv&&(mode==='them'?nm+nc>0:pv.rows.length>0&&!nl);
+    return `<section class="panel">${segs('danhSach')}${head('Học sinh','Chỉ học sinh có tên ở đây mới đăng nhập được. Mỗi em một PIN in trên phiếu.',`${S.students.length} em · ${cls.length} lớp · ${done} đã gửi nguyện vọng`)}
+    ${V.tmp.stuDone?`<div class="okmsg">${V.tmp.stuDone}</div>`:''}
+    ${lock?'<p class="note">Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.</p>':`<details ${pv||V.tmp.stuOpen?'open':''}><summary>Thêm học sinh</summary><div class="sub-box">
+     <fieldset class="seg" style="border:0;margin:0"><legend class="sr">Cách nạp</legend>
+      <label class="${mode==='them'?'cur':''}"><input type="radio" name="stuMode" value="them" data-chg="stuMode" ${mode==='them'?'checked':''}>Thêm vào danh sách</label>
+      <label class="${mode==='thay'?'cur':''}"><input type="radio" name="stuMode" value="thay" data-chg="stuMode" ${mode==='thay'?'checked':''}>Thay cả danh sách</label></fieldset>
+     <p class="small muted">${mode==='them'?`Mỗi dòng một em: <b>mã · họ tên · lớp</b>. Cách nhau bằng dấu cách, Tab (dán từ Excel) hoặc dấu phẩy đều được. Mã đã có thì cập nhật tên và lớp, giữ nguyên PIN.`:`Danh sách dán vào sẽ <b>thay toàn bộ ${S.students.length} em hiện có</b>. Em không có trong danh sách mới sẽ bị xoá cùng nguyện vọng. Dùng khi nạp danh sách cả trường lần đầu.`}</p>
+     <textarea id="stuTxt" placeholder="HS6969 Nguyễn Cường 7A8&#10;HS6970 Trần Thị Mai 10A2">${esc(V.tmp.stuTxt||'')}</textarea>
+     <div class="row"><button data-act="stuPreview">Xem trước</button><label class="btn" style="display:inline-flex;align-items:center;justify-content:center">Chọn tệp CSV<input type="file" id="stuFile" accept=".csv,text/csv" data-chg="stuFile" hidden></label></div>
+     ${pv?`<h3>Xem trước <span class="status">${nm} mới · ${nc} cập nhật · ${nl} lỗi</span></h3>
+      <div class="tbl preview"><table><thead><tr><th>Dòng</th><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Khối</th><th>Kết quả</th></tr></thead><tbody>${pv.rows.slice(0,50).map(r=>`<tr class="${r.kind==='loi'?'bad-row':''}"><td class="num">${r.line}</td><td class="mono">${esc(r.id)}</td><td>${esc(r.name)}</td><td>${esc(r.lop)}</td><td class="num">${r.khoi??'?'}</td><td>${kindCell(r)}</td></tr>`).join('')}</tbody></table></div>
+      ${pv.rows.length>50?`<p class="small muted">Hiện 50 / ${pv.rows.length} dòng.</p>`:''}
+      ${mode==='thay'&&nl?`<p class="err">Sửa hết ${nl} dòng lỗi rồi bấm "Xem trước" lại. Thay cả danh sách thì không được bỏ qua dòng lỗi.</p>`:''}
+      ${canSave?`<div><button class="pri" data-act="stuSave">${saveLbl}</button></div>`:''}`:''}</div></details>`}
+    <h3>Danh sách hiện có</h3>
+    <div class="row"><label>Lớp<select data-chg="cls">${cls.map(c=>`<option ${c===f?'selected':''}>${esc(c)}</option>`).join('')}</select></label><button data-act="slips">${V.tmp.slips?'Xem bảng':'Xem phiếu PIN'}</button></div>
+    ${V.tmp.slips?`<p class="small muted">Bản thật in ra để cắt phát. Bản mẫu chỉ hiển thị.</p><div class="slips">${list.map(s=>`<div class="slip"><b>${esc(s.name)}</b><span>Lớp ${esc(s.lop)} · Mã <span class="mono">${s.id}</span></span><span class="pin">${s.pin}</span><span class="small muted">Giữ kín PIN, không đưa bạn.</span></div>`).join('')}</div>`:
+    `<div class="tbl"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>Lớp</th><th>Khối</th><th>PIN</th><th>Đã gửi</th><th></th></tr></thead><tbody>${list.map(s=>`<tr class="${V.tmp.hl&&V.tmp.hl.includes(s.id)?'hl-row':''}"><td class="mono">${s.id}</td><td>${esc(s.name)}</td><td>${esc(s.lop)}</td><td class="num">${s.khoi}</td><td class="mono">${s.pin}</td><td>${S.regs[s.id]?'<span class="chip on">Rồi</span>':'<span class="chip">Chưa</span>'}</td><td><button class="sm" data-act="pinReset" data-id="${s.id}">Đặt lại PIN</button></td></tr>`).join('')}</tbody></table></div>`}</section>`}
+  const tv=V.tmp.gvPrev, made=V.tmp.gvMade;
+  return `<section class="panel">${segs('danhSach')}${head('Giáo viên',`Hai cách có tài khoản: thầy cô tự tạo bằng mã trường <span class="mono">${esc(S.schoolCode)}</span>, hoặc quản lý tạo hộ ở đây.`,`${S.teachers.length} tài khoản · ${S.teachers.filter(t=>t.byAdmin).length} do quản lý tạo · ${S.clubs.length} CLB`)}
+   ${made?`<div class="okmsg">Đã tạo ${made.length} tài khoản. Cắt phiếu dưới đây đưa từng thầy cô; đăng nhập bằng họ tên + PIN.</div><div class="slips">${made.map(t=>`<div class="slip"><b>${esc(t.name)}</b><span>Mã <span class="mono">${t.id}</span> · Giáo viên</span><span class="pin">${t.pin}</span><span class="small muted">Đăng nhập: họ tên + PIN này.</span></div>`).join('')}</div>`:''}
+   <details ${tv||V.tmp.gvOpen?'open':''}><summary>Thêm giáo viên</summary><div class="sub-box">
+    <p class="small muted">Mỗi dòng một họ tên, ví dụ "Cô Nguyễn Lan". Dán được cả cột tên từ Excel. App tạo PIN 4 số cho từng người.</p>
+    <textarea id="gvTxt" placeholder="Cô Nguyễn Lan&#10;Thầy Trần Minh">${esc(V.tmp.gvTxt||'')}</textarea>
+    <div><button data-act="gvPreview">Xem trước</button></div>
+    ${tv?`<h3>Xem trước <span class="status">${tv.filter(x=>x.kind==='moi').length} mới · ${tv.filter(x=>x.kind!=='moi').length} bỏ qua</span></h3>
+     <div class="tbl preview"><table><thead><tr><th>Dòng</th><th>Họ tên</th><th>Kết quả</th></tr></thead><tbody>${tv.map(x=>`<tr class="${x.kind==='moi'?'':'bad-row'}"><td class="num">${x.line}</td><td>${esc(x.name)}</td><td>${x.kind==='moi'?'<span class="chip on">Mới</span>':`<span class="chip off">Bỏ qua</span> <span class="small">${x.why}</span>`}</td></tr>`).join('')}</tbody></table></div>
+     ${tv.some(x=>x.kind==='moi')?`<div><button class="pri" data-act="gvCreate">Tạo ${tv.filter(x=>x.kind==='moi').length} tài khoản</button></div>`:''}`:''}
+   </div></details>
+   <div class="tbl"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>Cách tạo</th><th>Tạo lúc</th><th>CLB</th><th></th></tr></thead><tbody>${S.teachers.map(t=>{const cs=S.clubs.filter(c=>c.teacherId===t.id);const blk=S.phase>=3&&cs.some(c=>c.status==='duyet');
+   return `<tr class="${V.tmp.gvHl&&V.tmp.gvHl.includes(t.id)?'hl-row':''}"><td class="mono">${t.id}</td><td>${esc(t.name)}</td><td class="small">${t.byAdmin?'Quản lý tạo':'Tự đăng ký'}</td><td class="mono small">${fmt(t.ts)}</td><td class="small">${cs.length?cs.map(c=>esc(c.name)).join(', '):'<span class="muted">Chưa có</span>'}</td><td style="white-space:nowrap"><button class="sm" data-act="gvPin" data-id="${t.id}">Đặt lại PIN</button> ${blk?'':`<button class="sm bad" data-act="gvDel" data-id="${t.id}">Xoá</button>`}</td></tr>`}).join('')}</tbody></table></div>
+   <p class="small muted">Thầy cô quên PIN: bấm "Đặt lại PIN" rồi đưa PIN mới.</p></section>`;
+}
+function tabCaiDat(){
+  const lockS=S.phase>1;
+  return `<div class="grid2">
+  <section class="panel">${head('Buổi sinh hoạt','Mỗi CLB học đúng một buổi. Học sinh xếp nguyện vọng riêng cho từng buổi.',lockS?'Đã khoá: giáo viên đã đăng ký xong.':'')}
+   <div class="tbl"><table><thead><tr><th>Tên buổi</th><th>Số CLB</th><th></th></tr></thead><tbody>${S.sessions.map(s=>{const n=S.clubs.filter(c=>c.sessionId===s.id).length;return `<tr><td>${lockS?esc(s.name):`<input data-chg="sessName" data-id="${s.id}" value="${esc(s.name)}" aria-label="Tên buổi">`}</td><td class="num">${n}</td><td>${lockS||n?'':`<button class="sm bad" data-act="sessDel" data-id="${s.id}">Xoá</button>`}</td></tr>`}).join('')}</tbody></table></div>
+   ${lockS?'':'<form data-form="sessAdd" class="row"><label>Thêm buổi<input id="sn" placeholder="Thứ 7"></label><button>Thêm</button></form>'}</section>
+  <section class="panel">${head('Khối','Học sinh chỉ thấy CLB có khối của mình. Khối đọc từ tên lớp.',lockS?'Đã khoá: giáo viên đã đăng ký xong.':'')}
+   ${lockS?`<p>${S.grades.map(g=>'Khối '+g).join(' · ')}</p>`:`<form data-form="grades" class="row"><label>Các khối, cách nhau dấu phẩy<input id="gr" value="${S.grades.join(', ')}"></label><button>Lưu khối</button></form>`}</section>
+  <section class="panel">${head('Mã trường','Giáo viên nhập mã này khi tự tạo tài khoản. Đổi mã nếu bị lộ.')}
+   <form data-form="code" class="row"><label>Mã trường<input id="sc" class="mono" value="${esc(S.schoolCode)}"></label><button>Lưu mã</button></form></section></div>`;
+}
+function tabThem(){
+  const k=sub('them');
+  if(k==='nhatky')return `<section class="panel">${segs('them')}${head('Nhật ký','Mọi thay đổi của quản lý, giáo viên và học sinh, mới nhất ở trên.',`${S.log.length} dòng`)}
+   <div class="tbl" style="max-height:480px;overflow:auto"><table><thead><tr><th>Lúc</th><th>Ai</th><th>Việc</th></tr></thead><tbody>${S.log.slice(0,250).map(l=>`<tr><td class="mono small" style="white-space:nowrap">${fmt(l.ts)}</td><td class="small">${esc(l.who)}</td><td class="small">${esc(l.msg)}</td></tr>`).join('')}</tbody></table></div></section>`;
+  if(k==='saoluu')return `<section class="panel">${segs('them')}${head('Sao lưu','Dữ liệu bản mẫu chỉ nằm trong trình duyệt này. Sao lưu để không mất khi xoá trình duyệt.',`Lần gần nhất: ${fmt(S.lastBackup)}`)}
+   ${V.tmp.bk?`<textarea id="bkTxt" readonly>${esc(V.tmp.bk)}</textarea><div class="row"><button class="pri" data-act="copy" data-id="bkTxt">Chép bản sao lưu</button></div>`:`<div class="row"><button class="pri" data-act="backup">Tạo bản sao lưu</button></div>`}
+   <details><summary>Khôi phục từ bản sao lưu</summary><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><p class="small muted">Dán bản đã chép. Toàn bộ dữ liệu hiện tại bị thay.</p><textarea id="rsTxt"></textarea>${V.tmp.rsErr?`<div class="err">${V.tmp.rsErr}</div>`:''}<div><button class="bad" data-act="restore">Khôi phục</button></div></div></details></section>`;
+  if(k==='lui')return `<section class="panel">${segs('them')}${head('Lùi giai đoạn','Dùng khi cần sửa: mở lại đăng ký, hoặc mở khoá điểm đã chốt. Không xoá dữ liệu; có ghi nhật ký.',`Đang ở: ${PH[S.phase]}`)}
+   ${S.phase>0?`<div class="row"><button data-act="back">Lùi về "${PH[S.phase-1]}"</button></div>`:'<p class="muted">Đang ở giai đoạn đầu tiên.</p>'}</section>`;
+  const t=[S.phase<=2&&S.clubs.some(c=>c.status==='cho')?'<button data-act="fakeApprove">Duyệt mọi CLB đang chờ</button>':'',S.phase===3?'<button data-act="fakeRegs">Điền nguyện vọng giả cho 70% học sinh</button>':'',S.phase===4?'<button data-act="fakeScores">Điền điểm giả cho 85% bài thi</button>':''].filter(Boolean);
+  return `<section class="panel">${segs('them')}${head('Công cụ thử','Chỉ có trong bản mẫu, để đi nhanh qua các giai đoạn. Mọi thao tác ghi nhật ký.')}
+   ${t.length?`<div class="row">${t.join('')}</div>`:'<p class="muted">Giai đoạn này không có công cụ điền nhanh.</p>'}
+   <details><summary>Đặt lại dữ liệu mẫu</summary><div class="row" style="margin-top:8px"><button class="bad" data-act="reseed" data-k="nho">Demo nhỏ (30 HS)</button><button class="bad" data-act="reseed" data-k="ca">Cả trường (798 HS)</button></div></details></section>`;
+}
+
+function splitStudentLine(l){
+  let c=l.split('\t').map(x=>x.trim()).filter(Boolean);if(c.length>=3)return c;
+  c=l.split(/[;,]/).map(x=>x.trim()).filter(Boolean);if(c.length>=3)return c;
+  const w=l.split(/\s+/).filter(Boolean);if(w.length<3)return w;   // "HS6969 Nguyễn Cường 7A8": mã đầu, lớp cuối, giữa là họ tên
+  let kh=null;if(w.length>=4&&/^\d{1,2}$/.test(w[w.length-1])&&/^\d{1,2}\D/.test(w[w.length-2]))kh=w.pop();
+  const lop=w.pop(), id=w.shift();return kh?[id,w.join(' '),lop,kh]:[id,w.join(' '),lop];
+}
+function parseStudentText(txt){
+  const lines=txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);const rows=[],seen=new Set(),have=new Set(S.students.map(s=>s.id.toUpperCase()));
+  lines.forEach((l,i)=>{const c=splitStudentLine(l);
+    if(i===0&&c[0]&&/^(m[ãa]|id|stt|h[ọo])/i.test(c[0])&&!/\d/.test(c[0]))return;
+    const [id,name,lop,kh]=c;const r={id:id||'',name:name||'',lop:lop||'',line:i+1,err:[]};
+    r.khoi=kh?Number(kh):gradeOf(lop);
+    if(!id)r.err.push('thiếu mã học sinh ở đầu dòng');
+    if(!name)r.err.push('thiếu họ tên (nằm giữa mã và lớp)');
+    if(!lop)r.err.push('thiếu lớp ở cuối dòng, ví dụ 7A8');
+    else if(!/^\d/.test(lop))r.err.push(`không thấy lớp ở cuối dòng ("${lop}" không phải tên lớp; ví dụ 7A8)`);
+    else if(!r.khoi||!S.grades.includes(r.khoi))r.err.push(`lớp "${lop}" không bắt đầu bằng khối ${S.grades[0]}–${S.grades[S.grades.length-1]}`);
+    const U=r.id.toUpperCase();if(id&&seen.has(U))r.err.push('mã trùng với một dòng phía trên');if(id)seen.add(U);
+    r.kind=r.err.length?'loi':have.has(U)?'capnhat':'moi';
+    r.lopMoi=!!lop&&!S.students.some(s=>s.lop===lop);rows.push(r)});
+  return {rows,errs:rows.filter(r=>r.kind==='loi')};
+}
+function statusChip(s){return s==='duyet'?'<span class="chip on">Đã duyệt</span>':s==='tuchoi'?'<span class="chip off">Từ chối</span>':'<span class="chip wait">Chờ duyệt</span>'}
+
+/* ---------- teacher ---------- */
+function narrow(inner,act='home',label='← Về trang chọn vai trò'){return `<div class="narrow"><div><button class="ghost back" data-act="${act}">${label}</button></div>${inner}</div>`}
+function closedPanel(title,msg){return `<section class="panel"><h2>${title}</h2><p>${msg}</p><div class="row"><button class="pri" data-act="home">Về trang đầu</button></div></section>`}
+function gvView(){
+  const g=V.gv, open=S.phase===1;
+  if(!g.user){
+    if(S.phase<1)return narrow(closedPanel('Giáo viên','Đăng ký giáo viên chưa mở. Thầy cô quay lại khi quản lý thông báo.'));
+    const su=g.mode==='signup'&&open;
+    return narrow(`<section class="panel"><div class="row" style="align-items:center"><h2 style="flex:1">${su?'Tạo tài khoản giáo viên':'Giáo viên đăng nhập'}</h2>${phaseChip('gv')}</div>
+     ${!open?'<p class="note">Đăng ký giáo viên đã đóng. Thầy cô vẫn đăng nhập được để xem CLB của mình.</p>':''}
+     <form data-form="${su?'gvSignup':'gvLogin'}" class="stack">
+      ${su?'<label>Mã trường (quản lý cung cấp)<input id="g_code" class="mono" required autocomplete="off"></label>':''}
+      <label>Họ tên (ghi như trên danh sách trường)<input id="g_name" required placeholder="Cô Nguyễn Lan" autocomplete="off"></label>
+      <label>PIN 4 số${su?' (tự chọn, nhớ để đăng nhập lại)':''}<input id="g_pin" class="mono" required inputmode="numeric" maxlength="4" autocomplete="off"></label>
+      ${su?'<label>Nhập lại PIN<input id="g_pin2" class="mono" required inputmode="numeric" maxlength="4" autocomplete="off"></label>':''}
+      ${g.err.length?`<div class="err">${g.err.join('<br>')}</div>`:''}
+      <button class="pri">${su?'Tạo tài khoản':'Đăng nhập'}</button></form>
+     ${open?`<button class="ghost" data-act="gvMode">${su?'Đã có tài khoản? Đăng nhập':'Chưa có tài khoản? Tạo bằng mã trường'}</button>`:''}</section>`);
+  }
+  const mine=S.clubs.filter(c=>c.teacherId===g.user);
+  if(g.edit)return gvForm();
+  return `<div class="row" style="align-items:center"><h1 style="flex:1">CLB của tôi</h1>${phaseChip('gv')}</div>
+   ${!open?'<p class="note">Đăng ký giáo viên không mở nên không sửa được. Cần thay đổi thì liên hệ quản lý.</p>':''}
+   <section class="panel">${mine.length?`<div class="cards">${mine.map(c=>`<div class="card"><div class="body"><span class="name">${esc(c.name)}</span>
+     <span class="small muted">${esc(sess(c.sessionId)?.name)} · ${esc(room(c.roomId)?.name)} · ${isFree(c)?'nhận mọi em':`nhận <span class="num">${eq(c)}</span>`}${c.adminQuota!=null?` (thầy cô đề xuất ${c.quota})`:''} · khối ${gradeText(c.grades)} · ${LOAI[c.loai]}</span></div>
+     ${statusChip(c.status)}${open&&c.status==='cho'?`<button class="sm" data-act="gvEdit" data-id="${c.id}">Sửa</button><button class="sm bad" data-act="gvDelClub" data-id="${c.id}">Xoá</button>`:''}</div>`).join('')}</div>`:'<div class="empty">Chưa đăng ký CLB nào.</div>'}
+    ${open?'<div><button class="pri" data-act="gvEdit" data-id="new">+ Đăng ký CLB mới</button></div>':''}
+    <p class="small muted">Sửa được khi CLB còn "Chờ duyệt" và đăng ký giáo viên đang mở. Một thầy cô không mở hai CLB cùng một buổi.</p></section>`;
+}
+function gradeText(gs){if(!gs.length)return '—';const a=gs.slice().sort((x,y)=>x-y);const cont=a.every((g,i)=>i===0||g===a[i-1]+1);return cont&&a.length>1?`${a[0]}–${a[a.length-1]}`:a.join(', ')}
+const GV_STEPS=['Lịch và phòng','Ai được tham gia','Giới thiệu'];
+function gvForm(){
+  const d=V.gv.draft, isNew=V.gv.edit==='new', st=V.gv.step||1, sid=d.sessionId||S.sessions[0].id;
+  const lo=d.grades.length?Math.min(...d.grades):'', hi=d.grades.length?Math.max(...d.grades):'';
+  const cont=d.grades.length&&d.grades.length===hi-lo+1;
+  let body='';
+  if(st===1)body=`<label>Tên CLB<input id="f_name" data-chg="gvf" value="${esc(d.name)}" required placeholder="CLB Cờ vua"></label>
+    <label>Buổi sinh hoạt<select id="f_sess" data-chg="gvf">${S.sessions.map(s=>{const busy=S.clubs.find(c=>live(c)&&c.teacherId===V.gv.user&&c.sessionId===s.id&&c.id!==V.gv.edit);return `<option value="${s.id}" ${s.id===sid?'selected':''} ${busy?'disabled':''}>${esc(s.name)}${busy?' · thầy cô đã có '+esc(busy.name):''}</option>`}).join('')}</select></label>
+    <label>Loại CLB<select id="f_loai" data-chg="gvf"><option value="tudo" ${d.loai==='tudo'?'selected':''}>Tự do – nhận mọi em, không kiểm tra</option><option value="gioihan" ${d.loai==='gioihan'?'selected':''}>Giới hạn – có số chỗ, không kiểm tra</option><option value="tuyen" ${d.loai==='tuyen'?'selected':''}>Tuyển chọn – có số chỗ và bài kiểm tra</option></select></label>
+    <label>Phòng (chỉ hiện phòng trống buổi này)<select id="f_room" data-chg="gvf"><option value="">— Chọn phòng —</option>${S.rooms.map(r=>{const tk=roomTaken(r.id,sid,isNew?null:V.gv.edit);return `<option value="${r.id}" ${r.id===d.roomId?'selected':''} ${tk?'disabled':''}>${esc(r.name)} · sức chứa ${r.cap}${tk?' · đã có '+esc(tk.name):''}</option>`}).join('')}</select></label>
+    ${d.loai==='tudo'?'<p class="note">CLB Tự do nhận mọi em đăng ký. Đông hơn sức chứa phòng thì chia nhóm.</p>':`<label>Số học sinh nhận${d.roomId&&room(d.roomId)?` (tối đa ${room(d.roomId).cap})`:''}<input id="f_quota" data-chg="gvf" value="${esc(d.quota)}" inputmode="numeric" placeholder="20"></label>`}`;
+  if(st===2)body=`<div class="row"><label>Từ khối<select id="f_lo" data-chg="gvRange"><option value="">—</option>${S.grades.map(g=>`<option ${g===lo?'selected':''}>${g}</option>`).join('')}</select></label>
+     <label>Đến khối<select id="f_hi" data-chg="gvRange"><option value="">—</option>${S.grades.map(g=>`<option ${g===hi?'selected':''}>${g}</option>`).join('')}</select></label></div>
+    ${d.grades.length&&!cont?`<p class="small">Đang chọn riêng: khối ${d.grades.join(', ')}.</p>`:''}
+    <details ${d.grades.length&&!cont?'open':''}><summary>Chọn từng khối (khi không liền nhau)</summary><div class="row" style="margin-top:8px">${S.grades.map(g=>`<label class="chk"><input type="checkbox" data-chg="gvf" class="f_gr" value="${g}" ${d.grades.includes(g)?'checked':''}>Khối ${g}</label>`).join('')}</div></details>
+    ${d.loai==='tuyen'?`<label>Link bài kiểm tra Google Forms<input id="f_link" data-chg="gvf" value="${esc(d.link)}" placeholder="https://forms.gle/..."></label>
+     <label>Điểm sàn (0–10): dưới mốc này không nhận<input id="f_san" data-chg="gvf" value="${esc(d.san)}" inputmode="numeric" placeholder="5"></label>`:`<p class="note">CLB ${LOAI[d.loai]} không có bài kiểm tra. Muốn kiểm tra đầu vào thì chọn loại Tuyển chọn ở bước 1.</p>`}`;
+  if(st===3)body=`<label>Mô tả CLB (học sinh đọc khi chọn)<textarea id="f_desc" data-chg="gvf" style="font-family:var(--f-body);min-height:90px">${esc(d.desc)}</textarea></label>
+    <label>Yêu cầu cơ bản (ghi "Không" nếu không có)<input id="f_req" data-chg="gvf" value="${esc(d.req)}"></label>
+    <div class="note"><b>${esc(d.name)}</b> · ${LOAI[d.loai]} · ${esc(sess(d.sessionId)?.name)} · ${esc(room(d.roomId)?.name)} · ${d.loai==='tudo'?'nhận mọi em':'nhận '+esc(d.quota)} · khối ${gradeText(d.grades)}${d.loai==='tuyen'?' · điểm sàn '+esc(d.san):''}</div>`;
+  return narrow(`<section class="panel"><h2>${isNew?'Đăng ký CLB mới':'Sửa CLB'}</h2>
+   <div class="steps">${GV_STEPS.map((l,i)=>`<span class="${i+1===st?'cur':''}">${i+1}. ${l}</span>`).join('')}</div>
+   <form data-form="gvClub" class="stack" novalidate>${body}
+    ${V.gv.err.length?`<div class="err"><b>Chưa đi tiếp được:</b><ul>${V.gv.err.map(e=>`<li>${e}</li>`).join('')}</ul></div>`:''}
+    <div class="row">${st>1?'<button type="button" data-act="gvStep" data-d="-1">Quay lại</button>':''}<span class="spacer"></span><button class="pri">${st<3?'Tiếp':isNew?'Gửi đăng ký':'Lưu thay đổi'}</button></div>
+   </form></section>`,'gvCancel','← CLB của tôi');
+}
+function readGvForm(){const d=V.gv.draft, has=id=>!!$(id), v=id=>$(id).value;
+  if(has('f_name'))d.name=v('f_name');if(has('f_sess'))d.sessionId=v('f_sess');if(has('f_room'))d.roomId=v('f_room');if(has('f_quota'))d.quota=v('f_quota');
+  if(has('f_loai')){d.loai=v('f_loai');d.hasTest=d.loai==='tuyen'}if(has('f_san'))d.san=v('f_san');if(has('f_link'))d.link=v('f_link');if(has('f_desc'))d.desc=v('f_desc');if(has('f_req'))d.req=v('f_req');
+  if(document.querySelector('.f_gr'))d.grades=[...document.querySelectorAll('.f_gr:checked')].map(x=>Number(x.value));
+  if(d.roomId&&roomTaken(d.roomId,d.sessionId,V.gv.edit==='new'?null:V.gv.edit))d.roomId='';}
+function validateClub(d,editId){const e=[];const nm=norm(d.name), E=(st,m)=>e.push({st,m});
+  if(!nm)E(1,'Nhập tên CLB.');else if(S.clubs.some(c=>c.id!==editId&&norm(c.name)===nm))E(1,'Tên CLB đã có. Đặt tên khác, ví dụ thêm buổi vào tên.');
+  if(!sess(d.sessionId))E(1,'Chọn buổi.');
+  if(S.clubs.some(c=>live(c)&&c.id!==editId&&c.teacherId===V.gv.user&&c.sessionId===d.sessionId))E(1,'Thầy cô đã có một CLB ở buổi này.');
+  const r=room(d.roomId);if(!r)E(1,'Chọn phòng.');else if(roomTaken(r.id,d.sessionId,editId))E(1,'Phòng này đã có CLB khác ở buổi đó.');
+  if(d.loai!=='tudo'){const q=Number(d.quota);if(!/^\d+$/.test(String(d.quota).trim())||q<1)E(1,'Số học sinh nhận phải là số nguyên từ 1.');else if(r&&q>r.cap)E(1,`Số học sinh nhận (${q}) lớn hơn sức chứa phòng ${esc(r.name)} (${r.cap}). Giảm số hoặc chọn phòng lớn hơn.`);}
+  if(!d.grades.length)E(2,'Chọn khối được tham gia.');
+  if(d.hasTest&&!/^https?:\/\/\S+/.test(d.link.trim()))E(2,'CLB Tuyển chọn cần link bài kiểm tra Google Forms (bắt đầu bằng https://).');
+  if(d.loai==='tuyen'&&!(/^\d+$/.test(String(d.san).trim())&&Number(d.san)<=10))E(2,'Điểm sàn là số nguyên từ 0 đến 10.');
+  return e;}
+
+/* ---------- student ---------- */
+function stu(){return S.students.find(s=>s.id===V.hs.user)}
+function eligible(st,sessId){return S.clubs.filter(c=>c.status==='duyet'&&c.sessionId===sessId&&c.grades.includes(st.khoi))}
+function hsSteps(cur){const n=S.sessions.length,k=V.hs.si||0,L=[['rank','Xếp nguyện vọng'],['medals','Đặt huy chương'],['tests','Bài kiểm tra']];if(cur==='review')return `<div class="steps"><span>Đã xong ${n}/${n} buổi</span><span class="cur">Xem lại và gửi</span></div>`;return `<div class="steps" data-buoi="${k+1}"><span><b>Buổi ${k+1}/${n} · ${esc(S.sessions[k].name)}</b></span>${L.map(([s,l],i)=>`<span class="${s===cur?'cur':''}">${i+1}. ${l}</span>`).join('')}<span>Xem lại và gửi</span></div>`}
+function hsView(){
+  const h=V.hs;
+  if(!h.user){if(S.phase!==3)return narrow(closedPanel('Học sinh',S.phase<3?'Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo.':'Đã hết hạn đăng ký. Nguyện vọng em đã gửi vẫn được tính.'));
+    return narrow(`<section class="panel"><div class="row" style="align-items:center"><h2 style="flex:1">Học sinh đăng nhập</h2>${phaseChip('hs')}</div>
+     <form data-form="hsLogin" class="stack"><label>Mã học sinh<input id="h_id" class="mono" required autocomplete="off" placeholder="HS001"></label>
+     <label>PIN (trên phiếu thầy cô phát)<input id="h_pin" type="password" class="mono" inputmode="numeric" maxlength="4" required autocomplete="off"></label>
+     ${h.err?`<div class="err">${h.err}</div>`:''}<button class="pri">Đăng nhập</button></form>
+     <p class="small muted">Không có tên trong danh sách hoặc quên PIN thì báo thầy cô quản lý. Máy tự thoát sau 60 giây không thao tác.</p></section>`)}
+  const st=stu();
+  if(h.step==='closed')return narrow(`<section class="panel"><h2>Đã hết hạn đăng ký</h2><p>Phần chưa gửi không được lưu. ${S.regs[st.id]?'Lần gửi trước của em vẫn được tính.':''}</p><div class="row"><button class="pri" data-act="logout">Thoát</button></div></section>`);
+  if(h.step==='confirm')return `<section class="panel narrow"><h2>Đúng là em chứ?</h2><div class="big">${esc(st.name)}</div><p>Lớp <b>${esc(st.lop)}</b> · Khối <b>${st.khoi}</b> · Mã <span class="mono">${st.id}</span></p>
+    ${S.regs[st.id]?`<p class="note">Em đã gửi lúc ${fmt(S.regs[st.id].ts)}. Em có thể sửa rồi gửi lại; lần gửi cuối cùng được tính.</p>`:''}
+    <div class="row"><button class="pri" data-act="hsYes">Đúng là em</button><button data-act="logout">Không phải em</button></div></section>`;
+  if(h.step==='rank'){const tab=S.sessions[h.si||0].id, pr=h.draft.prefs[tab]||[], el=eligible(st,tab).filter(c=>!pr.includes(c.id)).sort((a,b)=>mix(st.id,a.id)-mix(st.id,b.id)), full=pr.length>=MAX_NV;
+    return `${hsSteps('rank')}<div class="row"><h1 style="flex:1">Xếp nguyện vọng · ${esc(sess(tab)?.name)}</h1></div>
+     <p class="muted">Xếp đúng thứ tự em thích. Xếp CLB khó vào lên đầu không làm em mất cơ hội ở CLB sau. Mỗi buổi tối đa ${MAX_NV} CLB, em vào nhiều nhất một CLB; buổi để trống là em không học buổi đó.</p>
+     ${pr.length&&!pr.some(id=>isFree(club(id)))&&eligible(st,tab).some(isFree)?'<p class="note">Thêm một CLB Tự do để chắc chắn có chỗ ở buổi này.</p>':''}
+     
+     <div class="split"><section class="panel"><h2>CLB cho khối ${st.khoi} · ${esc(sess(tab)?.name)}</h2>
+      ${el.length?`<div class="cards">${el.map(c=>`<div class="card"><div class="body"><span class="name">${esc(c.name)}</span><span>${loaiChip(c)}</span><span class="small muted">${loaiNote(c)}</span>
+       <span class="small muted">${esc(teacher(c.teacherId)?.name)} · ${esc(room(c.roomId)?.name)} · khối ${c.grades.join(', ')}</span><span class="small">${esc(c.desc)}</span>${c.req&&norm(c.req)!=='không'?`<span class="small"><b>Yêu cầu:</b> ${esc(c.req)}</span>`:''}</div>
+       <button class="sm" data-act="hsAdd" data-id="${c.id}" ${full?'disabled':''}>+ Thêm</button></div>`).join('')}</div>`:`<div class="empty">${eligible(st,tab).length?'Em đã thêm hết CLB của buổi này.':'Buổi này không có CLB nào cho khối của em.'}</div>`}</section>
+     <section class="panel"><h2>Nguyện vọng ${esc(sess(tab)?.name)} <span class="muted num">${pr.length}/${MAX_NV}</span></h2>
+      ${pr.length?`<ol class="rank">${pr.map((id,i)=>`<li><span class="nv">NV${i+1}</span><span class="nm">${esc(club(id)?.name)}<span class="small muted"> · ${LOAI[club(id)?.loai]}</span></span><button class="sm" data-act="hsMove" data-id="${id}" data-d="-1" ${i===0?'disabled':''} aria-label="Lên">↑</button><button class="sm" data-act="hsMove" data-id="${id}" data-d="1" ${i===pr.length-1?'disabled':''} aria-label="Xuống">↓</button><button class="sm" data-act="hsRm" data-id="${id}" aria-label="Bỏ">✕</button></li>`).join('')}</ol>`:'<div class="empty">Chưa chọn. Bấm "Thêm" ở bên cạnh.</div>'}
+      ${full?`<p class="small muted">Đã đủ ${MAX_NV} nguyện vọng cho buổi này.</p>`:''}</section></div>
+     <div class="row">${(h.si||0)>0?'<button data-act="hsPrevDay">Quay lại buổi trước</button>':''}<button class="pri" data-act="hsStep" data-s="medals">Tiếp: đặt huy chương</button></div>`}
+  if(h.step==='medals'){const cur=S.sessions[h.si||0].id, tab=(h.draft.prefs[cur]||[]).some(id=>!isFree(club(id)))?cur:null;
+    let body='<div class="panel"><div class="empty">Nguyện vọng buổi này chỉ có CLB Tự do (luôn có chỗ) hoặc để trống, nên không cần huy chương. Em bấm tiếp.</div></div>';
+    if(tab){const m=medalsOf(h.draft,tab), pr=h.draft.prefs[tab], opts=pr.filter(id=>!isFree(club(id))), manual=h.draft.medalSet?.[tab];
+      body=`<section class="panel"><div class="row" style="align-items:center"><h2 style="flex:1">${esc(sess(tab).name)}</h2>${manual?'<button class="sm" data-act="hsMedalReset" data-s="'+tab+'">Đặt lại theo nguyện vọng</button>':'<span class="chip">Đang đặt theo thứ tự nguyện vọng</span>'}</div>
+      ${manual?'<p class="small muted">Em đã tự đổi huy chương buổi này. Đổi thứ tự nguyện vọng sẽ không làm huy chương đổi theo.</p>':''}
+      <div class="medals">${MEDALS.map(([k,l,p])=>`<label class="medal m-${k}"><span class="mname"><span class="dot" aria-hidden="true"></span><b>${l}</b><span class="small muted">${p} điểm</span></span><select data-chg="hsMedal" data-s="${tab}" data-m="${k}" aria-label="Huy chương ${l}"><option value="">Không đặt</option>${opts.map(id=>`<option value="${id}" ${m[k]===id?'selected':''}>NV${pr.indexOf(id)+1} · ${esc(club(id).name)}</option>`).join('')}</select></label>`).join('')}</div>
+      ${Object.values(m).some(id=>id&&club(id).loai==='tuyen')?'<p class="note">Huy chương ở CLB Tuyển chọn chỉ dùng khi bằng điểm, và chỉ khi em vượt mốc.</p>':''}</section>`}
+    return `${hsSteps('medals')}<h1>Đặt huy chương · ${esc(S.sessions[h.si||0].name)}</h1><p class="muted">Mỗi buổi em có một huy chương Vàng, một Bạc, một Đồng. Khi CLB có nhiều bạn muốn vào hơn số chỗ, huy chương giúp em được ưu tiên: Vàng mạnh nhất. Mỗi CLB nhận tối đa một huy chương. CLB Tự do luôn có chỗ nên không cần huy chương.</p>
+     <p class="note">Đã đặt sẵn theo thứ tự nguyện vọng. Em đổi nếu muốn dồn huy chương cho CLB khác; thứ tự nguyện vọng vẫn giữ nguyên.</p>${body}
+     <div class="row"><button data-act="hsStep" data-s="rank">Quay lại</button><button class="pri" data-act="hsStep" data-s="tests">Tiếp: bài kiểm tra</button></div>`}
+  if(h.step==='tests'){const cur=S.sessions[h.si||0], cand=(h.draft.prefs[cur.id]||[]).map(id=>club(id)).filter(c=>c&&c.hasTest), n=testsIn(h.draft,cur.id), last=(h.si||0)>=S.sessions.length-1;
+    return `${hsSteps('tests')}<h1>Bài kiểm tra · ${esc(cur.name)}</h1><p class="muted">CLB Tuyển chọn có bài kiểm tra trên Google Forms; link hiện sau khi em gửi. Mỗi buổi tick tối đa ${MAX_TEST} CLB em sẽ làm bài. <b>Không làm bài, hoặc dưới mốc điểm, thì em không được xét vào CLB đó</b> và phần mềm xét nguyện vọng tiếp theo.</p>
+     ${n>=MAX_TEST&&cand.some(c=>!h.draft.tests.includes(c.id))?`<p class="note" data-canh-bao="tran-thi">Em đã chọn đủ ${MAX_TEST} bài cho buổi này. CLB Tuyển chọn chưa tick ở buổi này sẽ không nhận em.</p>`:''}${cand.some(c=>!h.draft.tests.includes(c.id))?`<p class="note">CLB Tuyển chọn em xếp nhưng chưa tick sẽ không được xét: ${cand.filter(c=>!h.draft.tests.includes(c.id)).map(c=>esc(c.name)).join(', ')||'—'}.</p>`:''}
+     <section class="panel"><div class="row"><h2 style="flex:1">CLB Tuyển chọn trong nguyện vọng</h2><span class="chip ${n>=MAX_TEST?'off':'wait'} num">${n}/${MAX_TEST}</span></div>
+     ${cand.length?`<div class="cards">${cand.map(c=>{const on=h.draft.tests.includes(c.id);return `<label class="card" style="flex-direction:row;align-items:center;cursor:pointer"><input type="checkbox" data-chg="hsTest" value="${c.id}" ${on?'checked':''} ${!on&&n>=MAX_TEST?'disabled':''} style="min-height:auto;width:22px;height:22px"><span class="body"><span class="name">${esc(c.name)}</span><span class="small muted">${loaiNote(c)}</span></span></label>`}).join('')}</div>`:'<div class="empty">Nguyện vọng buổi này không có CLB Tuyển chọn nào. Em bấm tiếp.</div>'}</section>
+     <div class="row"><button data-act="hsStep" data-s="medals">Quay lại</button>${last?'<button class="pri" data-act="hsStep" data-s="review">Tiếp: xem lại và gửi</button>':`<button class="pri" data-act="hsNextDay">Tiếp: ${esc(S.sessions[(h.si||0)+1].name)}</button>`}</div>`}
+  if(h.step==='review'){const any=S.sessions.some(s=>(h.draft.prefs[s.id]||[]).length);
+    return `${hsSteps('review')}<h1>Xem lại và gửi</h1>${!any?'<p class="note">Em chưa chọn CLB nào. Gửi như vậy nghĩa là em không tham gia CLB nào học kỳ này.</p>':''}
+     <section class="panel">${summary(h.draft,false)}</section>
+     <div class="row"><button data-act="hsStep" data-s="tests">Quay lại</button><button class="pri" data-act="hsSubmit">Gửi nguyện vọng</button></div>`}
+  if(h.step==='receipt'){const g=S.regs[st.id];
+    return `<section class="panel"><h2>Đã gửi</h2><p>Đã gửi lúc <b>${guiLuc(g.ts)}</b></p>${summary(g,true)}
+     <p class="small muted">Em có thể đăng nhập lại để sửa trước hạn chót (${fmt(S.deadline[3])}). Máy sẽ tự thoát sau <span id="rcpt">30</span> giây.</p><button class="pri" data-act="logout">Xong, thoát</button></section>`}
+  return '';
+}
+function summary(d,links){
+  const rows=S.sessions.map(s=>{const a=d.prefs[s.id]||[];return `<tr><td>${esc(s.name)}</td><td>${a.length?a.map((id,i)=>{const k=medalOfClub(d,s.id,id);return `NV${i+1} ${esc(club(id)?.name)}${k?` <span class="chip m-${k}">${medalName(k)}</span>`:''}`}).join('<br>'):'<span class="muted">Không học buổi này</span>'}</td></tr>`}).join('');
+  const t=d.tests.map(id=>club(id)).filter(Boolean);
+  return `<div class="tbl"><table><thead><tr><th>Buổi</th><th>Nguyện vọng</th></tr></thead><tbody>${rows}</tbody></table></div>
+   <h3>Bài kiểm tra (${t.length})</h3>${t.length?`<ul>${t.map(c=>`<li>${esc(c.name)}${links&&c.link?` — <a href="${esc(c.link)}" target="_blank" rel="noopener">làm bài thi</a>`:''}</li>`).join('')}</ul>`:'<p class="muted">Không làm bài kiểm tra nào.</p>'}`;
+}
+
+/* ---------- actions ---------- */
+function logout(msg){V.authed=false;V.gv.user=null;V.gv.edit=null;V.gv.err=[];V.hs={step:'login',user:null,draft:null,tab:null,err:''};V.screen='home';V.tmp={};render();if(msg)toast(msg)}
+const ACT={
+  home(){if(V.screen==='hs'&&V.hs.user){logout();return}V.screen='home';render()},
+  go(d){V.screen=d.s;V.tmp={};if(d.s==='gv'){V.gv.err=[]}if(d.s==='hs'){V.hs.err=''}render()},
+  logout(){logout()},
+  modalYes(){const f=V.onYes;V.modal=null;V.onYes=null;renderOverlay();f&&f()},
+  modalNo(){V.modal=null;V.onYes=null;renderOverlay()},
+  reseed(d){ask('Đặt lại dữ liệu mẫu?',`<p>Mọi thay đổi hiện tại sẽ mất và nạp bộ "${d.k==='ca'?'Cả trường (798 học sinh, 40 CLB)':'Demo nhỏ (30 học sinh, 10 CLB)'}".</p>`,'Đặt lại',()=>{seed(d.k);V.tmp={};render();toast('Đã nạp dữ liệu mẫu.')},true)},
+  tab(d){V.tab=d.t;V.tmp={};render()},
+  sub(d){V.sub[d.t]=d.k;V.tmp={};render()},
+  goto(d){V.tab=d.t;if(d.k)V.sub[d.t]=d.k;V.tmp={};render()},
+  openPhase(d){const p=Number(d.p), dl=fromInput($('dl')?.value);if(!dl||dl<=Date.now()){toast('Chọn hạn chót ở tương lai.');return}
+    S.deadline[p]=dl;setPhase(p,'Quản lý',`Mở "${PH[p]}", hạn ${fmt(dl)}`);render();toast(`Đã mở ${PH[p]}.`)},
+  extend(d){S.deadline[S.phase]=Math.max(S.deadline[S.phase],Date.now())+Number(d.h)*3600e3;log('Quản lý',`Gia hạn "${PH[S.phase]}" đến ${fmt(S.deadline[S.phase])}.`);save();render();toast('Đã gia hạn.')},
+  closeNow(){const p=S.phase;ask(`Đóng "${PH[p]}" ngay?`,`<p>${p===1?'Giáo viên không đăng ký hay sửa CLB được nữa. Chuyển sang Duyệt CLB.':'Học sinh không gửi hay sửa nguyện vọng được nữa. Chuyển sang Nhập điểm.'}</p>`,'Đóng ngay',()=>{setPhase(p+1,'Quản lý','Đóng sớm');render()})},
+  back(){const p=S.phase;const reopen=p-1===1||p-1===3;
+    ask(`Lùi về "${PH[p-1]}"?`,`<p>${reopen?`Giai đoạn "${PH[p-1]}" mở lại với hạn chót mới là 1 ngày nữa (gia hạn hoặc đóng ngay được).`:''}${p===5?' Điểm được mở khoá để sửa; lần chốt sau tạo phiên bản xuất mới.':''} Việc này ghi vào nhật ký.</p>`,'Lùi lại',()=>{if(reopen)S.deadline[p-1]=Date.now()+864e5;setPhase(p-1,'Quản lý','Lùi giai đoạn');V.tab='bayGio';render()})},
+  lockScores(){const m=missingScores().length;ask('Chốt điểm?',`<p>${m?`<b>${m}</b> bài kiểm tra chưa có điểm sẽ tính là không làm bài: em đó không được xét vào CLB Tuyển chọn ấy. `:''}Sau khi chốt, sổ nhập được tạo phiên bản <b>v${S.exportVer+1}</b>.</p>`,'Chốt điểm',()=>{S.exportVer++;setPhase(5,'Quản lý',`Chốt điểm (v${S.exportVer}, ${m} bài không điểm)`);V.tab='bayGio';render()})},
+  fakeApprove(){let n=0;S.clubs.forEach(c=>{if(c.status==='cho'){c.status='duyet';n++}});log('Công cụ thử',`Duyệt nhanh ${n} CLB.`);save();render();toast(`Đã duyệt ${n} CLB.`)},
+  fakeRegs(){const r=rng(Date.now()&0xffff);let n=0;
+    for(const s of S.students){if(S.regs[s.id]||r()>0.7)continue;const prefs={};
+      S.sessions.forEach(se=>{if(r()<0.65){const el=eligible(s,se.id).sort(()=>r()-.5);const k=Math.min(el.length,1+Math.floor(r()*5));if(k)prefs[se.id]=el.slice(0,k).map(c=>c.id)}});
+      const withTest=Object.values(prefs).flat().filter(id=>club(id).hasTest).filter(()=>r()<0.6).slice(0,MAX_TEST);
+      S.regs[s.id]={prefs,tests:withTest,ts:Date.now()};n++}
+    log('Công cụ thử',`Điền nguyện vọng giả cho ${n} học sinh.`);save();render();toast(`Đã điền cho ${n} em.`)},
+  fakeScores(){const r=rng(Date.now()&0xffff);let n=0;for(const sid in S.regs)for(const cid of S.regs[sid].tests){if(S.scores[cid]?.[sid]!=null||r()>0.85)continue;(S.scores[cid]=S.scores[cid]||{})[sid]=Math.round(r()*100)/10;n++}
+    log('Công cụ thử',`Điền ${n} điểm giả.`);save();render();toast(`Đã điền ${n} điểm.`)},
+  sessDel(d){S.sessions=S.sessions.filter(s=>s.id!==d.id);log('Quản lý','Xoá một buổi.');save();render()},
+  roomDel(d){const r=room(d.id);ask(`Xoá phòng ${r.name}?`,'<p>Phòng không có CLB nào nên xoá được.</p>','Xoá',()=>{S.rooms=S.rooms.filter(x=>x.id!==d.id);log('Quản lý',`Xoá phòng ${r.name}.`);save();render()},true)},
+  stuPreview(){V.tmp.stuTxt=$('stuTxt').value;V.tmp.stuDone='';V.tmp.stuPrev=V.tmp.stuTxt.trim()?parseStudentText(V.tmp.stuTxt):null;if(!V.tmp.stuPrev){V.tmp.stuOpen=true;toast('Dán ít nhất một dòng trước.')}render()},
+  stuSave(){const pv=V.tmp.stuPrev, mode=V.tmp.stuMode||'them';if(!pv)return;
+    const r=rng(Date.now()&0xffff), newPin=()=>String(Math.floor(r()*1e4)).padStart(4,'0'), ok=pv.rows.filter(x=>x.kind!=='loi');
+    if(mode==='them'){const added=[];let up=0;
+      ok.forEach(x=>{const o=S.students.find(s=>s.id.toUpperCase()===x.id.toUpperCase());if(o){o.name=x.name;o.lop=x.lop;o.khoi=x.khoi;up++}else{const st={id:x.id,name:x.name,lop:x.lop,khoi:x.khoi,pin:newPin()};S.students.push(st);added.push(st)}});
+      log('Quản lý',`Thêm ${added.length} học sinh, cập nhật ${up} em${pv.errs.length?`, bỏ qua ${pv.errs.length} dòng lỗi`:''}.`);
+      V.tmp={stuMode:'them',cls:ok[0]?.lop,hl:ok.map(x=>x.id),stuDone:`${added.length?`Đã thêm ${added.length} em: `+added.slice(0,8).map(s=>`<span class="mono">${esc(s.id)}</span> ${esc(s.name)} (${esc(s.lop)}) · PIN <b class="mono">${s.pin}</b>`).join('; ')+(added.length>8?'…':''):''}${up?` Đã cập nhật ${up} em (giữ PIN).`:''}`};save();render();return}
+    if(pv.errs.length)return;
+    ask('Thay cả danh sách học sinh?',`<p>Danh sách mới có <b>${pv.rows.length}</b> em, thay cho <b>${S.students.length}</b> em hiện có. Em không có tên trong danh sách mới bị xoá cùng nguyện vọng. Mã đã có giữ nguyên PIN.</p>`,'Thay danh sách',()=>{
+      const old=new Map(S.students.map(s=>[s.id.toUpperCase(),s]));
+      S.students=pv.rows.map(x=>{const o=old.get(x.id.toUpperCase());return {id:x.id,name:x.name,lop:x.lop,khoi:x.khoi,pin:o?o.pin:newPin()}});
+      const ids=new Set(S.students.map(s=>s.id));for(const k in S.regs)if(!ids.has(k))delete S.regs[k];
+      log('Quản lý',`Thay danh sách: ${S.students.length} học sinh.`);V.tmp={stuDone:`Đã thay danh sách: ${S.students.length} em.`};save();render()},true)},
+  gvPreview(){const t=$('gvTxt').value;V.tmp.gvTxt=t;V.tmp.gvMade=null;const seen=new Set(), have=new Set(S.teachers.map(x=>norm(x.name)));
+    const rows=t.split(/\r?\n/).map((l,i)=>({name:l.split('\t')[0].trim().replace(/\s+/g,' '),line:i+1})).filter(r=>r.name);
+    rows.forEach(r=>{const k=norm(r.name);r.kind='moi';if(r.name.length<3){r.kind='loi';r.why='tên quá ngắn'}else if(have.has(k)){r.kind='co';r.why='đã có tài khoản này'}else if(seen.has(k)){r.kind='loi';r.why='trùng với dòng phía trên'}seen.add(k)});
+    V.tmp.gvPrev=rows.length?rows:null;if(!rows.length){V.tmp.gvOpen=true;toast('Nhập ít nhất một họ tên.')}render()},
+  gvCreate(){const rows=(V.tmp.gvPrev||[]).filter(x=>x.kind==='moi');const r=rng(Date.now()&0xffff);const made=[];
+    rows.forEach(x=>{const t={id:'GV'+String(S.nextTeacher++).padStart(2,'0'),name:x.name,pin:String(Math.floor(r()*1e4)).padStart(4,'0'),ts:Date.now(),byAdmin:true};S.teachers.push(t);made.push(t)});
+    log('Quản lý',`Tạo hộ ${made.length} tài khoản giáo viên.`);V.tmp={gvMade:made,gvHl:made.map(t=>t.id)};save();render()},
+  gvPin(d){const t=teacher(d.id);t.pin=String(Math.floor(Math.random()*1e4)).padStart(4,'0');log('Quản lý',`Đặt lại PIN của ${t.name}.`);V.tmp={gvMade:[t],gvHl:[t.id]};save();render();toast(`PIN mới của ${t.name}: ${t.pin}`)},
+  slips(){V.tmp.slips=!V.tmp.slips;render()},
+  pinReset(d){const s=S.students.find(x=>x.id===d.id);s.pin=String(Math.floor(Math.random()*1e4)).padStart(4,'0');log('Quản lý',`Đặt lại PIN của ${s.id}.`);save();render();toast(`PIN mới của ${s.id}: ${s.pin}`)},
+  gvDel(d){const t=teacher(d.id), cs=S.clubs.filter(c=>c.teacherId===d.id);
+    ask(`Xoá tài khoản ${t.name}?`,`<p>${cs.length?`${cs.length} CLB của tài khoản này cũng bị xoá: ${cs.map(c=>esc(c.name)).join(', ')}.`:'Tài khoản chưa có CLB.'}</p>`,'Xoá',()=>{cs.forEach(c=>dropClubFromRegs(c.id));S.clubs=S.clubs.filter(c=>c.teacherId!==d.id);S.teachers=S.teachers.filter(x=>x.id!==d.id);log('Quản lý',`Xoá tài khoản GV ${t.name} (${cs.length} CLB).`);save();render()},true)},
+  dSet(d){const c=club(d.id);c.status=d.v;log('Quản lý',`${d.v==='duyet'?'Duyệt':'Từ chối'} ${c.name}.`);V.tmp.dErr='';save();render()},
+  dDel(d){const c=club(d.id), n=choosers(c.id);ask(`Xoá ${c.name}?`,`<p><b>${n} học sinh bị ảnh hưởng</b>: CLB bị bỏ khỏi nguyện vọng và môn thi của các em${n?'; nên báo các em đăng nhập lại để xếp bù':''}.</p>`,'Xoá CLB',()=>{const k=dropClubFromRegs(c.id);S.clubs=S.clubs.filter(x=>x.id!==c.id);log('Quản lý',`Xoá CLB ${c.name} sau khi HS đã đăng ký; ${k} HS bị ảnh hưởng.`);save();render()},true)},
+  gvMode(){V.gv.mode=V.gv.mode==='signup'?'login':'signup';V.gv.err=[];render()},
+  gvStep(d){readGvForm();V.gv.step=Math.max(1,(V.gv.step||1)+Number(d.d));V.gv.err=[];render()},
+  gvEdit(d){const c=d.id==='new'?null:club(d.id);V.gv.edit=d.id;V.gv.step=1;V.gv.err=[];
+    V.gv.draft=c?{name:c.name,sessionId:c.sessionId,roomId:c.roomId,quota:String(c.quota),grades:[...c.grades],hasTest:c.hasTest,loai:c.loai,san:c.diemSan??'',link:c.link,desc:c.desc,req:c.req}:{name:'',sessionId:(S.sessions.find(s=>!S.clubs.some(x=>live(x)&&x.teacherId===V.gv.user&&x.sessionId===s.id))||S.sessions[0]).id,roomId:'',quota:'',grades:[],hasTest:false,loai:'gioihan',san:'',link:'',desc:'',req:'Không'};render()},
+  gvCancel(){V.gv.edit=null;V.gv.step=1;V.gv.err=[];render()},
+  gvDelClub(d){const c=club(d.id);ask(`Xoá ${c.name}?`,'<p>CLB chưa được duyệt nên xoá được.</p>','Xoá',()=>{S.clubs=S.clubs.filter(x=>x.id!==c.id);log(teacher(V.gv.user).name,`Xoá CLB ${c.name}.`);save();render()},true)},
+  hsYes(){const st=stu(), g=S.regs[st.id];V.hs.draft=g?JSON.parse(JSON.stringify({prefs:g.prefs,tests:g.tests,medals:g.medals||{},medalSet:g.medalSet||{}})):{prefs:{},tests:[],medals:{},medalSet:{}};V.hs.step='rank';V.hs.si=0;V.hs.tab=S.sessions[0].id;render()},
+  hsTab(d){V.hs.tab=d.id;render()},
+  hsMedalReset(d){if(V.hs.draft.medalSet)delete V.hs.draft.medalSet[d.s];render()},
+  hsAdd(d){if(S.phase!==3){V.hs.step='closed';render();return}const a=V.hs.draft.prefs[V.hs.tab]=V.hs.draft.prefs[V.hs.tab]||[];if(a.length>=MAX_NV||a.includes(d.id))return;a.push(d.id);render()},
+  hsMove(d){const a=V.hs.draft.prefs[V.hs.tab];const i=a.indexOf(d.id),j=i+Number(d.d);if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];render()},
+  hsRm(d){const a=V.hs.draft.prefs[V.hs.tab];a.splice(a.indexOf(d.id),1);V.hs.draft.tests=V.hs.draft.tests.filter(x=>x!==d.id);render()},
+  hsStep(d){V.hs.step=d.s;window.scrollTo(0,0);render()},
+  hsNextDay(){V.hs.si=(V.hs.si||0)+1;V.hs.tab=S.sessions[V.hs.si].id;V.hs.step='rank';window.scrollTo(0,0);render()},
+  hsPrevDay(){V.hs.si=Math.max(0,(V.hs.si||0)-1);V.hs.tab=S.sessions[V.hs.si].id;V.hs.step='tests';window.scrollTo(0,0);render()},
+  hsSubmit(){if(S.phase!==3){V.hs.step='closed';render();return}const st=stu(), d=V.hs.draft, old=S.regs[st.id];
+    for(const k in d.prefs)if(!d.prefs[k].length)delete d.prefs[k];
+    const md={};S.sessions.forEach(se=>{if(d.prefs[se.id])md[se.id]=medalsOf(d,se.id)});S.regs[st.id]={prefs:d.prefs,tests:d.tests.filter(id=>(d.prefs[club(id)?.sessionId]||[]).includes(id)),medals:md,medalSet:{...(d.medalSet||{})},ts:Date.now()};
+    log(st.id,`${old?'Gửi lại':'Gửi'} nguyện vọng: ${Object.values(d.prefs).flat().length} CLB, ${d.tests.length} môn thi.`);save();V.hs.step='receipt';V.hs.rcptAt=Date.now();render()},
+  pasteScores(){const cid=V.tmp.sc&&club(V.tmp.sc)?V.tmp.sc:S.clubs.find(c=>c.status==='duyet'&&c.hasTest)?.id;const txt=$('pasteTxt').value;const res={ok:0,bad:[]};
+    txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).forEach((l,i)=>{let c=l.split('\t');if(c.length<2)c=l.split(/\s+/);const id=c[0].trim(), sc=parseScore(c[c.length-1]);
+      if(i===0&&sc==null&&/[a-zà-ỹ]/i.test(c[c.length-1]))return;
+      const s=S.students.find(x=>x.id.toUpperCase()===id.toUpperCase());
+      if(!s){res.bad.push(`${id}: không có mã này trong danh sách`);return}
+      if(!S.regs[s.id]?.tests.includes(cid)){res.bad.push(`${s.id}: em không đăng ký thi CLB này`);return}
+      if(sc==null||sc>10){res.bad.push(`${s.id}: điểm "${c[c.length-1]}" phải từ 0 đến 10`);return}
+      (S.scores[cid]=S.scores[cid]||{})[s.id]=sc;res.ok++});
+    V.tmp.sc=cid;V.tmp.pasteRes=res;log('Quản lý',`Dán điểm ${club(cid)?.name}: nạp ${res.ok}, bỏ qua ${res.bad.length}.`);save();render()},
+  backup(){V.tmp.bk=JSON.stringify(S);S.lastBackup=Date.now();log('Quản lý','Tạo bản sao lưu.');save();render()},
+  restore(){const t=$('rsTxt').value.trim();let o;try{o=JSON.parse(t)}catch(e){V.tmp.rsErr='Không đọc được: chữ dán vào không phải bản sao lưu.';render();return}
+    if(!o||o.v!==2||!Array.isArray(o.students)||!Array.isArray(o.clubs)){V.tmp.rsErr='Bản sao lưu thiếu dữ liệu hoặc khác phiên bản.';render();return}
+    ask('Khôi phục bản sao lưu?',`<p>Thay toàn bộ dữ liệu hiện tại bằng bản có ${o.students.length} học sinh, ${o.clubs.length} CLB, giai đoạn "${PH[o.phase]}".</p>`,'Khôi phục',()=>{S=o;log('Quản lý','Khôi phục từ bản sao lưu.');V.tmp={};save();render();toast('Đã khôi phục.')},true)},
+  copy(d){copyText(d.id)},
+};
+function guiLuc(t){const d=new Date(t),T=['Chủ nhật','thứ Hai','thứ Ba','thứ Tư','thứ Năm','thứ Sáu','thứ Bảy'],p=n=>String(n).padStart(2,'0');return `${p(d.getHours())}:${p(d.getMinutes())}, ${T[d.getDay()]} ${p(d.getDate())}/${p(d.getMonth()+1)}`}
+const FORM={
+  adminLogin(){if($('apw').value===ADMIN_PW){V.authed=true;V.tmp={};render()}else{V.tmp.apErr='Sai mật khẩu.';render()}},
+  sessAdd(){const n=$('sn').value.trim();if(!n)return;if(S.sessions.some(s=>norm(s.name)===norm(n))){toast('Buổi này đã có.');return}const id='B'+Date.now().toString(36);S.sessions.push({id,name:n});log('Quản lý',`Thêm buổi ${n}.`);save();render()},
+  grades(){const g=[...new Set($('gr').value.split(/[,\s]+/).map(Number).filter(x=>Number.isInteger(x)&&x>0))].sort((a,b)=>a-b);if(!g.length){toast('Nhập ít nhất một khối.');return}S.grades=g;log('Quản lý',`Đặt khối: ${g.join(', ')}.`);save();render();toast('Đã lưu khối.')},
+  code(){const c=$('sc').value.trim();if(c.length<4){toast('Mã trường cần ít nhất 4 ký tự.');return}S.schoolCode=c;log('Quản lý','Đổi mã trường.');save();render();toast('Đã lưu mã trường.')},
+  roomAdd(){const n=$('rn').value.trim(), c=Number($('rc').value);if(S.rooms.some(r=>norm(r.name)===norm(n))){toast('Tên phòng đã có.');return}if(!Number.isInteger(c)||c<1){toast('Sức chứa là số nguyên từ 1.');return}
+    S.rooms.push({id:'R'+Date.now().toString(36),name:n,cap:c});log('Quản lý',`Thêm phòng ${n} (${c}).`);save();render()},
+  gvSignup(){const code=$('g_code').value.trim(), name=$('g_name').value.trim(), pin=$('g_pin').value.trim(), pin2=$('g_pin2').value.trim();const e=[];
+    if(S.phase!==1)e.push('Đăng ký giáo viên không mở.');if(code!==S.schoolCode)e.push('Mã trường không đúng. Hỏi thầy cô quản lý.');
+    if(name.length<3)e.push('Nhập họ tên đầy đủ.');else if(S.teachers.some(t=>norm(t.name)===norm(name)))e.push('Tên này đã có tài khoản. Đăng nhập, hoặc thêm chữ để phân biệt.');
+    if(!/^\d{4}$/.test(pin))e.push('PIN gồm đúng 4 chữ số.');else if(pin!==pin2)e.push('Hai lần nhập PIN không khớp.');
+    if(e.length){V.gv.err=e;render();return}
+    const t={id:'GV'+String(S.nextTeacher++).padStart(2,'0'),name,pin,ts:Date.now()};S.teachers.push(t);log(name,'Tạo tài khoản giáo viên.');save();V.gv.user=t.id;V.gv.err=[];render();toast('Đã tạo tài khoản.')},
+  gvLogin(){const name=$('g_name').value, pin=$('g_pin').value.trim();const t=S.teachers.find(x=>norm(x.name)===norm(name));
+    if(!t||t.pin!==pin){V.gv.err=['Sai họ tên hoặc PIN.'];render();return}V.gv.user=t.id;V.gv.err=[];render()},
+  gvClub(){if(S.phase!==1){V.gv.err=['Đăng ký giáo viên đã đóng, không lưu được.'];render();return}readGvForm();const d=V.gv.draft, editId=V.gv.edit==='new'?null:V.gv.edit, st=V.gv.step||1;
+    const all=validateClub(d,editId), here=all.filter(x=>x.st===st);
+    if(here.length){V.gv.err=here.map(x=>x.m);render();return}
+    if(st<3){V.gv.step=st+1;V.gv.err=[];render();return}
+    if(all.length){V.gv.step=all[0].st;V.gv.err=all.filter(x=>x.st===all[0].st).map(x=>x.m);render();return}
+    const who=teacher(V.gv.user).name, fields={name:d.name.trim(),loai:d.loai,diemSan:d.loai==='tuyen'?Number(d.san):null,sessionId:d.sessionId,roomId:d.roomId,quota:d.loai==='tudo'?room(d.roomId).cap:Number(d.quota),grades:d.grades.slice().sort((a,b)=>a-b),hasTest:d.hasTest,link:d.hasTest?d.link.trim():'',desc:d.desc.trim(),req:d.req.trim()};
+    if(editId){Object.assign(club(editId),fields);log(who,`Sửa CLB ${fields.name}.`)}else{const id='CLB'+String(S.nextClub++).padStart(3,'0');S.clubs.push({id,...fields,teacherId:V.gv.user,adminQuota:null,status:'cho',ts:Date.now()});log(who,`Đăng ký CLB ${fields.name} (${id}).`)}
+    V.gv.edit=null;V.gv.step=1;V.gv.err=[];save();render();toast('Đã gửi, chờ quản lý duyệt.')},
+  hsLogin(){const id=$('h_id').value.trim().toUpperCase(), pin=$('h_pin').value.trim();
+    if(S.phase!==3){V.hs.err='Đăng ký học sinh không mở.';render();return}
+    const s=S.students.find(x=>x.id.toUpperCase()===id);
+    if(!s){V.hs.err='Mã học sinh không có trong danh sách. Báo thầy cô quản lý.';render();return}
+    if(s.pin!==pin){V.hs.err='PIN không đúng. Xem lại phiếu PIN.';render();return}
+    V.hs.user=s.id;V.hs.err='';V.hs.step='confirm';render()},
+};
+const CHG={
+  sessName(el){const n=el.value.trim();const s=sess(el.dataset.id);if(!n||S.sessions.some(x=>x.id!==s.id&&norm(x.name)===norm(n))){toast('Tên buổi trống hoặc trùng.');render();return}s.name=n;log('Quản lý',`Đổi tên buổi thành ${n}.`);save();render()},
+  roomName(el){const r=room(el.dataset.id), n=el.value.trim();if(!n||S.rooms.some(x=>x.id!==r.id&&norm(x.name)===norm(n))){toast('Tên phòng trống hoặc trùng.');render();return}r.name=n;log('Quản lý',`Đổi tên phòng thành ${n}.`);save();render()},
+  roomCap(el){const r=room(el.dataset.id), c=Number(el.value);if(!Number.isInteger(c)||c<1){toast('Sức chứa là số nguyên từ 1.');render();return}
+    const over=S.clubs.find(x=>live(x)&&!isFree(x)&&x.roomId===r.id&&eq(x)>c);S.clubs.forEach(x=>{if(isFree(x)&&x.roomId===r.id)x.quota=c});if(over){toast(`${over.name} đang nhận ${eq(over)} em, lớn hơn ${c}.`);render();return}r.cap=c;log('Quản lý',`Sức chứa ${r.name}: ${c}.`);save();render()},
+  stuFile(el){const f=el.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{V.tmp.stuTxt=String(rd.result);V.tmp.stuDone='';V.tmp.stuPrev=parseStudentText(V.tmp.stuTxt);render()};rd.readAsText(f,'utf-8')},
+  cls(el){V.tmp.cls=el.value;render()},
+  stuMode(el){V.tmp.stuTxt=$('stuTxt')?.value||'';V.tmp.stuMode=el.value;V.tmp.stuOpen=true;if(V.tmp.stuTxt.trim())V.tmp.stuPrev=parseStudentText(V.tmp.stuTxt);render()},
+  st(el){V.tmp.st=el.value;render()},
+  nrCls(el){V.tmp.nrCls=el.value;render()},
+  sc(el){V.tmp.sc=el.value;V.tmp.pasteRes=null;render()},
+  dRoom(el){const c=club(el.dataset.id), r=room(el.value);if(roomTaken(r.id,c.sessionId,c.id)){V.tmp.dErr=`Phòng ${esc(r.name)} đã có CLB khác ở buổi này.`;render();return}
+    if(!isFree(c)&&eq(c)>r.cap){V.tmp.dErr=`${esc(c.name)} nhận ${eq(c)} em, phòng ${esc(r.name)} chỉ chứa ${r.cap}. Giảm chỉ tiêu trước.`;render();return}
+    const old=room(c.roomId)?.name;c.roomId=r.id;if(isFree(c))c.quota=r.cap;log('Quản lý',`Đổi phòng ${c.name}: ${old} → ${r.name}.`);V.tmp.dErr='';save();render()},
+  dQuota(el){const c=club(el.dataset.id), v=el.value.trim(), r=room(c.roomId);
+    if(v===''){if(S.phase>=3&&c.quota<eq(c)){V.tmp.dErr='Học sinh đã đăng ký: không giảm chỉ tiêu được.';render();return}c.adminQuota=null;log('Quản lý',`${c.name}: dùng lại chỉ tiêu GV (${c.quota}).`);V.tmp.dErr='';save();render();return}
+    const q=Number(v);if(!/^\d+$/.test(v)||q<1){V.tmp.dErr='Chỉ tiêu là số nguyên từ 1.';render();return}
+    if(q>r.cap){V.tmp.dErr=`Chỉ tiêu ${q} lớn hơn sức chứa phòng ${esc(r.name)} (${r.cap}).`;render();return}
+    if(S.phase>=3&&q<eq(c)){V.tmp.dErr=`Học sinh đã đăng ký: chỉ được tăng chỉ tiêu (hiện ${eq(c)}).`;render();return}
+    c.adminQuota=q;log('Quản lý',`${c.name}: chỉ tiêu QL ${q} (GV ${c.quota}).`);V.tmp.dErr='';save();render()},
+  dSess(el){const c=club(el.dataset.id), ns=el.value;if(ns===c.sessionId)return;
+    if(roomTaken(c.roomId,ns,c.id)){V.tmp.dErr=`Phòng ${esc(room(c.roomId).name)} đã có CLB khác ở buổi mới. Đổi phòng trước.`;render();return}
+    if(S.clubs.some(x=>live(x)&&x.id!==c.id&&x.teacherId===c.teacherId&&x.sessionId===ns)){V.tmp.dErr='Giáo viên này đã có CLB ở buổi mới.';render();return}
+    const n=choosers(c.id);
+    ask(`Đổi buổi ${c.name}?`,`<p>${esc(sess(c.sessionId).name)} → ${esc(sess(ns).name)}. <b>${n} học sinh bị ảnh hưởng</b>: CLB bị bỏ khỏi nguyện vọng của các em (nguyện vọng xếp theo buổi).</p>`,'Đổi buổi',()=>{const k=dropClubFromRegs(c.id);const o=sess(c.sessionId).name;c.sessionId=ns;log('Quản lý',`Đổi buổi ${c.name}: ${o} → ${sess(ns).name}; ${k} HS bị ảnh hưởng.`);V.tmp.dErr='';save();render()},true);render()},
+  gvf(){readGvForm();V.gv.err=[];render()},
+  gvRange(){readGvForm();const lo=Number($('f_lo').value), hi=Number($('f_hi').value);if(lo&&hi){const a=Math.min(lo,hi),b=Math.max(lo,hi);V.gv.draft.grades=S.grades.filter(g=>g>=a&&g<=b)}else if(lo||hi){V.gv.draft.grades=[lo||hi]}render()},
+  hsMedal(el){const d=V.hs.draft, sid=el.dataset.s, k=el.dataset.m, v=el.value||null;const m=medalsOf(d,sid);
+    if(v){const other=Object.keys(m).find(x=>x!==k&&m[x]===v);if(other)m[other]=m[k]}m[k]=v;
+    d.medals=d.medals||{};d.medalSet=d.medalSet||{};d.medals[sid]=m;d.medalSet[sid]=true;render()},
+  hsTest(el){const t=V.hs.draft.tests;if(el.checked){if(testsIn(V.hs.draft,club(el.value)?.sessionId)<MAX_TEST&&!t.includes(el.value))t.push(el.value)}else V.hs.draft.tests=t.filter(x=>x!==el.value);render()},
+  score(el){const c=el.dataset.c, s=el.dataset.s, v=el.value.trim();
+    if(v===''){if(S.scores[c])delete S.scores[c][s];save();setTimeout(render,0);return}
+    const n=parseScore(v);if(n==null||n>10){toast(`"${v}" không phải điểm hợp lệ: từ 0 đến 10, dấu phẩy hoặc chấm.`);render();return}
+    (S.scores[c]=S.scores[c]||{})[s]=n;el.value=showScore(n);log('Quản lý',`Điểm ${s} · ${club(c).name}: ${showScore(n)}.`);save();setTimeout(render,0)},
+};
+document.addEventListener('pointerdown',()=>{ptrDown=true},true);
+document.addEventListener('pointerup',()=>{ptrDown=false;deferRender=false;setTimeout(()=>{if(pendingRender){pendingRender=false;render()}},0)},true);
+document.addEventListener('click',e=>{deferRender=false;const t=e.target.closest('[data-act]');if(!t||t.disabled)return;e.preventDefault();const f=ACT[t.dataset.act];f&&f(t.dataset,t)});
+document.addEventListener('submit',e=>{e.preventDefault();const f=FORM[e.target.dataset.form];f&&f()});
+document.addEventListener('change',e=>{if(rendering)return;const t=e.target.closest('[data-chg]');if(!t)return;const f=CHG[t.dataset.chg];deferRender=ptrDown;f&&f(t);if(!ptrDown)deferRender=false});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&V.modal)ACT.modalNo()});
+['pointerdown','keydown','input'].forEach(ev=>document.addEventListener(ev,()=>{V.lastAct=Date.now()},true));
+
+/* ---------- idle + clock ---------- */
+setInterval(()=>{
+  const role=V.screen==='hs'&&V.hs.user?'hs':V.screen==='gv'&&V.gv.user?'gv':V.screen==='admin'&&V.authed?'admin':null;
+  const el=$('idle');
+  if(role==='hs'&&V.hs.step==='receipt'){const left=30-Math.floor((Date.now()-V.hs.rcptAt)/1000);const r=$('rcpt');if(r)r.textContent=Math.max(0,left);if(left<=0){logout('Đã tự thoát sau khi gửi.');return}}
+  if(!role){if(el)el.textContent='';return}
+  const left=IDLE[role]-Math.floor((Date.now()-V.lastAct)/1000);
+  if(left<=0){logout(role==='admin'?'Đã khoá quản lý vì không thao tác.':'Đã tự thoát vì không thao tác.');return}
+  if(el)el.textContent=left<=20?`Tự thoát sau ${left} giây`:'';
+},1000);
+setInterval(tick,30000);
+function pull(){try{const t=localStorage.getItem(KEY);if(!t)return;const o=JSON.parse(t);if(o&&o.v===2&&JSON.stringify(o)!==JSON.stringify(S)){S=o;render()}}catch(e){}}
+window.addEventListener('storage',e=>{if(e.key===KEY)pull()});
+window.addEventListener('focus',pull);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)pull()});
+setInterval(()=>{if(!rendering&&!ptrDown&&!(document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)))pull()},3000);
+load();tick();render();
+</script>

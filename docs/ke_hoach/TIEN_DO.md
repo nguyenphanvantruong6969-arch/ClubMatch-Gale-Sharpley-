@@ -302,3 +302,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | KD1-L1 (MSHTML → trình duyệt dự phòng) | xong, chờ CI | 2026-11-25 | main.py, CHANGELOG.md | tests/test_kd1_khoi_dong.py (4) | |
 | KD1-L2 (log renderer + mốc ms) | xong, chờ CI | 2026-11-25 | main.py, CHANGELOG.md | tests/test_kd1_khoi_dong.py (+4) | |
 | KD1-L3 (ghi chú cài đặt + sổ đăng ký) | xong, chờ CI | 2026-11-25 | HUONG_DAN_CAI_DAT.md, docs/ke_hoach/SO_DANG_KY_33_MUC.md, CHANGELOG.md | – | |
+| DK2 (cầu nối JSON bản mẫu → Sổ nhập; bản mẫu v8: D39–D41, D44, thiết kế khớp phần mềm) | xong, chờ CI | 2026-11-25 | dk2_so_nhap.py, docs/phien/DK1_BAN_MAU_V8.html, docs/huong_dan/DK2_CAU_NOI.md, CHANGELOG.md, docs/ | tests/test_dk2_so_nhap.py (6), tests/test_giao_dien_dk2_ban_mau.py (5) | |
