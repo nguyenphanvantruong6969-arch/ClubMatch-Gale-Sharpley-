@@ -12,6 +12,7 @@ Cách chạy:
 
 import os
 import sys
+import time
 import traceback
 
 import browser_host
@@ -126,6 +127,14 @@ def tieu_de_cua_so(db_path: str, goc_ws) -> str:
         return APP_TITLE
 
 
+_T0 = time.monotonic()  # KD1-L2: mốc 0 = lúc nạp main.py (gần như lúc tiến trình bắt đầu chạy mã của ta)
+
+
+def _ghi_moc(nhan: str) -> None:
+    """KD1-L2: ghi "moc <nhan> +<n> ms" vào loi_khoi_dong.txt để biết bước khởi động nào chậm."""
+    chan_doan.ghi(BASE_DIR, "moc %s +%d ms" % (nhan, (time.monotonic() - _T0) * 1000))
+
+
 def _show_ui(title: str, page: str, js_api, width: int, height: int,
              min_size: tuple) -> None:
     """
@@ -169,6 +178,8 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
             chan_doan.ghi(BASE_DIR, "renderer mshtml: may thieu Microsoft Edge WebView2 Runtime, "
                           "chuyen sang cua so Edge/Chrome (--app=)")
             raise _DungMshtml()
+        if sys.platform == "win32":
+            chan_doan.ghi(BASE_DIR, "renderer %s" % _renderer_winforms())
         window = webview.create_window(
             title, os.path.join(RESOURCE_DIR, page), js_api=js_api,
             width=width, height=height, min_size=min_size,
@@ -185,6 +196,7 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
         # cho that su mo cua so, va no da tung TREO ngay tai do — luc ay nhat
         # ky van ghi "THANH CONG", tuc noi doi dung luc can su that nhat.
         chan_doan.ghi(BASE_DIR, "dang mo cua so goc (pywebview)...")
+        _ghi_moc("truoc webview.start")
         webview.start()
         chan_doan.ghi(BASE_DIR, "cua so goc (pywebview) da dong binh thuong")
         return
@@ -215,6 +227,7 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
             )
 
     chan_doan.ghi(BASE_DIR, "dang chay bang CHE DO TRINH DUYET (du phong)")
+    _ghi_moc("truoc browser_host.serve")
     browser_host.serve(js_api, RESOURCE_DIR, page, width=width, height=height)
 
 
@@ -230,6 +243,7 @@ def _renderer_winforms() -> str:
 
 
 def main() -> None:
+    _ghi_moc("main bat dau")
     # Đường dẫn cũ làm chỗ dựa cho màn phục hồi nếu chính việc chọn workspace
     # hỏng (khoi_dong_workspace nằm trong try ngay dưới).
     db_path = resolve_db_path()
@@ -247,6 +261,7 @@ def main() -> None:
     try:
         db_path, goc_ws, da_chon = khoi_dong_workspace()
         api = PipelineAPI(db_path, thu_muc_goc_ws=goc_ws, ws_da_chon=da_chon)
+        _ghi_moc("workspace da mo")
     except Exception as e:
         # Lỗi nêu rõ tệp hỏng thì phục hồi đúng tệp đó; không thì tệp dự phòng (xem hàm).
         db_phuc_hoi = getattr(e, "db_path", None) or (

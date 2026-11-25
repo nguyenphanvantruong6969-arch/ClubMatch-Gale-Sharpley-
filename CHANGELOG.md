@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — KD1-L2: nhật ký khởi động có tên renderer và mốc thời gian
+
+- `loi_khoi_dong.txt` ghi thêm `renderer <tên>` (win32) và `moc <bước> +<n> ms` tại: main bắt đầu, workspace đã mở, trước `webview.start`, trước `browser_host.serve`. Thêm `_T0`, `_ghi_moc` trong `main.py`. Không đổi hành vi nào khác.
+- Test mới: 4 test trong `tests/test_kd1_khoi_dong.py` (tổng 8).
+
 ## 2026-11-25 — KD1-L1: Windows thiếu WebView2 thì dùng cửa sổ Edge/Chrome thay vì MSHTML
 
 - Lỗi: pywebview lặng lẽ vẽ bằng MSHTML (IE11) khi máy thiếu WebView2 Runtime; IE11 không chạy nổi JS của app nên giao diện đứng hình, không bấm được.

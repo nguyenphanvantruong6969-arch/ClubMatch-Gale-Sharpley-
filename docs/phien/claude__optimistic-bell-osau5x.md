@@ -20,7 +20,7 @@ scanning `_internal` DLLs on first run. Not fixed in KD1 (measure first, via L2 
 - [x] L1 (must) `main._show_ui`: on win32, after `import webview`, import `webview.platforms.winforms` and read
       its `renderer`. If `"mshtml"`: log one clear line (no traceback) and go straight to `browser_host.serve`
       (Edge/Chrome `--app=` window). Otherwise unchanged. Import failure keeps today's path (except → fallback).
-- [ ] L2 (must) Startup timing in `loi_khoi_dong.txt`: renderer name, and elapsed ms since process start at:
+- [x] L2 (must) Startup timing in `loi_khoi_dong.txt`: renderer name, and elapsed ms since process start at:
       main start, workspace opened, before `webview.start()` / before `browser_host.serve`.
 - [ ] L3 (optional) `HUONG_DAN_CAI_DAT.md`: 3-line note — if the app opens in a separate Edge window, the
       machine lacks "Microsoft Edge WebView2 Runtime"; installing it restores the native window.

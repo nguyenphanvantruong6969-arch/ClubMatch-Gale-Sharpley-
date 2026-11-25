@@ -75,3 +75,48 @@ def test_khong_phai_windows_khong_nhap_winforms(gia):
     gia["monkeypatch"].setitem(sys.modules, "webview.platforms.winforms", None)  # neu nhap -> loi -> serve
     _chay()
     assert gia["start"] == 1 and gia["serve"] == 0
+
+
+# ---------------------------------------------------------------- L2: moc thoi gian khoi dong
+import re  # noqa: E402
+
+
+def _ms(dong):
+    m = re.search(r"\+(\d+) ms", dong)
+    return int(m.group(1)) if m else None
+
+
+def test_log_co_ten_renderer_va_moc_truoc_webview_start(gia):
+    gia["monkeypatch"].setattr(sys, "platform", "win32")
+    gia["winforms"].renderer = "edgechromium"
+    _chay()
+    log = "\n".join(gia["log"])
+    assert "renderer edgechromium" in log
+    moc = [d for d in gia["log"] if "truoc webview.start" in d]
+    assert len(moc) == 1 and _ms(moc[0]) is not None
+
+
+def test_log_moc_truoc_browser_host_khi_mshtml(gia):
+    gia["monkeypatch"].setattr(sys, "platform", "win32")
+    gia["winforms"].renderer = "mshtml"
+    _chay()
+    moc = [d for d in gia["log"] if "truoc browser_host.serve" in d]
+    assert len(moc) == 1 and _ms(moc[0]) is not None
+
+
+def test_main_ghi_moc_bat_dau_va_workspace_da_mo(gia):
+    mp = gia["monkeypatch"]
+    mp.setattr(main, "resolve_db_path", lambda: "x.db")
+    mp.setattr(main, "khoi_dong_workspace", lambda: ("x.db", "goc", True))
+    mp.setattr(main, "PipelineAPI", lambda *a, **k: _Api())
+    mp.setattr(main, "tieu_de_cua_so", lambda *a: "t")
+    mp.setattr(main, "_show_ui", lambda *a, **k: None)
+    main.main()
+    moc = [d for d in gia["log"] if "moc main bat dau" in d or "moc workspace da mo" in d]
+    assert len(moc) == 2 and all(_ms(d) is not None for d in moc)
+    assert _ms(moc[0]) <= _ms(moc[1])
+
+
+def test_ghi_moc_khong_nem_loi_khi_khong_ghi_duoc_tep(monkeypatch, tmp_path):
+    monkeypatch.setattr(main, "BASE_DIR", str(tmp_path / "khong_co_thu_muc" / "sau"))
+    main._ghi_moc("x")  # chan_doan.ghi nuot loi; khong duoc nem
