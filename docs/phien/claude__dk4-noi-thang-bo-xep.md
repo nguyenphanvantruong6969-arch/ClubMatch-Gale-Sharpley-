@@ -18,6 +18,12 @@ DK4: connect DK3 registration tables (`dk_*`) straight to the allocator: "Chốt
 - L3: 60 cases (3 sets x 20 seeds) path A == path B on every match_results row. L4: button + summary, Playwright test passes (needs `pip install playwright`).
 - Merged DK3 branch into this one (ff not possible).
 
+- L5 (Opus, 2026-11-25, Truong asked): entry from the app — sidebar "Đăng ký CLB" (admin only) opens dang_ky.html;
+  admin in the portal gets "← Mở phần mềm xếp CLB"; after "Chốt và xếp", "Xem kết quả trong phần mềm" opens
+  index.html#ket-qua. Keeps `?t=` token for browser_host. Test tests/test_giao_dien_dk4_cong_vao.py. NOT yet tried in
+  pywebview on Windows. Coder session was interrupted after L4; L0 items (error-detail leak, PIN attempt limit,
+  hard-coded 10/5) NOT done; DK4 not reviewed by a checker yet.
+
 ## Needs Truong
 - (none)
 

@@ -3495,3 +3495,9 @@ body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
 .dk-thongbao.la-loi { color: var(--rust-text); }
 .dk-thongbao.la-ok { color: var(--moss); }
 @media (max-width: 480px) { .dk-khung { padding: 14px; } .dk-form.dk-ngang { flex-direction: column; align-items: stretch; } }
+
+/* DK4-L5: liên kết trong thanh bên ("Đăng ký CLB") trông như .nav-item; lối từ cổng về phần mềm. Chỉ dùng token ở :root. */
+a.nav-item { text-decoration: none; }
+.dk-ve-phan-mem { display: inline-block; margin-bottom: 12px; color: var(--ink-soft); font-weight: 600; text-decoration: none; }
+.dk-ve-phan-mem:hover { text-decoration: underline; }
+.dk-ve-phan-mem:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); }

@@ -75,6 +75,7 @@
     return h("div", {}, tomTat.da_xep ? bangKetQua(tomTat) : h("p", {}, "Chưa xếp lần nào."),
       DK.nutVang("Xuất Sổ nhập", function () { DK.chay(this, async () => {
         const r = await goi("dk_xuat_so_nhap", T); if (r.ok) kq.textContent = "Đã ghi " + r.data.duong_dan + " (" + r.data.so_clb + " CLB, " + r.data.so_hs + " học sinh)."; return r; }); }),
+      tomTat.da_xep ? DK.nut("Xem kết quả trong phần mềm", () => { location.href = "index.html" + location.search + "#ket-qua"; }, { id: "dkXemKq" }) : null,
       nutXep("Xếp lại (cùng hạt giống)", false), kq);
   }
 

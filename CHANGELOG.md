@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L5: cổng đăng ký mở từ phần mềm và ngược lại
+
+- `index.html`: thanh bên có "Đăng ký CLB" (`#navDangKy`, chỉ quản trị) mở `dang_ky.html` trong cùng cửa sổ. `js/01_khung.js`: liên kết không có `data-tab` không gọi `switchTab`; giữ `location.search` (token `?t=` của bản trình duyệt dự phòng); `#ket-qua` mở thẻ Kết quả. `i18n.js`: `nav_dang_ky` (vi/en).
+- Cổng: quản trị có "← Mở phần mềm xếp CLB" (`#dkVePhanMem`); sau "Chốt và xếp" có "Xem kết quả trong phần mềm" (`#dkXemKq`). HS/GV không thấy lối ra. `style.css`: `a.nav-item`, `.dk-ve-phan-mem`.
+- Test: `tests/test_giao_dien_dk4_cong_vao.py` (phần mềm → cổng → chốt và xếp → Kết quả → cổng). Chưa thử trong pywebview trên Windows.
+
 ## 2026-11-25 — DK4-L3/L4: hai đường trùng khít + nút "Chốt và xếp"
 
 - `dk_ket_qua_xep` (chỉ đọc) + `dk_chot_va_xep(token, seed=None)`: không chỉ định seed thì dùng lại seed lần xếp trước (đã khoá), mặc định 42.

@@ -63,7 +63,9 @@
 
   DK.hien = function (...con) {
     const app = document.getElementById("dkApp");
-    app.replaceChildren(...con.flat().filter(Boolean), h("p#dkThongBao.dk-thongbao", { role: "status" }));
+    const ve = DK.S.vai === "quan_tri"      // DK4-L5: chỉ quản trị thấy lối sang phần mềm xếp (HS/GV ở lại cổng)
+      ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null;
+    app.replaceChildren(...[ve, ...con.flat()].filter(Boolean), h("p#dkThongBao.dk-thongbao", { role: "status" }));
   };
 
   DK.khung = (tieuDe, ...con) => h("section.dk-khung", {}, h("h1.dk-tieude", {}, tieuDe), ...con);
