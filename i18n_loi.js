@@ -1671,8 +1671,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "The name is empty or too long."
   },
   "dk_pin_sai_dang": {
-    "vi": "Mã PIN gồm đúng 4 chữ số.",
-    "en": "The PIN is exactly 4 digits."
+    "vi": "Mã gồm đúng 4 chữ số.",
+    "en": "The code is exactly 4 digits."
   },
   "dk_gv_trung": {
     "vi": "Tên giáo viên này đã có.",
