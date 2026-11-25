@@ -1,4 +1,4 @@
-# DK3 → DK4 automatic loop (Truong 2026-11-25: plan, then coder/checker sessions, NO human input)
+# DK3 → DK6 automatic loop (Truong 2026-11-25: plan, then coder/checker sessions, NO human input)
 
 > Orchestrator = session `session_01YVAyu2z93KyWsnJMXBdS4t` (Opus). Truong approved: coding without asking,
 > NEW SQLite tables for DK3 (rule 7 satisfied), child sessions (rule 10 satisfied). Token rules:
@@ -27,6 +27,20 @@
 - L3 `tests/test_dk4_hai_duong_trung_khit.py`: both paths, 3 datasets × 20 seeds, every `match_results` row equal.
 - L4 button + result summary (v8 style), Playwright test.
 
+## DK5 — branch `claude/dk5-dien-tap` (base: DK4 branch after PASS) · size M
+- L1 `du_lieu_test/dien_tap_dk5.py` + `tests/test_dk5_dien_tap.py`: seeded 798 students / 40 clubs through the
+  DK3/DK4 API only: setup → teachers → approval → students submit (interleaved, as several kiosks) → scores →
+  "Chốt và xếp" → export. Asserts: 0 errors, every student has a result row, run_history +1, time budget logged.
+- L2 robustness: backup → restore round-trip equal; idle lock; deadline auto-close; re-submit keeps last; kill
+  mid-run (exception injected) → rollback, DB unchanged (invariant 5). Data labelled MÔ PHỎNG.
+- L3 Playwright smoke `tests/test_giao_dien_dk5_toan_trinh.py`: one admin, one teacher, one student path.
+
+## DK6 — branch `claude/dk6-goi-phat-hanh` (base: DK5 branch after PASS) · size S
+- L1 docs: `docs/huong_dan/DK6_BAT_DAU_NHANH.md` (1 page: install, first setup, 6 phases) and
+  `docs/huong_dan/DK6_XU_LY_SU_CO.md` (forgot PIN, power loss, restore backup, WebView2 missing).
+- L2 build: `kiosk.spec` includes new js/ files and assets; CI "Build Windows executable" green; CHANGELOG
+  version note. No git tag, no GitHub release, no PR (Truong does that).
+
 ## Per lot (coder)
 Failing test → code → lot tests + ≤ 3 related (`-q --tb=line 2>&1 | tail -15`) → `ruff check .` →
 `.claude/skills/soat-ma/scripts/kiem_nhanh.py | tail -10` → CHANGELOG + TIEN_DO row `DK<n>-L<k>` → commit
@@ -37,4 +51,5 @@ Failing test → code → lot tests + ≤ 3 related (`-q --tb=line 2>&1 | tail -
 coder writes `READY | head <sha>` in its branch file and messages the orchestrator (send_message, one line) →
 orchestrator starts a checker → checker writes `PASS` or `FIX <≤10 lines>` in `<branch file>__checker.md`, pushes,
 messages the orchestrator → FIX is forwarded to the coder (max 2 FIX rounds, then "Needs Truong" + continue).
-DK3 PASS → orchestrator starts DK4 the same way.
+DK3 PASS → DK4 → DK5 → DK6, each started the same way after the previous PASS. After DK6 PASS: orchestrator
+reports to Truong (branches in order, what to merge). Checker for DK5 also re-runs DK3/DK4 lot tests.
