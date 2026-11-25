@@ -53,7 +53,8 @@ def test_l2_chot_va_xep_chay_tron(cd):
     assert any(x["hanh_dong"] == "chot_va_xep" for x in ok(api.dk_nhat_ky(qt)))
     # bấm lại: run_history chỉ thêm dòng, không bao giờ mất
     kq_truoc = _bang(api, "match_results")
-    assert ma(api.dk_chot_va_xep(qt, 8)) == "dk_chot_that_bai"      # hạt giống đã khoá: seed khác bị từ chối, CSDL nguyên
+    r = api.dk_chot_va_xep(qt, 8)                                   # hạt giống đã khoá: seed khác bị từ chối, CSDL nguyên
+    assert ma(r) == "dk_chot_seed_khoa" and r["errors"][0]["params"]["cu"] == 7
     assert len(_bang(api, "run_history")) == truoc + 1 and _bang(api, "match_results") == kq_truoc
     ok(api.dk_chot_va_xep(qt, 7))                                   # cùng seed: chạy lại được
     assert len(_bang(api, "run_history")) == truoc + 2
@@ -76,13 +77,66 @@ def test_l2_tu_choi_khi_chua_den_luc_hoac_thieu_diem_hoac_sai_quyen(cd):
 def test_l2_hong_giua_chung_thi_csdl_ve_nguyen_trang(cd, monkeypatch, hong):
     api, qt = cd
     _dang_ky_va_cham(api, qt)
-    ten = ["students", "clubs", "club_scores", "match_results", "run_history", "dk_nguyen_vong", "dk_nhat_ky"]
+    ten = ["students", "clubs", "club_scores", "match_results", "run_history", "dk_nguyen_vong"]
     truoc = {t: _bang(api, t) for t in ten}
     gd = ok(api.dk_trang_thai())["giai_doan"]
     if hong == "xep":
         monkeypatch.setattr(api, "run_pipeline", lambda **k: (_ for _ in ()).throw(RuntimeError("no")))
     else:
         monkeypatch.setattr(api, "import_so_nhap", lambda b: {"ok": False, "errors": [{"code": "x", "params": {}}]})
-    assert ma(api.dk_chot_va_xep(qt)) == ("dk_chot_loi_he_thong" if hong == "xep" else "dk_chot_that_bai")
+    r = api.dk_chot_va_xep(qt)
+    assert ma(r) == ("dk_chot_loi_he_thong" if hong == "xep" else "dk_chot_that_bai")
     assert {t: _bang(api, t) for t in ten} == truoc
+    assert ok(api.dk_nhat_ky(qt, 1))[0]["hanh_dong"] == "chot_that_bai"     # chỉ thêm đúng một dòng nhật ký
     assert ok(api.dk_trang_thai())["giai_doan"] == gd
+
+
+def test_l2_loi_la_khong_lo_chi_tiet_noi_bo(cd, monkeypatch):
+    api, qt = cd
+    _dang_ky_va_cham(api, qt)
+    monkeypatch.setattr(api, "run_pipeline", lambda **k: (_ for _ in ()).throw(RuntimeError("C:\\x sqlite3 SELECT")))
+    r = api.dk_chot_va_xep(qt)
+    assert ma(r) == "dk_chot_loi_he_thong" and "sqlite3" not in str(r["errors"])
+    assert any("sqlite3" in x["chi_tiet"] for x in ok(api.dk_nhat_ky(qt)))     # chi tiết chỉ vào nhật ký
+
+
+def test_l2_sao_luu_hong_thi_khong_chay(cd, monkeypatch):
+    api, qt = cd
+    _dang_ky_va_cham(api, qt)
+    monkeypatch.setattr(api, "_backup_db", lambda: (_ for _ in ()).throw(OSError("dia day")))
+    assert ma(api.dk_chot_va_xep(qt)) == "dk_chot_that_bai"
+    assert _bang(api, "match_results") == [] and ok(api.dk_trang_thai())["giai_doan"] == "nhap_diem"
+
+
+def test_l2_het_phien_giua_chung_van_chuyen_giai_doan(cd, monkeypatch):
+    api, qt = cd
+    _dang_ky_va_cham(api, qt)
+    chay = api.run_pipeline
+
+    def xep_roi_het_phien(**k):
+        r = chay(**k)
+        api._dk_phien_dict().pop(qt, None)       # phiên hết hạn ngay sau khi xếp xong
+        return r
+    monkeypatch.setattr(api, "run_pipeline", xep_roi_het_phien)
+    assert ok(api.dk_chot_va_xep(qt, 7))["da_xep"]
+    assert ok(api.dk_trang_thai())["giai_doan"] == "xuat" and len(_bang(api, "match_results")) > 0
+
+
+def test_dang_nhap_sai_5_lan_thi_khoa_tam(cd, monkeypatch):
+    api, qt = cd
+    import datetime
+    gio = {"t": datetime.datetime(2026, 11, 25, 9, 0)}
+    monkeypatch.setattr(api, "_dk_bay_gio", lambda: gio["t"])
+    pin = ok(api.dk_hs_nap_danh_sach(qt, "K1\tK\t10A1"))["pin"][0]["pin"]
+    for _ in range(5):
+        assert ma(api.dk_dang_nhap("hoc_sinh", "K1", "0000")) == "dk_sai_dang_nhap"
+    assert ma(api.dk_dang_nhap("hoc_sinh", "K1", pin)) == "dk_tam_khoa"      # đúng PIN cũng phải chờ
+    gio["t"] += datetime.timedelta(minutes=6)      # khoá 5 phút
+    assert ok(api.dk_dang_nhap("hoc_sinh", "K1", pin))["token"]
+
+
+def test_gioi_han_nguyen_vong_va_bai_thi_doi_duoc(cd):
+    api, qt = cd
+    assert ok(api.dk_dat_gioi_han(qt, 3, 1)) == {"toi_da_nv": 3, "toi_da_thi": 1}
+    assert ma(api.dk_dat_gioi_han(qt, 2, 5)) == "dk_gioi_han_sai"
+    assert ma(api.dk_dat_gioi_han("sai", 3, 1)) == "dk_can_dang_nhap"

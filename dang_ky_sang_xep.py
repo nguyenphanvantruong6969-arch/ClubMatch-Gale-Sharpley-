@@ -135,27 +135,38 @@ class DangKySangXepMixin:
         except dk2_so_nhap.LoiBanMau as e:
             return _fail(err("dk_khong_xuat_duoc", detail="; ".join(e.loi[:3])))
 
+        def that_bai(buoc, ket_qua=None, detail=""):
+            """Trả lỗi cho người dùng bằng câu cố định (không lộ đường dẫn / SQL); chi tiết chỉ vào nhật ký."""
+            ma_loi = ((ket_qua or {}).get("errors") or [{}])[0]
+            if ma_loi.get("code") == "hat_giong_da_khoa":
+                loi = err("dk_chot_seed_khoa", cu=(ma_loi.get("params") or {}).get("cu"), moi=seed)
+            else:
+                loi = err("dk_chot_that_bai", buoc=buoc)
+            self._dk_chay(lambda cur, p: self._dk_ghi_nk(cur, QUAN_TRI, "chot_that_bai", "%s: %s %s" % (
+                buoc, ma_loi.get("code", ""), detail)), ghi=True)
+            return _fail(loi)
+
         with self._khoa_ghi:
             anh = self._dk_chup_bo_nho()
             try:
+                # Bất biến 5: sao lưu TRƯỚC. Sao lưu hỏng thì không chạy gì (ảnh chụp trong bộ nhớ chỉ lo việc hoàn nguyên).
                 try:
                     self._backup_db()
-                except Exception:
-                    pass
+                except Exception as e:
+                    return that_bai("sao_luu", detail=str(e)[:200])
                 da_bat_luat = self._dk_bao_dam_luat()
                 nap = self.import_so_nhap(b64)
                 if not nap["ok"]:
                     self._dk_hoan_nguyen(anh)
-                    return _fail(err("dk_chot_that_bai", buoc="nhap", detail="; ".join(
-                        str(e.get("code")) for e in nap["errors"][:3])))
+                    return that_bai("nhap", nap)
                 xep = self.run_pipeline(seed=seed)
                 if not xep["ok"]:
                     self._dk_hoan_nguyen(anh)
-                    return _fail(err("dk_chot_that_bai", buoc="xep", detail="; ".join(
-                        str(e.get("code")) for e in xep["errors"][:3])))
-            except Exception:
+                    return that_bai("xep", xep)
+            except Exception as e:
                 _log.exception("dk_chot_va_xep: loi khong du kien, da hoan nguyen CSDL")
                 self._dk_hoan_nguyen(anh)
+                that_bai("loi", detail=str(e)[:200])        # chỉ để ghi nhật ký
                 return _fail(err("dk_chot_loi_he_thong"))
             finally:
                 anh.close()
@@ -169,4 +180,4 @@ class DangKySangXepMixin:
             rid = cur.execute("SELECT MAX(run_id) FROM run_history").fetchone()[0]
             return {"da_xep": True, "seed": seed, "run_id": rid, "da_bat_luat": da_bat_luat,
                     "canh_bao": nap["data"].get("warnings", []), **tt}
-        return self._dk_chay(ghi, QUAN_TRI, token=token)
+        return self._dk_chay(ghi)       # đã kiểm quyền ở đầu; không kiểm lại phiên khi kết quả đã ghi (tránh nửa chừng)

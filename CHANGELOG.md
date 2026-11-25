@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4: gộp hai bản L0 (khoá PIN 5 phút + giới hạn từ cài đặt)
+
+- Gộp `DK4-FIX` (phiên khác) với DK4-L0a–e: giữ khoá đăng nhập 5 phút lưu trong `dk_cai_dat` + `dk_mo_khoa` (thay khoá 60 giây trong bộ nhớ); giữ `dk_dat_gioi_han` và `_dk_gioi_han` (giới hạn 10/5 đổi được), `dk_trang_thai` trả `toi_da_nv`/`toi_da_thi` từ đó; giữ `#dkLuuY` cho luật tự bật; thêm dòng nhật ký `bat_luat`.
+
 ## 2026-11-25 — DK4-L0e: luật tự bật được ghi nhật ký và hiện trong tóm tắt
 
 - `dk_chot_va_xep`: khi `_dk_bao_dam_luat` tự bật `fa_daa` và `wharton`, ghi dòng `bat_luat` vào `dk_nhat_ky`; kết quả trả `da_bat_luat`; `dk_ket_qua_xep` cũng trả `da_bat_luat` (lần "Chốt và xếp" gần nhất). `js/dang_ky_quan_tri.js`: dòng `#dkBatLuat` trong bảng tóm tắt.
@@ -23,9 +27,11 @@
 - Test: `tests/test_dk4_l0b_khoa_dang_nhap.py` (6), `tests/test_giao_dien_dk4_mo_khoa.py` (1).
 
 ## 2026-11-25 — DK4-L0a: không lộ chi tiết lỗi lên giao diện
+## 2026-11-25 — DK4-FIX: sửa theo checker + mục L0
 
-- `api_dang_ky._dk_chay` và `dang_ky_sang_xep.dk_chot_va_xep`: không còn gửi `str(e)` cho giao diện; chi tiết vào nhật ký (`logging`), giao diện nhận mã chung `dk_loi_chung` / `dk_chot_loi_he_thong` (mới, cuối `i18n_errors.py`, đã chạy `tao_i18n_js.py`).
-- Test: `tests/test_dk4_l0a_khong_lo_loi.py` (2); `tests/test_dk4_chot_va_xep.py` cập nhật mã mong đợi.
+- `dk_chot_va_xep`: lỗi không còn lộ chi tiết nội bộ (câu cố định, chi tiết vào `dk_nhat_ky`); sao lưu hỏng thì từ chối (`buoc=sao_luu`); hạt giống đã khoá có câu riêng `dk_chot_seed_khoa`; không kiểm lại phiên sau khi đã ghi kết quả (hết phiên giữa chừng vẫn chuyển giai đoạn); luật giữ chỗ + huy chương vừa bật được báo trên bảng tóm tắt (`da_bat_luat` lưu ở `dk_cai_dat`).
+- `api_dang_ky.py`: `dk_loi_chung` không lộ `str(e)`; đăng nhập sai 5 lần liên tiếp khoá tạm 60 giây (`dk_tam_khoa`); giới hạn nguyện vọng/bài thi mỗi buổi đọc từ cài đặt, mặc định 10/5, đổi bằng `dk_dat_gioi_han`.
+- Test: +5 ca trong `tests/test_dk4_chot_va_xep.py` (tổng 11), `tests/test_giao_dien_dk4_chot_xep.py` kiểm lưu ý.
 
 ## 2026-11-25 — DK4-L5: cổng đăng ký mở từ phần mềm và ngược lại
 
