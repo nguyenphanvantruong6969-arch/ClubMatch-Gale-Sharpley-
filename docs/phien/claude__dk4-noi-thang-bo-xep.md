@@ -18,7 +18,7 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [x] Audit D1–D45 → `DK_DANH_GIA_TINH_NANG.md`; lot plan + prompts → `DKL_GIAO_THUC.md` (v8 diff table, 4 lots, same branch); CI green at 42b93af
 - [x] DKL lots L2→L3→L1→L4 built locally by Sonnet in one session (2026-11-25 night); CI NOT yet run, checker NOT yet run
 - [ ] DKL: CI green on Linux+Windows (CI on 5ac6d4f not read yet) → checker (prompt in DKL_GIAO_THUC §5) → `READY | head <sha>` → then DK5
-- [ ] DK4-UI: portal look/guidance like v8 (prompt below) → registry row, test-file count, `READY | head <sha>`
+- [x] DK4-UI: portal look/guidance like v8 — READY | head 8bde1ff (CI run 1671 green; contains DK4-UI commit a03ec2a plus DKL lots)
 
 ## Current state (2026-11-25, end of night session)
 - Head `5ac6d4f` pushed. CI green earlier at `42b93af` (DK4 code). DKL lots L1–L4 built locally and pushed; CI on `5ac6d4f` was started by the push but its result is NOT read yet; checker NOT run.
