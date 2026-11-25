@@ -80,7 +80,7 @@
       const hang = ds.map((x, k) => {
         const c = clb.find((q) => q.clb_id === x.clb_id);
         return h("li.dk-hang", {}, h("span.dk-thu", {}, String(k + 1)), h("span.dk-ten", {}, c.ten, " ", h("em.dk-loai", {}, c.loai)),
-          c.loai === "Tuyển chọn" ? h("label.dk-thi", {}, h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= 5,
+          c.loai === "Tuyển chọn" ? h("label.dk-thi", {}, h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= tt.toi_da_thi,
             onchange: (e) => { x.thi = e.target.checked; ve(); } }), " Thi") : null,
           c.loai !== "Tự do" ? h("select.dk-nhap.dk-hc", { "aria-label": "Huy chương", onchange: (e) => {
             if (!tay.has(b)) ds.forEach((q) => { q.hc = md[q.clb_id] || null; });
@@ -91,7 +91,7 @@
             DK.nutNhe("↓", () => k < ds.length - 1 && doi(k, k + 1), { "aria-label": "Xuống" }),
             DK.nutNhe("✕", () => { ds.splice(k, 1); ve(); }, { "aria-label": "Bỏ" })));
       });
-      const co = ds.length >= 10;
+      const co = ds.length >= tt.toi_da_nv;
       const khungDieu = [i > 0 ? DK.nutNhe("← Buổi trước", () => { i--; ve(); }) : null,
         cuoi ? DK.nutVang(nopXong ? "Nộp lại nguyện vọng" : "Nộp nguyện vọng", function () { nop(this); }) : DK.nut("Buổi tiếp theo →", () => { i++; ve(); })];
       DK.hien(DK.thanhDau("Học sinh · " + DK.S.lop),

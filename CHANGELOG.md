@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L0c: giới hạn nguyện vọng / bài thi đọc từ phần mềm
+
+- `dk_trang_thai` trả thêm `toi_da_nv` và `toi_da_thi` (lấy từ `TOI_DA_NV_BUOI`, `TOI_DA_THI_BUOI`); `js/dang_ky_gv_hs.js` dùng hai trường này thay cho số 10 và 5 viết cứng.
+- Test: `tests/test_dk4_l0c_gioi_han_tu_backend.py` (3, gồm một ca Chromium đặt giới hạn 2/1 để thấy giao diện đổi theo).
+
 ## 2026-11-25 — DK4-L0b: khoá đăng nhập sau 5 lần sai PIN
 
 - `dk_dang_nhap`: sai 5 lần liên tiếp cho cùng một mã (kể cả mã không có thật, cùng một mã lỗi) -> `dk_tam_khoa` 5 phút, đúng PIN trong lúc khoá cũng bị từ chối; đăng nhập đúng xoá bộ đếm. Bộ đếm lưu trong `dk_cai_dat` (khoá `dn_sai:<vai>:<mã>`, không đổi lược đồ), nên mở lại phần mềm không xoá khoá. Quản trị mở khoá bằng `dk_mo_khoa(token, vai, ten)` (ghi nhật ký `mo_khoa`).

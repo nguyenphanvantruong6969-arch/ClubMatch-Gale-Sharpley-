@@ -266,7 +266,8 @@ class DangKyMixin:
             buoi, khoi = self._dk_buoi_khoi(cur)
             gd = self._dk_giai_doan_hien_tai(cur)
             han = cur.execute("SELECT han_chot FROM dk_giai_doan WHERE ten = ?", (gd,)).fetchone()
-            return {"khoi_tao": True, "giai_doan": gd, "han_chot": han[0] if han else None, "buoi": buoi, "khoi": khoi}
+            return {"khoi_tao": True, "giai_doan": gd, "han_chot": han[0] if han else None, "buoi": buoi, "khoi": khoi,
+                    "toi_da_nv": TOI_DA_NV_BUOI, "toi_da_thi": TOI_DA_THI_BUOI}
         return self._dk_chay(lam)
 
     # ----------------------------------------------------- giai đoạn (quản trị)

@@ -311,3 +311,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK4-L5 (lối mở cổng đăng ký từ phần mềm và ngược lại) | xong, chờ CI | 2026-11-25 | index.html, js/01_khung.js, js/dang_ky_nen.js, js/dang_ky_quan_tri.js, i18n.js, style.css, CHANGELOG.md | tests/test_giao_dien_dk4_cong_vao.py (1) | Opus làm trực tiếp |
 | DK4-L0a (không lộ str(e) lên giao diện) | xong, chờ CI | 2026-11-25 | api_dang_ky.py, dang_ky_sang_xep.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk4_l0a_khong_lo_loi.py (2) | |
 | DK4-L0b (khoá đăng nhập 5 lần sai PIN, nút Mở khoá) | xong, chờ CI | 2026-11-25 | api_dang_ky.py, js/dang_ky_quan_tri.js, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk4_l0b_khoa_dang_nhap.py (6), tests/test_giao_dien_dk4_mo_khoa.py (1) | |
+| DK4-L0c (giới hạn 10/5 đọc từ phần mềm) | xong, chờ CI | 2026-11-25 | api_dang_ky.py, js/dang_ky_gv_hs.js, CHANGELOG.md | tests/test_dk4_l0c_gioi_han_tu_backend.py (3) | |
