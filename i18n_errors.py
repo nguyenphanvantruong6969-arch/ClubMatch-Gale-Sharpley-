@@ -1928,11 +1928,11 @@ MESSAGES = {
     },
     "dk_chot_seed_khoa": {
         "vi": "Hạt giống xếp đã khoá ở {cu}, không thể dùng {moi}. Hãy bấm lại mà không đổi hạt giống.",
-        "en": "The allocation seed is locked at {cu}; {moi} cannot be used. Press again without changing the seed.",
+        "en": "The draw number is locked at {cu}; {moi} cannot be used. Press again without changing it.",
     },
     "dk_chot_seed_sai": {
         "vi": "Hạt giống xếp phải là một số nguyên.",
-        "en": "The allocation seed must be an integer.",
+        "en": "The draw number for the allocation must be an integer.",
     },
     "dk_gioi_han_sai": {
         "vi": "Giới hạn phải là số từ 1 đến 30, và số bài thi không vượt số nguyện vọng.",

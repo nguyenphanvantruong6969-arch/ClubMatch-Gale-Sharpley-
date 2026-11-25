@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-CI: sửa các test cấu trúc đỏ trên CI (run 1650)
+
+- `nhat_ky.nen_ghi`: hàm `dk_*` không ghi nhật ký thao tác GT3 (cổng có `dk_nhat_ky` riêng; đối số `dk_dang_nhap` chứa PIN). `api_dang_ky.py`: `ORDER BY buoi COLLATE THU_TU_BUOI`. `rbda_priority_pipeline.di_tru_schema`: nạp `dang_ky_schema` theo tên, bỏ qua nếu thiếu (tập lệnh tham khảo nạp tệp riêng lẻ). `i18n_errors.py`: hai câu tiếng Anh về hạt giống không dùng chữ "seed".
+- Test: thêm tiền tố `dk_` vào các danh sách mã mới của `test_mt1_api`, `test_mt1_uoc_tinh`, `test_ws_nhan`; "PIN" là từ viết tắt hợp lệ trong `test_van_phong_tu_nhien`; cập nhật số tệp test (424) trong `CLAUDE_CHI_TIET.md`.
+
 ## 2026-11-25 — DK4: gộp hai bản L0 (khoá PIN 5 phút + giới hạn từ cài đặt)
 
 - Gộp `DK4-FIX` (phiên khác) với DK4-L0a–e: giữ khoá đăng nhập 5 phút lưu trong `dk_cai_dat` + `dk_mo_khoa` (thay khoá 60 giây trong bộ nhớ); giữ `dk_dat_gioi_han` và `_dk_gioi_han` (giới hạn 10/5 đổi được), `dk_trang_thai` trả `toi_da_nv`/`toi_da_thi` từ đó; giữ `#dkLuuY` cho luật tự bật; thêm dòng nhật ký `bat_luat`.

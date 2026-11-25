@@ -2596,8 +2596,13 @@ def di_tru_schema(db_path: str) -> list[str]:
             da_lam.append("stb_buoi")
 
         # DK3-L1: tám bảng `dk_*` của cổng đăng ký. Toàn bảng mới; sao lưu trước nếu CSDL đã có dữ liệu.
-        import dang_ky_schema
-        if any(t not in co_bang for t in dang_ky_schema.TEN_BANG_DK3):
+        # Nạp theo tên (không `import` tĩnh): các tập lệnh tham khảo nạp tệp này riêng lẻ và chỉ cho phép vài mô-đun
+        # anh em; thiếu `dang_ky_schema` ở đó thì bỏ qua bước này (chỉ bản trong kho mã mới có cổng đăng ký).
+        try:
+            dang_ky_schema = __import__("dang_ky_schema")
+        except ImportError:
+            dang_ky_schema = None
+        if dang_ky_schema and any(t not in co_bang for t in dang_ky_schema.TEN_BANG_DK3):
             sao_luu_truoc_khi_sua()
             dang_ky_schema.dam_bao_bang(conn)
             da_lam.append("dk3")
