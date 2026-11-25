@@ -17,7 +17,10 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [ ] CI green (3 tests left, see Current state) → checker DK4 (PASS only with CI green Linux+Windows)
 - [ ] DK4-UI: portal look/guidance like v8 (prompt below) → registry row, test-file count, `READY | head <sha>`
 
-## Current state (2026-11-25, head 3eb51b7)
+## Current state (2026-11-25)
+- UPDATE: DK4-CI-2 (658dec9) targets the 3 red tests below; CI run 45645130466 on 6323281 was IN PROGRESS at
+  handoff. First action of the next session: read its result (failed_only logs ≤60 lines).
+- Earlier state at head 3eb51b7:
 - CI run 45639876967 RED in 3 tests (Linux + Windows), 13 jobs green:
   1. `tests/test_gt3_nhat_ky.py::test_moi_ham_ghi_cua_bang_quyen_deu_duoc_ghi` — `dk_chuyen_giai_doan` (a WRITE
      function) is treated as not logged; DK4-CI seems to have excluded dk_* wholesale in `nhat_ky.py`. Only
@@ -67,3 +70,4 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 | 2026-11-25 | Sonnet | L0 / checker FIX items, DK4-CI (11 → 3 red tests) | |
 | 2026-11-25 | Opus | L5 entry link; CI triage; UI screenshots review; handoff at ~400k context | prompts only from now |
 | 2026-11-25 | Opus | Confirmed DK3 CI green (bdb2be8); handoff updated | no new work |
+| 2026-11-25 | Opus | DK4 CI check: run 45645130466 in progress (includes DK4-CI-2) | no new work |
