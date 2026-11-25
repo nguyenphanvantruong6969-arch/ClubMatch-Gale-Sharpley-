@@ -1,5 +1,8 @@
 # DK feature audit D1–D45 (read-only, static)
 
+> **SUPERSEDED / CORRECTED by `DKL_GIAO_THUC.md` §2 (v8 diff).** Errors here: D34 swap UI and D25 60 s idle DO exist
+> (`<select>` per club + reset button; `DK.henGio(60)`). D24 is not dropped (only the receipt *code*, D41). The real blocker is A2: no score-entry UI.
+
 > Branch `claude/dk4-noi-thang-bo-xep`, head `42b93af`. English. Method: code search (grep by function name) of
 > `api_dang_ky.py`, `dang_ky_schema.py`, `dang_ky_sang_xep.py`, `js/dang_ky_*.js`. **Nothing was run in a browser**;
 > "partial/missing" = no matching code found, so confirm by hand before building. Decisions: `claude__gracious-johnson-pnqvrg.md`.
