@@ -76,6 +76,13 @@ function capNhatViecTiepTheo(sucCoSan) {
   ]).then(([dash, suc, cho]) => {
     if (lan !== viecTiepTheoLanGoi) return; /* có lần gọi mới hơn: bỏ kết quả cũ */
     const tt = viecTinhTrangThai(dash, suc, cho);
+    /* DKL-I: chưa có dữ liệu thì chỉ đường sang cổng Đăng ký CLB (giữ ?t=<token> của bản trình duyệt dự phòng). */
+    const goiY = el("ghiChuDangKy");
+    if (goiY) {
+      goiY.hidden = !tt || tt.ten !== "nap_so";
+      const lk = el("ghiChuDangKyLienKet");
+      if (lk) lk.href = "dang_ky.html" + location.search;
+    }
     if (!tt) { khung.hidden = true; return; }
     khung.hidden = false;
     khung.dataset.trangThai = tt.ten;

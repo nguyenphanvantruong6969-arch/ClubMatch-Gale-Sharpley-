@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-I: lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu
+
+- `index.html` (khung «1. Nhập sổ»): đoạn `#ghiChuDangKy` + liên kết «Mở Đăng ký CLB», chỉ hiện khi thanh «Việc tiếp theo» ở trạng thái `nap_so` (chưa có dữ liệu); nói cổng làm gì (giáo viên lập CLB, học sinh đăng ký, xuất Sổ nhập tự động) và việc lần đầu (đặt mật khẩu quản trị cho cổng). `js/17_viec_tiep_theo.js` bật/tắt và giữ `?t=<token>`; `i18n.js` hai khoá `dk_loi_dan`, `dk_loi_dan_lien_ket` (vi, en).
+- Test mới: `tests/test_giao_dien_dkl_loi_dan_cong.py` (2 ca: hiện + bấm sang cổng thấy «Thiết lập lần đầu»; có dữ liệu thì ẩn). Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DKL-H: giải thích giới hạn nguyện vọng và bài thi tính riêng từng buổi (cổng đăng ký)
 
 - `js/dang_ky_gv_hs.js` (`vRank`, `vTests`): câu «Giới hạn N CLB tính riêng cho từng buổi (không phải cả tuần)» ở bước xếp nguyện vọng; khi đủ: «Buổi X đã đủ N CLB … bấm ✕ để bỏ bớt», nút «+ Thêm» khoá có `title` nêu lý do. Bước bài kiểm tra: câu «Giới hạn M bài thi tính riêng cho từng buổi», khi đủ «Buổi X đã tick đủ M bài thi … bỏ tick một CLB trước», ô tick bị khoá có `title`. Không đổi backend, schema, CSV hay thuật toán.
