@@ -345,7 +345,7 @@ def test_ma_loi_mt_co_vi_va_en():
         m = i18n_errors.MESSAGES[ma]
         assert m["vi"].strip() and m["en"].strip(), ma
     # nối ở CUỐI tệp (các khối sau, như `cb1_` của CB1, được nối thêm phía sau và không tính)
-    khong_cb1 = [m for m in i18n_errors.MESSAGES if not m.startswith("cb1_")]
+    khong_cb1 = [m for m in i18n_errors.MESSAGES if not m.startswith(("cb1_", "dk_"))]
     assert all(m.startswith("mt_") for m in khong_cb1[-8:])
 
 
