@@ -12,9 +12,9 @@
 
 ## 0. Team, push rule, CI reality
 - Coder (Sonnet) + checker (Sonnet), no lead; Truong pastes the checker prompt at each MILESTONE. Full CI ≈ 20–25 min, Linux+Windows.
-- **Push rule:** commit locally per lot; push only at a milestone (M1 after L1+L2, M2 after L3+L4) and for the final READY.
+- **Push rule:** commit locally per lot; push only at a milestone (M1 after L2+L3, M2 after L1+L4) and for the final READY.
   DK4-UI and DKL never push in the same window. Every push cancels the run in flight; never push while a needed run is going.
-  Budget: ≤ 4 full CI cycles tonight. Realistic order: L1 → L2 (M1 push) → L3 → L4 (M2 push) → CI → READY.
+  Budget: ≤ 4 full CI cycles tonight. Build order (after DK4-UI): L2 → L3 (M1 push) → L1 → L4 (M2 push) → CI → READY.
 - Invariants 1–8 untouched. No schema/CSV/algorithm change. New API functions only in `api_dang_ky.py` (+ `i18n_errors.py` codes
   → `python tao_i18n_js.py`; new `dk_*` write functions need `nkhd_<fn>` journal labels vi+en, and PIN/token never logged).
 
@@ -75,8 +75,8 @@ sentence on the card) + one behavioural test per DONE row (the coder verifies ea
 
 ## 4. Per lot, milestones, definition of done
 Failing test → minimal code → lot test + ≤ 3 related (`-q --tb=line 2>&1 | tail -15`) → `ruff check .` → `kiem_nhanh.py | tail -10`
-→ CHANGELOG `DKL-L<k>` + TIEN_DO row → local commit `DKL-L<k>: …`. After L2: `git fetch` + merge, push, write `MILESTONE 1 READY | head <sha>`.
-After L4: same with `MILESTONE 2 READY`, then registry row (`SO_DANG_KY_33_MUC.md`), test-file count in `CLAUDE_CHI_TIET.md`, CI green on
+→ CHANGELOG `DKL-L<k>` + TIEN_DO row → local commit `DKL-L<k>: …`. After L3: `git fetch` + merge, push, write `MILESTONE 1 READY | head <sha>`.
+After L4 (last): same with `MILESTONE 2 READY`, then registry row (`SO_DANG_KY_33_MUC.md`), test-file count in `CLAUDE_CHI_TIET.md`, CI green on
 Linux AND Windows (`failed_only` logs ≤ 60 lines), then `READY | head <sha>`. Done = every row of §2 ticked with its test name in the
 branch file, or moved to "Needs Truong" with the reason. Max 2 FIX rounds per milestone, then `git revert` that lot. No PR/tag.
 Test data labelled SIMULATED.
@@ -84,7 +84,17 @@ Test data labelled SIMULATED.
 ## 5. Prompts
 ### Coder (one Sonnet session)
 ```
-Read CLAUDE.md, docs/phien/claude__dk4-noi-thang-bo-xep.md, docs/phien/DKL_GIAO_THUC.md, docs/phien/_GIAO_THUC_GON.md. Reply to Truong in Vietnamese. You are the DKL coder (Sonnet) on branch claude/dk4-noi-thang-bo-xep (no new branch). SCOPE = the v8 diff table in DKL_GIAO_THUC.md §2: every row is a task and anything not ticked with a passing test is not done; first open docs/phien/DK1_BAN_MAU_V8.html for each row you build and match its behaviour (strings, flow, limits), in Vietnamese. Look/tokens belong to the DK4-UI session: do not restyle, add only the CSS your new elements need; `git fetch` + merge before each lot because both sessions touch js/dang_ky_*.js. Build lots L1→L4 in order, failing test first, commit locally per lot, push ONLY at the two milestones (after L2 write `MILESTONE 1 READY | head <sha>`; after L4 `MILESTONE 2 READY`), never push while a CI run you need is in flight, no doc-only pushes. After L4: registry row, test count, CI green on Linux and Windows, then `READY | head <sha>`. Respect invariants 1–8 and §0. No subagents, no PR. If the usage limit is near, update "Current state" in the branch file and stop.
+Read CLAUDE.md, docs/phien/claude__dk4-noi-thang-bo-xep.md, docs/phien/DKL_GIAO_THUC.md (all of it, §1b included) and docs/phien/_GIAO_THUC_GON.md. Reply to Truong in Vietnamese. You are the DKL coder (Sonnet) on branch claude/dk4-noi-thang-bo-xep (no new branch). Start with `git fetch origin claude/dk4-noi-thang-bo-xep && git merge --no-edit FETCH_HEAD`; DK4-UI (cc80e00) is already in.
+
+SCOPE = the v8 diff table in DKL_GIAO_THUC.md §2 as narrowed by §1b. Every open row is a task; a row without a passing test named in the branch file is NOT done. For each row, first open docs/phien/DK1_BAN_MAU_V8.html and match its behaviour, strings (Vietnamese, same wording), limits and error messages. Rows DK4-UI already built (S1, S3–S7): do not rebuild, add one behavioural test each and fix only what the test shows is wrong.
+
+BUILD ORDER: L2 (admin: A1–A8, score-entry UI first because it blocks real use) → L3 (teacher: S8, S9) → MILESTONE 1 → L1 (S2 "Dưới sàn" chip + rule line, expired message) → L4 (A9–A12: Cài đặt tab, export preview and version, backup, lock message) → MILESTONE 2.
+
+PER LOT: failing test first → minimal code → lot test + ≤3 related (`-q --tb=line 2>&1 | tail -15`) → `ruff check .` → `.claude/skills/soat-ma/scripts/kiem_nhanh.py | tail -10` → CHANGELOG `DKL-L<k>` + TIEN_DO row → LOCAL commit `DKL-L<k>: …`. New write API functions: `nkhd_<fn>` journal labels vi+en; PIN/token/password never logged or rendered after reload; new error codes only in i18n_errors.py then `python tao_i18n_js.py`. No schema/CSV/algorithm change (invariants 1–8), no new library; stop and ask Truong if a row seems to need one.
+
+PUSH RULE: never push mid-lot. Push only (a) after L3: `git fetch`+merge, push, write `MILESTONE 1 READY | head <sha>` in the branch file; (b) after L4: same with `MILESTONE 2 READY`, then registry row (SO_DANG_KY_33_MUC.md), test-file count (CLAUDE_CHI_TIET.md), and wait for CI green on Linux AND Windows (`mcp__github__actions_list`, failed_only logs ≤60 lines) before writing `READY | head <sha>`. A push cancels the run in flight and a full CI is ~22 min: batch fixes, never push docs-only. If the checker returns FIX, max 2 rounds per milestone, then "Needs Truong" and `git revert` that lot.
+
+TOKEN RULES: read by function name (`grep -n` then `sed -n a,b`, ≤80 lines), never print whole style.css/i18n.js/index.html/CHANGELOG.md; Chromium tests: one file per lot, one shared page fixture; screenshots only at the end, ≤3, scale 1. No subagents, no PR, no tag. Test data is SIMULATED, label it. If the usage limit is near: commit locally, update "Current state" in the branch file (what is ticked, what is next), push once, stop.
 ```
 ### Checker (Truong pastes at each MILESTONE)
 ```
