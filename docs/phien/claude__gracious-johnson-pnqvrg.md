@@ -84,7 +84,18 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
 - D41 Proposal to Truong (awaiting OK): drop "Mã biên nhận" (receipt code) — kiosk re-login with ID + PIN
   already shows submission; replace with "Đã gửi lúc hh:mm, thứ …".
 
+- D42 (Truong, 2026-11-25): "sample is OK" → start the next phase (DK2) once the Sổ nhập output is correct.
+  Planner's finding (NOT verified by running): v7 export is NOT a valid Sổ nhập yet — NV groups restart per
+  session (real sổ: one NV1…NVk run, session inferred from club); columns/headers not exactly
+  `so_nhap.py` (Tên CLB, Buổi, Chỉ tiêu, Suất/Nhóm ưu tiên, Mã CLB + FA: Loại, Điểm sàn, Tối thiểu, Sức chứa
+  phòng; NV group: CLB · Điểm thi · "Huy chương (60/30/10)"); Phòng/Khối/Link have no sổ column (CSV contract
+  → rule 7, ask Truong); never passed the real importer.
+
 ## Next steps (ordered)
+00. **DK2 planning (Opus, rule 12):** new branch + `docs/phien/DK2_GIAO_THUC.md`. Lot 1 must make the export
+   a real Sổ nhập: converter v7 JSON → `SO_NHAP_CLB.xlsx` using `so_nhap.py` writers, test that the kiosk
+   importer accepts it (FA/medal mode on) with 0 errors; decide with Truong whether Phòng/Khối/Link enter the
+   CSV contract. Check whether D39–D41 are still wanted in the prototype or go straight into DK2 UI.
 0. Apply D39–D41 to `docs/phien/DK1_BAN_MAU_V7.html` (republish the artifact if Truong wants it), re-run the
    Hick/Von Restorff count (≤ 7 per frame, 1 gold) and the full flow.
 1. Ask Truong: update `DK1_GIAO_THUC.md` to match v7 (recommended), and keep or drop the 5-test cap.
