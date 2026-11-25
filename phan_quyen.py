@@ -73,6 +73,9 @@ get_muc_tieu chon_muc_tieu hoan_tac_muc_tieu uoc_tinh_muc_tieu bao_cao_muc_tieu
 get_phuong_an_xep chot_phuong_an export_van_ban_phuong_an_pdf
 """.split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát); MT1: ba hàm mục tiêu (cả hàm đọc) chỉ quản trị
 
+# DK3: cổng đăng ký tự kiểm quyền bằng phiên riêng (token) nên coi là công khai với cổng chung.
+_CONG_KHAI += [n for n in dir(__import__("api_dang_ky").DangKyMixin) if n.startswith("dk_")]
+
 QUYEN = {}
 for _ten in _CONG_KHAI:
     QUYEN[_ten] = CONG_KHAI

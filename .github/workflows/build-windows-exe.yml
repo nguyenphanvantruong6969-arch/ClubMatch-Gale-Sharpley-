@@ -124,7 +124,7 @@ jobs:
             exit 1
           }
 
-          foreach ($f in @("index.html", "style.css", "i18n_loi.js", "i18n.js", "chung.js",
+          foreach ($f in @("index.html", "dang_ky.html", "style.css", "i18n_loi.js", "i18n.js", "chung.js",
                            "recovery.html", "recovery.js", "logo.png", "logo.ico")) {
             $goi = Join-Path $noi_bo $f
             if (-not (Test-Path $goi)) {

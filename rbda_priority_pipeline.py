@@ -2595,6 +2595,13 @@ def di_tru_schema(db_path: str) -> list[str]:
                 "so INTEGER NOT NULL, PRIMARY KEY (buoi, student_id))")
             da_lam.append("stb_buoi")
 
+        # DK3-L1: tám bảng `dk_*` của cổng đăng ký. Toàn bảng mới; sao lưu trước nếu CSDL đã có dữ liệu.
+        import dang_ky_schema
+        if any(t not in co_bang for t in dang_ky_schema.TEN_BANG_DK3):
+            sao_luu_truoc_khi_sua()
+            dang_ky_schema.dam_bao_bang(conn)
+            da_lam.append("dk3")
+
         conn.commit()
     finally:
         conn.close()
