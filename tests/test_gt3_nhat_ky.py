@@ -285,7 +285,8 @@ def test_moi_ham_ghi_cua_bang_quyen_deu_duoc_ghi():
     """Hàm không được ghi phải là hàm chỉ đọc: tên bắt đầu bằng get_/list_/… hoặc trong danh sách rõ ràng."""
     khong_ghi = [n for n in pq.QUYEN if not nk.nen_ghi(n)]
     for n in khong_ghi:
-        assert n.startswith(nk._DOC) or n in nk._KHONG_GHI, n
+        # dk_*: cổng đăng ký có phiên + nhật ký riêng (`dk_nhat_ky`); nhật ký chung không được chứa PIN/mật khẩu trong đối số
+        assert n.startswith(nk._DOC) or n in nk._KHONG_GHI or n.startswith("dk_"), n
 
 
 # ------------------------------------------------------------------ fix1: db_path chụp trước, khoá có hạn, lọc tên
@@ -373,3 +374,9 @@ def test_loc_nguoi_khong_phan_biet_hoa_thuong(api, co_tk):
     chuan = api.get_nhat_ky_thao_tac(1, 50, nguoi="quantri")["data"]["tong"]
     assert chuan > 0
     assert api.get_nhat_ky_thao_tac(1, 50, nguoi="QuanTri")["data"]["tong"] == chuan
+
+
+def test_ham_dk_khong_vao_nhat_ky_chung_vi_doi_so_co_pin():
+    """Mọi hàm dk_* (kể cả hàm ghi) ở ngoài nhật ký chung: đối số của chúng chứa PIN / mật khẩu."""
+    ds = [n for n in pq.QUYEN if n.startswith("dk_")]
+    assert ds and all(not nk.nen_ghi(n) for n in ds)

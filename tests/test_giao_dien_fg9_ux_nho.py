@@ -18,9 +18,9 @@ from test_giao_dien_fg6_danh_sach_loi import mo_dau  # noqa: E402,F401 (fixture)
 
 def test_thanh_ben_khong_con_so_thu_tu(mo_dau):  # noqa: F811
     page, api, loi = mo_dau(_dung)
-    chu = page.evaluate("() => [...document.querySelectorAll('.nav-item .nav-icon')].map((e) => e.textContent.trim())")
+    chu = page.evaluate("() => [...document.querySelectorAll('.nav-item[data-tab] .nav-icon')].map((e) => e.textContent.trim())")
     assert all(not re.fullmatch(r"\d+", c) for c in chu), chu
-    dau = page.evaluate("() => [...document.querySelectorAll('.nav-item')].map((e) => e.textContent.trim())")
+    dau = page.evaluate("() => [...document.querySelectorAll('.nav-item[data-tab]')].map((e) => e.textContent.trim())")      # 7 thẻ; "Đăng ký CLB" là liên kết, không phải thẻ
     assert len(dau) == 7 and all(not re.match(r"\d", c) for c in dau), dau      # mỗi nhãn không mở đầu bằng số
     assert not loi, loi
 

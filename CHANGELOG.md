@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-CI-2: sửa 3 test đỏ trên CI
+
+- `tests/test_gt3_nhat_ky.py`: hàm `dk_*` (kể cả hàm ghi) cố ý ở ngoài nhật ký chung vì đối số có PIN/mật khẩu; có `dk_nhat_ky` riêng. Test cho phép tiền tố `dk_` và thêm ca khoá quy ước này.
+- `tests/test_giao_dien_fg9_ux_nho.py`, `tests/test_giao_dien_a14_lop.py`: danh sách thẻ thanh bên chỉ đếm `.nav-item[data-tab]` (liên kết "Đăng ký CLB" của DK4-L5 không phải thẻ).
+- `dang_ky_sang_xep.py`: `ORDER BY buoi COLLATE THU_TU_BUOI`.
+
 ## 2026-11-25 — DK4-CI: sửa các test cấu trúc đỏ trên CI (run 1650)
 
 - `nhat_ky.nen_ghi`: hàm `dk_*` không ghi nhật ký thao tác GT3 (cổng có `dk_nhat_ky` riêng; đối số `dk_dang_nhap` chứa PIN). `api_dang_ky.py`: `ORDER BY buoi COLLATE THU_TU_BUOI`. `rbda_priority_pipeline.di_tru_schema`: nạp `dang_ky_schema` theo tên, bỏ qua nếu thiếu (tập lệnh tham khảo nạp tệp riêng lẻ). `i18n_errors.py`: hai câu tiếng Anh về hạt giống không dùng chữ "seed".

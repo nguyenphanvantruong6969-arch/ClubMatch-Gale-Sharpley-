@@ -77,7 +77,7 @@ class DangKySangXepMixin:
             dich.close()
 
     def _dk_tom_tat_xep(self, cur):
-        buoi = [r[0] for r in cur.execute("SELECT DISTINCT buoi FROM match_results ORDER BY buoi")]
+        buoi = [r[0] for r in cur.execute("SELECT DISTINCT buoi FROM match_results ORDER BY buoi COLLATE THU_TU_BUOI")]
         tong = cur.execute("SELECT COUNT(DISTINCT student_id) FROM match_results").fetchone()[0]
         theo_buoi = []
         for b in buoi:
