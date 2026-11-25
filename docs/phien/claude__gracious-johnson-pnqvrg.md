@@ -115,3 +115,4 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
 | 2026-11-25 | Opus | Evaluated reference site, 6 question rounds with Truong, wrote plan + protocol | no product code |
 | 2026-11-25 | Opus | Built artifact prototype v1–v7 at Truong's request: Hick/Von Restorff redesign, student add/replace, admin-created teachers, tab sync, medal mode | handoff at ~400k context; protocol not yet updated |
 | 2026-11-25 | Opus | Recorded Truong's v7 feedback as D39–D41 (per-day flow, chip overflow, drop receipt code) | not built; next session starts at Next steps 0 |
+| 2026-11-25 | Opus | Recorded D42: v7 export not yet a valid Sổ nhập; next = DK2 planning (Next steps 00) | no code; handoff final |
