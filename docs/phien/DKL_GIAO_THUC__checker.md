@@ -1,3 +1,61 @@
+# DKL checker report — ROUND 2 (Sonnet) — head f2db78f, branch claude/loving-babbage-8yqo7d, 2026-11-26
+
+**VERDICT: FIX.** Three reasons, in order of weight:
+1. **DKL-M defect (High):** the 5-second auto-refresh wipes the just-created teacher PIN list (shown once) and any typed-but-unsaved text. Reproduced (below).
+2. **`docs/ke_hoach/TIEN_DO.md` has unresolved merge-conflict markers committed** (`<<<<<<< HEAD` line 321, `=======` 324, `>>>>>>> e1fb45c` 328).
+3. **CI not finished:** run **45722740833** (head f2db78f) was `in_progress` when checked → "FIX: chờ CI". Note: my own push of this report cancels that run (workflow `cancel-in-progress`); the coder's fix push would cancel it anyway, so one clean full run is needed on the fix head, Linux AND Windows.
+
+Environment: Python 3.11 venv in scratchpad, Chromium. DKL test files (7 files, 25 tests) + `test_dkl_k_id_tra_ve.py`, `test_dkl_m_dau_van_tay.py`, `test_dk4_chot_va_xep.py`, `test_dkl_cai_dat.py` all PASS. `ruff check .` clean. `kiem_nhanh.py` 6/7 (only `trung_khit` fails: no `origin/main` in this clone — environment, CI must cover; same as round 1).
+
+## 1. Round-1 FIX items
+| Item | Result | Evidence |
+|---|---|---|
+| (a1) «NVNone» → «Ngoài nguyện vọng» | PASS | `test_dk4_chot_va_xep.py::test_tom_tat_xep_hang_null_la_ngoai_nguyen_vong_va_co_ten_buoi` (`{"1":2,"ngoai":1}`) + UI assertion in `test_giao_dien_dk4_chot_xep.py` |
+| (a2) «thu_2» → portal name «T2» | PASS | same tests (`ten_buoi == "T2"`, `match_results` still `thu_2`; display layer only) |
+| (a3) «Xem trước Sổ nhập» open by default | PASS | `test_giao_dien_dkl_quan_tri.py` test_6 waits for table visible with no click (`details open: true`) |
+| (b) TIEN_DO rows DKL-H, DKL-I | **FAIL (partial)** | rows present, no duplicates (DKL-H, I, J, K, M once each) BUT file contains conflict markers (see reason 2); also rows H/I/J have no test column |
+| (c) dot decimal "8.5" in UI test | PASS | `quan_tri test_4` fills "8.5" → chip «Đạt» (asserts chip, not stored value; acceptable) |
+| extra: unticked Tuyển chọn → no Forms link | PASS | `hoc_sinh test_2b_khong_tick_bai_thi_thi_khong_co_link_lam_bai` |
+
+## 2. DKL-K (id trả về) — PASS
+- `tests/test_dkl_k_id_tra_ve.py` FAILS on the old order (I swapped in `api_dang_ky.py` from 348f6d4: 2 failed, `[5, 6, 7] == [1, 2, 3]`, i.e. journal row ids) and PASSES on f2db78f.
+- `grep lastrowid`: only 3 left in `api_dang_ky.py` — `dk_phong_luu` (373) and `dk_gv_tu_dang_ky` (420) read it BEFORE `_dk_ghi_nk`; `dk_clb_luu` (617) reads it before `_dk_ghi_nk` as well. None returns lastrowid after the journal INSERT. None in `dang_ky_sang_xep.py`, `dk2_so_nhap.py`, `dang_ky_schema.py`.
+
+## 3. DKL-M (`dk_dau_van_tay` + 5 s refresh) — FIX (one High, one Medium)
+Confirmed by reading + scratch Chromium tests (fake clock, scripts outside repo in scratchpad `test_scratch_dklm.py`, `test_scratch_pin.py`):
+
+| # | Risk | Rating | How tested | Result |
+|---|---|---|---|---|
+| M1 | Redraw wipes **PIN list shown once** | **HIGH** | gv_dang_ky phase: create 2 teachers (PIN box shows "Cô Cúc 3139…"), then ANY other data change (e.g. a teacher self-registers), advance 6 s | PIN box becomes empty. Admin loses the PINs (recoverable only by «Đặt lại PIN» per teacher). Cause: `viecBayGio` renders `#dkPin` inside the redrawn tab; guard only checks a focused INPUT/TEXTAREA/SELECT and `#dkThayHop`, but focus is on a button/body after clicking «Tạo». The old 30 s loop ran only in hs_dang_ky, which has no PIN box; DKL-M widened it to gv_dang_ky and duyet |
+| M2 | Redraw wipes typed-but-unsaved input | **MEDIUM** | gv_dang_ky: type "Cô Mới" in textarea, click elsewhere (blur), other change, +6 s | textarea reset to "". Same for the «Hạn chót» datetime field and the duyệt/«Sửa sau mở» quota/room fields when not focused |
+| M3 | Fingerprint race on re-arm | LOW | by reading `QT2.tuLamMoi`: every redraw ends with `tuLamMoi(true)`, which re-reads `dauCu = layDau()` AFTER the redraw; a change that lands between the interval's fingerprint read and that re-read is recorded as "seen" though the redraw may predate it → screen stale until the NEXT change. Window ≈ one redraw (100–300 ms) | not reproduced (timing); fix = do not overwrite `dauCu` on re-arm if already set |
+| M4 | Fingerprint validity / WAL | LOW | measured: `PRAGMA journal_mode` = **delete** (`rbda_priority_pipeline.py:2240` keeps DELETE by design), so the `-wal` part is always "-"; fingerprint = `st_mtime_ns:st_size` of `app.db`. 4 read cycles of every admin read API + a login left it unchanged (no redraw loop); a write changes it. Windows: `os.stat` works on NTFS; mtime_ns is 100 ns granularity. Cannot test Windows here; CI Windows runs `test_giao_dien_dkl_m_lam_moi.py`. CHANGELOG says "tệp WAL" — inaccurate wording, harmless | tested (Linux) |
+| M5 | 2-minute idle lock still works | OK | `test_8` PASS; extra: with polling ON and data changing every 5 s, lock message appears after 23 steps (≈ 115–120 s fake) — client timer is not reset by `DK.quanTri(true)`. Note: redraw calls authenticated APIs, so the SERVER-side idle clock is refreshed on each change-driven redraw; harmless because the client calls `dk_dang_xuat` at 120 s, but the "server also locks" safety net is weakened while data keeps changing | tested |
+| M6 | Interval left running after logout / tab change | OK | counted `RBDA.callApi('dk_dau_van_tay')`: after lock 0 → 0 over 60 s fake; after «Đăng xuất» 0 → 0; on tab «Danh sách» 0 → 0 over 30 s with data changed; back to «Việc bây giờ» polling resumes. `tuLamMoi` always `clearInterval` before arming → no stacking | tested |
+| M7 | Student screen untouched | OK | `git diff 348f6d4..f2db78f` has no change in `js/dang_ky_gv_hs.js`, `dang_ky_nen.js`, `style.css`, `i18n.js` | read |
+| M8 | Public + no session refresh + no DB open | OK | `test_dkl_m_dau_van_tay.py` (3 PASS): no token, stable on reads, changes on writes incl. student submit, session `luc` unchanged after 3 calls. Leaks no personal data (opaque mtime:size string) | tested |
+| M9 | Timer/memory leak | LOW-OK | one interval at a time; callbacks hold no growing state; in-flight callback after logout re-checks `DK.quanTri` guard (`DK.S.vai`) before painting | read |
+
+**What to fix (coder, one lot `DKL-N`, test first):**
+1. M1+M2: skip the auto-redraw (keep the old fingerprint so it retries) when `#dkPin` has content, or when any `.dk-noidung` field differs from its initial value (e.g. `textarea.value !== ""`, `input.value !== defaultValue`); OR do not poll in `gv_dang_ky` (PIN screen) at all. Failing tests to add: (a) PIN box still has «Cô Cúc 3139…» after another change + 6 s; (b) typed textarea text survives blur + another change + 6 s; (c) after the PIN box is cleared (leave tab) polling resumes.
+2. M3: `if (dauCu === null) dauCu = await layDau()` on re-arm.
+3. Remove the conflict markers from TIEN_DO (keep all five rows: M, K, H, I, J), add the test column to H/I/J.
+4. CHANGELOG: say "mtime + kích thước tệp CSDL (chế độ nhật ký DELETE, không phải WAL)".
+5. Push once; wait for full CI green on Linux AND Windows on that head.
+
+## 4. DKL-H, DKL-I, G1–G4 — PASS (re-run)
+`test_giao_dien_dkl_hoc_sinh.py` (H `test_3d_…`, G1 `test_3b`, G4 `test_3c`), `test_giao_dien_dkl_loi_dan_cong.py` (I, 2 cases), `test_giao_dien_dkl_quan_tri.py::test_8` (G2/G3) — all in the 25 passed.
+
+## 5. Standing checks
+- Invariants 1–8: `rbda_priority_pipeline.py`, `dang_ky_schema.py`, `so_nhap.py`, `dk2_so_nhap.py`, `fa_daa.py`, `api.py`, `i18n_errors.py`, `i18n_loi.js`, `mau_csv` unchanged since 42b93af → no algorithm/schema/CSV change; `compute_club_priority` untouched (inv. 2 intact). `trung_khit` byte-identical check not runnable here (no `origin/main`) → CI.
+- i18n: `i18n_errors.py` unchanged; `kiem_nhanh` i18n checks PASS. `dk_dau_van_tay` is a read → no `nkhd_` label needed; `nkhd_` list unchanged and complete for earlier write functions.
+- CHANGELOG rows DKL-J, DKL-M, DKL-K: present. TIEN_DO: rows present but file corrupted by conflict markers (FIX 3).
+- soat-ma tiers 2–4: not run by me beyond the checks above (report-only run).
+- Not verifiable here: pywebview/WebView2, Windows `os.stat` timing, full suite.
+
+
+---
+
 # DKL checker report (Sonnet) — head 348f6d4, branch claude/loving-babbage-8yqo7d, 2026-11-26
 
 **VERDICT: FIX (not PASS).** Reasons: (a) CI of head 348f6d4 = run 45719263842 still `queued`, so no Linux+Windows result; (b) 3 confirmed defects on the
