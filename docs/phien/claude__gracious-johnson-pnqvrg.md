@@ -92,7 +92,7 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
   → rule 7, ask Truong); never passed the real importer.
 
 ## Next steps (ordered)
-00. **DK2 planning (Opus, rule 12):** new branch + `docs/phien/DK2_GIAO_THUC.md`. Lot 1 must make the export
+00. **DONE 2026-11-25** → `docs/phien/DK2_GIAO_THUC.md` + `docs/phien/claude__dk2-cau-noi-so-nhap.md` (D43–D45: bridge size M, D39–D41 in DK2 L2, test cap 5 per session). Steps 0–3 below are superseded by that plan. Original text: **DK2 planning (Opus, rule 12):** new branch + `docs/phien/DK2_GIAO_THUC.md`. Lot 1 must make the export
    a real Sổ nhập: converter v7 JSON → `SO_NHAP_CLB.xlsx` using `so_nhap.py` writers, test that the kiosk
    importer accepts it (FA/medal mode on) with 0 errors; decide with Truong whether Phòng/Khối/Link enter the
    CSV contract. Check whether D39–D41 are still wanted in the prototype or go straight into DK2 UI.
@@ -116,3 +116,4 @@ Workflow: 6 phases, one active: `Chuẩn bị → GV đăng ký → Duyệt CLB 
 | 2026-11-25 | Opus | Built artifact prototype v1–v7 at Truong's request: Hick/Von Restorff redesign, student add/replace, admin-created teachers, tab sync, medal mode | handoff at ~400k context; protocol not yet updated |
 | 2026-11-25 | Opus | Recorded Truong's v7 feedback as D39–D41 (per-day flow, chip overflow, drop receipt code) | not built; next session starts at Next steps 0 |
 | 2026-11-25 | Opus | Recorded D42: v7 export not yet a valid Sổ nhập; next = DK2 planning (Next steps 00) | no code; handoff final |
+| 2026-11-25 | Opus | Planned DK2 (Next step 00): protocol + branch file for `claude/dk2-cau-noi-so-nhap` | no code |
