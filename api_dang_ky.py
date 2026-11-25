@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import hmac
 import json
+import os
 import re
 import secrets
 import time
@@ -756,3 +757,50 @@ class DangKyMixin:
             return [dict(luc=r[0], vai=r[1], hanh_dong=r[2], chi_tiet=r[3]) for r in cur.execute(
                 "SELECT luc, vai, hanh_dong, chi_tiet FROM dk_nhat_ky ORDER BY id DESC LIMIT ?", (int(gioi_han),))]
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    # ------------------------------------------------------------ L4: xuất Sổ nhập
+    def _dk_ban_mau(self, cur):
+        """Dữ liệu xuất `dinhDang` 1 (đúng dạng `dk2_so_nhap.tu_ban_mau`) từ các bảng `dk_*`."""
+        buoi = self._dk_buoi_khoi(cur)[0]
+        clb, ma_cua = [], {}
+        for r in cur.execute("SELECT c.clb_id, c.ten, c.buoi, c.loai, c.chi_tieu, c.diem_san, ph.ten, ph.suc_chua FROM dk_clb c "
+                             "LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id WHERE c.trang_thai = 'duyet' ORDER BY c.buoi, c.ten"):
+            ma_cua[r[0]] = "CLB%03d" % r[0]
+            clb.append({"ma": ma_cua[r[0]], "ten": r[1], "buoi": r[2], "loai": r[3],
+                        "chiTieu": None if r[3] == TU_DO else r[4], "diemSan": r[5], "phong": r[6], "sucChuaPhong": r[7]})
+        thu_tu = {b: i for i, b in enumerate(buoi)}
+        nv_cua = {}
+        for r in cur.execute("SELECT student_id, buoi, hang, clb_id, thi, diem, huy_chuong FROM dk_nguyen_vong"):
+            if r[3] in ma_cua:
+                nv_cua.setdefault(r[0], []).append((thu_tu.get(r[1], len(thu_tu)), r[2], {
+                    "clb": ma_cua[r[3]], "thi": bool(r[4]), "diem": r[5], "huyChuong": r[6]}))
+        hs = [{"ma": r[0], "hoTen": r[1], "lop": r[2], "nv": [x[2] for x in sorted(nv_cua.get(r[0], []), key=lambda x: x[:2])]}
+              for r in cur.execute("SELECT student_id, ho_ten, lop FROM dk_hoc_sinh ORDER BY lop, student_id")]
+        return {"dinhDang": 1, "buoi": buoi, "clb": clb, "hocSinh": hs}
+
+    def dk_xuat_ban_mau(self, token):
+        """Quản trị: JSON `dinhDang` 1 (cùng dạng với "Chép dữ liệu xuất" của bản mẫu). Chỉ đọc."""
+        def lam(cur, p):
+            return self._dk_ban_mau(cur)
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_xuat_so_nhap(self, token, duong_dan=""):
+        """Quản trị: ghi `SO_NHAP_CLB.xlsx` qua `dk2_so_nhap.ghi_tu_ban_mau` (mặc định: cạnh app.db). Từ giai đoạn Nhập điểm
+        trở đi; còn bài thi chưa có điểm thì từ chối. Dữ liệu sai thì KHÔNG ghi tệp, trả lỗi `dk_khong_xuat_duoc`."""
+        import dk2_so_nhap
+
+        def lam(cur, p):
+            if CAC_GIAI_DOAN.index(self._dk_gd) < CAC_GIAI_DOAN.index("nhap_diem"):
+                raise _Loi("dk_sai_giai_doan", phan="nhap_diem")
+            thieu = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE thi = 1 AND diem IS NULL").fetchone()[0]
+            if thieu:
+                raise _Loi("dk_thieu_diem", n=thieu)
+            du_lieu = self._dk_ban_mau(cur)
+            dich = duong_dan or os.path.join(os.path.dirname(os.path.abspath(self.db_path)), "SO_NHAP_CLB.xlsx")
+            try:
+                kq = dk2_so_nhap.ghi_tu_ban_mau(du_lieu, dich)
+            except dk2_so_nhap.LoiBanMau as e:
+                raise _Loi("dk_khong_xuat_duoc", detail="; ".join(e.loi[:3])) from None
+            self._dk_ghi_nk(cur, QUAN_TRI, "xuat_so_nhap", "%d clb %d hs" % (kq["so_clb"], kq["so_hs"]))
+            return {"duong_dan": dich, **kq}
+        return self._dk_chay(lam, QUAN_TRI, token=token)

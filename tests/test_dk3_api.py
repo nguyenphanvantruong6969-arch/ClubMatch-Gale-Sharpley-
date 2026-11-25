@@ -208,3 +208,31 @@ def test_pin_va_mat_khau_chi_luu_bam(cd):
     raw = c.execute("SELECT pin_bam, pin_muoi FROM dk_hoc_sinh").fetchone()
     c.close()
     assert pin.encode() not in bytes(raw[0]) and len(raw[1]) == 16
+
+
+def test_xuat_so_nhap_nhap_0_loi_va_xep_duoc(cd, tmp_path):
+    """L4: dữ liệu đăng ký thật -> Sổ nhập -> phần mềm nhập 0 lỗi (chế độ FA) -> xếp chạy được."""
+    import base64
+
+    import cau_hinh_ws as ch
+    api, qt = cd
+    ids = _dung_san(api, qt)
+    for ma_hs, nv in (("H1", [{"clb_id": ids["Robot"], "thi": True}, {"clb_id": ids["Cờ vua"]}, {"clb_id": ids["Tự do 1"]}]),
+                      ("H2", [{"clb_id": ids["Tự do 1"]}, {"clb_id": ids["Cờ vua"]}])):
+        h = ok(api.dk_dang_nhap("hoc_sinh", ma_hs, ok(api.dk_hs_dat_lai_pin(qt, ma_hs))["pin"]))["token"]
+        ok(api.dk_hs_luu(h, nv))
+    assert ma(api.dk_xuat_so_nhap(qt)) == "dk_sai_giai_doan"
+    ok(api.dk_chuyen_giai_doan(qt, "nhap_diem"))
+    assert ma(api.dk_xuat_so_nhap(qt)) == "dk_thieu_diem"
+    ok(api.dk_diem_dat(qt, "H1", ids["Robot"], "8"))
+    d = ok(api.dk_xuat_ban_mau(qt))
+    assert d["dinhDang"] == 1 and len(d["clb"]) == 3 and len(d["hocSinh"]) == 3
+    assert [x["huyChuong"] for x in d["hocSinh"][0]["nv"]] == ["Vàng", "Bạc", None]
+    p = str(tmp_path / "so.xlsx")
+    assert ok(api.dk_xuat_so_nhap(qt, p))["so_hs"] == 3
+    ch.ghi_cau_hinh(api.db_path, {"rules": {"fa_daa": True, "wharton": True}})
+    with open(p, "rb") as f:
+        ra = api.import_so_nhap(base64.b64encode(f.read()).decode("ascii"))
+    assert ra["ok"] and ra["errors"] == [], ra
+    assert api.run_pipeline(seed=5)["ok"]
+    assert ma(api.dk_xuat_so_nhap("sai")) == "dk_can_dang_nhap"

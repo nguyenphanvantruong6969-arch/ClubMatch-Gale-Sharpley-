@@ -1805,5 +1805,9 @@ window.I18N_ERROR_MESSAGES = {
   "dk_diem_sai": {
     "vi": "Điểm phải là số từ 0 đến 10 (dùng dấu phẩy hoặc dấu chấm).",
     "en": "A score must be a number from 0 to 10 (comma or dot)."
+  },
+  "dk_khong_xuat_duoc": {
+    "vi": "Chưa xuất được Sổ nhập: dữ liệu còn lỗi. Hãy sửa rồi thử lại.",
+    "en": "The input workbook could not be exported: the data still has errors. Fix them and try again."
   }
 };
