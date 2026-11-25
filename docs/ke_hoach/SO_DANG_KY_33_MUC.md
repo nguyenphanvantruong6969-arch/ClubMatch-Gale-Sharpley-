@@ -43,6 +43,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | G4 | Gom lô nhỏ theo cửa sổ thời gian (nâng cấp 4) | Viết mới · M–L | G1, G3 | – | – | R | O | – | R | R | R | – | – | R | R |
 | G5 | Đổi nguyện vọng và dòng liên tục (nâng cấp 5–6) | Viết mới · XL | — | – | – | – | – | – | O | – | – | – | – | R | – |
 | MT2 | Chia CLB theo loại (Tự do / Giới hạn / Tuyển chọn) bằng một công tắc, ghép với chỉ xếp và chia 100 điểm, không cần huy chương (thêm 22/11/2026) | Sửa mã · L | MT1 | – | – | – | – | – | – | – | – | O | – | – | – |
+| KD1 | Khởi động an toàn khi máy Windows thiếu WebView2 (thêm 25/11/2026) | Sửa mã · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
@@ -751,6 +752,15 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** hàm lựa chọn mới phải qua kiểm thay thế được / tổng cầu (bất biến 8); đã đo 0 cặp phá vỡ trên dữ liệu mô phỏng. Chạy thử / ước tính từ chối khi bật (`mt_thu_chua_ho_tro_loai`). Chia 100 điểm + CLB Giới hạn so điểm hai quỹ trong một CLB.
 - **Kiểm nhận:** mặc định tắt trùng khít 3 bộ × 20 seed; tests/test_mt2_l1_cau_hinh.py, test_mt2_l2_chay.py, test_mt2_l3_backend.py, test_giao_dien_mt2.py.
 - **Phụ thuộc:** MT1 · **Ngành:** TS tuỳ chọn (O).
+
+## KD1 — Khởi động an toàn khi thiếu WebView2 (thêm 25/11/2026)
+- **Mức / quy mô:** Sửa mã / S
+- **Tệp:** main.py (`_show_ui`, `_renderer_winforms`, `_ghi_moc`), HUONG_DAN_CAI_DAT.md, tests/test_kd1_khoi_dong.py
+- **Hiện trạng:** thiếu WebView2 Runtime thì pywebview lặng lẽ vẽ bằng MSHTML (IE11); JS của app không chạy nổi, cửa sổ đứng hình, không bấm được; không có ngoại lệ nên không rơi sang `browser_host`.
+- **Thay đổi:** trên win32, nếu `webview.platforms.winforms.renderer == "mshtml"` thì ghi một dòng và dùng `browser_host.serve` (cửa sổ Edge/Chrome `--app=`). `loi_khoi_dong.txt` ghi thêm tên renderer và mốc `+<n> ms`.
+- **Rủi ro:** thấp; không đổi thuật toán, schema, API, CSV. Chưa kiểm chứng trên máy Windows của Truong.
+- **Kiểm nhận:** tests/test_kd1_khoi_dong.py (8, webview giả); Truong chạy bản CI trên máy bị đứng và gửi lại `loi_khoi_dong.txt`.
+- **Phụ thuộc:** không · **Ngành:** không áp dụng (lớp khởi động).
 
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 

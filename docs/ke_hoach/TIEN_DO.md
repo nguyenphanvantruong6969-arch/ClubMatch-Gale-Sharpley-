@@ -301,3 +301,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DC1-FIX2 (sửa theo checker: K0 mã+tên, test K3, ghi chú K6/K7, --ra) | xong | 2026-11-24 | du_lieu_test/kiem_doc_lap/kiem_doc_lap.py, README.md, docs/giai_trinh/HUONG_DAN_CHAY.md, CHANGELOG.md | tests/test_dc1_kiem_doc_lap.py (+8) | |
 | KD1-L1 (MSHTML → trình duyệt dự phòng) | xong, chờ CI | 2026-11-25 | main.py, CHANGELOG.md | tests/test_kd1_khoi_dong.py (4) | |
 | KD1-L2 (log renderer + mốc ms) | xong, chờ CI | 2026-11-25 | main.py, CHANGELOG.md | tests/test_kd1_khoi_dong.py (+4) | |
+| KD1-L3 (ghi chú cài đặt + sổ đăng ký) | xong, chờ CI | 2026-11-25 | HUONG_DAN_CAI_DAT.md, docs/ke_hoach/SO_DANG_KY_33_MUC.md, CHANGELOG.md | – | |

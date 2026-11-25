@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-25 — KD1-L3: hướng dẫn cài đặt + mục KD1 trong sổ đăng ký
+
+- `HUONG_DAN_CAI_DAT.md`: ghi chú 2 dòng về `renderer mshtml` / WebView2 Runtime. `SO_DANG_KY_33_MUC.md`: dòng + mục KD1 (theo mẫu MT2, `ke_hoach_thay_doi.json` không có MT2 nên không thêm). Chỉ tài liệu.
+
 ## 2026-11-25 — KD1-L2: nhật ký khởi động có tên renderer và mốc thời gian
 
 - `loi_khoi_dong.txt` ghi thêm `renderer <tên>` (win32) và `moc <bước> +<n> ms` tại: main bắt đầu, workspace đã mở, trước `webview.start`, trước `browser_host.serve`. Thêm `_T0`, `_ghi_moc` trong `main.py`. Không đổi hành vi nào khác.

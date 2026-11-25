@@ -22,17 +22,15 @@ scanning `_internal` DLLs on first run. Not fixed in KD1 (measure first, via L2 
       (Edge/Chrome `--app=` window). Otherwise unchanged. Import failure keeps today's path (except → fallback).
 - [x] L2 (must) Startup timing in `loi_khoi_dong.txt`: renderer name, and elapsed ms since process start at:
       main start, workspace opened, before `webview.start()` / before `browser_host.serve`.
-- [ ] L3 (optional) `HUONG_DAN_CAI_DAT.md`: 3-line note — if the app opens in a separate Edge window, the
+- [x] L3 (optional) `HUONG_DAN_CAI_DAT.md`: 3-line note — if the app opens in a separate Edge window, the
       machine lacks "Microsoft Edge WebView2 Runtime"; installing it restores the native window.
-- [ ] Registry: add a short KD1 entry to `SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` (pattern of MT2),
+- [x] Registry: add a short KD1 entry to `SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` (pattern of MT2),
       CHANGELOG + TIEN_DO rows `KD1-L<n>`.
 
 ## Current state (overwrite each handoff)
-- Done so far: diagnosis + plan only (no product code).
-- Tests: new `tests/test_kd1_khoi_dong.py` (to write). Related: `tests/test_a13_12_browser_host.py`,
-  any `tests/test_*main*`/`*chan_doan*` that exist.
-- Open: unverified on Truong's Windows machine. Truong to check (a) "Microsoft Edge WebView2 Runtime" in
-  Installed apps, (b) `msedgewebview2.exe` in Task Manager while the app is open.
+- Done: L1 (MSHTML -> browser_host), L2 (renderer + `moc ... +n ms` log), L3 (install-guide note), registry entry (md only; MT2 is not in the JSON either), CHANGELOG + TIEN_DO rows.
+- Tests: `tests/test_kd1_khoi_dong.py` (8) + browser_host/chan_doan files pass; ruff clean; kiem_nhanh 7/7. soat-ma: diff is 2 small functions in main.py + docs; no tier-1/2 file touched, no finding. Full suite left to CI.
+- Open (Needs Truong): try the CI build on the frozen Windows machine; send back `loi_khoi_dong.txt` (expect `renderer mshtml` + ms milestones). Unverified on real Windows.
 
 ## Decisions and gotchas (keep short)
 - No algorithm/pipeline/schema change → invariants 1–5, 7, 8 untouched; invariant 6 untouched (no new API).
@@ -45,13 +43,15 @@ scanning `_internal` DLLs on first run. Not fixed in KD1 (measure first, via L2 
 - `chan_doan.ghi` must never raise (keep it so).
 
 ## Next steps (ordered)
-1. Coder session (Sonnet) with the prompt in `KD1_GIAO_THUC.md` §3.
+1. Lead review of commits; Truong checks on Windows (protocol §4).
 
 ## Files touched
 - docs/phien/claude__optimistic-bell-osau5x.md: this handoff
 - docs/phien/KD1_GIAO_THUC.md: protocol
+- main.py, tests/test_kd1_khoi_dong.py, HUONG_DAN_CAI_DAT.md, SO_DANG_KY_33_MUC.md, CHANGELOG.md, TIEN_DO.md
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-25 | Opus | Diagnosed first-launch freeze, wrote KD1 plan + protocol | no product code |
+| 2026-11-25 | Sonnet | Coded KD1 L1-L3 + registry | commits KD1-L1, L2, L3 |
