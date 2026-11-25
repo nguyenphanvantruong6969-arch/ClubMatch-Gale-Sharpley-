@@ -1845,8 +1845,8 @@ MESSAGES = {
         "en": "A Selective club's minimum score is a whole number from 0 to 10.",
     },
     "dk_clb_khong_sua_duoc": {
-        "vi": "CLB này không còn sửa được (đã được xử lý hoặc không phải của bạn).",
-        "en": "This club can no longer be edited (already handled, or not yours).",
+        "vi": "CLB này không còn sửa được (đã được xử lý hoặc thuộc giáo viên khác).",
+        "en": "This club can no longer be edited (already handled, or owned by another teacher).",
     },
     "dk_con_clb_cho_duyet": {
         "vi": "Còn {n} CLB chờ duyệt. Hãy duyệt hoặc từ chối hết trước khi mở cho học sinh.",
@@ -1877,8 +1877,8 @@ MESSAGES = {
         "en": "Student registration is not open right now.",
     },
     "dk_clb_khong_hop_le": {
-        "vi": "CLB {clb} không có trong danh sách CLB dành cho em.",
-        "en": "Club {clb} is not among the clubs available to you.",
+        "vi": "CLB {clb} không nằm trong danh sách CLB được mở cho khối này.",
+        "en": "Club {clb} is not among the clubs open to this grade.",
     },
     "dk_nv_trung": {
         "vi": "Một CLB chỉ được chọn một lần.",
@@ -1909,8 +1909,8 @@ MESSAGES = {
         "en": "Each medal can be used once per session.",
     },
     "dk_khong_co_tu_do": {
-        "vi": "Buổi {buoi}: em chưa chọn CLB Tự do nào nên có thể không được xếp vào đâu.",
-        "en": "Session {buoi}: you have not ranked a Free club, so you may end up without a place.",
+        "vi": "Buổi {buoi}: chưa chọn CLB Tự do nào nên có thể không được xếp vào đâu.",
+        "en": "Session {buoi}: no Free club is ranked, so a place may not be found.",
     },
     "dk_diem_sai": {
         "vi": "Điểm phải là số từ 0 đến 10 (dùng dấu phẩy hoặc dấu chấm).",
