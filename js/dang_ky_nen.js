@@ -145,7 +145,7 @@
   };
 
   /* Thanh đầu trang sau khi đăng nhập: tên, đăng xuất. */
-  DK.thanhDau = (tieuDe) => h("header.dk-dau", {}, h("strong", {}, tieuDe), h("span.dk-phu", {}, DK.S.ten),
+  DK.thanhDau = (tieuDe) => h("header.dk-dau", {}, h("strong", {}, tieuDe), DK.S.ten && !tieuDe.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null, h("span.dk-gian"),
     DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc()));
 
   /* Học sinh: tự đăng xuất sau 60 giây không thao tác (D25). Quản trị: máy chủ khoá sau 2 phút. */

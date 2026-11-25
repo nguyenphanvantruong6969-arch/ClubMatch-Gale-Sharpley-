@@ -63,6 +63,11 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - tests/test_dk4_chot_va_xep.py, test_dk4_hai_duong_trung_khit.py, test_giao_dien_dk4_chot_xep.py,
   test_giao_dien_dk4_cong_vao.py; CHANGELOG.md, docs/ke_hoach/{TIEN_DO,CLAUDE_CHI_TIET}.md
 
+- DK4-UI (Sonnet, 2026-11-25): portal restyled like v8 (student step bar + two columns, admin 6-phase bar + deadline + progress bars,
+  teacher 3-step form). Backend: `dk_hs_clb_hop_le` adds `giao_vien`, `chi_tieu`. Tests: dk3_cong 10 pass (+5), dk3/dk4/giao_dien_dk4/van_phong
+  118 pass, ruff clean, kiem_nhanh 7/7. Screenshots (1366 / 390 / admin, scale 1): `docs/phien/dk4_ui/*.png`. Not tried in pywebview/Windows.
+  Note: "+ Thêm" is now disabled (not hidden) at the limit; ≤7 items per frame (D37) is not enforced on the club list.
+
 ## Needs Truong
 - Try the exe on Windows: sidebar "Đăng ký CLB" ↔ portal round trip (pywebview untested).
 

@@ -691,10 +691,11 @@ class DangKyMixin:
     def dk_hs_clb_hop_le(self, token):
         """D21: chỉ CLB đã duyệt thuộc khối của em. Không có số đông (D26)."""
         def lam(cur, p):
-            cot = "clb_id ten buoi loai phong khoi_tu khoi_den diem_san link_forms mo_ta yeu_cau".split()
+            cot = "clb_id ten buoi loai phong khoi_tu khoi_den diem_san link_forms mo_ta yeu_cau giao_vien chi_tieu".split()
             return [dict(zip(cot, r)) for r in cur.execute(
-                "SELECT c.clb_id, c.ten, c.buoi, c.loai, ph.ten, c.khoi_tu, c.khoi_den, c.diem_san, c.link_forms, c.mo_ta, c.yeu_cau "
-                "FROM dk_clb c LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id WHERE c.trang_thai = 'duyet' AND ? BETWEEN "
+                "SELECT c.clb_id, c.ten, c.buoi, c.loai, ph.ten, c.khoi_tu, c.khoi_den, c.diem_san, c.link_forms, c.mo_ta, c.yeu_cau, "
+                "g.ten, c.chi_tieu FROM dk_clb c LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id "
+                "LEFT JOIN dk_giao_vien g ON g.gv_id = c.gv_id WHERE c.trang_thai = 'duyet' AND ? BETWEEN "
                 "c.khoi_tu AND c.khoi_den ORDER BY c.buoi COLLATE THU_TU_BUOI, c.ten", (p["khoi"],))]
         return self._dk_chay(lam, HOC_SINH, ghi=False, token=token)
 

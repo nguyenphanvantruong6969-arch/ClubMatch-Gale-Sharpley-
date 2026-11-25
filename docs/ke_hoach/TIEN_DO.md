@@ -315,3 +315,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK4-L0d (hoàn nguyên giữ nhật ký chỉ-thêm) | xong, chờ CI | 2026-11-25 | dang_ky_sang_xep.py, CHANGELOG.md | tests/test_dk4_l0d_hoan_nguyen_nhat_ky.py (2) | |
 | DK4-L0e (luật tự bật ghi nhật ký + hiện tóm tắt) | xong, chờ CI | 2026-11-25 | dang_ky_sang_xep.py, js/dang_ky_quan_tri.js, CHANGELOG.md | tests/test_dk4_l0e_bat_luat_ghi_nhat_ky.py (2), tests/test_giao_dien_dk4_chot_xep.py (+1) | |
 | DK4-CI (sửa test cấu trúc đỏ run 1650) | xong, chờ CI | 2026-11-25 | nhat_ky.py, api_dang_ky.py, rbda_priority_pipeline.py, i18n_errors.py, tests, CLAUDE_CHI_TIET.md | — | |
+| DK4-UI (cổng đăng ký như bản mẫu v8) | xong, chờ CI | 2026-11-25 | js/dang_ky_*.js, style.css, api_dang_ky.py, CHANGELOG.md | tests/test_giao_dien_dk3_cong.py, tests/test_dk4_l0c_gioi_han_tu_backend.py |

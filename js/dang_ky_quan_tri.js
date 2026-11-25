@@ -8,6 +8,21 @@
   const THU_TU = Object.keys(TEN_GD);
   let the = "viec";
 
+  /* DK4-UI: thanh sáu giai đoạn (đã xong ✓ · hiện tại nổi · chưa tới) và hạn chót kèm thời gian còn lại. */
+  const thanhGd = (gd) => h("ol.dk-gd", { "aria-label": "Các giai đoạn" }, THU_TU.map((k, n) => {
+    const c = THU_TU.indexOf(gd);
+    return h("li", n < c ? { class: "xong" } : n === c ? { class: "cur", "aria-current": "step" } : {}, h("span.dk-gd-so", {}, n < c ? "✓" : String(n + 1)), TEN_GD[k]);
+  }));
+  const conLai = (han) => {
+    const ms = new Date(han).getTime() - Date.now();
+    if (isNaN(ms)) return "";
+    if (ms <= 0) return "đã hết hạn";
+    const ph = Math.round(ms / 60000);
+    return ph < 60 ? "còn " + ph + " phút" : ph < 2880 ? "còn " + Math.floor(ph / 60) + " giờ " + (ph % 60) + " phút" : "còn " + Math.floor(ph / 1440) + " ngày";
+  };
+  const hanChu = (tt) => tt.han_chot ? h("p.dk-han#dkHan", {}, "Hạn chót ", h("b", {}, String(tt.han_chot).replace("T", " ")), " · " + conLai(tt.han_chot) + ". Đến hạn tự đóng.")
+    : h("p.dk-han#dkHan", {}, "Chưa đặt hạn chót. Quản trị đóng đăng ký bằng nút bên dưới.");
+
   DK.quanTri = async function () {
     DK.henGio(110);
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
@@ -17,7 +32,7 @@
     const the3 = [["viec", "Việc bây giờ"], ["ds", "Danh sách"], ["them", "Thêm"]];
     const thanh = h("nav.dk-the", { role: "tablist" }, the3.map(([k, t]) =>
       h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t)));
-    DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanh, noiDung);
+    DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanhGd(tt.giai_doan), thanh, noiDung);
     noiDung.replaceChildren(await thanTheo[the]());
   };
 
@@ -26,6 +41,12 @@
   const chuyen = (gd, chu) => DK.nutVang(chu, function () {
     DK.chay(this, async () => { const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, gd); if (r.ok) DK.quanTri(); return r; });
   });
+  function khungHan(gd) {
+    const han = DK.truong("Hạn chót (tuỳ chọn)", "han", { type: "datetime-local", value: DK.S.tt.han_chot || "" });
+    const nut = DK.nut("Đặt hạn", function () { DK.chay(this, async () => {
+      const r = await DK.goi("dk_dat_han", DK.S.token, gd, han.querySelector("input").value || null); if (r.ok) DK.quanTri(); return r; }); });
+    return [han, nut];
+  }
   const o = (ten, chu, thuoc) => DK.truong(chu, ten, thuoc);
 
   async function viecBayGio(tt) {
@@ -47,9 +68,8 @@
       const van = h("textarea.dk-nhap", { rows: "4", placeholder: "Mỗi dòng một tên giáo viên" });
       const tao = DK.nut("Tạo tài khoản giáo viên", function () { DK.chay(this, async () => {
         const r = await goi("dk_gv_tao_hang_loat", T, van.value); if (r.ok) hienPin(r.data.da_tao.map((x) => ({ ma: x.ten, pin: x.pin })), "Mã PIN giáo viên (chỉ hiện lúc này)"); return r; }); });
-      const han = o("han", "Hạn chót (tuỳ chọn)", { type: "datetime-local" });
-      const datHan = DK.nut("Đặt hạn", function () { DK.chay(this, () => goi("dk_dat_han", T, "gv_dang_ky", han.querySelector("input").value || null), "Đã lưu hạn."); });
-      return h("div", {}, h("p.dk-phu", {}, "Mã trường dùng để giáo viên tự đăng ký do quản trị đặt lúc thiết lập."), van, tao, h("div#dkPin"), han, datHan,
+      const [han, datHan] = khungHan(tt.giai_doan);
+      return h("div", {}, hanChu(tt), h("p.dk-phu", {}, "Mã trường dùng để giáo viên tự đăng ký do quản trị đặt lúc thiết lập."), van, tao, h("div#dkPin"), han, datHan,
         chuyen("duyet", "Đóng đăng ký giáo viên"));
     }
     if (gd === "duyet") {
@@ -62,8 +82,10 @@
     }
     if (gd === "hs_dang_ky") {
       const tdo = (await goi("dk_tien_do", T)).data;
-      return h("div", {}, h("h2", {}, "Tiến độ theo lớp (lớp chậm nhất trước)"),
-        bang(["Lớp", "Đã nộp", "Tổng"], tdo.theo_lop.map((x) => [x.lop, x.da_nop, x.tong])), chuyen("nhap_diem", "Đóng đăng ký học sinh"));
+      return h("div", {}, hanChu(tt), h("h2", {}, "Tiến độ theo lớp (lớp chậm nhất trước)"),
+        bang(["Lớp", "Đã nộp", "Tổng", ""], tdo.theo_lop.map((x) => [x.lop, x.da_nop, x.tong,
+          h("progress.dk-tien", { max: String(x.tong || 1), value: String(x.da_nop || 0), "aria-label": "Lớp " + x.lop + ": " + x.da_nop + "/" + x.tong })])),
+        ...khungHan("hs_dang_ky"), chuyen("nhap_diem", "Đóng đăng ký học sinh"));
     }
     if (gd === "nhap_diem") {
       const thieu = (await goi("dk_diem_thieu", T)).data || [];

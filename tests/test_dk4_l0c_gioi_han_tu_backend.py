@@ -60,7 +60,9 @@ def test_giao_dien_theo_gioi_han_do_phan_mem_dat(tmp_path, monkeypatch):
         pg.wait_for_selector("text=Buổi T2")
         for ten in ("A", "B"):
             pg.locator("ul.dk-ds li", has_text=ten).first.get_by_role("button", name="+ Thêm").click()
-        assert pg.get_by_role("button", name="+ Thêm").count() == 0              # đủ 2 nguyện vọng (giới hạn do phần mềm đặt)
+        assert pg.locator("button:enabled", has_text="+ Thêm").count() == 0              # đủ 2 nguyện vọng (giới hạn do phần mềm đặt)
+        pg.get_by_role("button", name="Tiếp: đặt huy chương").click()
+        pg.get_by_role("button", name="Tiếp: bài kiểm tra").click()               # DK4-UI: ô thi nằm ở bước "Bài kiểm tra"
         boxes = pg.locator("label.dk-thi input")
         boxes.nth(0).check()
         assert boxes.nth(1).is_disabled()                                         # đủ 1 bài thi

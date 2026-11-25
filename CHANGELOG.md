@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8
+
+- `js/dang_ky_gv_hs.js`: học sinh đi theo từng buổi (Buổi k/N · Xếp nguyện vọng → Đặt huy chương → Bài kiểm tra), rồi Xem lại và gửi, biên nhận "Đã gửi lúc hh:mm, thứ …"; hai cột (CLB còn chọn | nguyện vọng NV1… với ↑ ↓ ✕), thẻ CLB có chip loại ngắn, giáo viên · phòng · khối, mô tả; nút kế tiếp là nút vàng duy nhất. Giáo viên: biểu mẫu ba bước có thanh bước, nút "Tiếp theo" màu vàng.
+- `js/dang_ky_quan_tri.js`: thanh sáu giai đoạn, hạn chót + thời gian còn lại, ô đặt hạn cho giai đoạn học sinh, thanh tiến độ mỗi lớp. `js/dang_ky_nen.js`: tiêu đề không lặp nhãn vai trò.
+- `style.css` (khối DK4-UI, chỉ dùng token), `api_dang_ky.py`: `dk_hs_clb_hop_le` trả thêm `giao_vien`, `chi_tieu` (khoá mới, các khoá cũ giữ nguyên).
+- Test: `tests/test_giao_dien_dk3_cong.py` (+5 ca: thanh bước, hai cột 1366 / một cột 390, chip không đè nút, mục tiêu ≥44 px, một nút vàng, thanh giai đoạn quản trị, ba bước giáo viên); `tests/test_dk4_l0c_gioi_han_tu_backend.py` đi qua bước Bài kiểm tra.
+
 ## 2026-11-25 — DK4-CI-2: sửa 3 test đỏ trên CI
 
 - `tests/test_gt3_nhat_ky.py`: hàm `dk_*` (kể cả hàm ghi) cố ý ở ngoài nhật ký chung vì đối số có PIN/mật khẩu; có `dk_nhat_ky` riêng. Test cho phép tiền tố `dk_` và thêm ca khoá quy ước này.
