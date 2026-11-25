@@ -600,7 +600,7 @@ class DangKyMixin:
                 tham = (p["id"],)
             cot = ("clb_id ten buoi loai phong_id phong gv_id giao_vien chi_tieu_gv chi_tieu khoi_tu khoi_den diem_san link_forms "
                    "mo_ta yeu_cau trang_thai ly_do_tu_choi").split()
-            return [dict(zip(cot, r)) for r in cur.execute(sql + " ORDER BY c.buoi, c.ten", tham)]
+            return [dict(zip(cot, r)) for r in cur.execute(sql + " ORDER BY c.buoi COLLATE THU_TU_BUOI, c.ten", tham)]
         return self._dk_chay(lam, QUAN_TRI, GIAO_VIEN, ghi=False, token=token)
 
     # ------------------------------------------------------------ học sinh đăng ký
@@ -611,14 +611,14 @@ class DangKyMixin:
             return [dict(zip(cot, r)) for r in cur.execute(
                 "SELECT c.clb_id, c.ten, c.buoi, c.loai, ph.ten, c.khoi_tu, c.khoi_den, c.diem_san, c.link_forms, c.mo_ta, c.yeu_cau "
                 "FROM dk_clb c LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id WHERE c.trang_thai = 'duyet' AND ? BETWEEN "
-                "c.khoi_tu AND c.khoi_den ORDER BY c.buoi, c.ten", (p["khoi"],))]
+                "c.khoi_tu AND c.khoi_den ORDER BY c.buoi COLLATE THU_TU_BUOI, c.ten", (p["khoi"],))]
         return self._dk_chay(lam, HOC_SINH, ghi=False, token=token)
 
     def dk_hs_nguyen_vong(self, token):
         """Nguyện vọng đã lưu của chính em (theo buổi, theo thứ hạng) và giờ nộp."""
         def lam(cur, p):
             nv = [dict(buoi=r[0], hang=r[1], clb_id=r[2], thi=bool(r[3]), diem=r[4], huy_chuong=r[5]) for r in cur.execute(
-                "SELECT buoi, hang, clb_id, thi, diem, huy_chuong FROM dk_nguyen_vong WHERE student_id = ? ORDER BY buoi, hang", (p["id"],))]
+                "SELECT buoi, hang, clb_id, thi, diem, huy_chuong FROM dk_nguyen_vong WHERE student_id = ? ORDER BY buoi COLLATE THU_TU_BUOI, hang", (p["id"],))]
             nop = cur.execute("SELECT nop_luc FROM dk_hoc_sinh WHERE student_id = ?", (p["id"],)).fetchone()[0]
             return {"nguyen_vong": nv, "nop_luc": nop}
         return self._dk_chay(lam, HOC_SINH, ghi=False, token=token)
@@ -764,7 +764,7 @@ class DangKyMixin:
         buoi = self._dk_buoi_khoi(cur)[0]
         clb, ma_cua = [], {}
         for r in cur.execute("SELECT c.clb_id, c.ten, c.buoi, c.loai, c.chi_tieu, c.diem_san, ph.ten, ph.suc_chua FROM dk_clb c "
-                             "LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id WHERE c.trang_thai = 'duyet' ORDER BY c.buoi, c.ten"):
+                             "LEFT JOIN dk_phong ph ON ph.phong_id = c.phong_id WHERE c.trang_thai = 'duyet' ORDER BY c.buoi COLLATE THU_TU_BUOI, c.ten"):
             ma_cua[r[0]] = "CLB%03d" % r[0]
             clb.append({"ma": ma_cua[r[0]], "ten": r[1], "buoi": r[2], "loai": r[3],
                         "chiTieu": None if r[3] == TU_DO else r[4], "diemSan": r[5], "phong": r[6], "sucChuaPhong": r[7]})
