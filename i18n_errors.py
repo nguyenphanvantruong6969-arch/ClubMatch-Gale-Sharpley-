@@ -1921,6 +1921,16 @@ MESSAGES = {
         "en": "The input workbook could not be exported: the data still has errors. Fix them and try again.",
     },
     # === end DK3 ===
+    # === DK4 ===
+    "dk_chot_that_bai": {
+        "vi": "Chốt và xếp không thành công (bước: {buoc}). Dữ liệu đã được trả về nguyên trạng. Chi tiết: {detail}",
+        "en": "Lock and allocate failed (step: {buoc}). Data has been restored unchanged. Details: {detail}",
+    },
+    "dk_chot_seed_sai": {
+        "vi": "Hạt giống xếp phải là một số nguyên.",
+        "en": "The allocation seed must be an integer.",
+    },
+    # === end DK4 ===
 }
 
 

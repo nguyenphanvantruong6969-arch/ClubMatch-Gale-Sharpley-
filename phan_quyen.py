@@ -75,6 +75,7 @@ get_phuong_an_xep chot_phuong_an export_van_ban_phuong_an_pdf
 
 # DK3: cổng đăng ký tự kiểm quyền bằng phiên riêng (token) nên coi là công khai với cổng chung.
 _CONG_KHAI += [n for n in dir(__import__("api_dang_ky").DangKyMixin) if n.startswith("dk_")]
+_CONG_KHAI += [n for n in dir(__import__("dang_ky_sang_xep").DangKySangXepMixin) if n.startswith("dk_")]  # DK4
 
 QUYEN = {}
 for _ten in _CONG_KHAI:

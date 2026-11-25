@@ -33,6 +33,7 @@ import types
 
 import fa_daa
 from api_dang_ky import DangKyMixin  # DK3
+from dang_ky_sang_xep import DangKySangXepMixin  # DK4
 from api_chung import (
     _fail_co_buoc,
     _now,
@@ -103,7 +104,7 @@ from phan_quyen import ap_dung_cong  # GT3-L2
 class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                   XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin, TieuChiMixin,
                   FormsMixin, FormsNapMixin, FormsBoMixin, TaiKhoanMixin, NhatKyMixin, MucTieuMixin,
-                  PhuongAnMixin, DangKyMixin):
+                  PhuongAnMixin, DangKyMixin, DangKySangXepMixin):
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
         self.db_path = db_path

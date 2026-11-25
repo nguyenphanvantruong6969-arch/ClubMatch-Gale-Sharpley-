@@ -1809,5 +1809,13 @@ window.I18N_ERROR_MESSAGES = {
   "dk_khong_xuat_duoc": {
     "vi": "Chưa xuất được Sổ nhập: dữ liệu còn lỗi. Hãy sửa rồi thử lại.",
     "en": "The input workbook could not be exported: the data still has errors. Fix them and try again."
+  },
+  "dk_chot_that_bai": {
+    "vi": "Chốt và xếp không thành công (bước: {buoc}). Dữ liệu đã được trả về nguyên trạng. Chi tiết: {detail}",
+    "en": "Lock and allocate failed (step: {buoc}). Data has been restored unchanged. Details: {detail}"
+  },
+  "dk_chot_seed_sai": {
+    "vi": "Hạt giống xếp phải là một số nguyên.",
+    "en": "The allocation seed must be an integer."
   }
 };

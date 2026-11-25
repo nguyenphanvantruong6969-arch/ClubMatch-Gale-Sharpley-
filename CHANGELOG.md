@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-L1/L2: nối đăng ký → Sổ nhập → "Chốt và xếp"
+
+- `dang_ky_sang_xep.py` (mới): `so_nhap_b64_tu_dk` (dữ liệu đăng ký → `dk2_so_nhap.ghi_tu_ban_mau` → base64, đi đúng đường `import_so_nhap`); `DangKySangXepMixin.dk_chot_va_xep(token, seed)`: quản trị, từ giai đoạn Nhập điểm, thiếu điểm thì từ chối; sao lưu → bảo đảm luật FA+Wharton (chỉ ghi khi chưa bật) → nhập Sổ (một giao dịch) → `run_pipeline` (khoá STB + xếp + ghi một giao dịch) → giai đoạn "xuat". Hỏng sau khi nhập: CSDL hoàn nguyên bằng ảnh chụp trong bộ nhớ, trả `dk_chot_that_bai`. Hạt giống đã khoá thì seed khác bị từ chối (như `run_pipeline`).
+- `api.py`, `phan_quyen.py`: gắn mixin; 2 mã lỗi `dk_chot_*` (`i18n_errors.py`, đã chạy `tao_i18n_js.py`).
+- Test: `tests/test_dk4_chot_va_xep.py` (5).
+
 ## 2026-11-25 — DK3-L3/L4: giao diện cổng đăng ký + xuất Sổ nhập
 
 - `dang_ky.html` + `js/dang_ky_nen.js`, `js/dang_ky_quan_tri.js`, `js/dang_ky_gv_hs.js` + khối CSS "DK3" cuối `style.css`: trang riêng (không đụng `index.html`), DOM dựng bằng `textContent`. Quản trị: ba thẻ "Việc bây giờ · Danh sách · Thêm", mỗi giai đoạn đúng một nút vàng. Giáo viên: đăng ký CLB ba bước. Học sinh: từng buổi, + Thêm / ↑ / ↓ / ✕, huy chương mặc định + ô chọn ghi đè, tự đăng xuất sau 60 giây không thao tác và 30 giây sau khi nộp. Đóng gói: `kiosk.spec` và danh sách soát của workflow có `dang_ky.html`.
