@@ -3,97 +3,103 @@
 > Read CLAUDE.md, then THIS file, then `docs/phien/DK1_GIAO_THUC.md`. English. Cap 150 lines.
 
 ## Feature / goal
-Item **DK1 (new, not in the 33-item registry; Truong approves the code)**: a clickable **prototype shell**
-("cái vỏ") for registration, so Truong's teacher can try the input flow before anything is built for real.
-Three roles: **Admin** (rooms, lists, approval, open/close switches), **Giáo viên** (register a club with
-room, session, quota, grades, entrance test yes/no, description), **Học sinh** (rank clubs per session,
-tick up to 5 entrance tests, confirm). Mock data only, no backend, no app.db, no algorithm. Insight source:
-https://magenta-crepe-416060.netlify.app/dang-ky-clb (evaluated 2026-11-25, see "Insight" below).
-In-kiosk entrance exams and the real integration are LATER (DK2), not this branch.
+Item **DK1** (approved by Truong 2026-11-25; DK2 = real integration later): a clickable **prototype shell**
+("cái vỏ") for the INPUT side of club allocation, so Truong's teacher can try it before anything real is
+built. Roles: Admin (Quản lý), Giáo viên, Học sinh. Mock data, no backend, no app.db, no algorithm.
+Ends by producing a Sổ nhập-shaped export for the allocation program. Post-allocation outputs: out of scope.
+Insight source: https://magenta-crepe-416060.netlify.app/dang-ky-clb (evaluated 2026-11-25, see "Insight").
 
-## Truong's decisions (2026-11-25, do not re-ask)
-- Runs inside the kiosk look (offline, same machine). Prototype = standalone page, NOT wired into `index.html`.
-- Rooms: admin pre-creates a room list with capacity; teacher picks a room free in that session; app blocks
-  two clubs in one room in one session and blocks quota > room capacity.
-- Admin approves every club before students see it (approve / reject, edit quota, change room).
-- Teacher fields: name of club, session, quota, allowed grades (Khối 6–12), entrance test yes/no,
-  description + basic requirements.
-- Login: admin pre-loads student list (mã HS, họ tên, lớp, khối) and teacher list; students type mã HS,
-  teachers pick name + type mã GV. Unknown code → refused (fixes the "a / a / a" problem seen on the site).
-- Student preferences: per session, click or drag clubs into a ranked list; no duplicates; empty session
-  = not attending that session. Only approved clubs of the student's grade are shown.
-- Entrance tests: student ticks at most 5 clubs that have a test, chosen among clubs in their preferences.
-- Time budget: one night. Size S.
-- **Workflow = phases in tab "Quản lý" (Truong, 2026-11-25; replaces the two independent switches):**
-  `Chuẩn bị` (admin rooms + lists) → `GV đăng ký` (open, deadline) → `Duyệt CLB` (admin approves, edits quota
-  / room) → `HS đăng ký` (admin presses open; students see ONLY approved clubs from the teacher phase;
-  deadline) → `Đã đóng` (ready for allocation). One phase active at a time; a phase bar shows all five.
-- Deadline: admin sets date+time per open phase; auto-closes by the machine clock (checked on load and every
-  30 s); "Đóng ngay" and "Gia hạn" buttons. Auto-close of `GV đăng ký` moves to `Duyệt CLB`, never straight
-  to `HS đăng ký`.
-- After `HS đăng ký` opens: teachers cannot edit; admin may raise quota (≤ room capacity) or change room.
-  Deleting a club or changing its session when students already chose it → warning with the number of
-  affected students + confirm, and a line in an admin log (prototype: list on screen).
-- Later (DK2): collection mode exports Sổ nhập; the allocation machine imports it (backup → validate → …).
-  Not written straight to app.db. One kiosk for now (throughput not a concern yet, Truong 2026-11-25).
-- **Round 3 (Truong, 2026-11-25):** scope = INPUT only (no post-allocation outputs).
-  - Phases become 6: `Chuẩn bị → GV đăng ký → Duyệt CLB → HS đăng ký → Nhập điểm → Xuất`.
-  - Tests are taken on Google Forms (not on the kiosk); admin enters scores in phase `Nhập điểm`: paste a
-    block copied from the Forms sheet (columns mã HS + score, one club at a time, matched by mã HS; unknown
-    IDs listed, not imported) AND a table students × ticked clubs to type / fix single scores.
-  - Scale = what the software uses today: any number ≥ 0, decimal comma or dot (`doc_diem` in `so_nhap.py`);
-    no fixed max; scores only compare within one club.
-  - Ticked but no score → counted as **0** at export, and listed in a warning panel ("đã tick thi nhưng chưa
-    có điểm") before export. Export enabled only after admin presses "Chốt điểm".
-  - Student identity = mã HS + 4-digit PIN (mock PINs in data; admin can view/print the PIN list).
-  - Up to **10 clubs per session**; at most 1 club won per session (already how multi-session allocation
-    works). Tests: tick ≤ 5 in total (Sổ nhập also caps 5 per session — compatible).
-  - Students may log in again and edit until the HS deadline; last submit counts; auto-logout after submit
-    and after 60 s idle.
-  - Export = one Sổ nhập after scores are locked. Real `.xlsx` needs a library in the browser (rule 7) →
-    prototype exports a preview + JSON only; real `.xlsx` is written in DK2 by Python (`so_nhap.py` already
-    writes workbooks).
+## Workflow (6 phases, one active at a time, phase bar in Quản lý)
+`Chuẩn bị → GV đăng ký → Duyệt CLB → HS đăng ký → Nhập điểm → Xuất`
+
+## Decisions (Truong, 2026-11-25, six question rounds — do not re-ask; later rounds override earlier)
+Phases and timing
+- D1 Phase change: admin opens a phase with a deadline (date+time); auto-close by machine clock (checked on
+  load and every 30 s); "Đóng ngay", "Gia hạn". Auto-close of GV đăng ký → Duyệt CLB, never straight to HS.
+- D2 "Mở cho học sinh" only from Duyệt CLB with no pending club and ≥ 1 approved.
+- D3 Admin may step back a phase (e.g. Xuất → Nhập điểm); every step back is logged; each export gets a version.
+Setup (Chuẩn bị)
+- D4 Sessions defined by admin (default Thứ 2–Thứ 6; rename / add / remove). Grade list editable (default 6–12).
+- D5 Rooms: admin list, name unique, capacity integer > 0; a room used by a club cannot be deleted.
+- D6 Student list loaded by paste from Excel AND by CSV upload; preview with errors before saving
+  (duplicate ID, missing name/class, grade unreadable).
+- D7 Grade read from class name ("10A1" → 10, "6B" → 6); rows the app cannot read are flagged; admin fixes.
+- D8 Student PIN: auto random 4 digits; printable PIN slips by class; admin can reset one PIN.
+- D9 Student not on the list → refused at the kiosk (no on-the-spot add, no self-add).
+- D10 Admin area: password (prototype shows the demo password), auto-lock after 2 min idle.
+- D11 Backup/restore: "Sao lưu" downloads all state as JSON, "Khôi phục" loads it; banner if no backup in 60 min.
+- D12 Mock data switch: "Demo nhỏ" (30 students, 8 rooms, ~8 clubs) and "Cả trường" (800 students, 40 clubs).
+Teachers (GV đăng ký)
+- D13 Self sign-up: school code (set by admin) + name + own 4-digit PIN; re-login = name + PIN. Admin sees all
+  sign-ups and can delete fakes. (Overrides earlier "admin loads teacher list".)
+- D14 A teacher may register several clubs, but never two in the same session (hard block).
+- D15 Club fields: name (unique), session, room (only rooms free in that session; taken ones disabled with
+  the club using them), quota (integer 1…room capacity), grades (≥ 1), test yes/no, Google Forms test link
+  (when test = yes), description, basic requirements. No max-score field (scale below).
+- D16 A club meeting twice a week = two separate clubs (one club = one session, as the algorithm expects).
+- D17 Teacher edits own clubs only while GV đăng ký is open.
+Approval (Duyệt CLB)
+- D18 Admin approves / rejects, sets admin quota (blank = teacher quota; ≤ room capacity), changes room
+  (same clash rule). Teacher quota and admin quota shown side by side.
+- D19 After HS đăng ký opens: admin may raise quota or change room only; delete or session change of a club
+  already chosen → "N học sinh bị ảnh hưởng" + confirm + log line.
+Students (HS đăng ký)
+- D20 Login: student ID + PIN; card "Họ tên · Lớp · Khối" + "Đúng là em".
+- D21 Sees only approved clubs whose grades include theirs. Per-session tabs; up to 10 clubs per session
+  (counter x/10); no duplicates; whole session may be empty; NO minimum (empty submit allowed).
+  Allocation gives at most 1 club per session (existing multi-session behaviour).
+- D22 Ranking: tap to add, ↑/↓ to reorder, ✕ to remove, plus drag-and-drop.
+- D23 Tests: tick ≤ 5 in total, only among ranked clubs that have a test (Sổ nhập also caps 5 per session).
+  Note: an untested club is still considered, behind students with a score.
+- D24 Receipt after submit: per-session list + ticked tests with their Forms links + receipt code.
+- D25 Edit until the HS deadline (last submit counts). Auto-logout after submit and after 60 s idle.
+- D26 Students never see demand counts.
+Scores (Nhập điểm) and export (Xuất)
+- D27 Tests are taken on Google Forms (not on the kiosk for now). Admin enters scores here: paste a block
+  per club ("mã HS ⇥ điểm", matched by ID; unknown IDs / not-ticked / bad numbers listed and skipped) AND a
+  typing table students × ticked clubs.
+- D28 Scale = current system: any number ≥ 0, comma or dot (`doc_diem` in `so_nhap.py`), no max; scores only
+  compare within one club.
+- D29 Ticked but no score = **no score** (absent → tier 2, lottery), shown in a warning list before export.
+  (Overrides round-3 "count as 0".) "Chốt điểm" locks scores and opens Xuất.
+- D30 Export: preview tables shaped like Sổ nhập `1. CLB` (Tên CLB, Buổi, Chỉ tiêu, Mã CLB + Phòng, Khối,
+  Có thi, Link) and `2. Học sinh` (Mã, Họ tên, Lớp, NV1…NV10 per session, score beside tested clubs, blank =
+  not tested/absent) + JSON download. Real .xlsx: DK2 via Python (no JS library, rule 7; Truong agreed).
+- D31 Live admin views during HS đăng ký: progress by class, demand per club (NV1 and total vs quota),
+  not-yet-registered list, change log (teacher edits, admin edits, re-submits, step backs).
+- D32 Demo target: teacher on a laptop (1366×768 / 1280×800, mouse); touch still works.
+- D33 Cut order if short of time (Truong: no preference, planner set): 1) 800-student mock, 2) live views
+  D31, 3) paste score import, 4) drag-and-drop.
 
 ## Insight from the reference site (keep / avoid)
-- KEEP: role picker home (3 doors); teacher self-registration; admin approval layer with "original quota"
-  vs "admin quota"; per-session preference lists; open/close switches; admin-only live demand counts.
-- AVOID (seen in its export 2026-11-25): grade collected but not used to filter or exported; no
-  validation (student "a/a/a", same club NV1 and NV2); rank restarts per day with no session column; quota
-  as text; club ids by row order; free-text room, no capacity/clash check; admin page public with student
-  names and emails; changes applied via chatbot with 30-min sync drift.
-- Do NOT show demand counts to students (they would dodge popular clubs; truthful ranking is the point of
-  Gale–Shapley).
+- KEEP: role doors; teacher self-registration; admin approval with "original quota" vs "admin quota";
+  per-session preference lists; open/close control; admin-only demand counts.
+- AVOID (seen in its export 2026-11-25): grade collected but unused; no validation ("a/a/a", same club as NV1
+  and NV2); rank restarts per day with no session column; quota as text; ids by row order; free-text room;
+  public admin page with student names and emails; chatbot-applied changes with 30-min sync drift.
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] L1 Shell + mock data + role picker + Admin: phase bar + deadlines, rooms CRUD, student/teacher lists
-- [ ] L2 Teacher registration (room/session clash, quota ≤ capacity, grades) + Admin approval table
-- [ ] L3 Student flow: mã HS + PIN → per-session ranking (≤ 10) → tick ≤ 5 tests → confirm + receipt
-- [ ] L4 Nhập điểm (paste + table, missing-score warnings, Chốt điểm) + export preview shaped like Sổ nhập
-      `1. CLB` / `2. Học sinh` + JSON download (must-ship; demand counts optional)
+- [ ] L1 Shell + setup: doors, admin password/lock, phase bar + deadlines + step back, sessions, grades,
+      rooms, student list (paste + CSV) + grade parse, PINs + slips, school code, backup/restore, mock switch
+- [ ] L2 Teacher sign-up/login + club form + approval table + post-open limits + log
+- [ ] L3 Student login + per-session ranking + test ticks + receipt + edit/auto-logout
+- [ ] L4 Nhập điểm (paste + table + warnings + Chốt điểm) + Xuất preview + JSON + live admin views
 
 ## Current state (overwrite each handoff)
-- Done so far: planning only (this file + `docs/phien/DK1_GIAO_THUC.md`).
-- In progress: none. Tests: none yet. Open problems: item code DK1 awaiting Truong's OK.
+- Done so far: planning only (this file + `docs/phien/DK1_GIAO_THUC.md`). No product code.
+- Tests: none yet. Open problems: none; DK2 open questions below.
 
-## Decisions and gotchas (keep short)
-- Prototype folder `nguyen_mau/dk1/` is not loaded by the app and not in `kiosk.spec`: invariants 1–8 untouched.
-- No new library (rule 7): native HTML5 drag-and-drop + up/down buttons (touch kiosks may not fire drag).
-- Prototype-local Vietnamese messages are allowed here; DK2 must move them to `i18n_errors.py` (invariant 6).
-- Colour tokens copied from `style.css :root` (--ink, --paper, --gold, --moss, --rust, --focus-ring);
-  fonts as in `style.css` (Be Vietnam Pro bundled, no network).
-- localStorage wrapped in try/catch; "Đặt lại dữ liệu mẫu" button restores mock data.
-- All data is SIMULATED; label the page "Bản mẫu — dữ liệu giả".
+## Gotchas
+- Prototype folder `nguyen_mau/dk1/` is not loaded by the app nor in `kiosk.spec`: invariants 1–8 untouched.
+- Prototype-local Vietnamese messages allowed; DK2 must move them to `i18n_errors.py` (invariant 6).
+- Deadlines trust the machine clock; DK2 should warn if the clock looks wrong.
+- All data SIMULATED; never present prototype numbers as a survey.
 
-## Next steps (ordered)
-1. Truong OKs item code DK1, then starts the coder with the prompt in `DK1_GIAO_THUC.md` §5.
-2. After Truong's teacher tries it: write DK2 plan (schema: rooms, club grades/description/test flag; A5 grade
-   filter; import to Sổ nhập; size L).
-
-## Files touched
-- docs/phien/claude__gracious-johnson-pnqvrg.md: this handoff
-- docs/phien/DK1_GIAO_THUC.md: protocol + coder prompt
+## Open questions for DK2 (not this branch)
+- Exact Sổ nhập columns for room / grades / link (CSV contract change → rule 7, ask Truong).
+- Grade filter at collection vs registry item A5 in the algorithm; several kiosks later (merge by USB/LAN).
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
-| 2026-11-25 | Opus | Evaluated reference site, asked Truong 8 questions, wrote plan + protocol | no product code |
+| 2026-11-25 | Opus | Evaluated reference site, 6 question rounds with Truong, wrote plan + protocol | no product code |

@@ -1,72 +1,45 @@
 # DK1 protocol — size S (1 Sonnet coder, self-check + Truong tries it)
 
-> Lean template: `docs/phien/_GIAO_THUC_GON.md` (§3 budget rules apply). Spec, decisions, insight:
+> Lean template: `docs/phien/_GIAO_THUC_GON.md` (§3 budget rules apply). ALL decisions D1–D33:
 > `docs/phien/claude__gracious-johnson-pnqvrg.md`. Size S: standalone prototype, no backend, no schema,
-> no algorithm, no invariant 1–8 in play.
+> no algorithm, no invariant 1–8 in play. Volume is large for one night → follow the cut order (D33).
 
-## 0. Decisions already made (do not ask Truong)
-- Files ONLY under `nguyen_mau/dk1/`: `index.html`, `dk1.css`, `dk1_du_lieu.js` (mock data), `dk1.js`.
-  Opens by double-click (file://), offline, no CDN, no new library, no change to `index.html`, `js/`,
-  `style.css`, `kiosk.spec`, Python code. Test: `tests/test_dk1_nguyen_mau.py` (Playwright, one page fixture).
-- Mock data: 5 sessions Thứ 2–6; 8 rooms (name, capacity 10–40); 6 teachers (mã GV, name); 30 students
-  (mã HS, họ tên, lớp, khối 6–12); 4 pre-registered clubs (2 approved, 1 pending, 1 rejected).
-- State in one object saved to localStorage (try/catch; page works without it). Header button
-  "Đặt lại dữ liệu mẫu". Banner "Bản mẫu — dữ liệu giả".
-- Touch-sized targets (≥ 44 px), visible focus ring `--focus-ring`, Vietnamese UI, works at 1280×800 and 390 px.
+## 0. Rules (do not ask Truong)
+- Files ONLY under `nguyen_mau/dk1/`: `index.html`, `dk1.css`, `dk1_du_lieu.js` (mock data), `dk1.js`
+  (split into more `dk1_*.js` if > 800 lines). Opens by double-click (file://), offline, no CDN, no new library,
+  no change to `index.html`, `js/`, `style.css`, `kiosk.spec`, Python. Test: `tests/test_dk1_nguyen_mau.py`
+  (Playwright, file URL, one shared page fixture, fake clock via `page.clock`).
+- Banner "Bản mẫu — dữ liệu giả". Colours from `style.css :root`; laptop first (D32), usable at 390 px;
+  targets ≥ 44 px; focus ring `--focus-ring`. Vietnamese UI. State = one object in localStorage (try/catch).
 - Anything outside this → "Needs Truong" line in the branch file, then continue.
 
 ## 1. Branch and lots
 | Branch | Lots |
 |---|---|
-| `claude/gracious-johnson-pnqvrg` | L1 shell+admin · L2 teacher+approval · L3 student · L4 scores + export preview |
+| `claude/gracious-johnson-pnqvrg` | L1 shell + setup · L2 teacher + approval · L3 student · L4 scores + export |
 - Before each lot: `git fetch origin main && git merge --no-edit FETCH_HEAD`. Never rebase or force-push. No PR.
+- Cut order D33 (drop from the top only); record anything cut in the branch file "Current state".
 
-## 2. Acceptance (`kiem_nhan`)
-- L1: home shows 3 role doors; Admin "Quản lý" has a 6-step phase bar (Chuẩn bị → GV đăng ký → Duyệt CLB →
-  HS đăng ký → Nhập điểm → Xuất; see branch file "Workflow" + "Round 3"). Admin can add / edit / delete a room (name unique,
-  capacity integer > 0; a room used by a club cannot be deleted); sees student and teacher lists; opens a
-  phase with a deadline (date+time), "Đóng ngay", "Gia hạn"; auto-close by clock on load and every 30 s
-  (test with a faked clock). A role whose phase is not active shows "Chưa mở" / "Đã đóng" and cannot submit.
-- L2: teacher logs in with name + mã GV (wrong code refused). Form: club name (unique, required), session,
-  room (dropdown lists only rooms free in that session; taken ones shown disabled with the club using them),
-  quota (integer 1…room capacity; above capacity → blocked with message), grades (≥ 1 ticked), test yes/no,
-  description, requirements. "CLB của tôi" lists own clubs with status; editable while "Chờ duyệt".
-  Admin approval table: approve / reject, admin quota (blank = teacher quota, still ≤ room capacity), change
-  room (same clash rule), shows teacher quota and admin quota side by side. "Mở cho học sinh" is enabled only
-  in phase Duyệt CLB with ≥ 1 approved club; pending clubs must be approved or rejected first. In phase HS
-  đăng ký: teacher edit locked; admin may raise quota / change room; delete or session change of a club already
-  chosen shows "N học sinh bị ảnh hưởng" + confirm and adds a line to an on-screen admin log.
-- L3: student types mã HS + 4-digit PIN → card "Họ tên · Lớp · Khối" + "Đúng là em"; unknown code or wrong
-  PIN refused; admin can view the PIN list. Auto-logout after submit and after 60 s idle. Per-session
-  tabs: left = approved clubs allowing the student's grade (card: name, room, teacher, description,
-  requirements, "Có thi" badge); right = ranked list. Add by click or drag; reorder by drag or ↑/↓; remove ✕;
-  a club cannot appear twice; max 10 per session (11th add blocked, counter "x/10"); empty session allowed. Step 2: clubs with a test that are in the ranked lists,
-  tick ≤ 5 (6th checkbox disabled, counter "x/5"); note that an untested club is still considered but ranks
-  behind students with a score. Step 3: summary per session + tests → "Gửi" → receipt with a code;
-  re-entering the same mã HS + PIN reopens the saved choices until the HS deadline (last submit counts). No demand counts anywhere
-  in the student view.
-- L4 (must): phase Nhập điểm: (a) pick a club, paste a block "mã HS <tab> điểm" copied from the Forms sheet →
-  matched rows filled, unknown IDs / not-ticked students / bad numbers listed and skipped; (b) table students ×
-  ticked clubs, type/fix one score (number ≥ 0, comma or dot). Warning panel "đã tick thi nhưng chưa có điểm"
-  (export writes 0 for them). "Chốt điểm" → phase Xuất: tables shaped like Sổ nhập `1. CLB` (Tên CLB, Buổi,
-  Chỉ tiêu, Mã CLB, + Phòng, Khối, Có thi) and `2. Học sinh` (Mã, Họ tên, Lớp, NV1…NV10 per session with score
-  beside each tested club), approved clubs only, + "Tải JSON". No .xlsx (needs a library; DK2 via Python).
-  Optional: admin-only demand count per club.
+## 2. Acceptance (`kiem_nhan`) — one or more Playwright cases per bullet group
+- L1 = D3–D12 + D1 timing: doors; admin password + 2-min lock; phase bar; deadline auto-close with fake
+  clock; step back logged; sessions/grades editable; rooms CRUD rules; paste AND CSV student load with error
+  preview; "10A1" → 10; PIN generate/reset/print view; school code; backup → restore round-trip equal; mock switch.
+- L2 = D13–D19 + D2: sign-up with wrong school code refused; re-login name + PIN; same teacher same session
+  blocked; taken room disabled; quota > capacity blocked; approval with admin quota; "Mở cho học sinh"
+  disabled while a club is pending; post-open delete shows affected count + log line.
+- L3 = D20–D26: unknown ID / wrong PIN refused; grade filter; 11th club blocked; no duplicates; empty submit
+  accepted; 6th test tick disabled; test ticks only on ranked clubs; receipt shows links; re-login reopens
+  choices; after deadline login shows "Đã đóng"; auto-logout after 60 s idle (fake clock); no demand numbers.
+- L4 = D27–D31: paste block fills matched scores and lists skipped rows; "8,5" and "8.5" equal; negative
+  refused; missing score listed and exported blank; Chốt điểm → Xuất; preview columns per D30; JSON
+  download; export version increments after a step back; live views D31 (cuttable).
 
 ## 3. Coder loop per lot
-Failing Playwright case in `tests/test_dk1_nguyen_mau.py` (load `nguyen_mau/dk1/index.html` via file URL,
-`--trace off`) → minimal code → `python -m pytest -q tests/test_dk1_nguyen_mau.py --tb=line 2>&1 | tail -15`
-→ `ruff check tests/test_dk1_nguyen_mau.py` → `kiem_nhanh.py | tail -10` → `soat-ma` tiers (report only) →
-CHANGELOG + TIEN_DO row `DK1-L<n>` → commit `DK1-L<n>: …` → push `-u origin claude/gracious-johnson-pnqvrg`.
-Tick the Plan in the branch file. After the last lot: update "Current state", write `DK1 READY | head <sha>`.
+Failing Playwright case → minimal code → `python -m pytest -q tests/test_dk1_nguyen_mau.py --tb=line 2>&1 |
+tail -15` → `ruff check tests/test_dk1_nguyen_mau.py` → `kiem_nhanh.py | tail -10` → `soat-ma` tiers (report
+only) → CHANGELOG + TIEN_DO row `DK1-L<n>` → commit `DK1-L<n>: …` → push `-u origin claude/gracious-johnson-pnqvrg`.
+Tick the Plan. After the last lot: add DK1 to the registry, update "Current state", write `DK1 READY | head <sha>`.
 
 ## 4. Truong's check (replaces the checker)
-Open `nguyen_mau/dk1/index.html` in Edge. Walk: Admin adds a room → teacher registers a club in it → admin
-approves → a grade-6 student ranks clubs and ticks tests → submit. Then show the teacher; note feedback for DK2.
-
-## 5. Coder prompt (Truong pastes this into a new Sonnet session)
-See the code block at the end of Truong's planning reply (2026-11-25); same text:
-"Item DK1, branch claude/gracious-johnson-pnqvrg. Read CLAUDE.md, docs/phien/claude__gracious-johnson-pnqvrg.md,
-docs/phien/DK1_GIAO_THUC.md. Build lots L1→L3 (L4 if budget allows) per §2, loop §3, budget
-_GIAO_THUC_GON.md §3. Only files under nguyen_mau/dk1/ and tests/test_dk1_nguyen_mau.py plus CHANGELOG/TIEN_DO.
-Stop and write 'Needs Truong' for anything outside §0."
+Open `nguyen_mau/dk1/index.html` in Edge on a laptop. Walk all 6 phases with "Demo nhỏ", then "Cả trường" and
+check lists stay fast. Show the teacher; note feedback for DK2.
