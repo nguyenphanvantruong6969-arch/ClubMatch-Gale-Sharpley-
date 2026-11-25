@@ -63,11 +63,12 @@ def test_edgechromium_van_dung_cua_so_goc(gia):
     assert gia["start"] == 1 and gia["serve"] == 0
 
 
-def test_nhap_winforms_loi_roi_ve_du_phong(gia):
+def test_nhap_winforms_loi_thi_duong_cu_khong_doi(gia):
     gia["monkeypatch"].setattr(sys, "platform", "win32")
     gia["monkeypatch"].setitem(sys.modules, "webview.platforms.winforms", None)  # import -> ImportError
     _chay()
-    assert gia["serve"] == 1 and gia["start"] == 0
+    assert gia["start"] == 1 and gia["serve"] == 0
+    assert any("renderer unknown" in d for d in gia["log"])
 
 
 def test_khong_phai_windows_khong_nhap_winforms(gia):
@@ -120,3 +121,33 @@ def test_main_ghi_moc_bat_dau_va_workspace_da_mo(gia):
 def test_ghi_moc_khong_nem_loi_khi_khong_ghi_duoc_tep(monkeypatch, tmp_path):
     monkeypatch.setattr(main, "BASE_DIR", str(tmp_path / "khong_co_thu_muc" / "sau"))
     main._ghi_moc("x")  # chan_doan.ghi nuot loi; khong duoc nem
+
+
+@pytest.mark.parametrize("hong_o,mong", [("create", "serve"), ("khong", "start"), ("ctrl_c", "thoat")])
+def test_webview_gia_khong_la_package_tren_win32_giu_duong_cu(gia, hong_o, mong):
+    """Tai hien 3 ca cua test_do_phu_bo_sung tren win32: `webview` la module don (khong co .platforms)."""
+    mp = gia["monkeypatch"]
+    mp.setattr(sys, "platform", "win32")
+    for k in ("webview.platforms.winforms", "webview.platforms"):
+        mp.delitem(sys.modules, k, raising=False)
+    wv = types.ModuleType("webview")  # khong phai package
+    dem = {"start": 0}
+
+    def tao(*a, **k):
+        if hong_o == "create":
+            raise RuntimeError("hong")
+        return object()
+
+    def start(*a, **k):
+        dem["start"] += 1
+        if hong_o == "ctrl_c":
+            raise KeyboardInterrupt
+    wv.create_window, wv.start = tao, start
+    mp.setitem(sys.modules, "webview", wv)
+    if mong == "thoat":
+        with pytest.raises(KeyboardInterrupt):
+            _chay()
+        assert gia["serve"] == 0
+    else:
+        _chay()
+        assert (gia["serve"], dem["start"]) == ((1, 0) if mong == "serve" else (0, 1))

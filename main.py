@@ -172,14 +172,15 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
     try:
         import webview
 
-        if sys.platform == "win32" and _renderer_winforms() == "mshtml":
+        ten_renderer = _renderer_winforms() if sys.platform == "win32" else ""
+        if ten_renderer == "mshtml":
             # KD1: thieu WebView2 Runtime -> pywebview LANG LE ve MSHTML (IE11), khong parse noi JS cua ta
             # (=>, const) nen giao dien dung hinh, khong bam duoc. Khong co ngoai le nao de bat -> tu chon du phong.
             chan_doan.ghi(BASE_DIR, "renderer mshtml: may thieu Microsoft Edge WebView2 Runtime, "
                           "chuyen sang cua so Edge/Chrome (--app=)")
             raise _DungMshtml()
         if sys.platform == "win32":
-            chan_doan.ghi(BASE_DIR, "renderer %s" % _renderer_winforms())
+            chan_doan.ghi(BASE_DIR, "renderer %s" % (ten_renderer or "unknown"))
         window = webview.create_window(
             title, os.path.join(RESOURCE_DIR, page), js_api=js_api,
             width=width, height=height, min_size=min_size,
@@ -236,10 +237,15 @@ class _DungMshtml(Exception):
 
 
 def _renderer_winforms() -> str:
-    """Ten renderer pywebview da chon tren Windows ("edgechromium" | "mshtml"). Nhap loi -> ngoai le (da co du phong)."""
-    import webview.platforms.winforms as wf
+    """Ten renderer pywebview da chon tren Windows ("edgechromium" | "mshtml"); "" neu KHONG BIET.
 
-    return str(getattr(wf, "renderer", "") or "")
+    Khong biet (nhap loi, module `webview` khong day du...) thi tra "" de duong cu chay y nhu truoc KD1."""
+    try:
+        import webview.platforms.winforms as wf
+
+        return str(getattr(wf, "renderer", "") or "")
+    except Exception:
+        return ""
 
 
 def main() -> None:

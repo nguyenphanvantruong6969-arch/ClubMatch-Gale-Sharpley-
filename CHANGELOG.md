@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-25 — KD1-L1 fix: dò renderer an toàn (không đổi đường cũ khi không biết)
+
+- CI Windows đỏ: test `test_do_phu_bo_sung.py` tiêm module `webview` giả (không phải package) nên `_renderer_winforms()` ném lỗi trước `create_window`. Nay `_renderer_winforms()` bắt `Exception` và trả `""` (không biết); chỉ `"mshtml"` mới chuyển sang `browser_host`. Log `renderer <tên|unknown>`.
+- Test: sửa `test_nhap_winforms_loi_thi_duong_cu_khong_doi`, thêm 3 ca tái hiện test_do_phu_bo_sung với `sys.platform="win32"`. Cập nhật đếm tệp test (409) trong `CLAUDE_CHI_TIET.md`.
+
 ## 2026-11-25 — KD1-L3: hướng dẫn cài đặt + mục KD1 trong sổ đăng ký
 
 - `HUONG_DAN_CAI_DAT.md`: ghi chú 2 dòng về `renderer mshtml` / WebView2 Runtime. `SO_DANG_KY_33_MUC.md`: dòng + mục KD1 (theo mẫu MT2, `ke_hoach_thay_doi.json` không có MT2 nên không thêm). Chỉ tài liệu.
