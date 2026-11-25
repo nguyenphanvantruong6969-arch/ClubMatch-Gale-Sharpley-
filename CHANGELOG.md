@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK3-L2: API cổng đăng ký (`api_dang_ky.py`)
+
+- `DangKyMixin` (`dk_*`, hợp đồng `{ok,data,errors}`): khởi tạo + mật khẩu quản trị, đăng nhập ba vai (token trong bộ nhớ, quản trị khoá sau 2 phút nghỉ), giai đoạn + hạn chót tự đóng (D1), điều kiện mở cho học sinh (D2), phòng (D5), giáo viên tự đăng ký / quản trị tạo (D13), một GV một CLB mỗi buổi (D14), luật CLB (D15), duyệt (D18), sửa sau khi mở có đếm "N học sinh bị ảnh hưởng" (D19), danh sách học sinh thêm/thay (D6), nguyện vọng ≤ 10 mỗi buổi, đúng khối (D21), ≤ 5 bài thi mỗi buổi (D44), huy chương mặc định + ghi đè (D2 đường A), điểm nhập tay / dán, tiến độ (D31). PIN và mật khẩu chỉ lưu băm PBKDF2 + muối.
+- 40 mã lỗi mới `dk_*` ở cuối `i18n_errors.py` (đã chạy `tao_i18n_js.py`); `phan_quyen`: hàm `dk_*` là công khai với cổng chung vì tự kiểm phiên.
+- Test: `tests/test_dk3_api.py` (11); sửa `tests/test_gt3_phan_quyen.py` (bỏ `dk_*` khỏi danh sách công khai gốc).
+
 ## 2026-11-25 — DK3-L1: bảng của cổng đăng ký thật
 
 - `dang_ky_schema.py` (mới): tám bảng `dk_*` (cài đặt, giai đoạn, phòng, giáo viên, CLB đăng ký, học sinh, nguyện vọng + huy chương, nhật ký), toàn bảng mới; `di_tru_schema` thêm bước "dk3" (sao lưu trước nếu CSDL có dữ liệu, chạy lại không đổi).
