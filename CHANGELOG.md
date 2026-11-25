@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-J và DKL-K: tự cập nhật nhanh cho màn quản trị; id trả về đúng
+
+- **DKL-J** (`api_dang_ky.py` `dk_dau_van_tay`, `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js` `QT2.tuLamMoi`): API công khai, không mở CSDL, không cần phiên, KHÔNG làm mới giờ nghỉ phiên quản trị; trả dấu vân tay (thời điểm sửa + kích thước của tệp CSDL và tệp WAL), đổi với mọi ghi kể cả học sinh gửi nguyện vọng (không ghi nhật ký). Màn quản trị hỏi mỗi 5 giây (trước: vẽ lại cả màn mỗi 30 giây, chỉ ở giai đoạn Học sinh đăng ký) và CHỈ vẽ lại khi dấu đổi; bật ở thẻ «Việc bây giờ» của ba giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký; hoãn khi đang gõ vào ô nhập hoặc hộp xác nhận «Thay cả danh sách» đang mở. Vẽ lại qua `DK.quanTri(true)` nên không đặt lại đồng hồ nghỉ 2 phút của máy khách. Màn học sinh KHÔNG đổi (không tự vẽ lại, tránh mất phần đang xếp).
+- **DKL-K**: `dk_phong_luu` và `dk_gv_tu_dang_ky` trả `cur.lastrowid` SAU khi ghi nhật ký nên trả id dòng nhật ký thay vì id phòng / giáo viên; nay lấy id TRƯỚC khi ghi nhật ký. (`dk_clb_luu` đã đúng.) Giao diện chưa dùng hai giá trị này nên chưa ai gặp lỗi.
+- Test mới: `tests/test_dkl_j_dau_van_tay.py` (3, API), `tests/test_giao_dien_dkl_j_lam_moi.py` (3, đồng hồ giả: dữ liệu đổi thì cập nhật trong 6 giây; không đổi thì không vẽ lại; đang gõ thì giữ nguyên), `tests/test_dkl_k_id_tra_ve.py` (2). Không đổi schema, CSV, thuật toán.
+
 ## 2026-11-26 — DKL-I: lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu
 
 - `index.html` (khung «1. Nhập sổ»): đoạn `#ghiChuDangKy` + liên kết «Mở Đăng ký CLB», chỉ hiện khi thanh «Việc tiếp theo» ở trạng thái `nap_so` (chưa có dữ liệu); nói cổng làm gì (giáo viên lập CLB, học sinh đăng ký, xuất Sổ nhập tự động) và việc lần đầu (đặt mật khẩu quản trị cho cổng). `js/17_viec_tiep_theo.js` bật/tắt và giữ `?t=<token>`; `i18n.js` hai khoá `dk_loi_dan`, `dk_loi_dan_lien_ket` (vi, en).

@@ -291,6 +291,23 @@ class DangKyMixin:
                     **dict(zip(("toi_da_nv", "toi_da_thi"), self._dk_gioi_han(cur)))}
         return self._dk_chay(lam)
 
+    def dk_dau_van_tay(self):
+        """DKL-J. Công khai (như `dk_trang_thai`): dấu vân tay RẺ của dữ liệu — thời điểm sửa và kích thước của tệp CSDL và tệp WAL.
+        Mọi thay đổi (kể cả học sinh gửi nguyện vọng, không ghi nhật ký) làm dấu đổi; đọc thì không. Màn quản trị hỏi mỗi 5 giây và chỉ
+        vẽ lại khi dấu đổi. Không mở CSDL, không cần phiên và KHÔNG làm mới giờ nghỉ của phiên quản trị. Không lộ dữ liệu cá nhân."""
+        try:
+            phan = []
+            for duong in (self.db_path, self.db_path + "-wal"):
+                try:
+                    s = os.stat(duong)
+                    phan.append("%d:%d" % (s.st_mtime_ns, s.st_size))
+                except OSError:
+                    phan.append("-")
+            return _ok({"dau": "|".join(phan)})
+        except Exception:
+            _log.exception("dk_dau_van_tay: loi khong du kien")
+            return _fail(err("dk_loi_chung"))
+
     # ----------------------------------------------------- giai đoạn (quản trị)
     def dk_dat_han(self, token, giai_doan, han_chot):
         """Đặt hạn chót (ISO `YYYY-MM-DDTHH:MM`) cho giai đoạn giáo viên / học sinh; None = bỏ hạn."""
@@ -353,8 +370,9 @@ class DangKyMixin:
             if cur.execute("SELECT 1 FROM dk_phong WHERE ten = ?", (t,)).fetchone():
                 raise _Loi("dk_phong_trung")
             cur.execute("INSERT INTO dk_phong (ten, suc_chua) VALUES (?, ?)", (t, sc))
+            phong_id = cur.lastrowid                     # DKL-K: lấy TRƯỚC khi ghi nhật ký (nhật ký cũng là một INSERT)
             self._dk_ghi_nk(cur, QUAN_TRI, "them_phong", t)
-            return {"phong_id": cur.lastrowid}
+            return {"phong_id": phong_id}
         return self._dk_chay(lam, QUAN_TRI, token=token)
 
     def dk_phong_xoa(self, token, phong_id):
@@ -399,8 +417,9 @@ class DangKyMixin:
                 raise _Loi("dk_gv_trung")
             b, m = _bam(pin)
             cur.execute("INSERT INTO dk_giao_vien (ten, pin_bam, pin_muoi, cach_tao) VALUES (?, ?, ?, 'tu_dang_ky')", (t, b, m))
+            gv_id = cur.lastrowid                        # DKL-K: lấy TRƯỚC khi ghi nhật ký
             self._dk_ghi_nk(cur, GIAO_VIEN, "tu_dang_ky", t)
-            return {"gv_id": cur.lastrowid}
+            return {"gv_id": gv_id}
         return self._dk_chay(lam)
 
     def dk_gv_tao_hang_loat(self, token, van_ban):

@@ -196,6 +196,24 @@
       const r = await DK.goi("dk_sao_luu", T()); if (r.ok) kq.textContent = "Đã tạo bản sao lưu lúc " + r.data.luc.replace("T", " ") + "."; return r; }); }, { id: "dkSaoLuu" });
     return h("div", {}, h("h2", {}, "Sao lưu"), h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
   };
-  let dongHo = null;
-  QT2.tuLamMoi = function (bat) { clearInterval(dongHo); dongHo = bat ? setInterval(() => { if (document.getElementById("dkNhuCau")) { const e = document.activeElement; if (!e || !/^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) DK.quanTri(true); } else { clearInterval(dongHo); dongHo = null; } }, 30000) : null; };
+  /* DKL-J: tự cập nhật trong vài giây. Mỗi 5 giây hỏi `dk_dau_van_tay` (công khai, rẻ, KHÔNG làm mới giờ nghỉ của phiên); chỉ vẽ
+     lại khi dấu đổi — không có thay đổi thì không tải lại gì. Đang gõ vào ô nhập hoặc đang mở hộp xác nhận thì hoãn (dấu cũ giữ
+     nguyên nên vòng sau thử lại). Vẽ lại bằng `DK.quanTri(true)`: không tính là thao tác, không đặt lại đồng hồ nghỉ của máy khách. */
+  const CHU_KY_LAM_MOI_MS = 5000;
+  let dongHo = null, dauCu = null;
+  const layDau = async () => { const r = await global.RBDA.callApi("dk_dau_van_tay"); return r && r.ok ? r.data.dau : null; };
+  QT2.tuLamMoi = function (bat) {
+    clearInterval(dongHo); dongHo = null;
+    if (!bat) return;
+    layDau().then((d) => { dauCu = d; });
+    dongHo = setInterval(async () => {
+      if (DK.S.vai !== "quan_tri") { clearInterval(dongHo); dongHo = null; return; }
+      const e = document.activeElement;
+      if ((e && /^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) || (document.getElementById("dkThayHop") && !document.getElementById("dkThayHop").hidden)) return;
+      const d = await layDau();
+      if (!d || d === dauCu) return;
+      dauCu = d;
+      DK.quanTri(true);
+    }, CHU_KY_LAM_MOI_MS);
+  };
 })(window);
