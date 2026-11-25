@@ -82,7 +82,16 @@ READY | head 42b93af
 - Test-file count 428. `ruff` clean, `kiem_nhanh.py` 7/7 (soat-ma tier 1 only: the four manual tiers were NOT run).
 - Not verified: full suite, CI (Linux+Windows), pywebview/Windows, `window.print()` in WebView2 (copy button is the fallback), `confirm()` behaviour in pywebview.
 - Simplifications: "Chốt điểm" only checks missing scores (gold button stays «Chốt và xếp»); PIN slips print only from the just-created/reset list; per-grade fold and admin password change not built.
+## DKL-G status (Sonnet, 2026-11-26) — fixes after the v8 comparison
+- [x] G1 identity confirmation "Đúng là em chứ?" (+ "Không phải em" → logout) — `test_giao_dien_dkl_hoc_sinh.py::test_3b_xac_nhan_danh_tinh_dung_la_em_khong_phai_em`
+- [x] G2 admin auto-lock: server `GIAY_NGHI_QUAN_TRI` = 120 s = v8's 2 min → no conflict; client `DK.GIAY_NGHI_QUAN_TRI = 120` (was 110), login text "Tự khoá sau 2 phút không thao tác." — `test_giao_dien_dkl_quan_tri.py::test_8_man_dang_nhap_noi_tu_khoa_2_phut_va_het_gio_hien_thong_bao`
+- [x] G3 A12 timeout message tested (Playwright fake clock, no test hook). The test exposed 3 real bugs, fixed: message wiped by async `dauTrang`; 30 s auto-refresh reset the idle timer (admin on "Việc bây giờ" never locked); in-flight calls after lock overwrote the page/message.
+- [x] G4 D37 fold: ≤7 cards per buổi then "Xem thêm (N)" — `test_giao_dien_dkl_hoc_sinh.py::test_3c_moi_buoi_toi_da_7_the_roi_xem_them`
+- Changed expectations: `test_giao_dien_dk3_cong.py` (test_5, `_vao_hs`), `test_dk4_l0c_gioi_han_tu_backend.py` (extra click "Đúng là em").
+- soat-ma: `kiem_nhanh.py` 7/7; tier-3 eye check of the JS diff only (no XSS: all text via `h()`, PIN never stored). Tiers 1, 2, 4 untouched by this diff (no algorithm/backend/schema change), not re-run.
+- Not verified here: Windows/pywebview, full suite. CI on the pushed head: see below.
+
 ## Needs Truong (DKL)
-- Backup RESTORE from the portal (v8 has it) not built: needs a decision (restore overwrites app.db). Also `_backup_db` keeps only `_MAX_BACKUPS` copies, so pressing «Sao lưu ngay» repeatedly can push out the backup taken before the last «Chốt và xếp».
+- Backup RESTORE from the portal ("Khôi phục từ bản sao lưu", DKL-G item 5) NOT built, needs Truong's decision (restore overwrites app.db). Original note: backup RESTORE from the portal (v8 has it) not built: needs a decision (restore overwrites app.db). Also `_backup_db` keeps only `_MAX_BACKUPS` copies, so pressing «Sao lưu ngay» repeatedly can push out the backup taken before the last «Chốt và xếp».
 - Try the CI-built exe: score entry, PIN slip printing, teacher edit/delete.
 | 2026-11-25 | Sonnet | DKL v8 diff table, built L1–L4 + tests, pushed 5ac6d4f; handoff at ~400k context | CI/checker pending |

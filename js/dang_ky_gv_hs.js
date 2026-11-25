@@ -15,6 +15,7 @@
     if (!m) return String(nop || "");
     return m[4] + ":" + m[5] + ", " + THU[new Date(+m[1], +m[2] - 1, +m[3]).getDay()] + " " + m[3] + "/" + m[2];
   };
+  const TOI_DA_THE = 7;                              // D37: tối đa 7 thẻ CLB mỗi khung trước nút "Xem thêm"
   const chip = (chu, lop) => h("span.dk-chip" + (lop ? "." + lop : ""), {}, chu);
   const khoiChu = (a, b) => (a === b ? "khối " + a : "khối " + a + "–" + b);
   /* Chip ngắn theo loại: "Tự do" · "Giới hạn · 15 chỗ" · "Tuyển chọn · 15 chỗ". */
@@ -119,7 +120,18 @@
     const cu = (await DK.goi("dk_hs_nguyen_vong", T)).data || { nguyen_vong: [], nop_luc: null };
     const theo = {}; tt.buoi.forEach((b) => { theo[b] = []; });
     cu.nguyen_vong.forEach((x) => { (theo[x.buoi] = theo[x.buoi] || []).push({ clb_id: x.clb_id, thi: x.thi, hc: x.huy_chuong }); });
+    if (!DK.S.daXacNhan) {                          // DKL-G1: "Đúng là em chứ?" trước khi vào xếp nguyện vọng (v8 `confirm`)
+      DK.henGio(60);
+      DK.hien(DK.thanhDau("Học sinh"), DK.khung("Đúng là em chứ?",
+        h("p.dk-ten-hs", {}, h("strong", {}, DK.S.ten)),
+        h("p#dkThongTinHs", {}, "Lớp " + DK.S.lop + " · Khối " + DK.S.khoi + " · Mã " + DK.S.ma),
+        cu.nop_luc ? h("p.dk-ghichu#dkDaGui", {}, "Em đã gửi lúc " + DK.guiLuc(cu.nop_luc) + ". Em có thể sửa rồi gửi lại; lần gửi cuối cùng được tính.") : null,
+        h("div.dk-hang-nut", {}, DK.nutVang("Đúng là em", () => { DK.S.daXacNhan = true; DK.hocSinh(); }),
+          DK.nutNhe("Không phải em", () => DK.dangXuatCuc()))));
+      return;
+    }
     const tay = new Set();
+    const moHet = new Set();                         // DKL-G4 (D37): buổi đã bấm "Xem thêm"
     const cua = (id) => clb.find((c) => c.clb_id === id) || {};
     const macDinh = (ds) => { const r = {}; let i = 0; ds.forEach((x) => { r[x.clb_id] = cua(x.clb_id).loai !== "Tự do" && i < 3 ? HC[i++] : null; }); return r; };
     tt.buoi.forEach((b) => {                       // Đã lưu huy chương khác mặc định = em đã chỉnh tay
@@ -169,7 +181,8 @@
         thieuTuDo ? h("p.dk-ghichu", {}, "Thêm một CLB Tự do để chắc chắn có chỗ ở buổi này.") : null,
         h("div.dk-chia", {},
           h("section.dk-khung", {}, h("h2", {}, "CLB cho khối " + DK.S.khoi + " · " + b),
-            chua.length ? h("ul.dk-ds.dk-cac-the", {}, chua.map(the)) : h("div.dk-rong", {}, ds.length ? "Em đã thêm hết CLB của buổi này." : "Buổi này không có CLB nào cho khối của em.")),
+            chua.length ? h("ul.dk-ds.dk-cac-the", {}, (moHet.has(b) ? chua : chua.slice(0, TOI_DA_THE)).map(the)) : h("div.dk-rong", {}, ds.length ? "Em đã thêm hết CLB của buổi này." : "Buổi này không có CLB nào cho khối của em."),
+            chua.length > TOI_DA_THE && !moHet.has(b) ? DK.nutNhe("Xem thêm (" + (chua.length - TOI_DA_THE) + ")", () => { moHet.add(b); ve(); }) : null),
           h("section.dk-khung", {}, h("h2", {}, "Nguyện vọng " + b + " ", h("span.dk-phu.dk-so", {}, ds.length + "/" + tt.toi_da_nv)),
             ds.length ? h("ol.dk-xep", {}, hang) : h("div.dk-rong", {}, "Chưa chọn. Bấm \"+ Thêm\" ở bên cạnh."),
             day ? h("p.dk-phu", {}, "Đã đủ " + tt.toi_da_nv + " nguyện vọng cho buổi này.") : null)),

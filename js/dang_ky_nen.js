@@ -34,7 +34,7 @@
 
   DK.goi = async function (ten, ...tham) {
     const r = await global.RBDA.callApi(ten, ...tham);
-    if (!r.ok && r.errors && r.errors.some((e) => e && (e.code === "dk_het_phien_nghi" || e.code === "dk_can_dang_nhap"))) {
+    if (DK.S.token && !r.ok && r.errors && r.errors.some((e) => e && (e.code === "dk_het_phien_nghi" || e.code === "dk_can_dang_nhap"))) {   // đã đăng xuất (hết giờ) thì lời gọi còn bay không được ghi đè thông báo
       DK.dangXuatCuc(DK.loiChu(r.errors));
     }
     return r;
@@ -75,8 +75,7 @@
     clearTimeout(DK.hen);
     if (DK.S.token) DK.goi("dk_dang_xuat", DK.S.token);
     DK.S.token = null; DK.S.vai = null;
-    DK.dauTrang();
-    if (chu) DK.thongBao(chu, true);
+    DK.dauTrang().then(() => { if (chu) DK.thongBao(chu, true); });   // sau khi trang đầu dựng xong, nếu không chữ bị xoá theo trang cũ
   };
 
   /* ---------- trang chọn vai trò, đăng nhập, khởi tạo ---------- */
@@ -117,11 +116,12 @@
       DK.truong(la[1], "ma", { type: "password", autocomplete: "off" }));
     const b = DK.nutVang("Đăng nhập", () => DK.chay(b, async () => {
       const r = await DK.goi("dk_dang_nhap", vai, la[0] ? f.elements.ten.value : "", f.elements.ma.value);
-      if (r.ok) { DK.S.token = r.data.token; DK.S.vai = vai; DK.S.ten = r.data.ten; DK.S.khoi = r.data.khoi; DK.S.lop = r.data.lop; DK.vaoVai(); }
+      if (r.ok) { DK.S.token = r.data.token; DK.S.vai = vai; DK.S.ten = r.data.ten; DK.S.ma = r.data.id; DK.S.khoi = r.data.khoi; DK.S.lop = r.data.lop; DK.vaoVai(); }
       return r;
     }));
     DK.hien(DK.khung({ hoc_sinh: "Học sinh đăng nhập", giao_vien: "Giáo viên đăng nhập", quan_tri: "Quản trị đăng nhập" }[vai],
       f, b,
+      vai === "quan_tri" ? h("p.dk-phu#dkTuKhoa", {}, "Tự khoá sau " + DK.GIAY_NGHI_QUAN_TRI / 60 + " phút không thao tác.") : null,
       vai === "giao_vien" ? DK.nut("Đăng ký tài khoản giáo viên", () => DK.manGvDangKy()) : null,
       DK.veTrangDau()));
   };
@@ -149,6 +149,7 @@
     DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc()));
 
   /* Học sinh: tự đăng xuất sau 60 giây không thao tác (D25). Quản trị: máy chủ khoá sau 2 phút. */
+  DK.GIAY_NGHI_QUAN_TRI = 120;                     // phải bằng GIAY_NGHI_QUAN_TRI trong api_dang_ky.py (đồng hồ khách bắt đầu trước khi máy chủ làm mới nên khoá trước)
   DK.henGio = function (giay, chu) {
     clearTimeout(DK.hen);
     DK.hen = setTimeout(() => DK.dangXuatCuc(chu || "Phiên đã kết thúc do để lâu không thao tác."), giay * 1000);

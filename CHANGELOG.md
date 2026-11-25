@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-G: bốn khoảng cách còn lại với bản mẫu v8 (cổng đăng ký)
+
+- **G1 xác nhận danh tính** (`js/dang_ky_gv_hs.js`, `js/dang_ky_nen.js`): sau đăng nhập học sinh thấy «Đúng là em chứ?» (tên, «Lớp … · Khối … · Mã …», câu «Em đã gửi lúc … lần gửi cuối cùng được tính.» nếu đã nộp), nút «Đúng là em» / «Không phải em» (đăng xuất). Dùng dữ liệu đăng nhập đã trả về (`ten`, `lop`, `khoi`, `id`); không lưu PIN.
+- **G2 tự khoá quản trị**: hằng `DK.GIAY_NGHI_QUAN_TRI = 120` (bằng `GIAY_NGHI_QUAN_TRI` của máy chủ, trước là 110) và dòng «Tự khoá sau 2 phút không thao tác.» ở màn đăng nhập quản trị.
+- **G3 test A12** + ba lỗi thật test này lộ ra: (a) `DK.dangXuatCuc` hiện thông báo trước khi trang đầu dựng xong nên chữ bị xoá — nay chờ `dauTrang()`; (b) tự làm mới 30 giây của tab «Việc bây giờ» gọi lại `DK.quanTri()` và đặt lại đồng hồ nghỉ nên quản trị không bao giờ bị khoá — nay `DK.quanTri(tuDong)` không đặt lại; (c) lời gọi còn bay sau khi khoá không còn vẽ đè/ghi đè thông báo (`DK.goi` bỏ qua khi đã đăng xuất, `quanTri` thoát nếu đã đăng xuất, `khungHan` chịu `DK.S.tt` rỗng).
+- **G4 D37**: mỗi buổi hiện tối đa 7 thẻ CLB, phần còn lại sau nút «Xem thêm (N)» (`TOI_DA_THE`).
+- Test mới: `test_giao_dien_dkl_hoc_sinh.py` test_3b (xác nhận), test_3c (7 thẻ + Xem thêm; fixture thêm 7 CLB Tự do buổi T3), `test_giao_dien_dkl_quan_tri.py` test_8 (chữ «Tự khoá…» + đồng hồ giả, thông báo «Đã khoá quản lý vì không thao tác.»). Helper `_vao_hs` nay bấm «Đúng là em»; test_4 (hết hạn) bỏ qua bước này. Đổi kỳ vọng ở `test_giao_dien_dk3_cong.py` (test_5, `_vao_hs`) và `test_dk4_l0c_gioi_han_tu_backend.py`: thêm bước bấm «Đúng là em».
+- Ngoài phạm vi: khôi phục bản sao lưu từ cổng (ghi ở "Needs Truong").
+
 ## 2026-11-25 — DKL: đóng khoảng cách giữa cổng đăng ký thật và bản mẫu v8
 
 - **L2 quản trị** (`js/dang_ky_quan_tri_2.js`, `api_dang_ky.py`): màn **nhập điểm** (dán "mã ⇥ điểm" theo CLB + bảng gõ, dấu phẩy/chấm, chip "Dưới sàn", «Chốt điểm»); «Đóng ngay», «+1 giờ», «+1 ngày»; phiếu PIN in được (`@media print`, PIN chỉ hiện ngay sau khi tạo/đặt lại); «Thay cả danh sách» có xác nhận; xoá phòng; sửa chỉ tiêu và phòng khi duyệt; nhu cầu theo CLB và danh sách «Chưa đăng ký»; tự làm mới 30 giây; danh sách lý do chưa đi tiếp được. Hàm mới: `dk_diem_danh_sach`; `dk_phong_danh_sach` thêm `dang_dung` (và `ban` khi có `buoi`).

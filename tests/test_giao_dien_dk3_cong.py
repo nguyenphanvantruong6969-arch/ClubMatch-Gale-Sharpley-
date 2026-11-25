@@ -139,6 +139,7 @@ def test_5_hoc_sinh_chon_nop_va_huy_chuong_mac_dinh(cong):
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     pin = _ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]
     _dang_nhap(pg, "hoc_sinh", "H1", pin)
+    pg.get_by_role("button", name="Đúng là em", exact=True).click()                  # DKL-G1
     pg.wait_for_selector("text=Buổi T2")
     # thanh bước theo buổi: "Buổi k/N" + 3 bước + "Xem lại và gửi"
     assert pg.locator("ol.dk-buoc li").count() == 5
@@ -173,6 +174,7 @@ def _vao_hs(pg, ma="H2"):
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     pin = _ok(api.dk_hs_dat_lai_pin(qt, ma))["pin"]
     _dang_nhap(pg, "hoc_sinh", ma, pin)
+    pg.get_by_role("button", name="Đúng là em", exact=True).click()                  # DKL-G1
     pg.wait_for_selector("ol.dk-buoc")
 
 

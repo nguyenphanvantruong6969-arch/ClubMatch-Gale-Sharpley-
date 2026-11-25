@@ -197,5 +197,5 @@
     return h("div", {}, h("h2", {}, "Sao lưu"), h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
   };
   let dongHo = null;
-  QT2.tuLamMoi = function (bat) { clearInterval(dongHo); dongHo = bat ? setInterval(() => { if (document.getElementById("dkNhuCau")) { const e = document.activeElement; if (!e || !/^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) lamMoi(); } else { clearInterval(dongHo); dongHo = null; } }, 30000) : null; };
+  QT2.tuLamMoi = function (bat) { clearInterval(dongHo); dongHo = bat ? setInterval(() => { if (document.getElementById("dkNhuCau")) { const e = document.activeElement; if (!e || !/^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) DK.quanTri(true); } else { clearInterval(dongHo); dongHo = null; } }, 30000) : null; };
 })(window);

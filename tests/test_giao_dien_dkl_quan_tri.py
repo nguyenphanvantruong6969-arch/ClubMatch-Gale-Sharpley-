@@ -246,3 +246,20 @@ def test_7_doi_phong_va_xoa_clb_sau_khi_mo_can_xac_nhan_va_bao_so_em_bi_anh_huon
     pg.wait_for_function("!document.body.innerText.includes('Robot')", timeout=8000)
     assert loi and "học sinh bị ảnh hưởng" in loi[-1], loi
     assert "Robot" not in [c["ten"] for c in _ok(api.dk_clb_danh_sach(tk))]
+
+
+def test_8_man_dang_nhap_noi_tu_khoa_2_phut_va_het_gio_hien_thong_bao(cong):
+    pg = cong
+    pg.clock.install()                                                          # đồng hồ giả: không phải chờ thật 2 phút
+    pg.goto(pg.dia_chi)
+    pg.get_by_role("button", name="Quản trị", exact=True).click()
+    assert "Tự khoá sau 2 phút không thao tác." in pg.locator("#dkApp").inner_text()          # G2
+    pg.fill("input[name=ma]", "matkhau")
+    pg.get_by_role("button", name="Đăng nhập").click()
+    pg.wait_for_selector("text=Quản trị ·")
+    pg.clock.fast_forward(119_000)
+    assert pg.get_by_text("Quản trị ·").count() >= 1                           # chưa đủ 2 phút: vẫn đăng nhập
+    pg.clock.fast_forward(2_000)
+    pg.wait_for_selector("text=Đã khoá quản lý vì không thao tác.")           # G3: A12
+    pg.wait_for_selector("text=Chọn vai trò")
+    assert not pg.loi, pg.loi

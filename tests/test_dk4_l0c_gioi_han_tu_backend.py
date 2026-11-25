@@ -57,6 +57,7 @@ def test_giao_dien_theo_gioi_han_do_phan_mem_dat(tmp_path, monkeypatch):
         pg.fill("input[name=ten]", "H1")
         pg.fill("input[name=ma]", pin)
         pg.get_by_role("button", name="Đăng nhập").click()
+        pg.get_by_role("button", name="Đúng là em", exact=True).click()              # DKL-G1
         pg.wait_for_selector("text=Buổi T2")
         for ten in ("A", "B"):
             pg.locator("ul.dk-ds li", has_text=ten).first.get_by_role("button", name="+ Thêm").click()

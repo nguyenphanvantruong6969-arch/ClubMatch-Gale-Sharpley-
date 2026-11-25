@@ -23,10 +23,11 @@
   const hanChu = (tt) => tt.han_chot ? h("p.dk-han#dkHan", {}, "Hạn chót ", h("b", {}, String(tt.han_chot).replace("T", " ")), " · " + conLai(tt.han_chot) + ". Đến hạn tự đóng.")
     : h("p.dk-han#dkHan", {}, "Chưa đặt hạn chót. Quản trị đóng đăng ký bằng nút bên dưới.");
 
-  DK.quanTri = async function () {
-    DK.henGio(110, "Đã khoá quản lý vì không thao tác.");
+  DK.quanTri = async function (tuDong) {          // tuDong = làm mới 30 giây một lần: KHÔNG tính là thao tác, không đặt lại đồng hồ nghỉ
+    if (!tuDong) DK.henGio(DK.GIAY_NGHI_QUAN_TRI, "Đã khoá quản lý vì không thao tác.");   // = GIAY_NGHI_QUAN_TRI của api_dang_ky.py (120 s, v8: 2 phút)
     if (DK.QT2) DK.QT2.tuLamMoi(false);
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
+    if (DK.S.vai !== "quan_tri") return;             // đã tự khoá/đăng xuất trong lúc chờ: không vẽ đè lên trang đầu
     DK.S.tt = tt;
     const thanTheo = { viec: () => viecBayGio(tt), ds: () => danhSach(), cai: () => DK.QT2.caiDat(), them: () => them(tt) };
     const noiDung = h("div.dk-noidung");
@@ -34,7 +35,8 @@
     const thanh = h("nav.dk-the", { role: "tablist" }, the3.map(([k, t]) =>
       h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t)));
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanhGd(tt.giai_doan), thanh, noiDung);
-    noiDung.replaceChildren(await thanTheo[the]());
+    const nd = await thanTheo[the]();
+    if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
   };
 
   const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
@@ -44,7 +46,7 @@
     DK.chay(this, async () => { const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, gd); if (r.ok) DK.quanTri(); return r; });
   });
   function khungHan(gd) {
-    const han = DK.truong("Hạn chót (tuỳ chọn)", "han", { type: "datetime-local", value: DK.S.tt.han_chot || "" });
+    const han = DK.truong("Hạn chót (tuỳ chọn)", "han", { type: "datetime-local", value: (DK.S.tt || {}).han_chot || "" });
     const nut = DK.nut("Đặt hạn", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_dat_han", DK.S.token, gd, han.querySelector("input").value || null); if (r.ok) DK.quanTri(); return r; }); });
     return [han, nut];

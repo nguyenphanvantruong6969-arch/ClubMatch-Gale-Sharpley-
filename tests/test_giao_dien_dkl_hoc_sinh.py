@@ -28,8 +28,10 @@ def cong(tmp_path_factory):
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     _ok(api.dk_phong_luu(qt, "P1", 40))
     _ok(api.dk_phong_luu(qt, "P2", 30))
+    for k in range(1, 8):
+        _ok(api.dk_phong_luu(qt, "Q%d" % k, 20))
     _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1"))
-    pin = {x["ten"]: x["pin"] for x in _ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nCô Bê"))["da_tao"]}
+    pin = {x["ten"]: x["pin"] for x in _ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nCô Bê\n" + "\n".join("Cô G%d" % k for k in range(1, 8))))["da_tao"]}
     _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     ph = {p["ten"]: p["phong_id"] for p in _ok(api.dk_phong_danh_sach(qt))}
     ga = _ok(api.dk_dang_nhap("giao_vien", "Cô An", pin["Cô An"]))["token"]
@@ -40,6 +42,9 @@ def cong(tmp_path_factory):
                                            (gb, "Robot", "T2", "Tuyển chọn", "P2", {"chi_tieu": 10, "diem_san": 6, "link_forms": "https://f.example/robot", "mo_ta": "Lắp robot"}),
                                            (ga, "Tự do T3", "T3", "Tự do", "P1", {"mo_ta": "Tự do T3"})):
         ids[ten] = _ok(api.dk_clb_luu(tk, dict(base, ten=ten, buoi=buoi, loai=loai, phong_id=ph[phong], **ex)))["clb_id"]
+    for k in range(1, 8):                                                        # D37: buổi T3 có 8 CLB (1 + 7)
+        tk = _ok(api.dk_dang_nhap("giao_vien", "Cô G%d" % k, pin["Cô G%d" % k]))["token"]
+        ids["Phụ %d" % k] = _ok(api.dk_clb_luu(tk, dict(base, ten="Phụ %d" % k, buoi="T3", loai="Tự do", phong_id=ph["Q%d" % k], mo_ta="Phụ")))["clb_id"]
     _ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     for cid in ids.values():
         _ok(api.dk_clb_duyet(qt, cid, "duyet"))
@@ -56,13 +61,15 @@ def cong(tmp_path_factory):
         br.close()
 
 
-def _vao_hs(pg, ma):
+def _vao_hs(pg, ma, xac_nhan=True):
     pin = _ok(pg.api.dk_hs_dat_lai_pin(pg.qt, ma))["pin"]
     pg.goto(pg.dia_chi)
     pg.get_by_role("button", name="Học sinh", exact=True).click()
     pg.fill("input[name=ten]", ma)
     pg.fill("input[name=ma]", pin)
     pg.get_by_role("button", name="Đăng nhập").click()
+    if xac_nhan:                                                          # DKL-G1: bước "Đúng là em chứ?"
+        pg.get_by_role("button", name="Đúng là em", exact=True).click()
 
 
 def _toi_xem_lai(pg):
@@ -117,10 +124,47 @@ def test_3_nop_rong_co_canh_bao_va_han_chot_hien_cho_hoc_sinh(cong):
     assert "Em chưa chọn CLB nào" in pg.locator("#dkApp").inner_text()          # S5
 
 
+def test_3b_xac_nhan_danh_tinh_dung_la_em_khong_phai_em(cong):
+    pg = cong
+    _vao_hs(pg, "H2", xac_nhan=False)                                            # G1: chưa gửi lần nào
+    pg.get_by_role("heading", name="Đúng là em chứ?").wait_for()
+    txt = pg.locator("#dkApp").inner_text()
+    assert "Bình" in txt and "Lớp 10A1 · Khối 10 · Mã H2" in txt
+    assert "Em đã gửi lúc" not in txt and pg.get_by_text("Buổi T2").count() == 0
+    pg.get_by_role("button", name="Không phải em").click()
+    pg.wait_for_selector("text=Chọn vai trò")
+    _vao_hs(pg, "H1", xac_nhan=False)                                            # đã gửi ở test_2
+    pg.get_by_role("heading", name="Đúng là em chứ?").wait_for()
+    assert "Em đã gửi lúc" in pg.locator("#dkApp").inner_text()
+    assert "lần gửi cuối cùng được tính" in pg.locator("#dkApp").inner_text()
+    pg.get_by_role("button", name="Đúng là em", exact=True).click()
+    pg.wait_for_selector("text=Buổi T2")
+    assert not pg.loi, pg.loi
+
+
+def test_3c_moi_buoi_toi_da_7_the_roi_xem_them(cong):
+    pg = cong
+    _vao_hs(pg, "H2")
+    for _ in range(6):                                                           # đi tới bước xếp nguyện vọng buổi T3
+        if pg.get_by_role("heading", name="Buổi T3 · Xếp nguyện vọng").count():
+            break
+        pg.locator("#dkApp .btn-primary:visible").first.click()
+        pg.wait_for_timeout(120)
+    assert pg.locator("li.dk-the-clb:visible").count() == 7                      # G4/D37: tám CLB, chỉ bảy thẻ hiện
+    nut = pg.get_by_role("button", name="Xem thêm (1)")
+    assert nut.count() == 1
+    nut.click()
+    assert pg.locator("li.dk-the-clb:visible").count() == 8
+    assert pg.get_by_role("button", name="Xem thêm (1)").count() == 0
+    pg.get_by_role("button", name="Đăng xuất").click()
+    pg.wait_for_selector("text=Chọn vai trò")
+    assert not pg.loi, pg.loi
+
+
 def test_4_het_han_hien_cau_nguyen_vong_da_gui_van_duoc_tinh(cong):
     pg = cong
     _ok(pg.api.dk_chuyen_giai_doan(pg.qt, "nhap_diem"))
-    _vao_hs(pg, "H1")
+    _vao_hs(pg, "H1", xac_nhan=False)                                           # hết hạn: không qua bước xác nhận
     pg.wait_for_selector("#dkHsDong")
     assert "Nguyện vọng em đã gửi vẫn được tính" in pg.locator("#dkHsDong").inner_text()
     assert not pg.loi, pg.loi
