@@ -44,6 +44,9 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 3. DK4-UI (prompt given to Truong): v8 look via style.css tokens; tests in test_giao_dien_dk3_cong.py.
 0. DK3: fresh checker PASS on bdb2be8+ → Truong merges DK3 → main → DK4 merges origin/main.
 4. DK4 → main after its checker PASS.
+4b. After DK4-UI: feature audit D1–D45 (read-only, writes docs/phien/DK_DANH_GIA_TINH_NANG.md; prompt given
+   to Truong). Likely gaps: PIN slips print (D8), live admin views (D31), receipt links (D24), auto-logout (D25),
+   medal swap UI (D34), export versions/step back (D3). Build important gaps as one lot before DK5.
 5. DK5 (prompt given: gate on DK4 PASS + green CI), DK6, then Truong tests the exe on Windows.
 
 ## Decisions (Truong, 2026-11-25; do not re-ask)
@@ -71,3 +74,4 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 | 2026-11-25 | Opus | L5 entry link; CI triage; UI screenshots review; handoff at ~400k context | prompts only from now |
 | 2026-11-25 | Opus | Confirmed DK3 CI green (bdb2be8); handoff updated | no new work |
 | 2026-11-25 | Opus | DK4 CI check: run 45645130466 in progress (includes DK4-CI-2) | no new work |
+| 2026-11-25 | Opus | Answered feature-coverage question; added audit step 4b | no new work |
