@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-25 — DK4-FIX: sửa theo checker + mục L0
+
+- `dk_chot_va_xep`: lỗi không còn lộ chi tiết nội bộ (câu cố định, chi tiết vào `dk_nhat_ky`); sao lưu hỏng thì từ chối (`buoc=sao_luu`); hạt giống đã khoá có câu riêng `dk_chot_seed_khoa`; không kiểm lại phiên sau khi đã ghi kết quả (hết phiên giữa chừng vẫn chuyển giai đoạn); luật giữ chỗ + huy chương vừa bật được báo trên bảng tóm tắt (`da_bat_luat` lưu ở `dk_cai_dat`).
+- `api_dang_ky.py`: `dk_loi_chung` không lộ `str(e)`; đăng nhập sai 5 lần liên tiếp khoá tạm 60 giây (`dk_tam_khoa`); giới hạn nguyện vọng/bài thi mỗi buổi đọc từ cài đặt, mặc định 10/5, đổi bằng `dk_dat_gioi_han`.
+- Test: +5 ca trong `tests/test_dk4_chot_va_xep.py` (tổng 11), `tests/test_giao_dien_dk4_chot_xep.py` kiểm lưu ý.
+
 ## 2026-11-25 — DK4-L5: cổng đăng ký mở từ phần mềm và ngược lại
 
 - `index.html`: thanh bên có "Đăng ký CLB" (`#navDangKy`, chỉ quản trị) mở `dang_ky.html` trong cùng cửa sổ. `js/01_khung.js`: liên kết không có `data-tab` không gọi `switchTab`; giữ `location.search` (token `?t=` của bản trình duyệt dự phòng); `#ket-qua` mở thẻ Kết quả. `i18n.js`: `nav_dang_ky` (vi/en).

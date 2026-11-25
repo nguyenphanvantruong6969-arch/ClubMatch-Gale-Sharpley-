@@ -1811,11 +1811,23 @@ window.I18N_ERROR_MESSAGES = {
     "en": "The input workbook could not be exported: the data still has errors. Fix them and try again."
   },
   "dk_chot_that_bai": {
-    "vi": "Chốt và xếp không thành công (bước: {buoc}). Dữ liệu đã được trả về nguyên trạng. Chi tiết: {detail}",
-    "en": "Lock and allocate failed (step: {buoc}). Data has been restored unchanged. Details: {detail}"
+    "vi": "Chốt và xếp không thành công (bước: {buoc}). Dữ liệu vẫn nguyên như trước khi bấm. Chi tiết đã ghi vào nhật ký.",
+    "en": "Lock and allocate failed (step: {buoc}). Data is unchanged from before the button was pressed. Details are in the log."
+  },
+  "dk_chot_seed_khoa": {
+    "vi": "Hạt giống xếp đã khoá ở {cu}, không thể dùng {moi}. Hãy bấm lại mà không đổi hạt giống.",
+    "en": "The allocation seed is locked at {cu}; {moi} cannot be used. Press again without changing the seed."
   },
   "dk_chot_seed_sai": {
     "vi": "Hạt giống xếp phải là một số nguyên.",
     "en": "The allocation seed must be an integer."
+  },
+  "dk_tam_khoa": {
+    "vi": "Nhập sai quá nhiều lần. Hãy thử lại sau {giay} giây.",
+    "en": "Too many wrong attempts. Try again in {giay} seconds."
+  },
+  "dk_gioi_han_sai": {
+    "vi": "Giới hạn phải là số từ 1 đến 30, và số bài thi không vượt số nguyện vọng.",
+    "en": "Limits must be numbers from 1 to 30, and tests cannot exceed choices."
   }
 };

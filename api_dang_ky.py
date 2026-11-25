@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import hmac
 import json
+import logging
 import os
 import re
 import secrets
@@ -29,6 +30,7 @@ HUY_CHUONG = ("Vàng", "Bạc", "Đồng")
 TU_DO, TUYEN_CHON = "Tự do", "Tuyển chọn"
 TOI_DA_NV_BUOI = 10
 TOI_DA_THI_BUOI = 5
+SAI_TOI_DA, GIAY_KHOA_TAM = 5, 60      # đăng nhập sai quá 5 lần liên tiếp -> khoá tạm 60 giây (theo vai + tên)
 GIAY_NGHI_QUAN_TRI = 120
 GIAY_NGHI_KHAC = 60
 SO_VONG_PIN = 10_000
@@ -84,6 +86,13 @@ class DangKyMixin:
             d = self._dk_phien_ = {"_db": self.db_path}
         return d
 
+    def _dk_sai_dict(self) -> dict:
+        d = getattr(self, "_dk_sai_", None)
+        if d is None or getattr(self, "_dk_sai_db", None) != self.db_path:
+            d, self._dk_sai_db = {}, self.db_path
+            self._dk_sai_ = d
+        return d
+
     def _dk_cai_dat(self, cur, khoa, mac_dinh=None):
         r = cur.execute("SELECT gia_tri FROM dk_cai_dat WHERE khoa = ?", (khoa,)).fetchone()
         return mac_dinh if r is None else r[0]
@@ -95,6 +104,27 @@ class DangKyMixin:
     def _dk_ghi_nk(self, cur, vai, hanh_dong, chi_tiet=""):
         cur.execute("INSERT INTO dk_nhat_ky (luc, vai, hanh_dong, chi_tiet) VALUES (?, ?, ?, ?)",
                     (self._dk_bay_gio().isoformat(timespec="seconds"), vai, hanh_dong, str(chi_tiet)[:500]))
+
+    def _dk_gioi_han(self, cur):
+        """(tối đa nguyện vọng, tối đa bài thi) mỗi buổi: đọc từ cài đặt, mặc định 10 và 5 (D21, D44)."""
+        def doc(khoa, mac):
+            v = _so_nguyen(self._dk_cai_dat(cur, khoa, str(mac)))
+            return v if v and v > 0 else mac
+        return doc("toi_da_nv", TOI_DA_NV_BUOI), doc("toi_da_thi", TOI_DA_THI_BUOI)
+
+    def dk_dat_gioi_han(self, token, toi_da_nv=None, toi_da_thi=None):
+        """Quản trị: đổi số nguyện vọng / bài thi tối đa mỗi buổi (1–30; bài thi không vượt nguyện vọng)."""
+        def lam(cur, p):
+            nv0, thi0 = self._dk_gioi_han(cur)
+            nv = nv0 if toi_da_nv is None else _so_nguyen(toi_da_nv)
+            thi = thi0 if toi_da_thi is None else _so_nguyen(toi_da_thi)
+            if nv is None or thi is None or not (1 <= nv <= 30 and 1 <= thi <= nv):
+                raise _Loi("dk_gioi_han_sai")
+            self._dk_dat(cur, "toi_da_nv", str(nv))
+            self._dk_dat(cur, "toi_da_thi", str(thi))
+            self._dk_ghi_nk(cur, QUAN_TRI, "dat_gioi_han", "%d / %d" % (nv, thi))
+            return {"toi_da_nv": nv, "toi_da_thi": thi}
+        return self._dk_chay(lam, QUAN_TRI, token=token)
 
     def _dk_buoi_khoi(self, cur):
         buoi = json.loads(self._dk_cai_dat(cur, "buoi", json.dumps(BUOI_MAC_DINH, ensure_ascii=False)))
@@ -134,8 +164,9 @@ class DangKyMixin:
                 return _ok(ham(cur, phien))
         except _Loi as e:
             return _fail(e.loi)
-        except Exception as e:
-            return _fail(err("dk_loi_chung", detail=str(e)))
+        except Exception:
+            logging.getLogger(__name__).exception("dk_loi_chung")      # chi tiết chỉ vào nhật ký, không ra giao diện
+            return _fail(err("dk_loi_chung"))
 
     # ------------------------------------------------------ khởi tạo, đăng nhập
     def dk_khoi_tao(self, mat_khau, ma_truong, buoi=None, khoi=None):
@@ -172,6 +203,13 @@ class DangKyMixin:
             if self._dk_cai_dat(cur, "mk_bam") is None:
                 raise _Loi("dk_chua_khoi_tao")
             ma_s = str(ma or "")
+            khoa_sai = (vai, str(ten or "").strip() if vai != QUAN_TRI else "")
+            sai = self._dk_sai_dict().get(khoa_sai, [0, 0.0])
+            bay_gio = self._dk_dong_ho()
+            if sai[0] >= SAI_TOI_DA:
+                if bay_gio - sai[1] < GIAY_KHOA_TAM:
+                    raise _Loi("dk_tam_khoa", giay=int(GIAY_KHOA_TAM - (bay_gio - sai[1])) + 1)
+                sai = [0, 0.0]
             if vai == QUAN_TRI:
                 ok = _dung(ma_s, bytes.fromhex(self._dk_cai_dat(cur, "mk_bam")), bytes.fromhex(self._dk_cai_dat(cur, "mk_muoi")))
                 thong = {"ten": "Quản trị"}
@@ -189,7 +227,9 @@ class DangKyMixin:
                 ok, thong = False, {}
             if not ok:
                 _dung(ma_s, b"x", b"y")        # thời gian phản hồi như nhau
+                self._dk_sai_dict()[khoa_sai] = [sai[0] + 1, bay_gio]
                 raise _Loi("dk_sai_dang_nhap")
+            self._dk_sai_dict().pop(khoa_sai, None)
             token = secrets.token_urlsafe(24)
             self._dk_phien_dict()[token] = {"vai": vai, "luc": self._dk_dong_ho(), **thong}
             return {"token": token, "vai": vai, **thong}
@@ -645,11 +685,12 @@ class DangKyMixin:
                                                         "huy_chuong": x.get("huy_chuong")})
             cu = {r[0]: r[1] for r in cur.execute("SELECT clb_id, diem FROM dk_nguyen_vong WHERE student_id = ?", (p["id"],))}
             hang_ra, canh_bao = [], []
+            toi_da_nv, toi_da_thi = self._dk_gioi_han(cur)
             for b, ds in theo_buoi.items():
-                if len(ds) > TOI_DA_NV_BUOI:
-                    raise _Loi("dk_qua_nguyen_vong", buoi=b, toi_da=TOI_DA_NV_BUOI)
-                if sum(d["thi"] for d in ds) > TOI_DA_THI_BUOI:
-                    raise _Loi("dk_qua_bai_thi", buoi=b, toi_da=TOI_DA_THI_BUOI)
+                if len(ds) > toi_da_nv:
+                    raise _Loi("dk_qua_nguyen_vong", buoi=b, toi_da=toi_da_nv)
+                if sum(d["thi"] for d in ds) > toi_da_thi:
+                    raise _Loi("dk_qua_bai_thi", buoi=b, toi_da=toi_da_thi)
                 if any(d["thi"] and d["loai"] != TUYEN_CHON for d in ds):
                     raise _Loi("dk_thi_sai_loai")
                 if b in tay:
