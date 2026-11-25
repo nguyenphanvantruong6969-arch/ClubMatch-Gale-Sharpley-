@@ -30,16 +30,17 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - L5 NOT tried in pywebview on Windows (browser only). Truong must try the CI-built exe.
 - UI review (Opus screenshots): app sidebar OK; portal works but is bare vs v8 (no step bar, no 6-phase bar,
   no deadline, cards without description/teacher/room, no gold "next" button for students, cramped admin layout).
-- Other branches: DK2 (`claude/gracious-johnson-pnqvrg`) CI green. DK3 (`claude/dk3-cong-dang-ky-that`): DK3-CI
-  e331c93 left 1 red test (`test_thu_tu_buoi` COLLATE in api_dang_ky.py); fix prompt given to Truong; its checker
-  PASS (8715ba9) was written while CI was pending → must be redone. DK5/DK6 branches exist at 6234344 (plan only).
+- Other branches: DK2 (`claude/gracious-johnson-pnqvrg`) CI green. DK3 (`claude/dk3-cong-dang-ky-that`) CI GREEN at
+  bdb2be8 (confirmed by Opus). Its checker PASS (8715ba9) was written while CI was pending → re-run the DK3 checker
+  (prompt given to Truong) before merging DK3 → main. DK5/DK6 branches exist at 6234344 (plan only).
 - No orchestrator loop running: Truong wants PROMPTS for his collaborator, never auto-run sessions.
 
 ## Next steps (ordered; each = a collaborator prompt, Truong runs them)
 1. DK4-CI-2 (prompt given to Truong 2026-11-25): fix the 3 tests above + PIN/token masking test; CI green.
 2. Checker DK4 (prompt A2) — PASS only if CI green on Linux AND Windows for the head.
 3. DK4-UI (prompt given to Truong): v8 look via style.css tokens; tests in test_giao_dien_dk3_cong.py.
-4. Truong merges DK3 → main (after DK3 green + fresh PASS), then DK4 merges main, then DK4 → main.
+0. DK3: fresh checker PASS on bdb2be8+ → Truong merges DK3 → main → DK4 merges origin/main.
+4. DK4 → main after its checker PASS.
 5. DK5 (prompt given: gate on DK4 PASS + green CI), DK6, then Truong tests the exe on Windows.
 
 ## Decisions (Truong, 2026-11-25; do not re-ask)
@@ -65,3 +66,4 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 | 2026-11-25 | Sonnet | L1–L4 | |
 | 2026-11-25 | Sonnet | L0 / checker FIX items, DK4-CI (11 → 3 red tests) | |
 | 2026-11-25 | Opus | L5 entry link; CI triage; UI screenshots review; handoff at ~400k context | prompts only from now |
+| 2026-11-25 | Opus | Confirmed DK3 CI green (bdb2be8); handoff updated | no new work |
