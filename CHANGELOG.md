@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-25 — DKL: đóng khoảng cách giữa cổng đăng ký thật và bản mẫu v8
+
+- **L2 quản trị** (`js/dang_ky_quan_tri_2.js`, `api_dang_ky.py`): màn **nhập điểm** (dán "mã ⇥ điểm" theo CLB + bảng gõ, dấu phẩy/chấm, chip "Dưới sàn", «Chốt điểm»); «Đóng ngay», «+1 giờ», «+1 ngày»; phiếu PIN in được (`@media print`, PIN chỉ hiện ngay sau khi tạo/đặt lại); «Thay cả danh sách» có xác nhận; xoá phòng; sửa chỉ tiêu và phòng khi duyệt; nhu cầu theo CLB và danh sách «Chưa đăng ký»; tự làm mới 30 giây; danh sách lý do chưa đi tiếp được. Hàm mới: `dk_diem_danh_sach`; `dk_phong_danh_sach` thêm `dang_dung` (và `ban` khi có `buoi`).
+- **L3 giáo viên**: sửa/xoá CLB của mình khi còn «chờ duyệt» (`dk_clb_xoa` mới), báo lỗi từng bước bằng tiếng Việt, link bài thi phải bắt đầu `https://`, chỉ hiện phòng còn trống theo buổi.
+- **L1 học sinh**: dòng «Dưới N thì không xét» trên CLB Tuyển chọn; hết hạn hiện «Nguyện vọng em đã gửi vẫn được tính»; thêm test hành vi cho các hàng DK4-UI đã làm.
+- **L4 cài đặt**: thẻ «Cài đặt» (mã trường, buổi và khối chỉ đổi ở Chuẩn bị, giới hạn nguyện vọng/bài thi), xem trước Sổ nhập, số phiên bản mỗi lần xuất, «Sao lưu ngay», thông báo khoá quản trị. Hàm mới: `dk_cai_dat_doc`, `dk_cai_dat_doi`, `dk_xuat_xem_truoc`, `dk_sao_luu`.
+- Không đổi thuật toán, schema SQLite, hợp đồng CSV. Nhãn nhật ký `nkhd_dk_*` đủ vi/en cho 8 hàm mới.
+- Test mới: `tests/test_dkl_cai_dat.py` (5), `tests/test_giao_dien_dkl_quan_tri.py` (6), `tests/test_giao_dien_dkl_giao_vien.py` (3), `tests/test_giao_dien_dkl_hoc_sinh.py` (4). Sửa `test_giao_dien_dk3_cong.py` (chọn phòng trống đầu tiên). Chưa chạy bộ đầy đủ/CI.
+
 ## 2026-11-25 — DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8
 
 - `js/dang_ky_gv_hs.js`: học sinh đi theo từng buổi (Buổi k/N · Xếp nguyện vọng → Đặt huy chương → Bài kiểm tra), rồi Xem lại và gửi, biên nhận "Đã gửi lúc hh:mm, thứ …"; hai cột (CLB còn chọn | nguyện vọng NV1… với ↑ ↓ ✕), thẻ CLB có chip loại ngắn, giáo viên · phòng · khối, mô tả; nút kế tiếp là nút vàng duy nhất. Giáo viên: biểu mẫu ba bước có thanh bước, nút "Tiếp theo" màu vàng.

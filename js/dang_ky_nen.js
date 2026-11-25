@@ -149,9 +149,9 @@
     DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc()));
 
   /* Học sinh: tự đăng xuất sau 60 giây không thao tác (D25). Quản trị: máy chủ khoá sau 2 phút. */
-  DK.henGio = function (giay) {
+  DK.henGio = function (giay, chu) {
     clearTimeout(DK.hen);
-    DK.hen = setTimeout(() => DK.dangXuatCuc("Phiên đã kết thúc do để lâu không thao tác."), giay * 1000);
+    DK.hen = setTimeout(() => DK.dangXuatCuc(chu || "Phiên đã kết thúc do để lâu không thao tác."), giay * 1000);
   };
 
   document.addEventListener("DOMContentLoaded", () => global.RBDA.choBackend(

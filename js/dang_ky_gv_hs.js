@@ -5,6 +5,7 @@
   "use strict";
   const DK = global.DK, h = DK.h;
   const HC = ["Vàng", "Bạc", "Đồng"], HC_LOP = ["vang", "bac", "dong"];
+  const SAU_HS = ["nhap_diem", "xuat"];
   const TRANG_THAI = { cho_duyet: "Chờ duyệt", duyet: "Đã duyệt", tu_choi: "Bị từ chối" };
   const THU = ["Chủ nhật", "thứ Hai", "thứ Ba", "thứ Tư", "thứ Năm", "thứ Sáu", "thứ Bảy"];
 
@@ -26,34 +27,63 @@
     nhan.map((t, i) => h("li", Object.assign({}, i === cur ? { "aria-current": "step" } : {}, i === cur ? { class: "cur" } : {}), (i + 1) + ". " + t)));
 
   /* ============================== giáo viên ============================== */
-  DK.giaoVien = async function () {
+  DK.giaoVien = async function (sua) {
     const T = DK.S.token;
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
-    const [dsr, phr] = await Promise.all([DK.goi("dk_clb_danh_sach", T), DK.goi("dk_phong_danh_sach", T)]);
-    const ds = dsr.data || [], phong = phr.data || [];
+    const ds = (await DK.goi("dk_clb_danh_sach", T)).data || [];
     const mo = tt.giai_doan === "gv_dang_ky";
     const danh = h("ul.dk-ds", {}, ds.map((c) => h("li", {}, h("span.dk-than", {}, h("strong", {}, c.ten), " · " + c.buoi + " · " + c.loai,
       c.ly_do_tu_choi ? h("span.dk-phu", {}, " (" + c.ly_do_tu_choi + ")") : null),
-      chip(TRANG_THAI[c.trang_thai], c.trang_thai === "duyet" ? "on" : c.trang_thai === "tu_choi" ? "off" : "wait"))));
-    const phan = [DK.thanhDau("Giáo viên"), DK.khung("CLB của tôi", ds.length ? danh : h("p.dk-phu", {}, "Chưa có CLB nào."))];
+      chip(TRANG_THAI[c.trang_thai], c.trang_thai === "duyet" ? "on" : c.trang_thai === "tu_choi" ? "off" : "wait"),
+      mo && c.trang_thai !== "duyet" ? h("span.dk-thao-tac", {}, DK.nutNhe("Sửa", () => DK.giaoVien(c), { "aria-label": "Sửa " + c.ten }),
+        DK.nutNhe("Xoá", function () { DK.chay(this, async () => { const r = await DK.goi("dk_clb_xoa", T, c.clb_id); if (r.ok) DK.giaoVien(); return r; }); }, { "aria-label": "Xoá " + c.ten })) : null)));
+    const phan = [DK.thanhDau("Giáo viên"), DK.khung("CLB của tôi", ds.length ? danh : h("p.dk-phu", {}, "Chưa có CLB nào."),
+      mo ? h("p.dk-phu", {}, "Giáo viên chỉ chọn được phòng còn trống ở buổi của CLB, và không nhận quá sức chứa. Quên PIN: nhờ quản trị bấm «Đặt lại PIN».")
+        : h("p.dk-phu", {}, "Giáo viên không đăng ký hay sửa CLB được nữa. Cần thay đổi thì liên hệ quản lý."))];
     if (!mo) phan.push(h("p.dk-phu", {}, "Đăng ký CLB hiện đã đóng."));
-    else phan.push(formClb(tt, phong));
+    else phan.push(await formClb(tt, sua || null));
     DK.hien(...phan);
   };
 
-  function formClb(tt, phong) {
+  /* Kiểm từng bước (v8). Trả chuỗi lỗi hoặc "" nếu ổn. */
+  const kiemBuoc = (b, d) => {
+    const nguyen = (v) => /^\d+$/.test(String(v).trim());
+    if (b === 1) {
+      if (!d.buoi) return "Chọn buổi.";
+      if (!d.phong_id) return "Chọn phòng.";
+      if (d.loai !== "Tự do" && (!nguyen(d.chi_tieu === undefined || d.chi_tieu === null ? "" : d.chi_tieu) || +d.chi_tieu < 1)) return "Chỉ tiêu là số nguyên từ 1.";
+    } else if (b === 2) {
+      if (!nguyen(d.khoi_tu) || !nguyen(d.khoi_den) || +d.khoi_tu > +d.khoi_den) return "Chọn khối được tham gia.";
+      if (d.loai === "Tuyển chọn") {
+        if (!nguyen(d.diem_san === undefined || d.diem_san === null ? "" : d.diem_san) || +d.diem_san > 10) return "Điểm sàn là số nguyên từ 0 đến 10.";
+        if (!/^https:\/\//i.test(String(d.link_forms || "").trim())) return "CLB Tuyển chọn cần link bài kiểm tra Google Forms (bắt đầu bằng https://).";
+      }
+    } else if (!String(d.ten || "").trim()) return "Nhập tên CLB.";
+    return "";
+  };
+
+  async function formClb(tt, sua) {
     let buoc = 1;
     const TEN_BUOC = ["Lịch và phòng", "Ai được tham gia", "Giới thiệu"];
-    const d = { buoi: tt.buoi[0], loai: "Giới hạn", phong_id: phong[0] ? phong[0].phong_id : "", khoi_tu: tt.khoi[0], khoi_den: tt.khoi[1] };
+    const d = sua ? { ten: sua.ten, buoi: sua.buoi, loai: sua.loai, phong_id: sua.phong_id, chi_tieu: sua.chi_tieu_gv === null ? "" : sua.chi_tieu_gv,
+      khoi_tu: sua.khoi_tu, khoi_den: sua.khoi_den, diem_san: sua.diem_san === null ? "" : sua.diem_san, link_forms: sua.link_forms, mo_ta: sua.mo_ta, yeu_cau: sua.yeu_cau }
+      : { buoi: tt.buoi[0], loai: "Giới hạn", phong_id: "", khoi_tu: tt.khoi[0], khoi_den: tt.khoi[1] };
+    const phongTheo = {};
+    const taiPhong = async (b) => {
+      if (!phongTheo[b]) phongTheo[b] = ((await DK.goi("dk_phong_danh_sach", DK.S.token, b, sua ? sua.clb_id : null)).data || []).filter((p) => !p.ban);
+      if (!phongTheo[b].some((p) => String(p.phong_id) === String(d.phong_id))) d.phong_id = phongTheo[b][0] ? phongTheo[b][0].phong_id : "";
+    };
+    await taiPhong(d.buoi);
     const hop = h("section.dk-khung");
-    const chon = (nhan, k, lua) => h("label.dk-truong", {}, h("span", {}, nhan),
-      h("select.dk-nhap", { onchange: (e) => { d[k] = e.target.value; ve(); } }, lua.map(([v, t]) => h("option", { value: v, selected: String(d[k]) === String(v) }, t))));
+    const chon = (nhan, k, lua, doi) => h("label.dk-truong", {}, h("span", {}, nhan),
+      h("select.dk-nhap", { onchange: async (e) => { d[k] = e.target.value; if (doi) await doi(); ve(); } }, lua.map(([v, t]) => h("option", { value: v, selected: String(d[k]) === String(v) }, t))));
     const nhap = (nhan, k, thuoc) => h("label.dk-truong", {}, h("span", {}, nhan),
       h("input.dk-nhap", Object.assign({ value: d[k] === undefined ? "" : d[k], oninput: (e) => { d[k] = e.target.value; } }, thuoc)));
     function ve() {
-      const b1 = [chon("Buổi", "buoi", tt.buoi.map((b) => [b, b])),
+      const phong = phongTheo[d.buoi] || [];
+      const b1 = [chon("Buổi", "buoi", tt.buoi.map((b) => [b, b]), () => taiPhong(d.buoi)),
         chon("Loại CLB", "loai", [["Tự do", "Tự do"], ["Giới hạn", "Giới hạn"], ["Tuyển chọn", "Tuyển chọn"]]),
-        chon("Phòng", "phong_id", phong.map((p) => [p.phong_id, p.ten + " (" + p.suc_chua + " chỗ)"])),
+        chon("Phòng (chỉ hiện phòng trống buổi này)", "phong_id", phong.map((p) => [p.phong_id, p.ten + " (" + p.suc_chua + " chỗ)"])),
         d.loai === "Tự do" ? h("p.dk-ghichu", {}, "CLB Tự do nhận mọi em đăng ký, không cần chỉ tiêu.") : nhap("Chỉ tiêu", "chi_tieu", { type: "number", min: "1" })];
       const b2 = [h("div.dk-nhom", {}, nhap("Từ khối", "khoi_tu", { type: "number" }), nhap("Đến khối", "khoi_den", { type: "number" })),
         d.loai === "Tuyển chọn" ? [nhap("Điểm sàn (0–10)", "diem_san", { type: "number", min: "0", max: "10" }), nhap("Đường dẫn bài thi", "link_forms")]
@@ -61,13 +91,15 @@
       const b3 = [nhap("Tên CLB", "ten"), nhap("Mô tả ngắn", "mo_ta"), nhap("Yêu cầu", "yeu_cau")];
       const noi = [b1, b2, b3][buoc - 1];
       const nutTrai = buoc > 1 ? DK.nutNhe("← Quay lại", () => { buoc--; ve(); }) : null;
-      const nutPhai = buoc < 3 ? DK.nutVang("Tiếp theo", () => { buoc++; ve(); }) : DK.nutVang("Gửi duyệt", function () {
-        DK.chay(this, async () => { const r = await DK.goi("dk_clb_luu", DK.S.token, Object.assign({}, d, { phong_id: +d.phong_id }));
+      const kiem = () => { const loi = kiemBuoc(buoc, d); DK.thongBao(loi, !!loi); return !loi; };
+      const nutPhai = buoc < 3 ? DK.nutVang("Tiếp theo", () => { if (kiem()) { buoc++; ve(); } }) : DK.nutVang(sua ? "Lưu thay đổi" : "Gửi duyệt", function () {
+        if (!kiem()) return;
+        DK.chay(this, async () => { const r = await DK.goi("dk_clb_luu", DK.S.token, Object.assign({}, d, { phong_id: +d.phong_id }), sua ? sua.clb_id : null);
           if (r.ok) DK.giaoVien(); return r; }); });
-      hop.replaceChildren(h("h2.dk-tieude", {}, "Đăng ký CLB mới · Bước " + buoc + "/3 · " + TEN_BUOC[buoc - 1]),
+      hop.replaceChildren(h("h2.dk-tieude", {}, (sua ? "Sửa CLB «" + sua.ten + "»" : "Đăng ký CLB mới") + " · Bước " + buoc + "/3 · " + TEN_BUOC[buoc - 1]),
         thanhBuoc(TEN_BUOC, buoc - 1),
         h("form.dk-form", { novalidate: true, onsubmit: (e) => e.preventDefault() }, noi),
-        h("div.dk-hang-nut", {}, nutTrai, h("span.dk-gian"), nutPhai));
+        h("div.dk-hang-nut", {}, nutTrai, sua ? DK.nutNhe("+ Đăng ký CLB mới", () => DK.giaoVien(), { id: "dkCLBMoi" }) : null, h("span.dk-gian"), nutPhai));
     }
     ve();
     return hop;
@@ -78,7 +110,9 @@
     const T = DK.S.token;
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     if (tt.giai_doan !== "hs_dang_ky") {
-      DK.hien(DK.thanhDau("Học sinh"), DK.khung("Chưa mở đăng ký", h("p", {}, "Cổng đăng ký học sinh hiện chưa mở hoặc đã đóng."), DK.nutNhe("Về trang đầu", () => DK.dangXuatCuc())));
+      DK.hien(DK.thanhDau("Học sinh"), DK.khung(SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký" : "Chưa mở đăng ký",
+        h("p#dkHsDong", {}, SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký. Nguyện vọng em đã gửi vẫn được tính." : "Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo."),
+        DK.nutNhe("Về trang đầu", () => DK.dangXuatCuc())));
       return;
     }
     const clb = ((await DK.goi("dk_hs_clb_hop_le", T)).data || []);
@@ -185,7 +219,7 @@
         h("section.dk-khung", {}, h("div.dk-hang-nut", {}, h("h2.dk-gian", {}, "CLB Tuyển chọn trong nguyện vọng"), chip(dem + "/" + tt.toi_da_thi, dem >= tt.toi_da_thi ? "off" : "wait")),
           ung.length ? h("div.dk-cac-the", {}, ung.map((x) => h("label.dk-thi.dk-the-clb", {},
             h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= tt.toi_da_thi, onchange: (e) => { x.thi = e.target.checked; ve(); } }),
-            h("span.dk-than", {}, h("strong", {}, cua(x.clb_id).ten), h("span.dk-phu", {}, ghiChuLoai(cua(x.clb_id)))))))
+            h("span.dk-than", {}, h("strong", {}, cua(x.clb_id).ten), " ", cua(x.clb_id).diem_san === null || cua(x.clb_id).diem_san === undefined ? null : h("span.chip.off.dk-san", {}, "Dưới " + cua(x.clb_id).diem_san + " thì không xét"), h("span.dk-phu", {}, ghiChuLoai(cua(x.clb_id)))))))
             : h("div.dk-rong", {}, "Nguyện vọng buổi này không có CLB Tuyển chọn nào. Em bấm tiếp.")),
         h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("medals")), h("span.dk-gian"),
           DK.nutVang(cuoi ? "Tiếp: xem lại và gửi" : "Tiếp: " + tt.buoi[i + 1], () => (cuoi ? di("review") : di("rank", i + 1))))];

@@ -92,7 +92,7 @@ def test_3_giao_vien_dang_ky_clb_ba_buoc(cong):
         _dang_nhap(pg, "giao_vien", gv, pg.api_pin[gv])
         pg.wait_for_selector("text=Bước 1/3")
         pg.locator("select").nth(1).select_option(loai)
-        pg.locator("select").nth(2).select_option(index=i)
+        pg.locator("select").nth(2).select_option(index=0)   # DKL-S9: chỉ hiện phòng còn trống ở buổi đó
         if loai != "Tự do":
             pg.fill("input[type=number]", "10")
         _mot_vang(pg)

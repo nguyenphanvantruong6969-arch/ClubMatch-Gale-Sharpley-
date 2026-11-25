@@ -16,7 +16,8 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [x] L0 checker items: no str(e) to UI, PIN attempt limit, 10/5 limits as settings (DK4-FIX commits)
 - [ ] CI green (3 tests left, see Current state) → checker DK4 (PASS only with CI green Linux+Windows)
 - [x] Audit D1–D45 → `DK_DANH_GIA_TINH_NANG.md`; lot plan + prompts → `DKL_GIAO_THUC.md` (v8 diff table, 4 lots, same branch); CI green at 42b93af
-- [ ] DKL lot (coder+checker, after DK4-UI and CI green) then DK5
+- [x] DKL lots L2→L3→L1→L4 built locally by Sonnet in one session (2026-11-25 night); CI NOT yet run, checker NOT yet run
+- [ ] DKL: CI green on Linux+Windows → checker (prompt in DKL_GIAO_THUC §5) → `READY | head <sha>` → then DK5
 - [ ] DK4-UI: portal look/guidance like v8 (prompt below) → registry row, test-file count, `READY | head <sha>`
 
 ## Current state (2026-11-25)
@@ -82,3 +83,13 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 | 2026-11-25 | Opus | Confirmed DK3 CI green (bdb2be8); handoff updated | no new work |
 | 2026-11-25 | Opus | DK4 CI check: run 45645130466 in progress (includes DK4-CI-2) | no new work |
 | 2026-11-25 | Opus | Answered feature-coverage question; added audit step 4b | no new work |
+
+## DKL status (Sonnet, 2026-11-25 night; Truong asleep, "run CI later")
+- Built all four lots in one go (no checker round between). Scope = `DKL_GIAO_THUC.md` §2. Done: S1–S9, A1–A12 (A11 = "Sao lưu ngay" via `_backup_db`, NO restore UI/API: needs Truong's decision).
+- Local results: `test_dkl_cai_dat` 5, `test_giao_dien_dkl_quan_tri` 6, `..._giao_vien` 3, `..._hoc_sinh` 4 pass; related dk3/dk4/gt3/i18n tests green locally (see below), `ruff` clean, `kiem_nhanh` 7/7.
+- Changed existing test: `test_giao_dien_dk3_cong.py` test_3 now picks the FIRST free room (rooms are filtered by buổi). Test-file count 428.
+- Not verified: full suite, CI (Linux+Windows), pywebview on Windows, `window.print()` in WebView2 (copy button is the fallback), `confirm()` on "Xoá CLB" after opening to students.
+- Known simplifications: "Chốt điểm" only checks missing scores (the gold button stays «Chốt và xếp»); PIN slips print only from the just-created/reset list; per-grade fold and admin password change not built (not in v8 §2).
+## Needs Truong (DKL)
+- Backup RESTORE from the portal (v8 has it): not built; needs a decision (restore overwrites app.db).
+- Try the CI-built exe: score entry, PIN slip print, teacher edit/delete.

@@ -3581,3 +3581,19 @@ a.nav-item { text-decoration: none; }
 .dk-noidung summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
 @media (max-width: 480px) { .dk-chia { gap: 12px; } .dk-the-clb { padding: 10px; } .dk-hc-ten { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .dk-app * { transition: none !important; animation: none !important; } }
+
+/* ===== DKL (cổng đăng ký): phiếu PIN, hộp xác nhận, danh sách kiểm ===== */
+.dk-in { display: none; }
+.dk-in.mo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+.dk-phieu { border: 1px dashed #666; border-radius: 6px; padding: 8px 10px; break-inside: avoid; font-size: 13px; }
+.dk-phieu-pin { font-size: 20px; letter-spacing: 2px; margin: 4px 0; }
+.dk-chua-di { color: var(--muted, #555); border-left: 3px solid var(--warn, #c60); padding-left: 8px; }
+.dk-xacnhan { border: 1px solid var(--line, #bbb); border-radius: 6px; padding: 8px 12px; margin-top: 8px; }
+.dk-xacnhan[hidden] { display: none; }
+.dk-so { max-width: 6rem; }
+.dk-diem { max-width: 5rem; }
+@media print {
+  body * { visibility: hidden; }
+  #dkIn.mo, #dkIn.mo * { visibility: visible; }
+  #dkIn.mo { position: absolute; left: 0; top: 0; width: 100%; }
+}

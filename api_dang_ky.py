@@ -366,10 +366,18 @@ class DangKyMixin:
             return {}
         return self._dk_chay(lam, QUAN_TRI, token=token)
 
-    def dk_phong_danh_sach(self, token):
+    def dk_phong_danh_sach(self, token, buoi=None, bo_qua_clb=None):
+        """Danh sách phòng. Có `buoi`: mỗi phòng thêm `ban` = đã có CLB khác (chưa bị từ chối) ở buổi đó (v8: chỉ hiện phòng trống)."""
         def lam(cur, p):
-            return [dict(phong_id=r[0], ten=r[1], suc_chua=r[2]) for r in cur.execute(
-                "SELECT phong_id, ten, suc_chua FROM dk_phong ORDER BY ten")]
+            ra = []
+            for r in cur.execute("SELECT p.phong_id, p.ten, p.suc_chua, (SELECT COUNT(*) FROM dk_clb c WHERE c.phong_id = p.phong_id AND "
+                                 "c.trang_thai != 'tu_choi') FROM dk_phong p ORDER BY p.ten").fetchall():
+                d = dict(phong_id=r[0], ten=r[1], suc_chua=r[2], dang_dung=r[3])
+                if buoi is not None:
+                    d["ban"] = bool(cur.execute("SELECT 1 FROM dk_clb WHERE phong_id = ? AND buoi = ? AND trang_thai != 'tu_choi' "
+                                                "AND clb_id IS NOT ?", (r[0], buoi, bo_qua_clb)).fetchone())
+                ra.append(d)
+            return ra
         return self._dk_chay(lam, QUAN_TRI, GIAO_VIEN, ghi=False, token=token)
 
     # ------------------------------------------------------------ giáo viên
@@ -595,6 +603,28 @@ class DangKyMixin:
                              v["khoi_den"], v["diem_san"], v["link_forms"], v["mo_ta"], v["yeu_cau"], cid))
             self._dk_ghi_nk(cur, p["vai"], "luu_clb", v["ten"])
             return {"clb_id": cid}
+        return self._dk_chay(lam, GIAO_VIEN, QUAN_TRI, token=token)
+
+    def dk_clb_xoa(self, token, clb_id):
+        """DKL-S8 (D17): giáo viên xoá CLB của MÌNH khi GV còn mở và CLB chưa được duyệt; quản trị xoá CLB chưa duyệt trước khi
+        mở cho học sinh. CLB đã duyệt thì không xoá ở đây (dùng `dk_clb_sua_sau_mo`)."""
+        def lam(cur, p):
+            gd = self._dk_gd
+            r = cur.execute("SELECT gv_id, trang_thai FROM dk_clb WHERE clb_id = ?", (clb_id,)).fetchone()
+            if r is None:
+                raise _Loi("dk_khong_thay")
+            if p["vai"] == GIAO_VIEN:
+                if gd != "gv_dang_ky":
+                    raise _Loi("dk_sai_giai_doan", phan="gv_dang_ky")
+                if r[0] != p["id"]:
+                    raise _Loi("dk_clb_khong_sua_duoc")
+            elif CAC_GIAI_DOAN.index(gd) >= CAC_GIAI_DOAN.index("hs_dang_ky"):
+                raise _Loi("dk_sai_giai_doan", phan="duyet")
+            if r[1] == "duyet":
+                raise _Loi("dk_clb_khong_sua_duoc")
+            cur.execute("DELETE FROM dk_clb WHERE clb_id = ?", (clb_id,))
+            self._dk_ghi_nk(cur, p["vai"], "xoa_clb", clb_id)
+            return {}
         return self._dk_chay(lam, GIAO_VIEN, QUAN_TRI, token=token)
 
     def dk_clb_duyet(self, token, clb_id, quyet_dinh, chi_tieu=None, phong_id=None, ly_do=""):
@@ -825,6 +855,20 @@ class DangKyMixin:
                 "JOIN dk_clb c ON c.clb_id = n.clb_id WHERE n.thi = 1 AND n.diem IS NULL ORDER BY c.ten, n.student_id")]
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
+    def dk_diem_danh_sach(self, token):
+        """DKL-A2: mọi CLB Tuyển chọn có em đánh dấu thi: điểm sàn và từng em (mã, họ tên, lớp, điểm hoặc None)."""
+        def lam(cur, p):
+            ra = []
+            for cid, ten, san in cur.execute(
+                    "SELECT DISTINCT c.clb_id, c.ten, c.diem_san FROM dk_clb c JOIN dk_nguyen_vong n ON n.clb_id = c.clb_id "
+                    "WHERE n.thi = 1 ORDER BY c.ten").fetchall():
+                hs = [dict(ma=r[0], ho_ten=r[1], lop=r[2], diem=r[3]) for r in cur.execute(
+                    "SELECT n.student_id, h.ho_ten, h.lop, n.diem FROM dk_nguyen_vong n JOIN dk_hoc_sinh h ON h.student_id = n.student_id "
+                    "WHERE n.clb_id = ? AND n.thi = 1 ORDER BY h.lop, n.student_id", (cid,))]
+                ra.append(dict(clb_id=cid, ten=ten, diem_san=san, hoc_sinh=hs))
+            return ra
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
     # ------------------------------------------------------------ đọc thêm cho quản trị
     def dk_tien_do(self, token):
         """D31: tiến độ nộp theo lớp (lớp chậm nhất trước) và số em chọn từng CLB (chỉ quản trị)."""
@@ -843,6 +887,74 @@ class DangKyMixin:
             return [dict(luc=r[0], vai=r[1], hanh_dong=r[2], chi_tiet=r[3]) for r in cur.execute(
                 "SELECT luc, vai, hanh_dong, chi_tiet FROM dk_nhat_ky ORDER BY id DESC LIMIT ?", (int(gioi_han),))]
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    # ------------------------------------------------------------ DKL-L4: cài đặt, xem trước, sao lưu
+    def dk_cai_dat_doc(self, token):
+        """Quản trị: mã trường, buổi, khối, giới hạn, số lần đã xuất, lần sao lưu cuối (đọc, không trả mật khẩu)."""
+        def lam(cur, p):
+            buoi, khoi = self._dk_buoi_khoi(cur)
+            nv, thi = self._dk_gioi_han(cur)
+            return {"ma_truong": self._dk_cai_dat(cur, "ma_truong", ""), "buoi": buoi, "khoi": khoi, "toi_da_nv": nv, "toi_da_thi": thi,
+                    "so_lan_xuat": _so_nguyen(self._dk_cai_dat(cur, "so_lan_xuat", "0")) or 0, "sao_luu_luc": self._dk_cai_dat(cur, "sao_luu_luc"),
+                    "giai_doan": self._dk_gd}
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_cai_dat_doi(self, token, ma_truong=None, buoi=None, khoi=None):
+        """D4/D36: đổi mã trường (≥ 4 ký tự), danh sách buổi, dải khối. Buổi và khối chỉ đổi được ở giai đoạn Chuẩn bị
+        (sau đó CLB và học sinh đã dựa vào chúng). Trả cài đặt hiện tại."""
+        def lam(cur, p):
+            if ma_truong is not None:
+                ma = str(ma_truong).strip()
+                if len(ma) < 4:
+                    raise _Loi("dk_ma_truong_sai")
+                self._dk_dat(cur, "ma_truong", ma)
+            if buoi is not None or khoi is not None:
+                if self._dk_gd != "chuan_bi":
+                    raise _Loi("dk_sai_giai_doan", phan="chuan_bi")
+                b0, k0 = self._dk_buoi_khoi(cur)
+                ds = b0 if buoi is None else [str(b).strip() for b in buoi if str(b).strip()]
+                k = k0 if khoi is None else [_so_nguyen(x) for x in khoi]
+                if not ds or len(set(ds)) != len(ds) or len(k) != 2 or None in k or not 1 <= k[0] <= k[1] <= 12:
+                    raise _Loi("dk_khoi_sai")
+                if cur.execute("SELECT 1 FROM dk_clb LIMIT 1").fetchone() or (
+                        khoi is not None and cur.execute("SELECT 1 FROM dk_hoc_sinh WHERE khoi < ? OR khoi > ? LIMIT 1", tuple(k)).fetchone()):
+                    raise _Loi("dk_khoi_sai")
+                self._dk_dat(cur, "buoi", json.dumps(ds, ensure_ascii=False))
+                self._dk_dat(cur, "khoi", json.dumps(k))
+            self._dk_ghi_nk(cur, QUAN_TRI, "doi_cai_dat", ",".join(x for x, v in (("ma", ma_truong), ("buoi", buoi), ("khoi", khoi)) if v is not None))
+            return {}
+        return self._dk_chay(lam, QUAN_TRI, token=token)
+
+    def dk_xuat_xem_truoc(self, token, toi_da=40):
+        """DKL-A10 (D30): xem trước hai trang của Sổ nhập (`1. CLB`, `2. Học sinh`) và số lần đã xuất. Chỉ đọc."""
+        def lam(cur, p):
+            bm = self._dk_ban_mau(cur)
+            clb = [[c["ten"], c["buoi"], c["loai"], c["chiTieu"], c["diemSan"], c["ma"], c["phong"], c["sucChuaPhong"]] for c in bm["clb"]]
+            ten = {c["ma"]: c["ten"] for c in bm["clb"]}
+            hs = [[x["ma"], x["hoTen"], x["lop"], "; ".join("%s%s%s" % (ten.get(n["clb"], n["clb"]), "" if n["diem"] is None else " · " + str(n["diem"]),
+                                                              "" if not n["huyChuong"] else " · " + n["huyChuong"]) for n in x["nv"])]
+                  for x in bm["hocSinh"][:max(1, int(toi_da))]]
+            return {"clb": clb, "hoc_sinh": hs, "tong_hoc_sinh": len(bm["hocSinh"]),
+                    "so_lan_xuat": _so_nguyen(self._dk_cai_dat(cur, "so_lan_xuat", "0")) or 0}
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_sao_luu(self, token):
+        """DKL-A11 (D11): sao lưu `app.db` ngay (cùng cơ chế `_backup_db` của phần mềm, giữ vài bản gần nhất). Ghi giờ sao lưu."""
+        kiem = self._dk_chay(lambda cur, p: {}, QUAN_TRI, ghi=False, token=token)
+        if not kiem["ok"]:
+            return kiem
+        try:
+            tep = os.path.basename(self._backup_db())
+        except Exception:
+            _log.exception("dk_sao_luu")
+            return _fail(err("dk_loi_chung"))
+        luc = self._dk_bay_gio().isoformat(timespec="seconds")
+
+        def lam(cur, p):
+            self._dk_dat(cur, "sao_luu_luc", luc)
+            self._dk_ghi_nk(cur, QUAN_TRI, "sao_luu", "")
+            return {"tep": tep, "luc": luc}
+        return self._dk_chay(lam, QUAN_TRI, token=token)
 
     # ------------------------------------------------------------ L4: xuất Sổ nhập
     def _dk_ban_mau(self, cur):
@@ -887,6 +999,8 @@ class DangKyMixin:
                 kq = dk2_so_nhap.ghi_tu_ban_mau(du_lieu, dich)
             except dk2_so_nhap.LoiBanMau as e:
                 raise _Loi("dk_khong_xuat_duoc", detail="; ".join(e.loi[:3])) from None
-            self._dk_ghi_nk(cur, QUAN_TRI, "xuat_so_nhap", "%d clb %d hs" % (kq["so_clb"], kq["so_hs"]))
-            return {"duong_dan": dich, **kq}
+            lan = (_so_nguyen(self._dk_cai_dat(cur, "so_lan_xuat", "0")) or 0) + 1
+            self._dk_dat(cur, "so_lan_xuat", str(lan))
+            self._dk_ghi_nk(cur, QUAN_TRI, "xuat_so_nhap", "lan %d: %d clb %d hs" % (lan, kq["so_clb"], kq["so_hs"]))
+            return {"duong_dan": dich, "phien_ban": lan, **kq}
         return self._dk_chay(lam, QUAN_TRI, token=token)

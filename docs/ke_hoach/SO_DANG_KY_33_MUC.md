@@ -48,6 +48,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | DK2 | Cầu nối bản mẫu → Sổ nhập thật (thêm 25/11/2026) | Sửa mã · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK3 | Cổng đăng ký thật (bảng dk_*, api_dang_ky, dang_ky.html) (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK4 | Nối thẳng đăng ký → xếp: `dang_ky_sang_xep.py`, nút "Chốt và xếp" (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| DKL | Đóng khoảng cách cổng đăng ký thật với bản mẫu v8: nhập điểm, phiếu PIN, đóng sớm/gia hạn, sửa/xoá CLB, cài đặt, xem trước/phiên bản xuất, sao lưu (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
