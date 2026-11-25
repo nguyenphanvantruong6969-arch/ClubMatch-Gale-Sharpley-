@@ -14,7 +14,7 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
 - [x] L4 button + result summary in `dang_ky_quan_tri.js` + Playwright test
 - [x] L5 sidebar "Đăng ký CLB" (admin only) ↔ portal "← Mở phần mềm xếp CLB" / "Xem kết quả trong phần mềm"
 - [x] L0 checker items: no str(e) to UI, PIN attempt limit, 10/5 limits as settings (DK4-FIX commits)
-- [ ] CI green (3 tests left, see Current state) → checker DK4 (PASS only with CI green Linux+Windows)
+- [x] CI green (run 1660, head 42b93af, success incl. DK4-L0a–e + merge of DK4-FIX) → checker DK4 (PASS only with CI green Linux+Windows)
 - [x] Audit D1–D45 → `DK_DANH_GIA_TINH_NANG.md`; lot plan + prompts → `DKL_GIAO_THUC.md` (v8 diff table, 4 lots, same branch); CI green at 42b93af
 - [x] DKL lots L2→L3→L1→L4 built locally by Sonnet in one session (2026-11-25 night); CI NOT yet run, checker NOT yet run
 - [ ] DKL: CI green on Linux+Windows → checker (prompt in DKL_GIAO_THUC §5) → `READY | head <sha>` → then DK5
@@ -70,6 +70,11 @@ equal to the dk2 export + `import_so_nhap` path; plus entry from the app (L5). B
   teacher 3-step form). Backend: `dk_hs_clb_hop_le` adds `giao_vien`, `chi_tieu`. Tests: dk3_cong 10 pass (+5), dk3/dk4/giao_dien_dk4/van_phong
   118 pass, ruff clean, kiem_nhanh 7/7. Screenshots (1366 / 390 / admin, scale 1): `docs/phien/dk4_ui/*.png`. Not tried in pywebview/Windows.
   Note: "+ Thêm" is now disabled (not hidden) at the limit; ≤7 items per frame (D37) is not enforced on the club list.
+
+## DK4-finish (L0a–e) status (Sonnet coder, 2026-11-25)
+READY | head 42b93af
+- L0a no str(e) to UI; L0b PIN lock 5 tries → 5 min (persisted in dk_cai_dat) + `dk_mo_khoa` + unlock button; L0c limits read via `dk_trang_thai`/`dk_dat_gioi_han`; L0d `_dk_hoan_nguyen` keeps append-only log rows (test proves a failed run's run_history row would otherwise be lost); L0e `bat_luat` logged + `#dkLuuY` in summary.
+- Later pushes by other sessions (DKL/DK4-UI) are outside this READY; run 1666+ not judged here.
 
 ## Needs Truong
 - Try the exe on Windows: sidebar "Đăng ký CLB" ↔ portal round trip (pywebview untested).
