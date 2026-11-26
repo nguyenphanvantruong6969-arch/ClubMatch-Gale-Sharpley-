@@ -5,6 +5,7 @@
 - `js/dang_ky_quan_tri_2.js`: `QT2.napExcel(c)` (chèn trong `QT2.caiDat`, dưới lưới thẻ): nút «Tải file mẫu», vùng thả + «Chọn tệp .xlsx», xem trước (bảng Hợp lệ / Mới / Đã có / Dòng lỗi mỗi trang; mỗi trang có dòng lỗi mở một bảng «Dòng · Lý do», tối đa 50 dòng hiện), MỘT nút vàng «Nạp» chỉ bật khi xem trước có ≥ 1 dòng hợp lệ, rồi phiếu PIN gộp học sinh và giáo viên (hiện một lần). Giai đoạn học sinh đã bắt đầu đăng ký: giao diện gửi `bo_hoc_sinh` nên trang «Học sinh» bị bỏ qua (như ô dán). `QT2.phieuPin`: nhãn đăng nhập theo từng phiếu (`x.vai`), không đổi hành vi cũ.
 - `api_dang_ky_excel.py`: tham số tuỳ chọn `bo_hoc_sinh=False` (mặc định = như L1) cho `dk_excel_xem_truoc` / `dk_excel_nap`; kết quả xem trước có thêm `hs_bi_khoa`.
 - `style.css` (khối cuối, chỉ `.dk-*`): `.dk-tha`, `.dk-excel-xem`, `.dk-excel-loi`. Giao diện chính không đổi.
+- Chỉnh thiết kế (Truong: «make sure the design is nice»): bốn bước đánh số (Tải mẫu · Chọn tệp · Xem trước · Nạp), chip màu cho số mới / số lỗi, dòng gợi ý trước khi có kết quả; CSS `.dk-buoc*` (chỉ cổng).
 - Test mới: `tests/test_giao_dien_dk9_l2.py` (9, một fixture trang); `tests/test_dk9_nap_excel.py` thêm 1 (tổng 15). Không đổi schema, CSV, thuật toán; không sửa test cũ.
 
 ## 2026-11-26 — DK9-L1: nạp Excel cho cổng đăng ký (backend)

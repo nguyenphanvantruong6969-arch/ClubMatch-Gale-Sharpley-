@@ -167,6 +167,7 @@
     const ten = h("p#dkExcelTen.dk-phu", {}, "Chưa chọn tệp.");
     const xem = h("div#dkExcelXem.dk-excel-xem");
     const pin = h("div#dkPin");
+    const goiY = h("p#dkExcelGoiY.dk-phu", {}, "Kết quả hiện ở đây sau khi chọn tệp. Chưa ghi gì vào danh sách.");
     const nap = DK.nutVang("Nạp", function () { const b = this; DK.chay(b, napDi).then(() => { if (!tep) b.disabled = true; }); }, { id: "dkExcelNap", disabled: true });
     const doc = (f) => new Promise((xong, hong) => { const r = new global.FileReader(); r.onload = () => xong(String(r.result).split(",").slice(1).join(",")); r.onerror = () => hong(r.error); r.readAsDataURL(f); });
     const loiChu = (ma, tham) => DK.thongBao(DK.loiChu([{ code: ma, params: tham || {} }]), true);
@@ -175,7 +176,8 @@
         const m = xt[k];
         if (k === "hoc_sinh" && xt.hs_bi_khoa) return [tenTrang, "Đã khoá", "—", "—", "—"];
         if (!m.co) return [tenTrang, "Không có trang", "—", "—", "—"];
-        return [tenTrang, String(m.moi + m.da_co), String(m.moi), String(m.da_co), String(m.loi.length)];
+        const chip = (n, loai) => (n ? h("span.dk-chip." + loai, {}, String(n)) : "0");           // số khác 0 có chip màu: mới = xanh, lỗi = đỏ
+        return [tenTrang, String(m.moi + m.da_co), chip(m.moi, "on"), String(m.da_co), chip(m.loi.length, "off")];
       });
       const soLoi = TRANG_XL.reduce((a, [k]) => a + xt[k].loi.length, 0);
       const chu = xt.co_the_nap ? "Sẽ nạp " + xt.so_hop_le + " dòng hợp lệ" + (soLoi ? ", bỏ qua " + soLoi + " dòng lỗi." : ".")
@@ -186,11 +188,12 @@
           DK.bang(["Dòng", "Lý do"], ds.slice(0, TOI_DA_LOI_HIEN).map((e) => [String(e.dong), DK.loiChu([{ code: e.ly_do, params: e.params }])])),
           ds.length > TOI_DA_LOI_HIEN ? h("p.dk-phu", {}, "…và " + (ds.length - TOI_DA_LOI_HIEN) + " dòng lỗi nữa.") : null);
       });
+      goiY.hidden = true;
       xem.replaceChildren(h("p#dkExcelTomTat.dk-excel-tomtat", {}, chu), DK.bang(["Trang", "Hợp lệ", "Mới", "Đã có", "Dòng lỗi"], hang),
         h("p.dk-phu", {}, "«Đã có»: học sinh được cập nhật và giữ nguyên PIN; giáo viên và phòng đã có thì bỏ qua."), ...loi);
     };
     const chon = async (f) => {
-      tep = xt = null; nap.disabled = true; pin.replaceChildren(); xem.replaceChildren();
+      tep = xt = null; nap.disabled = true; pin.replaceChildren(); xem.replaceChildren(); goiY.hidden = false;
       if (!f) { ten.textContent = "Chưa chọn tệp."; return; }
       ten.textContent = f.name;
       if (!/\.xlsx$/i.test(f.name)) return loiChu("dk_excel_khong_phai_xlsx");
@@ -209,7 +212,7 @@
       const ds = hs.pin.map((x) => ({ ma: x.ma, ten: x.ten, lop: x.lop, pin: x.pin })).concat(gv.pin.map((x) => ({ ma: x.ma, ten: x.ten, pin: x.pin, vai: "gv" })));
       pin.replaceChildren(ds.length ? QT2.phieuPin(ds, "Mã PIN vừa tạo (chỉ hiện lúc này)", "hs") : h("p.dk-phu", {}, "Không có tài khoản mới nên không có PIN mới."));
       DK.thongBao("Đã nạp: học sinh mới " + hs.moi + " (cập nhật " + hs.da_co + "), giáo viên mới " + gv.moi + ", phòng mới " + d.phong.moi + "." + (d.loi.length ? " Bỏ qua " + d.loi.length + " dòng lỗi." : ""));
-      tep = xt = null; xem.replaceChildren(); ten.textContent = "Đã nạp. Chọn tệp khác để nạp tiếp.";
+      tep = xt = null; xem.replaceChildren(); goiY.hidden = false; ten.textContent = "Đã nạp. Chọn tệp khác để nạp tiếp.";
       return r;
     };
     const mau = DK.nut("Tải file mẫu", function () { DK.chay(this, async () => {
@@ -227,10 +230,14 @@
     ["dragenter", "dragover"].forEach((ev) => tha.addEventListener(ev, (e) => { e.preventDefault(); tha.classList.add("keo"); }));
     ["dragleave", "drop"].forEach((ev) => tha.addEventListener(ev, (e) => { e.preventDefault(); tha.classList.remove("keo"); }));
     tha.addEventListener("drop", (e) => { chon(e.dataTransfer && e.dataTransfer.files[0]); });
+    const buoc = (so, tieu, ...nd) => h("div.dk-buoc", {}, h("span.dk-buoc-so", { "aria-hidden": "true" }, String(so)), h("div.dk-buoc-nd", {}, h("b", {}, tieu), ...nd));
     return h("section#dkExcel.dk-khung", {}, h("h3", {}, "Nạp từ Excel"),
       h("p.dk-phu", {}, "Một tệp .xlsx có ba trang: «Học sinh» (Mã HS, Họ tên, Lớp), «Giáo viên» (Họ tên), «Phòng» (Tên phòng, Sức chứa). Khối suy từ lớp. Nạp lại tệp đã sửa được: học sinh cũ giữ nguyên PIN."),
       khoa ? h("p.dk-phu#dkExcelKhoa", {}, "Học sinh đã bắt đầu đăng ký nên trang «Học sinh» không được nạp.") : null,
-      h("div.dk-hang-nut", {}, mau), tha, ten, xem, nap, pin);
+      buoc(1, "Tải file mẫu và điền", h("div.dk-hang-nut", {}, mau)),
+      buoc(2, "Chọn hoặc thả tệp đã điền", tha, ten),
+      buoc(3, "Xem trước", xem, goiY),
+      buoc(4, "Nạp", nap, pin));
   };
 
   /* ---------- A9: thẻ Cài đặt ---------- */
