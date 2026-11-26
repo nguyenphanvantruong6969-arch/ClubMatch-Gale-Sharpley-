@@ -59,7 +59,7 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 - L1 + L2 + L4 done, L3 dropped. Head cb698f1: Tests run 1700 GREEN (Linux + Windows + ruff). kiem_nhanh 7/7.
 - MILESTONE 1 READY | head cb698f1   (note: L4 already included in this head; review L1+L2 as c4486d3..cb698f1 minus L4 files)
 - MILESTONE 2 READY | head cb698f1
-- NOT done: workflow *Build Windows executable* (manual dispatch; its last step overwrites the public release -> needs Truong's go-ahead).
+- Status: DONE d312516 CI green 2026-11-26 (Tests run 1701 + Build Windows executable run 24, both success). Build was run on Truong's explicit go-ahead.
 - Note: Playwright `clock.install()` makes `wait_for_function` hang (rAF faked) — use `wait_for_timeout` + assert.
 - Note: grep ALL tests for a changed UI string before pushing (the label change broke an old DK4 test).
 
@@ -97,3 +97,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 | 2026-11-26 | Sonnet | L3 dropped; L4 done: 2 guides + test_dk6_goi_phat_hanh + registry row | new test file, docs |
 | 2026-11-26 | Sonnet | CI 1699 red (L2 head 6eddc2b): old DK4 test expected old label -> fixed in tests/test_giao_dien_dk4_chot_xep.py; pushing with L4 (M1 head = this push head, L4 included) | fix round 1 of 2 |
 | 2026-11-26 | Sonnet | CI 1700 green on cb698f1; milestones 1+2 written; Build Windows executable left for Truong | status: awaiting checker + build go-ahead |
+| 2026-11-26 | Sonnet | Tests 1701 + Build run 24 green on d312516; opening PR on Truong's go-ahead | DONE |
