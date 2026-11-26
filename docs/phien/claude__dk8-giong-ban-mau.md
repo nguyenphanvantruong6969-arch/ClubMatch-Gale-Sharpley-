@@ -1,5 +1,14 @@
 # Branch handoff: claude/dk8-giong-ban-mau
 
+Status: DONE 3d0e41c CI green 2026-11-26 (Tests run 1722: success; checker M1+M2 PASS; soat-ma: 0 chặn, 0 nên sửa)
+
+## Tóm tắt cho Truong (5 dòng)
+1. Cổng đăng ký đã giống bản mẫu v8: thanh trên dính, thẻ vai trò, đăng nhập thẻ hẹp, quản trị dạng thanh thẻ + thẻ giai đoạn, giáo viên/học sinh dạng thẻ (L1–L4, cùng chỉnh thứ tự thẻ của phiên song song).
+2. L5: nút báo đang lưu / xong / lỗi, ô mã học sinh, PIN, tên có dấu ✓ chỉ theo định dạng, màn «Đã gửi» có một dấu ✓; không có dấu nào ở nguyện vọng, huy chương, đáp án.
+3. Sửa dọc đường hai lỗi CI thật: `test_dk3 test_9` (đua thời gian từ L2) và thanh trên không dính khi trang dài (L1).
+4. Không đổi thuật toán, schema, CSV; giao diện chính không đổi; `kiem_nhanh` 7/7. Báo cáo soát mã: `docs/ke_hoach/BAO_CAO_SOAT_MA_DK8.md` (4 mục nhỏ, 1 chưa đo, chờ Truong duyệt).
+5. Chưa làm: thử bản Windows .exe thật (Build chỉ chạy thủ công) và quyết định có thêm test giảm chuyển động cho thanh trên hay không.
+
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK8_GIAO_THUC.md` (size M, AUTO: coder runs its own checker; no human input).
@@ -71,20 +80,16 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
-- L5 (Truong, 2026-11-26, after reviewing screenshots): role-card order now Giáo viên → Học sinh → Quản trị, taller cards, logo, empty states, alert box, CSS chevron on «Thêm». Portal UI tests green locally, kiem_nhanh 7/7. Still no checker run.
-- Done locally and pushed: L1, L2, L3, L4 (all code + tests + docs). `DK8_KHAC_BIET.md` has zero "còn khác" rows.
-  Local: all portal UI tests green, ruff clean, kiem_nhanh 7/7. NO checker has run yet (milestones 1 and 2 are both still to do).
-- CI: run 1709 on L2 head `2102efe` was pending; this handoff push (L3+L4+docs) supersedes it. Need CI GREEN on the new head.
-- Milestone plan: because L3/L4 are already in, do ONE checker pass covering `7c5dae5..<head>` (call it "M1+M2"), or two if time allows.
-  Protocol §2: write `MILESTONE <k> READY | head <sha> | base 7c5dae5` here, push, `create_session` (sonnet, source_revision and
-  outcome_branch = this branch) with the CHECKER prompt of DK8_GIAO_THUC.md §3, wait with `send_later` 30 min, FIX max 2 rounds.
-- A `send_later` was scheduled in the OLD session (04:52Z) for CI check of 2102efe; ignore it in a new session.
-- Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s all 19 pairs).
-- Done: L1, L2, L3, L4 (pushed) and L5 (local, 18 tests in `tests/test_giao_dien_dk8_l5.py`, ruff clean). NO checker has run yet.
-- L5 design: `DK.phanHoi` in `js/dang_ky_nen.js` (DK.chay uses it, so every portal button gets `.is-luu/.is-xong/.is-loi`); tick moves to the re-rendered
-  button via MutationObserver (admin screen renders in two phases); `data-hl` fields = student id, PIN (4 digits), required names only; receipt has one `.dk-xong-dau`.
-  Two fake `ok:true` returns in `dang_ky_quan_tri_2.js` became `ok:false` (same message). CSS must override the MAIN-app UX2 rule `.btn.is-xong` (padding/nowrap).
-- Next: commit+push L5, wait CI green, then ONE checker pass `7c5dae5..<head>` ("M1+M2"), CI gate, soat-ma report, registry row DK8, test-file count in CLAUDE_CHI_TIET.md, `Status: DONE` + 5-line Vietnamese summary.
+MILESTONE M1+M2 READY | head 1bb488d | base 7c5dae5 -> checker PASS (7dd5a83), soat-ma done (3d0e41c), CI 1722 green
+- Done and pushed: L1, L2, L3, L4, L5 (feedback: `DK.phanHoi`, `data-hl` ticks, receipt tick, 19 tests in `test_giao_dien_dk8_l5.py`) and the
+  parallel session's "L6" (Truong, after screenshots: role-card order Giáo viên → Học sinh → Quản trị, taller cards, logo, empty states, alert box,
+  CSS chevron on «Thêm»; it changed SELECTORS/ORDER in dk8_l1/l2/l4 tests, see git log c51cef0..1bb488d: checker must confirm no assertion was weakened).
+- CI: run 1719 on `1bb488d` = all 17 jobs green (Linux 6/6, Windows 9/9, ruff, coverage >= 85 %). Build Windows exe is workflow_dispatch only.
+- Local on the merged head: portal UI tests green, ruff clean, kiem_nhanh 7/7 (checked before the merge, re-run by checker).
+- Fixed on the way: `DK.quanTri` now builds content first then shows the whole screen once (test_dk3 test_9 race since L2); sticky bar needs `#dkTop`
+  sticky + `body.dk-body {height:auto}` (global `html, body {height:100%}`); test_q in the L5 file reproduces it at 360 px height.
+- Next: checker pass `7c5dae5..1bb488d` (create_session sonnet; verdict in `docs/phien/claude__dk8-giong-ban-mau__checker.md`), FIX max 2 rounds,
+  then soat-ma four tiers (report only), `Status: DONE <sha> CI green <date>` + 5-line Vietnamese summary at the top of this file.
 - Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]`. Read tool caches images by path: use new filenames.
 - Tests require: exactly ONE `ol.dk-gd`, one `#dkHan`, one textarea in GV phase, every visible `.btn` in `#dkApp` >= 44 px, one gold button/frame.
 
@@ -118,3 +123,5 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 | 2026-11-26 | Sonnet | L3 + L4 done, handoff (context limit) | checker not yet run |
 | 2026-11-26 | Sonnet | L5 done: DK.phanHoi feedback, format-only tick, receipt tick; 18 tests | CI pending |
 | 2026-11-26 | Sonnet | CI loop round 1: chup_dk8.py wharton False; test count 439→444 in CLAUDE_CHI_TIET.md (Linux 6/6 log confirmed same cause) | CI only; DK8-L5 NOT started |
+| 2026-11-26 | Sonnet | CI loop: sticky bar fix (#dkTop + body height), test_q; merged parallel L6; CI 1719 green; MILESTONE M1+M2 READY | checker next |
+| 2026-11-26 | Sonnet | Closed DK8: checker PASS, soat-ma report, CI 1722 green on 3d0e41c, Status DONE | docs only |
