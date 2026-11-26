@@ -1,0 +1,324 @@
+"""DK9: nạp MỘT tệp .xlsx cho cổng đăng ký — học sinh, giáo viên, phòng (giai đoạn Chuẩn bị, nhưng không khoá thêm luật nào).
+
+Mô-đun này chỉ ĐỌC tệp, soát từng dòng rồi gọi lại đúng ba hàm có sẵn (`dk_hs_nap_danh_sach` chế độ "them", `dk_gv_tao_hang_loat`,
+`dk_phong_luu`); mọi luật của từng danh sách (giai đoạn, PIN giữ nguyên, trùng tên bỏ qua) là luật của các hàm ấy, KHÔNG thêm luật mới.
+Cổng tự kiểm quyền bằng phiên riêng (như mọi hàm `dk_*`): chỉ quản trị gọi được. Xem trước (`dk_excel_xem_truoc`) không ghi gì.
+
+Tệp: chỉ .xlsx, ≤ 5 MB, ≤ 5 000 dòng dữ liệu mỗi trang tính, hàng 1 là tiêu đề. Trang tính «Học sinh» (Mã HS | Họ tên | Lớp), «Giáo viên»
+(Họ tên), «Phòng» (Tên phòng | Sức chứa); khối suy từ lớp như ô dán (10A1 -> 10). Thiếu trang tính = danh sách ấy không nạp; không có
+trang nào = lỗi. Mọi dữ liệu mẫu là DỮ LIỆU GIẢ LẬP.
+"""
+
+import base64
+import binascii
+import io
+import unicodedata
+import zipfile
+
+from api_dang_ky import QUAN_TRI, _khoi_cua_lop, _Loi, _so_nguyen
+from i18n_errors import err
+from i18n_errors import phan_hoi_loi as _fail
+from i18n_errors import phan_hoi_ok as _ok
+from so_nhap import bo_dau, o_thanh_chu
+
+TOI_DA_MB = 5
+TOI_DA_GIAI_NEN_MB = 50           # chặn tệp zip nén quá mức (cỡ sau giải nén), như `_soat_co_xlsx` của sổ nhập
+TOI_DA_DONG = 5000                # dòng dữ liệu có chữ mỗi trang tính
+TOI_DA_QUET = 20000               # dòng thô tối đa phải đọc (chặn trang tính toàn ô trống có định dạng)
+TOI_DA_TEN = 60
+TOI_DA_MA = 30
+
+TEN_TRANG = {"hoc_sinh": "Học sinh", "giao_vien": "Giáo viên", "phong": "Phòng"}
+TIEU_DE = {"hoc_sinh": ["Mã HS", "Họ tên", "Lớp"], "giao_vien": ["Họ tên"], "phong": ["Tên phòng", "Sức chứa"]}
+# Tiêu đề chấp nhận được (so bằng `bo_dau`: không dấu, hoa/thường, gọn khoảng trắng; có thể thêm cột phụ phía sau).
+TIEU_DE_CHAP_NHAN = {
+    "hoc_sinh": [{"ma hs", "ma", "ma hoc sinh"}, {"ho ten", "ho va ten", "ten", "ten hoc sinh"}, {"lop"}],
+    "giao_vien": [{"ho ten", "ho va ten", "ten", "ten giao vien"}],
+    "phong": [{"ten phong", "phong", "ten"}, {"suc chua", "so cho", "chi tieu"}],
+}
+TRANG_HUONG_DAN = "Hướng dẫn"
+
+
+def _gon(chu) -> str:
+    """NFC, bỏ khoảng trắng đầu/cuối, gộp khoảng trắng giữa chữ thành một dấu cách."""
+    return " ".join(unicodedata.normalize("NFC", str(chu)).split())
+
+
+def _khoa_trang(ten) -> str:
+    return unicodedata.normalize("NFC", str(ten or "")).strip().casefold()
+
+
+def _loi_dong(sheet, dong, ly_do, **tham_so):
+    return {"sheet": sheet, "dong": dong, "ly_do": ly_do, "params": tham_so}
+
+
+class DangKyExcelMixin:
+    # ------------------------------------------------------------ đọc tệp (không đụng CSDL)
+    @staticmethod
+    def _dk_excel_giai_ma(file_base64, ten_tep):
+        """base64 -> bytes của một .xlsx hợp lệ về hình thức (hoặc ném `_Loi`)."""
+        if ten_tep and not str(ten_tep).strip().lower().endswith(".xlsx"):
+            raise _Loi("dk_excel_khong_phai_xlsx")
+        s = str(file_base64 or "")
+        if s.startswith("data:") and "," in s:                       # FileReader.readAsDataURL
+            s = s.split(",", 1)[1]
+        try:
+            du = base64.b64decode(s, validate=True)
+        except (binascii.Error, ValueError):
+            raise _Loi("dk_excel_khong_phai_xlsx") from None
+        mb = 1024 * 1024
+        if len(du) > TOI_DA_MB * mb:
+            raise _Loi("dk_excel_qua_lon", max_mb=TOI_DA_MB)
+        try:
+            with zipfile.ZipFile(io.BytesIO(du)) as z:
+                tong = sum(i.file_size for i in z.infolist())
+        except zipfile.BadZipFile:
+            raise _Loi("dk_excel_khong_phai_xlsx") from None         # gồm cả .csv đổi đuôi, tệp rỗng
+        if tong > TOI_DA_GIAI_NEN_MB * mb:
+            raise _Loi("dk_excel_qua_lon", max_mb=TOI_DA_MB)
+        return du
+
+    def _dk_excel_doc(self, file_base64, ten_tep=""):
+        """Đọc ba trang tính. Trả `{khoá: [(số dòng Excel, [ô đã thành chuỗi]), ...]}` chỉ cho trang CÓ mặt (đã bỏ hàng tiêu đề và hàng trống).
+        Ném `_Loi` ở lỗi mức tệp. Không đọc CSDL."""
+        import openpyxl
+        du = self._dk_excel_giai_ma(file_base64, ten_tep)
+        try:
+            wb = openpyxl.load_workbook(io.BytesIO(du), read_only=True, data_only=True)
+        except Exception:
+            raise _Loi("dk_excel_khong_phai_xlsx") from None
+        try:
+            theo_ten = {}
+            for ten in wb.sheetnames:
+                theo_ten.setdefault(_khoa_trang(ten), ten)
+            ra = {}
+            for khoa, ten_chuan in TEN_TRANG.items():
+                ten = theo_ten.get(_khoa_trang(ten_chuan))
+                if ten is None:
+                    continue
+                hang = self._dk_excel_hang(wb[ten], khoa)
+                if hang is not None:
+                    ra[khoa] = hang
+            if not ra:
+                raise _Loi("dk_excel_khong_co_sheet")
+            return ra
+        finally:
+            wb.close()
+
+    @staticmethod
+    def _dk_excel_hang(ws, khoa):
+        """Các hàng dữ liệu của một trang tính; None nếu trang hoàn toàn trống (coi như vắng)."""
+        tieu_de, ra = None, []
+        for so_dong, hang in enumerate(ws.iter_rows(values_only=True), start=1):
+            if so_dong > TOI_DA_QUET + 1:
+                raise _Loi("dk_excel_qua_nhieu_dong", sheet=TEN_TRANG[khoa], toi_da=TOI_DA_DONG)
+            o = [o_thanh_chu(v) for v in hang]
+            if not any(o):
+                continue
+            if tieu_de is None:
+                tieu_de = o
+                mong = TIEU_DE_CHAP_NHAN[khoa]
+                if len(o) < len(mong) or any(bo_dau(o[i]) not in mong[i] for i in range(len(mong))):
+                    raise _Loi("dk_excel_tieu_de_sai", sheet=TEN_TRANG[khoa], mong_doi=" | ".join(TIEU_DE[khoa]))
+                continue
+            if len(ra) >= TOI_DA_DONG:
+                raise _Loi("dk_excel_qua_nhieu_dong", sheet=TEN_TRANG[khoa], toi_da=TOI_DA_DONG)
+            ra.append((so_dong, o))
+        return None if tieu_de is None else ra
+
+    # ------------------------------------------------------------ soát từng dòng (thuần, không đụng CSDL)
+    @staticmethod
+    def _dk_excel_soat_hs(hang, k_tu, k_den):
+        hop_le, loi, thay = [], [], set()
+        for so_dong, o in hang:
+            o = o + [""] * (3 - len(o))
+            ma_, ten, lop = _gon(o[0]), _gon(o[1]), _gon(o[2])
+            khoi = _khoi_cua_lop(lop)
+            if not ma_:
+                ly = ("dk_excel_ma_trong", {})
+            elif " " in ma_ or len(ma_) > TOI_DA_MA:
+                ly = ("dk_excel_ma_sai", {})
+            elif not ten:
+                ly = ("dk_excel_ten_trong", {})
+            elif len(ten) > TOI_DA_TEN:
+                ly = ("dk_excel_ten_dai", {})
+            elif not lop:
+                ly = ("dk_excel_lop_trong", {})
+            elif khoi is None or not k_tu <= khoi <= k_den:
+                ly = ("dk_excel_khoi_ngoai", {"tu": k_tu, "den": k_den})
+            elif ma_ in thay:
+                ly = ("dk_excel_trung_ma", {})
+            else:
+                thay.add(ma_)
+                hop_le.append((so_dong, ma_, ten, lop))
+                continue
+            loi.append(_loi_dong("hoc_sinh", so_dong, ly[0], **ly[1]))
+        return hop_le, loi
+
+    @staticmethod
+    def _dk_excel_soat_gv(hang):
+        hop_le, loi, thay = [], [], set()
+        for so_dong, o in hang:
+            ten = _gon(o[0]) if o else ""
+            if not ten:
+                ly = "dk_excel_ten_trong"
+            elif len(ten) > TOI_DA_TEN:
+                ly = "dk_excel_ten_dai"
+            elif ten in thay:
+                ly = "dk_excel_trung_ten"
+            else:
+                thay.add(ten)
+                hop_le.append((so_dong, ten))
+                continue
+            loi.append(_loi_dong("giao_vien", so_dong, ly))
+        return hop_le, loi
+
+    @staticmethod
+    def _dk_excel_soat_phong(hang):
+        hop_le, loi, thay = [], [], set()
+        for so_dong, o in hang:
+            o = o + [""] * (2 - len(o))
+            ten = _gon(o[0])
+            sc = _so_nguyen(_gon(o[1])) if o[1] else None
+            if not ten:
+                ly = "dk_excel_ten_trong"
+            elif len(ten) > TOI_DA_TEN:
+                ly = "dk_excel_ten_dai"
+            elif sc is None or sc <= 0:
+                ly = "dk_excel_suc_chua"
+            elif ten in thay:
+                ly = "dk_excel_trung_ten"
+            else:
+                thay.add(ten)
+                hop_le.append((so_dong, ten, sc))
+                continue
+            loi.append(_loi_dong("phong", so_dong, ly))
+        return hop_le, loi
+
+    def _dk_excel_ke_hoach(self, token, file_base64, ten_tep=""):
+        """Đọc + soát + đối chiếu CSDL (chỉ ĐỌC). Trả `{ke_hoach, tom_tat}`:
+        `ke_hoach[khoá]` = {hop_le: [...], moi: [...], da_co: [...], loi: [...]}; `tom_tat` là phần xem trước cho giao diện."""
+        def lam(cur, p):
+            hang = self._dk_excel_doc(file_base64, ten_tep)
+            _, (k_tu, k_den) = self._dk_buoi_khoi(cur)
+            co_hs = {r[0] for r in cur.execute("SELECT student_id FROM dk_hoc_sinh")}
+            co_gv = {r[0] for r in cur.execute("SELECT ten FROM dk_giao_vien")}
+            co_ph = {r[0] for r in cur.execute("SELECT ten FROM dk_phong")}
+            kh = {}
+            if "hoc_sinh" in hang:
+                hl, loi = self._dk_excel_soat_hs(hang["hoc_sinh"], k_tu, k_den)
+                kh["hoc_sinh"] = dict(hop_le=hl, loi=loi, moi=[x for x in hl if x[1] not in co_hs], da_co=[x for x in hl if x[1] in co_hs])
+            if "giao_vien" in hang:
+                hl, loi = self._dk_excel_soat_gv(hang["giao_vien"])
+                kh["giao_vien"] = dict(hop_le=hl, loi=loi, moi=[x for x in hl if x[1] not in co_gv], da_co=[x for x in hl if x[1] in co_gv])
+            if "phong" in hang:
+                hl, loi = self._dk_excel_soat_phong(hang["phong"])
+                kh["phong"] = dict(hop_le=hl, loi=loi, moi=[x for x in hl if x[1] not in co_ph], da_co=[x for x in hl if x[1] in co_ph])
+            tom = {"thieu_sheet": [k for k in TEN_TRANG if k not in kh]}
+            for k in TEN_TRANG:
+                m = kh.get(k)
+                tom[k] = {"co": m is not None, "tong": len(m["hop_le"]) + len(m["loi"]) if m else 0, "moi": len(m["moi"]) if m else 0,
+                          "da_co": len(m["da_co"]) if m else 0, "loi": list(m["loi"]) if m else []}
+            tom["so_hop_le"] = sum(len(m["hop_le"]) for m in kh.values())
+            tom["co_the_nap"] = tom["so_hop_le"] > 0
+            return {"ke_hoach": kh, "tom_tat": tom}
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    # ------------------------------------------------------------ ba hàm công khai
+    def dk_excel_mau(self, token):
+        """Tệp mẫu: ba trang tính chỉ có hàng tiêu đề (không có dòng ví dụ, để khỏi nạp nhầm) + trang «Hướng dẫn» (bị bỏ qua khi nạp).
+        Trả `{ten_tep, file_base64}`."""
+        def lam(cur, p):
+            import openpyxl
+            from openpyxl.styles import Alignment, Font
+            wb = openpyxl.Workbook()
+            wb.remove(wb.active)
+            rong = {"hoc_sinh": (14, 32, 12), "giao_vien": (36,), "phong": (22, 14)}
+            for k, ten in TEN_TRANG.items():
+                ws = wb.create_sheet(ten)
+                ws.append(TIEU_DE[k])
+                for c in ws[1]:
+                    c.font = Font(bold=True)
+                for i, w in enumerate(rong[k]):
+                    ws.column_dimensions[chr(ord("A") + i)].width = w
+                ws.freeze_panes = "A2"
+                if k == "hoc_sinh":                                    # mã dạng chữ: không để Excel đổi 0123 thành 123
+                    ws.column_dimensions["A"].number_format = "@"
+            hd = wb.create_sheet(TRANG_HUONG_DAN)
+            for dong in (
+                ["Cách dùng"],
+                ["1. Điền dữ liệu vào các trang «Học sinh», «Giáo viên», «Phòng», từ hàng 2 trở xuống. Không xoá hàng 1 (tiêu đề)."],
+                ["2. Không cần điền đủ ba trang: trang nào để trống thì danh sách đó không được nạp."],
+                ["3. Khối được suy từ lớp (10A1 là khối 10). Không có cột Khối."],
+                ["4. Nạp lại tệp đã sửa được: học sinh cũ được cập nhật và giữ nguyên PIN; giáo viên, phòng đã có thì bỏ qua."],
+                ["5. Trang này không được nạp. Ví dụ (dữ liệu giả lập):"],
+                ["Học sinh", "10001", "Nguyễn Văn An", "10A1"],
+                ["Giáo viên", "Cô Lê Thị Hoa"],
+                ["Phòng", "P101", 40],
+            ):
+                hd.append(dong)
+            hd["A1"].font = Font(bold=True)
+            hd.column_dimensions["A"].width = 18
+            for r in hd.iter_rows(min_row=2, max_row=5):
+                r[0].alignment = Alignment(wrap_text=False)
+            bo = io.BytesIO()
+            wb.save(bo)
+            return {"ten_tep": "MAU_DANG_KY.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii")}
+        return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_excel_xem_truoc(self, token, file_base64, ten_tep=""):
+        """Chỉ ĐỌC: trả `{hoc_sinh|giao_vien|phong: {co, tong, moi, da_co, loi: [{sheet, dong, ly_do, params}]}, thieu_sheet,
+        so_hop_le, co_the_nap}`. `da_co`: học sinh = sẽ được cập nhật (giữ PIN); giáo viên / phòng = sẽ bị bỏ qua. Không ghi gì (kể cả nhật ký)."""
+        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep)
+        return _ok(r["data"]["tom_tat"]) if r["ok"] else r
+
+    def dk_excel_nap(self, token, file_base64, ten_tep=""):
+        """Nạp các dòng hợp lệ, bỏ dòng lỗi và liệt kê chúng. Đọc lại tệp (không tin kết quả xem trước của máy khách).
+        Trả `{hoc_sinh: {moi, da_co, pin: [{ma, pin, ten, lop}]}, giao_vien: {moi, da_co, pin: [{ma, ten, pin}]}, phong: {moi, da_co},
+        loi: [...], thieu_sheet}`; PIN chỉ có trong lần trả này (CSDL chỉ lưu băm). Mỗi danh sách là một giao dịch của hàm có sẵn;
+        nạp lại cùng tệp an toàn (idempotent) nếu một bước giữa chừng hỏng."""
+        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep)
+        if not r["ok"]:
+            return r
+        kh, tom = r["data"]["ke_hoach"], r["data"]["tom_tat"]
+        if not tom["so_hop_le"]:
+            return self._dk_excel_het_dong(tom)
+        ra = {"hoc_sinh": {"moi": 0, "da_co": 0, "pin": []}, "giao_vien": {"moi": 0, "da_co": 0, "pin": []},
+              "phong": {"moi": 0, "da_co": 0}, "loi": [], "thieu_sheet": tom["thieu_sheet"]}
+        if "phong" in kh:
+            ra["phong"]["da_co"] = len(kh["phong"]["da_co"])
+            for _, ten, sc in kh["phong"]["moi"]:
+                rr = self.dk_phong_luu(token, ten, sc)
+                if rr["ok"]:
+                    ra["phong"]["moi"] += 1
+                elif rr["errors"][0].get("code") == "dk_phong_trung":      # có người thêm cùng tên giữa lúc xem và nạp
+                    ra["phong"]["da_co"] += 1
+                else:
+                    return rr
+        if kh.get("giao_vien", {}).get("moi"):
+            rr = self.dk_gv_tao_hang_loat(token, "\n".join(x[1] for x in kh["giao_vien"]["moi"]))
+            if not rr["ok"]:
+                return rr
+            ra["giao_vien"]["moi"] = len(rr["data"]["da_tao"])
+            ra["giao_vien"]["da_co"] = len(kh["giao_vien"]["da_co"]) + len(rr["data"]["bo_qua"])
+            ra["giao_vien"]["pin"] = [{"ma": x["ten"], "ten": x["ten"], "pin": x["pin"]} for x in rr["data"]["da_tao"]]
+        elif "giao_vien" in kh:
+            ra["giao_vien"]["da_co"] = len(kh["giao_vien"]["da_co"])
+        if kh.get("hoc_sinh", {}).get("hop_le"):
+            ds = {x[1]: x for x in kh["hoc_sinh"]["hop_le"]}
+            van = "\n".join("%s\t%s\t%s" % (ma_, ten, lop) for _, ma_, ten, lop in kh["hoc_sinh"]["hop_le"])
+            rr = self.dk_hs_nap_danh_sach(token, van, "them")
+            if not rr["ok"]:
+                return rr
+            d = rr["data"]
+            ra["hoc_sinh"] = {"moi": d["moi"], "da_co": d["da_co"],
+                              "pin": [{"ma": x["ma"], "pin": x["pin"], "ten": ds[x["ma"]][2], "lop": ds[x["ma"]][3]} for x in d["pin"]]}
+        for k in ("hoc_sinh", "giao_vien", "phong"):
+            ra["loi"] += tom[k]["loi"]
+        return _ok(ra)
+
+    @staticmethod
+    def _dk_excel_het_dong(tom):
+        """Không có dòng hợp lệ nào: báo lỗi (kèm số dòng lỗi) thay vì nạp rỗng."""
+        so_loi = sum(len(tom[k]["loi"]) for k in TEN_TRANG)
+        return _fail(err("dk_excel_khong_co_dong", n=so_loi))

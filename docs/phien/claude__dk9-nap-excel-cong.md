@@ -33,7 +33,7 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - No schema change, no CSV change, no new library (`openpyxl==3.1.5` is in `requirements.txt`), no allocation change.
 
 ## Plan (written by Opus-role planner; ticked by Sonnet)
-- [ ] **L1 (must) backend, test first.** `tests/test_dk9_nap_excel.py`: (a) template round-trips: `dk_excel_mau` file →
+- [x] **L1 (must) backend, test first.** `tests/test_dk9_nap_excel.py`: (a) template round-trips: `dk_excel_mau` file →
   `dk_excel_xem_truoc` shows 0 rows, no error; (b) valid 3-sheet file loads exactly the rows, PINs returned once;
   (c) bad rows (empty code, no class, grade out of range, duplicate code, capacity ≤ 0, name > 60) skipped and listed
   with row number + reason, valid rows still load; (d) re-upload keeps student PINs, adds new, skips existing
@@ -55,7 +55,8 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - No test weakened; `kiem_nhanh.py` 7/7 (invariant 1: no allocation change); ruff clean; CI green.
 
 ## Current state (overwrite each handoff)
-- Nothing built yet. Branch created from `claude/dk8-giong-ban-mau` @ `1bb488d`; this file and the protocol are the only additions.
+- L1 done locally: `api_dang_ky_excel.py` + tests (14 green), kiem_nhanh 7/7, ruff clean. L2 (UI block «Nạp từ Excel» in `QT2.caiDat`) next.
+- Row error reasons are i18n codes (`dk_excel_*`) in `loi[].ly_do`; preview/nap return `{hoc_sinh|giao_vien|phong: {co,tong,moi,da_co,loi}, thieu_sheet, so_hop_le, co_the_nap}`.
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk8-giong-ban-mau` and `main`. Every push cancels running CI (~20 min).
@@ -63,9 +64,10 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - Another session already used the name "DK8-L5" (input feedback) and Truong's visual pass is "DK8-L6"; DK9 lots are DK9-L1/L2.
 
 ## Files touched
-- (none yet)
+- L1: `api_dang_ky_excel.py` (new), `api.py`, `phan_quyen.py`, `i18n_errors.py`, `i18n_loi.js`, `tests/test_dk9_nap_excel.py`, CHANGELOG, TIEN_DO.
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-26 | Sonnet (planner role at Truong's request) | Wrote this file and `DK9_GIAO_THUC.md` after two rounds of questions | No product code |
+| 2026-11-26 | Sonnet (coder) | L1 backend + 14 tests | merged dk8 + main first; L1 CI not awaited separately (L2 push covers the same head) |

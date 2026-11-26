@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — DK9-L1: nạp Excel cho cổng đăng ký (backend)
+
+- Mới `api_dang_ky_excel.py` (`DangKyExcelMixin`, ghép vào `PipelineAPI` ở `api.py`, đăng ký công khai-tự-kiểm-quyền ở `phan_quyen.py` như mọi hàm `dk_*`): `dk_excel_mau` (tệp mẫu: ba trang chỉ có tiêu đề + trang «Hướng dẫn» bị bỏ qua), `dk_excel_xem_truoc` (chỉ đọc: đếm mới / đã có / dòng lỗi kèm số dòng và lý do), `dk_excel_nap` (đọc lại tệp, nạp dòng hợp lệ qua `dk_phong_luu`, `dk_gv_tao_hang_loat`, `dk_hs_nap_danh_sach` chế độ "them"; học sinh cũ giữ PIN; PIN chỉ trả một lần). Chỉ quản trị. Giới hạn: .xlsx, ≤ 5 MB, ≤ 5 000 dòng mỗi trang. Không đổi schema, CSV, thuật toán, giao diện.
+- `i18n_errors.py`: mười lăm mã `dk_excel_*` ở CUỐI bảng (lỗi mức tệp + lý do từng dòng); `i18n_loi.js` sinh lại.
+- Test mới: `tests/test_dk9_nap_excel.py` (14).
+
 ## 2026-11-26 — DK8-L6: chỉnh giao diện cổng sau khi soát màn hình (Truong yêu cầu)
 
 - `js/dang_ky_nen.js`: thứ tự thẻ vai trò **Giáo viên → Học sinh → Quản trị** (Truong); dòng đếm luôn có (có thể trống) và chip dồn xuống đáy thẻ nên ba chip cùng một hàng; logo «RB» ở thanh trên. `js/dang_ky_quan_tri.js`: tab «Thêm» vẽ mũi tên bằng CSS (tên truy cập «Thêm»); «Danh sách» có trạng thái trống kèm nút đi tới nơi thêm (ẩn khi danh sách đã khoá). `js/dang_ky_quan_tri_2.js`: cảnh báo «Chưa đi tiếp được» thành khối đỏ nhạt có biểu tượng, `role="alert"`.
