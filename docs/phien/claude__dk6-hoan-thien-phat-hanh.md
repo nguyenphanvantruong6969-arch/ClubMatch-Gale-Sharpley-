@@ -25,7 +25,7 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
     (assert no `dk_dau_van_tay` call while on that tab for 12 s); (e) new label text + title present.
   - Test: NEW `tests/test_giao_dien_dk6_l1.py` (one shared page fixture; reuse helpers of
     `tests/test_giao_dien_dkl_m_lam_moi.py`, do not edit that file except to import).
-- [ ] **L2 (must) admin password change + per-grade fold** — `api_dang_ky.py`, `i18n_errors.py`, `js/dang_ky_quan_tri*.js`
+- [x] **L2 (must) admin password change + per-grade fold** — `api_dang_ky.py`, `i18n_errors.py`, `js/dang_ky_quan_tri*.js`
   - New `dk_doi_mat_khau(self, token, mat_khau_cu, mat_khau_moi)`: admin only; old must verify; new ≥ 4 chars (reuse
     `dk_mat_khau_ngan`); new salt via `_bam`; journal entry via `_dk_ghi_nk(cur, QUAN_TRI, "doi_mat_khau")`; other
     admin tokens invalidated except the caller's (if tokens are stored; else note it). New error code
@@ -56,10 +56,11 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
   - **MILESTONE 2 after L4**, then CI gate (Linux + Windows + Build Windows executable green).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 committed locally (tests/test_giao_dien_dk6_l1.py 7/7, kiem_nhanh 7/7, ruff clean). Not yet pushed.
-- In progress: L2 (admin password change + per-grade fold). Open problems: none.
-- Note: with Playwright `clock.install()`, `wait_for_function` hangs (rAF faked) — use `wait_for_timeout` + assert.
-- Note: `dk_diem_dat` is admin-only in this codebase (no teacher token), so "teacher saves score" is simulated with the admin token.
+- Done so far: L1 (b3daa55) + L2 committed locally; tests: dk6 l1 7/7, l2 5/5, doi_mat_khau 6/6; kiem_nhanh 7/7; ruff clean.
+- In progress: push L2, wait for CI green on head, then write MILESTONE 1. Then L3 (optional), L4.
+- Note: Playwright `clock.install()` makes `wait_for_function` hang (rAF faked) — use `wait_for_timeout` + assert.
+- Note: `dk_diem_dat` is admin-only here (no teacher token); "teacher saves score" is simulated with an admin token.
+- Note: Danh sách folds persist in `moDs` (js/dang_ky_quan_tri.js); a single grade opens by default (keeps test_giao_dien_dk4_mo_khoa).
 
 ## Decisions and gotchas (keep short)
 - Base is the integration branch, not main: before each lot `git fetch origin claude/loving-babbage-8yqo7d main` and
@@ -83,3 +84,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 |---|---|---|---|
 | 2026-11-26 | Opus | Plan DK6 (4 lots, size M), protocol, coder prompt | no product code |
 | 2026-11-26 | Sonnet | L1 done: tuLamMoi on ds + nhap_diem viec; label+title | test file new |
+| 2026-11-26 | Sonnet | L2 done: dk_doi_mat_khau + UI, per-grade fold | 2 new test files + backend file |

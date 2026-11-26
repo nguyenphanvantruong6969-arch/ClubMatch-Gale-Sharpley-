@@ -96,6 +96,7 @@ def test_b_hoc_sinh_nop_thi_danh_sach_tu_cap_nhat(cong_hs):
     pg = cong_hs
     _the(pg, "Danh sách")
     pg.locator("summary", has_text="Học sinh").click()
+    pg.locator("summary", has_text="Khối 10").click()                             # DK6-L2: học sinh chia thẻ gấp theo khối
     assert pg.locator("tr:has-text('H2')").inner_text().count("Chưa") == 1
     ok(pg.api.dk_hs_luu(ok(pg.api.dk_dang_nhap("hoc_sinh", "H2", ok(pg.api.dk_hs_dat_lai_pin(pg.qt, "H2"))["pin"]))["token"],
                         [{"clb_id": pg.ids["Tự do 1"]}]))

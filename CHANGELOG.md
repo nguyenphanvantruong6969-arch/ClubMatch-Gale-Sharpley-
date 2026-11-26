@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-26 — DK6-L2: đổi mật khẩu quản trị + «Danh sách» chia thẻ gấp theo khối
+
+- `api_dang_ky.py`: `dk_doi_mat_khau(token, mat_khau_cu, mat_khau_moi)` — chỉ quản trị; mật khẩu cũ phải đúng (`dk_mat_khau_cu_sai`), mới ≥ 4 ký tự (`dk_mat_khau_ngan`), băm lại với muối mới (`_bam`), nhật ký chỉ ghi `doi_mat_khau` (không ghi mật khẩu), huỷ mọi phiên quản trị KHÁC (phiên người gọi và phiên giáo viên/học sinh giữ nguyên). Không có bộ đếm sai riêng: phải đang đăng nhập quản trị mới gọi được. Hợp đồng `{ok,data,errors}`.
+- `i18n_errors.py` + `i18n_loi.js` (sinh lại bằng `tao_i18n_js.py`): mã lỗi mới `dk_mat_khau_cu_sai`.
+- `js/dang_ky_quan_tri_2.js` (`QT2.caiDat`): khối «Đổi mật khẩu quản trị» (cũ, mới, nhập lại; nhập lại không khớp bị chặn ở máy khách).
+- `js/dang_ky_quan_tri.js` (`danhSach`): học sinh chia `<details>` theo khối («Khối 10 · 268 HS · 240 đã nộp»); trạng thái mở/đóng mọi thẻ gấp giữ trong `moDs` nên còn sau tự làm mới (DK6-L1). Chỉ có một khối thì mở sẵn.
+- Test mới: `tests/test_dk6_doi_mat_khau.py` (6), `tests/test_giao_dien_dk6_l2.py` (5); sửa `tests/test_giao_dien_dk6_l1.py` test_b (mở thẻ Khối 10). Số tệp test trong `CLAUDE_CHI_TIET.md`: 438. Không đổi schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK6-L1: tự làm mới mở rộng + nhãn «Xếp ngoài nguyện vọng»
 
 - `js/dang_ky_quan_tri.js` (`DK.quanTri`): vòng tự làm mới (`QT2.tuLamMoi`, hỏi `dk_dau_van_tay` mỗi 5 giây) chạy thêm ở thẻ «Danh sách» và ở thẻ «Việc bây giờ» giai đoạn Nhập điểm (ngoài ba giai đoạn cũ). Giữ nguyên các lớp bảo vệ DKL-N/P (phiếu PIN, chữ chưa lưu, ô đang focus, hộp xác nhận).
