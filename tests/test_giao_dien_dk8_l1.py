@@ -51,19 +51,19 @@ def test_a_trang_dau_ba_the_vai_tro_co_chip_va_dong_dem(cong):
     the = pg.locator(".dk-cua")
     assert the.count() == 3
     ten = [the.nth(i).locator(".dk-cua-nut").inner_text() for i in range(3)]
-    assert ten == ["Học sinh", "Giáo viên", "Quản trị"]
-    hs, gv, qt = (the.nth(i).inner_text() for i in range(3))
+    assert ten == ["Giáo viên", "Học sinh", "Quản trị"]        # DK8-L5 (Truong, 2026-11-26): giáo viên trước học sinh
+    gv, hs, qt = (the.nth(i).inner_text() for i in range(3))
     assert "Chọn CLB theo từng buổi, đăng ký thi" in hs and "Chưa mở" in hs and "0 em đã gửi" in hs
     assert "Đăng ký mở CLB, chọn phòng" in gv and "Đang mở · còn 2 ngày" in gv and "2 giáo viên đã đăng ký tài khoản" in gv
     assert "Phòng, danh sách, duyệt CLB, nhập điểm, xuất sổ" in qt and "Cần mật khẩu" in qt
-    assert the.nth(0).locator(".dk-chip.wait").count() == 1 and the.nth(1).locator(".dk-chip.on").count() == 1
+    assert the.nth(1).locator(".dk-chip.wait").count() == 1 and the.nth(0).locator(".dk-chip.on").count() == 1
     assert pg.locator("h1").inner_text() == "Đăng ký câu lạc bộ"
     assert pg.get_by_role("button", name="Quản trị", exact=True).count() == 1             # nhãn nút giữ nguyên (test cũ dùng)
 
 
 def test_b_bam_vao_bat_ky_cho_nao_cua_the_deu_di_tiep(cong):
     pg = cong
-    pg.locator(".dk-cua").nth(1).click(position={"x": 6, "y": 6})                          # góc thẻ, không phải chữ nút
+    pg.locator(".dk-cua").nth(0).click(position={"x": 6, "y": 6})                          # góc thẻ, không phải chữ nút
     pg.wait_for_selector("text=Giáo viên đăng nhập")
     assert pg.locator("input[name=ten]").count() == 1
 
@@ -74,8 +74,8 @@ def test_c_chip_doi_theo_giai_doan(cong):
     pg.reload()
     pg.wait_for_selector("text=Chọn vai trò")
     the = pg.locator(".dk-cua")
-    assert "Đã đóng" in the.nth(1).inner_text() and "Chưa mở" in the.nth(0).inner_text()
-    assert the.nth(1).locator(".dk-chip.off").count() == 1
+    assert "Đã đóng" in the.nth(0).inner_text() and "Chưa mở" in the.nth(1).inner_text()
+    assert the.nth(0).locator(".dk-chip.off").count() == 1
 
 
 def test_d_thanh_tren_dinh_co_thuong_hieu_va_chip_giai_doan(cong):

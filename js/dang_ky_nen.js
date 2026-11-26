@@ -77,7 +77,7 @@
      xếp (chỉ quản trị, DK4-L5) và «Đăng xuất». Nằm ngoài #dkApp để dính ở mép trên; DK.hien đặt nó vào #dkTop. */
   DK.dauTren = function (vaiTro) {
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
-    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
+    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
       vaiTro ? [h("span.dk-gian"), h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
@@ -114,8 +114,8 @@
     const t = r.data, dem = (n, chu) => (typeof n === "number" ? n + chu : "");
     DK.hien(h("div.dk-dau-trang", {}, h("h1.dk-tieude", {}, "Đăng ký câu lạc bộ"), h("p.dk-phu", {}, "Chọn vai trò của bạn.")),
       h("div.dk-cuas", {},
-        DK.theVaiTro("Học sinh", "Chọn CLB theo từng buổi, đăng ký thi", DK.chipVai("hs"), dem(t.so_da_gui, " em đã gửi"), () => DK.manDangNhap("hoc_sinh")),
         DK.theVaiTro("Giáo viên", "Đăng ký mở CLB, chọn phòng", DK.chipVai("gv"), dem(t.so_gv, " giáo viên đã đăng ký tài khoản"), () => DK.manDangNhap("giao_vien")),
+        DK.theVaiTro("Học sinh", "Chọn CLB theo từng buổi, đăng ký thi", DK.chipVai("hs"), dem(t.so_da_gui, " em đã gửi"), () => DK.manDangNhap("hoc_sinh")),
         DK.theVaiTro("Quản trị", "Phòng, danh sách, duyệt CLB, nhập điểm, xuất sổ", h("span.dk-chip", {}, "Cần mật khẩu"), "", () => DK.manDangNhap("quan_tri"))));
   };
 
@@ -127,7 +127,7 @@
   };
   /* Thẻ vai trò: cả thẻ bấm được (nút ở tiêu đề phủ kín thẻ bằng ::after) nhưng nút vẫn tên đúng là tên vai trò (test và trình đọc màn hình). */
   DK.theVaiTro = (ten, mucDich, chip, dem, lam) => h("div.dk-cua", {}, h("h2.dk-cua-vai", {}, h("button.dk-cua-nut", { type: "button", onclick: lam }, ten)),
-    h("p.dk-cua-md", {}, mucDich), chip, dem ? h("p.dk-cua-dem", {}, dem) : null);
+    h("p.dk-cua-md", {}, mucDich), chip, h("p.dk-cua-dem", {}, dem || " "));   // DK8-L5: luôn có dòng đếm (có thể trống) để chip của ba thẻ nằm cùng một hàng
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },

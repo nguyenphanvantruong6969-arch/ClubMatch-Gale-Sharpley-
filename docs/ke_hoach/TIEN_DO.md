@@ -336,3 +336,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK8-L2 (màn quản trị giống v8: thanh thẻ trên, thẻ giai đoạn, thẻ nội dung) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, style.css, docs/phien/DK8_KHAC_BIET.md, CHANGELOG.md | tests/test_giao_dien_dk8_l2.py (7) | |
 | DK8-L3 (giáo viên + học sinh giống v8: thẻ CLB, form thẻ hẹp, xác nhận thẻ hẹp) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_gv_hs.js, style.css, docs/phien/DK8_KHAC_BIET.md, CHANGELOG.md | tests/test_giao_dien_dk8_l3.py (4) | |
 | DK8-L4 (khổ hẹp 390 px, focus; chỉ test) | xong ở máy, chờ CI | 2026-11-26 | CHANGELOG.md | tests/test_giao_dien_dk8_l4.py (2) | |
+| DK8-L5 (chỉnh giao diện cổng: thứ tự thẻ, logo, trạng thái trống, cảnh báo nổi) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_nen.js, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, style.css, CHANGELOG.md | sửa chỉ số trong tests/test_giao_dien_dk8_l1.py, _l2.py, _l4.py | |

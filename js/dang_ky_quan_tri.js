@@ -25,9 +25,9 @@
     DK.S.tt = tt;
     const thanTheo = { viec: () => viecBayGio(tt), ds: () => danhSach(), cai: () => DK.QT2.caiDat(), them: () => them(tt) };
     const noiDung = h("div.dk-noidung");
-    const the3 = [["viec", "Việc bây giờ"], ["ds", "Danh sách"], ["cai", "Cài đặt"], ["them", "Thêm ▾"]];
+    const the3 = [["viec", "Việc bây giờ"], ["ds", "Danh sách"], ["cai", "Cài đặt"], ["them", "Thêm"]];
     const thanh = h("nav.dk-the", { role: "tablist" }, the3.map(([k, t]) =>
-      h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t)));
+      h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t, k === "them" ? h("span.dk-mui", { "aria-hidden": "true" }) : null)));   // DK8-L5: mũi tên vẽ bằng CSS, tên truy cập vẫn là «Thêm»
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanh, noiDung);
     const nd = await thanTheo[the]();
     if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
@@ -172,6 +172,8 @@
       d.addEventListener("toggle", () => moDs.set(khoa, d.open));
       return d;
     };
+    /* DK8-L5: trạng thái trống có chữ hướng dẫn và nút đi thẳng tới nơi thêm (ẩn nút khi danh sách đã khoá). */
+    const trong = (chu, nhan, an) => h("div.dk-rong", {}, h("p", {}, chu), an ? null : DK.nutNhe(nhan, () => { the = "viec"; DK.quanTri(); }));
     const dongHs = (x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)];
     const cotHs = ["Mã", "Họ tên", "Lớp", "Đã nộp", ""];
     const khoiHs = [...new Set(hs.map((x) => x.khoi))].sort((a, b) => a - b);
@@ -181,9 +183,9 @@
         h("p.dk-phu", {}, "Phòng, giáo viên và học sinh. Chỉ học sinh có tên ở đây mới đăng nhập được; mỗi em một PIN in trên phiếu."),
         h("p.dk-dem", {}, ph.length + " phòng · " + gv.length + " giáo viên · " + hs.length + " học sinh · " + hs.filter((x) => x.da_nop).length + " đã gửi nguyện vọng")),
       khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null,
-      ct("phong", true, "Phòng (" + ph.length + ")", bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
-      ct("gv", false, "Giáo viên (" + gv.length + ")", bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
-      ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [bang(cotHs, [])]))));
+      ct("phong", true, "Phòng (" + ph.length + ")", ph.length ? bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua])) : trong("Chưa có phòng nào.", "Thêm phòng", khoa)),
+      ct("gv", false, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [trong("Chưa có học sinh nào. Dán danh sách (mã, họ tên, lớp) ở bước «Chuẩn bị».", "Thêm học sinh", khoa)]))));
   }
 
   async function them(tt) {

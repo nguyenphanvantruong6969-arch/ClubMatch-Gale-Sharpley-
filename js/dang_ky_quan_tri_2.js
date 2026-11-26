@@ -97,7 +97,7 @@
   QT2.bangPhong = (ph) => DK.bang(["Phòng", "Sức chứa", ""], ph.map((x) => [x.ten, x.suc_chua, x.dang_dung ? h("span.dk-phu", {}, "Đang có CLB") :
     DK.nutNhe("Xoá", function () { DK.chay(this, async () => { const r = await DK.goi("dk_phong_xoa", T(), x.phong_id); if (r.ok) lamMoi(); return r; }); })]));
   QT2.kiemTra = function (ly, nutDi) {
-    return ly.length ? h("p.dk-chua-di#dkChuaDi", {}, "Chưa đi tiếp được: " + ly.join(", ") + ".") : nutDi;
+    return ly.length ? h("p.dk-chua-di#dkChuaDi", { role: "alert" }, h("span.dk-chua-di-bieu", { "aria-hidden": "true" }, "!"), "Chưa đi tiếp được: " + ly.join(", ") + ".") : nutDi;
   };
 
   /* ---------- A6: duyệt có sửa chỉ tiêu / phòng ---------- */

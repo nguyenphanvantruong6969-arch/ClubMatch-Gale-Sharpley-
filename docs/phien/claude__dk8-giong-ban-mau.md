@@ -59,6 +59,7 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
+- L5 (Truong, 2026-11-26, after reviewing screenshots): role-card order now Giáo viên → Học sinh → Quản trị, taller cards, logo, empty states, alert box, CSS chevron on «Thêm». Portal UI tests green locally, kiem_nhanh 7/7. Still no checker run.
 - Done locally and pushed: L1, L2, L3, L4 (all code + tests + docs). `DK8_KHAC_BIET.md` has zero "còn khác" rows.
   Local: all portal UI tests green, ruff clean, kiem_nhanh 7/7. NO checker has run yet (milestones 1 and 2 are both still to do).
 - CI: run 1709 on L2 head `2102efe` was pending; this handoff push (L3+L4+docs) supersedes it. Need CI GREEN on the new head.
