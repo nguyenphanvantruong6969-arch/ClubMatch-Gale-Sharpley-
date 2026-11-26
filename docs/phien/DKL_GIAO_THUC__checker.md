@@ -1,3 +1,28 @@
+# DKL checker report — ROUND 4 (Sonnet) — head e6f9b96, branch claude/loving-babbage-8yqo7d, 2026-11-26
+
+**VERDICT: FIX: chờ CI** — run **45734319503** (head e6f9b96) còn `in_progress` (Lint xanh; Linux 1–6/6 và Windows 1–9/9 đang chạy). Mã và test đều PASS; chỉ thiếu CI xanh. Khi run xong xanh cả Linux và Windows → coi là PASS, không cần sửa gì thêm.
+
+Head checked: e6f9b96 (= origin/claude/loving-babbage-8yqo7d, không dịch). Môi trường: Python 3.11 venv, Chromium thật.
+
+## 1. DKL-P đóng M3 — PASS
+- `git diff 4a5aadd..e6f9b96 --stat`: đúng 5 tệp — js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, tests/test_giao_dien_dkl_m_lam_moi.py, CHANGELOG.md, docs/ke_hoach/TIEN_DO.md. Không đụng api*/i18n*/pipeline.
+- test_6: bản sao scratch với hai tệp JS của 4a5aadd → **FAIL** (`assert 2 == 1`, đọc dấu 2 lần); trên e6f9b96 → **PASS**; cả tệp 6 test PASS (12 s).
+- Hồi quy `giuDau`: (a) vẽ lại thủ công / đổi thẻ gọi `tuLamMoi(false, false)` → vẫn xoá `dauCho` và `clearInterval` (đọc mã + kịch bản dưới). (b) Kịch bản riêng (đồng hồ giả, scratch `test_scratch_b`, không đưa vào repo): admin ở «Duyệt CLB», nơi khác chuyển hs_dang_ky → nhap_diem; vòng hỏi tự vẽ lại và kết thúc ở «Nhập điểm» (không bật lại vòng hỏi). Sau đó 60 s đồng hồ giả: `dk_dau_van_tay` không gọi thêm (không còn interval dư). Đổi thẻ Danh sách → Việc bây giờ thủ công, 60 s: vẫn không gọi. Trả giai đoạn về hs_dang_ky, đổi thẻ thủ công, 30 s không đổi dữ liệu: màn KHÔNG vẽ lại (không dùng `dauCho` cũ). PASS. Ghi chú: `dauCho` cũ có thể còn trong closure ở nhap_diem nhưng mọi đường vào `tuLamMoi(true)` đều đi qua `DK.quanTri`, và bản thủ công luôn xoá nó trước → vô hại.
+- (c) test_8 (khoá nghỉ 2 phút), test_4 (PIN), test_5 (chữ gõ dở) PASS trong lần chạy mục 2.
+
+## 2. Chạy lại — PASS
+`tests/test_giao_dien_dkl_*.py tests/test_dkl_*.py tests/test_giao_dien_dk5_toan_trinh.py tests/test_a13_12_tai_lieu.py tests/test_ws_nhan_giao_dien.py` → **59 passed in 57.32s**. `ruff check .` sạch. kiem_nhanh.py (`.claude/skills/soat-ma/scripts/`) **7/7** (trung_khit: 15 ca trùng khít). `git grep '^<<<<<<<\|^>>>>>>>'` → rỗng. Hàng `| tests/ |` trong CLAUDE_CHI_TIET.md = 435 = `ls tests/test_*.py | wc -l` (435).
+
+## 3. CI — chưa xong (FIX: chờ CI)
+Run 45734319503 `in_progress` lúc kiểm; chỉ job Lint (ruff) xong, success. Run cũ 45729479268 (80ef1be) = success. Không chờ.
+
+## 4. Merge — PASS
+`git merge-tree --write-tree --name-only origin/main HEAD` → cây sạch (42009849), không xung đột; origin/main vẫn d106262.
+
+**Kết luận:** mã sẵn sàng gộp; điều kiện duy nhất còn lại là run 45734319503 xanh cả Linux lẫn Windows.
+
+---
+
 # DKL checker report — ROUND 3 (Sonnet) — head 80ef1be (integration: DK3+DK4+DKL+H..O+DK5), branch claude/loving-babbage-8yqo7d, 2026-11-26
 
 **VERDICT: FIX (một mục THẤP, M3; mọi thứ khác PASS).** Không có rủi ro mất dữ liệu; M3 chỉ là cửa sổ lệch ~100–300 ms làm màn cũ thêm một vòng. Nếu Truong chấp nhận rủi ro thấp này thì có thể gộp; nếu muốn đóng hẳn mục vòng 2 thì sửa như dưới.
