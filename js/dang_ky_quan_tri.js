@@ -37,8 +37,10 @@
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanhGd(tt.giai_doan), thanh, noiDung);
     const nd = await thanTheo[the]();
     if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
-    /* DKL-M: tự cập nhật ở thẻ «Việc bây giờ» của ba giai đoạn có người khác đang thay đổi dữ liệu. */
-    if (DK.S.vai === "quan_tri" && the === "viec" && ["gv_dang_ky", "duyet", "hs_dang_ky"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
+    /* DKL-M + DK6-L1: tự cập nhật ở thẻ «Việc bây giờ» và «Danh sách» của bốn giai đoạn có người khác đang thay đổi dữ liệu
+       (giáo viên đăng ký, duyệt, học sinh đăng ký, nhập điểm). KHÔNG tự làm mới: «Cài đặt», «Thêm», giai đoạn Chuẩn bị và Xuất
+       (chỉ quản trị đổi chúng; vẽ lại thêm rủi ro mà không thêm giá trị). Mỗi lần vẽ, `tuLamMoi(false)` ở đầu hàm đã tắt vòng cũ. */
+    if (DK.S.vai === "quan_tri" && (the === "viec" || the === "ds") && ["gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
   const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
@@ -118,11 +120,14 @@
   }
 
   function bangKetQua(t) {
+    /* DK6-L1: "ngoai" = hạng NULL trong match_results (dang_ky_sang_xep._dk_tom_tat_xep): em không vào được CLB nào trong danh sách của mình, được xếp bù vào CLB còn chỗ. */
+    const GHI_CHU_NGOAI = "Học sinh không vào được CLB nào trong danh sách của mình, được xếp vào CLB còn chỗ.";
     const nv = (m) => Object.keys(m).sort((a, b) => (a === "ngoai") - (b === "ngoai") || (a < b ? -1 : a > b ? 1 : 0))
-      .map((k) => (k === "ngoai" ? "Ngoài nguyện vọng" : "NV" + k) + ": " + m[k]).join(" · ") || "—";
+      .map((k, i) => [i ? " · " : "", k === "ngoai" ? h("span", { title: GHI_CHU_NGOAI }, "Xếp ngoài nguyện vọng") : "NV" + k, ": " + m[k]]);
+    const nvChu = (m) => (Object.keys(m).length ? nv(m) : "—");
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
       h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
-      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
+      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nvChu(x.theo_nguyen_vong)])));
   }
 
   function hienPin(ds, tieuDe, vai) {

@@ -328,3 +328,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK5-L1 (diễn tập 798 HS / 40 CLB qua API DK3/DK4) | xong ở máy, chờ CI | 2026-11-26 | du_lieu_test/dien_tap_dk5.py, CHANGELOG.md | tests/test_dk5_dien_tap.py (6) | dk_phong_luu trả phong_id lệch (Needs Truong) |
 | DK5-L2 (vùng chịu lỗi: khôi phục, khoá nghỉ, hạn chót, nộp lại, rollback giữa giao dịch, run_history chỉ thêm) | xong ở máy, chờ CI | 2026-11-26 | du_lieu_test/dien_tap_dk5.py, CHANGELOG.md | tests/test_dk5_vung_chiu_loi.py (6) | |
 | DK5-L3 (diễn tập giao diện admin/giáo viên/học sinh) | xong ở máy, chờ CI | 2026-11-26 | CHANGELOG.md, SO_DANG_KY_33_MUC.md, CLAUDE_CHI_TIET.md | tests/test_giao_dien_dk5_toan_trinh.py (4) | |
+| DK6-L1 (tự làm mới: Danh sách + Nhập điểm; nhãn «Xếp ngoài nguyện vọng») | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_quan_tri.js, CHANGELOG.md | tests/test_giao_dien_dk6_l1.py (7) | |

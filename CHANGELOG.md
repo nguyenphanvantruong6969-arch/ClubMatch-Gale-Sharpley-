@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DK6-L1: tự làm mới mở rộng + nhãn «Xếp ngoài nguyện vọng»
+
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`): vòng tự làm mới (`QT2.tuLamMoi`, hỏi `dk_dau_van_tay` mỗi 5 giây) chạy thêm ở thẻ «Danh sách» và ở thẻ «Việc bây giờ» giai đoạn Nhập điểm (ngoài ba giai đoạn cũ). Giữ nguyên các lớp bảo vệ DKL-N/P (phiếu PIN, chữ chưa lưu, ô đang focus, hộp xác nhận).
+- **Quyết định:** KHÔNG tự làm mới «Cài đặt», «Thêm», giai đoạn Chuẩn bị và Xuất — chỉ quản trị đổi các màn này; vẽ lại thêm rủi ro mà không thêm giá trị.
+- `bangKetQua`: nhãn «Ngoài nguyện vọng» → «Xếp ngoài nguyện vọng» kèm `title` giải thích. Nghĩa thật (đã kiểm `dang_ky_sang_xep._dk_tom_tat_xep`): `rank_in_student_pref` NULL = em không vào được CLB nào trong danh sách, được xếp bù vào CLB còn chỗ.
+- Test mới: `tests/test_giao_dien_dk6_l1.py` (7 ca; 3 đỏ trước, xanh sau). Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DKL-P: đóng mục M3 của checker vòng 3 (vẽ lại do vòng hỏi dùng đúng dấu đã thấy)
 
 - `js/dang_ky_quan_tri.js` (`DK.quanTri`) gọi `DK.QT2.tuLamMoi(false, !!tuDong)`; `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi(bat, giuDau)`): khi vẽ lại là do chính vòng hỏi thì KHÔNG xoá dấu đã thấy (`dauCho`), nên lần bật lại dùng nó thay vì gọi `dk_dau_van_tay` thêm lần nữa (trước đây mã đó chết vì `tuLamMoi(false)` xoá `dauCho` trước, mở cửa sổ ~100–300 ms làm một thay đổi xen giữa bị coi như đã thấy). Vẽ lại thủ công / rời màn vẫn xoá `dauCho` và dừng vòng hỏi cũ như trước.

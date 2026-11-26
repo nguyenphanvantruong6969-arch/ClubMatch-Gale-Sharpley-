@@ -11,7 +11,7 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 (Truong decision A: manual restore, document it only); DK7 (single source of truth) = separate size-L item, planned later.
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] **L1 (must) auto-refresh + wording** — `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js`
+- [x] **L1 (must) auto-refresh + wording** — `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js`
   - Extend `QT2.tuLamMoi` (5 s fingerprint poll, `dk_dau_van_tay`) to: tab "ds" (Danh sách) in phases gv_dang_ky,
     duyet, hs_dang_ky, nhap_diem; tab "viec" in phase `nhap_diem` (teachers enter scores concurrently).
   - Do NOT auto-refresh: tab "cai" (Cài đặt), tab "them", phases `chuan_bi` and `xuat` (only the admin changes them;
@@ -56,8 +56,10 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
   - **MILESTONE 2 after L4**, then CI gate (Linux + Windows + Build Windows executable green).
 
 ## Current state (overwrite each handoff)
-- Done so far: plan only (Opus, 2026-11-26). Branch created from `c4486d3`.
-- In progress: nothing. Tests: none yet. Open problems: none.
+- Done so far: L1 committed locally (tests/test_giao_dien_dk6_l1.py 7/7, kiem_nhanh 7/7, ruff clean). Not yet pushed.
+- In progress: L2 (admin password change + per-grade fold). Open problems: none.
+- Note: with Playwright `clock.install()`, `wait_for_function` hangs (rAF faked) — use `wait_for_timeout` + assert.
+- Note: `dk_diem_dat` is admin-only in this codebase (no teacher token), so "teacher saves score" is simulated with the admin token.
 
 ## Decisions and gotchas (keep short)
 - Base is the integration branch, not main: before each lot `git fetch origin claude/loving-babbage-8yqo7d main` and
@@ -80,3 +82,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-26 | Opus | Plan DK6 (4 lots, size M), protocol, coder prompt | no product code |
+| 2026-11-26 | Sonnet | L1 done: tuLamMoi on ds + nhap_diem viec; label+title | test file new |
