@@ -190,6 +190,11 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
             width=width, height=height, min_size=min_size,
         )
         _ghi_moc("sau create_window")
+        try:      # chỉ ghi log: biết WebView2 mất bao lâu để hiện cửa sổ / tải xong trang (khoảng sau webview.start)
+            window.events.shown += lambda: _ghi_moc("cua so da hien")
+            window.events.loaded += lambda: _ghi_moc("trang da tai xong")
+        except Exception:
+            pass
         if hasattr(js_api, "_set_window"):
             # Cho phép các tính năng dùng hộp thoại gốc của hệ điều hành
             # sau này (hiện chưa tính năng nào bắt buộc phải có window ref).
