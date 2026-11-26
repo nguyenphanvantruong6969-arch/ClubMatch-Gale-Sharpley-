@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-26 — DK6 fix 1 (CI run 1699, Linux 3/6): test cũ DK4 còn kiểm nhãn cũ
+
+- `tests/test_giao_dien_dk4_chot_xep.py` dòng 45: «Ngoài nguyện vọng: 1» → «Xếp ngoài nguyện vọng: 1» (nhãn đổi ở DK6-L1; test cũ bị bỏ sót vì lần chạy cục bộ chỉ chọn vài test liên quan). Không đổi mã sản phẩm.
+
 ## 2026-11-26 — DK6-L4: tài liệu cổng đăng ký + test gói phát hành (L3 bỏ)
 
 - `docs/huong_dan/DK6_BAT_DAU_NHANH.md` (cài đặt, thiết lập lần đầu, sáu giai đoạn `CAC_GIAI_DOAN`) và `docs/huong_dan/DK6_XU_LY_SU_CO.md` (quên PIN, quên mật khẩu quản trị — nói thật: chưa có đường đặt lại trong phần mềm, mất điện, **khôi phục sao lưu BẰNG TAY** theo quyết định A, thiếu WebView2).

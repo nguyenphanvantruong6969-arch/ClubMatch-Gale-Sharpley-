@@ -95,3 +95,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 | 2026-11-26 | Sonnet | L1 done: tuLamMoi on ds + nhap_diem viec; label+title | test file new |
 | 2026-11-26 | Sonnet | L2 done: dk_doi_mat_khau + UI, per-grade fold | 2 new test files + backend file |
 | 2026-11-26 | Sonnet | L3 dropped; L4 done: 2 guides + test_dk6_goi_phat_hanh + registry row | new test file, docs |
+| 2026-11-26 | Sonnet | CI 1699 red (L2 head 6eddc2b): old DK4 test expected old label -> fixed in tests/test_giao_dien_dk4_chot_xep.py; pushing with L4 (M1 head = this push head, L4 included) | fix round 1 of 2 |
