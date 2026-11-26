@@ -6,8 +6,8 @@
   GIAI_TRINH_THANH_CONG.pdf       : các em đạt nguyện vọng 1 ở cả hai buổi.
   GIAI_TRINH_KHONG_THANH_CONG.pdf : các em không đạt nguyện vọng 1 ở ít nhất một buổi, đủ bốn loại lý do
                                     (huy chương, bốc thăm, dưới điểm sàn, thua điểm).
-Chế độ Huy chương, seed 42 — giống mục 2 của báo cáo. Mỗi tệp có một trang tóm tắt đứng đầu, sau đó là
-phiếu của phần mềm, mỗi em một trang.
+Chế độ Huy chương, seed 42 — giống mục 2 của báo cáo. Tệp là đúng bản phần mềm xuất, mỗi em một trang;
+chỉ in đè dòng nhãn DỮ LIỆU MÔ PHỎNG ở mép trên.
 """
 import base64
 import collections
@@ -96,33 +96,32 @@ def trang_bia(duong, tieu_de, mo_ta, dong):
                          "> Lưu PDF), mỗi em một trang, theo đúng thứ tự trong bảng.", S_THUONG)])
 
 
-def xuat(api, ma, ten_tep, tieu_de, mo_ta):
-    tam = tempfile.mkdtemp()
-    bia = os.path.join(tam, "bia.pdf")
-    trang_bia(bia, tieu_de, mo_ta, [dong_tom_tat(api, s) for s in ma])
-    r = api.export_phieu_giai_trinh_pdf(os.path.join(tam, "phieu.pdf"), student_ids=ma)
+def _nhan_mo_phong():
+    """Trang trong suốt chỉ có dòng "DỮ LIỆU MÔ PHỎNG" ở mép trên, để in đè lên phiếu."""
+    import io
+    from reportlab.pdfgen import canvas
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf, pagesize=A4)
+    c.setFont("BVP-B", 8)
+    c.setFillColor(colors.HexColor("#A03020"))
+    c.drawRightString(A4[0] - 1.5 * cm, A4[1] - 0.8 * cm, "DỮ LIỆU MÔ PHỎNG — không phải học sinh thật")
+    c.save()
+    buf.seek(0)
+    return PdfReader(buf).pages[0]
+
+
+def xuat(api, ma, ten_tep):
+    """Đúng tệp phần mềm xuất (Lưu PDF), không thêm trang nào; chỉ in đè nhãn dữ liệu mô phỏng."""
+    r = api.export_phieu_giai_trinh_pdf(os.path.join(tempfile.mkdtemp(), "phieu.pdf"), student_ids=ma)
     assert r["ok"], r
-    phieu = r["data"].get("path")
-    # Phần mềm xếp phiếu theo lớp rồi theo mã; ghép lại đúng thứ tự trong bảng tóm tắt.
-    doc_phieu = PdfReader(phieu)
-    vi_tri = {}
-    for i, pg in enumerate(doc_phieu.pages):
-        chu = pg.extract_text() or ""
-        for s in ma:
-            if s not in vi_tri and ("Mã: %s" % s in chu or s in chu.split("\n")[1:3]):
-                vi_tri[s] = i
     w = PdfWriter()
-    for pg in PdfReader(bia).pages:
+    for pg in PdfReader(r["data"]["path"]).pages:
+        pg.merge_page(_nhan_mo_phong())
         w.add_page(pg)
-    thu_tu = [vi_tri[s] for s in ma if s in vi_tri]
-    con_lai = [i for i in range(len(doc_phieu.pages)) if i not in thu_tu]
-    for i in thu_tu + con_lai:
-        w.add_page(doc_phieu.pages[i])
     ra = os.path.join(D, ten_tep)
     with open(ra, "wb") as f:
         w.write(f)
-    print(ra, "· trang:", len(w.pages), "· khớp thứ tự:", len(thu_tu), "/", len(ma))
-    return ra
+    print(ra, "· trang:", len(w.pages))
 
 
 if __name__ == "__main__":
@@ -133,13 +132,5 @@ if __name__ == "__main__":
     for r in kq:
         nv[r["student_id"]].append(r["rank_in_student_pref"])
     tc = [s for s, v in nv.items() if all(x == 1 for x in v)]
-    xuat(api, [s for s in THANH_CONG if s in tc] or tc[:8], "GIAI_TRINH_THANH_CONG.pdf",
-         "Giải trình các ca phân bổ THÀNH CÔNG",
-         "Chế độ Huy chương, mã bốc thăm %d, 300 học sinh × 2 buổi. Trong lần chạy này %d/300 em đạt "
-         "nguyện vọng 1 ở cả hai buổi; dưới đây là %d em tiêu biểu (có em đỗ CLB Tuyển chọn nhờ điểm thi, có "
-         "em vào CLB Giới hạn nhờ huy chương)." % (SEED, len(tc), len([s for s in THANH_CONG if s in tc])))
-    xuat(api, KHONG_THANH_CONG, "GIAI_TRINH_KHONG_THANH_CONG.pdf",
-         "Giải trình các ca phân bổ KHÔNG THÀNH CÔNG",
-         "Chế độ Huy chương, mã bốc thăm %d. Trong lần chạy này %d/300 em không đạt nguyện vọng 1 ở ít nhất "
-         "một buổi. Dưới đây là %d em tiêu biểu, đủ bốn loại lý do phần mềm đưa ra: huy chương thấp hơn, bốc "
-         "thăm chưa trúng, dưới điểm sàn, thua điểm thi." % (SEED, 300 - len(tc), len(KHONG_THANH_CONG)))
+    xuat(api, [s for s in THANH_CONG if s in tc] or tc[:8], "GIAI_TRINH_THANH_CONG.pdf")
+    xuat(api, KHONG_THANH_CONG, "GIAI_TRINH_KHONG_THANH_CONG.pdf")
