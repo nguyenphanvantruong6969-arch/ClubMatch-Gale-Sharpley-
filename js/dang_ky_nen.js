@@ -92,6 +92,7 @@
   };
 
   DK.khung = (tieuDe, ...con) => h("section.dk-khung", {}, tieuDe && tieuDe.nodeType ? tieuDe : h("h1.dk-tieude", {}, tieuDe), ...con);
+  DK.theCon = (tieuDe, ...con) => h("section.dk-khung", {}, h("h3", {}, tieuDe), ...con);     // DK8-L2: thẻ nội dung (v8 `.panel`)
   DK.hep = (...con) => h("div.dk-hep", {}, ...con);                 // DK8-L1: cột hẹp giữa trang (≤ 480 px) cho đăng nhập / thiết lập
   const day = (nut) => { nut.classList.add("dk-day"); return nut; };   // nút vàng rộng hết thẻ
   DK.veTrangDau = () => DK.nutNhe("← Về trang chọn vai trò", () => DK.dauTrang());   // D38

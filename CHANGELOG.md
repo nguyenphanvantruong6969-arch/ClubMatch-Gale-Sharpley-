@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — DK8-L2: màn quản trị giống bản mẫu v8 (thanh thẻ trên, thẻ giai đoạn, thẻ nội dung)
+
+- `js/dang_ky_quan_tri.js`: thanh thẻ nằm TRÊN; «Việc bây giờ» = MỘT thẻ giai đoạn (`theGd`: thanh sáu bước bên trong + tiêu đề + giải thích + dòng đếm mono + dòng hạn chót với «Gia hạn +1 giờ / +1 ngày» và «Đóng ngay» bên phải) rồi các thẻ nội dung (`DK.theCon`): Chuẩn bị (danh sách kiểm 3 mục + «Phòng» + «Danh sách học sinh»), Giáo viên đăng ký (+ «CLB đã gửi», «Tạo hộ tài khoản giáo viên»), Duyệt (bảng trong thẻ, đếm), Học sinh đăng ký (hai thẻ cạnh nhau), Nhập điểm, Xuất. «Danh sách» và «Thêm ▾» chia thẻ.
+- `js/dang_ky_quan_tri_2.js`: `giaHan` (nhãn + ba nút viền), `caiDat` lưới thẻ hai cột, `nhuCau`/`saoLuu` thành thẻ, `nhapDiem`/`xemTruoc` nhận dữ liệu có sẵn (bớt một lần gọi). `style.css` (khối DK8-L2, chỉ `.dk-*`). Giữ nguyên mọi nhãn nút, `id` và hành vi cũ (một nút vàng mỗi màn, tự làm mới, phiếu PIN, thẻ gấp theo khối).
+- Test mới `tests/test_giao_dien_dk8_l2.py` (7). Test cũ không sửa. Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK8-L1: khung cổng giống bản mẫu v8 (thanh trên, thẻ vai trò, đăng nhập hẹp)
 
 - `du_lieu_test/chup_dk8.py` (mới): chụp CẶP màn hình v8 / cổng thật (19 màn, dữ liệu MÔ PHỎNG, ảnh không commit); `docs/phien/DK8_KHAC_BIET.md` (mới): bảng khác biệt theo màn × lô.

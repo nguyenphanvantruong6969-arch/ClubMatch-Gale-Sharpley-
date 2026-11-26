@@ -37,7 +37,7 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   (`body.dk` or `dang_ky.css` — if a new css file, add it to `dang_ky.html` and to the build bundle test of DK6), top
   bar, landing role cards with status, login cards. Landing status needs counts: if `dk_trang_thai` lacks them, add
   read-only COUNTS only (no names/ids: it is public) + backend test.
-- [ ] **L2 (must) admin.** Tabs above content; "Việc bây giờ" = phase card (stepper inside, title, explanation,
+- [x] **L2 (must) admin.** Tabs above content; "Việc bây giờ" = phase card (stepper inside, title, explanation,
   counts, deadline line + "Gia hạn" (menu +1 giờ/+1 ngày/date) and "Đóng ngay") + content cards per phase as v8
   (phase 1 checklist, 2 "CLB đã gửi", 3 approve table, 4 progress + demand, 5 score entry, 6 export). Move teacher bulk
   creation and other setup forms to where v8 has them (Danh sách / Cài đặt). "Thêm ▾" dropdown. Tables in cards.
@@ -59,10 +59,11 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
-- Done: L1 (harness `du_lieu_test/chup_dk8.py`, `DK8_KHAC_BIET.md`, top bar, role cards, narrow login, `dk_trang_thai` counts `so_gv`/`so_da_gui`).
-  Local: L1 tests 8 + related UI tests green, ruff clean, kiem_nhanh 7/7. CI on L1 head: pending. Next: L2 (admin).
+- Done: L1 (shell) and L2 (admin cards). Local: all portal UI tests green (50 + L2 7), ruff clean, kiem_nhanh 7/7.
+  Next: push, wait CI green on the head, then MILESTONE 1 (create checker session), then L3.
 - Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s for all 19 pairs).
-- Kept button labels for old tests (Đăng nhập / Đăng xuất / Quản trị / Tạo tài khoản giáo viên / Đóng đăng ký giáo viên).
+- Kept button labels for old tests (Đăng nhập / Đăng xuất / Quản trị / Tạo tài khoản giáo viên / Đóng đăng ký giáo viên / +1 giờ / +1 ngày / Đóng ngay).
+- Tests require: exactly ONE `ol.dk-gd`, one `#dkHan`, one textarea in the GV phase, every visible `.btn` in `#dkApp` >= 44 px high, one gold button per frame.
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk6-hoan-thien-phat-hanh`, `claude/loving-babbage-8yqo7d`, `main`.
@@ -80,6 +81,7 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 
 ## Files touched
 - docs/phien/claude__dk8-giong-ban-mau.md, docs/phien/DK8_GIAO_THUC.md: plan
+- L2: js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, style.css (end block), tests/test_giao_dien_dk8_l2.py
 - L1: api_dang_ky.py, dang_ky.html, js/dang_ky_{nen,quan_tri,gv_hs}.js, style.css (end block), du_lieu_test/chup_dk8.py, docs/phien/DK8_KHAC_BIET.md, tests/test_dk8_l1_dem_cong_khai.py, tests/test_giao_dien_dk8_l1.py
 
 ## Session log (append only, newest last)
@@ -87,3 +89,4 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 |---|---|---|---|
 | 2026-11-26 | Opus | Plan DK8 (visual parity with v8), auto protocol | no product code |
 | 2026-11-26 | Sonnet | L1 done: harness, shell (top bar, role cards, narrow login), public counts | CI pending |
+| 2026-11-26 | Sonnet | L2 done: admin tab bar on top, phase card + content cards, 2-col grids | CI pending |

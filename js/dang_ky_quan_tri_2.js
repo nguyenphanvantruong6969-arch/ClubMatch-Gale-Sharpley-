@@ -14,11 +14,12 @@
   const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
   QT2.giaHan = function (gd, han) {
     const goc = han && !isNaN(new Date(han).getTime()) && new Date(han).getTime() > Date.now() ? new Date(han) : new Date();
-    const them = (ms, chu) => DK.nutNhe(chu, function () { DK.chay(this, async () => {
+    const them = (ms, chu) => DK.nut(chu, function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_dat_han", T(), gd, iso(new Date(goc.getTime() + ms)));
       if (r.ok) { DK.thongBao("Đã gia hạn."); lamMoi(); } return r; }); });
-    return h("div.dk-hang-nut", {}, them(3600000, "+1 giờ"), them(86400000, "+1 ngày"),
-      DK.nutNhe("Đóng ngay", function () { DK.chay(this, async () => {
+    /* DK8-L2 (v8): «Gia hạn» + «Đóng ngay» bên phải dòng hạn chót; hai nút gia hạn hiện sẵn (không giấu trong menu) để quản trị bấm một lần. */
+    return h("div.dk-han-nut", {}, h("span.dk-phu", {}, "Gia hạn"), them(3600000, "+1 giờ"), them(86400000, "+1 ngày"),
+      DK.nut("Đóng ngay", function () { DK.chay(this, async () => {
         const r = await DK.goi("dk_chuyen_giai_doan", T(), TIEP[gd]); if (r.ok) lamMoi(); return r; }); }));
   };
 
@@ -59,8 +60,8 @@
 
   /* ---------- A2: nhập điểm ---------- */
   const so = (v) => (v === null || v === undefined ? "" : String(v).replace(".", ","));
-  QT2.nhapDiem = async function () {
-    const ds = (await DK.goi("dk_diem_danh_sach", T())).data || [];
+  QT2.nhapDiem = async function (ds0) {
+    const ds = ds0 || (await DK.goi("dk_diem_danh_sach", T())).data || [];
     if (!ds.length) return h("p.dk-phu", {}, "Không CLB nào có thi. Bấm «Chốt và xếp» để sang bước xếp.");
     const khoi = ds.map((c) => {
       const chip = (hs, o) => {
@@ -147,7 +148,7 @@
   QT2.nhuCau = function (tdo, hs) {
     const chua = hs.filter((x) => !x.da_nop);
     const theoLop = {}; chua.forEach((x) => { (theoLop[x.lop] = theoLop[x.lop] || []).push(x); });
-    return h("div#dkNhuCau", {}, h("h2", {}, "Nhu cầu theo CLB"), h("p.dk-phu", {}, "Theo dõi lớp nào chưa đăng ký để nhắc. Học sinh không thấy các con số này."),
+    return h("section#dkNhuCau.dk-khung", {}, h("h3", {}, "Nhu cầu theo CLB"), h("p.dk-phu", {}, "Theo dõi lớp nào chưa đăng ký để nhắc. Học sinh không thấy các con số này."),
       DK.bang(["CLB", "Số em chọn"], tdo.theo_clb.map((x) => [x.ten, x.so_em])),
       h("details#dkChuaDangKy", {}, h("summary", {}, "Chưa đăng ký (" + chua.length + " em)"),
         chua.length ? DK.bang(["Lớp", "Chưa nộp"], Object.keys(theoLop).sort().map((l) => [l, theoLop[l].map((x) => x.ma + " " + x.ho_ten).join("; ")])) : h("p.dk-phu", {}, "Mọi em đã gửi.")),
@@ -180,16 +181,17 @@
       if (moi.value !== lai.value) { DK.thongBao("Hai lần nhập mật khẩu mới không giống nhau.", true); return { ok: true }; }
       const r = await DK.goi("dk_doi_mat_khau", T(), cu.value, moi.value);
       if (r.ok) { cu.value = moi.value = lai.value = ""; chupO(); DK.thongBao("Đã đổi mật khẩu. Các máy quản trị khác phải đăng nhập lại."); } return r; }); }, { id: "dkDoiMk" });
-    return h("div", {}, h("h2", {}, "Mã trường"), h("p.dk-phu", {}, "Giáo viên nhập mã này khi tự tạo tài khoản. Đổi mã nếu bị lộ."), ma, luuMa,
-      h("h2", {}, "Buổi và khối"), sua ? h("p.dk-phu", {}, "Chỉ đổi được ở giai đoạn Chuẩn bị, khi chưa có CLB.") : h("p.dk-phu", {}, "Đã khoá: giáo viên đã đăng ký xong."), buoi, khoi, sua ? luuBk : null,
-      h("h2", {}, "Giới hạn cho học sinh"), nv, thi, luuGh,
-      h("h2", {}, "Đổi mật khẩu quản trị"), h("p.dk-phu", {}, "Mật khẩu mới có hiệu lực ngay; các máy quản trị khác bị đăng xuất."), mkCu, mkMoi, mkLai, doiMk,
+    return h("div", {}, h("div.dk-luoi2", {},
+      DK.theCon("Mã trường", h("p.dk-phu", {}, "Giáo viên nhập mã này khi tự tạo tài khoản. Đổi mã nếu bị lộ."), ma, luuMa),
+      DK.theCon("Buổi và khối", sua ? h("p.dk-phu", {}, "Chỉ đổi được ở giai đoạn Chuẩn bị, khi chưa có CLB.") : h("p.dk-phu", {}, "Đã khoá: giáo viên đã đăng ký xong."), buoi, khoi, sua ? luuBk : null),
+      DK.theCon("Giới hạn cho học sinh", nv, thi, luuGh),
+      DK.theCon("Đổi mật khẩu quản trị", h("p.dk-phu", {}, "Mật khẩu mới có hiệu lực ngay; các máy quản trị khác bị đăng xuất."), mkCu, mkMoi, mkLai, doiMk)),
       h("p.dk-phu", {}, "Quản trị tự khoá sau 2 phút không thao tác. Số lần đã xuất Sổ nhập: " + (c.so_lan_xuat || 0) + "."));
   };
 
   /* ---------- A10: xem trước bản xuất ---------- */
-  QT2.xemTruoc = async function () {
-    const x = (await DK.goi("dk_xuat_xem_truoc", T())).data || { clb: [], hoc_sinh: [], tong_hoc_sinh: 0, so_lan_xuat: 0 };
+  QT2.xemTruoc = async function (x0) {
+    const x = x0 || (await DK.goi("dk_xuat_xem_truoc", T())).data || { clb: [], hoc_sinh: [], tong_hoc_sinh: 0, so_lan_xuat: 0 };
     return h("details#dkXemTruoc", { open: true }, h("summary", {}, "Xem trước Sổ nhập (" + x.clb.length + " CLB, " + x.tong_hoc_sinh + " học sinh)"),
       h("p.dk-phu", {}, "Đã xuất " + x.so_lan_xuat + " lần. Mỗi lần xuất là một phiên bản mới."),
       h("h3", {}, "1. CLB"), DK.bang(["Tên", "Buổi", "Loại", "Chỉ tiêu", "Điểm sàn", "Mã", "Phòng", "Sức chứa phòng"], x.clb.map((r) => r.map((v) => (v === null ? "" : v)))),
@@ -204,7 +206,7 @@
     const kq = h("p#dkSaoLuuKq.dk-phu", {}, phut === null || phut > 60 ? "Chưa sao lưu trong 60 phút qua." : "Sao lưu lúc " + c.sao_luu_luc.replace("T", " ") + ".");
     const nut = DK.nut("Sao lưu ngay", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_sao_luu", T()); if (r.ok) kq.textContent = "Đã tạo bản sao lưu lúc " + r.data.luc.replace("T", " ") + "."; return r; }); }, { id: "dkSaoLuu" });
-    return h("div", {}, h("h2", {}, "Sao lưu"), h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
+    return DK.theCon("Sao lưu", h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
   };
   /* DKL-M: tự cập nhật trong vài giây. Mỗi 5 giây hỏi `dk_dau_van_tay` (công khai, rẻ, KHÔNG làm mới giờ nghỉ của phiên); chỉ vẽ
      lại khi dấu đổi — không có thay đổi thì không tải lại gì. Vẽ lại bằng `DK.quanTri(true)`: không tính là thao tác, không đặt lại
