@@ -109,8 +109,9 @@ function wsTaiTrangThai() {
     wsVeTenHienTai();
     wsCapNhatTieuDe();
     /* Chưa chọn (có nhiều workspace lúc khởi động) thì màn chọn hiện ngay,
-       đè lên trên và KHÔNG đóng được cho tới khi mở một workspace. */
-    if (wsTrangThai.enabled && !wsTrangThai.chon) wsMoManChon(false);
+       đè lên trên và KHÔNG đóng được cho tới khi mở một workspace. Trừ giáo viên: mở workspace là việc của quản trị
+       (open_workspace), màn chọn không đóng được sẽ khoá cứng giáo viên; họ làm trong workspace đang mở (tên hiện ở thanh bên). */
+    if (wsTrangThai.enabled && !wsTrangThai.chon && document.body.dataset.vai !== "giao_vien") wsMoManChon(false);
   });
 }
 

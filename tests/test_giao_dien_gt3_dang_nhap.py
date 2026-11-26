@@ -176,3 +176,91 @@ def test_dang_nhap_xong_nap_lai_the_dang_mo_workspace_va_bo_thong_bao_cu(trang):
     con = [x for x in page.locator("#toastStack .toast").all_inner_texts() if "Cần đăng nhập" in x]
     assert con == [], con
     assert not loi, loi
+
+
+
+def _hai_workspace_ban_sao_trong_moi_hon(tmp_path):
+    """Hai workspace: «Trường học» có dữ liệu; «Bản sao trống» (nhân bản kèm tài khoản, rồi xoá dữ liệu) SỬA GẦN NHẤT.
+    Trả (slug_a, api) với api dựng đúng như main.khoi_dong_workspace (CSDL sửa gần nhất, da_chon=False)."""
+    import base64
+    import time
+
+    import workspace
+    from api import PipelineAPI
+    from rbda_priority_pipeline import init_db
+
+    goc = str(tmp_path)
+    a = workspace.tao(goc, "Trường học", None)
+    pa = workspace.duong_dan_db(goc, a)
+    init_db(pa)
+    api_a = PipelineAPI(pa, thu_muc_goc_ws=goc, ws_da_chon=True)
+    api_a.tao_tai_khoan("quantri", MK, "quan_tri")
+    api_a.tao_tai_khoan("giaovien", MK2, "giao_vien")
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_MAU_DAY_DU.xlsx"), "rb") as f:
+        assert api_a.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    time.sleep(1.1)                                       # bản sao phải là workspace SỬA GẦN NHẤT
+    b = workspace.nhan_ban(goc, a, "Bản sao trống", True)  # chép cả tài khoản
+    api_b = PipelineAPI(workspace.duong_dan_db(goc, b), thu_muc_goc_ws=goc, ws_da_chon=True)
+    assert api_b.dang_nhap("quantri", MK)["ok"]
+    assert api_b.reset_data("tat_ca", "XOA")["ok"]
+    api_b.dang_xuat()
+    ds = workspace.danh_sach(goc)
+    db0 = max(ds, key=lambda w: w["modified"])["path"]
+    assert db0 == workspace.duong_dan_db(goc, b)
+    return a, PipelineAPI(db0, thu_muc_goc_ws=goc, ws_da_chon=False)
+
+
+def _mo_trang_dang_nhap(pw, api, ten, mk):
+    url = browser_host.serve(api, GOC, "index.html", open_browser=False)
+    br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+    page = br.new_page(locale="vi-VN", bypass_csp=True)
+    page.set_default_timeout(8000)
+    page.loi = []
+    page.on("pageerror", lambda e: page.loi.append(str(e)))
+    page.goto(url)
+
+    def dang_nhap():
+        page.wait_for_selector("#tkNutDangNhap")
+        page.fill("#tkTen", ten)
+        page.fill("#tkMatKhau", mk)
+        page.click("#tkNutDangNhap")
+        page.wait_for_selector("#tkNutDangXuat")
+
+    page.dang_nhap = dang_nhap
+    dang_nhap()
+    return br, page
+
+
+def test_nhieu_workspace_dang_nhap_xong_hien_man_chon_khong_lam_viec_nham_workspace_trong(tmp_path):
+    """Lỗi khẩn (Truong, 26/11, ảnh): workspace SỬA GẦN NHẤT có tài khoản nhưng trống. Trước: get_workspace_state bị
+    từ chối lúc chưa đăng nhập -> màn chọn không bao giờ hiện, tên workspace không hiện -> «Chưa có dữ liệu» trong
+    workspace sai. Nay: đăng nhập xong màn chọn hiện; chọn workspace có dữ liệu -> đăng nhập lại (tài khoản theo từng
+    workspace) -> thấy đủ dữ liệu."""
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    a, api = _hai_workspace_ban_sao_trong_moi_hon(tmp_path)
+    with sync_playwright() as pw:
+        br, page = _mo_trang_dang_nhap(pw, api, "quantri", MK)
+        page.wait_for_selector("#wsOverlay", state="visible")
+        page.click('#wsOverlay [data-slug="%s"][data-hanh-dong="mo"]' % a)
+        page.dang_nhap()                                       # phiên gắn với CSDL: workspace khác thì đăng nhập lại
+        page.wait_for_function("document.getElementById('statStudents').textContent === '120'")
+        assert page.locator("#wsOverlay").is_hidden()
+        assert page.locator("#viecTiepTheo").get_attribute("data-trang-thai") != "nap_so"
+        assert not page.loi, page.loi
+        br.close()
+
+
+def test_nhieu_workspace_giao_vien_khong_bi_khoa_trong_man_chon(tmp_path):
+    """Giáo viên không mở được workspace (open_workspace là việc của quản trị): màn chọn không đóng được không được bật
+    ra với giáo viên; tên workspace đang mở vẫn hiện để biết mình đang ở đâu."""
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    _a, api = _hai_workspace_ban_sao_trong_moi_hon(tmp_path)
+    with sync_playwright() as pw:
+        br, page = _mo_trang_dang_nhap(pw, api, "giaovien", MK2)
+        page.wait_for_function("document.body.dataset.vai === 'giao_vien'")
+        page.wait_for_timeout(1000)
+        assert page.locator("#wsOverlay").is_hidden()
+        assert not page.loi, page.loi
+        br.close()

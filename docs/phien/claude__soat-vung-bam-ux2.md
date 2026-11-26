@@ -108,8 +108,12 @@ Place it after test_1 (portal must be initialised; the module fixture is shared)
   `get_workspace_state` denied pre-login was never retried.
 - Fix: js/16_tai_khoan.js `taiLaiGiaoDien` (after `capNhat`), js/075_workspace.js `wsTaiTrangThai`,
   js/00_nen.js toast `data-ma`. Test added in tests/test_giao_dien_gt3_dang_nhap.py (RED before fix).
-- Not explained yet: the screenshot's "Chưa có dữ liệu" banner means the backend DB really had 0 students at
-  that moment (dash ok); likely an empty workspace was active. Ask Truong if it recurs after this fix.
+- Explained (round 2, emergency patch): several workspaces → main.py opens the most recently modified one
+  with `da_chon=False` and relies on the UI chooser; `get_workspace_state` is teacher-level, denied before login,
+  so the chooser never appeared and the user worked in the wrong (empty, but with accounts) workspace. Old code
+  reproduces the screenshot exactly. Round 2 also stops forcing the non-closable chooser on teachers.
+- Open (Truong decides): if the most recent workspace has accounts the user cannot log into, the chooser is still
+  unreachable; fixing needs pre-login permission for get_workspace_state/list_workspaces/open_workspace.
 
 ## Decisions and gotchas
 - Python Playwright is not installed in this container (the project venv is missing); used the
@@ -138,3 +142,4 @@ None. CSS only; no change to `compute_club_priority`, STB, `run_history`, pipeli
 | 2026-11-26 | Opus | Verified 21cfdd4 fix at 3 widths; swept UX2 overrides; found F1, F2 | Report only |
 | 2026-11-26 | Opus | Fixed F1/F2 on Truong's request, tests first | Rule 11/12 (Opus plans only) waived by Truong's direct order |
 | 2026-11-26 | Opus | DN-NL: reload open tab + workspace state after login, clear stale toasts | Truong reported with screenshot |
+| 2026-11-26 | Opus | DN-NL round 2: root cause (wrong workspace), teacher guard, 2 tests | Emergency patch |
