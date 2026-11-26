@@ -3608,6 +3608,8 @@ a.nav-item { text-decoration: none; }
 .dk-app .btn-secondary:hover:not(:disabled) { background: var(--paper-hover); }
 .dk-app .btn-primary.dk-day { width: 100%; }
 /* thanh trên dính: thương hiệu · chip giai đoạn · (vai trò · tên · lối về phần mềm · Đăng xuất) */
+body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100%} chung chỉ cao bằng khung nhìn: thanh dính hết chỗ khi cuộn */
+#dkTop { position: sticky; top: 0; z-index: 5; }     /* khối chứa của thanh dính phải là body: header sticky nằm trong #dkTop (cao bằng chính nó) thì không bao giờ dính */
 .dk-dau { position: sticky; top: 0; z-index: 5; display: block; background: var(--paper-raised); border-bottom: 1px solid var(--hairline); padding: 0; }
 .dk-top-in { max-width: 1180px; margin: 0 auto; padding: 4px 16px; min-height: 56px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-sizing: border-box; }
 .dk-thuong-hieu { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }

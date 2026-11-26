@@ -7,7 +7,8 @@
 - `js/dang_ky_quan_tri_2.js`: hai chỗ trả `ok:true` giả khi lỗi nhập («Dán ít nhất một dòng trước.», «Hai lần nhập mật khẩu mới không giống nhau.») nay trả `ok:false` cùng nội dung thông báo, để không hiện ✓ cho thao tác lỗi.
 - `style.css` (khối cuối, chỉ `.dk-*`): chuyển động ≤ 600 ms, tắt khi `prefers-reduced-motion` (dấu vẫn hiện), dấu là `::after` cỡ cố định ở góc nên không đổi chữ/cỡ/bố cục; chặn luật UX2 chung `.btn.is-xong` làm nút cổng đổi đệm. Giao diện chính không đổi.
 - `js/dang_ky_quan_tri.js` (`DK.quanTri`): dựng xong nội dung rồi mới hiện cả màn một lần. Trước đó khung rỗng hiện trước nên `tests/test_giao_dien_dk3_cong.py::test_9` (đếm `ol.dk-gd li` ngay khi thấy tiêu đề) đỏ từ DK8-L2; test không sửa.
-- Test mới: `tests/test_giao_dien_dk8_l5.py` (18). Không đổi backend, schema, CSV, thuật toán.
+- `style.css`: sửa lỗi L1 CI đỏ (`test_giao_dien_dk8_l1.py::test_d`, thanh trên không dính khi trang dài): `#dkTop` dính và `body.dk-body { height: auto }` (luật chung `html, body {height:100%}` làm khối chứa chỉ cao bằng khung nhìn). Chỉ cổng. Test mới `test_q` chạy ở khổ thấp để trang thực sự cuộn.
+- Test mới: `tests/test_giao_dien_dk8_l5.py` (19). Không đổi backend, schema, CSV, thuật toán.
 
 ## 2026-11-26 — CI xanh cho DK8 (vòng 1: sửa CI, không đổi tính năng)
 
