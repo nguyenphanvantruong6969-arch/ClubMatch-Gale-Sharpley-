@@ -50,6 +50,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | DK4 | Nối thẳng đăng ký → xếp: `dang_ky_sang_xep.py`, nút "Chốt và xếp" (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK5 | Diễn tập toàn trình đăng ký → xếp trên dữ liệu MÔ PHỎNG (798 HS / 40 CLB), chỉ tệp mới: `du_lieu_test/dien_tap_dk5.py`, `tests/test_dk5_*.py`, `tests/test_giao_dien_dk5_toan_trinh.py` (thêm 26/11/2026) | Kiểm thử · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK6 | Hoàn thiện cổng đăng ký + gói phát hành: tự làm mới Danh sách/Nhập điểm, đổi mật khẩu quản trị, Danh sách chia thẻ theo khối, hướng dẫn bắt đầu nhanh/xử lý sự cố, test gói phát hành (thêm 26/11/2026) | Sửa mã · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| DK8 | Giao diện cổng đăng ký giống bản mẫu v8: thanh trên dính, thẻ vai trò, đăng nhập thẻ hẹp, màn quản trị thanh thẻ + thẻ giai đoạn, giáo viên/học sinh dạng thẻ; L5 phản hồi tích cực (nút đang lưu/xong/lỗi, dấu hợp lệ theo định dạng) (thêm 26/11/2026) | Sửa mã (chỉ giao diện cổng) · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DKL | Đóng khoảng cách cổng đăng ký thật với bản mẫu v8: nhập điểm, phiếu PIN, đóng sớm/gia hạn, sửa/xoá CLB, cài đặt, xem trước/phiên bản xuất, sao lưu (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước

@@ -119,7 +119,7 @@ def test_b_the_thu_hai_clb_da_gui(cong):
 
 def test_c_the_khac_khong_co_thanh_sau_buoc_va_them_co_mui_ten(cong):
     pg = cong("gv_dang_ky")
-    assert pg.get_by_role("tab", name="Thêm ▾").count() == 1
+    assert pg.get_by_role("tab", name="Thêm", exact=True).count() == 1      # DK8-L6: mũi tên là CSS, tên truy cập «Thêm»
     for ten in ("Danh sách", "Cài đặt", "Thêm"):
         pg.get_by_role("tab", name=ten).click()
         pg.wait_for_timeout(400)

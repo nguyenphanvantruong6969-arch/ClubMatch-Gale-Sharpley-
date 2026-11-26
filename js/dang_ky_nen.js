@@ -18,6 +18,7 @@
       else el.setAttribute(k, v === true ? "" : v);
     });
     con.flat(Infinity).forEach((c) => { if (c !== null && c !== undefined && c !== false) el.append(c.nodeType ? c : String(c)); });
+    if (thuoc && thuoc["data-hl"]) DK.capNhatHopLe(el);     // DK8-L5: ô có sẵn giá trị (sửa CLB) được chấm ngay
     return el;
   };
   const h = DK.h;
@@ -50,16 +51,67 @@
   DK.nutNhe = (chu, lam, thuoc) => h("button.btn.btn-ghost", Object.assign({ type: "button", onclick: lam }, thuoc), chu);
   DK.truong = (nhan, ten, thuoc) => h("label.dk-truong", {}, h("span", {}, nhan), h("input.dk-nhap", Object.assign({ name: ten }, thuoc)));
 
-  /* Chạy một thao tác của nút: khoá nút khi bận (chống bấm đúp), hiện lỗi/ok ở #dkThongBao. */
+  /* Chạy một thao tác của nút: khoá nút khi bận (chống bấm đúp), hiện lỗi/ok ở #dkThongBao; DK8-L5: nút báo đang lưu / xong / lỗi. */
   DK.chay = async function (nut, ham, okChu) {
     if (nut) nut.disabled = true;
     try {
-      const r = await ham();
+      const r = await DK.phanHoi(nut, ham);
       if (r && !r.ok) DK.thongBao(DK.loiChu(r.errors), true);
       else if (okChu) DK.thongBao(okChu);
       return r;
     } finally { if (nut) nut.disabled = false; }
   };
+
+  /* ---------- DK8-L5: phản hồi tích cực (CHỈ cổng; giao diện chính không đổi) ----------
+     (a) DK.phanHoi(nut, lam): `.is-luu` lúc đang chạy → `.is-xong` (ok:true) hoặc `.is-loi` (ok:false / ném lỗi) ~0,8 giây. CHỮ nút
+         không đổi (dấu vẽ bằng ::after trong CSS); trình đọc màn hình nghe ở vùng riêng #dkPhanHoiLive (ngoài #dkApp nên DK.hien không xoá).
+         Nút bị dựng lại ngay sau khi lưu (vẽ lại màn): dấu ✓ chuyển sang nút MỚI cùng id, hoặc cùng chữ nếu chữ ấy là duy nhất.
+     (b) dấu hợp lệ theo ĐỊNH DẠNG ở các ô có `data-hl`: chỉ mã học sinh, PIN, tên bắt buộc. KHÔNG gắn cho nguyện vọng, huy chương, đáp án:
+         phần mềm không được gợi ý điều em khai (bất biến 2). */
+  const MS_DAU = 800;
+  let vungDoc = null, henDoc = 0, vuaXong = null;
+  const noiDoc = (chu) => {
+    if (!vungDoc) { vungDoc = h("div#dkPhanHoiLive.sr-only", { role: "status", "aria-live": "polite" }); document.body.append(vungDoc); }
+    vungDoc.textContent = chu;
+    clearTimeout(henDoc);
+    henDoc = setTimeout(() => { vungDoc.textContent = ""; }, 1500);
+  };
+  const goDau = (nut) => { clearTimeout(nut.__dkPh); nut.classList.remove("is-luu", "is-xong", "is-loi"); nut.removeAttribute("aria-busy"); };
+  const datDau = (nut, lop) => { goDau(nut); nut.classList.add(lop); nut.__dkPh = setTimeout(() => nut.classList.remove(lop), MS_DAU); };
+  function chuyenDau(d) {                                                  // d = nút vừa «xong»; trả true khi đã đặt dấu lên nút MỚI
+    const app = document.getElementById("dkApp");
+    let m = d.id ? app.querySelector("#" + CSS.escape(d.id)) : null;
+    if (!m) { const ds = [...app.querySelectorAll("button.btn")].filter((b) => b.textContent.trim() === d.chu); if (ds.length === 1) m = ds[0]; }
+    if (!m || m === d.nut) return false;
+    datDau(m, "is-xong");
+    return true;
+  }
+  /* Màn quản trị dựng hai pha (khung rỗng rồi mới đổ nội dung) nên chờ các lần đổi DOM trong ≤ 1,5 giây thay vì thử một lần. */
+  let theoDoi = null;
+  function choNutMoi(d) {
+    vuaXong = d;
+    if (!theoDoi) { theoDoi = new MutationObserver(() => { if (vuaXong && chuyenDau(vuaXong)) vuaXong = null; }); theoDoi.observe(document.getElementById("dkApp"), { childList: true, subtree: true }); }
+    setTimeout(() => { if (vuaXong === d) vuaXong = null; }, 1500);
+  }
+  function ketThuc(nut, kq) {
+    if (nut) { goDau(nut); if (kq) datDau(nut, kq === "xong" ? "is-xong" : "is-loi"); }
+    if (!kq) return;
+    noiDoc(kq === "xong" ? "Thao tác hoàn tất." : "Thao tác chưa thành công.");
+    if (kq !== "xong" || !nut) return;
+    const d = { id: nut.id, chu: nut.textContent.trim(), nut };
+    if (nut.isConnected || !chuyenDau(d)) choNutMoi(d);
+  }
+  DK.phanHoi = function (nut, lam) {
+    if (nut) { goDau(nut); nut.classList.add("is-luu"); nut.setAttribute("aria-busy", "true"); }
+    let p;
+    try { p = Promise.resolve(typeof lam === "function" ? lam() : lam); } catch (e) { p = Promise.reject(e); }
+    return p.then((r) => { ketThuc(nut, r && r.ok === true ? "xong" : r && r.ok === false ? "loi" : null); return r; },
+      (e) => { ketThuc(nut, "loi"); throw e; });
+  };
+
+  const QUY_HL = { ma_hs: (v) => v.trim() !== "", pin: (v) => /^\d{4}$/.test(v), ten: (v) => v.trim() !== "" };
+  DK.capNhatHopLe = function (o) { const q = QUY_HL[o.getAttribute("data-hl")]; o.classList.toggle("is-hop-le", !!q && q(o.value)); };
+  document.addEventListener("input", (e) => { const o = e.target; if (o && o.hasAttribute && o.hasAttribute("data-hl")) DK.capNhatHopLe(o); });
 
   /* DK8-L1: tên giai đoạn dùng chung (thanh trên, thanh sáu bước, chip ở trang đầu) và «còn N phút/giờ/ngày». */
   DK.TEN_GD = { chuan_bi: "Chuẩn bị", gv_dang_ky: "Giáo viên đăng ký", duyet: "Duyệt CLB", hs_dang_ky: "Học sinh đăng ký",
@@ -77,7 +129,7 @@
      xếp (chỉ quản trị, DK4-L5) và «Đăng xuất». Nằm ngoài #dkApp để dính ở mép trên; DK.hien đặt nó vào #dkTop. */
   DK.dauTren = function (vaiTro) {
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
-    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
+    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
       vaiTro ? [h("span.dk-gian"), h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
@@ -114,8 +166,8 @@
     const t = r.data, dem = (n, chu) => (typeof n === "number" ? n + chu : "");
     DK.hien(h("div.dk-dau-trang", {}, h("h1.dk-tieude", {}, "Đăng ký câu lạc bộ"), h("p.dk-phu", {}, "Chọn vai trò của bạn.")),
       h("div.dk-cuas", {},
-        DK.theVaiTro("Học sinh", "Chọn CLB theo từng buổi, đăng ký thi", DK.chipVai("hs"), dem(t.so_da_gui, " em đã gửi"), () => DK.manDangNhap("hoc_sinh")),
         DK.theVaiTro("Giáo viên", "Đăng ký mở CLB, chọn phòng", DK.chipVai("gv"), dem(t.so_gv, " giáo viên đã đăng ký tài khoản"), () => DK.manDangNhap("giao_vien")),
+        DK.theVaiTro("Học sinh", "Chọn CLB theo từng buổi, đăng ký thi", DK.chipVai("hs"), dem(t.so_da_gui, " em đã gửi"), () => DK.manDangNhap("hoc_sinh")),
         DK.theVaiTro("Quản trị", "Phòng, danh sách, duyệt CLB, nhập điểm, xuất sổ", h("span.dk-chip", {}, "Cần mật khẩu"), "", () => DK.manDangNhap("quan_tri"))));
   };
 
@@ -127,7 +179,7 @@
   };
   /* Thẻ vai trò: cả thẻ bấm được (nút ở tiêu đề phủ kín thẻ bằng ::after) nhưng nút vẫn tên đúng là tên vai trò (test và trình đọc màn hình). */
   DK.theVaiTro = (ten, mucDich, chip, dem, lam) => h("div.dk-cua", {}, h("h2.dk-cua-vai", {}, h("button.dk-cua-nut", { type: "button", onclick: lam }, ten)),
-    h("p.dk-cua-md", {}, mucDich), chip, dem ? h("p.dk-cua-dem", {}, dem) : null);
+    h("p.dk-cua-md", {}, mucDich), chip, h("p.dk-cua-dem", {}, dem || " "));   // DK8-L6: luôn có dòng đếm (có thể trống) để chip của ba thẻ nằm cùng một hàng
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },
@@ -148,8 +200,8 @@
   DK.manDangNhap = function (vai) {
     const la = { hoc_sinh: ["Mã học sinh", "Mã PIN"], giao_vien: ["Tên giáo viên", "Mã PIN"], quan_tri: [null, "Mật khẩu"] }[vai];
     const f = h("form.dk-form", { novalidate: true, onsubmit: (e) => { e.preventDefault(); b.click(); } },
-      la[0] ? DK.truong(la[0], "ten", { autocomplete: "off" }) : null,
-      DK.truong(la[1], "ma", { type: "password", autocomplete: "off" }));
+      la[0] ? DK.truong(la[0], "ten", { autocomplete: "off", "data-hl": vai === "hoc_sinh" ? "ma_hs" : "ten" }) : null,
+      DK.truong(la[1], "ma", { type: "password", autocomplete: "off", "data-hl": vai === "quan_tri" ? null : "pin" }));
     const b = day(DK.nutVang("Đăng nhập", () => DK.chay(b, async () => {
       const r = await DK.goi("dk_dang_nhap", vai, la[0] ? f.elements.ten.value : "", f.elements.ma.value);
       if (r.ok) { DK.S.token = r.data.token; DK.S.vai = vai; DK.S.ten = r.data.ten; DK.S.ma = r.data.id; DK.S.khoi = r.data.khoi; DK.S.lop = r.data.lop; DK.vaoVai(); }
@@ -171,8 +223,8 @@
 
   DK.manGvDangKy = function () {
     const f = h("form.dk-form", { novalidate: true },
-      DK.truong("Mã trường", "ma"), DK.truong("Họ và tên giáo viên", "ten"),
-      DK.truong("Mã PIN riêng (4 chữ số)", "pin", { type: "password", inputmode: "numeric", maxlength: "4" }));
+      DK.truong("Mã trường", "ma"), DK.truong("Họ và tên giáo viên", "ten", { "data-hl": "ten" }),
+      DK.truong("Mã PIN riêng (4 chữ số)", "pin", { type: "password", inputmode: "numeric", maxlength: "4", "data-hl": "pin" }));
     const b = day(DK.nutVang("Đăng ký", () => DK.chay(b, async () => {
       const r = await DK.goi("dk_gv_tu_dang_ky", f.elements.ma.value, f.elements.ten.value, f.elements.pin.value);
       if (r.ok) { DK.manDangNhap("giao_vien"); DK.thongBao("Đã đăng ký. Đăng nhập bằng tên và mã PIN vừa đặt."); }

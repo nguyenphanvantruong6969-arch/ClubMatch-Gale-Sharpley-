@@ -77,7 +77,7 @@ def test_b_tab_di_qua_the_vai_tro_va_co_vong_focus(cong):
     pg = cong
     pg.keyboard.press("Tab")
     ten = pg.evaluate("document.activeElement.textContent")
-    assert ten == "Học sinh"
+    assert ten == "Giáo viên"
     vien = pg.evaluate("getComputedStyle(document.activeElement.closest('.dk-cua')).outlineStyle")
     assert vien == "solid"                                                          # vòng focus hiện trên cả thẻ
     pg.keyboard.press("Tab")
