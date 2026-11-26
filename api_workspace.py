@@ -69,11 +69,16 @@ class _LoiWs(Exception):
         self.params = params
 
 
-def _ws_phuong_thuc(ham):
-    """Bọc một hàm API workspace: chặn khi tắt chế độ, và đổi ngoại lệ thành lỗi dịch được."""
+def _ws_phuong_thuc(ham=None, *, cho_mot_csdl=False):
+    """Bọc một hàm API workspace: chặn khi tắt chế độ, và đổi ngoại lệ thành lỗi dịch được.
+
+    `cho_mot_csdl=True`: hàm vẫn chạy khi không có workspace (chạy kèm đường dẫn CSDL), trên chính CSDL đó."""
+    if ham is None:
+        return lambda h: _ws_phuong_thuc(h, cho_mot_csdl=cho_mot_csdl)
+
     @functools.wraps(ham)
     def boc(self, *args, **kwargs):
-        if not self._goc_ws:
+        if not self._goc_ws and not cho_mot_csdl:
             return _fail(err("ws_tat_che_do"))
         try:
             return ham(self, *args, **kwargs)
@@ -337,21 +342,26 @@ class WorkspaceMixin:
 
     # ---------------------------------------------------------------- cấu hình
 
-    @_ws_phuong_thuc
+    @_ws_phuong_thuc(cho_mot_csdl=True)
     def get_workspace_config(self, slug=""):
-        """Cấu hình của workspace `slug` (rỗng = đang mở)."""
+        """Cấu hình của workspace `slug` (rỗng = đang mở). Không có workspace (một CSDL): cấu hình của chính CSDL đó."""
+        if not self._goc_ws:
+            return _ok({"slug": "", "config": cau_hinh_ws.doc_cau_hinh(self.db_path)})
         slug = self._ws_hien_tai(slug)
         return _ok({"slug": slug,
                     "config": cau_hinh_ws.doc_cau_hinh(self._ws_db(slug))})
 
-    @_ws_phuong_thuc
+    @_ws_phuong_thuc(cho_mot_csdl=True)
     def update_workspace_config(self, cfg, slug=""):
         """Kiểm rồi ghi cấu hình. Thư mục (slug) giữ nguyên dù đổi tên.
 
         `cfg` có thể chỉ một phần: phần không nhắc tới GIỮ NGUYÊN như đã lưu (không đặt lại về
         mặc định trường học). Cấu hình đã lưu mà đọc không được thì từ chối, không ghi đè."""
-        slug = self._ws_hien_tai(slug)
-        db = self._ws_db(slug)
+        if self._goc_ws:
+            slug = self._ws_hien_tai(slug)
+            db = self._ws_db(slug)
+        else:                                  # một CSDL: ghi vào chính CSDL đang mở
+            slug, db = "", self.db_path
         with self._khoa_ghi:
             da_luu = cau_hinh_ws.doc_cau_hinh(db, nghiem=True)
             moi = cau_hinh_ws.ghi_cau_hinh(db, cau_hinh_ws.tron_len(da_luu, cfg))
