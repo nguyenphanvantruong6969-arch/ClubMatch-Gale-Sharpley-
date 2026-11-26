@@ -5,3 +5,11 @@ Verified: test_dk9_nap_excel 15 + test_giao_dien_dk9_l2 9 + dk8_l* 37 green; kie
 2. js (PIN table after Nạp): «Mã / tên» column shows only the name, no code/class; PIN column far right; table touches the «Nạp» button (no gap) — add student code (+ lớp) and ~12 px spacing.
 3. api_dang_ky_excel.py `_dk_excel_hang`: a sheet whose dimension is XFD1048576 takes ~12 s to reject (iterates up to 20 000 raw rows x 16 384 columns) and the message says «quá nhiều dòng» — pass `max_col=` (e.g. 10) to `iter_rows` so it is instant.
 Design: desktop and 390 px OK (no horizontal scroll, one gold button, all .btn = 44 px, steps 1-4 clear). Minor: «In phiếu» / «Chép PIN» look like plain text links beside a boxed button (inconsistent hierarchy).
+
+## Round 2 (head 81e1425)
+**Verdict: PASS** (no blocking items; two cosmetic notes below).
+1. Result block stays: after «Nạp» `#dkExcelKq` ("Đã nạp: học sinh mới 2…, Bỏ qua 15 dòng lỗi") and the 3 error-row tables (6/2/7 rows, with row + reason) remain on the card above the PIN table. Screenshots at 1200 px and 390 px confirm; no horizontal scroll.
+2. PIN table rows read «Nguyễn An · H1 · 10A1», «Cô Hoa (giáo viên)»; gap under the Nạp button is visible (~14 px).
+3. `iter_rows(max_col=TOI_DA_COT)`: a cell at XFD1048576 is rejected in 0.01 s (was ~12 s). Sheet with 25 000 styled-but-empty rows: rejected in 0.07 s. Data placed at row 25 000 after blank rows is also rejected (limit TOI_DA_QUET = 20 000 raw rows). Judgement: acceptable, not worth a fix — a real roster has ≤ 5 000 rows and leftover blank rows beyond 20 000 are very rare; the only wart is the message says «tối đa 5000 dòng» for that case (misleading but harmless; the fix is to delete blank rows).
+Gates: test_dk9_nap_excel + test_giao_dien_dk9_l2 = 25 passed (23 s); ruff clean; kiem_nhanh 7/7 (after fetch origin main); `git merge-tree --write-tree origin/main HEAD` clean (tree e9dc3f5…, rc 0). CI not checked.
+Still unpolished (cosmetic): «In phiếu» / «Chép PIN» remain plain text links beside the boxed «Xem phiếu PIN»; a small tick badge sits on the disabled «Nạp» button and step 3 is still titled «Xem trước» although it now holds the post-nạp result; at 1200 px the PIN column is far from the name column.
