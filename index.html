@@ -42,6 +42,10 @@
         <button class="nav-item is-active" data-tab="pipeline" data-quyen="quan_tri">
           <span data-i18n="nav_pipeline">Xếp CLB</span>
         </button>
+        <!-- DK4-L5: mở cổng đăng ký (dang_ky.html) trong cùng cửa sổ; cổng có đăng nhập riêng -->
+        <a class="nav-item nav-lien-ket" id="navDangKy" href="dang_ky.html" data-quyen="quan_tri">
+          <span data-i18n="nav_dang_ky">Đăng ký CLB</span>
+        </a>
       </div>
       <div class="nav-nhom" data-nhom="nhap_tay">
         <button type="button" class="nav-nhom-nut" data-nhom-nut="nhap_tay"><span class="nav-nhom-so"></span><span data-i18n="ux1a_nhom_nhap_tay">Nhập thủ công</span></button>
@@ -119,6 +123,10 @@
           </div>
         </div>
         <p class="hint-text" data-i18n="import_hint">Chưa có sổ? Tải sổ mẫu, điền xong rồi kéo vào ô bên dưới.</p>
+        <p class="hint-text" id="ghiChuDangKy" data-quyen="quan_tri" hidden>
+          <span data-i18n="dk_loi_dan">Chưa có sổ nhập? Có thể thu thập bằng cổng Đăng ký CLB: giáo viên lập CLB, học sinh đăng ký, rồi xuất Sổ nhập tự động. Lần đầu cần đặt mật khẩu quản trị cho cổng.</span>
+          <a href="dang_ky.html" id="ghiChuDangKyLienKet" data-i18n="dk_loi_dan_lien_ket">Mở Đăng ký CLB</a>
+        </p>
 
         <div class="drop-zone" id="dropZone" tabindex="0" role="button"
              aria-describedby="dropZoneHint">

@@ -1,5 +1,177 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-P: đóng mục M3 của checker vòng 3 (vẽ lại do vòng hỏi dùng đúng dấu đã thấy)
+
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`) gọi `DK.QT2.tuLamMoi(false, !!tuDong)`; `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi(bat, giuDau)`): khi vẽ lại là do chính vòng hỏi thì KHÔNG xoá dấu đã thấy (`dauCho`), nên lần bật lại dùng nó thay vì gọi `dk_dau_van_tay` thêm lần nữa (trước đây mã đó chết vì `tuLamMoi(false)` xoá `dauCho` trước, mở cửa sổ ~100–300 ms làm một thay đổi xen giữa bị coi như đã thấy). Vẽ lại thủ công / rời màn vẫn xoá `dauCho` và dừng vòng hỏi cũ như trước.
+- Test mới: `tests/test_giao_dien_dkl_m_lam_moi.py::test_6` (đếm lời gọi `dk_dau_van_tay` sau một thay đổi + một vòng hỏi = đúng 1; đỏ trước, xanh sau). Không đổi backend, schema, CSV, thuật toán; không thêm tệp test (số tệp vẫn 435).
+
+## 2026-11-26 — DKL-O: sửa CI đỏ run 1689 (lời dẫn DKL-I chỉ ở workspace trường học; số tệp test trong bản đồ)
+
+- `js/17_viec_tiep_theo.js`: lời dẫn sang cổng Đăng ký CLB (`#ghiChuDangKy`) chỉ hiện khi từ vựng workspace là mặc định trường học (`I18N.getLabels()`: Học sinh / Câu lạc bộ). Trước đó chữ «học sinh» lọt ra màn hình workspace công ty, làm đỏ `tests/test_ws_nhan_giao_dien.py::test_cong_ty_thay_tu_cua_minh_tren_man_hinh` (Linux 3/6).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 428 → 432 (bốn tệp mới của DKL-I/K/M), làm đỏ `tests/test_a13_12_tai_lieu.py::test_ban_do_ma_so_tep_test_la_so_that` (Linux 2/6 và Windows 8/9).
+- Test mới: `tests/test_giao_dien_dkl_loi_dan_cong.py::test_workspace_khong_phai_truong_hoc_khong_hien_loi_dan` (đỏ trước, xanh sau). Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DKL-N: sửa DKL-M theo checker vòng 2 (tự cập nhật không được làm mất dữ liệu đang có)
+
+- `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi`): **không vẽ lại** khi (1) phiếu PIN vừa tạo còn hiện (`#dkPin`, chỉ hiện một lần), (2) có chữ đã gõ chưa lưu ở bất kỳ ô nhập nào (so với giá trị chụp lúc vẽ xong, kể cả khi con trỏ đã rời ô), (3) ô nhập đang focus, (4) hộp «Thay cả danh sách» đang mở; dấu cũ giữ nguyên nên vòng sau thử lại. Vẽ lại do chính vòng hỏi dùng dấu ĐÃ thấy (`dauCho`) thay vì đọc lại, để không bỏ sót thay đổi xen giữa (M3).
+- `docs/ke_hoach/TIEN_DO.md`: gỡ dấu xung đột gộp nhánh em để sót ở f2db78f; thêm cột test cho DKL-H/I/J; thêm dòng DKL-N.
+- Test mới: `tests/test_giao_dien_dkl_m_lam_moi.py` test_4 (phiếu PIN còn sau khi dữ liệu đổi + 12 giây) và test_5 (chữ chưa lưu còn nguyên kể cả khi đã rời ô; xoá sạch thì vẽ lại).
+- Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DKL-J: sửa ba lỗi màn «Xuất» do checker DKL tìm ra (cổng đăng ký)
+
+- `dang_ky_sang_xep.py` (`_dk_tom_tat_xep`): học sinh xếp bù (hạng NULL, ví dụ em không gửi nguyện vọng) nay có khoá `"ngoai"` thay cho `"None"`; mỗi buổi thêm `ten_buoi` (tên cổng đã khai, ví dụ «T2», ánh xạ ngược từ mã chuẩn «thu_2» bằng `so_nhap.ma_buoi`; `match_results` không đổi).
+- `js/dang_ky_quan_tri.js` (`bangKetQua`): cột «Theo nguyện vọng» in «Ngoài nguyện vọng: N» (xếp cuối) thay «NVNone: N»; cột «Buổi» in `ten_buoi`. `js/dang_ky_quan_tri_2.js` (`xemTruoc`): thẻ «Xem trước Sổ nhập» mở sẵn, không còn chỉ thấy tiêu đề.
+- Test: `test_dk4_chot_va_xep.py::test_tom_tat_xep_hang_null_la_ngoai_nguyen_vong_va_co_ten_buoi` (mới), `test_giao_dien_dk4_chot_xep.py` (thêm khẳng định NVNone/thu_2), `test_giao_dien_dkl_quan_tri.py` test_6 (bảng hiện sẵn) và test_4 (nhập «8.5» dấu chấm), `test_giao_dien_dkl_hoc_sinh.py::test_2b_khong_tick_bai_thi_thi_khong_co_link_lam_bai` (mới; fixture thêm học sinh H3).
+- Không đổi thuật toán, schema, CSV, `i18n_errors.py`.
+
+## 2026-11-26 — DKL-M và DKL-K: tự cập nhật nhanh cho màn quản trị; id trả về đúng
+
+- **DKL-M** (`api_dang_ky.py` `dk_dau_van_tay`, `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js` `QT2.tuLamMoi`): API công khai, không mở CSDL, không cần phiên, KHÔNG làm mới giờ nghỉ phiên quản trị; trả dấu vân tay (thời điểm sửa + kích thước của app.db; chế độ nhật ký là DELETE nên không có tệp WAL), đổi với mọi ghi kể cả học sinh gửi nguyện vọng (không ghi nhật ký). Màn quản trị hỏi mỗi 5 giây (trước: vẽ lại cả màn mỗi 30 giây, chỉ ở giai đoạn Học sinh đăng ký) và CHỈ vẽ lại khi dấu đổi; bật ở thẻ «Việc bây giờ» của ba giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký; hoãn khi đang gõ vào ô nhập hoặc hộp xác nhận «Thay cả danh sách» đang mở. Vẽ lại qua `DK.quanTri(true)` nên không đặt lại đồng hồ nghỉ 2 phút của máy khách. Màn học sinh KHÔNG đổi (không tự vẽ lại, tránh mất phần đang xếp).
+- **DKL-K**: `dk_phong_luu` và `dk_gv_tu_dang_ky` trả `cur.lastrowid` SAU khi ghi nhật ký nên trả id dòng nhật ký thay vì id phòng / giáo viên; nay lấy id TRƯỚC khi ghi nhật ký. (`dk_clb_luu` đã đúng.) Giao diện chưa dùng hai giá trị này nên chưa ai gặp lỗi.
+- Test mới: `tests/test_dkl_m_dau_van_tay.py` (3, API), `tests/test_giao_dien_dkl_m_lam_moi.py` (3, đồng hồ giả: dữ liệu đổi thì cập nhật trong 6 giây; không đổi thì không vẽ lại; đang gõ thì giữ nguyên), `tests/test_dkl_k_id_tra_ve.py` (2). Không đổi schema, CSV, thuật toán.
+
+## 2026-11-26 — DKL-I: lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu
+
+- `index.html` (khung «1. Nhập sổ»): đoạn `#ghiChuDangKy` + liên kết «Mở Đăng ký CLB», chỉ hiện khi thanh «Việc tiếp theo» ở trạng thái `nap_so` (chưa có dữ liệu); nói cổng làm gì (giáo viên lập CLB, học sinh đăng ký, xuất Sổ nhập tự động) và việc lần đầu (đặt mật khẩu quản trị cho cổng). `js/17_viec_tiep_theo.js` bật/tắt và giữ `?t=<token>`; `i18n.js` hai khoá `dk_loi_dan`, `dk_loi_dan_lien_ket` (vi, en).
+- Test mới: `tests/test_giao_dien_dkl_loi_dan_cong.py` (2 ca: hiện + bấm sang cổng thấy «Thiết lập lần đầu»; có dữ liệu thì ẩn). Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DKL-H: giải thích giới hạn nguyện vọng và bài thi tính riêng từng buổi (cổng đăng ký)
+
+- `js/dang_ky_gv_hs.js` (`vRank`, `vTests`): câu «Giới hạn N CLB tính riêng cho từng buổi (không phải cả tuần)» ở bước xếp nguyện vọng; khi đủ: «Buổi X đã đủ N CLB … bấm ✕ để bỏ bớt», nút «+ Thêm» khoá có `title` nêu lý do. Bước bài kiểm tra: câu «Giới hạn M bài thi tính riêng cho từng buổi», khi đủ «Buổi X đã tick đủ M bài thi … bỏ tick một CLB trước», ô tick bị khoá có `title`. Không đổi backend, schema, CSV hay thuật toán.
+- Test mới: `test_giao_dien_dkl_hoc_sinh.py::test_3d_gioi_han_nguyen_vong_va_bai_thi_noi_ro_la_tinh_rieng_tung_buoi` (đặt giới hạn 3 và 1 để chạm trần, trả 10 và 5 ở cuối).
+
+## 2026-11-26 — DK5-CI: sửa đỏ run 1683 (chỉ `du_lieu_test/dien_tap_dk5.py`)
+
+- Máy CI Windows chạy pha «học sinh nộp» (798 em) lâu hơn 120 s nên phiên quản trị hết giờ nghỉ (`dk_het_phien_nghi`). Bộ sinh nay đăng nhập quản trị lại đầu mỗi pha `duyet`, `hoc_sinh_nop`, `nhap_diem`. Không đổi test, không đổi mã sản phẩm.
+
+## 2026-11-26 — DK5-L3: diễn tập qua giao diện, ba vai trò (chỉ tệp mới)
+
+- `tests/test_giao_dien_dk5_toan_trinh.py` (4, Playwright): giáo viên tạo CLB Tự do bằng giao diện và chỉ thấy CLB của mình → quản trị «Đóng ngay», duyệt, «Mở cho học sinh» → học sinh H01 chọn ba CLB, đánh dấu thi, gửi, thấy «Đã gửi lúc …» và link bài thi → quản trị dán điểm, «Chốt và xếp», thấy «Đã xếp». Bộ dữ liệu nhỏ (24 em, 3 CLB), MÔ PHỎNG.
+- Sổ đăng ký: thêm hàng DK5; `CLAUDE_CHI_TIET.md`: 431 tệp test.
+
+## 2026-11-26 — DK5-L2: vùng chịu lỗi của diễn tập (chỉ tệp mới)
+
+- `tests/test_dk5_vung_chiu_loi.py` (6): (a) sao lưu → khôi phục (chép `.bak` sang chỗ khác) giống từng dòng 7 bảng; (b) khoá khi nghỉ (đồng hồ giả `_dong_ho`: 119 s còn dùng, +121 s khoá); (c) quá hạn chót (đồng hồ giả `_dk_bay_gio`): nộp bị từ chối `dk_hs_chua_mo`, lần nộp cũ còn nguyên; (d) nộp lại chỉ giữ lần cuối; (e) lỗi giả lập TRONG giao dịch ghi của `run_pipeline` (sau kết quả + khoá STB, trước `run_history`) → mọi bảng nguyên trạng (băm), `stb_lock` chưa khoá, +1 dòng `dk_nhat_ky`; (f) `run_history` chỉ thêm, hạt giống khác bị từ chối.
+- `dien_tap_dk5.chay(..., dung_den="nhap_diem")` để dừng trước «Chốt và xếp». Không sửa tệp sản phẩm.
+
+## 2026-11-26 — DK5-L1: diễn tập toàn trình 798 HS / 40 CLB (chỉ tệp mới)
+
+- `du_lieu_test/dien_tap_dk5.py`: bộ sinh tất định (`random.Random(seed)`, không `hash()`) + `chay()` đi qua API DK3/DK4: cài đặt → giáo viên (một nửa tự đăng ký, một nửa quản trị tạo) → duyệt → 798 em nộp xen kẽ 4 máy → nhập điểm → «Chốt và xếp» → xuất Sổ nhập. Dữ liệu MÔ PHỎNG.
+- Test mới: `tests/test_dk5_dien_tap.py` (6): sinh tất định, 1 dòng kết quả/em/buổi, `run_history` +1, nộp xen kẽ ≥ 4 máy, xuất Sổ nhập, ngân sách thời gian (≈ 10 s ở máy này).
+- Không sửa tệp sản phẩm. Phát hiện (chưa sửa): `dk_phong_luu` trả `phong_id` = `lastrowid` SAU dòng nhật ký nên lệch 1 — xem "Needs Truong" ở tệp nhánh.
+
+## 2026-11-26 — DKL-G: bốn khoảng cách còn lại với bản mẫu v8 (cổng đăng ký)
+
+- **G1 xác nhận danh tính** (`js/dang_ky_gv_hs.js`, `js/dang_ky_nen.js`): sau đăng nhập học sinh thấy «Đúng là em chứ?» (tên, «Lớp … · Khối … · Mã …», câu «Em đã gửi lúc … lần gửi cuối cùng được tính.» nếu đã nộp), nút «Đúng là em» / «Không phải em» (đăng xuất). Dùng dữ liệu đăng nhập đã trả về (`ten`, `lop`, `khoi`, `id`); không lưu PIN.
+- **G2 tự khoá quản trị**: hằng `DK.GIAY_NGHI_QUAN_TRI = 120` (bằng `GIAY_NGHI_QUAN_TRI` của máy chủ, trước là 110) và dòng «Tự khoá sau 2 phút không thao tác.» ở màn đăng nhập quản trị.
+- **G3 test A12** + ba lỗi thật test này lộ ra: (a) `DK.dangXuatCuc` hiện thông báo trước khi trang đầu dựng xong nên chữ bị xoá — nay chờ `dauTrang()`; (b) tự làm mới 30 giây của tab «Việc bây giờ» gọi lại `DK.quanTri()` và đặt lại đồng hồ nghỉ nên quản trị không bao giờ bị khoá — nay `DK.quanTri(tuDong)` không đặt lại; (c) lời gọi còn bay sau khi khoá không còn vẽ đè/ghi đè thông báo (`DK.goi` bỏ qua khi đã đăng xuất, `quanTri` thoát nếu đã đăng xuất, `khungHan` chịu `DK.S.tt` rỗng).
+- **G4 D37**: mỗi buổi hiện tối đa 7 thẻ CLB, phần còn lại sau nút «Xem thêm (N)» (`TOI_DA_THE`).
+- Test mới: `test_giao_dien_dkl_hoc_sinh.py` test_3b (xác nhận), test_3c (7 thẻ + Xem thêm; fixture thêm 7 CLB Tự do buổi T3), `test_giao_dien_dkl_quan_tri.py` test_8 (chữ «Tự khoá…» + đồng hồ giả, thông báo «Đã khoá quản lý vì không thao tác.»). Helper `_vao_hs` nay bấm «Đúng là em»; test_4 (hết hạn) bỏ qua bước này. Đổi kỳ vọng ở `test_giao_dien_dk3_cong.py` (test_5, `_vao_hs`) và `test_dk4_l0c_gioi_han_tu_backend.py`: thêm bước bấm «Đúng là em».
+- Ngoài phạm vi: khôi phục bản sao lưu từ cổng (ghi ở "Needs Truong").
+
+## 2026-11-25 — DKL: đóng khoảng cách giữa cổng đăng ký thật và bản mẫu v8
+
+- **L2 quản trị** (`js/dang_ky_quan_tri_2.js`, `api_dang_ky.py`): màn **nhập điểm** (dán "mã ⇥ điểm" theo CLB + bảng gõ, dấu phẩy/chấm, chip "Dưới sàn", «Chốt điểm»); «Đóng ngay», «+1 giờ», «+1 ngày»; phiếu PIN in được (`@media print`, PIN chỉ hiện ngay sau khi tạo/đặt lại); «Thay cả danh sách» có xác nhận; xoá phòng; sửa chỉ tiêu và phòng khi duyệt; nhu cầu theo CLB và danh sách «Chưa đăng ký»; tự làm mới 30 giây; danh sách lý do chưa đi tiếp được. Hàm mới: `dk_diem_danh_sach`; `dk_phong_danh_sach` thêm `dang_dung` (và `ban` khi có `buoi`).
+- **L3 giáo viên**: sửa/xoá CLB của mình khi còn «chờ duyệt» (`dk_clb_xoa` mới), báo lỗi từng bước bằng tiếng Việt, link bài thi phải bắt đầu `https://`, chỉ hiện phòng còn trống theo buổi.
+- **L1 học sinh**: dòng «Dưới N thì không xét» trên CLB Tuyển chọn; hết hạn hiện «Nguyện vọng em đã gửi vẫn được tính»; thêm test hành vi cho các hàng DK4-UI đã làm.
+- **L4 cài đặt**: thẻ «Cài đặt» (mã trường, buổi và khối chỉ đổi ở Chuẩn bị, giới hạn nguyện vọng/bài thi), xem trước Sổ nhập, số phiên bản mỗi lần xuất, «Sao lưu ngay», thông báo khoá quản trị. Hàm mới: `dk_cai_dat_doc`, `dk_cai_dat_doi`, `dk_xuat_xem_truoc`, `dk_sao_luu`.
+- Không đổi thuật toán, schema SQLite, hợp đồng CSV. Nhãn nhật ký `nkhd_dk_*` đủ vi/en cho 6 hàm mới (`dk_diem_danh_sach`, `dk_clb_xoa`, `dk_cai_dat_doc`, `dk_cai_dat_doi`, `dk_xuat_xem_truoc`, `dk_sao_luu`).
+- Đổi có chủ ý hai kỳ vọng cũ của `test_giao_dien_dk3_cong.py` theo bản mẫu v8: giáo viên chọn phòng trống ĐẦU TIÊN của buổi (phòng được lọc theo buổi); nút «Mở đăng ký giáo viên» chỉ hiện khi đã có phòng và danh sách học sinh (test vẽ lại màn sau khi dựng dữ liệu bằng API); bước 1 cần «Chỉ tiêu là số nguyên từ 1.» và CLB Tuyển chọn cần link `https://` mới sang bước kế (test_3, test_10 điền thêm).
+- Test mới: `tests/test_dkl_cai_dat.py` (5), `tests/test_giao_dien_dkl_quan_tri.py` (7), `tests/test_giao_dien_dkl_giao_vien.py` (3), `tests/test_giao_dien_dkl_hoc_sinh.py` (4). Sửa `test_giao_dien_dk3_cong.py` (chọn phòng trống đầu tiên). Chưa chạy bộ đầy đủ/CI.
+
+## 2026-11-25 — DK4-UI: cổng đăng ký trông và dẫn đường như bản mẫu v8
+
+- `js/dang_ky_gv_hs.js`: học sinh đi theo từng buổi (Buổi k/N · Xếp nguyện vọng → Đặt huy chương → Bài kiểm tra), rồi Xem lại và gửi, biên nhận "Đã gửi lúc hh:mm, thứ …"; hai cột (CLB còn chọn | nguyện vọng NV1… với ↑ ↓ ✕), thẻ CLB có chip loại ngắn, giáo viên · phòng · khối, mô tả; nút kế tiếp là nút vàng duy nhất. Giáo viên: biểu mẫu ba bước có thanh bước, nút "Tiếp theo" màu vàng.
+- `js/dang_ky_quan_tri.js`: thanh sáu giai đoạn, hạn chót + thời gian còn lại, ô đặt hạn cho giai đoạn học sinh, thanh tiến độ mỗi lớp. `js/dang_ky_nen.js`: tiêu đề không lặp nhãn vai trò.
+- `style.css` (khối DK4-UI, chỉ dùng token), `api_dang_ky.py`: `dk_hs_clb_hop_le` trả thêm `giao_vien`, `chi_tieu` (khoá mới, các khoá cũ giữ nguyên).
+- Test: `tests/test_giao_dien_dk3_cong.py` (+5 ca: thanh bước, hai cột 1366 / một cột 390, chip không đè nút, mục tiêu ≥44 px, một nút vàng, thanh giai đoạn quản trị, ba bước giáo viên); `tests/test_dk4_l0c_gioi_han_tu_backend.py` đi qua bước Bài kiểm tra.
+
+## 2026-11-25 — DK4-CI-2: sửa 3 test đỏ trên CI
+
+- `tests/test_gt3_nhat_ky.py`: hàm `dk_*` (kể cả hàm ghi) cố ý ở ngoài nhật ký chung vì đối số có PIN/mật khẩu; có `dk_nhat_ky` riêng. Test cho phép tiền tố `dk_` và thêm ca khoá quy ước này.
+- `tests/test_giao_dien_fg9_ux_nho.py`, `tests/test_giao_dien_a14_lop.py`: danh sách thẻ thanh bên chỉ đếm `.nav-item[data-tab]` (liên kết "Đăng ký CLB" của DK4-L5 không phải thẻ).
+- `dang_ky_sang_xep.py`: `ORDER BY buoi COLLATE THU_TU_BUOI`.
+
+## 2026-11-25 — DK4-CI: sửa các test cấu trúc đỏ trên CI (run 1650)
+
+- `nhat_ky.nen_ghi`: hàm `dk_*` không ghi nhật ký thao tác GT3 (cổng có `dk_nhat_ky` riêng; đối số `dk_dang_nhap` chứa PIN). `api_dang_ky.py`: `ORDER BY buoi COLLATE THU_TU_BUOI`. `rbda_priority_pipeline.di_tru_schema`: nạp `dang_ky_schema` theo tên, bỏ qua nếu thiếu (tập lệnh tham khảo nạp tệp riêng lẻ). `i18n_errors.py`: hai câu tiếng Anh về hạt giống không dùng chữ "seed".
+- Test: thêm tiền tố `dk_` vào các danh sách mã mới của `test_mt1_api`, `test_mt1_uoc_tinh`, `test_ws_nhan`; "PIN" là từ viết tắt hợp lệ trong `test_van_phong_tu_nhien`; cập nhật số tệp test (424) trong `CLAUDE_CHI_TIET.md`.
+
+## 2026-11-25 — DK4: gộp hai bản L0 (khoá PIN 5 phút + giới hạn từ cài đặt)
+
+- Gộp `DK4-FIX` (phiên khác) với DK4-L0a–e: giữ khoá đăng nhập 5 phút lưu trong `dk_cai_dat` + `dk_mo_khoa` (thay khoá 60 giây trong bộ nhớ); giữ `dk_dat_gioi_han` và `_dk_gioi_han` (giới hạn 10/5 đổi được), `dk_trang_thai` trả `toi_da_nv`/`toi_da_thi` từ đó; giữ `#dkLuuY` cho luật tự bật; thêm dòng nhật ký `bat_luat`.
+
+## 2026-11-25 — DK4-L0e: luật tự bật được ghi nhật ký và hiện trong tóm tắt
+
+- `dk_chot_va_xep`: khi `_dk_bao_dam_luat` tự bật `fa_daa` và `wharton`, ghi dòng `bat_luat` vào `dk_nhat_ky`; kết quả trả `da_bat_luat`; `dk_ket_qua_xep` cũng trả `da_bat_luat` (lần "Chốt và xếp" gần nhất). `js/dang_ky_quan_tri.js`: dòng `#dkBatLuat` trong bảng tóm tắt.
+- Test: `tests/test_dk4_l0e_bat_luat_ghi_nhat_ky.py` (2); `tests/test_giao_dien_dk4_chot_xep.py` thêm một khẳng định.
+
+## 2026-11-25 — DK4-L0d: hoàn nguyên "Chốt và xếp" không làm mất dòng nhật ký chỉ-thêm
+
+- Chứng minh bằng test: hoàn nguyên cả CSDL từ ảnh chụp KHÔNG làm mất dòng `run_history` đã có trước khi bấm (ảnh chụp chứa chúng), nhưng LÀM MẤT dòng của chính lần xếp đã ghi rồi mới hỏng (vi phạm "mỗi lần chạy thêm một dòng").
+- `dang_ky_sang_xep._dk_hoan_nguyen`: trước khi trả ảnh chụp, đọc các dòng hiện có của `run_history`, `wharton_nhat_ky`, `fa_dieu_chinh`, sau đó chép lại (`INSERT OR IGNORE`, giữ nguyên rowid). Không UPDATE/DELETE các bảng này.
+- Test: `tests/test_dk4_l0d_hoan_nguyen_nhat_ky.py` (2).
+
+## 2026-11-25 — DK4-L0c: giới hạn nguyện vọng / bài thi đọc từ phần mềm
+
+- `dk_trang_thai` trả thêm `toi_da_nv` và `toi_da_thi` (lấy từ `TOI_DA_NV_BUOI`, `TOI_DA_THI_BUOI`); `js/dang_ky_gv_hs.js` dùng hai trường này thay cho số 10 và 5 viết cứng.
+- Test: `tests/test_dk4_l0c_gioi_han_tu_backend.py` (3, gồm một ca Chromium đặt giới hạn 2/1 để thấy giao diện đổi theo).
+
+## 2026-11-25 — DK4-L0b: khoá đăng nhập sau 5 lần sai PIN
+
+- `dk_dang_nhap`: sai 5 lần liên tiếp cho cùng một mã (kể cả mã không có thật, cùng một mã lỗi) -> `dk_tam_khoa` 5 phút, đúng PIN trong lúc khoá cũng bị từ chối; đăng nhập đúng xoá bộ đếm. Bộ đếm lưu trong `dk_cai_dat` (khoá `dn_sai:<vai>:<mã>`, không đổi lược đồ), nên mở lại phần mềm không xoá khoá. Quản trị mở khoá bằng `dk_mo_khoa(token, vai, ten)` (ghi nhật ký `mo_khoa`).
+- `dk_gv_danh_sach` / `dk_hs_danh_sach` có trường `bi_khoa`; `js/dang_ky_quan_tri.js`: nút "Mở khoá" cạnh "Đặt lại PIN" khi đang khoá. Mã lỗi mới `dk_tam_khoa` (cuối `i18n_errors.py`).
+- Test: `tests/test_dk4_l0b_khoa_dang_nhap.py` (6), `tests/test_giao_dien_dk4_mo_khoa.py` (1).
+
+## 2026-11-25 — DK4-L0a: không lộ chi tiết lỗi lên giao diện
+## 2026-11-25 — DK4-FIX: sửa theo checker + mục L0
+
+- `dk_chot_va_xep`: lỗi không còn lộ chi tiết nội bộ (câu cố định, chi tiết vào `dk_nhat_ky`); sao lưu hỏng thì từ chối (`buoc=sao_luu`); hạt giống đã khoá có câu riêng `dk_chot_seed_khoa`; không kiểm lại phiên sau khi đã ghi kết quả (hết phiên giữa chừng vẫn chuyển giai đoạn); luật giữ chỗ + huy chương vừa bật được báo trên bảng tóm tắt (`da_bat_luat` lưu ở `dk_cai_dat`).
+- `api_dang_ky.py`: `dk_loi_chung` không lộ `str(e)`; đăng nhập sai 5 lần liên tiếp khoá tạm 60 giây (`dk_tam_khoa`); giới hạn nguyện vọng/bài thi mỗi buổi đọc từ cài đặt, mặc định 10/5, đổi bằng `dk_dat_gioi_han`.
+- Test: +5 ca trong `tests/test_dk4_chot_va_xep.py` (tổng 11), `tests/test_giao_dien_dk4_chot_xep.py` kiểm lưu ý.
+
+## 2026-11-25 — DK4-L5: cổng đăng ký mở từ phần mềm và ngược lại
+
+- `index.html`: thanh bên có "Đăng ký CLB" (`#navDangKy`, chỉ quản trị) mở `dang_ky.html` trong cùng cửa sổ. `js/01_khung.js`: liên kết không có `data-tab` không gọi `switchTab`; giữ `location.search` (token `?t=` của bản trình duyệt dự phòng); `#ket-qua` mở thẻ Kết quả. `i18n.js`: `nav_dang_ky` (vi/en).
+- Cổng: quản trị có "← Mở phần mềm xếp CLB" (`#dkVePhanMem`); sau "Chốt và xếp" có "Xem kết quả trong phần mềm" (`#dkXemKq`). HS/GV không thấy lối ra. `style.css`: `a.nav-item`, `.dk-ve-phan-mem`.
+- Test: `tests/test_giao_dien_dk4_cong_vao.py` (phần mềm → cổng → chốt và xếp → Kết quả → cổng). Chưa thử trong pywebview trên Windows.
+
+## 2026-11-25 — DK4-L3/L4: hai đường trùng khít + nút "Chốt và xếp"
+
+- `dk_ket_qua_xep` (chỉ đọc) + `dk_chot_va_xep(token, seed=None)`: không chỉ định seed thì dùng lại seed lần xếp trước (đã khoá), mặc định 42.
+- `js/dang_ky_quan_tri.js`: giai đoạn Nhập điểm có đúng một nút vàng "Chốt và xếp" (thay "Chốt điểm"); giai đoạn Xuất hiện bảng tóm tắt theo buổi (đã xếp / chưa xếp / theo nguyện vọng) + "Xuất Sổ nhập" + "Xếp lại (cùng hạt giống)".
+- Test: `tests/test_dk4_hai_duong_trung_khit.py` (60: 3 bộ MÔ PHỎNG × 20 seed, đường A `dk_chot_va_xep` = đường B xuất Sổ + `import_so_nhap` + `run_pipeline`, mọi dòng `match_results` bằng nhau), `tests/test_giao_dien_dk4_chot_xep.py` (1, Chromium). Đếm tệp test: 417.
+
+## 2026-11-25 — DK4-L1/L2: nối đăng ký → Sổ nhập → "Chốt và xếp"
+
+- `dang_ky_sang_xep.py` (mới): `so_nhap_b64_tu_dk` (dữ liệu đăng ký → `dk2_so_nhap.ghi_tu_ban_mau` → base64, đi đúng đường `import_so_nhap`); `DangKySangXepMixin.dk_chot_va_xep(token, seed)`: quản trị, từ giai đoạn Nhập điểm, thiếu điểm thì từ chối; sao lưu → bảo đảm luật FA+Wharton (chỉ ghi khi chưa bật) → nhập Sổ (một giao dịch) → `run_pipeline` (khoá STB + xếp + ghi một giao dịch) → giai đoạn "xuat". Hỏng sau khi nhập: CSDL hoàn nguyên bằng ảnh chụp trong bộ nhớ, trả `dk_chot_that_bai`. Hạt giống đã khoá thì seed khác bị từ chối (như `run_pipeline`).
+- `api.py`, `phan_quyen.py`: gắn mixin; 2 mã lỗi `dk_chot_*` (`i18n_errors.py`, đã chạy `tao_i18n_js.py`).
+- Test: `tests/test_dk4_chot_va_xep.py` (5).
+
+## 2026-11-25 — DK3-L3/L4: giao diện cổng đăng ký + xuất Sổ nhập
+
+- `dang_ky.html` + `js/dang_ky_nen.js`, `js/dang_ky_quan_tri.js`, `js/dang_ky_gv_hs.js` + khối CSS "DK3" cuối `style.css`: trang riêng (không đụng `index.html`), DOM dựng bằng `textContent`. Quản trị: ba thẻ "Việc bây giờ · Danh sách · Thêm", mỗi giai đoạn đúng một nút vàng. Giáo viên: đăng ký CLB ba bước. Học sinh: từng buổi, + Thêm / ↑ / ↓ / ✕, huy chương mặc định + ô chọn ghi đè, tự đăng xuất sau 60 giây không thao tác và 30 giây sau khi nộp. Đóng gói: `kiosk.spec` và danh sách soát của workflow có `dang_ky.html`.
+- L4: `dk_xuat_ban_mau` / `dk_xuat_so_nhap` (`api_dang_ky.py`) → JSON `dinhDang` 1 → `dk2_so_nhap.ghi_tu_ban_mau`; còn bài thi chưa điểm thì từ chối.
+- Test: `tests/test_giao_dien_dk3_cong.py` (5, một trang dùng chung), thêm ca xuất trong `tests/test_dk3_api.py` (nhập 0 lỗi + xếp được). Đếm tệp test: 414.
+
+## 2026-11-25 — DK3-L2: API cổng đăng ký (`api_dang_ky.py`)
+
+- `DangKyMixin` (`dk_*`, hợp đồng `{ok,data,errors}`): khởi tạo + mật khẩu quản trị, đăng nhập ba vai (token trong bộ nhớ, quản trị khoá sau 2 phút nghỉ), giai đoạn + hạn chót tự đóng (D1), điều kiện mở cho học sinh (D2), phòng (D5), giáo viên tự đăng ký / quản trị tạo (D13), một GV một CLB mỗi buổi (D14), luật CLB (D15), duyệt (D18), sửa sau khi mở có đếm "N học sinh bị ảnh hưởng" (D19), danh sách học sinh thêm/thay (D6), nguyện vọng ≤ 10 mỗi buổi, đúng khối (D21), ≤ 5 bài thi mỗi buổi (D44), huy chương mặc định + ghi đè (D2 đường A), điểm nhập tay / dán, tiến độ (D31). PIN và mật khẩu chỉ lưu băm PBKDF2 + muối.
+- 40 mã lỗi mới `dk_*` ở cuối `i18n_errors.py` (đã chạy `tao_i18n_js.py`); `phan_quyen`: hàm `dk_*` là công khai với cổng chung vì tự kiểm phiên.
+- Test: `tests/test_dk3_api.py` (11); sửa `tests/test_gt3_phan_quyen.py` (bỏ `dk_*` khỏi danh sách công khai gốc).
+
+## 2026-11-25 — DK3-L1: bảng của cổng đăng ký thật
+
+- `dang_ky_schema.py` (mới): tám bảng `dk_*` (cài đặt, giai đoạn, phòng, giáo viên, CLB đăng ký, học sinh, nguyện vọng + huy chương, nhật ký), toàn bảng mới; `di_tru_schema` thêm bước "dk3" (sao lưu trước nếu CSDL có dữ liệu, chạy lại không đổi).
+- Test: `tests/test_dk3_schema.py` (2).
+
+## 2026-11-25 — DK2: cầu nối bản mẫu cổng đăng ký → Sổ nhập thật
+
+- `dk2_so_nhap.py` (mới): JSON xuất của bản mẫu (`dinhDang` 1) → `SO_NHAP_CLB.xlsx` CHỈ qua `so_nhap.ghi_so_nhap` (chế độ huy chương, cột Lớp). Soát trước khi ghi (mã trùng, loại, chỉ tiêu, điểm sàn nguyên 0–10 theo `kiem_thuoc_tinh`, huy chương, trần 10 NV / 5 bài mỗi buổi); lỗi thì không ghi tệp. NV Tuyển chọn không thi / không điểm bị bỏ (cùng kết quả DA; tránh `fa_clb_tuyen_chon_chua_co_diem`, lỗi thấy ở CI). CLI `python dk2_so_nhap.py vao.json ra.xlsx`. Không đổi hợp đồng cột, schema, thuật toán.
+- `docs/phien/DK1_BAN_MAU_V8.html` (mới, từ v7): xuất một dãy NV1…NVk theo buổi; học sinh đi từng buổi (xếp → huy chương → bài kiểm tra) rồi xem lại (D39); nhãn loại ngắn + câu giải thích xuống dòng (D40); bỏ mã biên nhận, ghi "Đã gửi lúc" (D41); tối đa 5 bài thi mỗi buổi + cảnh báo (D44); thiết kế khớp phần mềm: phông cục bộ `assets/fonts`, chỉ giao diện sáng, bo góc 6/10 px.
+- Hướng dẫn `docs/huong_dan/DK2_CAU_NOI.md`. Test: `tests/test_dk2_so_nhap.py` (6), `tests/test_giao_dien_dk2_ban_mau.py` (5; dữ liệu xuất "Demo nhỏ" và "Cả trường" nhập 0 lỗi và chạy xếp được).
+
 ## 2026-11-25 — KD1-L1 fix: dò renderer an toàn (không đổi đường cũ khi không biết)
 
 - CI Windows đỏ: test `test_do_phu_bo_sung.py` tiêm module `webview` giả (không phải package) nên `_renderer_winforms()` ném lỗi trước `create_window`. Nay `_renderer_winforms()` bắt `Exception` và trả `""` (không biết); chỉ `"mshtml"` mới chuyển sang `browser_host`. Log `renderer <tên|unknown>`.

@@ -1,0 +1,168 @@
+"""DKL-M (Playwright + Chromium): màn quản trị tự cập nhật trong vài giây khi dữ liệu đổi (hỏi dấu vân tay mỗi 5 giây,
+chỉ vẽ lại khi đổi), ở giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký. Đồng hồ giả. Dữ liệu MÔ PHỎNG."""
+import os
+
+import pytest
+
+pytest.importorskip("playwright", reason="chưa cài playwright")
+from playwright.sync_api import sync_playwright  # noqa: E402
+
+import browser_host  # noqa: E402
+from _trinh_duyet import CHROMIUM  # noqa: E402
+from api import PipelineAPI  # noqa: E402
+
+GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _ok(r):
+    assert r["ok"], r
+    return r["data"]
+
+
+@pytest.fixture()
+def cong(tmp_path):
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    api = PipelineAPI(str(tmp_path / "app.db"))
+    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
+    for t, sc in (("P1", 40), ("P2", 30)):
+        _ok(api.dk_phong_luu(qt, t, sc))
+    _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
+    gv = {x["ten"]: x["pin"] for x in _ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nCô Bê"))["da_tao"]}
+    _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
+    ph = {p["ten"]: p["phong_id"] for p in _ok(api.dk_phong_danh_sach(qt))}
+    ids = []
+    for ten, nguoi, p in (("Cờ vua", "Cô An", "P1"), ("Bóng rổ", "Cô Bê", "P2")):       # mỗi giáo viên một CLB (luật: một CLB mỗi buổi)
+        tk = _ok(api.dk_dang_nhap("giao_vien", nguoi, gv[nguoi]))["token"]
+        ids.append(_ok(api.dk_clb_luu(tk, {"ten": ten, "buoi": "T2", "loai": "Tự do", "phong_id": ph[p], "khoi_tu": 9, "khoi_den": 12,
+                                           "mo_ta": "x", "yeu_cau": "Không"}))["clb_id"])
+    _ok(api.dk_chuyen_giai_doan(qt, "duyet"))
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, GOC, "dang_ky.html", open_browser=False)
+        pg = br.new_page(bypass_csp=True, viewport={"width": 1200, "height": 900})
+        pg.loi = []
+        pg.on("pageerror", lambda e: pg.loi.append(str(e)))
+        pg.api, pg.qt, pg.ids, pg.dia_chi = api, qt, ids, url
+        pg.clock.install()
+        pg.goto(url)
+        pg.get_by_role("button", name="Quản trị", exact=True).click()
+        pg.fill("input[name=ma]", "matkhau")
+        pg.get_by_role("button", name="Đăng nhập").click()
+        pg.wait_for_selector("text=Quản trị · Duyệt CLB")
+        pg.wait_for_selector("tr:has-text('Cờ vua')")
+        yield pg
+        br.close()
+
+
+def test_1_du_lieu_doi_thi_man_duyet_tu_cap_nhat_trong_vai_giay(cong):
+    pg = cong
+    assert pg.locator("tr:has-text('Cờ vua')").inner_text().count("Chờ duyệt") == 1
+    _ok(pg.api.dk_clb_duyet(pg.qt, pg.ids[0], "duyet"))                          # đổi dữ liệu từ nơi khác
+    pg.wait_for_timeout(300)                                                     # để lần lấy dấu vân tay đầu xong
+    pg.clock.fast_forward(6_000)                                                 # một vòng hỏi 5 giây
+    pg.wait_for_selector("tr:has-text('Cờ vua') >> text=Đã duyệt", timeout=5000)
+    assert not pg.loi, pg.loi
+
+
+def test_2_khong_co_gi_doi_thi_khong_ve_lai(cong):
+    pg = cong
+    pg.wait_for_timeout(300)
+    pg.evaluate("window.__moc = document.querySelector('.dk-noidung')")
+    pg.clock.fast_forward(30_000)                                                # sáu vòng hỏi, dữ liệu không đổi
+    pg.wait_for_timeout(500)
+    assert pg.evaluate("document.querySelector('.dk-noidung') === window.__moc")
+    assert not pg.loi, pg.loi
+
+
+def test_3_dang_go_thi_khong_ve_de_roi_ve_sau_khi_roi_o_nhap(cong):
+    pg = cong
+    pg.wait_for_timeout(300)
+    pg.evaluate("window.__moc = document.querySelector('.dk-noidung')")
+    pg.evaluate("document.querySelector('.dk-noidung input, .dk-noidung select').focus()")
+    _ok(pg.api.dk_clb_duyet(pg.qt, pg.ids[1], "duyet"))
+    pg.clock.fast_forward(11_000)
+    pg.wait_for_timeout(500)
+    assert pg.evaluate("document.querySelector('.dk-noidung') === window.__moc")        # đang ở ô nhập: giữ nguyên
+    pg.evaluate("document.activeElement.blur()")
+    pg.clock.fast_forward(6_000)
+    pg.wait_for_selector("tr:has-text('Bóng rổ') >> text=Đã duyệt", timeout=5000)
+    assert not pg.loi, pg.loi
+
+
+@pytest.fixture()
+def cong_gv(tmp_path):
+    """Cổng ở giai đoạn «Giáo viên đăng ký» (chưa có giáo viên nào): chỗ phiếu PIN hiện một lần."""
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    api = PipelineAPI(str(tmp_path / "app.db"))
+    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
+    _ok(api.dk_phong_luu(qt, "P1", 40))
+    _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
+    _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, GOC, "dang_ky.html", open_browser=False)
+        pg = br.new_page(bypass_csp=True, viewport={"width": 1200, "height": 900})
+        pg.loi = []
+        pg.on("pageerror", lambda e: pg.loi.append(str(e)))
+        pg.api, pg.qt = api, qt
+        pg.clock.install()
+        pg.goto(url)
+        pg.get_by_role("button", name="Quản trị", exact=True).click()
+        pg.fill("input[name=ma]", "matkhau")
+        pg.get_by_role("button", name="Đăng nhập").click()
+        pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
+        yield pg
+        br.close()
+
+
+def test_4_phieu_pin_chi_hien_mot_lan_khong_bi_xoa_khi_tu_cap_nhat(cong_gv):
+    """Checker vòng 2, M1 (cao): danh sách PIN vừa tạo không được mất khi dữ liệu đổi và màn tự vẽ lại."""
+    pg = cong_gv
+    pg.fill("textarea", "Cô Cúc\nCô Dũng")
+    pg.get_by_role("button", name="Tạo tài khoản giáo viên").click()
+    pg.wait_for_selector("#dkPin table")
+    pg.wait_for_timeout(300)
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tự", "1234"))                          # dữ liệu đổi từ nơi khác
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_timeout(600)
+    assert pg.locator("#dkPin table").count() == 1, "phiếu PIN bị xoá bởi lần tự vẽ lại"
+    assert "Cô Cúc" in pg.locator("#dkPin").inner_text()
+    assert not pg.loi, pg.loi
+
+
+def test_5_chu_dang_go_chua_luu_khong_bi_xoa_ke_ca_khi_da_roi_o_nhap(cong_gv):
+    """Checker vòng 2, M2 (vừa): chữ đã gõ nhưng chưa bấm lưu không được mất khi tự vẽ lại; sạch rồi thì vẽ lại bình thường."""
+    pg = cong_gv
+    pg.wait_for_timeout(300)
+    pg.fill("textarea", "Cô Mới")
+    pg.evaluate("document.activeElement.blur()")                                   # đã rời ô nhập: lớp bảo vệ «đang focus» không còn che
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tự", "1234"))
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_timeout(600)
+    assert pg.locator("textarea").input_value() == "Cô Mới"
+    pg.fill("textarea", "")                                                        # xoá sạch: không còn gì để mất
+    pg.evaluate("document.activeElement.blur()")
+    pg.evaluate("window.__moc = document.querySelector('.dk-noidung')")
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tư", "1234"))
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_function("document.querySelector('.dk-noidung') !== window.__moc", timeout=5000)
+    assert not pg.loi, pg.loi
+
+
+def test_6_ve_lai_do_vong_hoi_dung_dau_da_thay_khong_doc_lai(cong):
+    """Checker vòng 3, M3: vẽ lại do chính vòng hỏi phải dùng dấu ĐÃ thấy (`dauCho`), không gọi `dk_dau_van_tay` thêm lần nữa
+    (nếu đọc lại, thay đổi lọt vào giữa lúc hỏi và lúc đọc lại bị coi như đã thấy)."""
+    pg = cong
+    pg.wait_for_timeout(300)
+    pg.evaluate("""() => { window.__nDau = 0; const g = window.RBDA.callApi;
+        window.RBDA.callApi = function (ten, ...a) { if (ten === 'dk_dau_van_tay') window.__nDau++; return g.call(this, ten, ...a); }; }""")
+    _ok(pg.api.dk_clb_duyet(pg.qt, pg.ids[0], "duyet"))                              # một thay đổi từ nơi khác
+    pg.clock.fast_forward(6_000)                                                    # đúng một vòng hỏi
+    pg.wait_for_selector("tr:has-text('Cờ vua') >> text=Đã duyệt", timeout=5000)
+    pg.wait_for_timeout(500)
+    assert pg.evaluate("window.__nDau") == 1, "vẽ lại do vòng hỏi lại đọc dấu thêm một lần"
+    assert not pg.loi, pg.loi

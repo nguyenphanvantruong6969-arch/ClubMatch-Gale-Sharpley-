@@ -28,6 +28,7 @@ block_cipher = None
 
 datas = [
     ("index.html", "."),
+    ("dang_ky.html", "."),
     ("style.css", "."),
     ("js", "js"),
     ("i18n_loi.js", "."),

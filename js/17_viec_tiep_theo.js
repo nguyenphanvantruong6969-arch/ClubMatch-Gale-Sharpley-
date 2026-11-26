@@ -76,6 +76,17 @@ function capNhatViecTiepTheo(sucCoSan) {
   ]).then(([dash, suc, cho]) => {
     if (lan !== viecTiepTheoLanGoi) return; /* có lần gọi mới hơn: bỏ kết quả cũ */
     const tt = viecTinhTrangThai(dash, suc, cho);
+    /* DKL-I: chưa có dữ liệu thì chỉ đường sang cổng Đăng ký CLB (giữ ?t=<token> của bản trình duyệt dự phòng). */
+    const goiY = el("ghiChuDangKy");
+    if (goiY) {
+      /* Cổng đăng ký chỉ dành cho trường học: lời dẫn dùng từ «học sinh», «giáo viên», «CLB» nên chỉ hiện khi từ vựng workspace
+         là mặc định trường học (CI run 1689: ở workspace công ty chữ «học sinh» không được lọt ra màn hình). */
+      const nhan = window.I18N && window.I18N.getLabels ? window.I18N.getLabels() : null;
+      const laTruongHoc = !!nhan && nhan.person.vi === "Học sinh" && nhan.slot.vi === "Câu lạc bộ";
+      goiY.hidden = !tt || tt.ten !== "nap_so" || !laTruongHoc;
+      const lk = el("ghiChuDangKyLienKet");
+      if (lk) lk.href = "dang_ky.html" + location.search;
+    }
     if (!tt) { khung.hidden = true; return; }
     khung.hidden = false;
     khung.dataset.trangThai = tt.ten;

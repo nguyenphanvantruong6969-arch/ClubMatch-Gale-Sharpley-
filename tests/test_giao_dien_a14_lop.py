@@ -272,7 +272,7 @@ def _mo_ket_qua(page, tang1):
 
 def test_thanh_ben_sau_khi_gop_va_bao_chua_co_ket_qua(mo):
     page, api, loi = mo({"HS1": "10A1"})
-    nut = page.evaluate("""() => Array.from(document.querySelectorAll('.nav-item'))
+    nut = page.evaluate("""() => Array.from(document.querySelectorAll('.nav-item[data-tab]'))      // bỏ liên kết "Đăng ký CLB" (DK4-L5)
         .map(n => [n.dataset.tab, /^\\d+\\s/.test(n.textContent.trim())])""")
     # FG-9: thanh bên không còn số thứ tự (trước đây 01–07); thứ tự thẻ giữ nguyên.
     # UX1A-L2: thẻ xếp theo 4 nhóm (Nạp & xếp / Nhập tay / Kết quả & phiếu / Cài đặt).

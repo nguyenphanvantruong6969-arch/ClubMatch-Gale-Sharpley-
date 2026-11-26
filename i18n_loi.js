@@ -1617,5 +1617,221 @@ window.I18N_ERROR_MESSAGES = {
   "cb1_khong_chot_duoc": {
     "vi": "Không chốt được phương án. Hãy kiểm tra tệp dữ liệu rồi thử lại.",
     "en": "The plan could not be fixed. Check the data file and try again."
+  },
+  "dk_loi_chung": {
+    "vi": "Không thực hiện được. Hãy thử lại.",
+    "en": "Couldn't complete that. Try again."
+  },
+  "dk_chua_khoi_tao": {
+    "vi": "Cổng đăng ký chưa được thiết lập.",
+    "en": "The registration portal has not been set up yet."
+  },
+  "dk_da_khoi_tao": {
+    "vi": "Cổng đăng ký đã được thiết lập rồi.",
+    "en": "The registration portal is already set up."
+  },
+  "dk_mat_khau_ngan": {
+    "vi": "Mật khẩu quản trị cần ít nhất 4 ký tự.",
+    "en": "The admin password needs at least 4 characters."
+  },
+  "dk_sai_dang_nhap": {
+    "vi": "Tên hoặc mã không đúng. Hãy kiểm tra lại.",
+    "en": "The name or code is not correct. Check and try again."
+  },
+  "dk_can_dang_nhap": {
+    "vi": "Hãy đăng nhập trước.",
+    "en": "Please sign in first."
+  },
+  "dk_het_phien_nghi": {
+    "vi": "Phiên đã hết do để lâu không thao tác. Hãy đăng nhập lại.",
+    "en": "The session ended after a period of inactivity. Sign in again."
+  },
+  "dk_khong_du_quyen": {
+    "vi": "Tài khoản này không được làm việc đó.",
+    "en": "This account is not allowed to do that."
+  },
+  "dk_giai_doan_la": {
+    "vi": "Không rõ giai đoạn hoặc quyết định này.",
+    "en": "Unknown phase or decision."
+  },
+  "dk_han_sai": {
+    "vi": "Hạn chót không đúng dạng ngày giờ.",
+    "en": "The deadline is not a valid date and time."
+  },
+  "dk_sai_giai_doan": {
+    "vi": "Việc này chỉ làm được ở giai đoạn \"{phan}\".",
+    "en": "This can only be done in the \"{phan}\" phase."
+  },
+  "dk_ma_truong_sai": {
+    "vi": "Mã trường không đúng.",
+    "en": "The school code is not correct."
+  },
+  "dk_ten_trong": {
+    "vi": "Tên đang để trống hoặc quá dài.",
+    "en": "The name is empty or too long."
+  },
+  "dk_pin_sai_dang": {
+    "vi": "Mã gồm đúng 4 chữ số.",
+    "en": "The code is exactly 4 digits."
+  },
+  "dk_gv_trung": {
+    "vi": "Tên giáo viên này đã có.",
+    "en": "This teacher name already exists."
+  },
+  "dk_phong_trung": {
+    "vi": "Tên phòng này đã có.",
+    "en": "This room name already exists."
+  },
+  "dk_phong_suc_chua": {
+    "vi": "Sức chứa phòng phải là số nguyên lớn hơn 0.",
+    "en": "Room capacity must be a whole number above 0."
+  },
+  "dk_phong_dang_dung": {
+    "vi": "Phòng đang có CLB dùng, chưa xoá được.",
+    "en": "A club is using this room, so it cannot be deleted."
+  },
+  "dk_phong_la": {
+    "vi": "Không tìm thấy phòng này.",
+    "en": "That room was not found."
+  },
+  "dk_phong_ban": {
+    "vi": "Phòng này đã có CLB khác trong buổi đó.",
+    "en": "This room already has another club in that session."
+  },
+  "dk_khong_thay": {
+    "vi": "Không tìm thấy mục này.",
+    "en": "That item was not found."
+  },
+  "dk_clb_ten_trung": {
+    "vi": "Tên CLB này đã có.",
+    "en": "This club name already exists."
+  },
+  "dk_clb_buoi_la": {
+    "vi": "Buổi này không có trong danh sách buổi.",
+    "en": "This session is not in the session list."
+  },
+  "dk_clb_loai_la": {
+    "vi": "Loại CLB phải là Tự do, Giới hạn hoặc Tuyển chọn.",
+    "en": "Club type must be Free, Limited or Selective."
+  },
+  "dk_gv_hai_clb_mot_buoi": {
+    "vi": "Giáo viên này đã có một CLB trong buổi đó.",
+    "en": "This teacher already has a club in that session."
+  },
+  "dk_chi_tieu_sai": {
+    "vi": "Chỉ tiêu phải là số nguyên lớn hơn 0.",
+    "en": "The quota must be a whole number above 0."
+  },
+  "dk_chi_tieu_qua_phong": {
+    "vi": "Chỉ tiêu vượt sức chứa phòng ({suc_chua} chỗ).",
+    "en": "The quota exceeds the room capacity ({suc_chua} seats)."
+  },
+  "dk_khoi_sai": {
+    "vi": "Khối không hợp lệ hoặc nằm ngoài dải khối của trường.",
+    "en": "The grade range is invalid or outside the school's grades."
+  },
+  "dk_diem_san_sai": {
+    "vi": "Điểm sàn của CLB Tuyển chọn là số nguyên từ 0 đến 10.",
+    "en": "A Selective club's minimum score is a whole number from 0 to 10."
+  },
+  "dk_clb_khong_sua_duoc": {
+    "vi": "CLB này không còn sửa được (đã được xử lý hoặc thuộc giáo viên khác).",
+    "en": "This club can no longer be edited (already handled, or owned by another teacher)."
+  },
+  "dk_con_clb_cho_duyet": {
+    "vi": "Còn {n} CLB chờ duyệt. Hãy duyệt hoặc từ chối hết trước khi mở cho học sinh.",
+    "en": "{n} clubs are still pending. Approve or reject them all before opening to students."
+  },
+  "dk_chua_co_clb_duyet": {
+    "vi": "Chưa có CLB nào được duyệt.",
+    "en": "No club has been approved yet."
+  },
+  "dk_thieu_clb_tu_do": {
+    "vi": "Buổi {buoi} chưa có CLB Tự do nào được duyệt.",
+    "en": "Session {buoi} has no approved Free club yet."
+  },
+  "dk_thieu_diem": {
+    "vi": "Còn {n} bài thi chưa có điểm.",
+    "en": "{n} tests still have no score."
+  },
+  "dk_danh_sach_trong": {
+    "vi": "Danh sách trống.",
+    "en": "The list is empty."
+  },
+  "dk_danh_sach_co_loi": {
+    "vi": "Có {n} dòng lỗi. Sửa rồi nạp lại, hoặc chọn \"Thêm vào danh sách\".",
+    "en": "{n} lines have errors. Fix and reload, or choose \"Add to list\"."
+  },
+  "dk_hs_chua_mo": {
+    "vi": "Cổng đăng ký học sinh hiện không mở.",
+    "en": "Student registration is not open right now."
+  },
+  "dk_clb_khong_hop_le": {
+    "vi": "CLB {clb} không nằm trong danh sách CLB được mở cho khối này.",
+    "en": "Club {clb} is not among the clubs open to this grade."
+  },
+  "dk_nv_trung": {
+    "vi": "Một CLB chỉ được chọn một lần.",
+    "en": "A club can only be chosen once."
+  },
+  "dk_qua_nguyen_vong": {
+    "vi": "Buổi {buoi}: tối đa {toi_da} nguyện vọng.",
+    "en": "Session {buoi}: at most {toi_da} choices."
+  },
+  "dk_qua_bai_thi": {
+    "vi": "Buổi {buoi}: tối đa {toi_da} bài thi.",
+    "en": "Session {buoi}: at most {toi_da} tests."
+  },
+  "dk_thi_sai_loai": {
+    "vi": "Chỉ CLB Tuyển chọn mới có bài thi.",
+    "en": "Only Selective clubs have tests."
+  },
+  "dk_huy_chuong_sai": {
+    "vi": "Huy chương phải là Vàng, Bạc hoặc Đồng.",
+    "en": "A medal must be Gold, Silver or Bronze."
+  },
+  "dk_huy_chuong_tu_do": {
+    "vi": "CLB Tự do không nhận huy chương.",
+    "en": "Free clubs do not take medals."
+  },
+  "dk_huy_chuong_trung": {
+    "vi": "Mỗi huy chương chỉ dùng một lần trong một buổi.",
+    "en": "Each medal can be used once per session."
+  },
+  "dk_khong_co_tu_do": {
+    "vi": "Buổi {buoi}: chưa chọn CLB Tự do nào nên có thể không được xếp vào đâu.",
+    "en": "Session {buoi}: no Free club is ranked, so a place may not be found."
+  },
+  "dk_diem_sai": {
+    "vi": "Điểm phải là số từ 0 đến 10 (dùng dấu phẩy hoặc dấu chấm).",
+    "en": "A score must be a number from 0 to 10 (comma or dot)."
+  },
+  "dk_khong_xuat_duoc": {
+    "vi": "Chưa xuất được Sổ nhập: dữ liệu còn lỗi. Hãy sửa rồi thử lại.",
+    "en": "The input workbook could not be exported: the data still has errors. Fix them and try again."
+  },
+  "dk_chot_that_bai": {
+    "vi": "Chốt và xếp không thành công (bước: {buoc}). Dữ liệu vẫn nguyên như trước khi bấm. Chi tiết đã ghi vào nhật ký.",
+    "en": "Lock and allocate failed (step: {buoc}). Data is unchanged from before the button was pressed. Details are in the log."
+  },
+  "dk_chot_seed_khoa": {
+    "vi": "Hạt giống xếp đã khoá ở {cu}, không thể dùng {moi}. Hãy bấm lại mà không đổi hạt giống.",
+    "en": "The draw number is locked at {cu}; {moi} cannot be used. Press again without changing it."
+  },
+  "dk_chot_seed_sai": {
+    "vi": "Hạt giống xếp phải là một số nguyên.",
+    "en": "The draw number for the allocation must be an integer."
+  },
+  "dk_gioi_han_sai": {
+    "vi": "Giới hạn phải là số từ 1 đến 30, và số bài thi không vượt số nguyện vọng.",
+    "en": "Limits must be numbers from 1 to 30, and tests cannot exceed choices."
+  },
+  "dk_chot_loi_he_thong": {
+    "vi": "Chốt và xếp không thành công do lỗi hệ thống. Dữ liệu đã được trả về nguyên trạng. Hãy thử lại; nếu vẫn lỗi, báo người quản lý phần mềm.",
+    "en": "Lock and allocate failed because of a system error. Data has been restored unchanged. Try again; if it persists, tell the software administrator."
+  },
+  "dk_tam_khoa": {
+    "vi": "Nhập sai quá nhiều lần nên mã này tạm khoá, còn khoảng {phut} phút. Hãy chờ hoặc nhờ quản trị mở khoá.",
+    "en": "Too many wrong attempts: this ID is locked for about {phut} more minute(s). Wait, or ask the administrator to unlock it."
   }
 };

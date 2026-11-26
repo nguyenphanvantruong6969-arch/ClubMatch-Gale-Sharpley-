@@ -174,6 +174,7 @@ def test_css_chuyen_canh_nam_trong_supports_va_no_preference_de_lui_ve_tuc_thi()
     import re
     i = css.index("/* UX2 — L8")
     khoi = css[i:]
+    khoi = khoi[:khoi.index("/* UX4:")]     # chỉ khối L8: CSS các tính năng thêm sau (DK…) không thuộc phạm vi test này
     assert "@supports selector(::details-content)" in khoi
     assert "overflow" not in re.sub(r"/\*.*?\*/", "", khoi[khoi.index("@supports"):], flags=re.S)     # nội dung <details> KHÔNG bị cắt khi mở
     j = khoi.index("@supports")

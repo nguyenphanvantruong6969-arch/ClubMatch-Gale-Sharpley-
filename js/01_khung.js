@@ -28,12 +28,13 @@ const TAB_LOADERS = {
 function initTabs() {
   const navItems = document.querySelectorAll(".nav-item");
   navItems.forEach((btn) => {
+    if (!btn.dataset.tab) return;          // DK4-L5: liên kết (vd. "Đăng ký CLB") tự điều hướng
     btn.addEventListener("click", () => switchTab(btn.dataset.tab));
   });
   /* UX1A-L2: nút nhóm mở thẻ đầu tiên đang hiện của nhóm; nhóm không còn thẻ hiện thì tự ẩn. */
   document.querySelectorAll(".nav-nhom-nut").forEach((nut) => {
     nut.addEventListener("click", () => {
-      const dau = Array.from(nut.parentElement.querySelectorAll(".nav-item")).find(thanhDieuHuongDangHien);
+      const dau = Array.from(nut.parentElement.querySelectorAll(".nav-item[data-tab]")).find(thanhDieuHuongDangHien);
       if (dau) switchTab(dau.dataset.tab);
     });
   });
@@ -44,6 +45,10 @@ function initTabs() {
     quan.observe(document.body, { attributes: true, attributeFilter: ["data-vai"] });
   }
   capNhatNhomDieuHuong();
+  /* Bản trình duyệt dự phòng xin trang bằng ?t=<token>: giữ nguyên location.search khi sang cổng. */
+  const dangKy = document.getElementById("navDangKy");
+  if (dangKy) dangKy.href = "dang_ky.html" + location.search;
+  if (location.hash === "#ket-qua") switchTab("results");   // DK4-L5: cổng đăng ký mở thẳng Kết quả
 }
 
 /* UX1A-L2: "hiện" tính theo thuộc tính, không theo hiển thị thật (thanh bên bị ẩn tạm thì không làm mất cả nhóm):

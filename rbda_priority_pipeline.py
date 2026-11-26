@@ -2445,6 +2445,91 @@ def _co_cot(cur, bang: str, cot: str) -> bool:
     return any(r[1] == cot for r in cur.execute("PRAGMA table_info(%s)" % bang))
 
 
+# DK3-L1: bảng `dk_*` của cổng đăng ký đặt TẠI ĐÂY (kịch bản đo chỉ cho phép import i18n_errors, lop_hoc_sinh, nhan_ws);
+# `dang_ky_schema` chỉ re-export.
+SCHEMA_DK3 = """
+CREATE TABLE IF NOT EXISTS dk_cai_dat (
+    khoa TEXT PRIMARY KEY,
+    gia_tri TEXT
+);
+CREATE TABLE IF NOT EXISTS dk_giai_doan (
+    ten TEXT PRIMARY KEY,
+    mo_luc TEXT,
+    han_chot TEXT,
+    trang_thai TEXT NOT NULL DEFAULT 'cho' CHECK (trang_thai IN ('cho', 'mo', 'dong'))
+);
+CREATE TABLE IF NOT EXISTS dk_phong (
+    phong_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ten TEXT NOT NULL UNIQUE,
+    suc_chua INTEGER NOT NULL CHECK (suc_chua > 0)
+);
+CREATE TABLE IF NOT EXISTS dk_giao_vien (
+    gv_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ten TEXT NOT NULL UNIQUE,
+    pin_bam BLOB NOT NULL,
+    pin_muoi BLOB NOT NULL,
+    cach_tao TEXT NOT NULL CHECK (cach_tao IN ('tu_dang_ky', 'quan_tri'))
+);
+CREATE TABLE IF NOT EXISTS dk_clb (
+    clb_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ten TEXT NOT NULL UNIQUE,
+    buoi TEXT NOT NULL,
+    loai TEXT NOT NULL CHECK (loai IN ('Tự do', 'Giới hạn', 'Tuyển chọn')),
+    phong_id INTEGER,
+    gv_id INTEGER,
+    chi_tieu_gv INTEGER,
+    chi_tieu INTEGER,
+    khoi_tu INTEGER NOT NULL,
+    khoi_den INTEGER NOT NULL,
+    diem_san INTEGER,
+    link_forms TEXT,
+    mo_ta TEXT,
+    yeu_cau TEXT,
+    trang_thai TEXT NOT NULL DEFAULT 'cho_duyet' CHECK (trang_thai IN ('cho_duyet', 'duyet', 'tu_choi')),
+    ly_do_tu_choi TEXT
+);
+CREATE TABLE IF NOT EXISTS dk_hoc_sinh (
+    student_id TEXT PRIMARY KEY,
+    ho_ten TEXT NOT NULL,
+    lop TEXT NOT NULL,
+    khoi INTEGER NOT NULL,
+    pin_bam BLOB NOT NULL,
+    pin_muoi BLOB NOT NULL,
+    nop_luc TEXT
+);
+CREATE TABLE IF NOT EXISTS dk_nguyen_vong (
+    student_id TEXT NOT NULL,
+    buoi TEXT NOT NULL,
+    hang INTEGER NOT NULL CHECK (hang >= 1),
+    clb_id INTEGER NOT NULL,
+    thi INTEGER NOT NULL DEFAULT 0 CHECK (thi IN (0, 1)),
+    diem REAL,
+    huy_chuong TEXT CHECK (huy_chuong IS NULL OR huy_chuong IN ('Vàng', 'Bạc', 'Đồng')),
+    PRIMARY KEY (student_id, clb_id),
+    UNIQUE (student_id, buoi, hang)
+);
+CREATE TABLE IF NOT EXISTS dk_nhat_ky (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    luc TEXT NOT NULL,
+    vai TEXT NOT NULL,
+    hanh_dong TEXT NOT NULL,
+    chi_tiet TEXT
+);
+"""
+
+TEN_BANG_DK3 = ("dk_cai_dat", "dk_giai_doan", "dk_phong", "dk_giao_vien", "dk_clb",
+                "dk_hoc_sinh", "dk_nguyen_vong", "dk_nhat_ky")
+
+
+def dam_bao_bang(conn) -> bool:
+    """Tạo các bảng còn thiếu trên `conn` (một kết nối đang mở). True nếu vừa tạo ít nhất một bảng."""
+    co = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    thieu = [t for t in TEN_BANG_DK3 if t not in co]
+    if thieu:
+        conn.executescript(SCHEMA_DK3)
+    return bool(thieu)
+
+
 def di_tru_schema(db_path: str) -> list[str]:
     """Nâng CSDL cũ lên schema có buổi sinh hoạt. Chạy lại bao nhiêu lần cũng được.
 
@@ -2594,6 +2679,12 @@ def di_tru_schema(db_path: str) -> list[str]:
                 "CREATE TABLE IF NOT EXISTS stb_buoi (buoi TEXT NOT NULL, student_id TEXT NOT NULL, "
                 "so INTEGER NOT NULL, PRIMARY KEY (buoi, student_id))")
             da_lam.append("stb_buoi")
+
+        # DK3-L1: tám bảng `dk_*` của cổng đăng ký. Toàn bảng mới; sao lưu trước nếu CSDL đã có dữ liệu.
+        if any(t not in co_bang for t in TEN_BANG_DK3):
+            sao_luu_truoc_khi_sua()
+            dam_bao_bang(conn)
+            da_lam.append("dk3")
 
         conn.commit()
     finally:

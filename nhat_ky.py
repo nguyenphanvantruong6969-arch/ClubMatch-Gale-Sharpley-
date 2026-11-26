@@ -42,8 +42,8 @@ uoc_tinh_muc_tieu bao_cao_muc_tieu""".split())
 
 def nen_ghi(ten: str) -> bool:
     """Hàm này có để lại dòng nhật ký khi đã có tài khoản không? Mặc định CÓ (ghi thừa còn hơn thiếu)."""
-    if ten in _KHONG_GHI:
-        return False
+    if ten in _KHONG_GHI or ten.startswith("dk_"):
+        return False          # cổng đăng ký (DK3/DK4) có phiên và nhật ký riêng (`dk_nhat_ky`); đối số có thể chứa PIN
     if ten in _CHI_GIU or ten in _GHI_DU_LA_DOC:
         return True
     return not ten.startswith(_DOC)
