@@ -4,7 +4,7 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK5_GIAO_THUC.md` (size M: coder + checker, no lead). Loop context: `docs/phien/DK3_DK4_VONG_TU_DONG.md`.
 
-Status: IN PROGRESS (L1-L3 done; soat-ma + CI gate next)
+Status: DONE b510313 CI green 2026-11-26 (Tests run 1687 success; checker PASS milestone 1+2 in b54980a; docs-only commits after b510313 add no code). Build Windows executable workflow has no run on this branch (not triggered by push here).
 
 ## Feature / goal
 DK5 = full rehearsal ("diễn tập") of the registration-to-allocation flow on SIMULATED data (798 students, 40 clubs),
@@ -78,3 +78,4 @@ MILESTONE 2 READY | head 38d8f84 | base c084f20
 | 2026-11-26 | Sonnet | L2 done and committed | wharton_nhat_ky kept by design |
 | 2026-11-26 | Sonnet | L3 done and committed | MILESTONE 2 below |
 | 2026-11-25 | Sonnet | CI fix: admin re-login per phase | CI run 1683 red, cause above |
+| 2026-11-26 | Sonnet | CI gate: Tests run 1687 (head b510313) green | Status set to DONE |
