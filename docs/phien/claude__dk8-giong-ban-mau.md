@@ -1,5 +1,14 @@
 # Branch handoff: claude/dk8-giong-ban-mau
 
+Status: DONE 3d0e41c CI green 2026-11-26 (Tests run 1722: success; checker M1+M2 PASS; soat-ma: 0 chặn, 0 nên sửa)
+
+## Tóm tắt cho Truong (5 dòng)
+1. Cổng đăng ký đã giống bản mẫu v8: thanh trên dính, thẻ vai trò, đăng nhập thẻ hẹp, quản trị dạng thanh thẻ + thẻ giai đoạn, giáo viên/học sinh dạng thẻ (L1–L4, cùng chỉnh thứ tự thẻ của phiên song song).
+2. L5: nút báo đang lưu / xong / lỗi, ô mã học sinh, PIN, tên có dấu ✓ chỉ theo định dạng, màn «Đã gửi» có một dấu ✓; không có dấu nào ở nguyện vọng, huy chương, đáp án.
+3. Sửa dọc đường hai lỗi CI thật: `test_dk3 test_9` (đua thời gian từ L2) và thanh trên không dính khi trang dài (L1).
+4. Không đổi thuật toán, schema, CSV; giao diện chính không đổi; `kiem_nhanh` 7/7. Báo cáo soát mã: `docs/ke_hoach/BAO_CAO_SOAT_MA_DK8.md` (4 mục nhỏ, 1 chưa đo, chờ Truong duyệt).
+5. Chưa làm: thử bản Windows .exe thật (Build chỉ chạy thủ công) và quyết định có thêm test giảm chuyển động cho thanh trên hay không.
+
 > Purpose: a fresh session reads CLAUDE.md, then THIS file, and can continue without the old chat.
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK8_GIAO_THUC.md` (size M, AUTO: coder runs its own checker; no human input).
@@ -71,7 +80,7 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
-MILESTONE M1+M2 READY | head 1bb488d | base 7c5dae5
+MILESTONE M1+M2 READY | head 1bb488d | base 7c5dae5 -> checker PASS (7dd5a83), soat-ma done (3d0e41c), CI 1722 green
 - Done and pushed: L1, L2, L3, L4, L5 (feedback: `DK.phanHoi`, `data-hl` ticks, receipt tick, 19 tests in `test_giao_dien_dk8_l5.py`) and the
   parallel session's "L6" (Truong, after screenshots: role-card order Giáo viên → Học sinh → Quản trị, taller cards, logo, empty states, alert box,
   CSS chevron on «Thêm»; it changed SELECTORS/ORDER in dk8_l1/l2/l4 tests, see git log c51cef0..1bb488d: checker must confirm no assertion was weakened).
@@ -115,3 +124,4 @@ MILESTONE M1+M2 READY | head 1bb488d | base 7c5dae5
 | 2026-11-26 | Sonnet | L5 done: DK.phanHoi feedback, format-only tick, receipt tick; 18 tests | CI pending |
 | 2026-11-26 | Sonnet | CI loop round 1: chup_dk8.py wharton False; test count 439→444 in CLAUDE_CHI_TIET.md (Linux 6/6 log confirmed same cause) | CI only; DK8-L5 NOT started |
 | 2026-11-26 | Sonnet | CI loop: sticky bar fix (#dkTop + body height), test_q; merged parallel L6; CI 1719 green; MILESTONE M1+M2 READY | checker next |
+| 2026-11-26 | Sonnet | Closed DK8: checker PASS, soat-ma report, CI 1722 green on 3d0e41c, Status DONE | docs only |
