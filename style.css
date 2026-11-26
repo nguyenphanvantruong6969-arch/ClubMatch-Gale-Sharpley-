@@ -3434,7 +3434,10 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #ux1aNangCao { margin: 0 0 16px; }
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }
 #ux1aNangCao > summary { display: block; cursor: pointer; }
-#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; }
+/* summary.btn khớp UX2 (::after tuyệt đối, tâm 50%, ≥ 44 px): mũi tên ở ::after phải về lại trong dòng chữ, nên vùng bấm 44 px chuyển sang ::before (cùng hình học UX2) */
+#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; position: static; width: auto; height: auto; transform: none; }
+#ux1aNangCao > summary.btn::before, .club-them > summary.btn::before {
+  content: ""; position: absolute; top: 50%; left: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
 
 /* UX5A: nếp gập ít dùng của thẻ Kết quả / Chi tiết (Hick) */
 .ux5a-hop-rong { width: min(360px, 90vw); }
@@ -3694,8 +3697,8 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-app .btn.is-xong { border-color: var(--moss); }
 .dk-app .btn.is-loi { border-color: var(--rust); background-color: var(--rust-soft); }
 .dk-app .btn.is-xong::after, .dk-app .btn.is-loi::after, .dk-dau .btn.is-xong::after, .dk-dau .btn.is-loi::after {
-  content: ""; position: absolute; top: -7px; right: -7px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%;
-  background-repeat: no-repeat; background-position: center; background-size: 12px; pointer-events: none; }
+  content: ""; position: absolute; top: -7px; right: -7px; left: auto; transform: none; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%;
+  background-repeat: no-repeat; background-position: center; background-size: 12px; pointer-events: none; }   /* left/transform: gỡ ::after vùng bấm UX2 (left:50% + translate) */
 .dk-app .btn.is-xong::after, .dk-dau .btn.is-xong::after { background-color: var(--moss); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.4l2.6 2.6 5-5.4' fill='none' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 .dk-app .btn.is-loi::after, .dk-dau .btn.is-loi::after { background-color: var(--rust); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 2.2v4.4M6 9.3v.1' fill='none' stroke='white' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E"); }
 @keyframes dkLuu { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 0 5px var(--gold-soft); } }

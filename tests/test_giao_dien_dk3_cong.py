@@ -276,3 +276,56 @@ def test_10_giao_vien_ba_buoc_mot_nut_vang(cong):
     assert pg.get_by_role("button", name="Gửi duyệt").count() == 1
     _mot_vang(pg)
     assert not pg.loi, pg.loi
+
+
+# ---- Vùng bấm UX2 (:where(button,.btn,[role=button]) {position:relative} + ::after tâm 50%) không được ghi đè ::after riêng của nút ----
+@pytest.mark.parametrize("rong", [1000, 600, 375])
+def test_11_ca_the_vai_tro_bam_duoc_bang_toa_do(cong, rong):
+    """Bấm vào THÂN thẻ vai trò (không phải chữ tiêu đề) phải mở màn đăng nhập."""
+    pg = cong
+    pg.set_viewport_size({"width": rong, "height": 900})
+    try:
+        for vai in ("Giáo viên", "Học sinh", "Quản trị"):
+            for fy in (0.06, 0.5, 0.94):
+                pg.goto(pg.dia_chi)
+                pg.wait_for_selector(".dk-cua")
+                bb = pg.locator(".dk-cua", has=pg.get_by_role("button", name=vai, exact=True)).bounding_box()
+                x, y = bb["x"] + bb["width"] * 0.8, bb["y"] + bb["height"] * fy
+                tren = pg.evaluate("([x, y]) => document.elementFromPoint(x, y).className", [x, y])
+                assert "dk-cua-nut" in tren, (rong, vai, fy, tren)
+                pg.mouse.click(x, y)
+                pg.wait_for_selector("input[name=ma]", timeout=3000)
+    finally:
+        pg.set_viewport_size({"width": 1100, "height": 900})
+
+
+@pytest.mark.parametrize("chuyen_dong", ["no-preference", "reduce"])
+def test_12_dau_xong_loi_dk8_o_goc_phai_tren(cong, chuyen_dong):
+    """DK8-L5: dấu ✓/! của .btn.is-xong/.is-loi nằm ở góc phải-trên (lệch 7 px), không ở giữa nút."""
+    pg = cong
+    pg.emulate_media(reduced_motion=chuyen_dong)
+    try:
+        pg.goto(pg.dia_chi)
+        pg.get_by_role("button", name="Quản trị", exact=True).click()
+        b = pg.get_by_role("button", name="Đăng nhập")
+        for lop in ("is-xong", "is-loi"):
+            b.evaluate("(e, lop) => { e.classList.remove('is-xong', 'is-loi'); e.classList.add(lop); }", lop)
+            pg.wait_for_timeout(450)                                   # chờ hết hoạt ảnh dkTich
+            hop = b.evaluate("""e => { const s = getComputedStyle(e, "::after");
+                const m = new DOMMatrix(s.transform === 'none' ? undefined : s.transform);
+                return {rong: e.clientWidth, trai: parseFloat(s.left) + m.e, tren: parseFloat(s.top) + m.f, w: parseFloat(s.width)}; }""")
+            assert abs(hop["trai"] - (hop["rong"] + 7 - hop["w"])) <= 1, (chuyen_dong, lop, hop)
+            assert abs(hop["tren"] + 7) <= 1, (chuyen_dong, lop, hop)
+    finally:
+        pg.emulate_media(reduced_motion="no-preference")
+
+
+def test_13_mui_ten_summary_btn_nam_sau_chu(cong):
+    """Mũi tên « ▾» của summary.btn (Thêm tuỳ chọn, Nâng cao) nằm trong dòng chữ, không bị UX2 đẩy lên góc."""
+    pg = cong
+    pg.goto(pg.dia_chi.replace("dang_ky.html", "index.html"))
+    kq = pg.evaluate("""() => [...document.querySelectorAll('.club-them > summary.btn, #ux1aNangCao > summary')].map(s => {
+        const a = getComputedStyle(s, '::after'); return [s.id || s.parentElement.id, a.content, a.position, a.transform]; })""")
+    assert len(kq) >= 3, kq
+    for ten, noi_dung, vi_tri, bien_doi in kq:
+        assert noi_dung == '" ▾"' and vi_tri == "static" and bien_doi == "none", (ten, noi_dung, vi_tri, bien_doi)

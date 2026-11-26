@@ -1,6 +1,6 @@
 # Branch handoff: claude/soat-vung-bam-ux2
 
-> Review-only branch (no production code changed). Base: `claude/stoic-ride-e92joa` @ 21cfdd4.
+> Review, then fix on Truong's request (2026-11-26, "sửa ngay"; code UX2-VB, outside the registry). Base: `claude/stoic-ride-e92joa` @ 21cfdd4.
 > Data: none of the algorithm is touched; the browser checks used a throw-away `app.db` (simulated).
 
 ## Feature / goal
@@ -13,7 +13,7 @@ centred at 50%/50%, `max(100%, 44px)`, `translate(-50%, -50%)`). No registry ite
 - [x] Verify the fix with real mouse clicks at 1000 / 600 / 375 px.
 - [x] Sweep for the same pattern (CSSOM diff with/without the UX2 rules + static grep of every `::after`).
 - [x] Propose a coordinate-click test for `tests/test_giao_dien_dk3_cong.py` (not added).
-- [ ] Truong decides whether to fix findings F1/F2 (separate item; needs a coder session).
+- [x] Fix F1/F2 (Truong: fix now). Tests written first (RED: 3 failed without the CSS change), then CSS.
 
 ## Current state
 ### Root cause (confirmed)
@@ -64,14 +64,14 @@ the list is complete.
   timing artifact (gone after `document.fonts.ready`).
 - **Limit:** only DOM present on the screens visited was diffed; the static grep covers the rest.
 
-### Fix direction (for a coder session; not done here)
+### Fix (DONE 2026-11-26; first idea below kept for record)
 Any rule that styles a button's `::after` must reset UX2 explicitly, as 21cfdd4 did:
 F1: add `left:auto; transform:none` to the badge rule (and keep the `dkTich` keyframes ending at
 `transform:none`). F2: add `position:static; width:auto; height:auto; transform:none` for the two
 summary `::after` rules (or exclude `summary` from the UX2 selector). Longer term: scope the UX2 block as
 `:where(button, .btn, [role="button"]):not(.co-after)` or document the reset rule in `style.css` header.
 
-### Proposed test (for `tests/test_giao_dien_dk3_cong.py`; NOT added)
+### Test (ADDED as test_11, plus test_12 badge and test_13 summary arrow)
 ```python
 @pytest.mark.parametrize("rong", [1000, 600, 375])
 def test_11_ca_the_vai_tro_bam_duoc_bang_toa_do(cong, rong):
@@ -95,6 +95,13 @@ Place it after test_1 (portal must be initialised; the module fixture is shared)
 (all 27 points MISS in the simulation) and passes on 21cfdd4. An F1 guard could assert the badge's
 `getBoundingClientRect` via `getComputedStyle(b,'::after').left` ≈ `width + 7 - 18`.
 
+### What was applied
+- F1: badge rule gets `left: auto; transform: none` → measured 429 px = padding-box width 440 + 7 − 18 (both motion modes).
+- F2: making the summary `::after` static removed its 44 px hit area (`test_giao_dien_ux2_nut` admin failed on
+  `clubFormThemTuyChon 139x36`). Final: `::after` static for the arrow; `summary.btn::before` carries UX2's hit area.
+- Tests: `tests/test_giao_dien_dk3_cong.py` 16 passed; with dk8_l5, ux2_nut, ux4_l2/l3/l4, dk8_l1, dk4_cong_vao: all pass.
+  Screenshots checked: "Thêm tuỳ chọn ▾" arrow after text; ✓ badge at top-right.
+
 ## Decisions and gotchas
 - Python Playwright is not installed in this container (the project venv is missing); used the
   pre-installed Node Playwright as client and `python3` + `browser_host.serve` as server.
@@ -107,13 +114,17 @@ None. CSS only; no change to `compute_club_priority`, STB, `run_history`, pipeli
 (`tests/test_giao_dien_dk3_cong.py`, UX2/DK8 UI tests) should be re-run.
 
 ## Next steps
-1. Truong: decide whether F1/F2 get an item code and a coder session.
-2. Add the proposed test (and an F1 badge-position guard) in that session, test first.
+1. CI green on the branch; then PR into the target branch if Truong asks.
+2. Truong: confirm the temporary code UX2-VB (or assign a registry code).
 
 ## Files touched
-- docs/phien/claude__soat-vung-bam-ux2.md: this report (only file changed).
+- docs/phien/claude__soat-vung-bam-ux2.md: this report.
+- style.css: F1 badge reset, F2 summary arrow + ::before hit area.
+- tests/test_giao_dien_dk3_cong.py: test_11/12/13.
+- CHANGELOG.md, docs/ke_hoach/TIEN_DO.md: UX2-VB entry.
 
 ## Session log
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-26 | Opus | Verified 21cfdd4 fix at 3 widths; swept UX2 overrides; found F1, F2 | Report only |
+| 2026-11-26 | Opus | Fixed F1/F2 on Truong's request, tests first | Rule 11/12 (Opus plans only) waived by Truong's direct order |
