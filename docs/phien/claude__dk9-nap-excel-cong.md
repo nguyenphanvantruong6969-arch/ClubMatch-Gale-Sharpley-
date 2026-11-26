@@ -4,6 +4,15 @@
 > Language: English. Cap: 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 > Protocol: `docs/phien/DK9_GIAO_THUC.md` (size M, AUTO: coder runs its own checker; no human input).
 
+Status: DONE 593c0b7 CI green 2026-11-26 (run 1736 lượt 2: job Windows 8/9 chạy lại 1 lần vì `test_a13_12_browser_host::test_tai_lai_trang_khong_tat_may_chu` chập chờn thời gian, không liên quan DK9)
+
+## Tóm tắt cho Truong (5 dòng)
+1. Cổng đăng ký có khối «Nạp từ Excel» ở Quản trị → Cài đặt: tải file mẫu, chọn/thả một tệp .xlsx (ba trang Học sinh, Giáo viên, Phòng), xem trước, rồi «Nạp».
+2. Xem trước chỉ đọc, không ghi gì; dòng lỗi được liệt kê kèm số dòng Excel và lý do, dòng hợp lệ vẫn nạp; nạp lại giữ nguyên PIN học sinh cũ, giáo viên và phòng đã có thì bỏ qua.
+3. PIN chỉ hiện một lần sau «Nạp» trên phiếu gộp (tên · mã · lớp); chỉ quản trị gọi được; không đổi schema, CSV, thuật toán hay giao diện chính.
+4. Test: 16 backend + 10 giao diện Chromium (gồm XSS); checker vòng 1 FIX ba mục nhỏ đã sửa, vòng 2 PASS; ruff sạch, kiem_nhanh 7/7; mutation 5 chỗ đều làm test đỏ.
+5. Nhánh mang theo cả DK8 (chưa vào main) và merge sạch vào main; PR #44 đã mở. Còn lại: nút «In phiếu»/«Chép PIN» là nút nhẹ có sẵn của cổng; trang tính >20 000 hàng thô bị từ chối; tải file mẫu bằng Blob chưa thử trong WebView2 máy bàn.
+
 ## Feature / goal
 Item **DK9** (registry row to add: "Nạp Excel cho cổng đăng ký"). Truong, 2026-11-26: today the registration portal
 (`dang_ky.html`) is set up by pasting text (students, teachers) and typing rooms one by one. Add ONE `.xlsx` upload that
