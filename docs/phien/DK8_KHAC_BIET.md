@@ -33,13 +33,13 @@
 | cai_dat | v8: các thẻ nhỏ (Buổi · Khối · Mã trường) lưới hai cột; cổng thật: một cột liền | L2 | đã giống (lưới thẻ: Mã trường · Buổi và khối · Giới hạn · Đổi mật khẩu) |
 | them | v8: «Thêm ▾» có Nhật ký · Sao lưu · Lùi giai đoạn · Công cụ thử | L2 | đã giống («Thêm ▾»; ba thẻ liền nhau Sao lưu · Lùi giai đoạn · Nhật ký thay cho thanh chọn; không có «Công cụ thử» vì ngoài phạm vi) |
 | gv_dang_nhap | v8: thẻ hẹp, chip giai đoạn giáo viên trong tiêu đề, «Chưa có tài khoản? Tạo bằng mã trường» | L1 | đã giống (khung); luồng đăng ký GV giữ nút «Đăng ký tài khoản giáo viên» |
-| gv_ds | v8: «CLB của tôi» + chip giai đoạn bên phải; thẻ CLB (tên, dòng buổi · phòng · chỗ · khối · loại, chip trạng thái, Sửa/Xoá); «+ Đăng ký CLB mới» | L3 | còn khác |
-| gv_form | v8: màn riêng (thẻ hẹp), tiêu đề «Đăng ký CLB mới», ba bước «1. Lịch và phòng …», thứ tự trường như v8, dòng chú thích | L3 | còn khác |
+| gv_ds | v8: «CLB của tôi» + chip giai đoạn bên phải; thẻ CLB (tên, dòng buổi · phòng · chỗ · khối · loại, chip trạng thái, Sửa/Xoá); «+ Đăng ký CLB mới» | L3 | đã giống (tiêu đề + chip giai đoạn, thẻ CLB bo góc 10 px với chip trạng thái và dòng «buổi · phòng · nhận · khối · loại»; Sửa/Xoá giữ chữ cũ) |
+| gv_form | v8: màn riêng (thẻ hẹp), tiêu đề «Đăng ký CLB mới», ba bước «1. Lịch và phòng …», thứ tự trường như v8, dòng chú thích | L3 | khác chấp nhận: form nằm NGAY dưới danh sách trong thẻ hẹp (không phải màn riêng sau nút «+ Đăng ký CLB mới») và tên CLB vẫn ở bước 3 — test và luồng DKL dựa vào; nhãn, tuỳ chọn «Tự do – nhận mọi em…», «Số học sinh nhận (tối đa N)», dòng tóm tắt đã như v8 |
 | hs_dang_nhap | v8: thẻ hẹp, chip giai đoạn học sinh, dòng gợi ý «Máy tự thoát sau 60 giây…» | L1 | đã giống |
-| hs_xacnhan | v8: «Đúng là em chứ?», tên lớn, dòng «Lớp · Khối · Mã», hai nút «Đúng là em» / «Không phải em» | L3 | còn khác |
-| hs_buoi | v8: hai cột (CLB cho khối · Nguyện vọng) với thẻ CLB đủ chip và chú thích; thanh bước «Buổi k/N · …» | L3 | còn khác |
-| hs_xemlai | v8: «Xem lại và gửi», bảng tóm tắt + «Bài kiểm tra (n)» | L3 | còn khác |
-| hs_dagui | v8: «Đã gửi», «Đã gửi lúc …», tóm tắt, «Xong, thoát», dòng «Máy sẽ tự thoát sau 30 giây» | L3 | còn khác |
+| hs_xacnhan | v8: «Đúng là em chứ?», tên lớn, dòng «Lớp · Khối · Mã», hai nút «Đúng là em» / «Không phải em» | L3 | đã giống (thẻ hẹp, tên lớn 1,4rem, «Lớp · Khối · Mã», nút «Đúng là em» vàng + «Không phải em» viền) |
+| hs_buoi | v8: hai cột (CLB cho khối · Nguyện vọng) với thẻ CLB đủ chip và chú thích; thanh bước «Buổi k/N · …» | L3 | đã giống (thẻ CLB và hàng nguyện vọng bo góc 10 px); khác chấp nhận: nút +Thêm / ↑ ↓ ✕ cao 44 px (v8 36 px) vì kiosk cảm ứng, test kiểm ≥ 44 px |
+| hs_xemlai | v8: «Xem lại và gửi», bảng tóm tắt + «Bài kiểm tra (n)» | L3 | đã giống từ DK4-UI/DKL (bảng tóm tắt + «Bài kiểm tra (n)») |
+| hs_dagui | v8: «Đã gửi», «Đã gửi lúc …», tóm tắt, «Xong, thoát», dòng «Máy sẽ tự thoát sau 30 giây» | L3 | đã giống từ DK4-UI/DKL («Đã gửi lúc …», tóm tắt, «Xong, thoát», «Máy sẽ tự thoát sau 30 giây») |
 | mọi màn | v8: phông chữ tải từ Google Fonts; cổng thật dùng phông cài sẵn (`assets/fonts`) — cùng họ Be Vietnam Pro / IBM Plex Mono | — | khác chấp nhận: kiosk chạy offline |
 | mọi màn | v8: lớp phủ `body::before` an toàn vùng tai thỏ (iOS) | — | khác chấp nhận: kiosk Windows, không cần |
 

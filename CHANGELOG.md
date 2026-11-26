@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-26 — DK8-L4: khổ hẹp 390 px và focus (chỉ thêm test)
+
+- `tests/test_giao_dien_dk8_l4.py` (2): không cuộn ngang ở trang đầu, đăng nhập, bốn thẻ quản trị, giáo viên (390 px); Tab đi qua ba thẻ vai trò, vòng focus hiện trên cả thẻ, Enter mở màn đăng nhập. Bảng khác biệt không còn dòng «còn khác». Không đổi mã sản phẩm.
+
+## 2026-11-26 — DK8-L3: giáo viên và học sinh giống bản mẫu v8
+
+- `js/dang_ky_gv_hs.js`: «CLB của tôi» kèm chip giai đoạn, danh sách CLB dạng thẻ (chip trạng thái, dòng «buổi · phòng · nhận · khối · loại», Sửa/Xoá giữ nhãn cũ); form trong thẻ hẹp với nhãn như v8 (tuỳ chọn «Tự do – nhận mọi em…», «Số học sinh nhận (tối đa N)», «Mô tả CLB (học sinh đọc khi chọn)», dòng tóm tắt); học sinh: «Đúng là em chứ?» và màn chưa mở/hết hạn trong thẻ hẹp, «Không phải em» nút viền. `style.css` (khối DK8-L3, chỉ `.dk-*`): thẻ CLB / hàng nguyện vọng bo góc 10 px, tên lớn.
+- Ô đặt huy chương cho học sinh giữ nguyên (ngoại lệ bất biến 2); không đụng `compute_club_priority`. Test mới `tests/test_giao_dien_dk8_l3.py` (4); test cũ không sửa. Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK8-L2: màn quản trị giống bản mẫu v8 (thanh thẻ trên, thẻ giai đoạn, thẻ nội dung)
 
 - `js/dang_ky_quan_tri.js`: thanh thẻ nằm TRÊN; «Việc bây giờ» = MỘT thẻ giai đoạn (`theGd`: thanh sáu bước bên trong + tiêu đề + giải thích + dòng đếm mono + dòng hạn chót với «Gia hạn +1 giờ / +1 ngày» và «Đóng ngay» bên phải) rồi các thẻ nội dung (`DK.theCon`): Chuẩn bị (danh sách kiểm 3 mục + «Phòng» + «Danh sách học sinh»), Giáo viên đăng ký (+ «CLB đã gửi», «Tạo hộ tài khoản giáo viên»), Duyệt (bảng trong thẻ, đếm), Học sinh đăng ký (hai thẻ cạnh nhau), Nhập điểm, Xuất. «Danh sách» và «Thêm ▾» chia thẻ.

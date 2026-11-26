@@ -33,16 +33,19 @@
     const tt = DK.S.tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     const ds = (await DK.goi("dk_clb_danh_sach", T)).data || [];
     const mo = tt.giai_doan === "gv_dang_ky";
-    const danh = h("ul.dk-ds", {}, ds.map((c) => h("li", {}, h("span.dk-than", {}, h("strong", {}, c.ten), " · " + c.buoi + " · " + c.loai,
-      c.ly_do_tu_choi ? h("span.dk-phu", {}, " (" + c.ly_do_tu_choi + ")") : null),
+    const soCho = (c) => (c.loai === "Tự do" ? "nhận mọi em" : "nhận " + (c.chi_tieu !== null && c.chi_tieu !== undefined ? c.chi_tieu : (c.chi_tieu_gv === null || c.chi_tieu_gv === undefined ? "?" : c.chi_tieu_gv)));
+    const danh = h("ul.dk-ds.dk-cac-the", {}, ds.map((c) => h("li.dk-clb-gv", {}, h("span.dk-than", {}, h("strong.dk-ten-clb", {}, c.ten),
+      h("span.dk-phu", {}, [c.buoi, c.phong, soCho(c), khoiChu(c.khoi_tu, c.khoi_den), c.loai].filter(Boolean).join(" · ")),
+      c.ly_do_tu_choi ? h("span.dk-phu", {}, "Lý do từ chối: " + c.ly_do_tu_choi) : null),
       chip(TRANG_THAI[c.trang_thai], c.trang_thai === "duyet" ? "on" : c.trang_thai === "tu_choi" ? "off" : "wait"),
-      mo && c.trang_thai !== "duyet" ? h("span.dk-thao-tac", {}, DK.nutNhe("Sửa", () => DK.giaoVien(c), { "aria-label": "Sửa " + c.ten }),
-        DK.nutNhe("Xoá", function () { DK.chay(this, async () => { const r = await DK.goi("dk_clb_xoa", T, c.clb_id); if (r.ok) DK.giaoVien(); return r; }); }, { "aria-label": "Xoá " + c.ten })) : null)));
-    const phan = [DK.thanhDau("Giáo viên"), DK.khung("CLB của tôi", ds.length ? danh : h("p.dk-phu", {}, "Chưa có CLB nào."),
+      mo && c.trang_thai !== "duyet" ? h("span.dk-thao-tac", {}, DK.nut("Sửa", () => DK.giaoVien(c), { "aria-label": "Sửa " + c.ten }),
+        DK.nut("Xoá", function () { DK.chay(this, async () => { const r = await DK.goi("dk_clb_xoa", T, c.clb_id); if (r.ok) DK.giaoVien(); return r; }); }, { "aria-label": "Xoá " + c.ten })) : null)));
+    /* DK8-L3 (v8): «CLB của tôi» kèm chip giai đoạn; danh sách là các thẻ; form nằm trong thẻ hẹp bên dưới. */
+    const phan = [DK.thanhDau("Giáo viên"), DK.khung(h("div.dk-hang-nut", {}, h("h1.dk-tieude.dk-gian", {}, "CLB của tôi"), DK.chipVai("gv")), ds.length ? danh : h("div.dk-rong", {}, "Chưa đăng ký CLB nào."),
       mo ? h("p.dk-phu", {}, "Giáo viên chỉ chọn được phòng còn trống ở buổi của CLB, và không nhận quá sức chứa. Quên PIN: nhờ quản trị bấm «Đặt lại PIN».")
         : h("p.dk-phu", {}, "Giáo viên không đăng ký hay sửa CLB được nữa. Cần thay đổi thì liên hệ quản lý."))];
     if (!mo) phan.push(h("p.dk-phu", {}, "Đăng ký CLB hiện đã đóng."));
-    else phan.push(await formClb(tt, sua || null));
+    else phan.push(DK.hep(await formClb(tt, sua || null)));
     DK.hien(...phan);
   };
 
@@ -82,14 +85,17 @@
       h("input.dk-nhap", Object.assign({ value: d[k] === undefined ? "" : d[k], oninput: (e) => { d[k] = e.target.value; } }, thuoc)));
     function ve() {
       const phong = phongTheo[d.buoi] || [];
+      const prRoom = phong.find((p) => String(p.phong_id) === String(d.phong_id));
       const b1 = [chon("Buổi", "buoi", tt.buoi.map((b) => [b, b]), () => taiPhong(d.buoi)),
-        chon("Loại CLB", "loai", [["Tự do", "Tự do"], ["Giới hạn", "Giới hạn"], ["Tuyển chọn", "Tuyển chọn"]]),
+        chon("Loại CLB", "loai", [["Tự do", "Tự do – nhận mọi em, không kiểm tra"], ["Giới hạn", "Giới hạn – có số chỗ, không kiểm tra"], ["Tuyển chọn", "Tuyển chọn – có số chỗ và bài kiểm tra"]]),
         chon("Phòng (chỉ hiện phòng trống buổi này)", "phong_id", phong.map((p) => [p.phong_id, p.ten + " (" + p.suc_chua + " chỗ)"])),
-        d.loai === "Tự do" ? h("p.dk-ghichu", {}, "CLB Tự do nhận mọi em đăng ký, không cần chỉ tiêu.") : nhap("Chỉ tiêu", "chi_tieu", { type: "number", min: "1" })];
+        d.loai === "Tự do" ? h("p.dk-ghichu", {}, "CLB Tự do nhận mọi em đăng ký, không cần chỉ tiêu.") : nhap("Số học sinh nhận" + (prRoom ? " (tối đa " + prRoom.suc_chua + ")" : ""), "chi_tieu", { type: "number", min: "1" })];
       const b2 = [h("div.dk-nhom", {}, nhap("Từ khối", "khoi_tu", { type: "number" }), nhap("Đến khối", "khoi_den", { type: "number" })),
-        d.loai === "Tuyển chọn" ? [nhap("Điểm sàn (0–10)", "diem_san", { type: "number", min: "0", max: "10" }), nhap("Đường dẫn bài thi", "link_forms")]
+        d.loai === "Tuyển chọn" ? [nhap("Điểm sàn (0–10): dưới mốc này không nhận", "diem_san", { type: "number", min: "0", max: "10" }), nhap("Đường dẫn bài thi (link Google Forms)", "link_forms")]
           : h("p.dk-ghichu", {}, "CLB " + d.loai + " không có bài kiểm tra. Muốn kiểm tra đầu vào thì chọn loại Tuyển chọn ở bước 1.")];
-      const b3 = [nhap("Tên CLB", "ten"), nhap("Mô tả ngắn", "mo_ta"), nhap("Yêu cầu", "yeu_cau")];
+      const tomTat = [d.ten ? d.ten.trim() : "", d.loai, d.buoi, prRoom ? prRoom.ten : "", d.loai === "Tự do" ? "nhận mọi em" : "nhận " + (d.chi_tieu === undefined ? "" : d.chi_tieu),
+        khoiChu(d.khoi_tu, d.khoi_den)].concat(d.loai === "Tuyển chọn" ? ["điểm sàn " + (d.diem_san === undefined ? "" : d.diem_san)] : []).filter(Boolean).join(" · ");
+      const b3 = [nhap("Tên CLB", "ten"), nhap("Mô tả CLB (học sinh đọc khi chọn)", "mo_ta"), nhap("Yêu cầu cơ bản (ghi «Không» nếu không có)", "yeu_cau"), h("p.dk-ghichu.dk-tom-tat", {}, tomTat)];
       const noi = [b1, b2, b3][buoc - 1];
       const nutTrai = buoc > 1 ? DK.nutNhe("← Quay lại", () => { buoc--; ve(); }) : null;
       const kiem = () => { const loi = kiemBuoc(buoc, d); DK.thongBao(loi, !!loi); return !loi; };
@@ -111,9 +117,9 @@
     const T = DK.S.token;
     const tt = DK.S.tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     if (tt.giai_doan !== "hs_dang_ky") {
-      DK.hien(DK.thanhDau("Học sinh"), DK.khung(SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký" : "Chưa mở đăng ký",
+      DK.hien(DK.thanhDau("Học sinh"), DK.hep(DK.khung(SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký" : "Chưa mở đăng ký",
         h("p#dkHsDong", {}, SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký. Nguyện vọng em đã gửi vẫn được tính." : "Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo."),
-        DK.nutNhe("Về trang đầu", () => DK.dangXuatCuc())));
+        DK.nut("Về trang đầu", () => DK.dangXuatCuc()))));
       return;
     }
     const clb = ((await DK.goi("dk_hs_clb_hop_le", T)).data || []);
@@ -122,12 +128,12 @@
     cu.nguyen_vong.forEach((x) => { (theo[x.buoi] = theo[x.buoi] || []).push({ clb_id: x.clb_id, thi: x.thi, hc: x.huy_chuong }); });
     if (!DK.S.daXacNhan) {                          // DKL-G1: "Đúng là em chứ?" trước khi vào xếp nguyện vọng (v8 `confirm`)
       DK.henGio(60);
-      DK.hien(DK.thanhDau("Học sinh"), DK.khung("Đúng là em chứ?",
+      DK.hien(DK.thanhDau("Học sinh"), DK.hep(DK.khung("Đúng là em chứ?",
         h("p.dk-ten-hs", {}, h("strong", {}, DK.S.ten)),
         h("p#dkThongTinHs", {}, "Lớp " + DK.S.lop + " · Khối " + DK.S.khoi + " · Mã " + DK.S.ma),
         cu.nop_luc ? h("p.dk-ghichu#dkDaGui", {}, "Em đã gửi lúc " + DK.guiLuc(cu.nop_luc) + ". Em có thể sửa rồi gửi lại; lần gửi cuối cùng được tính.") : null,
         h("div.dk-hang-nut", {}, DK.nutVang("Đúng là em", () => { DK.S.daXacNhan = true; DK.hocSinh(); }),
-          DK.nutNhe("Không phải em", () => DK.dangXuatCuc()))));
+          DK.nut("Không phải em", () => DK.dangXuatCuc())))));
       return;
     }
     const tay = new Set();

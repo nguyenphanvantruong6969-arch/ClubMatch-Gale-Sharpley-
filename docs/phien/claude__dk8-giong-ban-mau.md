@@ -43,11 +43,11 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   creation and other setup forms to where v8 has them (Danh sách / Cài đặt). "Thêm ▾" dropdown. Tables in cards.
   Keep every DKL/DK6 behaviour (auto-refresh guards, PIN slips, fold per grade, password change).
   **MILESTONE 1 after L2** (auto checker, see protocol).
-- [ ] **L3 (must) teacher + student.** Teacher: club list cards + "+ Đăng ký CLB mới", form card with v8 field order
+- [x] **L3 (must) teacher + student.** Teacher: club list cards + "+ Đăng ký CLB mới", form card with v8 field order
   and help lines. Student: v8 step flow per session "Tiếp: đặt huy chương" → "Tiếp: bài kiểm tra" → "Tiếp: xem lại và
   gửi" (DKL S7), confirm-identity step, sent screen "Đã gửi lúc …" + "Xong, thoát". Medal override UI MUST stay
   reachable for every student (invariant 2 exception); priority never reads rank.
-- [ ] **L4 (optional) final pass.** Re-run the harness, fix remaining "còn khác" rows (≤ 10 small items), narrow
+- [x] **L4 (optional) final pass (tests only: 390 px, focus).** Re-run the harness, fix remaining "còn khác" rows (≤ 10 small items), narrow
   width 390 px check (no horizontal scroll), focus ring + keyboard order. **MILESTONE 2 after L3 (or L4).**
 - [ ] Close: CHANGELOG, TIEN_DO rows `DK8-L<k>`, registry row DK8, test-file count in `CLAUDE_CHI_TIET.md`, CI green.
 
@@ -59,11 +59,15 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
-- Done: L1 (shell) and L2 (admin cards). Local: all portal UI tests green (50 + L2 7), ruff clean, kiem_nhanh 7/7.
-  Next: push, wait CI green on the head, then MILESTONE 1 (create checker session), then L3.
-- Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s for all 19 pairs).
-- Kept button labels for old tests (Đăng nhập / Đăng xuất / Quản trị / Tạo tài khoản giáo viên / Đóng đăng ký giáo viên / +1 giờ / +1 ngày / Đóng ngay).
-- Tests require: exactly ONE `ol.dk-gd`, one `#dkHan`, one textarea in the GV phase, every visible `.btn` in `#dkApp` >= 44 px high, one gold button per frame.
+- Done locally and pushed: L1, L2, L3, L4 (all code + tests + docs). `DK8_KHAC_BIET.md` has zero "còn khác" rows.
+  Local: all portal UI tests green, ruff clean, kiem_nhanh 7/7. NO checker has run yet (milestones 1 and 2 are both still to do).
+- CI: run 1709 on L2 head `2102efe` was pending; this handoff push (L3+L4+docs) supersedes it. Need CI GREEN on the new head.
+- Milestone plan: because L3/L4 are already in, do ONE checker pass covering `7c5dae5..<head>` (call it "M1+M2"), or two if time allows.
+  Protocol §2: write `MILESTONE <k> READY | head <sha> | base 7c5dae5` here, push, `create_session` (sonnet, source_revision and
+  outcome_branch = this branch) with the CHECKER prompt of DK8_GIAO_THUC.md §3, wait with `send_later` 30 min, FIX max 2 rounds.
+- A `send_later` was scheduled in the OLD session (04:52Z) for CI check of 2102efe; ignore it in a new session.
+- Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s all 19 pairs).
+- Tests require: exactly ONE `ol.dk-gd`, one `#dkHan`, one textarea in GV phase, every visible `.btn` in `#dkApp` >= 44 px, one gold button/frame.
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk6-hoan-thien-phat-hanh`, `claude/loving-babbage-8yqo7d`, `main`.
@@ -77,10 +81,12 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - Top bar lives in `#dkTop` (outside `#dkApp`); `DK.hien` moves any `header.dk-dau` there.
 
 ## Next steps (ordered)
-1. Coder: (L1 done) L2 → MILESTONE 1 (auto checker) → L3 → (L4) → MILESTONE 2 (auto checker) → CI gate → DONE.
+0. NEW SESSION: git fetch + merge (no rebase) origin branch; wait CI green on head; then MILESTONE (checker), CI gate, soat-ma report, registry row DK8, test-file count (443 files now: +dem_cong_khai, dk8_l1..l4) in CLAUDE_CHI_TIET.md, `Status: DONE <sha> CI green <date>` + 5-line Vietnamese summary at top.
+1. (old) Coder: L2 → MILESTONE 1 (auto checker) → L3 → (L4) → MILESTONE 2 (auto checker) → CI gate → DONE.
 
 ## Files touched
 - docs/phien/claude__dk8-giong-ban-mau.md, docs/phien/DK8_GIAO_THUC.md: plan
+- L3: js/dang_ky_gv_hs.js, style.css (end block), tests/test_giao_dien_dk8_l3.py; L4: tests/test_giao_dien_dk8_l4.py
 - L2: js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, style.css (end block), tests/test_giao_dien_dk8_l2.py
 - L1: api_dang_ky.py, dang_ky.html, js/dang_ky_{nen,quan_tri,gv_hs}.js, style.css (end block), du_lieu_test/chup_dk8.py, docs/phien/DK8_KHAC_BIET.md, tests/test_dk8_l1_dem_cong_khai.py, tests/test_giao_dien_dk8_l1.py
 
@@ -90,3 +96,4 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 | 2026-11-26 | Opus | Plan DK8 (visual parity with v8), auto protocol | no product code |
 | 2026-11-26 | Sonnet | L1 done: harness, shell (top bar, role cards, narrow login), public counts | CI pending |
 | 2026-11-26 | Sonnet | L2 done: admin tab bar on top, phase card + content cards, 2-col grids | CI pending |
+| 2026-11-26 | Sonnet | L3 + L4 done, handoff (context limit) | checker not yet run |

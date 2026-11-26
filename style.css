@@ -3657,3 +3657,13 @@ a.nav-item { text-decoration: none; }
 .dk-kiem li:last-child { border-bottom: 0; }
 .dk-tick { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; flex: none; background: var(--gold-soft); color: var(--gold-text); }
 .dk-tick.on { background: var(--moss-soft); color: var(--moss); }
+
+/* ===== DK8-L3: giáo viên và học sinh giống bản mẫu v8 (thẻ bo góc 10 px, tên lớn, thẻ hẹp) ===== */
+.dk-cac-the > li.dk-clb-gv { display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--hairline); border-radius: 10px; padding: 12px 14px; background: var(--paper-raised); }
+.dk-clb-gv .dk-chip { align-self: flex-start; }
+.dk-thao-tac { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.dk-ds > li.dk-the-clb, .dk-the-clb { border-radius: 10px; }
+.dk-xep > li.dk-hang { border-radius: 10px; }
+.dk-rong { border-radius: 10px; }
+.dk-ten-hs { margin: 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; }
+.dk-tom-tat { margin: 0; }
