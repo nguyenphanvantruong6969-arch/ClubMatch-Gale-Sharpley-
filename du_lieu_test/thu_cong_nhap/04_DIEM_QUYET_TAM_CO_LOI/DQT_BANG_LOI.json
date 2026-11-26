@@ -1,0 +1,220 @@
+{
+ "SO_NHAP_CLB.xlsx": [
+  {
+   "canh_bao_nhap": [],
+   "loai": "thieu",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "quỹ 2 buổi  thiếu 27 điểm (tổng 73)",
+   "student_id": "HS036"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "thieu",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "quỹ 2 buổi  thiếu 25 điểm (tổng 75)",
+   "student_id": "HS008"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "thieu",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "quỹ 2 buổi  thiếu 21 điểm (tổng 79)",
+   "student_id": "HS026"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "thua",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_vuot_ngan_sach",
+     "quy": 1
+    }
+   ],
+   "mo_ta": "quỹ 1 buổi  thừa 7 điểm (tổng 107)",
+   "student_id": "HS028"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "thua",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_vuot_ngan_sach",
+     "quy": 1
+    }
+   ],
+   "mo_ta": "quỹ 1 buổi  thừa 14 điểm (tổng 114)",
+   "student_id": "HS035"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "thua",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_vuot_ngan_sach",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "quỹ 2 buổi  thừa 8 điểm (tổng 108)",
+   "student_id": "HS016"
+  },
+  {
+   "canh_bao_nhap": [
+    "csv_wp_khong_co_nguyen_vong"
+   ],
+   "loai": "ngoai_nguyen_vong",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 1
+    }
+   ],
+   "mo_ta": "15 điểm đặt ở ô cạnh nguyện vọng trống; quỹ 1 buổi  còn thiếu 15",
+   "student_id": "HS056"
+  },
+  {
+   "canh_bao_nhap": [
+    "csv_wp_khong_co_nguyen_vong"
+   ],
+   "loai": "ngoai_nguyen_vong",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 1
+    }
+   ],
+   "mo_ta": "21 điểm đặt ở ô cạnh nguyện vọng trống; quỹ 1 buổi  còn thiếu 21",
+   "student_id": "HS039"
+  },
+  {
+   "canh_bao_nhap": [
+    "csv_wp_khong_co_nguyen_vong"
+   ],
+   "loai": "ngoai_nguyen_vong",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "7 điểm đặt ở ô cạnh nguyện vọng trống; quỹ 2 buổi  còn thiếu 7",
+   "student_id": "HS033"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "tang_lech",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 1
+    },
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "một quỹ chung 100 điểm cho cả CLB có thi và không thi của buổi ",
+   "student_id": "HS032"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "tang_lech",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 1
+    },
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "một quỹ chung 100 điểm cho cả CLB có thi và không thi của buổi ",
+   "student_id": "HS052"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "tang_lech",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 1
+    },
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "một quỹ chung 100 điểm cho cả CLB có thi và không thi của buổi ",
+   "student_id": "HS004"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "toan_0",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "mọi ô điểm quyết tâm bằng 0",
+   "student_id": "HS057"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "toan_0",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "mọi ô điểm quyết tâm bằng 0",
+   "student_id": "HS058"
+  },
+  {
+   "canh_bao_nhap": [],
+   "loai": "toan_0",
+   "loi_pipeline": [
+    {
+     "buoi": "",
+     "code": "wharton_chua_dung_het",
+     "quy": 2
+    }
+   ],
+   "mo_ta": "mọi ô điểm quyết tâm bằng 0",
+   "student_id": "HS024"
+  }
+ ]
+}
