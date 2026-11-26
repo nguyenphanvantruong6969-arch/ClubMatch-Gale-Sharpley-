@@ -275,6 +275,27 @@ class DangKyMixin:
             return {}
         return self._dk_chay(lam, QUAN_TRI, token=token)
 
+    def dk_doi_mat_khau(self, token, mat_khau_cu, mat_khau_moi):
+        """DK6-L2. Quản trị đổi mật khẩu: mật khẩu cũ phải đúng, mới ≥ 4 ký tự, băm lại với muối mới. Các phiên quản trị KHÁC bị
+        huỷ (phiên của người gọi giữ lại). Nhật ký chỉ ghi «doi_mat_khau», không ghi mật khẩu. Không đếm số lần sai: phải đang
+        đăng nhập quản trị mới gọi được (phiên tự khoá sau 2 phút)."""
+        def lam(cur, p):
+            if not _dung(str(mat_khau_cu or ""), bytes.fromhex(self._dk_cai_dat(cur, "mk_bam")), bytes.fromhex(self._dk_cai_dat(cur, "mk_muoi"))):
+                raise _Loi("dk_mat_khau_cu_sai")
+            if not isinstance(mat_khau_moi, str) or len(mat_khau_moi) < 4:
+                raise _Loi("dk_mat_khau_ngan")
+            b, m = _bam(mat_khau_moi)
+            self._dk_dat(cur, "mk_bam", b.hex())
+            self._dk_dat(cur, "mk_muoi", m.hex())
+            self._dk_ghi_nk(cur, QUAN_TRI, "doi_mat_khau")
+            return {}
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:                                                  # chỉ huỷ phiên khác SAU khi đã ghi xong
+            ds = self._dk_phien_dict()
+            for t in [t for t, v in ds.items() if t != "_db" and t != token and isinstance(v, dict) and v.get("vai") == QUAN_TRI]:
+                ds.pop(t, None)
+        return r
+
     def dk_dang_xuat(self, token):
         self._dk_phien_dict().pop(token, None)
         return _ok({})

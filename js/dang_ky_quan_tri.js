@@ -37,8 +37,10 @@
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanhGd(tt.giai_doan), thanh, noiDung);
     const nd = await thanTheo[the]();
     if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
-    /* DKL-M: tự cập nhật ở thẻ «Việc bây giờ» của ba giai đoạn có người khác đang thay đổi dữ liệu. */
-    if (DK.S.vai === "quan_tri" && the === "viec" && ["gv_dang_ky", "duyet", "hs_dang_ky"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
+    /* DKL-M + DK6-L1: tự cập nhật ở thẻ «Việc bây giờ» và «Danh sách» của bốn giai đoạn có người khác đang thay đổi dữ liệu
+       (giáo viên đăng ký, duyệt, học sinh đăng ký, nhập điểm). KHÔNG tự làm mới: «Cài đặt», «Thêm», giai đoạn Chuẩn bị và Xuất
+       (chỉ quản trị đổi chúng; vẽ lại thêm rủi ro mà không thêm giá trị). Mỗi lần vẽ, `tuLamMoi(false)` ở đầu hàm đã tắt vòng cũ. */
+    if (DK.S.vai === "quan_tri" && (the === "viec" || the === "ds") && ["gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
   const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
@@ -118,11 +120,14 @@
   }
 
   function bangKetQua(t) {
+    /* DK6-L1: "ngoai" = hạng NULL trong match_results (dang_ky_sang_xep._dk_tom_tat_xep): em không vào được CLB nào trong danh sách của mình, được xếp bù vào CLB còn chỗ. */
+    const GHI_CHU_NGOAI = "Học sinh không vào được CLB nào trong danh sách của mình, được xếp vào CLB còn chỗ.";
     const nv = (m) => Object.keys(m).sort((a, b) => (a === "ngoai") - (b === "ngoai") || (a < b ? -1 : a > b ? 1 : 0))
-      .map((k) => (k === "ngoai" ? "Ngoài nguyện vọng" : "NV" + k) + ": " + m[k]).join(" · ") || "—";
+      .map((k, i) => [i ? " · " : "", k === "ngoai" ? h("span", { title: GHI_CHU_NGOAI }, "Xếp ngoài nguyện vọng") : "NV" + k, ": " + m[k]]);
+    const nvChu = (m) => (Object.keys(m).length ? nv(m) : "—");
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
       h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
-      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nv(x.theo_nguyen_vong)])));
+      bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nvChu(x.theo_nguyen_vong)])));
   }
 
   function hienPin(ds, tieuDe, vai) {
@@ -130,6 +135,7 @@
     if (ch) ch.replaceChildren(DK.QT2.phieuPin(ds, tieuDe, vai));
   }
 
+  const moDs = new Map();      // DK6-L2: trạng thái mở/đóng các thẻ gấp của «Danh sách»
   async function danhSach() {
     const T = DK.S.token;
     const [ph, gv, hs] = (await Promise.all([DK.goi("dk_phong_danh_sach", T), DK.goi("dk_gv_danh_sach", T), DK.goi("dk_hs_danh_sach", T)])).map((r) => r.data || []);
@@ -139,9 +145,22 @@
       const r = await DK.goi("dk_mo_khoa", T, vai, ten); if (r.ok) { DK.thongBao("Đã mở khoá cho " + ten); DK.quanTri(); } return r; }); });
     const thaoTac = (x, nut, vai, ten) => x.bi_khoa ? h("span.dk-thao-tac", {}, nut, h("span.dk-phu", {}, " Đang khoá "), moKhoa(vai, ten)) : nut;
     const khoa = ["hs_dang_ky", "nhap_diem", "xuat"].includes((DK.S.tt || {}).giai_doan);
-    return h("div", {}, khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null, h("details", { open: true }, h("summary", {}, "Phòng (" + ph.length + ")"), bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
-      h("details", {}, h("summary", {}, "Giáo viên (" + gv.length + ")"), bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
-      h("details", {}, h("summary", {}, "Học sinh (" + hs.length + ")"), bang(["Mã", "Họ tên", "Lớp", "Đã nộp", ""], hs.map((x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)]))));
+    /* DK6-L2: mỗi khối một `<details>` (tiêu đề «Khối 10 · 268 HS · 240 đã nộp»). Trạng thái mở/đóng của MỌI thẻ gấp được giữ trong `moDs`
+       (khoá → true/false) nên vẫn còn sau khi tự làm mới (DK6-L1) hoặc bấm nút vẽ lại. */
+    const ct = (khoa, macDinh, tieuDe, ...nd) => {
+      const d = h("details", { open: moDs.has(khoa) ? moDs.get(khoa) : macDinh }, h("summary", {}, tieuDe), ...nd);
+      d.addEventListener("toggle", () => moDs.set(khoa, d.open));
+      return d;
+    };
+    const dongHs = (x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)];
+    const cotHs = ["Mã", "Họ tên", "Lớp", "Đã nộp", ""];
+    const khoiHs = [...new Set(hs.map((x) => x.khoi))].sort((a, b) => a - b);
+    const nhomHs = khoiHs.map((k) => { const ds = hs.filter((x) => x.khoi === k);
+      return ct("hs-khoi-" + k, khoiHs.length === 1, "Khối " + k + " · " + ds.length + " HS · " + ds.filter((x) => x.da_nop).length + " đã nộp", bang(cotHs, ds.map(dongHs))); });
+    return h("div", {}, khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null,
+      ct("phong", true, "Phòng (" + ph.length + ")", bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua]))),
+      ct("gv", false, "Giáo viên (" + gv.length + ")", bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [bang(cotHs, [])])));
   }
 
   async function them(tt) {
