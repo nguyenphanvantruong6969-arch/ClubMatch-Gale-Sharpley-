@@ -6,7 +6,8 @@
 - `api_dang_ky_excel.py`: tham số tuỳ chọn `bo_hoc_sinh=False` (mặc định = như L1) cho `dk_excel_xem_truoc` / `dk_excel_nap`; kết quả xem trước có thêm `hs_bi_khoa`.
 - `style.css` (khối cuối, chỉ `.dk-*`): `.dk-tha`, `.dk-excel-xem`, `.dk-excel-loi`. Giao diện chính không đổi.
 - Chỉnh thiết kế (Truong: «make sure the design is nice»): bốn bước đánh số (Tải mẫu · Chọn tệp · Xem trước · Nạp), chip màu cho số mới / số lỗi, dòng gợi ý trước khi có kết quả; CSS `.dk-buoc*` (chỉ cổng).
-- Test mới: `tests/test_giao_dien_dk9_l2.py` (9, một fixture trang); `tests/test_dk9_nap_excel.py` thêm 1 (tổng 15). Không đổi schema, CSV, thuật toán; không sửa test cũ.
+- Sửa theo checker vòng 1: (1) sau «Nạp» kết quả và bảng dòng lỗi ở lại trên thẻ (`#dkExcelKq`); (2) bảng PIN ghi tên · mã · lớp (`QT2.phieuPin` nhận `x.nhan` tuỳ chọn) và có khoảng cách với nút; (3) `_dk_excel_hang` chỉ đọc 10 cột đầu (`TOI_DA_COT`) nên trang tính khai kích thước XFD1048576 bị từ chối tức thì. Test mới: 1 backend, 2 dòng kiểm thêm ở UI.
+- Test mới: `tests/test_giao_dien_dk9_l2.py` (9, một fixture trang); `tests/test_dk9_nap_excel.py` thêm 2 (tổng 16). Không đổi schema, CSV, thuật toán; không sửa test cũ.
 
 ## 2026-11-26 — DK9-L1: nạp Excel cho cổng đăng ký (backend)
 

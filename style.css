@@ -3736,3 +3736,4 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-buoc-nd { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 .dk-buoc-nd > .btn { align-self: flex-start; }
 .dk-excel-xem .dk-chip { align-self: auto; }
+#dkExcel #dkPin:not(:empty) { margin-top: 14px; }

@@ -56,6 +56,7 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 
 ## Current state (overwrite each handoff)
 MILESTONE 1 READY | head 4cfcc7e | base 1bb488d
+Checker round 1 = FIX (3 small items) -> fixed in the next commit (result block kept after Nạp, PIN table label + spacing, max_col). Round 2 checker started after CI is green.
 - L1 + L2 + design polish done (tests: `test_dk9_nap_excel.py` 15, `test_giao_dien_dk9_l2.py` 9; related UI files green; kiem_nhanh 7/7; ruff clean). Truong (2026-11-26, later): "spawn a checker and run CI until green and mergeable into main; do not wait" — checker started without waiting for CI; coder owns CI.
 - UI note: students sheet skipped in locked phases via optional `bo_hoc_sinh`. Template download = Blob anchor (browser host); not testable in desktop WebView2 here.
 
@@ -74,3 +75,5 @@ MILESTONE 1 READY | head 4cfcc7e | base 1bb488d
 | 2026-11-26 | Sonnet (planner role at Truong's request) | Wrote this file and `DK9_GIAO_THUC.md` after two rounds of questions | No product code |
 | 2026-11-26 | Sonnet (coder) | L1 backend + 14 tests | merged dk8 + main first; L1 CI not awaited separately (L2 push covers the same head) |
 | 2026-11-26 | Sonnet (coder) | L2 UI + 9 Chromium tests, `bo_hoc_sinh` option | merged main + dk8 again; screenshots checked by eye |
+| 2026-11-26 | Sonnet (checker) | Round 1: FIX x3 (see `__checker.md`) | backend/acceptance PASS |
+| 2026-11-26 | Sonnet (coder) | Fixed the 3 items; 16 + 9 tests green | |

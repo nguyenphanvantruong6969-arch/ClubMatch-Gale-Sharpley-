@@ -284,3 +284,22 @@ def test_bo_hoc_sinh_khi_giao_dien_khoa_danh_sach_hoc_sinh(cd):
     assert r["hoc_sinh"]["moi"] == 0 and r["giao_vien"]["moi"] == 2 and r["phong"]["moi"] == 2
     assert ok(api.dk_hs_danh_sach(qt)) == []
     assert ok(api.dk_excel_xem_truoc(qt, tep_tot()))["hs_bi_khoa"] is False                    # mặc định: như cũ
+
+
+def test_trang_tinh_khai_kich_thuoc_khong_lo_van_tu_choi_nhanh(cd):
+    """Một ô ở XFD1048576 làm trang tính khai kích thước cực lớn: chỉ đọc vài cột đầu nên không tốn hàng chục giây."""
+    import time
+    api, qt = cd
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Học sinh"
+    ws.append(HS_TD)
+    ws.append(["H1", "An", "10A1"])
+    ws.cell(row=1048576, column=16384, value="x")
+    bo = io.BytesIO()
+    wb.save(bo)
+    t = base64.b64encode(bo.getvalue()).decode()
+    t0 = time.time()
+    r = api.dk_excel_xem_truoc(qt, t)
+    assert time.time() - t0 < 5
+    assert not r["ok"] and r["errors"][0]["code"] == "dk_excel_qua_nhieu_dong"

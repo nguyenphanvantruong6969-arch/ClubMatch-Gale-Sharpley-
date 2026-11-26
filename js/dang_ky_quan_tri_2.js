@@ -30,7 +30,7 @@
       h("b", {}, x.ten || x.ma), x.lop ? h("span", {}, " · " + x.lop) : null, h("div.dk-phieu-ma", {}, "Mã: ", x.ma), h("div.dk-phieu-pin", {}, "PIN ", h("b", {}, x.pin)),
       h("small", {}, laCua(x) + " Giữ kín PIN, không đưa bạn."))));
     const khung = h("div.dk-khung-pin", {}, h("h3", {}, tieuDe),
-      DK.bang(["Mã / tên", "PIN"], ds.map((x) => [x.ten ? x.ten : x.ma, x.pin])),
+      DK.bang(["Mã / tên", "PIN"], ds.map((x) => [x.nhan || (x.ten ? x.ten : x.ma), x.pin])),      // DK9: `nhan` = tên kèm mã, lớp
       DK.nut("Xem phiếu PIN", function () { vung.classList.toggle("mo"); }, { id: "dkXemPhieu" }),
       DK.nutNhe("In phiếu", () => { vung.classList.add("mo"); try { global.print(); } catch (e) { DK.thongBao("Trình duyệt chặn in. Dùng nút Chép PIN.", true); } }, { id: "dkInPhieu" }),
       DK.nutNhe("Chép PIN", () => { const t = ds.map((x) => x.ma + "\t" + x.pin).join("\n");
@@ -171,6 +171,12 @@
     const nap = DK.nutVang("Nạp", function () { const b = this; DK.chay(b, napDi).then(() => { if (!tep) b.disabled = true; }); }, { id: "dkExcelNap", disabled: true });
     const doc = (f) => new Promise((xong, hong) => { const r = new global.FileReader(); r.onload = () => xong(String(r.result).split(",").slice(1).join(",")); r.onerror = () => hong(r.error); r.readAsDataURL(f); });
     const loiChu = (ma, tham) => DK.thongBao(DK.loiChu([{ code: ma, params: tham || {} }]), true);
+    const bangLoi = (theoTrang) => TRANG_XL.filter(([k]) => theoTrang[k].length).map(([k, tenTrang]) => {
+      const ds = theoTrang[k];
+      return h("details.dk-excel-loi", { open: true, "data-trang": k }, h("summary", {}, "Trang «" + tenTrang + "»: " + ds.length + " dòng lỗi (bị bỏ qua)"),
+        DK.bang(["Dòng", "Lý do"], ds.slice(0, TOI_DA_LOI_HIEN).map((e) => [String(e.dong), DK.loiChu([{ code: e.ly_do, params: e.params }])])),
+        ds.length > TOI_DA_LOI_HIEN ? h("p.dk-phu", {}, "…và " + (ds.length - TOI_DA_LOI_HIEN) + " dòng lỗi nữa.") : null);
+    });
     const ve = () => {
       const hang = TRANG_XL.map(([k, tenTrang]) => {
         const m = xt[k];
@@ -182,12 +188,7 @@
       const soLoi = TRANG_XL.reduce((a, [k]) => a + xt[k].loi.length, 0);
       const chu = xt.co_the_nap ? "Sẽ nạp " + xt.so_hop_le + " dòng hợp lệ" + (soLoi ? ", bỏ qua " + soLoi + " dòng lỗi." : ".")
         : (soLoi ? "Không có dòng hợp lệ nào. Sửa " + soLoi + " dòng lỗi dưới đây rồi chọn lại tệp." : "Tệp chưa có dòng dữ liệu nào (chỉ có hàng tiêu đề).");
-      const loi = TRANG_XL.filter(([k]) => xt[k].loi.length).map(([k, tenTrang]) => {
-        const ds = xt[k].loi;
-        return h("details.dk-excel-loi", { open: true, "data-trang": k }, h("summary", {}, "Trang «" + tenTrang + "»: " + ds.length + " dòng lỗi (bị bỏ qua)"),
-          DK.bang(["Dòng", "Lý do"], ds.slice(0, TOI_DA_LOI_HIEN).map((e) => [String(e.dong), DK.loiChu([{ code: e.ly_do, params: e.params }])])),
-          ds.length > TOI_DA_LOI_HIEN ? h("p.dk-phu", {}, "…và " + (ds.length - TOI_DA_LOI_HIEN) + " dòng lỗi nữa.") : null);
-      });
+      const loi = bangLoi(Object.fromEntries(TRANG_XL.map(([k]) => [k, xt[k].loi])));
       goiY.hidden = true;
       xem.replaceChildren(h("p#dkExcelTomTat.dk-excel-tomtat", {}, chu), DK.bang(["Trang", "Hợp lệ", "Mới", "Đã có", "Dòng lỗi"], hang),
         h("p.dk-phu", {}, "«Đã có»: học sinh được cập nhật và giữ nguyên PIN; giáo viên và phòng đã có thì bỏ qua."), ...loi);
@@ -209,10 +210,14 @@
       const r = await DK.goi("dk_excel_nap", T(), tep.b64, tep.ten, khoa);
       if (!r.ok) return r;
       const d = r.data, hs = d.hoc_sinh, gv = d.giao_vien;
-      const ds = hs.pin.map((x) => ({ ma: x.ma, ten: x.ten, lop: x.lop, pin: x.pin })).concat(gv.pin.map((x) => ({ ma: x.ma, ten: x.ten, pin: x.pin, vai: "gv" })));
+      const ds = hs.pin.map((x) => ({ ma: x.ma, ten: x.ten, lop: x.lop, pin: x.pin, nhan: x.ten + " · " + x.ma + " · " + x.lop })).concat(gv.pin.map((x) => ({ ma: x.ma, ten: x.ten, pin: x.pin, vai: "gv", nhan: x.ten + " (giáo viên)" })));
       pin.replaceChildren(ds.length ? QT2.phieuPin(ds, "Mã PIN vừa tạo (chỉ hiện lúc này)", "hs") : h("p.dk-phu", {}, "Không có tài khoản mới nên không có PIN mới."));
-      DK.thongBao("Đã nạp: học sinh mới " + hs.moi + " (cập nhật " + hs.da_co + "), giáo viên mới " + gv.moi + ", phòng mới " + d.phong.moi + "." + (d.loi.length ? " Bỏ qua " + d.loi.length + " dòng lỗi." : ""));
-      tep = xt = null; xem.replaceChildren(); goiY.hidden = false; ten.textContent = "Đã nạp. Chọn tệp khác để nạp tiếp.";
+      const tomTat = "Đã nạp: học sinh mới " + hs.moi + " (cập nhật " + hs.da_co + "), giáo viên mới " + gv.moi + " (đã có " + gv.da_co + "), phòng mới " + d.phong.moi + " (đã có " + d.phong.da_co + ")." + (d.loi.length ? " Bỏ qua " + d.loi.length + " dòng lỗi." : "");
+      DK.thongBao(tomTat);
+      /* Kết quả ở lại trên thẻ (không chỉ thông báo thoáng qua): số liệu + bảng dòng lỗi để quản trị sửa tệp rồi nạp lại. */
+      const theoTrang = Object.fromEntries(TRANG_XL.map(([k]) => [k, d.loi.filter((e) => e.sheet === k)]));
+      xem.replaceChildren(h("p#dkExcelKq.dk-excel-tomtat", {}, tomTat), ...bangLoi(theoTrang));
+      tep = xt = null; goiY.hidden = true; ten.textContent = "Đã nạp. Chọn tệp khác để nạp tiếp.";
       return r;
     };
     const mau = DK.nut("Tải file mẫu", function () { DK.chay(this, async () => {

@@ -113,7 +113,10 @@ def test_c_chon_tep_xem_truoc_roi_nap_hien_phieu_pin_mot_lan(cong):
     assert any("Đăng nhập: họ tên + PIN này." in s for s in slips) and any("Đăng nhập: mã học sinh + PIN này." in s for s in slips)
     pin = pg.locator("#dkPin .dk-phieu", has_text="Mã: H1").locator(".dk-phieu-pin b").text_content()
     assert ok(pg.api.dk_dang_nhap("hoc_sinh", "H1", pin))["token"]                          # PIN trên phiếu dùng được
-    assert pg.locator("#dkExcelNap").is_disabled() and pg.locator("#dkExcelXem").inner_text() == ""
+    assert pg.locator("#dkExcelNap").is_disabled() and pg.locator("#dkExcelXem details").count() == 0            # không có dòng lỗi
+    assert "học sinh mới 3" in pg.locator("#dkExcelKq").inner_text()                                              # kết quả ở lại trên thẻ
+    nhan = [r.locator("td").first.inner_text() for r in pg.locator("#dkPin tbody tr").all()]
+    assert "Nguyễn An · H1 · 10A1" in nhan and "Cô Hoa (giáo viên)" in nhan                                       # bảng PIN có mã và lớp
     assert len(ok(pg.api.dk_hs_danh_sach(pg.qt))) == 3 and len(ok(pg.api.dk_gv_danh_sach(pg.qt))) == 2
     assert len(ok(pg.api.dk_phong_danh_sach(pg.qt))) == 3 + 2                                # 3 phòng của fixture + 2 phòng nạp
 
@@ -132,6 +135,8 @@ def test_d_dong_loi_co_so_dong_va_ly_do_dong_hop_le_van_nap(cong):
     pg.locator("#dkExcelNap").click()
     pg.wait_for_selector("#dkPin .dk-phieu", state="attached")
     assert "Bỏ qua 15 dòng lỗi." in pg.locator("#dkThongBao").inner_text()
+    assert pg.locator("#dkExcelKq").inner_text().startswith("Đã nạp") and pg.locator("details.dk-excel-loi").count() == 3          # bảng lỗi còn sau «Nạp»
+    assert pg.locator("details.dk-excel-loi[data-trang=hoc_sinh] tbody tr").count() == 6
     assert sorted(x["ma"] for x in ok(pg.api.dk_hs_danh_sach(pg.qt))) == ["H1", "H7"]
 
 

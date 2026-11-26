@@ -24,6 +24,7 @@ from so_nhap import bo_dau, o_thanh_chu
 TOI_DA_MB = 5
 TOI_DA_GIAI_NEN_MB = 50           # chặn tệp zip nén quá mức (cỡ sau giải nén), như `_soat_co_xlsx` của sổ nhập
 TOI_DA_DONG = 5000                # dòng dữ liệu có chữ mỗi trang tính
+TOI_DA_COT = 10                   # cột đầu được đọc (cột thừa phía sau bị bỏ qua)
 TOI_DA_QUET = 20000               # dòng thô tối đa phải đọc (chặn trang tính toàn ô trống có định dạng)
 TOI_DA_TEN = 60
 TOI_DA_MA = 30
@@ -109,7 +110,7 @@ class DangKyExcelMixin:
     def _dk_excel_hang(ws, khoa):
         """Các hàng dữ liệu của một trang tính; None nếu trang hoàn toàn trống (coi như vắng)."""
         tieu_de, ra = None, []
-        for so_dong, hang in enumerate(ws.iter_rows(values_only=True), start=1):
+        for so_dong, hang in enumerate(ws.iter_rows(max_col=TOI_DA_COT, values_only=True), start=1):      # chỉ đọc vài cột đầu: trang tính khai kích thước XFD1048576 vẫn nhanh
             if so_dong > TOI_DA_QUET + 1:
                 raise _Loi("dk_excel_qua_nhieu_dong", sheet=TEN_TRANG[khoa], toi_da=TOI_DA_DONG)
             o = [o_thanh_chu(v) for v in hang]
