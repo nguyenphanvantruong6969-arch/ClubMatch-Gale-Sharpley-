@@ -3629,7 +3629,9 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-cua:has(.dk-cua-nut:focus-visible) { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
 .dk-cua-vai { margin: 0; font-size: 1.3rem; }
 .dk-cua-nut { font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; background: none; border: 0; padding: 0; margin: 0; text-align: left; color: var(--ink); cursor: pointer; }
-.dk-cua-nut::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }       /* cả thẻ bấm được */
+/* UX2 (:where(button){position:relative} + ::after tâm 50%/50%, ≥44 px) làm ::after chỉ phủ nút → phải trả lại static và đặt đủ top/left/width/height/transform */
+.dk-cua-nut { position: static; }
+.dk-cua-nut::after { content: ""; position: absolute; inset: 0; top: 0; left: 0; width: auto; height: auto; transform: none; border-radius: 10px; }       /* cả thẻ bấm được */
 .dk-cua-nut:focus-visible { outline: none; }
 .dk-cua-md { margin: 0; color: var(--slate); font-weight: 600; }
 .dk-cua .dk-chip { align-self: stretch; }
