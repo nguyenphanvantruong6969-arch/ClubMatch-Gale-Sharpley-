@@ -46,7 +46,7 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
   (PINs appear once). Disabled students sheet in locked phases follows `khoa` as the paste box does. One Chromium
   test file `tests/test_giao_dien_dk9_l2.py`, one shared page fixture; every visible `.btn` ≥ 44 px; one gold button.
   grep ALL tests for any UI string you change. **MILESTONE after L2** (auto checker, see protocol).
-- [ ] Close: CHANGELOG, TIEN_DO rows `DK9-L<k>`, registry row DK9, test-file count in `CLAUDE_CHI_TIET.md`, CI green.
+- [x] Close: CHANGELOG, TIEN_DO rows `DK9-L<k>`, registry row DK9, test-file count in `CLAUDE_CHI_TIET.md`, CI green.
 
 ## Acceptance (checker uses these)
 - Admin can: download template → fill → drop file → read preview → «Nạp» → see PIN slips → students/teachers/rooms
@@ -77,3 +77,9 @@ Checker round 1 = FIX (3 small items) -> fixed in the next commit (result block 
 | 2026-11-26 | Sonnet (coder) | L2 UI + 9 Chromium tests, `bo_hoc_sinh` option | merged main + dk8 again; screenshots checked by eye |
 | 2026-11-26 | Sonnet (checker) | Round 1: FIX x3 (see `__checker.md`) | backend/acceptance PASS |
 | 2026-11-26 | Sonnet (coder) | Fixed the 3 items; 16 + 9 tests green | |
+
+## soat-ma report (DK9, report only)
+- T2 backend: preview writes nothing (row counts before = after, tested); only admin token; SQL parametrised (reads via fixed queries, writes via existing functions); dirty cells (10001.0, blank rows, merged, formulas) tolerated; no `run_history` touch. Not atomic across the three lists (each = one existing transaction) — re-uploading the same file is idempotent.
+- T3 UI: names with `<img onerror>` render as text (`test_j`); `ok=false` shown via `DK.chay`; one gold button; all `.btn` ≥ 44 px; 390 px no horizontal scroll.
+- T4: 5 deliberate mutations (`<= 0`, duplicate check, grade range `<=`→`<`, 5000 limit, mode "them"→"thay") each turned a DK9 test red; ruff clean; kiem_nhanh 7/7; tests only added.
+- Known, left: >20 000 raw rows in a sheet are rejected with the «too many rows» message; «In phiếu»/«Chép PIN» use the portal's existing ghost buttons.

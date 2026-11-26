@@ -241,7 +241,7 @@
       khoa ? h("p.dk-phu#dkExcelKhoa", {}, "Học sinh đã bắt đầu đăng ký nên trang «Học sinh» không được nạp.") : null,
       buoc(1, "Tải file mẫu và điền", h("div.dk-hang-nut", {}, mau)),
       buoc(2, "Chọn hoặc thả tệp đã điền", tha, ten),
-      buoc(3, "Xem trước", xem, goiY),
+      buoc(3, "Xem trước và kết quả", xem, goiY),
       buoc(4, "Nạp", nap, pin));
   };
 

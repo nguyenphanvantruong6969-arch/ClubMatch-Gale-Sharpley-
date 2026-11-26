@@ -205,3 +205,16 @@ def test_i_khoi_khong_tran_ngang_o_man_hep(cong):
     assert pg.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1")
     for b in pg.locator("#dkExcel .btn:visible").all():
         assert b.bounding_box()["height"] >= 44
+
+
+def test_j_ten_chua_the_html_khong_chay_ma(cong):
+    """Soát mã tầng 3: tên trong tệp đi qua textContent; `<img onerror>` hiện là chữ, không chạy."""
+    pg = cong()
+    xau = '<img src=x onerror="window.__xss=1">'
+    chon(pg, "xss.xlsx", t9.b64({"Học sinh": [t9.HS_TD, ["H1", xau, "10A1"], ["H2", "Em", "3A1"]], "Giáo viên": [t9.GV_TD, [xau + "gv"]],
+                                "Phòng": [t9.PH_TD, [xau + "p", 5]]}))
+    pg.wait_for_selector("#dkExcelTomTat")
+    pg.locator("#dkExcelNap").click()
+    pg.wait_for_selector("#dkPin .dk-phieu", state="attached")
+    assert pg.evaluate("window.__xss === undefined") and pg.locator("#dkExcel img").count() == 0
+    assert xau in pg.locator("#dkPin tbody").first.text_content()
