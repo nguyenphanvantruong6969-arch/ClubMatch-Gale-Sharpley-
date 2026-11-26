@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-N: sửa DKL-M theo checker vòng 2 (tự cập nhật không được làm mất dữ liệu đang có)
+
+- `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi`): **không vẽ lại** khi (1) phiếu PIN vừa tạo còn hiện (`#dkPin`, chỉ hiện một lần), (2) có chữ đã gõ chưa lưu ở bất kỳ ô nhập nào (so với giá trị chụp lúc vẽ xong, kể cả khi con trỏ đã rời ô), (3) ô nhập đang focus, (4) hộp «Thay cả danh sách» đang mở; dấu cũ giữ nguyên nên vòng sau thử lại. Vẽ lại do chính vòng hỏi dùng dấu ĐÃ thấy (`dauCho`) thay vì đọc lại, để không bỏ sót thay đổi xen giữa (M3).
+- `docs/ke_hoach/TIEN_DO.md`: gỡ dấu xung đột gộp nhánh em để sót ở f2db78f; thêm cột test cho DKL-H/I/J; thêm dòng DKL-N.
+- Test mới: `tests/test_giao_dien_dkl_m_lam_moi.py` test_4 (phiếu PIN còn sau khi dữ liệu đổi + 12 giây) và test_5 (chữ chưa lưu còn nguyên kể cả khi đã rời ô; xoá sạch thì vẽ lại).
+- Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DKL-J: sửa ba lỗi màn «Xuất» do checker DKL tìm ra (cổng đăng ký)
 
 - `dang_ky_sang_xep.py` (`_dk_tom_tat_xep`): học sinh xếp bù (hạng NULL, ví dụ em không gửi nguyện vọng) nay có khoá `"ngoai"` thay cho `"None"`; mỗi buổi thêm `ten_buoi` (tên cổng đã khai, ví dụ «T2», ánh xạ ngược từ mã chuẩn «thu_2» bằng `so_nhap.ma_buoi`; `match_results` không đổi).
@@ -9,7 +16,7 @@
 
 ## 2026-11-26 — DKL-M và DKL-K: tự cập nhật nhanh cho màn quản trị; id trả về đúng
 
-- **DKL-M** (`api_dang_ky.py` `dk_dau_van_tay`, `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js` `QT2.tuLamMoi`): API công khai, không mở CSDL, không cần phiên, KHÔNG làm mới giờ nghỉ phiên quản trị; trả dấu vân tay (thời điểm sửa + kích thước của tệp CSDL và tệp WAL), đổi với mọi ghi kể cả học sinh gửi nguyện vọng (không ghi nhật ký). Màn quản trị hỏi mỗi 5 giây (trước: vẽ lại cả màn mỗi 30 giây, chỉ ở giai đoạn Học sinh đăng ký) và CHỈ vẽ lại khi dấu đổi; bật ở thẻ «Việc bây giờ» của ba giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký; hoãn khi đang gõ vào ô nhập hoặc hộp xác nhận «Thay cả danh sách» đang mở. Vẽ lại qua `DK.quanTri(true)` nên không đặt lại đồng hồ nghỉ 2 phút của máy khách. Màn học sinh KHÔNG đổi (không tự vẽ lại, tránh mất phần đang xếp).
+- **DKL-M** (`api_dang_ky.py` `dk_dau_van_tay`, `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js` `QT2.tuLamMoi`): API công khai, không mở CSDL, không cần phiên, KHÔNG làm mới giờ nghỉ phiên quản trị; trả dấu vân tay (thời điểm sửa + kích thước của app.db; chế độ nhật ký là DELETE nên không có tệp WAL), đổi với mọi ghi kể cả học sinh gửi nguyện vọng (không ghi nhật ký). Màn quản trị hỏi mỗi 5 giây (trước: vẽ lại cả màn mỗi 30 giây, chỉ ở giai đoạn Học sinh đăng ký) và CHỈ vẽ lại khi dấu đổi; bật ở thẻ «Việc bây giờ» của ba giai đoạn Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký; hoãn khi đang gõ vào ô nhập hoặc hộp xác nhận «Thay cả danh sách» đang mở. Vẽ lại qua `DK.quanTri(true)` nên không đặt lại đồng hồ nghỉ 2 phút của máy khách. Màn học sinh KHÔNG đổi (không tự vẽ lại, tránh mất phần đang xếp).
 - **DKL-K**: `dk_phong_luu` và `dk_gv_tu_dang_ky` trả `cur.lastrowid` SAU khi ghi nhật ký nên trả id dòng nhật ký thay vì id phòng / giáo viên; nay lấy id TRƯỚC khi ghi nhật ký. (`dk_clb_luu` đã đúng.) Giao diện chưa dùng hai giá trị này nên chưa ai gặp lỗi.
 - Test mới: `tests/test_dkl_m_dau_van_tay.py` (3, API), `tests/test_giao_dien_dkl_m_lam_moi.py` (3, đồng hồ giả: dữ liệu đổi thì cập nhật trong 6 giây; không đổi thì không vẽ lại; đang gõ thì giữ nguyên), `tests/test_dkl_k_id_tra_ve.py` (2). Không đổi schema, CSV, thuật toán.
 

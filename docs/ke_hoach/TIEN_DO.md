@@ -318,11 +318,10 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK4-UI (cổng đăng ký như bản mẫu v8) | xong, chờ CI | 2026-11-25 | js/dang_ky_*.js, style.css, api_dang_ky.py, CHANGELOG.md | tests/test_giao_dien_dk3_cong.py, tests/test_dk4_l0c_gioi_han_tu_backend.py |
 | DKL-L2 + L3 + L1 + L4 (khoảng cách với bản mẫu v8: nhập điểm, phiếu PIN, đóng sớm/gia hạn, sửa/xoá CLB giáo viên, cài đặt, xem trước/phiên bản xuất, sao lưu) | xong ở máy, chưa CI | 2026-11-25 | api_dang_ky.py, js/dang_ky_quan_tri_2.js, js/dang_ky_quan_tri.js, js/dang_ky_gv_hs.js, js/dang_ky_nen.js, dang_ky.html, style.css, i18n.js, CHANGELOG.md | tests/test_dkl_cai_dat.py (5), test_giao_dien_dkl_quan_tri.py (7), test_giao_dien_dkl_giao_vien.py (3), test_giao_dien_dkl_hoc_sinh.py (4) | chưa thử pywebview/Windows |
 | DKL-G (xác nhận danh tính HS, tự khoá quản trị 2 phút + test A12, gập «Xem thêm» sau 7 thẻ) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_gv_hs.js, js/dang_ky_nen.js, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, CHANGELOG.md | tests/test_giao_dien_dkl_hoc_sinh.py, tests/test_giao_dien_dkl_quan_tri.py |
-<<<<<<< HEAD
 | DKL-M (màn quản trị tự cập nhật ≤ 5 giây: hỏi dấu vân tay, chỉ vẽ lại khi đổi) | xong ở máy, chờ CI | 2026-11-26 | api_dang_ky.py, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, CHANGELOG.md | tests/test_dkl_m_dau_van_tay.py, tests/test_giao_dien_dkl_m_lam_moi.py | thay vòng 30 giây chỉ ở giai đoạn Học sinh đăng ký |
 | DKL-K (id API trả về đúng dòng vừa tạo: dk_phong_luu, dk_gv_tu_dang_ky) | xong ở máy, chờ CI | 2026-11-26 | api_dang_ky.py, CHANGELOG.md | tests/test_dkl_k_id_tra_ve.py | báo bởi DK5 |
-=======
-| DKL-H (giải thích giới hạn nguyện vọng và bài thi tính riêng từng buổi) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_gv_hs.js, CHANGELOG.md |
-| DKL-I (lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu) | xong ở máy, chờ CI | 2026-11-26 | index.html, js/17_viec_tiep_theo.js, CHANGELOG.md |
-| DKL-J (checker FIX: «Ngoài nguyện vọng» thay «NVNone», tên buổi của cổng thay «thu_2», Xem trước Sổ nhập mở sẵn; thêm test dấu chấm và không tick bài thi) | xong ở máy, chờ CI | 2026-11-26 | dang_ky_sang_xep.py, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, CHANGELOG.md |
->>>>>>> e1fb45c326b0ff6c2c88969c3b614bcea8867011
+| DKL-H (giải thích giới hạn nguyện vọng và bài thi tính riêng từng buổi) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_gv_hs.js, CHANGELOG.md | tests/test_giao_dien_dkl_hoc_sinh.py::test_3d | |
+| DKL-I (lời dẫn sang cổng Đăng ký CLB khi chưa có dữ liệu) | xong ở máy, chờ CI | 2026-11-26 | index.html, js/17_viec_tiep_theo.js, CHANGELOG.md | tests/test_giao_dien_dkl_loi_dan_cong.py | |
+| DKL-J (checker FIX: «Ngoài nguyện vọng» thay «NVNone», tên buổi của cổng thay «thu_2», Xem trước Sổ nhập mở sẵn; thêm test dấu chấm và không tick bài thi) | xong ở máy, chờ CI | 2026-11-26 | dang_ky_sang_xep.py, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, CHANGELOG.md | tests/test_dk4_chot_va_xep.py::test_tom_tat_xep_hang_null_la_ngoai_nguyen_vong_va_co_ten_buoi, tests/test_giao_dien_dk4_chot_xep.py, tests/test_giao_dien_dkl_quan_tri.py::test_6 | |
+
+| DKL-N (checker vòng 2: tự cập nhật không xoá phiếu PIN vừa tạo / chữ chưa lưu; dấu đã thấy không đọc lại) | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_quan_tri_2.js, CHANGELOG.md | tests/test_giao_dien_dkl_m_lam_moi.py::test_4, test_5 | sửa lỗi DKL-M |

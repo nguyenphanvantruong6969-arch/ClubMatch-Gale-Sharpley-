@@ -197,22 +197,38 @@
     return h("div", {}, h("h2", {}, "Sao lưu"), h("p.dk-phu", {}, "Sao lưu để không mất dữ liệu khi máy hỏng hoặc mất điện."), nut, kq);
   };
   /* DKL-M: tự cập nhật trong vài giây. Mỗi 5 giây hỏi `dk_dau_van_tay` (công khai, rẻ, KHÔNG làm mới giờ nghỉ của phiên); chỉ vẽ
-     lại khi dấu đổi — không có thay đổi thì không tải lại gì. Đang gõ vào ô nhập hoặc đang mở hộp xác nhận thì hoãn (dấu cũ giữ
-     nguyên nên vòng sau thử lại). Vẽ lại bằng `DK.quanTri(true)`: không tính là thao tác, không đặt lại đồng hồ nghỉ của máy khách. */
+     lại khi dấu đổi — không có thay đổi thì không tải lại gì. Vẽ lại bằng `DK.quanTri(true)`: không tính là thao tác, không đặt lại
+     đồng hồ nghỉ của máy khách.
+     DKL-N (checker vòng 2): KHÔNG vẽ lại khi có thứ sẽ mất — (1) phiếu PIN vừa tạo (chỉ hiện một lần, `#dkPin` còn nội dung);
+     (2) chữ đã gõ chưa lưu ở bất kỳ ô nhập nào (so với giá trị lúc vẽ), kể cả khi con trỏ đã rời ô; (3) ô nhập đang focus; (4) hộp
+     xác nhận đang mở. Dấu cũ được giữ nên vòng sau thử lại; sạch rồi thì vẽ lại bình thường.
+     Dấu vân tay = thời điểm sửa + kích thước của app.db (chế độ nhật ký DELETE, không phải WAL). */
   const CHU_KY_LAM_MOI_MS = 5000;
-  let dongHo = null, dauCu = null;
+  let dongHo = null, dauCu = null, dauCho = null;
   const layDau = async () => { const r = await global.RBDA.callApi("dk_dau_van_tay"); return r && r.ok ? r.data.dau : null; };
+  const cacO = () => document.querySelectorAll(".dk-noidung input, .dk-noidung textarea, .dk-noidung select");
+  const chupO = () => cacO().forEach((e) => { e.dataset.v0 = e.value; });          // giá trị lúc vừa vẽ xong
+  const coThuSeMat = () => {
+    const pin = document.getElementById("dkPin");
+    if (pin && pin.childElementCount > 0) return true;                              // phiếu PIN chỉ hiện một lần
+    const e = document.activeElement;
+    if (e && /^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) return true;              // đang ở trong ô nhập
+    const hop = document.getElementById("dkThayHop");
+    if (hop && !hop.hidden) return true;                                            // hộp xác nhận đang mở
+    return Array.from(cacO()).some((x) => x.dataset.v0 !== undefined && x.value !== x.dataset.v0);   // chữ chưa lưu
+  };
   QT2.tuLamMoi = function (bat) {
     clearInterval(dongHo); dongHo = null;
-    if (!bat) return;
-    layDau().then((d) => { dauCu = d; });
+    if (!bat) { dauCho = null; return; }                                           // vẽ lại thủ công / rời màn: bỏ dấu đang chờ
+    chupO();
+    if (dauCho !== null) { dauCu = dauCho; dauCho = null; }                         // vẽ lại do chính vòng hỏi: dùng dấu ĐÃ thấy, không đọc lại (tránh bỏ sót thay đổi xen giữa)
+    else layDau().then((d) => { dauCu = d; });
     dongHo = setInterval(async () => {
       if (DK.S.vai !== "quan_tri") { clearInterval(dongHo); dongHo = null; return; }
-      const e = document.activeElement;
-      if ((e && /^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName)) || (document.getElementById("dkThayHop") && !document.getElementById("dkThayHop").hidden)) return;
+      if (coThuSeMat()) return;
       const d = await layDau();
       if (!d || d === dauCu) return;
-      dauCu = d;
+      dauCho = d;
       DK.quanTri(true);
     }, CHU_KY_LAM_MOI_MS);
   };

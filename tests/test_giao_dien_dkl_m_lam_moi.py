@@ -89,3 +89,65 @@ def test_3_dang_go_thi_khong_ve_de_roi_ve_sau_khi_roi_o_nhap(cong):
     pg.clock.fast_forward(6_000)
     pg.wait_for_selector("tr:has-text('Bóng rổ') >> text=Đã duyệt", timeout=5000)
     assert not pg.loi, pg.loi
+
+
+@pytest.fixture()
+def cong_gv(tmp_path):
+    """Cổng ở giai đoạn «Giáo viên đăng ký» (chưa có giáo viên nào): chỗ phiếu PIN hiện một lần."""
+    if CHROMIUM is None:
+        pytest.skip("khong tim thay Chromium")
+    api = PipelineAPI(str(tmp_path / "app.db"))
+    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
+    _ok(api.dk_phong_luu(qt, "P1", 40))
+    _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
+    _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
+    with sync_playwright() as pw:
+        br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
+        url = browser_host.serve(api, GOC, "dang_ky.html", open_browser=False)
+        pg = br.new_page(bypass_csp=True, viewport={"width": 1200, "height": 900})
+        pg.loi = []
+        pg.on("pageerror", lambda e: pg.loi.append(str(e)))
+        pg.api, pg.qt = api, qt
+        pg.clock.install()
+        pg.goto(url)
+        pg.get_by_role("button", name="Quản trị", exact=True).click()
+        pg.fill("input[name=ma]", "matkhau")
+        pg.get_by_role("button", name="Đăng nhập").click()
+        pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
+        yield pg
+        br.close()
+
+
+def test_4_phieu_pin_chi_hien_mot_lan_khong_bi_xoa_khi_tu_cap_nhat(cong_gv):
+    """Checker vòng 2, M1 (cao): danh sách PIN vừa tạo không được mất khi dữ liệu đổi và màn tự vẽ lại."""
+    pg = cong_gv
+    pg.fill("textarea", "Cô Cúc\nCô Dũng")
+    pg.get_by_role("button", name="Tạo tài khoản giáo viên").click()
+    pg.wait_for_selector("#dkPin table")
+    pg.wait_for_timeout(300)
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tự", "1234"))                          # dữ liệu đổi từ nơi khác
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_timeout(600)
+    assert pg.locator("#dkPin table").count() == 1, "phiếu PIN bị xoá bởi lần tự vẽ lại"
+    assert "Cô Cúc" in pg.locator("#dkPin").inner_text()
+    assert not pg.loi, pg.loi
+
+
+def test_5_chu_dang_go_chua_luu_khong_bi_xoa_ke_ca_khi_da_roi_o_nhap(cong_gv):
+    """Checker vòng 2, M2 (vừa): chữ đã gõ nhưng chưa bấm lưu không được mất khi tự vẽ lại; sạch rồi thì vẽ lại bình thường."""
+    pg = cong_gv
+    pg.wait_for_timeout(300)
+    pg.fill("textarea", "Cô Mới")
+    pg.evaluate("document.activeElement.blur()")                                   # đã rời ô nhập: lớp bảo vệ «đang focus» không còn che
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tự", "1234"))
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_timeout(600)
+    assert pg.locator("textarea").input_value() == "Cô Mới"
+    pg.fill("textarea", "")                                                        # xoá sạch: không còn gì để mất
+    pg.evaluate("document.activeElement.blur()")
+    pg.evaluate("window.__moc = document.querySelector('.dk-noidung')")
+    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tư", "1234"))
+    pg.clock.fast_forward(12_000)
+    pg.wait_for_function("document.querySelector('.dk-noidung') !== window.__moc", timeout=5000)
+    assert not pg.loi, pg.loi
