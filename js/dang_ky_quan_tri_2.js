@@ -171,9 +171,19 @@
     const thi = DK.truong("Số bài thi tối đa mỗi buổi", "toi_da_thi", { type: "number", min: "1", max: "30", value: c.toi_da_thi });
     const luuGh = DK.nut("Lưu giới hạn", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_dat_gioi_han", T(), nv.querySelector("input").value, thi.querySelector("input").value); if (r.ok) DK.thongBao("Đã lưu giới hạn."); return r; }); }, { id: "dkLuuGh" });
+    /* DK6-L2: đổi mật khẩu quản trị. Nhập lại phải khớp (kiểm ở máy); mật khẩu cũ do máy chủ kiểm (`dk_mat_khau_cu_sai`). */
+    const mkCu = DK.truong("Mật khẩu hiện tại", "mk_cu", { type: "password", autocomplete: "current-password" });
+    const mkMoi = DK.truong("Mật khẩu mới (ít nhất 4 ký tự)", "mk_moi", { type: "password", autocomplete: "new-password" });
+    const mkLai = DK.truong("Nhập lại mật khẩu mới", "mk_lai", { type: "password", autocomplete: "new-password" });
+    const doiMk = DK.nut("Đổi mật khẩu", function () { DK.chay(this, async () => {
+      const cu = mkCu.querySelector("input"), moi = mkMoi.querySelector("input"), lai = mkLai.querySelector("input");
+      if (moi.value !== lai.value) { DK.thongBao("Hai lần nhập mật khẩu mới không giống nhau.", true); return { ok: true }; }
+      const r = await DK.goi("dk_doi_mat_khau", T(), cu.value, moi.value);
+      if (r.ok) { cu.value = moi.value = lai.value = ""; chupO(); DK.thongBao("Đã đổi mật khẩu. Các máy quản trị khác phải đăng nhập lại."); } return r; }); }, { id: "dkDoiMk" });
     return h("div", {}, h("h2", {}, "Mã trường"), h("p.dk-phu", {}, "Giáo viên nhập mã này khi tự tạo tài khoản. Đổi mã nếu bị lộ."), ma, luuMa,
       h("h2", {}, "Buổi và khối"), sua ? h("p.dk-phu", {}, "Chỉ đổi được ở giai đoạn Chuẩn bị, khi chưa có CLB.") : h("p.dk-phu", {}, "Đã khoá: giáo viên đã đăng ký xong."), buoi, khoi, sua ? luuBk : null,
       h("h2", {}, "Giới hạn cho học sinh"), nv, thi, luuGh,
+      h("h2", {}, "Đổi mật khẩu quản trị"), h("p.dk-phu", {}, "Mật khẩu mới có hiệu lực ngay; các máy quản trị khác bị đăng xuất."), mkCu, mkMoi, mkLai, doiMk,
       h("p.dk-phu", {}, "Quản trị tự khoá sau 2 phút không thao tác. Số lần đã xuất Sổ nhập: " + (c.so_lan_xuat || 0) + "."));
   };
 

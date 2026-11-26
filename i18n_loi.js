@@ -1634,6 +1634,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Mật khẩu quản trị cần ít nhất 4 ký tự.",
     "en": "The admin password needs at least 4 characters."
   },
+  "dk_mat_khau_cu_sai": {
+    "vi": "Mật khẩu hiện tại không đúng. Mật khẩu chưa được đổi.",
+    "en": "The current password is not correct. The password was not changed."
+  },
   "dk_sai_dang_nhap": {
     "vi": "Tên hoặc mã không đúng. Hãy kiểm tra lại.",
     "en": "The name or code is not correct. Check and try again."
