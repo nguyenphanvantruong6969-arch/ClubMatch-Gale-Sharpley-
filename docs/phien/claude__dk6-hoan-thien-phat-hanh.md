@@ -56,12 +56,12 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
   - **MILESTONE 2 after L4**, then CI gate (Linux + Windows + Build Windows executable green).
 
 ## Current state (overwrite each handoff)
-- Done: L1 b3daa55, L2 6eddc2b (pushed, CI run on that head pending at time of writing), L4 committed locally (not pushed: no push while CI for M1 head is in flight).
-- L3 dropped (see Needs Truong). Tests: dk6 l1 7, l2 5, doi_mat_khau 6, goi_phat_hanh 4; kiem_nhanh 7/7; ruff clean.
-- Next: wait CI green on 6eddc2b -> MILESTONE 1; push L4; wait CI -> MILESTONE 2; soat-ma tiers; CI gate; Status DONE.
+- L1 + L2 + L4 done, L3 dropped. Head cb698f1: Tests run 1700 GREEN (Linux + Windows + ruff). kiem_nhanh 7/7.
+- MILESTONE 1 READY | head cb698f1   (note: L4 already included in this head; review L1+L2 as c4486d3..cb698f1 minus L4 files)
+- MILESTONE 2 READY | head cb698f1
+- NOT done: workflow *Build Windows executable* (manual dispatch; its last step overwrites the public release -> needs Truong's go-ahead).
 - Note: Playwright `clock.install()` makes `wait_for_function` hang (rAF faked) — use `wait_for_timeout` + assert.
-- Note: `dk_diem_dat` is admin-only here (no teacher token); "teacher saves score" simulated with an admin token.
-- Note: Danh sách folds persist in `moDs` (js/dang_ky_quan_tri.js); a single grade opens by default.
+- Note: grep ALL tests for a changed UI string before pushing (the label change broke an old DK4 test).
 
 ## Needs Truong
 - L3 (keep pre-"Chốt và xếp" backup) dropped: `_backup_db` (api.py, ~10 callers) names every backup `app.db.bak-<ts>`; nothing marks the
@@ -96,3 +96,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 | 2026-11-26 | Sonnet | L2 done: dk_doi_mat_khau + UI, per-grade fold | 2 new test files + backend file |
 | 2026-11-26 | Sonnet | L3 dropped; L4 done: 2 guides + test_dk6_goi_phat_hanh + registry row | new test file, docs |
 | 2026-11-26 | Sonnet | CI 1699 red (L2 head 6eddc2b): old DK4 test expected old label -> fixed in tests/test_giao_dien_dk4_chot_xep.py; pushing with L4 (M1 head = this push head, L4 included) | fix round 1 of 2 |
+| 2026-11-26 | Sonnet | CI 1700 green on cb698f1; milestones 1+2 written; Build Windows executable left for Truong | status: awaiting checker + build go-ahead |
