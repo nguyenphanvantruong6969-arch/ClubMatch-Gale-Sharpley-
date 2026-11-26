@@ -9,6 +9,12 @@
 - `js/dang_ky_quan_tri.js` (`DK.quanTri`): dựng xong nội dung rồi mới hiện cả màn một lần. Trước đó khung rỗng hiện trước nên `tests/test_giao_dien_dk3_cong.py::test_9` (đếm `ol.dk-gd li` ngay khi thấy tiêu đề) đỏ từ DK8-L2; test không sửa.
 - Test mới: `tests/test_giao_dien_dk8_l5.py` (18). Không đổi backend, schema, CSV, thuật toán.
 
+## 2026-11-26 — CI xanh cho DK8 (vòng 1: sửa CI, không đổi tính năng)
+
+- `du_lieu_test/chup_dk8.py`: tắt `wharton` RÕ RÀNG sau `PipelineAPI(...)` (như các script `du_lieu_test` khác) — sửa `test_F1_script_do_tat_wharton_ro_rang`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `tests/test_*.py` 439 → 444 (thêm 5 tệp DK8-L1..L4) — sửa `test_ban_do_ma_so_tep_test_la_so_that` (cũng là nguyên nhân duy nhất của job Linux 6/6, xác nhận bằng log).
+- Không thêm / không sửa test; không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK8-L4: khổ hẹp 390 px và focus (chỉ thêm test)
 
 - `tests/test_giao_dien_dk8_l4.py` (2): không cuộn ngang ở trang đầu, đăng nhập, bốn thẻ quản trị, giáo viên (390 px); Tab đi qua ba thẻ vai trò, vòng focus hiện trên cả thẻ, Enter mở màn đăng nhập. Bảng khác biệt không còn dòng «còn khác». Không đổi mã sản phẩm.

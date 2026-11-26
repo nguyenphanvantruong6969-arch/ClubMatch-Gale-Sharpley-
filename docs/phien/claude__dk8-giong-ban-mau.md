@@ -108,3 +108,4 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 | 2026-11-26 | Sonnet | L2 done: admin tab bar on top, phase card + content cards, 2-col grids | CI pending |
 | 2026-11-26 | Sonnet | L3 + L4 done, handoff (context limit) | checker not yet run |
 | 2026-11-26 | Sonnet | L5 done: DK.phanHoi feedback, format-only tick, receipt tick; 18 tests | CI pending |
+| 2026-11-26 | Sonnet | CI loop round 1: chup_dk8.py wharton False; test count 439→444 in CLAUDE_CHI_TIET.md (Linux 6/6 log confirmed same cause) | CI only; DK8-L5 NOT started |
