@@ -166,12 +166,16 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
     # assembly mang dấu — khớp đúng triệu chứng: lỗi nêu rõ đường dẫn tới
     # Python.Runtime.dll, tức tệp CÓ đó, .NET tìm thấy nhưng không nạp.
     if getattr(sys, "frozen", False):
+        _ghi_moc("truoc go dau tai-ve")
         ket = chan_doan.go_dau_tai_ve(RESOURCE_DIR)
         chan_doan.ghi(BASE_DIR, "go dau tai-ve trong %s: %r" % (RESOURCE_DIR, ket))
+        _ghi_moc("sau go dau tai-ve")      # hiệu hai mốc = thời gian gỡ dấu (nghi phạm làm khởi động chậm trên Windows)
 
     try:
+        _ghi_moc("truoc import webview")
         import webview
 
+        _ghi_moc("sau import webview")      # pywebview + pythonnet nạp xong (nghi phạm thứ hai)
         ten_renderer = _renderer_winforms() if sys.platform == "win32" else ""
         if ten_renderer == "mshtml":
             # KD1: thieu WebView2 Runtime -> pywebview LANG LE ve MSHTML (IE11), khong parse noi JS cua ta
@@ -185,6 +189,12 @@ def _show_ui(title: str, page: str, js_api, width: int, height: int,
             title, os.path.join(RESOURCE_DIR, page), js_api=js_api,
             width=width, height=height, min_size=min_size,
         )
+        _ghi_moc("sau create_window")
+        try:      # chỉ ghi log: biết WebView2 mất bao lâu để hiện cửa sổ / tải xong trang (khoảng sau webview.start)
+            window.events.shown += lambda: _ghi_moc("cua so da hien")
+            window.events.loaded += lambda: _ghi_moc("trang da tai xong")
+        except Exception:
+            pass
         if hasattr(js_api, "_set_window"):
             # Cho phép các tính năng dùng hộp thoại gốc của hệ điều hành
             # sau này (hiện chưa tính năng nào bắt buộc phải có window ref).

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — UX2-VB (vùng bấm UX2 ghi đè ::after riêng của nút; ngoài sổ, Truong yêu cầu trực tiếp)
+
+- Nguyên nhân chung: khối UX2-L3 `:where(button, .btn, [role="button"])` (độ ưu tiên 0) đặt `position: relative` cho nút và `::after` tuyệt đối ở tâm 50 %/50 %, `max(100%, 44px)`, `translate(-50%, -50%)`. Quy tắc riêng chỉ ghi đè MỘT phần thuộc tính nên phần còn lại của UX2 vẫn áp dụng.
+- `style.css`: (1) thẻ vai trò cổng `.dk-cua-nut` — đã sửa ở 21cfdd4 (`position: static`, đặt lại top/left/width/height/transform), giữ nguyên; (2) dấu ✓/! DK8-L5 `.dk-app/.dk-dau .btn.is-xong::after, .is-loi::after`: thêm `left: auto; transform: none` → dấu về góc phải-trên (trước: giữa mép trên, lệch thêm −9 px khi giảm chuyển động); (3) mũi tên « ▾» của `#ux1aNangCao > summary`, `.club-them > summary` (summary.btn): `::after` về lại trong dòng chữ (static), vùng bấm 44 px chuyển sang `summary.btn::before` cùng hình học UX2 (test vùng bấm 44 px UX2 vẫn đạt).
+- Test mới trong `tests/test_giao_dien_dk3_cong.py`: `test_11_ca_the_vai_tro_bam_duoc_bang_toa_do` (1000/600/375 px × 3 vai trò × 3 điểm bấm), `test_12_dau_xong_loi_dk8_o_goc_phai_tren` (thường + giảm chuyển động), `test_13_mui_ten_summary_btn_nam_sau_chu`. Chỉ CSS + test; không đổi thuật toán, schema, CSV. Báo cáo: `docs/phien/claude__soat-vung-bam-ux2.md`.
+
 ## 2026-11-26 — DK9-L2: khối «Nạp từ Excel» ở thẻ Cài đặt của cổng quản trị
 
 - `js/dang_ky_quan_tri_2.js`: `QT2.napExcel(c)` (chèn trong `QT2.caiDat`, dưới lưới thẻ): nút «Tải file mẫu», vùng thả + «Chọn tệp .xlsx», xem trước (bảng Hợp lệ / Mới / Đã có / Dòng lỗi mỗi trang; mỗi trang có dòng lỗi mở một bảng «Dòng · Lý do», tối đa 50 dòng hiện), MỘT nút vàng «Nạp» chỉ bật khi xem trước có ≥ 1 dòng hợp lệ, rồi phiếu PIN gộp học sinh và giáo viên (hiện một lần). Giai đoạn học sinh đã bắt đầu đăng ký: giao diện gửi `bo_hoc_sinh` nên trang «Học sinh» bị bỏ qua (như ô dán). `QT2.phieuPin`: nhãn đăng nhập theo từng phiếu (`x.vai`), không đổi hành vi cũ.

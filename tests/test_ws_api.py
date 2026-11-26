@@ -24,8 +24,6 @@ HAM_QUAN_LY = {
     "save_as_template": ("truong-hoc", "M"),
     "export_workspace": ("truong-hoc",),
     "import_workspace": ("", "x.zip"),
-    "get_workspace_config": (),
-    "update_workspace_config": ({},),
 }
 
 
@@ -68,6 +66,17 @@ def test_che_do_dung_duong_dan_csdl_tat_moi_ham_workspace(tmp_path):
     # không hàm nào kịp làm gì: không thư mục workspaces, không đổi db_path
     assert not os.path.exists(os.path.join(str(tmp_path), "workspaces"))
     assert api.db_path == str(tmp_path / "rieng.db")
+
+
+def test_che_do_mot_csdl_van_doc_ghi_cau_hinh_cua_chinh_csdl_do(tmp_path):
+    """Chạy kèm đường dẫn CSDL (không workspace): khung «Cách xếp» vẫn đọc/ghi cấu hình ngay trong CSDL đó."""
+    api = PipelineAPI(str(tmp_path / "rieng.db"))
+    r = api.get_workspace_config()
+    assert r["ok"] and r["data"]["slug"] == "" and r["data"]["config"] == ch.MAC_DINH_TRUONG_HOC
+    w = api.update_workspace_config({"rules": {"fa_daa": True, "fa_phan_hoi": True}})
+    assert w["ok"], w
+    assert api.get_workspace_config()["data"]["config"]["rules"]["fa_daa"] is True
+    assert not os.path.exists(os.path.join(str(tmp_path), "workspaces"))
 
 
 def test_trang_thai_che_do_tat_van_tra_nhan_mac_dinh(tmp_path):

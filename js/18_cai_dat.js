@@ -280,7 +280,7 @@ function ux1aApDungSong(cfg) {
 /* Vẽ trang Cài đặt vào `host` cho workspace `slug`. */
 function ux1aVeCaiDatSong(host, slug, tienTo) {
   let luat = {};
-  const dangMo = () => wsTrangThai && wsTrangThai.enabled && wsTrangThai.slug === slug;
+  const dangMo = () => wsTrangThai && ((wsTrangThai.enabled && wsTrangThai.slug === slug) || (!wsTrangThai.enabled && !slug));   // chạy một CSDL: slug rỗng
   const the = ux1aTaoThe(tienTo, (ma) => doi(ma));
   /* MT1: một thẻ mục tiêu có thể đổi cách xét (vd. "Cơ hội như nhau" tắt điểm chia, rời thẻ thì bật lại): câu hỏi đầu
      phải vẽ lại từ cấu hình ĐÃ LƯU sau mỗi lần chọn / hoàn tác / "Về mục tiêu mẫu". */
@@ -355,10 +355,10 @@ function ux1aVeCaiDatSong(host, slug, tienTo) {
 function ux1aTaiCaiDat() {
   const panel = el("ux1aCaiDat");
   if (!panel) return;
-  if (!wsTrangThai || !wsTrangThai.enabled) { panel.hidden = true; return; }
-  panel.hidden = false;
+  if (!wsTrangThai) { panel.hidden = true; return; }
+  panel.hidden = false;      /* chạy một CSDL (không workspace) vẫn có: cấu hình nằm ngay trong CSDL đó, slug rỗng */
   el("ux1aCaiDatTen").textContent = t("ux1a_cd_tieu_de", { ten: wsTrangThai.name || wsTrangThai.slug || "" });
-  return ux1aVeCaiDatSong(el("ux1aCaiDatThan"), wsTrangThai.slug, "ux1a");
+  return ux1aVeCaiDatSong(el("ux1aCaiDatThan"), wsTrangThai.slug || "", "ux1a");
 }
 
 /* Mục ⋯ "Cài đặt…" ở màn chọn workspace: cùng thành phần, trong một hộp thoại. */
