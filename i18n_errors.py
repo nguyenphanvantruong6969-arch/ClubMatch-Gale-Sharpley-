@@ -1951,6 +1951,68 @@ MESSAGES = {
         "en": "Too many wrong attempts: this ID is locked for about {phut} more minute(s). Wait, or ask the administrator to unlock it.",
     },
     # === end DK4 ===
+    # === DK9: nạp Excel cho cổng đăng ký ===
+    "dk_excel_khong_phai_xlsx": {
+        "vi": "Không đọc được tệp. Chỉ nhận tệp Excel .xlsx (không phải .csv hay .xls).",
+        "en": "Could not read the file. Only Excel .xlsx files are accepted (not .csv or .xls).",
+    },
+    "dk_excel_qua_lon": {
+        "vi": "Tệp quá lớn (tối đa {max_mb} MB).",
+        "en": "The file is too large (maximum {max_mb} MB).",
+    },
+    "dk_excel_khong_co_sheet": {
+        "vi": "Tệp không có trang tính nào tên «Học sinh», «Giáo viên» hoặc «Phòng». Tải tệp mẫu để dùng đúng tên.",
+        "en": "The file has no sheet named \"Học sinh\", \"Giáo viên\" or \"Phòng\". Download the template to get the exact names.",
+    },
+    "dk_excel_tieu_de_sai": {
+        "vi": "Trang «{sheet}» phải có hàng 1 là tiêu đề: {mong_doi}.",
+        "en": "Sheet \"{sheet}\" must have a header row 1: {mong_doi}.",
+    },
+    "dk_excel_qua_nhieu_dong": {
+        "vi": "Trang «{sheet}» có quá {toi_da} dòng dữ liệu. Chia thành nhiều tệp.",
+        "en": "Sheet \"{sheet}\" has more than {toi_da} data rows. Split it into several files.",
+    },
+    "dk_excel_khong_co_dong": {
+        "vi": "Không có dòng hợp lệ nào để nạp (dòng lỗi: {n}).",
+        "en": "There are no valid rows to load (rows with errors: {n}).",
+    },
+    "dk_excel_ma_trong": {
+        "vi": "Thiếu mã học sinh.",
+        "en": "Student ID is missing.",
+    },
+    "dk_excel_ma_sai": {
+        "vi": "Mã học sinh không được có dấu cách và dài tối đa 30 ký tự.",
+        "en": "Student ID must have no spaces and be at most 30 characters.",
+    },
+    "dk_excel_ten_trong": {
+        "vi": "Thiếu họ tên hoặc tên.",
+        "en": "Name is missing.",
+    },
+    "dk_excel_ten_dai": {
+        "vi": "Họ tên hoặc tên dài quá 60 ký tự.",
+        "en": "Name is longer than 60 characters.",
+    },
+    "dk_excel_lop_trong": {
+        "vi": "Thiếu lớp.",
+        "en": "Class is missing.",
+    },
+    "dk_excel_khoi_ngoai": {
+        "vi": "Khối suy từ lớp nằm ngoài dải {tu}–{den}.",
+        "en": "The grade taken from the class is outside {tu}-{den}.",
+    },
+    "dk_excel_trung_ma": {
+        "vi": "Mã học sinh trùng với một dòng phía trên.",
+        "en": "Student ID repeats an earlier row.",
+    },
+    "dk_excel_suc_chua": {
+        "vi": "Sức chứa phải là số nguyên lớn hơn 0.",
+        "en": "Capacity must be a whole number greater than 0.",
+    },
+    "dk_excel_trung_ten": {
+        "vi": "Tên trùng với một dòng phía trên.",
+        "en": "Name repeats an earlier row.",
+    },
+    # === end DK9 ===
 }
 
 
