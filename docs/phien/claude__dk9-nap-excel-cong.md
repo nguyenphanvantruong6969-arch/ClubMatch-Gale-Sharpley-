@@ -55,8 +55,9 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - No test weakened; `kiem_nhanh.py` 7/7 (invariant 1: no allocation change); ruff clean; CI green.
 
 ## Current state (overwrite each handoff)
-- L1 + L2 done locally (tests: `test_dk9_nap_excel.py` 15, `test_giao_dien_dk9_l2.py` 9; related UI files green; kiem_nhanh 7/7; ruff clean). Next: push, CI green on head, then MILESTONE 1 (checker session), then close.
-- UI note: students sheet is skipped in locked phases via optional `bo_hoc_sinh` (backend default unchanged). Template download uses a Blob anchor (browser host); not testable in desktop WebView2 here.
+MILESTONE 1 READY | head 4cfcc7e | base 1bb488d
+- L1 + L2 + design polish done (tests: `test_dk9_nap_excel.py` 15, `test_giao_dien_dk9_l2.py` 9; related UI files green; kiem_nhanh 7/7; ruff clean). Truong (2026-11-26, later): "spawn a checker and run CI until green and mergeable into main; do not wait" — checker started without waiting for CI; coder owns CI.
+- UI note: students sheet skipped in locked phases via optional `bo_hoc_sinh`. Template download = Blob anchor (browser host); not testable in desktop WebView2 here.
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk8-giong-ban-mau` and `main`. Every push cancels running CI (~20 min).
