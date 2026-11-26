@@ -319,3 +319,16 @@ def test_p_man_da_gui_mot_dau_tick_tieu_de_giu_chu(cong):
     assert pg.get_by_role("heading", name="Đã gửi", exact=True).count() == 1
     assert pg.locator("#dkBienNhan").inner_text().startswith("Đã gửi lúc")
     assert pg.get_by_role("button", name="Xong, thoát", exact=True).count() == 1
+
+
+# ---------------------------------------------------------------- sửa CI: thanh trên dính khi trang dài
+def test_q_thanh_tren_dinh_that_khi_trang_cuon_duoc(cong):
+    """Chạy ở khổ thấp để trang CÓ cuộn (ở khổ cao thì trang ngắn, thanh trông như dính dù không dính)."""
+    pg = cong("qt")
+    pg.set_viewport_size({"width": 1200, "height": 360})
+    pg.wait_for_timeout(200)
+    assert pg.evaluate("document.documentElement.scrollHeight - window.innerHeight") > 150      # trang đủ dài để cuộn
+    pg.mouse.wheel(0, 600)
+    pg.wait_for_timeout(300)
+    assert pg.evaluate("window.scrollY") > 100
+    assert pg.locator("header.dk-dau").bounding_box()["y"] == 0                                    # cuộn rồi thanh vẫn ở trên cùng
