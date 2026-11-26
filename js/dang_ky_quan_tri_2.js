@@ -25,10 +25,10 @@
 
   /* ---------- A3: phiếu PIN in ra ---------- */
   QT2.phieuPin = function (ds, tieuDe, vai) {
-    const la = vai === "gv" ? "Đăng nhập: họ tên + PIN này." : "Đăng nhập: mã học sinh + PIN này.";
+    const laCua = (x) => (x.vai || vai) === "gv" ? "Đăng nhập: họ tên + PIN này." : "Đăng nhập: mã học sinh + PIN này.";    // DK9: một phiếu gộp học sinh và giáo viên
     const vung = h("section#dkIn.dk-in", { "aria-label": "Phiếu PIN" }, ds.map((x) => h("div.dk-phieu", {},
       h("b", {}, x.ten || x.ma), x.lop ? h("span", {}, " · " + x.lop) : null, h("div.dk-phieu-ma", {}, "Mã: ", x.ma), h("div.dk-phieu-pin", {}, "PIN ", h("b", {}, x.pin)),
-      h("small", {}, la + " Giữ kín PIN, không đưa bạn."))));
+      h("small", {}, laCua(x) + " Giữ kín PIN, không đưa bạn."))));
     const khung = h("div.dk-khung-pin", {}, h("h3", {}, tieuDe),
       DK.bang(["Mã / tên", "PIN"], ds.map((x) => [x.ten ? x.ten : x.ma, x.pin])),
       DK.nut("Xem phiếu PIN", function () { vung.classList.toggle("mo"); }, { id: "dkXemPhieu" }),
@@ -155,6 +155,84 @@
       DK.nutNhe("Làm mới", () => lamMoi(), { id: "dkLamMoi" }));
   };
 
+  /* ---------- DK9: nạp MỘT tệp Excel (học sinh, giáo viên, phòng) ----------
+     Chọn / thả tệp -> «Xem trước» (máy chủ chỉ ĐỌC) -> «Nạp» (máy chủ đọc lại tệp, không tin bản xem trước). Mỗi dòng lỗi có số dòng Excel và lý
+     do (mã `dk_excel_*` trong i18n_errors.py, đổi chữ bằng DK.loiChu). PIN chỉ hiện ngay sau «Nạp» (phiếu PIN gộp học sinh và giáo viên).
+     Giai đoạn học sinh đã bắt đầu đăng ký: trang «Học sinh» bị bỏ qua, như ô dán («không thêm hay thay danh sách được nữa»). */
+  const TRANG_XL = [["hoc_sinh", "Học sinh"], ["giao_vien", "Giáo viên"], ["phong", "Phòng"]];
+  const TOI_DA_LOI_HIEN = 50, TOI_DA_MB = 5;
+  QT2.napExcel = function (c) {
+    const khoa = ["hs_dang_ky", "nhap_diem", "xuat"].includes(c.giai_doan);
+    let tep = null, xt = null;
+    const ten = h("p#dkExcelTen.dk-phu", {}, "Chưa chọn tệp.");
+    const xem = h("div#dkExcelXem.dk-excel-xem");
+    const pin = h("div#dkPin");
+    const nap = DK.nutVang("Nạp", function () { const b = this; DK.chay(b, napDi).then(() => { if (!tep) b.disabled = true; }); }, { id: "dkExcelNap", disabled: true });
+    const doc = (f) => new Promise((xong, hong) => { const r = new global.FileReader(); r.onload = () => xong(String(r.result).split(",").slice(1).join(",")); r.onerror = () => hong(r.error); r.readAsDataURL(f); });
+    const loiChu = (ma, tham) => DK.thongBao(DK.loiChu([{ code: ma, params: tham || {} }]), true);
+    const ve = () => {
+      const hang = TRANG_XL.map(([k, tenTrang]) => {
+        const m = xt[k];
+        if (k === "hoc_sinh" && xt.hs_bi_khoa) return [tenTrang, "Đã khoá", "—", "—", "—"];
+        if (!m.co) return [tenTrang, "Không có trang", "—", "—", "—"];
+        return [tenTrang, String(m.moi + m.da_co), String(m.moi), String(m.da_co), String(m.loi.length)];
+      });
+      const soLoi = TRANG_XL.reduce((a, [k]) => a + xt[k].loi.length, 0);
+      const chu = xt.co_the_nap ? "Sẽ nạp " + xt.so_hop_le + " dòng hợp lệ" + (soLoi ? ", bỏ qua " + soLoi + " dòng lỗi." : ".")
+        : (soLoi ? "Không có dòng hợp lệ nào. Sửa " + soLoi + " dòng lỗi dưới đây rồi chọn lại tệp." : "Tệp chưa có dòng dữ liệu nào (chỉ có hàng tiêu đề).");
+      const loi = TRANG_XL.filter(([k]) => xt[k].loi.length).map(([k, tenTrang]) => {
+        const ds = xt[k].loi;
+        return h("details.dk-excel-loi", { open: true, "data-trang": k }, h("summary", {}, "Trang «" + tenTrang + "»: " + ds.length + " dòng lỗi (bị bỏ qua)"),
+          DK.bang(["Dòng", "Lý do"], ds.slice(0, TOI_DA_LOI_HIEN).map((e) => [String(e.dong), DK.loiChu([{ code: e.ly_do, params: e.params }])])),
+          ds.length > TOI_DA_LOI_HIEN ? h("p.dk-phu", {}, "…và " + (ds.length - TOI_DA_LOI_HIEN) + " dòng lỗi nữa.") : null);
+      });
+      xem.replaceChildren(h("p#dkExcelTomTat.dk-excel-tomtat", {}, chu), DK.bang(["Trang", "Hợp lệ", "Mới", "Đã có", "Dòng lỗi"], hang),
+        h("p.dk-phu", {}, "«Đã có»: học sinh được cập nhật và giữ nguyên PIN; giáo viên và phòng đã có thì bỏ qua."), ...loi);
+    };
+    const chon = async (f) => {
+      tep = xt = null; nap.disabled = true; pin.replaceChildren(); xem.replaceChildren();
+      if (!f) { ten.textContent = "Chưa chọn tệp."; return; }
+      ten.textContent = f.name;
+      if (!/\.xlsx$/i.test(f.name)) return loiChu("dk_excel_khong_phai_xlsx");
+      if (f.size > TOI_DA_MB * 1048576) return loiChu("dk_excel_qua_lon", { max_mb: TOI_DA_MB });
+      let b64;
+      try { b64 = await doc(f); } catch (e) { return loiChu("dk_excel_khong_phai_xlsx"); }
+      const r = await DK.chay(null, () => DK.goi("dk_excel_xem_truoc", T(), b64, f.name, khoa));
+      if (!r.ok) return;
+      DK.thongBao("");
+      tep = { ten: f.name, b64 }; xt = r.data; ve(); nap.disabled = !xt.co_the_nap;
+    };
+    const napDi = async () => {
+      const r = await DK.goi("dk_excel_nap", T(), tep.b64, tep.ten, khoa);
+      if (!r.ok) return r;
+      const d = r.data, hs = d.hoc_sinh, gv = d.giao_vien;
+      const ds = hs.pin.map((x) => ({ ma: x.ma, ten: x.ten, lop: x.lop, pin: x.pin })).concat(gv.pin.map((x) => ({ ma: x.ma, ten: x.ten, pin: x.pin, vai: "gv" })));
+      pin.replaceChildren(ds.length ? QT2.phieuPin(ds, "Mã PIN vừa tạo (chỉ hiện lúc này)", "hs") : h("p.dk-phu", {}, "Không có tài khoản mới nên không có PIN mới."));
+      DK.thongBao("Đã nạp: học sinh mới " + hs.moi + " (cập nhật " + hs.da_co + "), giáo viên mới " + gv.moi + ", phòng mới " + d.phong.moi + "." + (d.loi.length ? " Bỏ qua " + d.loi.length + " dòng lỗi." : ""));
+      tep = xt = null; xem.replaceChildren(); ten.textContent = "Đã nạp. Chọn tệp khác để nạp tiếp.";
+      return r;
+    };
+    const mau = DK.nut("Tải file mẫu", function () { DK.chay(this, async () => {
+      const r = await DK.goi("dk_excel_mau", T()); if (!r.ok) return r;
+      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
+      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
+      DK.thongBao("Đã tải " + r.data.ten_tep + "."); return r; }); }, { id: "dkExcelMau" });
+    const inp = h("input#dkExcelTep", { type: "file", accept: ".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", hidden: true,
+      onchange: () => { const f = inp.files[0]; inp.value = ""; chon(f); } });
+    const tha = h("div#dkExcelTha.dk-tha", { role: "group", "aria-label": "Thả tệp Excel vào đây" },
+      h("span.dk-tha-chu", {}, "Kéo tệp .xlsx vào đây, hoặc"), DK.nut("Chọn tệp .xlsx", () => inp.click(), { id: "dkExcelChon" }), inp);
+    ["dragenter", "dragover"].forEach((ev) => tha.addEventListener(ev, (e) => { e.preventDefault(); tha.classList.add("keo"); }));
+    ["dragleave", "drop"].forEach((ev) => tha.addEventListener(ev, (e) => { e.preventDefault(); tha.classList.remove("keo"); }));
+    tha.addEventListener("drop", (e) => { chon(e.dataTransfer && e.dataTransfer.files[0]); });
+    return h("section#dkExcel.dk-khung", {}, h("h3", {}, "Nạp từ Excel"),
+      h("p.dk-phu", {}, "Một tệp .xlsx có ba trang: «Học sinh» (Mã HS, Họ tên, Lớp), «Giáo viên» (Họ tên), «Phòng» (Tên phòng, Sức chứa). Khối suy từ lớp. Nạp lại tệp đã sửa được: học sinh cũ giữ nguyên PIN."),
+      khoa ? h("p.dk-phu#dkExcelKhoa", {}, "Học sinh đã bắt đầu đăng ký nên trang «Học sinh» không được nạp.") : null,
+      h("div.dk-hang-nut", {}, mau), tha, ten, xem, nap, pin);
+  };
+
   /* ---------- A9: thẻ Cài đặt ---------- */
   QT2.caiDat = async function () {
     const c = (await DK.goi("dk_cai_dat_doc", T())).data || {};
@@ -186,6 +264,7 @@
       DK.theCon("Buổi và khối", sua ? h("p.dk-phu", {}, "Chỉ đổi được ở giai đoạn Chuẩn bị, khi chưa có CLB.") : h("p.dk-phu", {}, "Đã khoá: giáo viên đã đăng ký xong."), buoi, khoi, sua ? luuBk : null),
       DK.theCon("Giới hạn cho học sinh", nv, thi, luuGh),
       DK.theCon("Đổi mật khẩu quản trị", h("p.dk-phu", {}, "Mật khẩu mới có hiệu lực ngay; các máy quản trị khác bị đăng xuất."), mkCu, mkMoi, mkLai, doiMk)),
+      QT2.napExcel(c),
       h("p.dk-phu", {}, "Quản trị tự khoá sau 2 phút không thao tác. Số lần đã xuất Sổ nhập: " + (c.so_lan_xuat || 0) + "."));
   };
 

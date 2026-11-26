@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DK9-L2: khối «Nạp từ Excel» ở thẻ Cài đặt của cổng quản trị
+
+- `js/dang_ky_quan_tri_2.js`: `QT2.napExcel(c)` (chèn trong `QT2.caiDat`, dưới lưới thẻ): nút «Tải file mẫu», vùng thả + «Chọn tệp .xlsx», xem trước (bảng Hợp lệ / Mới / Đã có / Dòng lỗi mỗi trang; mỗi trang có dòng lỗi mở một bảng «Dòng · Lý do», tối đa 50 dòng hiện), MỘT nút vàng «Nạp» chỉ bật khi xem trước có ≥ 1 dòng hợp lệ, rồi phiếu PIN gộp học sinh và giáo viên (hiện một lần). Giai đoạn học sinh đã bắt đầu đăng ký: giao diện gửi `bo_hoc_sinh` nên trang «Học sinh» bị bỏ qua (như ô dán). `QT2.phieuPin`: nhãn đăng nhập theo từng phiếu (`x.vai`), không đổi hành vi cũ.
+- `api_dang_ky_excel.py`: tham số tuỳ chọn `bo_hoc_sinh=False` (mặc định = như L1) cho `dk_excel_xem_truoc` / `dk_excel_nap`; kết quả xem trước có thêm `hs_bi_khoa`.
+- `style.css` (khối cuối, chỉ `.dk-*`): `.dk-tha`, `.dk-excel-xem`, `.dk-excel-loi`. Giao diện chính không đổi.
+- Test mới: `tests/test_giao_dien_dk9_l2.py` (9, một fixture trang); `tests/test_dk9_nap_excel.py` thêm 1 (tổng 15). Không đổi schema, CSV, thuật toán; không sửa test cũ.
+
 ## 2026-11-26 — DK9-L1: nạp Excel cho cổng đăng ký (backend)
 
 - Mới `api_dang_ky_excel.py` (`DangKyExcelMixin`, ghép vào `PipelineAPI` ở `api.py`, đăng ký công khai-tự-kiểm-quyền ở `phan_quyen.py` như mọi hàm `dk_*`): `dk_excel_mau` (tệp mẫu: ba trang chỉ có tiêu đề + trang «Hướng dẫn» bị bỏ qua), `dk_excel_xem_truoc` (chỉ đọc: đếm mới / đã có / dòng lỗi kèm số dòng và lý do), `dk_excel_nap` (đọc lại tệp, nạp dòng hợp lệ qua `dk_phong_luu`, `dk_gv_tao_hang_loat`, `dk_hs_nap_danh_sach` chế độ "them"; học sinh cũ giữ PIN; PIN chỉ trả một lần). Chỉ quản trị. Giới hạn: .xlsx, ≤ 5 MB, ≤ 5 000 dòng mỗi trang. Không đổi schema, CSV, thuật toán, giao diện.

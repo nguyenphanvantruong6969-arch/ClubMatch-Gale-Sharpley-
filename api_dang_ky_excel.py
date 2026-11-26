@@ -195,9 +195,11 @@ class DangKyExcelMixin:
             loi.append(_loi_dong("phong", so_dong, ly))
         return hop_le, loi
 
-    def _dk_excel_ke_hoach(self, token, file_base64, ten_tep=""):
+    def _dk_excel_ke_hoach(self, token, file_base64, ten_tep="", bo_hoc_sinh=False):
         """Đọc + soát + đối chiếu CSDL (chỉ ĐỌC). Trả `{ke_hoach, tom_tat}`:
-        `ke_hoach[khoá]` = {hop_le: [...], moi: [...], da_co: [...], loi: [...]}; `tom_tat` là phần xem trước cho giao diện."""
+        `ke_hoach[khoá]` = {hop_le: [...], moi: [...], da_co: [...], loi: [...]}; `tom_tat` là phần xem trước cho giao diện.
+        `bo_hoc_sinh` (giao diện đặt ở giai đoạn học sinh đã bắt đầu đăng ký, như ô dán: «không thêm hay thay danh sách nữa») bỏ qua trang
+        «Học sinh»; mặc định False = hành vi như `dk_hs_nap_danh_sach` ("them" không có khoá giai đoạn ở máy chủ)."""
         def lam(cur, p):
             hang = self._dk_excel_doc(file_base64, ten_tep)
             _, (k_tu, k_den) = self._dk_buoi_khoi(cur)
@@ -205,6 +207,8 @@ class DangKyExcelMixin:
             co_gv = {r[0] for r in cur.execute("SELECT ten FROM dk_giao_vien")}
             co_ph = {r[0] for r in cur.execute("SELECT ten FROM dk_phong")}
             kh = {}
+            if bo_hoc_sinh:
+                hang.pop("hoc_sinh", None)
             if "hoc_sinh" in hang:
                 hl, loi = self._dk_excel_soat_hs(hang["hoc_sinh"], k_tu, k_den)
                 kh["hoc_sinh"] = dict(hop_le=hl, loi=loi, moi=[x for x in hl if x[1] not in co_hs], da_co=[x for x in hl if x[1] in co_hs])
@@ -214,7 +218,7 @@ class DangKyExcelMixin:
             if "phong" in hang:
                 hl, loi = self._dk_excel_soat_phong(hang["phong"])
                 kh["phong"] = dict(hop_le=hl, loi=loi, moi=[x for x in hl if x[1] not in co_ph], da_co=[x for x in hl if x[1] in co_ph])
-            tom = {"thieu_sheet": [k for k in TEN_TRANG if k not in kh]}
+            tom = {"thieu_sheet": [k for k in TEN_TRANG if k not in kh and not (bo_hoc_sinh and k == "hoc_sinh")], "hs_bi_khoa": bool(bo_hoc_sinh)}
             for k in TEN_TRANG:
                 m = kh.get(k)
                 tom[k] = {"co": m is not None, "tong": len(m["hop_le"]) + len(m["loi"]) if m else 0, "moi": len(m["moi"]) if m else 0,
@@ -266,18 +270,18 @@ class DangKyExcelMixin:
             return {"ten_tep": "MAU_DANG_KY.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii")}
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
-    def dk_excel_xem_truoc(self, token, file_base64, ten_tep=""):
+    def dk_excel_xem_truoc(self, token, file_base64, ten_tep="", bo_hoc_sinh=False):
         """Chỉ ĐỌC: trả `{hoc_sinh|giao_vien|phong: {co, tong, moi, da_co, loi: [{sheet, dong, ly_do, params}]}, thieu_sheet,
-        so_hop_le, co_the_nap}`. `da_co`: học sinh = sẽ được cập nhật (giữ PIN); giáo viên / phòng = sẽ bị bỏ qua. Không ghi gì (kể cả nhật ký)."""
-        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep)
+        so_hop_le, co_the_nap, hs_bi_khoa}`. `da_co`: học sinh = sẽ được cập nhật (giữ PIN); giáo viên / phòng = sẽ bị bỏ qua. Không ghi gì (kể cả nhật ký)."""
+        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep, bo_hoc_sinh)
         return _ok(r["data"]["tom_tat"]) if r["ok"] else r
 
-    def dk_excel_nap(self, token, file_base64, ten_tep=""):
+    def dk_excel_nap(self, token, file_base64, ten_tep="", bo_hoc_sinh=False):
         """Nạp các dòng hợp lệ, bỏ dòng lỗi và liệt kê chúng. Đọc lại tệp (không tin kết quả xem trước của máy khách).
         Trả `{hoc_sinh: {moi, da_co, pin: [{ma, pin, ten, lop}]}, giao_vien: {moi, da_co, pin: [{ma, ten, pin}]}, phong: {moi, da_co},
         loi: [...], thieu_sheet}`; PIN chỉ có trong lần trả này (CSDL chỉ lưu băm). Mỗi danh sách là một giao dịch của hàm có sẵn;
         nạp lại cùng tệp an toàn (idempotent) nếu một bước giữa chừng hỏng."""
-        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep)
+        r = self._dk_excel_ke_hoach(token, file_base64, ten_tep, bo_hoc_sinh)
         if not r["ok"]:
             return r
         kh, tom = r["data"]["ke_hoach"], r["data"]["tom_tat"]

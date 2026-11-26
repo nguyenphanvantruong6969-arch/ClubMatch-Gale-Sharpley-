@@ -272,3 +272,15 @@ def test_ten_co_dau_ma_so_va_khoang_trang_thua(cd):
     hs = {x["ma"]: x for x in ok(api.dk_hs_danh_sach(qt))}
     assert set(hs) == {"10002", "0007"} and hs["10002"]["ho_ten"] == "Đặng Thị Ánh" and hs["10002"]["lop"] == "10A1"
     assert r["giao_vien"]["pin"][0]["ten"] == "Cô Ngọc Ánh"
+
+
+def test_bo_hoc_sinh_khi_giao_dien_khoa_danh_sach_hoc_sinh(cd):
+    """Giai đoạn học sinh đã bắt đầu đăng ký: ô dán không thêm học sinh nữa; giao diện báo `bo_hoc_sinh` thì trang «Học sinh» bị bỏ qua."""
+    api, qt = cd
+    xt = ok(api.dk_excel_xem_truoc(qt, tep_tot(), "", True))
+    assert xt["hs_bi_khoa"] is True and xt["hoc_sinh"]["co"] is False and xt["hoc_sinh"]["moi"] == 0 and "hoc_sinh" not in xt["thieu_sheet"]
+    assert xt["giao_vien"]["moi"] == 2 and xt["phong"]["moi"] == 2
+    r = ok(api.dk_excel_nap(qt, tep_tot(), "", True))
+    assert r["hoc_sinh"]["moi"] == 0 and r["giao_vien"]["moi"] == 2 and r["phong"]["moi"] == 2
+    assert ok(api.dk_hs_danh_sach(qt)) == []
+    assert ok(api.dk_excel_xem_truoc(qt, tep_tot()))["hs_bi_khoa"] is False                    # mặc định: như cũ

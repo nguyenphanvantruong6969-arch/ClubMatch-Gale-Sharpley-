@@ -40,7 +40,7 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
   teachers/rooms; (e) not `.xlsx` / > 5 MB / no known sheet → error codes; (f) preview writes nothing (DB row counts
   unchanged); (g) non-admin token refused. Then `api_dang_ky_excel.py`: `dk_excel_mau(token)`,
   `dk_excel_xem_truoc(token, b64)` (read-only; counts new / already-present / error rows per sheet), `dk_excel_nap(token, b64)`.
-- [ ] **L2 (must) UI.** In `QT2.caiDat` (`js/dang_ky_quan_tri_2.js`) add the block «Nạp từ Excel» (card, `.dk-*` CSS only):
+- [x] **L2 (must) UI.** In `QT2.caiDat` (`js/dang_ky_quan_tri_2.js`) add the block «Nạp từ Excel» (card, `.dk-*` CSS only):
   drop zone + file button, «Tải file mẫu», preview table per sheet (valid / already there / errors with row + reason),
   one gold button «Nạp» enabled only after a preview with ≥ 1 valid row, then show PIN slips via `hienPin`/`phieuPin`
   (PINs appear once). Disabled students sheet in locked phases follows `khoa` as the paste box does. One Chromium
@@ -55,8 +55,8 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - No test weakened; `kiem_nhanh.py` 7/7 (invariant 1: no allocation change); ruff clean; CI green.
 
 ## Current state (overwrite each handoff)
-- L1 done locally: `api_dang_ky_excel.py` + tests (14 green), kiem_nhanh 7/7, ruff clean. L2 (UI block «Nạp từ Excel» in `QT2.caiDat`) next.
-- Row error reasons are i18n codes (`dk_excel_*`) in `loi[].ly_do`; preview/nap return `{hoc_sinh|giao_vien|phong: {co,tong,moi,da_co,loi}, thieu_sheet, so_hop_le, co_the_nap}`.
+- L1 + L2 done locally (tests: `test_dk9_nap_excel.py` 15, `test_giao_dien_dk9_l2.py` 9; related UI files green; kiem_nhanh 7/7; ruff clean). Next: push, CI green on head, then MILESTONE 1 (checker session), then close.
+- UI note: students sheet is skipped in locked phases via optional `bo_hoc_sinh` (backend default unchanged). Template download uses a Blob anchor (browser host); not testable in desktop WebView2 here.
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk8-giong-ban-mau` and `main`. Every push cancels running CI (~20 min).
@@ -64,6 +64,7 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 - Another session already used the name "DK8-L5" (input feedback) and Truong's visual pass is "DK8-L6"; DK9 lots are DK9-L1/L2.
 
 ## Files touched
+- L2: `js/dang_ky_quan_tri_2.js`, `style.css`, `tests/test_giao_dien_dk9_l2.py`, `api_dang_ky_excel.py` (`bo_hoc_sinh`).
 - L1: `api_dang_ky_excel.py` (new), `api.py`, `phan_quyen.py`, `i18n_errors.py`, `i18n_loi.js`, `tests/test_dk9_nap_excel.py`, CHANGELOG, TIEN_DO.
 
 ## Session log (append only, newest last)
@@ -71,3 +72,4 @@ Portal setup only; the MAIN app (`index.html`, Sổ nhập) is untouched. All sa
 |---|---|---|---|
 | 2026-11-26 | Sonnet (planner role at Truong's request) | Wrote this file and `DK9_GIAO_THUC.md` after two rounds of questions | No product code |
 | 2026-11-26 | Sonnet (coder) | L1 backend + 14 tests | merged dk8 + main first; L1 CI not awaited separately (L2 push covers the same head) |
+| 2026-11-26 | Sonnet (coder) | L2 UI + 9 Chromium tests, `bo_hoc_sinh` option | merged main + dk8 again; screenshots checked by eye |
