@@ -330,3 +330,5 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK5-L3 (diễn tập giao diện admin/giáo viên/học sinh) | xong ở máy, chờ CI | 2026-11-26 | CHANGELOG.md, SO_DANG_KY_33_MUC.md, CLAUDE_CHI_TIET.md | tests/test_giao_dien_dk5_toan_trinh.py (4) | |
 | DK6-L1 (tự làm mới: Danh sách + Nhập điểm; nhãn «Xếp ngoài nguyện vọng») | xong ở máy, chờ CI | 2026-11-26 | js/dang_ky_quan_tri.js, CHANGELOG.md | tests/test_giao_dien_dk6_l1.py (7) | |
 | DK6-L2 (đổi mật khẩu quản trị; Danh sách chia thẻ khối) | xong ở máy, chờ CI | 2026-11-26 | api_dang_ky.py, i18n_errors.py, i18n_loi.js, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, CHANGELOG.md | tests/test_dk6_doi_mat_khau.py (6), tests/test_giao_dien_dk6_l2.py (5) | |
+| DK6-L3 (giữ bản sao lưu trước khi xếp) | bỏ — cần đổi cách đặt tên / `_backup_db` (Needs Truong) | 2026-11-26 | CHANGELOG.md | – | |
+| DK6-L4 (tài liệu bắt đầu nhanh + xử lý sự cố; test gói phát hành) | xong ở máy, chờ CI | 2026-11-26 | docs/huong_dan/DK6_*.md, SO_DANG_KY_33_MUC.md, CLAUDE_CHI_TIET.md, CHANGELOG.md | tests/test_dk6_goi_phat_hanh.py (4) | |

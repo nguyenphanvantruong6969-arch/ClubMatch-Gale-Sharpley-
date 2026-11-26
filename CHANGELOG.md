@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DK6-L4: tài liệu cổng đăng ký + test gói phát hành (L3 bỏ)
+
+- `docs/huong_dan/DK6_BAT_DAU_NHANH.md` (cài đặt, thiết lập lần đầu, sáu giai đoạn `CAC_GIAI_DOAN`) và `docs/huong_dan/DK6_XU_LY_SU_CO.md` (quên PIN, quên mật khẩu quản trị — nói thật: chưa có đường đặt lại trong phần mềm, mất điện, **khôi phục sao lưu BẰNG TAY** theo quyết định A, thiếu WebView2).
+- Test mới `tests/test_dk6_goi_phat_hanh.py` (4): mọi tệp `dang_ky.html` nạp có trong kho và có trong `kiosk.spec`; mọi `js/dang_ky_*.js` đều được trang nạp; bước soát SHA256 của workflow kiểm đủ tệp gốc của cổng; `api.py` nạp hai mô-đun cổng. (`test_dong_goi_du_tep.py` cũ chỉ soát `index.html`/`recovery.html`.) `kiosk.spec` không cần sửa (đã gói `js/` nguyên cụm và `dang_ky.html`).
+- **L3 bỏ (không sửa mã):** bản sao lưu trước «Chốt và xếp» và bản «Sao lưu ngay» dùng chung `_backup_db` và cùng cách đặt tên, không có dấu hiệu phân biệt; bảo vệ bản trước khi xếp cần đổi cách đặt tên hoặc thêm khoá ghi nhớ trong `_backup_db` (dùng ở ~10 nơi, thuộc bước sao lưu của bất biến 5). Theo giao thức DK6: bỏ, ghi «Needs Truong». Tài liệu nói rõ giới hạn (chỉ giữ 10 bản; chép bản trước khi xếp đi ngay).
+- Sổ đăng ký: thêm dòng DK6 vào `SO_DANG_KY_33_MUC.md` (`ke_hoach_thay_doi.json` không có dòng DK nên không sửa). Số tệp test trong `CLAUDE_CHI_TIET.md`: 439. Không đổi schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK6-L2: đổi mật khẩu quản trị + «Danh sách» chia thẻ gấp theo khối
 
 - `api_dang_ky.py`: `dk_doi_mat_khau(token, mat_khau_cu, mat_khau_moi)` — chỉ quản trị; mật khẩu cũ phải đúng (`dk_mat_khau_cu_sai`), mới ≥ 4 ký tự (`dk_mat_khau_ngan`), băm lại với muối mới (`_bam`), nhật ký chỉ ghi `doi_mat_khau` (không ghi mật khẩu), huỷ mọi phiên quản trị KHÁC (phiên người gọi và phiên giáo viên/học sinh giữ nguyên). Không có bộ đếm sai riêng: phải đang đăng nhập quản trị mới gọi được. Hợp đồng `{ok,data,errors}`.

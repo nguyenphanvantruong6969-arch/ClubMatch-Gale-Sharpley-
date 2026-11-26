@@ -38,13 +38,13 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
     grade left open stays open after an auto-refresh.
   - Tests: NEW `tests/test_dk6_doi_mat_khau.py` (backend) + `tests/test_giao_dien_dk6_l2.py` (one Chromium file).
   - **MILESTONE 1 after L2.**
-- [ ] **L3 (optional) keep the pre-"Chốt và xếp" backup** — `api.py` (`_MAX_BACKUPS` rotation)
+- [~] **L3 (optional) DROPPED (see Needs Truong) keep the pre-"Chốt và xếp" backup** — `api.py` (`_MAX_BACKUPS` rotation)
   - Problem: repeated "Sao lưu ngay" can rotate out the backup taken before "Chốt và xếp". Fix: rotation never
     deletes the newest backup whose name marks it as pre-allocation (find the naming in `dang_ky_sang_xep.py` /
     `dk_sao_luu`); limit counts only the others. Touches the backup step of invariant 5: no other change.
   - Box: 12× "Sao lưu ngay" after a "Chốt và xếp" → pre-allocation file still exists, total ≤ `_MAX_BACKUPS` + 1.
   - Test: NEW `tests/test_dk6_giu_sao_luu.py`. If it needs a schema/naming change → skip lot, "Needs Truong".
-- [ ] **L4 (must) docs + build**
+- [x] **L4 (must) docs + build**
   - `docs/huong_dan/DK6_BAT_DAU_NHANH.md` (≤ 1 page: install, first setup, the 6 phases `CAC_GIAI_DOAN`).
   - `docs/huong_dan/DK6_XU_LY_SU_CO.md`: forgot student/teacher PIN, forgot admin password (state truthfully what
     exists), power loss mid-phase, restore backup BY HAND (decision A: which file, where, steps), WebView2 missing.
@@ -56,11 +56,20 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
   - **MILESTONE 2 after L4**, then CI gate (Linux + Windows + Build Windows executable green).
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 (b3daa55) + L2 committed locally; tests: dk6 l1 7/7, l2 5/5, doi_mat_khau 6/6; kiem_nhanh 7/7; ruff clean.
-- In progress: push L2, wait for CI green on head, then write MILESTONE 1. Then L3 (optional), L4.
+- Done: L1 b3daa55, L2 6eddc2b (pushed, CI run on that head pending at time of writing), L4 committed locally (not pushed: no push while CI for M1 head is in flight).
+- L3 dropped (see Needs Truong). Tests: dk6 l1 7, l2 5, doi_mat_khau 6, goi_phat_hanh 4; kiem_nhanh 7/7; ruff clean.
+- Next: wait CI green on 6eddc2b -> MILESTONE 1; push L4; wait CI -> MILESTONE 2; soat-ma tiers; CI gate; Status DONE.
 - Note: Playwright `clock.install()` makes `wait_for_function` hang (rAF faked) — use `wait_for_timeout` + assert.
-- Note: `dk_diem_dat` is admin-only here (no teacher token); "teacher saves score" is simulated with an admin token.
-- Note: Danh sách folds persist in `moDs` (js/dang_ky_quan_tri.js); a single grade opens by default (keeps test_giao_dien_dk4_mo_khoa).
+- Note: `dk_diem_dat` is admin-only here (no teacher token); "teacher saves score" simulated with an admin token.
+- Note: Danh sách folds persist in `moDs` (js/dang_ky_quan_tri.js); a single grade opens by default.
+
+## Needs Truong
+- L3 (keep pre-"Chốt và xếp" backup) dropped: `_backup_db` (api.py, ~10 callers) names every backup `app.db.bak-<ts>`; nothing marks the
+  pre-allocation one. Protecting it needs a naming change or a stored marker inside `_backup_db` (invariant 5 backup step). Docs tell users
+  to copy that file away right after "Chốt và xếp".
+- Portal admin password has NO reset path if forgotten (`QUEN_MAT_KHAU.bat` only clears main-app accounts). Needs a design decision
+  (e.g. a `--dat-lai-mat-khau-cong` command-line switch like `--xoa-tai-khoan`). Documented truthfully in DK6_XU_LY_SU_CO.md.
+- `dk_diem_dat` is admin-only, so teachers cannot enter scores concurrently (plan L1 assumed they could); auto-refresh still covers it.
 
 ## Decisions and gotchas (keep short)
 - Base is the integration branch, not main: before each lot `git fetch origin claude/loving-babbage-8yqo7d main` and
@@ -85,3 +94,4 @@ cooking"). Base = `claude/loving-babbage-8yqo7d` @ `c4486d3` (NOT yet in main). 
 | 2026-11-26 | Opus | Plan DK6 (4 lots, size M), protocol, coder prompt | no product code |
 | 2026-11-26 | Sonnet | L1 done: tuLamMoi on ds + nhap_diem viec; label+title | test file new |
 | 2026-11-26 | Sonnet | L2 done: dk_doi_mat_khau + UI, per-grade fold | 2 new test files + backend file |
+| 2026-11-26 | Sonnet | L3 dropped; L4 done: 2 guides + test_dk6_goi_phat_hanh + registry row | new test file, docs |
