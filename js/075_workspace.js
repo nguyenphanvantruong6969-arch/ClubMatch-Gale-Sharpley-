@@ -92,6 +92,12 @@ function initWorkspace() {
     if (wsWizard) wsGomBuoc();   // chữ đang gõ dở không được mất khi đổi ngôn ngữ
     wsVe();
   });
+  wsTaiTrangThai();
+}
+
+/* Hỏi trạng thái workspace (nhãn, tên, màn chọn). Gọi lúc khởi động và lại sau khi đăng nhập (js/16_tai_khoan.js):
+   có tài khoản mà chưa đăng nhập thì lần hỏi lúc khởi động bị cổng phân quyền từ chối. */
+function wsTaiTrangThai() {
   callApi("get_workspace_state").then((res) => {
     if (!res.ok) return;
     wsTrangThai = res.data;

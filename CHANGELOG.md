@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-26 — DN-NL (đăng nhập xong không nạp lại thẻ đang mở; ngoài sổ, Truong báo lỗi kèm ảnh)
+
+- Lỗi: có tài khoản mà chưa đăng nhập (mở máy, hoặc phiên hết 15 phút) thì mọi lời gọi lúc đó bị cổng phân quyền từ chối (`gt3_can_dang_nhap`). Sau khi đăng nhập, `taiLaiGiaoDien()` chỉ nạp lại thẻ Xếp CLB, nên thẻ đang mở (vd. Quản lý) giữ bản rỗng: ô chọn buổi 2/5 lựa chọn, ô lớp 1/7, ô CLB 0/13, bảng CLB 0/90 dòng cho tới khi bấm sang thẻ khác rồi quay lại. Trạng thái workspace (`get_workspace_state`: nhãn, tên, màn chọn) cũng không được hỏi lại; các thông báo đỏ «Cần đăng nhập» cũ nằm lại trên màn.
+- `js/16_tai_khoan.js` `taiLaiGiaoDien`: chạy SAU `capNhat()` (đã biết vai), nạp lại thẻ Xếp CLB + thẻ đang mở (qua `TAB_LOADERS`, bỏ qua thẻ vai đó không được xem), gọi `wsTaiTrangThai()`, gỡ thông báo có mã `gt3_can_dang_nhap`.
+- `js/075_workspace.js`: tách lời hỏi `get_workspace_state` của `initWorkspace` thành `wsTaiTrangThai()` (hành vi khởi động không đổi).
+- `js/00_nen.js` `showToast`: thông báo lỗi mang `data-ma` (mã lỗi) để gỡ có chọn lọc.
+- Test mới: `tests/test_giao_dien_gt3_dang_nhap.py::test_dang_nhap_xong_nap_lai_the_dang_mo_workspace_va_bo_thong_bao_cu` (đỏ trước khi sửa). Chỉ giao diện; không đổi backend, phân quyền, thuật toán, schema, CSV.
+
 ## 2026-11-26 — UX2-VB (vùng bấm UX2 ghi đè ::after riêng của nút; ngoài sổ, Truong yêu cầu trực tiếp)
 
 - Nguyên nhân chung: khối UX2-L3 `:where(button, .btn, [role="button"])` (độ ưu tiên 0) đặt `position: relative` cho nút và `::after` tuyệt đối ở tâm 50 %/50 %, `max(100%, 44px)`, `translate(-50%, -50%)`. Quy tắc riêng chỉ ghi đè MỘT phần thuộc tính nên phần còn lại của UX2 vẫn áp dụng.

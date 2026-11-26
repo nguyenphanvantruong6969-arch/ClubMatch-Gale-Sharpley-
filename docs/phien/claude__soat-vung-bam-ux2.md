@@ -102,6 +102,15 @@ Place it after test_1 (portal must be initialised; the module fixture is shared)
 - Tests: `tests/test_giao_dien_dk3_cong.py` 16 passed; with dk8_l5, ux2_nut, ux4_l2/l3/l4, dk8_l1, dk4_cong_vao: all pass.
   Screenshots checked: "Thêm tuỳ chọn ▾" arrow after text; ✓ badge at top-right.
 
+### Second fix on this branch: DN-NL (login does not reload the open tab)
+- Repro (Truong's screenshot): admin logs in while Quản lý is the open tab → dropdowns/table stay empty until
+  switching tabs; stale "Cần đăng nhập" toasts remain. Cause: `taiLaiGiaoDien` reloaded only the pipeline tab;
+  `get_workspace_state` denied pre-login was never retried.
+- Fix: js/16_tai_khoan.js `taiLaiGiaoDien` (after `capNhat`), js/075_workspace.js `wsTaiTrangThai`,
+  js/00_nen.js toast `data-ma`. Test added in tests/test_giao_dien_gt3_dang_nhap.py (RED before fix).
+- Not explained yet: the screenshot's "Chưa có dữ liệu" banner means the backend DB really had 0 students at
+  that moment (dash ok); likely an empty workspace was active. Ask Truong if it recurs after this fix.
+
 ## Decisions and gotchas
 - Python Playwright is not installed in this container (the project venv is missing); used the
   pre-installed Node Playwright as client and `python3` + `browser_host.serve` as server.
@@ -128,3 +137,4 @@ None. CSS only; no change to `compute_club_priority`, STB, `run_history`, pipeli
 |---|---|---|---|
 | 2026-11-26 | Opus | Verified 21cfdd4 fix at 3 widths; swept UX2 overrides; found F1, F2 | Report only |
 | 2026-11-26 | Opus | Fixed F1/F2 on Truong's request, tests first | Rule 11/12 (Opus plans only) waived by Truong's direct order |
+| 2026-11-26 | Opus | DN-NL: reload open tab + workspace state after login, clear stale toasts | Truong reported with screenshot |

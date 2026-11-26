@@ -149,3 +149,30 @@ def test_nhat_ky_thao_tac_hien_trong_hop_tai_khoan_cua_quan_tri(trang):
     assert "1 dòng" in page.inner_text("#tkNkTrang")
     assert page.is_disabled("#tkNkTruoc") and page.is_disabled("#tkNkSau")
     assert not loi, loi
+
+
+def test_dang_nhap_xong_nap_lai_the_dang_mo_workspace_va_bo_thong_bao_cu(trang):
+    """Thẻ đang mở sau lớp phủ đăng nhập (Quản lý) phải được nạp lại sau khi đăng nhập, không chỉ thẻ Xếp CLB;
+    trạng thái workspace hỏi lại; thông báo «Cần đăng nhập» của các lời gọi trước khi đăng nhập được gỡ."""
+    import base64
+    page, api, url, loi = trang
+    api.tao_tai_khoan("quantri", MK, "quan_tri")
+    with open(os.path.join(GOC, "du_lieu_test", "SO_NHAP_MAU_DAY_DU.xlsx"), "rb") as f:
+        assert api.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+    api.dang_xuat()
+    page.reload()
+    page.wait_for_selector("#tkNutDangNhap")
+    page.evaluate("doiThe('admin')")                       # thẻ Quản lý đang mở phía sau lớp phủ
+    page.wait_for_timeout(500)
+    goi = []
+    page.on("request", lambda r: goi.append(r.url.split("/__api__/")[-1].split("?")[0]) if "/__api__/" in r.url else None)
+    page.fill("#tkTen", "quantri")
+    page.fill("#tkMatKhau", MK)
+    page.click("#tkNutDangNhap")
+    page.wait_for_selector("#tkNutDangXuat")
+    page.wait_for_function("document.getElementById('adminLopLoc').options.length > 1"
+                           " && document.querySelectorAll('#view-admin tbody tr').length > 0", timeout=5000)
+    assert "get_workspace_state" in goi, goi
+    con = [x for x in page.locator("#toastStack .toast").all_inner_texts() if "Cần đăng nhập" in x]
+    assert con == [], con
+    assert not loi, loi
