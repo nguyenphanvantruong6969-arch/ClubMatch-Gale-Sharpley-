@@ -57,3 +57,15 @@ def test_da_co_du_lieu_khong_hien_loi_dan(mo, api):
     page.wait_for_function("document.getElementById('viecTiepTheo').dataset.trangThai !== 'nap_so'")
     assert page.locator("#ghiChuDangKy").is_hidden()
     assert not loi, loi
+
+
+def test_workspace_khong_phai_truong_hoc_khong_hien_loi_dan(mo):
+    """CI run 1689: lời dẫn dùng từ của trường học («học sinh», «giáo viên», «CLB») nên KHÔNG được hiện ở workspace có từ vựng
+    khác (ví dụ công ty). Cổng đăng ký chỉ dành cho trường học."""
+    page, loi = mo()
+    page.wait_for_function("document.getElementById('viecTiepTheo').dataset.trangThai === 'nap_so'")
+    assert page.locator("#ghiChuDangKy").is_visible()                                  # từ vựng mặc định (trường học): hiện
+    page.evaluate("window.I18N.applyLabels({person: {vi: 'Nhân viên', en: 'Employee'}, slot: {vi: 'Dự án', en: 'Project'}})")
+    page.wait_for_function("document.getElementById('ghiChuDangKy').hidden")           # đổi từ vựng sang công ty: ẩn
+    assert "học sinh" not in page.locator("#view-pipeline").inner_text()
+    assert not loi, loi

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-O: sửa CI đỏ run 1689 (lời dẫn DKL-I chỉ ở workspace trường học; số tệp test trong bản đồ)
+
+- `js/17_viec_tiep_theo.js`: lời dẫn sang cổng Đăng ký CLB (`#ghiChuDangKy`) chỉ hiện khi từ vựng workspace là mặc định trường học (`I18N.getLabels()`: Học sinh / Câu lạc bộ). Trước đó chữ «học sinh» lọt ra màn hình workspace công ty, làm đỏ `tests/test_ws_nhan_giao_dien.py::test_cong_ty_thay_tu_cua_minh_tren_man_hinh` (Linux 3/6).
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 428 → 432 (bốn tệp mới của DKL-I/K/M), làm đỏ `tests/test_a13_12_tai_lieu.py::test_ban_do_ma_so_tep_test_la_so_that` (Linux 2/6 và Windows 8/9).
+- Test mới: `tests/test_giao_dien_dkl_loi_dan_cong.py::test_workspace_khong_phai_truong_hoc_khong_hien_loi_dan` (đỏ trước, xanh sau). Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DKL-N: sửa DKL-M theo checker vòng 2 (tự cập nhật không được làm mất dữ liệu đang có)
 
 - `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi`): **không vẽ lại** khi (1) phiếu PIN vừa tạo còn hiện (`#dkPin`, chỉ hiện một lần), (2) có chữ đã gõ chưa lưu ở bất kỳ ô nhập nào (so với giá trị chụp lúc vẽ xong, kể cả khi con trỏ đã rời ô), (3) ô nhập đang focus, (4) hộp «Thay cả danh sách» đang mở; dấu cũ giữ nguyên nên vòng sau thử lại. Vẽ lại do chính vòng hỏi dùng dấu ĐÃ thấy (`dauCho`) thay vì đọc lại, để không bỏ sót thay đổi xen giữa (M3).
