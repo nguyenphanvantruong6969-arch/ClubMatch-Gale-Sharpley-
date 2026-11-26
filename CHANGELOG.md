@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-26 — DK8-L5: phản hồi tích cực cho nút và ô nhập của cổng
+
+- `js/dang_ky_nen.js`: `DK.phanHoi(nut, lam)` (DK.chay dùng nó nên mọi nút của cổng được hưởng): `.is-luu` lúc chạy, `.is-xong` (ok) / `.is-loi` (lỗi, ném lỗi) ~0,8 giây; chữ nút không đổi; vùng đọc màn hình `#dkPhanHoiLive`; nút vừa lưu mà màn được dựng lại thì dấu ✓ sang nút mới cùng id / cùng chữ duy nhất (MutationObserver ≤ 1,5 giây). Dấu hợp lệ CHỈ theo định dạng (`data-hl`): mã học sinh, PIN 4 chữ số, tên bắt buộc (tên giáo viên, tên CLB); KHÔNG ở nguyện vọng, huy chương, đáp án (bất biến 2).
+- `js/dang_ky_gv_hs.js`: màn «Đã gửi» có đúng một dấu ✓ vẽ một lần (tái dùng `ux2Xong`), tiêu đề giữ chữ.
+- `js/dang_ky_quan_tri_2.js`: hai chỗ trả `ok:true` giả khi lỗi nhập («Dán ít nhất một dòng trước.», «Hai lần nhập mật khẩu mới không giống nhau.») nay trả `ok:false` cùng nội dung thông báo, để không hiện ✓ cho thao tác lỗi.
+- `style.css` (khối cuối, chỉ `.dk-*`): chuyển động ≤ 600 ms, tắt khi `prefers-reduced-motion` (dấu vẫn hiện), dấu là `::after` cỡ cố định ở góc nên không đổi chữ/cỡ/bố cục; chặn luật UX2 chung `.btn.is-xong` làm nút cổng đổi đệm. Giao diện chính không đổi.
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`): dựng xong nội dung rồi mới hiện cả màn một lần. Trước đó khung rỗng hiện trước nên `tests/test_giao_dien_dk3_cong.py::test_9` (đếm `ol.dk-gd li` ngay khi thấy tiêu đề) đỏ từ DK8-L2; test không sửa.
+- Test mới: `tests/test_giao_dien_dk8_l5.py` (18). Không đổi backend, schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK8-L4: khổ hẹp 390 px và focus (chỉ thêm test)
 
 - `tests/test_giao_dien_dk8_l4.py` (2): không cuộn ngang ở trang đầu, đăng nhập, bốn thẻ quản trị, giáo viên (390 px); Tab đi qua ba thẻ vai trò, vòng focus hiện trên cả thẻ, Enter mở màn đăng nhập. Bảng khác biệt không còn dòng «còn khác». Không đổi mã sản phẩm.
