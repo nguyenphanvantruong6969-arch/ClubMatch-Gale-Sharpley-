@@ -27,7 +27,7 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   `<style>`; real uses `style.css` `.dk-*` rules (112 lines). Reuse v8 values; do not restyle the MAIN app.
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] **L1 (must) harness + shell.** NEW `du_lieu_test/chup_dk8.py`: builds the same SIMULATED state through the API
+- [x] **L1 (must) harness + shell.** NEW `du_lieu_test/chup_dk8.py`: builds the same SIMULATED state through the API
   (30 students, 6 teachers, 10 clubs, 3 rooms, like v8 "Demo nhỏ") and screenshots BOTH v8 (file://, password
   `admin123`, sample PINs on its landing page) and the real portal for this fixed list: landing; admin login; admin
   "Việc bây giờ" in phases 1,2,3,4,5,6; admin "Danh sách", "Cài đặt", "Thêm"; teacher login, teacher list, teacher
@@ -59,7 +59,10 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - `kiem_nhanh.py` 7/7 (invariant 1: no allocation change). No new library, no schema/CSV change.
 
 ## Current state (overwrite each handoff)
-- Done so far: plan only (Opus, 2026-11-26). Branch from `7c5dae5`. In progress: nothing.
+- Done: L1 (harness `du_lieu_test/chup_dk8.py`, `DK8_KHAC_BIET.md`, top bar, role cards, narrow login, `dk_trang_thai` counts `so_gv`/`so_da_gui`).
+  Local: L1 tests 8 + related UI tests green, ruff clean, kiem_nhanh 7/7. CI on L1 head: pending. Next: L2 (admin).
+- Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s for all 19 pairs).
+- Kept button labels for old tests (Đăng nhập / Đăng xuất / Quản trị / Tạo tài khoản giáo viên / Đóng đăng ký giáo viên).
 
 ## Decisions and gotchas (keep short)
 - Before each lot fetch and merge (`--no-edit`) `claude/dk6-hoan-thien-phat-hanh`, `claude/loving-babbage-8yqo7d`, `main`.
@@ -67,15 +70,20 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 - grep ALL tests for a UI string before changing it (DK6 broke a DK4 test that way).
 - Playwright `clock.install()` makes `wait_for_function` hang: use `wait_for_timeout` + assert.
 - Portal is school-vocabulary only; the MAIN app (`index.html`, `style.css` non-`.dk` rules) must not change look.
-- Adding `tests/test_*.py` → update the count in `docs/ke_hoach/CLAUDE_CHI_TIET.md`.
+- Adding `tests/test_*.py` → update the count in `docs/ke_hoach/CLAUDE_CHI_TIET.md` (at close).
+- v8 reloads its state from localStorage every 3 s: any harness change of `S` must call `save()`.
+- Role cards: whole card clickable via `.dk-cua-nut::after`; the button keeps the exact role name (tests use `exact=True`).
+- Top bar lives in `#dkTop` (outside `#dkApp`); `DK.hien` moves any `header.dk-dau` there.
 
 ## Next steps (ordered)
-1. Coder: L1 → L2 → MILESTONE 1 (auto checker) → L3 → (L4) → MILESTONE 2 (auto checker) → CI gate → DONE.
+1. Coder: (L1 done) L2 → MILESTONE 1 (auto checker) → L3 → (L4) → MILESTONE 2 (auto checker) → CI gate → DONE.
 
 ## Files touched
 - docs/phien/claude__dk8-giong-ban-mau.md, docs/phien/DK8_GIAO_THUC.md: plan
+- L1: api_dang_ky.py, dang_ky.html, js/dang_ky_{nen,quan_tri,gv_hs}.js, style.css (end block), du_lieu_test/chup_dk8.py, docs/phien/DK8_KHAC_BIET.md, tests/test_dk8_l1_dem_cong_khai.py, tests/test_giao_dien_dk8_l1.py
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-26 | Opus | Plan DK8 (visual parity with v8), auto protocol | no product code |
+| 2026-11-26 | Sonnet | L1 done: harness, shell (top bar, role cards, narrow login), public counts | CI pending |

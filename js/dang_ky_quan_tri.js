@@ -3,9 +3,7 @@
 (function (global) {
   "use strict";
   const DK = global.DK, h = DK.h;
-  const TEN_GD = { chuan_bi: "Chuẩn bị", gv_dang_ky: "Giáo viên đăng ký", duyet: "Duyệt CLB", hs_dang_ky: "Học sinh đăng ký",
-    nhap_diem: "Nhập điểm", xuat: "Xuất" };
-  const THU_TU = Object.keys(TEN_GD);
+  const TEN_GD = DK.TEN_GD, THU_TU = DK.THU_TU;          // DK8-L1: dùng chung với thanh trên (dang_ky_nen.js)
   let the = "viec";
 
   /* DK4-UI: thanh sáu giai đoạn (đã xong ✓ · hiện tại nổi · chưa tới) và hạn chót kèm thời gian còn lại. */
@@ -13,13 +11,7 @@
     const c = THU_TU.indexOf(gd);
     return h("li", n < c ? { class: "xong" } : n === c ? { class: "cur", "aria-current": "step" } : {}, h("span.dk-gd-so", {}, n < c ? "✓" : String(n + 1)), TEN_GD[k]);
   }));
-  const conLai = (han) => {
-    const ms = new Date(han).getTime() - Date.now();
-    if (isNaN(ms)) return "";
-    if (ms <= 0) return "đã hết hạn";
-    const ph = Math.round(ms / 60000);
-    return ph < 60 ? "còn " + ph + " phút" : ph < 2880 ? "còn " + Math.floor(ph / 60) + " giờ " + (ph % 60) + " phút" : "còn " + Math.floor(ph / 1440) + " ngày";
-  };
+  const conLai = DK.conLai;
   const hanChu = (tt) => tt.han_chot ? h("p.dk-han#dkHan", {}, "Hạn chót ", h("b", {}, String(tt.han_chot).replace("T", " ")), " · " + conLai(tt.han_chot) + ". Đến hạn tự đóng.")
     : h("p.dk-han#dkHan", {}, "Chưa đặt hạn chót. Quản trị đóng đăng ký bằng nút bên dưới.");
 

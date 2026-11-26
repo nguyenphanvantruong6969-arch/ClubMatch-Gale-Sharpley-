@@ -301,15 +301,18 @@ class DangKyMixin:
         return _ok({})
 
     def dk_trang_thai(self):
-        """Công khai: giai đoạn hiện tại, hạn chót, buổi, khối. Không có dữ liệu cá nhân."""
+        """Công khai: giai đoạn hiện tại, hạn chót, buổi, khối, hai số đếm (so_gv, so_da_gui). Không có dữ liệu cá nhân."""
         def lam(cur, _):
             if self._dk_cai_dat(cur, "mk_bam") is None:
                 return {"khoi_tao": False}
             buoi, khoi = self._dk_buoi_khoi(cur)
             gd = self._dk_giai_doan_hien_tai(cur)
             han = cur.execute("SELECT han_chot FROM dk_giai_doan WHERE ten = ?", (gd,)).fetchone()
+            # DK8-L1: hai SỐ ĐẾM (không tên, không mã) cho thẻ vai trò ở trang đầu (v8: «N giáo viên đã đăng ký», «N em đã gửi»).
+            so_gv = cur.execute("SELECT COUNT(*) FROM dk_giao_vien").fetchone()[0]
+            so_da_gui = cur.execute("SELECT COUNT(*) FROM dk_hoc_sinh WHERE nop_luc IS NOT NULL").fetchone()[0]
             return {"khoi_tao": True, "giai_doan": gd, "han_chot": han[0] if han else None, "buoi": buoi, "khoi": khoi,
-                    **dict(zip(("toi_da_nv", "toi_da_thi"), self._dk_gioi_han(cur)))}
+                    **dict(zip(("toi_da_nv", "toi_da_thi"), self._dk_gioi_han(cur))), "so_gv": so_gv, "so_da_gui": so_da_gui}
         return self._dk_chay(lam)
 
     def dk_dau_van_tay(self):

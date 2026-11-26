@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-26 — DK8-L1: khung cổng giống bản mẫu v8 (thanh trên, thẻ vai trò, đăng nhập hẹp)
+
+- `du_lieu_test/chup_dk8.py` (mới): chụp CẶP màn hình v8 / cổng thật (19 màn, dữ liệu MÔ PHỎNG, ảnh không commit); `docs/phien/DK8_KHAC_BIET.md` (mới): bảng khác biệt theo màn × lô.
+- `dang_ky.html` (thêm `#dkTop`), `js/dang_ky_nen.js` (thanh trên dính `DK.dauTren`: thương hiệu + chip «Giai đoạn k/6 · tên» + vai trò + «Đăng xuất» + lối về phần mềm xếp; trang đầu = ba thẻ vai trò `DK.theVaiTro` + `DK.chipVai`; đăng nhập/thiết lập/GV tự đăng ký trong cột hẹp `DK.hep`, nút vàng rộng hết thẻ), `js/dang_ky_quan_tri.js` (dùng `DK.TEN_GD`, `DK.conLai` chung), `js/dang_ky_gv_hs.js` (lưu `DK.S.tt`), `style.css` (khối DK8-L1, chỉ `.dk-*`).
+- `api_dang_ky.py`: `dk_trang_thai` (công khai) trả thêm `so_gv`, `so_da_gui` — chỉ số đếm, không tên/mã. Giữ nhãn nút cũ («Đăng nhập», «Đăng xuất», «Quản trị»).
+- Test mới: `tests/test_dk8_l1_dem_cong_khai.py` (3), `tests/test_giao_dien_dk8_l1.py` (5). Không đổi schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK6 fix 1 (CI run 1699, Linux 3/6): test cũ DK4 còn kiểm nhãn cũ
 
 - `tests/test_giao_dien_dk4_chot_xep.py` dòng 45: «Ngoài nguyện vọng: 1» → «Xếp ngoài nguyện vọng: 1» (nhãn đổi ở DK6-L1; test cũ bị bỏ sót vì lần chạy cục bộ chỉ chọn vài test liên quan). Không đổi mã sản phẩm.

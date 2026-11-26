@@ -3597,3 +3597,41 @@ a.nav-item { text-decoration: none; }
   #dkIn.mo, #dkIn.mo * { visibility: visible; }
   #dkIn.mo { position: absolute; left: 0; top: 0; width: 100%; }
 }
+
+/* ===== DK8-L1: khung cổng giống bản mẫu v8 (docs/phien/DK1_BAN_MAU_V8.html). CHỈ selector .dk-*; giao diện chính không đổi. ===== */
+.dk-body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.dk-app { gap: 20px; padding: 20px 16px 48px; }
+.dk-khung { border-radius: 10px; padding: 18px; gap: 14px; }
+.dk-app h1.dk-tieude { font-size: 1.6rem; }
+.dk-app h2 { font-size: 1.2rem; }
+.dk-app .btn-secondary, .dk-dau .btn-secondary { background: var(--paper-raised); }
+.dk-app .btn-secondary:hover:not(:disabled) { background: var(--paper-hover); }
+.dk-app .btn-primary.dk-day { width: 100%; }
+/* thanh trên dính: thương hiệu · chip giai đoạn · (vai trò · tên · lối về phần mềm · Đăng xuất) */
+.dk-dau { position: sticky; top: 0; z-index: 5; display: block; background: var(--paper-raised); border-bottom: 1px solid var(--hairline); padding: 0; }
+.dk-top-in { max-width: 1180px; margin: 0 auto; padding: 4px 16px; min-height: 56px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-sizing: border-box; }
+.dk-thuong-hieu { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.dk-vai { font-size: 0.95rem; }
+.dk-top-in .dk-chip { align-self: center; }
+.dk-dau .btn { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+.dk-dau .btn-ghost { border: 1px solid var(--hairline); color: var(--ink); }
+.dk-dau .btn:focus-visible, .dk-dau a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.dk-top-in .dk-ve-phan-mem { margin: 0; font-size: 0.9rem; }
+/* trang đầu: ba thẻ vai trò */
+.dk-dau-trang { display: flex; flex-direction: column; gap: 4px; }
+.dk-cuas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.dk-cua { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 22px; min-height: 150px; box-sizing: border-box;
+  background: var(--paper-raised); border: 1px solid var(--hairline); border-radius: 10px; }
+.dk-cua:hover { background: var(--paper-hover); }
+.dk-cua:has(.dk-cua-nut:focus-visible) { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.dk-cua-vai { margin: 0; font-size: 1.3rem; }
+.dk-cua-nut { font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; background: none; border: 0; padding: 0; margin: 0; text-align: left; color: var(--ink); cursor: pointer; }
+.dk-cua-nut::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }       /* cả thẻ bấm được */
+.dk-cua-nut:focus-visible { outline: none; }
+.dk-cua-md { margin: 0; color: var(--slate); font-weight: 600; }
+.dk-cua .dk-chip { align-self: stretch; }
+.dk-cua-dem { margin: 0; color: var(--slate); font-size: 0.85rem; font-weight: 600; }
+/* đăng nhập / thiết lập: cột hẹp giữa trang */
+.dk-hep { max-width: 480px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; }
+.dk-hep > .btn-ghost { align-self: flex-start; padding: 0 6px; color: var(--slate); font-weight: 500; }
+@media (max-width: 480px) { .dk-top-in { padding: 4px 12px; } .dk-cua { padding: 16px; min-height: 0; } }

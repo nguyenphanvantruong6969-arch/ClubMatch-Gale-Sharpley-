@@ -30,7 +30,7 @@
   /* ============================== giáo viên ============================== */
   DK.giaoVien = async function (sua) {
     const T = DK.S.token;
-    const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
+    const tt = DK.S.tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     const ds = (await DK.goi("dk_clb_danh_sach", T)).data || [];
     const mo = tt.giai_doan === "gv_dang_ky";
     const danh = h("ul.dk-ds", {}, ds.map((c) => h("li", {}, h("span.dk-than", {}, h("strong", {}, c.ten), " · " + c.buoi + " · " + c.loai,
@@ -109,7 +109,7 @@
   /* ============================== học sinh ============================== */
   DK.hocSinh = async function () {
     const T = DK.S.token;
-    const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
+    const tt = DK.S.tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     if (tt.giai_doan !== "hs_dang_ky") {
       DK.hien(DK.thanhDau("Học sinh"), DK.khung(SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký" : "Chưa mở đăng ký",
         h("p#dkHsDong", {}, SAU_HS.includes(tt.giai_doan) ? "Đã hết hạn đăng ký. Nguyện vọng em đã gửi vẫn được tính." : "Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo."),
