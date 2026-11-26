@@ -3721,4 +3721,3 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 /* màn «Đã gửi»: dấu ✓ vẽ một lần (hoạt ảnh ux2Xong có sẵn qua lớp .ux2-xong) */
 .dk-xong-dau { position: relative; flex: none; width: 30px; height: 30px; margin: 0; border-radius: 50%; background: var(--moss); }
 .dk-xong-dau::after { content: ""; position: absolute; left: 9px; top: 8px; width: 11px; height: 6px; border-left: 3px solid #fff; border-bottom: 3px solid #fff; transform: rotate(-45deg); }
-#dkTop { display: contents; }      /* DK8-L6: thanh trên dính theo cả trang (nếu không, vùng chứa chỉ cao bằng thanh nên nó trôi đi khi cuộn) */

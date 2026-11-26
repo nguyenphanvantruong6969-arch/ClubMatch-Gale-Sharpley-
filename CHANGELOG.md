@@ -3,7 +3,7 @@
 ## 2026-11-26 — DK8-L6: chỉnh giao diện cổng sau khi soát màn hình (Truong yêu cầu)
 
 - `js/dang_ky_nen.js`: thứ tự thẻ vai trò **Giáo viên → Học sinh → Quản trị** (Truong); dòng đếm luôn có (có thể trống) và chip dồn xuống đáy thẻ nên ba chip cùng một hàng; logo «RB» ở thanh trên. `js/dang_ky_quan_tri.js`: tab «Thêm» vẽ mũi tên bằng CSS (tên truy cập «Thêm»); «Danh sách» có trạng thái trống kèm nút đi tới nơi thêm (ẩn khi danh sách đã khoá). `js/dang_ky_quan_tri_2.js`: cảnh báo «Chưa đi tiếp được» thành khối đỏ nhạt có biểu tượng, `role="alert"`.
-- `style.css` (khối DK8-L6, chỉ `.dk-*`): thẻ vai trò cao hơn, chữ to hơn; dòng đếm `.dk-dem` bỏ chữ mono cỡ nhỏ. Giao diện chính không đổi. `#dkTop { display: contents }`: thanh trên của cổng thật sự dính khi cuộn (trước đó vùng chứa chỉ cao bằng thanh; test cũ chỉ qua vì trang ngắn).
+- `style.css` (khối DK8-L6, chỉ `.dk-*`): thẻ vai trò cao hơn, chữ to hơn; dòng đếm `.dk-dem` bỏ chữ mono cỡ nhỏ. Giao diện chính không đổi.
 - Test cũ chỉ đổi chỉ số thẻ và tên tab: `tests/test_giao_dien_dk8_l1.py`, `_l2.py`, `_l4.py`. Không đổi backend, schema, CSV, thuật toán.
 ## 2026-11-26 — DK8-L5: phản hồi tích cực cho nút và ô nhập của cổng
 
