@@ -25,7 +25,7 @@
 
   DK.quanTri = async function (tuDong) {          // tuDong = tự làm mới (DKL-M: hỏi dấu vân tay mỗi 5 giây): KHÔNG tính là thao tác, không đặt lại đồng hồ nghỉ
     if (!tuDong) DK.henGio(DK.GIAY_NGHI_QUAN_TRI, "Đã khoá quản lý vì không thao tác.");   // = GIAY_NGHI_QUAN_TRI của api_dang_ky.py (120 s, v8: 2 phút)
-    if (DK.QT2) DK.QT2.tuLamMoi(false);
+    if (DK.QT2) DK.QT2.tuLamMoi(false, !!tuDong);      // DKL-P: vẽ lại do vòng hỏi thì giữ dấu ĐÃ thấy (dauCho) cho lần bật lại
     const tt = (await global.RBDA.callApi("dk_trang_thai")).data;
     if (DK.S.vai !== "quan_tri") return;             // đã tự khoá/đăng xuất trong lúc chờ: không vẽ đè lên trang đầu
     DK.S.tt = tt;

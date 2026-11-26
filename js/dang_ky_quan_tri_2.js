@@ -217,9 +217,9 @@
     if (hop && !hop.hidden) return true;                                            // hộp xác nhận đang mở
     return Array.from(cacO()).some((x) => x.dataset.v0 !== undefined && x.value !== x.dataset.v0);   // chữ chưa lưu
   };
-  QT2.tuLamMoi = function (bat) {
+  QT2.tuLamMoi = function (bat, giuDau) {
     clearInterval(dongHo); dongHo = null;
-    if (!bat) { dauCho = null; return; }                                           // vẽ lại thủ công / rời màn: bỏ dấu đang chờ
+    if (!bat) { if (!giuDau) dauCho = null; return; }                                           // vẽ lại thủ công / rời màn: bỏ dấu đang chờ
     chupO();
     if (dauCho !== null) { dauCu = dauCho; dauCho = null; }                         // vẽ lại do chính vòng hỏi: dùng dấu ĐÃ thấy, không đọc lại (tránh bỏ sót thay đổi xen giữa)
     else layDau().then((d) => { dauCu = d; });

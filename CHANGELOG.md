@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-26 — DKL-P: đóng mục M3 của checker vòng 3 (vẽ lại do vòng hỏi dùng đúng dấu đã thấy)
+
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`) gọi `DK.QT2.tuLamMoi(false, !!tuDong)`; `js/dang_ky_quan_tri_2.js` (`QT2.tuLamMoi(bat, giuDau)`): khi vẽ lại là do chính vòng hỏi thì KHÔNG xoá dấu đã thấy (`dauCho`), nên lần bật lại dùng nó thay vì gọi `dk_dau_van_tay` thêm lần nữa (trước đây mã đó chết vì `tuLamMoi(false)` xoá `dauCho` trước, mở cửa sổ ~100–300 ms làm một thay đổi xen giữa bị coi như đã thấy). Vẽ lại thủ công / rời màn vẫn xoá `dauCho` và dừng vòng hỏi cũ như trước.
+- Test mới: `tests/test_giao_dien_dkl_m_lam_moi.py::test_6` (đếm lời gọi `dk_dau_van_tay` sau một thay đổi + một vòng hỏi = đúng 1; đỏ trước, xanh sau). Không đổi backend, schema, CSV, thuật toán; không thêm tệp test (số tệp vẫn 435).
+
 ## 2026-11-26 — DKL-O: sửa CI đỏ run 1689 (lời dẫn DKL-I chỉ ở workspace trường học; số tệp test trong bản đồ)
 
 - `js/17_viec_tiep_theo.js`: lời dẫn sang cổng Đăng ký CLB (`#ghiChuDangKy`) chỉ hiện khi từ vựng workspace là mặc định trường học (`I18N.getLabels()`: Học sinh / Câu lạc bộ). Trước đó chữ «học sinh» lọt ra màn hình workspace công ty, làm đỏ `tests/test_ws_nhan_giao_dien.py::test_cong_ty_thay_tu_cua_minh_tren_man_hinh` (Linux 3/6).

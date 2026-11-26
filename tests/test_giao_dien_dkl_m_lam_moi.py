@@ -151,3 +151,18 @@ def test_5_chu_dang_go_chua_luu_khong_bi_xoa_ke_ca_khi_da_roi_o_nhap(cong_gv):
     pg.clock.fast_forward(12_000)
     pg.wait_for_function("document.querySelector('.dk-noidung') !== window.__moc", timeout=5000)
     assert not pg.loi, pg.loi
+
+
+def test_6_ve_lai_do_vong_hoi_dung_dau_da_thay_khong_doc_lai(cong):
+    """Checker vòng 3, M3: vẽ lại do chính vòng hỏi phải dùng dấu ĐÃ thấy (`dauCho`), không gọi `dk_dau_van_tay` thêm lần nữa
+    (nếu đọc lại, thay đổi lọt vào giữa lúc hỏi và lúc đọc lại bị coi như đã thấy)."""
+    pg = cong
+    pg.wait_for_timeout(300)
+    pg.evaluate("""() => { window.__nDau = 0; const g = window.RBDA.callApi;
+        window.RBDA.callApi = function (ten, ...a) { if (ten === 'dk_dau_van_tay') window.__nDau++; return g.call(this, ten, ...a); }; }""")
+    _ok(pg.api.dk_clb_duyet(pg.qt, pg.ids[0], "duyet"))                              # một thay đổi từ nơi khác
+    pg.clock.fast_forward(6_000)                                                    # đúng một vòng hỏi
+    pg.wait_for_selector("tr:has-text('Cờ vua') >> text=Đã duyệt", timeout=5000)
+    pg.wait_for_timeout(500)
+    assert pg.evaluate("window.__nDau") == 1, "vẽ lại do vòng hỏi lại đọc dấu thêm một lần"
+    assert not pg.loi, pg.loi
