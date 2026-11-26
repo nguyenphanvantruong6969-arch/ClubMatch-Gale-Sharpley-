@@ -36,6 +36,26 @@
 - `js/dang_ky_gv_hs.js` (`vRank`, `vTests`): câu «Giới hạn N CLB tính riêng cho từng buổi (không phải cả tuần)» ở bước xếp nguyện vọng; khi đủ: «Buổi X đã đủ N CLB … bấm ✕ để bỏ bớt», nút «+ Thêm» khoá có `title` nêu lý do. Bước bài kiểm tra: câu «Giới hạn M bài thi tính riêng cho từng buổi», khi đủ «Buổi X đã tick đủ M bài thi … bỏ tick một CLB trước», ô tick bị khoá có `title`. Không đổi backend, schema, CSV hay thuật toán.
 - Test mới: `test_giao_dien_dkl_hoc_sinh.py::test_3d_gioi_han_nguyen_vong_va_bai_thi_noi_ro_la_tinh_rieng_tung_buoi` (đặt giới hạn 3 và 1 để chạm trần, trả 10 và 5 ở cuối).
 
+## 2026-11-26 — DK5-CI: sửa đỏ run 1683 (chỉ `du_lieu_test/dien_tap_dk5.py`)
+
+- Máy CI Windows chạy pha «học sinh nộp» (798 em) lâu hơn 120 s nên phiên quản trị hết giờ nghỉ (`dk_het_phien_nghi`). Bộ sinh nay đăng nhập quản trị lại đầu mỗi pha `duyet`, `hoc_sinh_nop`, `nhap_diem`. Không đổi test, không đổi mã sản phẩm.
+
+## 2026-11-26 — DK5-L3: diễn tập qua giao diện, ba vai trò (chỉ tệp mới)
+
+- `tests/test_giao_dien_dk5_toan_trinh.py` (4, Playwright): giáo viên tạo CLB Tự do bằng giao diện và chỉ thấy CLB của mình → quản trị «Đóng ngay», duyệt, «Mở cho học sinh» → học sinh H01 chọn ba CLB, đánh dấu thi, gửi, thấy «Đã gửi lúc …» và link bài thi → quản trị dán điểm, «Chốt và xếp», thấy «Đã xếp». Bộ dữ liệu nhỏ (24 em, 3 CLB), MÔ PHỎNG.
+- Sổ đăng ký: thêm hàng DK5; `CLAUDE_CHI_TIET.md`: 431 tệp test.
+
+## 2026-11-26 — DK5-L2: vùng chịu lỗi của diễn tập (chỉ tệp mới)
+
+- `tests/test_dk5_vung_chiu_loi.py` (6): (a) sao lưu → khôi phục (chép `.bak` sang chỗ khác) giống từng dòng 7 bảng; (b) khoá khi nghỉ (đồng hồ giả `_dong_ho`: 119 s còn dùng, +121 s khoá); (c) quá hạn chót (đồng hồ giả `_dk_bay_gio`): nộp bị từ chối `dk_hs_chua_mo`, lần nộp cũ còn nguyên; (d) nộp lại chỉ giữ lần cuối; (e) lỗi giả lập TRONG giao dịch ghi của `run_pipeline` (sau kết quả + khoá STB, trước `run_history`) → mọi bảng nguyên trạng (băm), `stb_lock` chưa khoá, +1 dòng `dk_nhat_ky`; (f) `run_history` chỉ thêm, hạt giống khác bị từ chối.
+- `dien_tap_dk5.chay(..., dung_den="nhap_diem")` để dừng trước «Chốt và xếp». Không sửa tệp sản phẩm.
+
+## 2026-11-26 — DK5-L1: diễn tập toàn trình 798 HS / 40 CLB (chỉ tệp mới)
+
+- `du_lieu_test/dien_tap_dk5.py`: bộ sinh tất định (`random.Random(seed)`, không `hash()`) + `chay()` đi qua API DK3/DK4: cài đặt → giáo viên (một nửa tự đăng ký, một nửa quản trị tạo) → duyệt → 798 em nộp xen kẽ 4 máy → nhập điểm → «Chốt và xếp» → xuất Sổ nhập. Dữ liệu MÔ PHỎNG.
+- Test mới: `tests/test_dk5_dien_tap.py` (6): sinh tất định, 1 dòng kết quả/em/buổi, `run_history` +1, nộp xen kẽ ≥ 4 máy, xuất Sổ nhập, ngân sách thời gian (≈ 10 s ở máy này).
+- Không sửa tệp sản phẩm. Phát hiện (chưa sửa): `dk_phong_luu` trả `phong_id` = `lastrowid` SAU dòng nhật ký nên lệch 1 — xem "Needs Truong" ở tệp nhánh.
+
 ## 2026-11-26 — DKL-G: bốn khoảng cách còn lại với bản mẫu v8 (cổng đăng ký)
 
 - **G1 xác nhận danh tính** (`js/dang_ky_gv_hs.js`, `js/dang_ky_nen.js`): sau đăng nhập học sinh thấy «Đúng là em chứ?» (tên, «Lớp … · Khối … · Mã …», câu «Em đã gửi lúc … lần gửi cuối cùng được tính.» nếu đã nộp), nút «Đúng là em» / «Không phải em» (đăng xuất). Dùng dữ liệu đăng nhập đã trả về (`ten`, `lop`, `khoi`, `id`); không lưu PIN.
