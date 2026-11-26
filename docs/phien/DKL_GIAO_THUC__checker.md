@@ -1,3 +1,33 @@
+# DKL checker report — ROUND 3 (Sonnet) — head 80ef1be (integration: DK3+DK4+DKL+H..O+DK5), branch claude/loving-babbage-8yqo7d, 2026-11-26
+
+**VERDICT: FIX (một mục THẤP, M3; mọi thứ khác PASS).** Không có rủi ro mất dữ liệu; M3 chỉ là cửa sổ lệch ~100–300 ms làm màn cũ thêm một vòng. Nếu Truong chấp nhận rủi ro thấp này thì có thể gộp; nếu muốn đóng hẳn mục vòng 2 thì sửa như dưới.
+
+Head checked: 80ef1be (= origin/claude/loving-babbage-8yqo7d, no move). Env: Python 3.11 venv, Chromium, tests run for real.
+
+## CI (verified, not trusted) — PASS
+Run 45729479268 on head 80ef1be: all 17 jobs `success`: Lint (ruff), Linux 1/6…6/6 (full + real UI), Windows 1/9…9/9, coverage ≥ 85 %. (Linux 1/6 ran the «no UI test skipped» step; others skipped it by design.)
+
+## 1. Round-2 items closed by DKL-N (ea30610)
+- **M1 PIN list not wiped — PASS.** `test_4` PASS; own check: create PIN, switch tab «Danh sách» and back, data change + 12 s → screen redraws (not stuck forever; PIN box gone only because the tab was re-entered).
+- **M2 typed text survives blur — PASS.** `test_5` PASS; own checks: type «abc» then delete back to «» → redraw resumes (PASS); a `<select>` changed but not saved in the duyệt phase, blurred, data change + 12 s → `.dk-noidung` NOT replaced (PASS). «Thay cả danh sách» box: guard `#dkThayHop` read in `coThuSeMat()`, not run in browser.
+- **M3 re-arm uses fingerprint already seen — FIX (Low).** The code in `QT2.tuLamMoi` is right but dead: `DK.quanTri` (js/dang_ky_quan_tri.js, first lines) calls `DK.QT2.tuLamMoi(false)` on EVERY redraw, including the automatic one; that sets `dauCho = null` before the final `tuLamMoi(true)`, so re-arm always takes the `else layDau()` branch. Measured with a spy on `RBDA.callApi`: one data change + auto-redraw → `dk_dau_van_tay` called **2** times (poll + re-arm read), expected 1. No test covers it (test_4/5 do not count calls).
+  **Change:** js/dang_ky_quan_tri.js line `if (DK.QT2) DK.QT2.tuLamMoi(false);` → `if (DK.QT2 && !tuDong) DK.QT2.tuLamMoi(false);` (the auto-redraw path then keeps `dauCho`; a failed/aborted auto-redraw is harmless: next interval sets `dauCho` again). Add test: spy counts `dk_dau_van_tay` == 1 after one change + 6 s (my scratch `test_m3_khong_doc_lai_dau` fails 2≠1 today, passes after fix).
+- **Docs:** `git grep '^<<<<<<<\|^>>>>>>>'` → none in any tracked file; TIEN_DO table has no blank line inside it (rows DKL-H…O, DK5-L1…L3 contiguous); CHANGELOG DKL-M says «chế độ nhật ký là DELETE nên không có tệp WAL» — PASS.
+
+## 2. DKL-O (0ddc2b3) — PASS
+`test_giao_dien_dkl_loi_dan_cong.py` (3) + `test_ws_nhan_giao_dien.py::test_cong_ty_thay_tu_cua_minh_tren_man_hinh` PASS (hint visible only with default school vocabulary, hidden for company vocabulary). CLAUDE_CHI_TIET says 435; `ls tests/test_*.py | wc -l` = 435.
+
+## 3. DK5 merge (80ef1be) — PASS
+`git diff 0ddc2b3..80ef1be --stat`: only du_lieu_test/dien_tap_dk5.py, tests/test_dk5_dien_tap.py, tests/test_dk5_vung_chiu_loi.py, tests/test_giao_dien_dk5_toan_trinh.py + CHANGELOG, TIEN_DO, SO_DANG_KY_33_MUC, CLAUDE_CHI_TIET, docs/phien/*. No api*.py, js, i18n*, index.html, pipeline, so_nhap file changed.
+Run: `tests/test_dk5_*.py tests/test_giao_dien_dk5_toan_trinh.py tests/test_giao_dien_dkl_*.py tests/test_dkl_*.py tests/test_a13_12_tai_lieu.py` + the ws test → **62 passed in 73.64s**.
+
+## 4. Standing checks — PASS
+`ruff check .` clean. `kiem_nhanh.py` **7/7** (trung_khit runnable this time: 15 cases byte-identical). Invariants 1–8: `git diff --stat 42b93af..HEAD` on rbda_priority_pipeline.py, dang_ky_schema.py, so_nhap.py, dk2_so_nhap.py, fa_daa.py, api.py → empty (no algorithm/schema/CSV change). `git merge-tree --write-tree --name-only origin/main HEAD` → clean tree (37cda1b), no conflict; origin/main still d106262.
+
+**Kết luận:** merge-ready về an toàn dữ liệu và CI; còn đúng một sửa nhỏ M3 (1 dòng + 1 test) để đóng mục vòng 2.
+
+---
+
 # DKL checker report — ROUND 2 (Sonnet) — head f2db78f, branch claude/loving-babbage-8yqo7d, 2026-11-26
 
 **VERDICT: FIX.** Three reasons, in order of weight:
