@@ -49,6 +49,18 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   reachable for every student (invariant 2 exception); priority never reads rank.
 - [x] **L4 (optional) final pass (tests only: 390 px, focus).** Re-run the harness, fix remaining "còn khác" rows (≤ 10 small items), narrow
   width 390 px check (no horizontal scroll), focus ring + keyboard order. **MILESTONE 2 after L3 (or L4).**
+- [ ] **L5 (optional, Truong 2026-11-26) positive feedback on portal inputs.** PORTAL ONLY (`dang_ky.html`, `.dk-*`); the
+  MAIN app stays unchanged (would be a separate item). Scope, all CSS-class driven, max 600 ms, off under
+  `prefers-reduced-motion`, no layout shift, every `.btn` in `#dkApp` stays >= 44 px, button TEXT/`name=` unchanged
+  (tests use `exact=True`; show state with `::after` + `aria-live`, never by rewriting the label):
+  (a) helper `DK.phanHoi(btn, promise)` in `js/dang_ky_nen.js`: `.is-luu` (disabled, subtle pulse) while the call runs,
+  `.is-xong` (moss + tick, ~800 ms) on `ok:true`, `.is-loi` (rust, one short shake) on `ok:false`; wire to the save /
+  send / "Đặt hạn" / approve buttons in `dang_ky_quan_tri*.js` and `dang_ky_gv_hs.js`;
+  (b) FORMAT-ONLY valid tick on fields: student id, PIN, required name/club name. NEVER on rank, medal or answer fields
+  (invariant 2 spirit: no signal that nudges what the student reports);
+  (c) sent screen: draw the tick once, reuse `ux2Xong`.
+  Test: `tests/test_giao_dien_dk8_l5.py` (class toggles, reduced-motion, 44 px, no text change). Do L5 BEFORE the checker
+  pass, so the checker reviews the final head once.
 - [ ] Close: CHANGELOG, TIEN_DO rows `DK8-L<k>`, registry row DK8, test-file count in `CLAUDE_CHI_TIET.md`, CI green.
 
 ## Acceptance (checker uses these)
