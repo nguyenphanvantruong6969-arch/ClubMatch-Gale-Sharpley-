@@ -3587,7 +3587,8 @@ a.nav-item { text-decoration: none; }
 .dk-in.mo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
 .dk-phieu { border: 1px dashed #666; border-radius: 6px; padding: 8px 10px; break-inside: avoid; font-size: 13px; }
 .dk-phieu-pin { font-size: 20px; letter-spacing: 2px; margin: 4px 0; }
-.dk-chua-di { color: var(--muted, #555); border-left: 3px solid var(--warn, #c60); padding-left: 8px; }
+.dk-chua-di { display: flex; align-items: center; gap: 10px; margin: 0; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--rust-soft); color: var(--rust-text); border-left: 4px solid var(--rust); font-size: 1rem; font-weight: 600; }
+.dk-chua-di-bieu { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--rust); color: var(--paper-raised); display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; }
 .dk-xacnhan { border: 1px solid var(--line, #bbb); border-radius: 6px; padding: 8px 12px; margin-top: 8px; }
 .dk-xacnhan[hidden] { display: none; }
 .dk-so { max-width: 6rem; }
@@ -3597,3 +3598,126 @@ a.nav-item { text-decoration: none; }
   #dkIn.mo, #dkIn.mo * { visibility: visible; }
   #dkIn.mo { position: absolute; left: 0; top: 0; width: 100%; }
 }
+
+/* ===== DK8-L1: khung cổng giống bản mẫu v8 (docs/phien/DK1_BAN_MAU_V8.html). CHỈ selector .dk-*; giao diện chính không đổi. ===== */
+.dk-body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.dk-app { gap: 20px; padding: 20px 16px 48px; }
+.dk-khung { border-radius: 10px; padding: 18px; gap: 14px; }
+.dk-app h1.dk-tieude { font-size: 1.6rem; }
+.dk-app h2 { font-size: 1.2rem; }
+.dk-app .btn-secondary, .dk-dau .btn-secondary { background: var(--paper-raised); }
+.dk-app .btn-secondary:hover:not(:disabled) { background: var(--paper-hover); }
+.dk-app .btn-primary.dk-day { width: 100%; }
+/* thanh trên dính: thương hiệu · chip giai đoạn · (vai trò · tên · lối về phần mềm · Đăng xuất) */
+body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100%} chung chỉ cao bằng khung nhìn: thanh dính hết chỗ khi cuộn */
+#dkTop { position: sticky; top: 0; z-index: 5; }     /* khối chứa của thanh dính phải là body: header sticky nằm trong #dkTop (cao bằng chính nó) thì không bao giờ dính */
+.dk-dau { position: sticky; top: 0; z-index: 5; display: block; background: var(--paper-raised); border-bottom: 1px solid var(--hairline); padding: 0; }
+.dk-top-in { max-width: 1180px; margin: 0 auto; padding: 4px 16px; min-height: 56px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-sizing: border-box; }
+.dk-thuong-hieu { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.dk-vai { font-size: 0.95rem; }
+.dk-top-in .dk-chip { align-self: center; }
+.dk-dau .btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.dk-dau .btn-ghost { border: 1px solid var(--hairline); color: var(--ink); text-decoration: none; }
+.dk-dau .btn:focus-visible, .dk-dau a:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.dk-top-in .dk-ve-phan-mem { margin: 0; font-size: 0.9rem; }
+/* trang đầu: ba thẻ vai trò */
+.dk-dau-trang { display: flex; flex-direction: column; gap: 4px; }
+.dk-cuas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.dk-cua { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 22px; min-height: 150px; box-sizing: border-box;
+  background: var(--paper-raised); border: 1px solid var(--hairline); border-radius: 10px; }
+.dk-cua:hover { background: var(--paper-hover); }
+.dk-cua:has(.dk-cua-nut:focus-visible) { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.dk-cua-vai { margin: 0; font-size: 1.3rem; }
+.dk-cua-nut { font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; background: none; border: 0; padding: 0; margin: 0; text-align: left; color: var(--ink); cursor: pointer; }
+.dk-cua-nut::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }       /* cả thẻ bấm được */
+.dk-cua-nut:focus-visible { outline: none; }
+.dk-cua-md { margin: 0; color: var(--slate); font-weight: 600; }
+.dk-cua .dk-chip { align-self: stretch; }
+.dk-cua-dem { margin: 0; color: var(--slate); font-size: 0.85rem; font-weight: 600; }
+/* đăng nhập / thiết lập: cột hẹp giữa trang */
+.dk-hep { max-width: 480px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; }
+.dk-hep > .btn-ghost { align-self: flex-start; padding: 0 6px; color: var(--slate); font-weight: 500; }
+@media (max-width: 480px) { .dk-top-in { padding: 4px 12px; } .dk-cua { padding: 16px; min-height: 0; } }
+
+/* ===== DK8-L2: màn quản trị giống bản mẫu v8 (thanh thẻ trên · MỘT thẻ giai đoạn · các thẻ nội dung · lưới hai cột) ===== */
+.dk-the { flex-wrap: wrap; }
+.dk-the-nut[aria-selected="true"] { border-bottom-width: 3px; }
+.dk-noidung { gap: 20px; }
+.dk-noidung > div { gap: 20px; }
+.dk-noidung > div > .dk-khung, .dk-noidung > div > .dk-luoi2 { align-self: stretch; }
+.dk-khung > .btn { align-self: flex-start; }
+.dk-gd-dau { display: flex; flex-direction: column; gap: 4px; }
+.dk-dem { margin: 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }       /* DK8-L5: bỏ chữ mono cỡ nhỏ */
+.dk-hang-han { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.dk-han { background: none; padding: 0; color: var(--ink); font-size: inherit; }
+.dk-han-nut { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dk-chon-han > summary { color: var(--slate); font-weight: 500; }
+.dk-chon-han > .dk-hang-nut { align-items: flex-end; margin-bottom: 4px; }
+.dk-luoi2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.dk-luoi2 > .dk-khung { min-width: 0; }
+.dk-kiem { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border: 1px solid var(--hairline); border-radius: 10px; }
+.dk-kiem li { display: flex; align-items: center; gap: 12px; padding: 4px 8px 4px 12px; border-bottom: 1px solid var(--hairline); }
+.dk-kiem li:last-child { border-bottom: 0; }
+.dk-tick { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; flex: none; background: var(--gold-soft); color: var(--gold-text); }
+.dk-tick.on { background: var(--moss-soft); color: var(--moss); }
+
+/* ===== DK8-L3: giáo viên và học sinh giống bản mẫu v8 (thẻ bo góc 10 px, tên lớn, thẻ hẹp) ===== */
+.dk-cac-the > li.dk-clb-gv { display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--hairline); border-radius: 10px; padding: 12px 14px; background: var(--paper-raised); }
+.dk-clb-gv .dk-chip { align-self: flex-start; }
+.dk-thao-tac { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.dk-ds > li.dk-the-clb, .dk-the-clb { border-radius: 10px; }
+.dk-xep > li.dk-hang { border-radius: 10px; }
+.dk-rong { border-radius: 10px; }
+.dk-ten-hs { margin: 0; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; }
+.dk-tom-tat { margin: 0; }
+
+/* ===== DK8-L6: trang chọn vai trò to hơn, ba thẻ thẳng hàng, logo ở thanh trên, mũi tên «Thêm», trạng thái trống ===== */
+.dk-logo { flex: none; width: 32px; height: 32px; border-radius: 8px; background: var(--gold); color: var(--ink); font-family: var(--font-mono); font-weight: 500; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+.dk-cuas { margin-top: 8px; }
+.dk-cua { min-height: 260px; padding: 28px; gap: 10px; }
+.dk-cua-vai, .dk-cua-nut { font-size: 1.6rem; }
+.dk-cua-md { font-size: 1.05rem; flex: 1 1 auto; }              /* đẩy chip và dòng đếm xuống đáy: ba chip cùng một hàng */
+.dk-cua-dem { height: 1.4em; line-height: 1.4; }
+.dk-mui { display: inline-block; width: 7px; height: 7px; margin: 0 0 3px 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); }
+.dk-rong p { margin: 0 0 8px; }
+@media (max-width: 480px) { .dk-cua { min-height: 0; padding: 18px; } }
+/* ===== DK8-L5: phản hồi tích cực cho nút và ô nhập (CHỈ cổng). Điều khiển bằng lớp (js/dang_ky_nen.js, DK.phanHoi): .is-luu đang chạy ·
+   .is-xong ok · .is-loi lỗi; ô nhập: .is-hop-le (chỉ ĐỊNH DẠNG). Mọi chuyển động ≤ 600 ms, tắt khi giảm chuyển động (dấu vẫn hiện: là trạng thái).
+   Dấu vẽ bằng ::after cỡ cố định, đặt tuyệt đối ở góc: không đổi chữ, không đổi cỡ, không xê dịch bố cục. ===== */
+.dk-app .btn, .dk-dau .btn { position: relative; }
+/* luật UX2 chung (.btn.is-xong: đệm 6 px + nowrap, dành cho giao diện chính) không được làm nút cổng đổi cỡ */
+.dk-app .btn.is-xong, .dk-dau .btn.is-xong { white-space: normal; }
+.dk-app .btn-primary.is-xong, .dk-app .btn-secondary.is-xong { padding-left: 16px; padding-right: 16px; }
+.dk-app .btn.is-luu { box-shadow: 0 0 0 3px var(--gold-soft); }
+.dk-app .btn.is-xong { border-color: var(--moss); }
+.dk-app .btn.is-loi { border-color: var(--rust); background-color: var(--rust-soft); }
+.dk-app .btn.is-xong::after, .dk-app .btn.is-loi::after, .dk-dau .btn.is-xong::after, .dk-dau .btn.is-loi::after {
+  content: ""; position: absolute; top: -7px; right: -7px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%;
+  background-repeat: no-repeat; background-position: center; background-size: 12px; pointer-events: none; }
+.dk-app .btn.is-xong::after, .dk-dau .btn.is-xong::after { background-color: var(--moss); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.4l2.6 2.6 5-5.4' fill='none' stroke='white' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.dk-app .btn.is-loi::after, .dk-dau .btn.is-loi::after { background-color: var(--rust); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 2.2v4.4M6 9.3v.1' fill='none' stroke='white' stroke-width='1.9' stroke-linecap='round'/%3E%3C/svg%3E"); }
+@keyframes dkLuu { 0%, 100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 0 5px var(--gold-soft); } }
+@keyframes dkTich { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes dkLoi { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .dk-app .btn.is-luu { animation: dkLuu 600ms ease-in-out infinite; }
+  .dk-app .btn.is-xong::after, .dk-dau .btn.is-xong::after { animation: dkTich 300ms var(--ease-out) 1 both; }
+  .dk-app .btn.is-loi { animation: dkLoi 450ms ease-in-out 1; }
+  .dk-app .btn.is-loi::after, .dk-dau .btn.is-loi::after { animation: dkTich 200ms var(--ease-out) 1 both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dk-app .btn.is-luu, .dk-app .btn.is-loi, .dk-app .btn.is-xong::after, .dk-app .btn.is-loi::after,
+  .dk-dau .btn.is-xong::after, .dk-dau .btn.is-loi::after { animation: none; }
+}
+/* ô nhập: dấu hợp lệ theo định dạng (viền xanh rêu + ✓ cuối ô); chừa sẵn chỗ bên phải để bật dấu không làm chữ nhảy */
+.dk-app .dk-truong { position: relative; }
+.dk-app .dk-nhap[data-hl] { padding-right: 36px; transition: border-color 150ms ease; }
+.dk-app .dk-nhap.is-hop-le { border-color: var(--moss); }
+.dk-app .dk-truong:has(> .dk-nhap.is-hop-le)::after { content: ""; position: absolute; right: 13px; bottom: 15px; width: 12px; height: 7px; box-sizing: content-box;
+  border-left: 2.5px solid var(--moss); border-bottom: 2.5px solid var(--moss); transform: rotate(-45deg); pointer-events: none; z-index: 1; }
+@keyframes dkHien { from { opacity: 0; } to { opacity: 1; } }       /* chỉ độ mờ: không đè phép xoay của dấu */
+@media (prefers-reduced-motion: no-preference) { .dk-app .dk-truong:has(> .dk-nhap.is-hop-le)::after { animation: dkHien 250ms ease-out 1 both; } }
+@media (prefers-reduced-motion: reduce) { .dk-app .dk-truong:has(> .dk-nhap.is-hop-le)::after { animation: none; } }
+/* màn «Đã gửi»: dấu ✓ vẽ một lần (hoạt ảnh ux2Xong có sẵn qua lớp .ux2-xong) */
+.dk-xong-dau { position: relative; flex: none; width: 30px; height: 30px; margin: 0; border-radius: 50%; background: var(--moss); }
+.dk-xong-dau::after { content: ""; position: absolute; left: 9px; top: 8px; width: 11px; height: 6px; border-left: 3px solid #fff; border-bottom: 3px solid #fff; transform: rotate(-45deg); }

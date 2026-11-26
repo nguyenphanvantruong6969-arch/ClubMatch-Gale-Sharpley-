@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## 2026-11-26 — DK8-L6: chỉnh giao diện cổng sau khi soát màn hình (Truong yêu cầu)
+
+- `js/dang_ky_nen.js`: thứ tự thẻ vai trò **Giáo viên → Học sinh → Quản trị** (Truong); dòng đếm luôn có (có thể trống) và chip dồn xuống đáy thẻ nên ba chip cùng một hàng; logo «RB» ở thanh trên. `js/dang_ky_quan_tri.js`: tab «Thêm» vẽ mũi tên bằng CSS (tên truy cập «Thêm»); «Danh sách» có trạng thái trống kèm nút đi tới nơi thêm (ẩn khi danh sách đã khoá). `js/dang_ky_quan_tri_2.js`: cảnh báo «Chưa đi tiếp được» thành khối đỏ nhạt có biểu tượng, `role="alert"`.
+- `style.css` (khối DK8-L6, chỉ `.dk-*`): thẻ vai trò cao hơn, chữ to hơn; dòng đếm `.dk-dem` bỏ chữ mono cỡ nhỏ. Giao diện chính không đổi.
+- Test cũ chỉ đổi chỉ số thẻ và tên tab: `tests/test_giao_dien_dk8_l1.py`, `_l2.py`, `_l4.py`. Không đổi backend, schema, CSV, thuật toán.
+## 2026-11-26 — DK8-L5: phản hồi tích cực cho nút và ô nhập của cổng
+
+- `js/dang_ky_nen.js`: `DK.phanHoi(nut, lam)` (DK.chay dùng nó nên mọi nút của cổng được hưởng): `.is-luu` lúc chạy, `.is-xong` (ok) / `.is-loi` (lỗi, ném lỗi) ~0,8 giây; chữ nút không đổi; vùng đọc màn hình `#dkPhanHoiLive`; nút vừa lưu mà màn được dựng lại thì dấu ✓ sang nút mới cùng id / cùng chữ duy nhất (MutationObserver ≤ 1,5 giây). Dấu hợp lệ CHỈ theo định dạng (`data-hl`): mã học sinh, PIN 4 chữ số, tên bắt buộc (tên giáo viên, tên CLB); KHÔNG ở nguyện vọng, huy chương, đáp án (bất biến 2).
+- `js/dang_ky_gv_hs.js`: màn «Đã gửi» có đúng một dấu ✓ vẽ một lần (tái dùng `ux2Xong`), tiêu đề giữ chữ.
+- `js/dang_ky_quan_tri_2.js`: hai chỗ trả `ok:true` giả khi lỗi nhập («Dán ít nhất một dòng trước.», «Hai lần nhập mật khẩu mới không giống nhau.») nay trả `ok:false` cùng nội dung thông báo, để không hiện ✓ cho thao tác lỗi.
+- `style.css` (khối cuối, chỉ `.dk-*`): chuyển động ≤ 600 ms, tắt khi `prefers-reduced-motion` (dấu vẫn hiện), dấu là `::after` cỡ cố định ở góc nên không đổi chữ/cỡ/bố cục; chặn luật UX2 chung `.btn.is-xong` làm nút cổng đổi đệm. Giao diện chính không đổi.
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`): dựng xong nội dung rồi mới hiện cả màn một lần. Trước đó khung rỗng hiện trước nên `tests/test_giao_dien_dk3_cong.py::test_9` (đếm `ol.dk-gd li` ngay khi thấy tiêu đề) đỏ từ DK8-L2; test không sửa.
+- `style.css`: sửa lỗi L1 CI đỏ (`test_giao_dien_dk8_l1.py::test_d`, thanh trên không dính khi trang dài): `#dkTop` dính và `body.dk-body { height: auto }` (luật chung `html, body {height:100%}` làm khối chứa chỉ cao bằng khung nhìn). Chỉ cổng. Test mới `test_q` chạy ở khổ thấp để trang thực sự cuộn.
+- Test mới: `tests/test_giao_dien_dk8_l5.py` (19). Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — CI xanh cho DK8 (vòng 1: sửa CI, không đổi tính năng)
+
+- `du_lieu_test/chup_dk8.py`: tắt `wharton` RÕ RÀNG sau `PipelineAPI(...)` (như các script `du_lieu_test` khác) — sửa `test_F1_script_do_tat_wharton_ro_rang`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `tests/test_*.py` 439 → 444 (thêm 5 tệp DK8-L1..L4) — sửa `test_ban_do_ma_so_tep_test_la_so_that` (cũng là nguyên nhân duy nhất của job Linux 6/6, xác nhận bằng log).
+- Không thêm / không sửa test; không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DK8-L4: khổ hẹp 390 px và focus (chỉ thêm test)
+
+- `tests/test_giao_dien_dk8_l4.py` (2): không cuộn ngang ở trang đầu, đăng nhập, bốn thẻ quản trị, giáo viên (390 px); Tab đi qua ba thẻ vai trò, vòng focus hiện trên cả thẻ, Enter mở màn đăng nhập. Bảng khác biệt không còn dòng «còn khác». Không đổi mã sản phẩm.
+
+## 2026-11-26 — DK8-L3: giáo viên và học sinh giống bản mẫu v8
+
+- `js/dang_ky_gv_hs.js`: «CLB của tôi» kèm chip giai đoạn, danh sách CLB dạng thẻ (chip trạng thái, dòng «buổi · phòng · nhận · khối · loại», Sửa/Xoá giữ nhãn cũ); form trong thẻ hẹp với nhãn như v8 (tuỳ chọn «Tự do – nhận mọi em…», «Số học sinh nhận (tối đa N)», «Mô tả CLB (học sinh đọc khi chọn)», dòng tóm tắt); học sinh: «Đúng là em chứ?» và màn chưa mở/hết hạn trong thẻ hẹp, «Không phải em» nút viền. `style.css` (khối DK8-L3, chỉ `.dk-*`): thẻ CLB / hàng nguyện vọng bo góc 10 px, tên lớn.
+- Ô đặt huy chương cho học sinh giữ nguyên (ngoại lệ bất biến 2); không đụng `compute_club_priority`. Test mới `tests/test_giao_dien_dk8_l3.py` (4); test cũ không sửa. Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DK8-L2: màn quản trị giống bản mẫu v8 (thanh thẻ trên, thẻ giai đoạn, thẻ nội dung)
+
+- `js/dang_ky_quan_tri.js`: thanh thẻ nằm TRÊN; «Việc bây giờ» = MỘT thẻ giai đoạn (`theGd`: thanh sáu bước bên trong + tiêu đề + giải thích + dòng đếm mono + dòng hạn chót với «Gia hạn +1 giờ / +1 ngày» và «Đóng ngay» bên phải) rồi các thẻ nội dung (`DK.theCon`): Chuẩn bị (danh sách kiểm 3 mục + «Phòng» + «Danh sách học sinh»), Giáo viên đăng ký (+ «CLB đã gửi», «Tạo hộ tài khoản giáo viên»), Duyệt (bảng trong thẻ, đếm), Học sinh đăng ký (hai thẻ cạnh nhau), Nhập điểm, Xuất. «Danh sách» và «Thêm ▾» chia thẻ.
+- `js/dang_ky_quan_tri_2.js`: `giaHan` (nhãn + ba nút viền), `caiDat` lưới thẻ hai cột, `nhuCau`/`saoLuu` thành thẻ, `nhapDiem`/`xemTruoc` nhận dữ liệu có sẵn (bớt một lần gọi). `style.css` (khối DK8-L2, chỉ `.dk-*`). Giữ nguyên mọi nhãn nút, `id` và hành vi cũ (một nút vàng mỗi màn, tự làm mới, phiếu PIN, thẻ gấp theo khối).
+- Test mới `tests/test_giao_dien_dk8_l2.py` (7). Test cũ không sửa. Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — DK8-L1: khung cổng giống bản mẫu v8 (thanh trên, thẻ vai trò, đăng nhập hẹp)
+
+- `du_lieu_test/chup_dk8.py` (mới): chụp CẶP màn hình v8 / cổng thật (19 màn, dữ liệu MÔ PHỎNG, ảnh không commit); `docs/phien/DK8_KHAC_BIET.md` (mới): bảng khác biệt theo màn × lô.
+- `dang_ky.html` (thêm `#dkTop`), `js/dang_ky_nen.js` (thanh trên dính `DK.dauTren`: thương hiệu + chip «Giai đoạn k/6 · tên» + vai trò + «Đăng xuất» + lối về phần mềm xếp; trang đầu = ba thẻ vai trò `DK.theVaiTro` + `DK.chipVai`; đăng nhập/thiết lập/GV tự đăng ký trong cột hẹp `DK.hep`, nút vàng rộng hết thẻ), `js/dang_ky_quan_tri.js` (dùng `DK.TEN_GD`, `DK.conLai` chung), `js/dang_ky_gv_hs.js` (lưu `DK.S.tt`), `style.css` (khối DK8-L1, chỉ `.dk-*`).
+- `api_dang_ky.py`: `dk_trang_thai` (công khai) trả thêm `so_gv`, `so_da_gui` — chỉ số đếm, không tên/mã. Giữ nhãn nút cũ («Đăng nhập», «Đăng xuất», «Quản trị»).
+- Test mới: `tests/test_dk8_l1_dem_cong_khai.py` (3), `tests/test_giao_dien_dk8_l1.py` (5). Không đổi schema, CSV, thuật toán.
+
 ## 2026-11-26 — DK6 fix 1 (CI run 1699, Linux 3/6): test cũ DK4 còn kiểm nhãn cũ
 
 - `tests/test_giao_dien_dk4_chot_xep.py` dòng 45: «Ngoài nguyện vọng: 1» → «Xếp ngoài nguyện vọng: 1» (nhãn đổi ở DK6-L1; test cũ bị bỏ sót vì lần chạy cục bộ chỉ chọn vài test liên quan). Không đổi mã sản phẩm.
