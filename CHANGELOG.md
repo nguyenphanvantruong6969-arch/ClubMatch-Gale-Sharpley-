@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 2026-11-26 — DN-NL vòng 2 (VÁ KHẨN: làm việc nhầm workspace trống sau khi đăng nhập)
+
+- Nguyên nhân gốc của ảnh Truong gửi («quanly (Quản trị)» + «Chưa có dữ liệu» + «Cần đăng nhập»): có NHIỀU workspace thì `main.khoi_dong_workspace` mở tạm workspace SỬA GẦN NHẤT (`da_chon=False`) và trông vào giao diện hiện màn chọn. Nhưng `get_workspace_state` thuộc mức giáo viên nên bị từ chối khi chưa đăng nhập → màn chọn KHÔNG BAO GIỜ hiện, tên workspace không hiện → người dùng đăng nhập (tài khoản đi theo từng CSDL) và làm việc trong workspace sai, ví dụ bản nhân bản đã «Làm lại từ đầu». Tái hiện trên mã cũ (21cfdd4): khớp ảnh từng chi tiết.
+- Sửa chính đã có ở DN-NL (48f0c9b: hỏi lại `wsTaiTrangThai()` sau khi đăng nhập). Vòng này: `js/075_workspace.js` không tự bật màn chọn (không đóng được) cho GIÁO VIÊN, vì `open_workspace` là việc của quản trị; nếu bật, giáo viên bị khoá cứng.
+- Test mới (`tests/test_giao_dien_gt3_dang_nhap.py`): `test_nhieu_workspace_dang_nhap_xong_hien_man_chon_khong_lam_viec_nham_workspace_trong` (đỏ trên mã cũ: màn chọn không hiện), `test_nhieu_workspace_giao_vien_khong_bi_khoa_trong_man_chon` (đỏ khi bỏ điều kiện giáo viên). Chỉ giao diện; không đổi phân quyền, backend, thuật toán, schema, CSV.
+- Còn mở (cần Truong quyết): workspace sửa gần nhất có tài khoản mà người dùng không biết mật khẩu thì vẫn không tới được màn chọn (có từ trước). Muốn sửa phải cho `get_workspace_state` / `list_workspaces` / `open_workspace` chạy trước khi đăng nhập khi `da_chon=False`, tức là thay đổi phân quyền.
+
+## 2026-11-26 — DN-NL (đăng nhập xong không nạp lại thẻ đang mở; ngoài sổ, Truong báo lỗi kèm ảnh)
+
+- Lỗi: có tài khoản mà chưa đăng nhập (mở máy, hoặc phiên hết 15 phút) thì mọi lời gọi lúc đó bị cổng phân quyền từ chối (`gt3_can_dang_nhap`). Sau khi đăng nhập, `taiLaiGiaoDien()` chỉ nạp lại thẻ Xếp CLB, nên thẻ đang mở (vd. Quản lý) giữ bản rỗng: ô chọn buổi 2/5 lựa chọn, ô lớp 1/7, ô CLB 0/13, bảng CLB 0/90 dòng cho tới khi bấm sang thẻ khác rồi quay lại. Trạng thái workspace (`get_workspace_state`: nhãn, tên, màn chọn) cũng không được hỏi lại; các thông báo đỏ «Cần đăng nhập» cũ nằm lại trên màn.
+- `js/16_tai_khoan.js` `taiLaiGiaoDien`: chạy SAU `capNhat()` (đã biết vai), nạp lại thẻ Xếp CLB + thẻ đang mở (qua `TAB_LOADERS`, bỏ qua thẻ vai đó không được xem), gọi `wsTaiTrangThai()`, gỡ thông báo có mã `gt3_can_dang_nhap`.
+- `js/075_workspace.js`: tách lời hỏi `get_workspace_state` của `initWorkspace` thành `wsTaiTrangThai()` (hành vi khởi động không đổi).
+- `js/00_nen.js` `showToast`: thông báo lỗi mang `data-ma` (mã lỗi) để gỡ có chọn lọc.
+- Test mới: `tests/test_giao_dien_gt3_dang_nhap.py::test_dang_nhap_xong_nap_lai_the_dang_mo_workspace_va_bo_thong_bao_cu` (đỏ trước khi sửa). Chỉ giao diện; không đổi backend, phân quyền, thuật toán, schema, CSV.
+
 ## 2026-11-26 — UX2-VB (vùng bấm UX2 ghi đè ::after riêng của nút; ngoài sổ, Truong yêu cầu trực tiếp)
 
 - Nguyên nhân chung: khối UX2-L3 `:where(button, .btn, [role="button"])` (độ ưu tiên 0) đặt `position: relative` cho nút và `::after` tuyệt đối ở tâm 50 %/50 %, `max(100%, 44px)`, `translate(-50%, -50%)`. Quy tắc riêng chỉ ghi đè MỘT phần thuộc tính nên phần còn lại của UX2 vẫn áp dụng.

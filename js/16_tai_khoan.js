@@ -89,8 +89,7 @@
       chayNut(gui, () => callApi("dang_nhap", tenGui, mkGui), (res) => {
         if (!res.ok) { feedbackErrors(tin, res.errors); mk.o.focus(); return; }
         dongLopPhu();
-        capNhat();
-        taiLaiGiaoDien();
+        capNhat().then(taiLaiGiaoDien);   // sau khi biết vai: giáo viên đã được chuyển khỏi thẻ của quản trị (ganVai)
       });
     });
     const hop = mot("div", { class: "ws-hop", role: "dialog", "aria-modal": "true", "aria-labelledby": "tkTieuDe", style: "max-width:420px" },
@@ -99,9 +98,17 @@
     ten.o.focus();
   }
 
-  /* Sau khi vào được: kéo lại dữ liệu mà màn đăng nhập từng chặn (các thẻ đã tải trước đó vẫn nguyên). */
+  /* Sau khi vào được: kéo lại dữ liệu mà màn đăng nhập từng chặn. Thẻ Xếp CLB luôn nạp lại (số liệu thanh trên, «Việc
+     tiếp theo»); thẻ ĐANG MỞ cũng nạp lại, nếu không nó giữ nguyên bản rỗng của các lời gọi bị từ chối (vd. Quản lý: ô
+     chọn buổi / lớp / CLB và bảng trống). Trạng thái workspace cũng hỏi lại. Thông báo «Cần đăng nhập» cũ thì gỡ. */
   function taiLaiGiaoDien() {
+    document.querySelectorAll('#toastStack .toast[data-ma~="gt3_can_dang_nhap"]').forEach((x) => { if (x.goBo) x.goBo(); x.remove(); });
     if (typeof loadPipelineTab === "function") loadPipelineTab();
+    const the = typeof currentTabName === "function" ? currentTabName() : "pipeline";
+    const nut = document.querySelector('.nav-item[data-tab="' + the + '"]');
+    const duocXem = !nut || typeof thanhDieuHuongDangHien !== "function" || thanhDieuHuongDangHien(nut);
+    if (the !== "pipeline" && duocXem && typeof TAB_LOADERS === "object" && TAB_LOADERS[the]) TAB_LOADERS[the]();
+    if (typeof wsTaiTrangThai === "function") wsTaiTrangThai();
   }
 
   /* ------------------------------------------------------------ hộp "Tài khoản" */

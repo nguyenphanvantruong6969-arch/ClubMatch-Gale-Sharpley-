@@ -92,6 +92,12 @@ function initWorkspace() {
     if (wsWizard) wsGomBuoc();   // chữ đang gõ dở không được mất khi đổi ngôn ngữ
     wsVe();
   });
+  wsTaiTrangThai();
+}
+
+/* Hỏi trạng thái workspace (nhãn, tên, màn chọn). Gọi lúc khởi động và lại sau khi đăng nhập (js/16_tai_khoan.js):
+   có tài khoản mà chưa đăng nhập thì lần hỏi lúc khởi động bị cổng phân quyền từ chối. */
+function wsTaiTrangThai() {
   callApi("get_workspace_state").then((res) => {
     if (!res.ok) return;
     wsTrangThai = res.data;
@@ -103,8 +109,9 @@ function initWorkspace() {
     wsVeTenHienTai();
     wsCapNhatTieuDe();
     /* Chưa chọn (có nhiều workspace lúc khởi động) thì màn chọn hiện ngay,
-       đè lên trên và KHÔNG đóng được cho tới khi mở một workspace. */
-    if (wsTrangThai.enabled && !wsTrangThai.chon) wsMoManChon(false);
+       đè lên trên và KHÔNG đóng được cho tới khi mở một workspace. Trừ giáo viên: mở workspace là việc của quản trị
+       (open_workspace), màn chọn không đóng được sẽ khoá cứng giáo viên; họ làm trong workspace đang mở (tên hiện ở thanh bên). */
+    if (wsTrangThai.enabled && !wsTrangThai.chon && document.body.dataset.vai !== "giao_vien") wsMoManChon(false);
   });
 }
 

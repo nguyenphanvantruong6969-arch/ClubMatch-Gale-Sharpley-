@@ -361,6 +361,8 @@ function showToast(message, type, opts) {
   toastEl.className = "toast" + (type === "error" ? " is-error"
     : type === "warn" ? " is-warn"
     : type === "success" ? " is-success" : "");
+  /* Mã lỗi của thông báo: để gỡ có chọn lọc (vd. «Cần đăng nhập» sau khi đã đăng nhập, js/16_tai_khoan.js). */
+  if (errors && errors.length) toastEl.dataset.ma = errors.map((e) => (e && e.code) || "").filter(Boolean).join(" ");
   /* Loi doc ngay (assertive); thong bao khac doc khi roi (polite). */
   if (type === "error") {
     toastEl.setAttribute("role", "alert");
