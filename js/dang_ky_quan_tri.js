@@ -27,10 +27,11 @@
     const noiDung = h("div.dk-noidung");
     const the3 = [["viec", "Việc bây giờ"], ["ds", "Danh sách"], ["cai", "Cài đặt"], ["them", "Thêm"]];
     const thanh = h("nav.dk-the", { role: "tablist" }, the3.map(([k, t]) =>
-      h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t, k === "them" ? h("span.dk-mui", { "aria-hidden": "true" }) : null)));   // DK8-L5: mũi tên vẽ bằng CSS, tên truy cập vẫn là «Thêm»
+      h("button.dk-the-nut", { type: "button", role: "tab", "aria-selected": String(k === the), onclick: () => { the = k; DK.quanTri(); } }, t, k === "them" ? h("span.dk-mui", { "aria-hidden": "true" }) : null)));   // DK8-L6: mũi tên vẽ bằng CSS, tên truy cập vẫn là «Thêm»
+    const nd = await thanTheo[the]();                  // DK8-L5: dựng xong nội dung rồi mới hiện cả màn MỘT lần (trước đây khung rỗng hiện trước: thanh sáu bước, nút, dấu ✓ chưa có lúc đầu)
+    if (DK.S.vai !== "quan_tri") return;
+    noiDung.replaceChildren(nd);
     DK.hien(DK.thanhDau("Quản trị · " + TEN_GD[tt.giai_doan]), thanh, noiDung);
-    const nd = await thanTheo[the]();
-    if (DK.S.vai === "quan_tri") noiDung.replaceChildren(nd);
     /* DKL-M + DK6-L1: tự cập nhật ở thẻ «Việc bây giờ» và «Danh sách» của bốn giai đoạn có người khác đang thay đổi dữ liệu
        (giáo viên đăng ký, duyệt, học sinh đăng ký, nhập điểm). KHÔNG tự làm mới: «Cài đặt», «Thêm», giai đoạn Chuẩn bị và Xuất
        (chỉ quản trị đổi chúng; vẽ lại thêm rủi ro mà không thêm giá trị). Mỗi lần vẽ, `tuLamMoi(false)` ở đầu hàm đã tắt vòng cũ. */
@@ -172,7 +173,7 @@
       d.addEventListener("toggle", () => moDs.set(khoa, d.open));
       return d;
     };
-    /* DK8-L5: trạng thái trống có chữ hướng dẫn và nút đi thẳng tới nơi thêm (ẩn nút khi danh sách đã khoá). */
+    /* DK8-L6: trạng thái trống có chữ hướng dẫn và nút đi thẳng tới nơi thêm (ẩn nút khi danh sách đã khoá). */
     const trong = (chu, nhan, an) => h("div.dk-rong", {}, h("p", {}, chu), an ? null : DK.nutNhe(nhan, () => { the = "viec"; DK.quanTri(); }));
     const dongHs = (x) => [x.ma, x.ho_ten, x.lop, x.da_nop ? "Có" : "Chưa", thaoTac(x, datLai("dk_hs_dat_lai_pin", x.ma, x.ho_ten), "hoc_sinh", x.ma)];
     const cotHs = ["Mã", "Họ tên", "Lớp", "Đã nộp", ""];

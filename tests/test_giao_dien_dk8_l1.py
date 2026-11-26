@@ -51,7 +51,7 @@ def test_a_trang_dau_ba_the_vai_tro_co_chip_va_dong_dem(cong):
     the = pg.locator(".dk-cua")
     assert the.count() == 3
     ten = [the.nth(i).locator(".dk-cua-nut").inner_text() for i in range(3)]
-    assert ten == ["Giáo viên", "Học sinh", "Quản trị"]        # DK8-L5 (Truong, 2026-11-26): giáo viên trước học sinh
+    assert ten == ["Giáo viên", "Học sinh", "Quản trị"]        # DK8-L6 (Truong, 2026-11-26): giáo viên trước học sinh
     gv, hs, qt = (the.nth(i).inner_text() for i in range(3))
     assert "Chọn CLB theo từng buổi, đăng ký thi" in hs and "Chưa mở" in hs and "0 em đã gửi" in hs
     assert "Đăng ký mở CLB, chọn phòng" in gv and "Đang mở · còn 2 ngày" in gv and "2 giáo viên đã đăng ký tài khoản" in gv

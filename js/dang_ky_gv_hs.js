@@ -95,7 +95,7 @@
           : h("p.dk-ghichu", {}, "CLB " + d.loai + " không có bài kiểm tra. Muốn kiểm tra đầu vào thì chọn loại Tuyển chọn ở bước 1.")];
       const tomTat = [d.ten ? d.ten.trim() : "", d.loai, d.buoi, prRoom ? prRoom.ten : "", d.loai === "Tự do" ? "nhận mọi em" : "nhận " + (d.chi_tieu === undefined ? "" : d.chi_tieu),
         khoiChu(d.khoi_tu, d.khoi_den)].concat(d.loai === "Tuyển chọn" ? ["điểm sàn " + (d.diem_san === undefined ? "" : d.diem_san)] : []).filter(Boolean).join(" · ");
-      const b3 = [nhap("Tên CLB", "ten"), nhap("Mô tả CLB (học sinh đọc khi chọn)", "mo_ta"), nhap("Yêu cầu cơ bản (ghi «Không» nếu không có)", "yeu_cau"), h("p.dk-ghichu.dk-tom-tat", {}, tomTat)];
+      const b3 = [nhap("Tên CLB", "ten", { "data-hl": "ten" }), nhap("Mô tả CLB (học sinh đọc khi chọn)", "mo_ta"), nhap("Yêu cầu cơ bản (ghi «Không» nếu không có)", "yeu_cau"), h("p.dk-ghichu.dk-tom-tat", {}, tomTat)];
       const noi = [b1, b2, b3][buoc - 1];
       const nutTrai = buoc > 1 ? DK.nutNhe("← Quay lại", () => { buoc--; ve(); }) : null;
       const kiem = () => { const loi = kiemBuoc(buoc, d); DK.thongBao(loi, !!loi); return !loi; };
@@ -273,7 +273,7 @@
           DK.nutVang(nopXong ? "Gửi lại nguyện vọng" : "Gửi nguyện vọng", function () { nop(this); }, { id: "dkGui" }))];
     }
     function vReceipt() {
-      return [bar(), h("section.dk-khung", {}, h("h1.dk-tieude", {}, "Đã gửi"),
+      return [bar(), h("section.dk-khung", {}, h("div.dk-hang-nut", {}, h("span.dk-xong-dau.ux2-xong", { "aria-hidden": "true" }), h("h1.dk-tieude", {}, "Đã gửi")),   // DK8-L5: dấu ✓ vẽ một lần (tái dùng ux2Xong)
         h("p#dkBienNhan.dk-bien-nhan", {}, "Đã gửi lúc " + DK.guiLuc(cu.nop_luc)), tomTat(),
         h("p.dk-phu", {}, "Em có thể đăng nhập lại để sửa trước hạn chót" + (tt.han_chot ? " (" + String(tt.han_chot).replace("T", " ") + ")" : "") + ". Máy sẽ tự thoát sau 30 giây."),
         h("div.dk-hang-nut", {}, h("span.dk-gian"), DK.nutVang("Xong, thoát", () => DK.dangXuatCuc())))];

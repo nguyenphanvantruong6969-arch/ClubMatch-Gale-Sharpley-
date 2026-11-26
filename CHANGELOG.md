@@ -1,10 +1,24 @@
 # CHANGELOG
 
-## 2026-11-26 — DK8-L5: chỉnh giao diện cổng sau khi soát màn hình (Truong yêu cầu)
+## 2026-11-26 — DK8-L6: chỉnh giao diện cổng sau khi soát màn hình (Truong yêu cầu)
 
 - `js/dang_ky_nen.js`: thứ tự thẻ vai trò **Giáo viên → Học sinh → Quản trị** (Truong); dòng đếm luôn có (có thể trống) và chip dồn xuống đáy thẻ nên ba chip cùng một hàng; logo «RB» ở thanh trên. `js/dang_ky_quan_tri.js`: tab «Thêm» vẽ mũi tên bằng CSS (tên truy cập «Thêm»); «Danh sách» có trạng thái trống kèm nút đi tới nơi thêm (ẩn khi danh sách đã khoá). `js/dang_ky_quan_tri_2.js`: cảnh báo «Chưa đi tiếp được» thành khối đỏ nhạt có biểu tượng, `role="alert"`.
-- `style.css` (khối DK8-L5, chỉ `.dk-*`): thẻ vai trò cao hơn, chữ to hơn; dòng đếm `.dk-dem` bỏ chữ mono cỡ nhỏ. Giao diện chính không đổi.
+- `style.css` (khối DK8-L6, chỉ `.dk-*`): thẻ vai trò cao hơn, chữ to hơn; dòng đếm `.dk-dem` bỏ chữ mono cỡ nhỏ. Giao diện chính không đổi. `#dkTop { display: contents }`: thanh trên của cổng thật sự dính khi cuộn (trước đó vùng chứa chỉ cao bằng thanh; test cũ chỉ qua vì trang ngắn).
 - Test cũ chỉ đổi chỉ số thẻ và tên tab: `tests/test_giao_dien_dk8_l1.py`, `_l2.py`, `_l4.py`. Không đổi backend, schema, CSV, thuật toán.
+## 2026-11-26 — DK8-L5: phản hồi tích cực cho nút và ô nhập của cổng
+
+- `js/dang_ky_nen.js`: `DK.phanHoi(nut, lam)` (DK.chay dùng nó nên mọi nút của cổng được hưởng): `.is-luu` lúc chạy, `.is-xong` (ok) / `.is-loi` (lỗi, ném lỗi) ~0,8 giây; chữ nút không đổi; vùng đọc màn hình `#dkPhanHoiLive`; nút vừa lưu mà màn được dựng lại thì dấu ✓ sang nút mới cùng id / cùng chữ duy nhất (MutationObserver ≤ 1,5 giây). Dấu hợp lệ CHỈ theo định dạng (`data-hl`): mã học sinh, PIN 4 chữ số, tên bắt buộc (tên giáo viên, tên CLB); KHÔNG ở nguyện vọng, huy chương, đáp án (bất biến 2).
+- `js/dang_ky_gv_hs.js`: màn «Đã gửi» có đúng một dấu ✓ vẽ một lần (tái dùng `ux2Xong`), tiêu đề giữ chữ.
+- `js/dang_ky_quan_tri_2.js`: hai chỗ trả `ok:true` giả khi lỗi nhập («Dán ít nhất một dòng trước.», «Hai lần nhập mật khẩu mới không giống nhau.») nay trả `ok:false` cùng nội dung thông báo, để không hiện ✓ cho thao tác lỗi.
+- `style.css` (khối cuối, chỉ `.dk-*`): chuyển động ≤ 600 ms, tắt khi `prefers-reduced-motion` (dấu vẫn hiện), dấu là `::after` cỡ cố định ở góc nên không đổi chữ/cỡ/bố cục; chặn luật UX2 chung `.btn.is-xong` làm nút cổng đổi đệm. Giao diện chính không đổi.
+- `js/dang_ky_quan_tri.js` (`DK.quanTri`): dựng xong nội dung rồi mới hiện cả màn một lần. Trước đó khung rỗng hiện trước nên `tests/test_giao_dien_dk3_cong.py::test_9` (đếm `ol.dk-gd li` ngay khi thấy tiêu đề) đỏ từ DK8-L2; test không sửa.
+- Test mới: `tests/test_giao_dien_dk8_l5.py` (18). Không đổi backend, schema, CSV, thuật toán.
+
+## 2026-11-26 — CI xanh cho DK8 (vòng 1: sửa CI, không đổi tính năng)
+
+- `du_lieu_test/chup_dk8.py`: tắt `wharton` RÕ RÀNG sau `PipelineAPI(...)` (như các script `du_lieu_test` khác) — sửa `test_F1_script_do_tat_wharton_ro_rang`.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `tests/test_*.py` 439 → 444 (thêm 5 tệp DK8-L1..L4) — sửa `test_ban_do_ma_so_tep_test_la_so_that` (cũng là nguyên nhân duy nhất của job Linux 6/6, xác nhận bằng log).
+- Không thêm / không sửa test; không đổi backend, schema, CSV, thuật toán.
 
 ## 2026-11-26 — DK8-L4: khổ hẹp 390 px và focus (chỉ thêm test)
 

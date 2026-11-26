@@ -12,13 +12,15 @@
   failing part only if it breaks tests; otherwise leave it and note it.
 - Blocked by an error you cannot fix in 3 tries → note it, move to the next lot. Never stop to ask.
 
-## 1. Coder loop per lot (L1 → L2 → M1 → L3 → [L4] → M2)
+## 1. Coder loop per lot (L1 → L2 → M1 → L3 → [L4] → [L5] → M2)
 Failing test from the lot's boxes (one Chromium test file per lot: `tests/test_giao_dien_dk8_l<k>.py`, one shared page
 fixture) → code → lot test + ≤ 3 related (`-q --tb=line 2>&1 | tail -15`) → grep tests for every changed UI text →
 `ruff check .` → `.claude/skills/soat-ma/scripts/kiem_nhanh.py | tail -10` (7/7) → CHANGELOG (`head -20` only) + TIEN_DO
 row `DK8-L<k>` → commit `DK8-L<k>: …` → update "Current state" → push.
 Wait for CI with `send_later` (25 min), never poll; read `failed_only` logs ≤ 60 lines; red → fix, never skip/disable/
 weaken a test.
+
+> L5 (optional, added 2026-11-26): portal input feedback; spec in the branch file Plan. Same loop, lot test `tests/test_giao_dien_dk8_l5.py`.
 
 ## 2. Milestones = automatic checker
 At M1 (after L2) and M2 (after L3/L4), once CI is green on the head:

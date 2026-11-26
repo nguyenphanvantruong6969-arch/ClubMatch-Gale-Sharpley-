@@ -134,6 +134,7 @@ def _di_den_xem_lai(pg):
 def dung_that(tmp):
     rng = random.Random(11)
     api = PipelineAPI(os.path.join(tmp, "app.db"))
+    __import__("cau_hinh_ws").ghi_cau_hinh(api.db_path, {"rules": {"wharton": False}})  # A13.13: mặc định đã BẬT; chụp màn cổng = tắt RÕ RÀNG
     _ok(api.dk_khoi_tao(MK, MA, BUOI, [6, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", MK))["token"]
     for ten, sc in PHONG:

@@ -49,6 +49,18 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   reachable for every student (invariant 2 exception); priority never reads rank.
 - [x] **L4 (optional) final pass (tests only: 390 px, focus).** Re-run the harness, fix remaining "còn khác" rows (≤ 10 small items), narrow
   width 390 px check (no horizontal scroll), focus ring + keyboard order. **MILESTONE 2 after L3 (or L4).**
+- [x] **L5 (optional, Truong 2026-11-26) positive feedback on portal inputs.** PORTAL ONLY (`dang_ky.html`, `.dk-*`); the
+  MAIN app stays unchanged (would be a separate item). Scope, all CSS-class driven, max 600 ms, off under
+  `prefers-reduced-motion`, no layout shift, every `.btn` in `#dkApp` stays >= 44 px, button TEXT/`name=` unchanged
+  (tests use `exact=True`; show state with `::after` + `aria-live`, never by rewriting the label):
+  (a) helper `DK.phanHoi(btn, promise)` in `js/dang_ky_nen.js`: `.is-luu` (disabled, subtle pulse) while the call runs,
+  `.is-xong` (moss + tick, ~800 ms) on `ok:true`, `.is-loi` (rust, one short shake) on `ok:false`; wire to the save /
+  send / "Đặt hạn" / approve buttons in `dang_ky_quan_tri*.js` and `dang_ky_gv_hs.js`;
+  (b) FORMAT-ONLY valid tick on fields: student id, PIN, required name/club name. NEVER on rank, medal or answer fields
+  (invariant 2 spirit: no signal that nudges what the student reports);
+  (c) sent screen: draw the tick once, reuse `ux2Xong`.
+  Test: `tests/test_giao_dien_dk8_l5.py` (class toggles, reduced-motion, 44 px, no text change). Do L5 BEFORE the checker
+  pass, so the checker reviews the final head once.
 - [ ] Close: CHANGELOG, TIEN_DO rows `DK8-L<k>`, registry row DK8, test-file count in `CLAUDE_CHI_TIET.md`, CI green.
 
 ## Acceptance (checker uses these)
@@ -68,6 +80,12 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
   outcome_branch = this branch) with the CHECKER prompt of DK8_GIAO_THUC.md §3, wait with `send_later` 30 min, FIX max 2 rounds.
 - A `send_later` was scheduled in the OLD session (04:52Z) for CI check of 2102efe; ignore it in a new session.
 - Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]` (~40 s all 19 pairs).
+- Done: L1, L2, L3, L4 (pushed) and L5 (local, 18 tests in `tests/test_giao_dien_dk8_l5.py`, ruff clean). NO checker has run yet.
+- L5 design: `DK.phanHoi` in `js/dang_ky_nen.js` (DK.chay uses it, so every portal button gets `.is-luu/.is-xong/.is-loi`); tick moves to the re-rendered
+  button via MutationObserver (admin screen renders in two phases); `data-hl` fields = student id, PIN (4 digits), required names only; receipt has one `.dk-xong-dau`.
+  Two fake `ok:true` returns in `dang_ky_quan_tri_2.js` became `ok:false` (same message). CSS must override the MAIN-app UX2 rule `.btn.is-xong` (padding/nowrap).
+- Next: commit+push L5, wait CI green, then ONE checker pass `7c5dae5..<head>` ("M1+M2"), CI gate, soat-ma report, registry row DK8, test-file count in CLAUDE_CHI_TIET.md, `Status: DONE` + 5-line Vietnamese summary.
+- Harness: `.venv/bin/python du_lieu_test/chup_dk8.py <out> [--chi v8|that] [--ten landing,viec_1]`. Read tool caches images by path: use new filenames.
 - Tests require: exactly ONE `ol.dk-gd`, one `#dkHan`, one textarea in GV phase, every visible `.btn` in `#dkApp` >= 44 px, one gold button/frame.
 
 ## Decisions and gotchas (keep short)
@@ -98,3 +116,5 @@ Cả trường", "Công cụ thử", fake data); portal backup restore (decision
 | 2026-11-26 | Sonnet | L1 done: harness, shell (top bar, role cards, narrow login), public counts | CI pending |
 | 2026-11-26 | Sonnet | L2 done: admin tab bar on top, phase card + content cards, 2-col grids | CI pending |
 | 2026-11-26 | Sonnet | L3 + L4 done, handoff (context limit) | checker not yet run |
+| 2026-11-26 | Sonnet | L5 done: DK.phanHoi feedback, format-only tick, receipt tick; 18 tests | CI pending |
+| 2026-11-26 | Sonnet | CI loop round 1: chup_dk8.py wharton False; test count 439→444 in CLAUDE_CHI_TIET.md (Linux 6/6 log confirmed same cause) | CI only; DK8-L5 NOT started |

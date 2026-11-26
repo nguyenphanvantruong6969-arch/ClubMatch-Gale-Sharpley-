@@ -79,7 +79,7 @@
       });
       const van = h("textarea.dk-nhap", { rows: "3", placeholder: "Mỗi dòng: Mã HS, dấu Tab, điểm. Chép hai cột từ trang tính là đúng dạng." });
       const dan = DK.nut("Lưu điểm đã dán", function () { DK.chay(this, async () => {
-        if (!van.value.trim()) { DK.thongBao("Dán ít nhất một dòng trước.", true); return { ok: true }; }
+        if (!van.value.trim()) return { ok: false, errors: ["Dán ít nhất một dòng trước."] };       // DK8-L5: là lỗi nhập, không phải «xong»
         const r = await DK.goi("dk_diem_dan", T(), c.clb_id, van.value);
         if (r.ok) { const chu = "Đã lưu " + r.data.da_luu + " điểm" + (r.data.loi.length ? ", " + r.data.loi.length + " dòng lỗi (dòng " + r.data.loi.map((e) => e.dong).join(", ") + ")." : "."); await lamMoi(); DK.thongBao(chu); } return r; }); });
       return h("details", { open: ds.length === 1 }, h("summary", {}, c.ten + " (" + c.hoc_sinh.length + " em" + (c.diem_san !== null ? ", điểm sàn " + c.diem_san : "") + ")"),
@@ -178,7 +178,7 @@
     const mkLai = DK.truong("Nhập lại mật khẩu mới", "mk_lai", { type: "password", autocomplete: "new-password" });
     const doiMk = DK.nut("Đổi mật khẩu", function () { DK.chay(this, async () => {
       const cu = mkCu.querySelector("input"), moi = mkMoi.querySelector("input"), lai = mkLai.querySelector("input");
-      if (moi.value !== lai.value) { DK.thongBao("Hai lần nhập mật khẩu mới không giống nhau.", true); return { ok: true }; }
+      if (moi.value !== lai.value) return { ok: false, errors: ["Hai lần nhập mật khẩu mới không giống nhau."] };       // DK8-L5: là lỗi nhập, không phải «xong»
       const r = await DK.goi("dk_doi_mat_khau", T(), cu.value, moi.value);
       if (r.ok) { cu.value = moi.value = lai.value = ""; chupO(); DK.thongBao("Đã đổi mật khẩu. Các máy quản trị khác phải đăng nhập lại."); } return r; }); }, { id: "dkDoiMk" });
     return h("div", {}, h("div.dk-luoi2", {},
