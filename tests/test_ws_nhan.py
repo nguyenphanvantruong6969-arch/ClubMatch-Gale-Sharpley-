@@ -194,7 +194,7 @@ KHOA_UI_DA_BO = {"fill_panel_title", "fill_hint", "fill_nhom_tong", "fill_choi",
                  # T3-L2 (T3-04): gộp hai nút kiểm tra thành một (`btn_validate`, đổi chữ).
                  "btn_health_recheck"}
 # UX6-L1: bớt chữ giải thích — các khoá này bị xoá khỏi UI_STRINGS (vi + en).
-KHOA_UI_DA_BO |= {"pipeline_desc", "kq_desc", "ux5a_gt_mo_ta", "ux5a_kq_mo_bang", "others_desc", "xuat_hint_hoc_sinh", "do_phu_desc", "nv_desc", "tham_tai_lap", "fallback_desc", "ux5b_fallback_desc_qt", "fallback_buoi_hint", "admin_desc", "ux4_mo_clb", "admin_tai_buoi_desc", "ux4_mo_hs", "wh_sua_rong", "wh_dang_mo_khong_can", "wh_nk_chon_em", "wh_nhat_ky_rong", "ux4_mo_lam_lai", "danger_zone_safety", "ux4_mo_cach_xep", "gt2_tc_nhom_goi_y", "scoring_desc", "cb_desc", "cb_duong_hint", "cb_duong_a_ghi", "cb_duong_b_ghi", "cb_buoc_trong", "scoring_desc_person", "import_hint", "gt2_tc_mo_ta", "gt2_thu_mo_ta"}
+KHOA_UI_DA_BO |= {"pipeline_desc", "kq_desc", "ux5a_gt_mo_ta", "ux5a_kq_mo_bang", "others_desc", "xuat_hint_hoc_sinh", "do_phu_desc", "nv_desc", "tham_tai_lap", "fallback_desc", "ux5b_fallback_desc_qt", "fallback_buoi_hint", "admin_desc", "ux4_mo_clb", "admin_tai_buoi_desc", "ux4_mo_hs", "wh_sua_rong", "wh_dang_mo_khong_can", "wh_nk_chon_em", "wh_nhat_ky_rong", "ux4_mo_lam_lai", "danger_zone_safety", "ux4_mo_cach_xep", "gt2_tc_nhom_goi_y", "scoring_desc", "cb_desc", "cb_duong_hint", "cb_duong_a_ghi", "cb_duong_b_ghi", "cb_buoc_trong", "scoring_desc_person", "import_hint", "gt2_tc_mo_ta", "gt2_thu_mo_ta", "ux1b_tieu_de"}
 
 # T3-L1 (Truong duyệt 04/11/2026): đổi chữ có chủ ý theo bảng 5.1-5.3 của nghiên cứu T3. Chuỗi cũ đổi theo
 # bảng thay chữ dưới đây; chuỗi viết lại hẳn nằm trong `chu_ui_doi_co_y_t3.json` (giá trị MỚI với mặc định

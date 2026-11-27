@@ -3754,3 +3754,26 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .ux6-hoi-nut:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; border-radius: 6px; }
 .ux6-hoi-nd { margin: 0 0 8px; max-width: 70ch; font-size: 14px; line-height: 1.5; color: var(--slate); }
 .ux6-hoi-nd[hidden] { display: none; }
+
+/* UX6-L2: màn hình đổi theo trạng thái */
+.drop-zone[hidden] { display: none; }
+.ux6-tom-so { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.ux6-tom-so[hidden] { display: none; }
+.ux6-tom-dau { color: var(--moss); font-weight: 700; }
+.ux6-tom-chu { font-weight: 600; }
+#panelCanhBao[data-gon="1"] .hint-text,
+#panelCanhBao[data-gon="1"] #healthChiTiet,
+#panelCanhBao[data-gon="1"] #btnValidate { display: none; }
+#panelCanhBao[data-gon="1"] .panel-head { margin-bottom: 4px; }
+.status-strip { flex-wrap: wrap; }
+.ux6-tien-do { flex-basis: 100%; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+.ux6-tien-do-chu { font-weight: 600; white-space: nowrap; }
+.ux6-thanh { flex: 1; height: 6px; border-radius: 3px; background: var(--moss-soft); overflow: hidden; min-width: 80px; }
+.ux6-thanh > span { display: block; height: 100%; width: 0; background: var(--moss); transition: width 240ms var(--ease-out); }
+.ux6-tien-do .btn[hidden] { display: none; }
+
+/* UX6-L2 (Kết quả): một thanh công cụ phía trên bảng; bảng không nằm trong khung */
+.kq-thanh-cong-cu { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 12px; }
+.kq-nhom-lop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.kq-thanh-cong-cu .kq-nut-tai { margin-left: auto; }
+.kq-vung-bang { margin-top: 8px; width: 100%; }

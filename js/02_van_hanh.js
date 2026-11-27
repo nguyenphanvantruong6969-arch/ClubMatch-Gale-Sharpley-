@@ -45,6 +45,8 @@ function docHatGiong() {
 }
 
 function loadPipelineTab() {
+  ux6DoiSo = false;
+  ux6MoCanhBao = false;
   ux2VePha(); /* UX2-L5: ve 4 pha ngay khi mo the (trang thai hien co, mac dinh "chua chay") */
   refreshDashboardStats();
   refreshStbLockLine();
@@ -155,7 +157,7 @@ function loadHealthReport() {
       });
     gap.hidden = false;
     gap.open = nCao > 0;
-  }));
+  }).then(() => ux6GonBuocCanhBao()));
   return hoi;
 }
 
@@ -173,8 +175,44 @@ function ux5bVeTrangThaiPipeline() {
     : trangThaiVanHanh === "san_sang" ? t("ux5b_tt_buoc_chay", { n: ux5bSoNguoi })
     : t("ux5b_tt_buoc_nhap");
 }
+/* UX6-L2: màn hình đổi theo trạng thái. Đã có sổ (có học sinh và CLB) thì một dòng tóm tắt thay ô thả tệp; "Đổi sổ" mang ô thả
+   về. Có tệp đang chờ nhập thì ô thả vẫn hiện. */
+let ux6DoiSo = false;
+let ux6SoDem = { n: 0, m: 0 };
+function ux6VeTomSo() {
+  const tom = el("ux6TomSo"), zone = el("dropZone");
+  if (!tom || !zone) return;
+  const daCoSo = trangThaiVanHanh !== "trong";
+  const hienO = !daCoSo || ux6DoiSo || importQueue.length > 0;
+  zone.hidden = !hienO;
+  tom.hidden = hienO;
+  if (daCoSo) el("ux6TomSoChu").textContent = t("ux6_tom_so", { n: ux6SoDem.n, m: ux6SoDem.m });
+}
+/* Bước "Xem cảnh báo" đã xong (không có mục chặn) thì gọn thành một dòng; có mục nghiêm trọng thì giữ mở. */
+let ux6MoCanhBao = false;
+function ux6GonBuocCanhBao() {
+  const p = el("panelCanhBao"), sum = el("healthSummary");
+  if (!p || !sum) return;
+  const chan = sum.classList.contains("is-warn") || sum.classList.contains("is-empty");
+  const gon = trangThaiVanHanh !== "trong" && !chan && sum.textContent.trim() !== "" && !ux6MoCanhBao;
+  p.dataset.gon = gon ? "1" : "0";
+  el("btnMoLaiCanhBao").hidden = !gon;
+}
+/* Thanh trạng thái: x/y đã có CLB, thanh tiến độ, nút "n chưa có CLB" (cùng hành động với thanh "Việc tiếp theo"). */
+function ux6VeThanhTienDo(d, soChua) {
+  const n = d.n_students || 0, m = d.n_matched || 0;
+  el("statTienDo").textContent = t("ux6_tien_do", { n, m });
+  const bar = el("statBar");
+  bar.setAttribute("aria-valuemax", String(n));
+  bar.setAttribute("aria-valuenow", String(m));
+  el("statBarDay").style.width = n ? Math.min(100, Math.round(100 * m / n)) + "%" : "0%";
+  const nut = el("btnStripChuaCo");
+  nut.hidden = !(soChua > 0 && d.has_results);
+  if (!nut.hidden) nut.textContent = t("ux6_chua_co", { n: soChua });
+}
 function datTrangThaiVanHanh(d) {
   ux5bSoNguoi = d.n_students || 0;
+  ux6SoDem = { n: d.n_students || 0, m: d.n_clubs || 0 };
   trangThaiVanHanh = (!d.n_students || !d.n_clubs) ? "trong" : (d.n_matched > 0 ? "xong" : "san_sang");
   const v = el("view-pipeline");
   if (v) v.dataset.trangThai = trangThaiVanHanh;
@@ -191,6 +229,7 @@ function refreshDashboardStats() {
     el("statClubs").textContent = res.data.n_clubs;
     el("statMatched").textContent = res.data.n_matched;
     datTrangThaiVanHanh(res.data);
+    callApi("get_em_chua_co_cho").then((cho) => ux6VeThanhTienDo(res.data, cho.ok ? cho.data.so_em : 0));
     if (typeof capNhatViecTiepTheo === "function") capNhatViecTiepTheo(); /* UX1A-L1 */
     /* T3-01 (B2): chưa có học sinh hoặc chưa có CLB thì khoá nút Chạy kèm lý do (backend cũng chặn
        bằng `chua_co_du_lieu_de_chay`, nên đây chỉ là báo sớm cho người vận hành). */
@@ -501,6 +540,8 @@ function capNhatKhoaVanHanh() {
   el("btnClearQueue").disabled = khoa.dangChay || khoa.dangNhap;
   el("btnTaiSoMau").disabled = khoa.dangChay || khoa.dangNhap;
   ux5bVeTrangThaiPipeline();
+  ux6VeTomSo();
+  ux6GonBuocCanhBao();
   if (el("btnXuatTuyChon")) el("btnXuatTuyChon").disabled = khoa.dangChay || khoa.dangXuat;
   if (typeof capNhatNutXuatTheoLop === "function") capNhatNutXuatTheoLop();
 
@@ -921,6 +962,9 @@ function initCsvImportHandlers() {
   el("btnImportAll").addEventListener("click", nhapTatCa);
   el("btnClearQueue").addEventListener("click", boHangDoiNhap);
   el("btnTaiSoMau").addEventListener("click", () => taiSoNhapMau("thuong"));
+  el("btnDoiSo").addEventListener("click", () => { ux6DoiSo = true; ux6VeTomSo(); const o = el("dropZone"); o.scrollIntoView({ block: "center" }); o.focus(); });
+  el("btnMoLaiCanhBao").addEventListener("click", () => { ux6MoCanhBao = true; ux6GonBuocCanhBao(); });
+  el("btnStripChuaCo").addEventListener("click", () => viecXuLyChuaCoCho());
 }
 
 function boHangDoiNhap() {

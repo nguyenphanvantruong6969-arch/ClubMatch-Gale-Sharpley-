@@ -112,6 +112,11 @@
         <div class="strip-item"><span class="strip-num" id="statClubs">—</span><span class="strip-label" data-i18n="label_clubs">CLB</span></div>
         <div class="strip-div"></div>
         <div class="strip-item"><span class="strip-num" id="statMatched">—</span><span class="strip-label" data-i18n="label_matched">đã xếp CLB</span></div>
+        <div class="ux6-tien-do">
+          <span class="ux6-tien-do-chu" id="statTienDo" role="status"></span>
+          <div class="ux6-thanh" id="statBar" role="progressbar" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" data-i18n-aria-label="ux6_tien_do_aria" aria-label="Tiến độ xếp"><span id="statBarDay"></span></div>
+          <button type="button" class="btn btn-secondary btn-nho" id="btnStripChuaCo" hidden></button>
+        </div>
       </div>
 
       <div class="panel" id="panelNhap">
@@ -125,6 +130,13 @@
           <span data-i18n="dk_loi_dan">Chưa có sổ nhập? Có thể thu thập bằng cổng Đăng ký CLB: giáo viên lập CLB, học sinh đăng ký, rồi xuất Sổ nhập tự động. Lần đầu cần đặt mật khẩu quản trị cho cổng.</span>
           <a href="dang_ky.html" id="ghiChuDangKyLienKet" data-i18n="dk_loi_dan_lien_ket">Mở Đăng ký CLB</a>
         </p>
+
+        <!-- UX6-L2: sau khi đã có sổ, dòng tóm tắt thay ô thả tệp (ux6VeTomSo, js/02_van_hanh.js) -->
+        <div class="ux6-tom-so" id="ux6TomSo" hidden>
+          <span class="ux6-tom-dau" aria-hidden="true">✓</span>
+          <span class="ux6-tom-chu" id="ux6TomSoChu"></span>
+          <button type="button" class="btn btn-ghost btn-nho" id="btnDoiSo" data-i18n="ux6_doi_so">Đổi sổ</button>
+        </div>
 
         <div class="drop-zone" id="dropZone" tabindex="0" role="button"
              aria-describedby="dropZoneHint">
@@ -144,10 +156,11 @@
         <div class="import-warnings" id="importWarnings" hidden></div>
       </div>
 
-      <div class="panel" id="panelCanhBao">
+      <div class="panel" id="panelCanhBao" data-gon="0">
         <div class="panel-head">
           <h2 data-i18n="health_panel_title">2. Xem cảnh báo</h2>
           <div class="panel-actions">
+            <button class="btn btn-ghost btn-nho" type="button" id="btnMoLaiCanhBao" data-i18n="ux6_xem_lai" hidden>Xem lại</button>
             <button class="btn btn-secondary" id="btnValidate" data-i18n="btn_validate">Kiểm tra lại</button>
           </div>
         </div>
@@ -324,16 +337,24 @@
         </div>
       </div>
 
-      <!-- UX1B/UX1F-L4: giáo viên chủ nhiệm và hiệu trưởng (js/19_ux1b_gv.js). MỘT ô "Chọn lớp" (#kqChonLop) cho cả bảng kết quả bên dưới và "In phiếu cả lớp" -->
-      <div class="panel" id="ux1bPanel">
-        <div class="panel-head"><h2 data-i18n="ux1b_tieu_de">Theo {cohort_l} và báo cáo</h2></div>
-        <div class="panel-body">
-          <div class="search-row">
-            <span class="kq-chon-lop-goi" id="kqChonLopHang" hidden>
-              <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
-              <select id="kqChonLop" class="text-input text-input-sm"></select>
-            </span>
-            <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
+      <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
+        <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
+      </div>
+
+      <!-- UX6-L2: MỘT thanh công cụ phía trên bảng (cách xem · chọn lớp · xuất theo lớp · báo cáo · tải bảng); bảng không nằm trong khung.
+           UX1B/UX1F-L4: #ux1bPanel (js/19_ux1b_gv.js) là nhóm "lớp và báo cáo" của thanh; MỘT ô "Chọn lớp" (#kqChonLop) cho cả bảng và "In phiếu cả lớp". -->
+      <div class="kq-thanh-cong-cu" id="kqThanhCongCu">
+        <div class="kq-seg" id="kqTang1" role="group" data-i18n-aria-label="kq_aria_tang1">
+          <button type="button" class="kq-seg-nut" data-kq="lop" aria-pressed="false" data-i18n="kq_theo_lop">Theo {cohort_l}</button>
+          <button type="button" class="kq-seg-nut" data-kq="clb" aria-pressed="false" data-i18n="kq_theo_clb">Theo {slot_sl}</button>
+          <button type="button" class="kq-seg-nut" data-kq="ma" aria-pressed="false" data-i18n="kq_theo_ma">Theo mã {person_l}</button>
+        </div>
+        <div class="kq-nhom-lop" id="ux1bPanel">
+          <span class="kq-chon-lop-goi" id="kqChonLopHang" hidden>
+            <label class="lop-nhan" for="kqChonLop" data-i18n="kq_chon_lop">Chọn {cohort_l}</label>
+            <select id="kqChonLop" class="text-input text-input-sm"></select>
+          </span>
+          <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
             <!-- UX5A-L2: ba việc ít dùng gập vào một nếp (Hick); id các nút giữ nguyên -->
             <details class="menu-khac" id="ux1bThemMenu">
               <summary class="btn btn-secondary" id="ux1bThemTom" data-i18n="ux5a_ux1b_them">Báo cáo và phiếu in ▾</summary>
@@ -344,25 +365,12 @@
                 <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp: mức lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}. Không có tên, mã hay điểm.</p>
               </div>
             </details>
-          </div>
-          <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
         </div>
+        <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
       </div>
-      <!-- /UX1B -->
-
-      <div class="canh-bao-vang canh-bao-hang" id="kqCuBanner" hidden>
-        <span data-i18n="ket_qua_cu_banner">Dữ liệu đã được sửa sau lần chạy gần nhất, nên kết quả bên dưới có thể đã cũ. Hãy chạy lại ở thẻ "Xếp CLB" trước khi xuất hoặc công bố.</span>
-      </div>
-      <div class="panel">
-        <div class="kq-chon-hang">
-          <div class="kq-seg" id="kqTang1" role="group" data-i18n-aria-label="kq_aria_tang1">
-            <button type="button" class="kq-seg-nut" data-kq="lop" aria-pressed="false" data-i18n="kq_theo_lop">Theo {cohort_l}</button>
-            <button type="button" class="kq-seg-nut" data-kq="clb" aria-pressed="false" data-i18n="kq_theo_clb">Theo {slot_sl}</button>
-            <button type="button" class="kq-seg-nut" data-kq="ma" aria-pressed="false" data-i18n="kq_theo_ma">Theo mã {person_l}</button>
-          </div>
-          <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
-        </div>
-        <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+      <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
+      <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>
+      <div class="kq-vung-bang">
         <div class="search-row kq-chon-hang-phu" id="kqChonClbHang" hidden>
           <label class="lop-nhan" for="kqChonClb" data-i18n="kq_chon_clb">Chọn {slot_l}</label>
           <select id="kqChonClb" class="text-input"></select>
