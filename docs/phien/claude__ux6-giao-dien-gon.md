@@ -49,15 +49,14 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- L1-L3 implemented; M1 (bf12e43) and M2 (f392ae1) written; checker NOT run yet.
-- Truong (latest): "fix only what is red in CI, then recheck, then done; ignore the context limit, follow the CI".
-- CI run 1806 (e28fe96) red causes, all test-copy/visibility fallout: btnValidate hidden when step 2 collapsed (fixed 1d7ffe3),
-  tests count 447 vs 450 (fixed), a14_lop key count 48->46 (xuat_theo_lop_hint deleted), thong_bao used `#view-admin .view-desc`,
-  diem_quyet_tam_gon asserted deleted `#whNkChonEm` (now asserts `#whNkHop`). Last three fixed locally, being pushed.
-- Run 1812 on 7b7a5b0 queued before these fixes; a new run follows the next push.
+- L1-L3 implemented; M1 (bf12e43) and M2 (f392ae1) written. CI "Tests (rbda-kiosk)" run 1813 on 8b27fc2: SUCCESS (rechecked).
+- The red causes of run 1806 (btnValidate hidden by data-gon, tests count 450, a14_lop key count 46, thong_bao `.view-desc`,
+  diem_quyet_tam_gon `#whNkChonEm`) are fixed; all were test-copy/visibility fallout, no backend change.
+- Checker (protocol section 4) NOT run yet; soat-ma tiers were self-checked (kiem_nhanh 7/7, ruff clean, no removed id used by JS).
+- Open for Truong: logo uses logo.png (kiosk.spec bundles only logo.png); "..." suffix on dialog buttons kept as convention.
 
 ## Next steps
-1. Read the CI result for 1d7ffe3; if red, fetch CI failures with failed_only and tail_lines ~130 (summary
+1. (Done: CI green on 8b27fc2.) If a later push turns CI red, fetch failures with tail_lines ~130 (summary
    lines "FAILED ..." sit right before "N failed"); fix inside UX6 only; loop until Tests (rbda-kiosk) is green on head.
 2. soat-ma pass on the diff (report, fix only UX6 findings); list anything outside UX6 for Truong.
 3. Checker runs M1 and M2 (protocol section 4); then final CHANGELOG/TIEN_DO touch-ups.
@@ -95,6 +94,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
+| 2026-11-27 | Sonnet | CI run 1813 on 8b27fc2 green; recorded | Truong: done after recheck |
 | 2026-11-27 | Sonnet | CI fixes: a14_lop count, thong_bao, diem_quyet_tam_gon; push then watch CI | Truong: only CI-red, then recheck |
 | 2026-11-27 | Sonnet | Context handoff 2: pushed 1d7ffe3, CI rerun pending, Truong said fix only CI-red then recheck | next session continues |
 | 2026-11-27 | Sonnet | Context handoff: CI red on e28fe96, fix a01a8fc committed locally | superseded |
