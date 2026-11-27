@@ -53,9 +53,19 @@ needs Truong's screenshot. **Out of scope until then; do not guess.**
 - [ ] Final: all 8 repro tests green (renamed into the items' own test files is fine), related tests green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG1-L<n>`, one Chromium file `tests/test_giao_dien_vg1.py`.
 
 ## Current state
-- Done so far: 8 red repro tests (`tests/test_va_gap_tai_hien.py`), this plan. No product code changed.
-- Tests: `python -m pytest -q tests/test_va_gap_tai_hien.py` → 8 failed (expected before L1–L4).
-- Open: defect 7 (needs Truong's screenshot). Repo has no `.venv`; system `python` has pytest + openpyxl, NOT playwright.
+- L1–L4 coded and pushed (commits `VG1-L1..L4`); 8 repro tests green + `tests/test_vg1_*.py`, `tests/test_giao_dien_vg1.py`. `kiem_nhanh.py` 7/7.
+- Checker session `session_01VfPzNtE9d7La8pmUAfoyyr` (Opus) asked `REVIEW 1 fea0230..HEAD` (covers both milestones). Waiting for `CHECKER REPORT`.
+- Next: on NO BUGS -> §4 CI loop (tests.yml + Build Windows). Note: another session pushed `tests/test_vg2_tai_hien.py` (16 RED repro tests for VG2) onto this branch: they will make CI red; they are NOT VG1 (see `docs/phien/claude__vg2-ra-soat-theo-vai.md`).
+- Open: defect 7 (Đặng Văn Nam 4) untouched.
+
+## Decisions added by coder (safe defaults)
+- D6 `so_gv` (portal count) = self-registered teachers + teachers with >=1 club (admin-created, never used = not counted).
+- D7 PIN reset / export / "thay" list also kill the person's open sessions (from VG1_KIEM_TRA_TOAN_DIEN #2, #3).
+- D8 Risk text for turning OFF the free-club rule lives in the portal JS (`QT2.CHU_RUI_RO`), not `i18n.js` (rule `chu_cam` forbids "em" there).
+
+## Needs Truong (notes, not stops)
+- Export check: FA `kiem_truoc_fa` blocks the RUN with `fa_thieu_clb_tu_do` when a session has no Tự do club. With the rule OFF the Sổ nhập exports but the run is blocked; fixing needs an algorithm/pipeline change (out of scope). The Duyệt/Xuất screens say so.
+- Findings #1 (admin lockout DoS), #4–#8, #10–#14 of `VG1_KIEM_TRA_TOAN_DIEN.md` not done (candidate L5/VG2).
 
 ## Next steps
 1. Coder session: follow `docs/phien/VG1_GIAO_THUC.md`.
