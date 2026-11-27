@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1-L1 (vá gấp cổng đăng ký: đăng nhập chuẩn hoá tên/mã/PIN, lỗi 1–2)
+
+- `api_dang_ky.py`: `_chuan_ten` (NFC + gộp khoảng trắng + casefold) dùng cho `dk_dang_nhap` (tên giáo viên, mã học sinh), khoá đếm sai `_dk_khoa_dn`, kiểm trùng tên giáo viên (`_dk_gv_trung`) và trùng mã học sinh khi nạp danh sách (`dk_hs_nap_danh_sach`: mã trùng sau chuẩn hoá = trùng, em đã có thì giữ cách viết mã đã lưu). PIN được cắt khoảng trắng; PIN không đúng 4 chữ số ASCII bị từ chối bằng `dk_pin_sai_dang` TRƯỚC khi băm và KHÔNG tính một lần sai (chống khoá hộ tài khoản người khác). Tên/mã lưu và xuất giữ nguyên cách viết gốc (bất biến 7).
+- Test: `tests/test_vg1_cong_dang_nhap.py` (4); 3 test lỗi 1–2 trong `tests/test_va_gap_tai_hien.py` xanh; `tests/test_dk4_l0b_khoa_dang_nhap.py` đổi PIN sai «xxxx» thành PIN sai ĐÚNG DẠNG (`_sai()`), ý nghĩa giữ nguyên.
+
 ## 2026-11-26 — DN-NL vòng 2 (VÁ KHẨN: làm việc nhầm workspace trống sau khi đăng nhập)
 
 - Nguyên nhân gốc của ảnh Truong gửi («quanly (Quản trị)» + «Chưa có dữ liệu» + «Cần đăng nhập»): có NHIỀU workspace thì `main.khoi_dong_workspace` mở tạm workspace SỬA GẦN NHẤT (`da_chon=False`) và trông vào giao diện hiện màn chọn. Nhưng `get_workspace_state` thuộc mức giáo viên nên bị từ chối khi chưa đăng nhập → màn chọn KHÔNG BAO GIỜ hiện, tên workspace không hiện → người dùng đăng nhập (tài khoản đi theo từng CSDL) và làm việc trong workspace sai, ví dụ bản nhân bản đã «Làm lại từ đầu». Tái hiện trên mã cũ (21cfdd4): khớp ảnh từng chi tiết.

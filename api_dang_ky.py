@@ -56,6 +56,11 @@ def _dung(pin, bam, muoi) -> bool:
     return hmac.compare_digest(_bam(pin, bytes(muoi))[0], bytes(bam))
 
 
+def _chuan_ten(v) -> str:
+    """VG1-L1 (D1): khoá so khớp tên/mã khi đăng nhập: NFC, gộp khoảng trắng trong, bỏ hoa/thường. KHÔNG dùng để lưu."""
+    return " ".join(unicodedata.normalize("NFC", str(v or "")).split()).casefold()
+
+
 def _pin_moi() -> str:
     return "%04d" % secrets.randbelow(10000)
 
@@ -194,7 +199,7 @@ class DangKyMixin:
 
     @staticmethod
     def _dk_khoa_dn(vai, ten):
-        return "dn_sai:%s:%s" % (vai, str(ten or "").strip()[:64])
+        return "dn_sai:%s:%s" % (vai, _chuan_ten(ten)[:64])
 
     def _dk_con_khoa(self, cur, khoa):
         """Số phút còn bị khoá (làm tròn lên) hoặc 0. Giá trị lưu: `số_lần_sai|hạn_khoá_ISO` (hạn rỗng = chưa khoá)."""
@@ -212,6 +217,11 @@ class DangKyMixin:
         thời gian khoá, nhập đúng cũng bị từ chối. Quản trị mở khoá bằng `dk_mo_khoa`. Bộ đếm lưu trong `dk_cai_dat`
         (không đổi lược đồ) nên mở lại phần mềm không xoá khoá."""
         khoa = self._dk_khoa_dn(vai, ten)
+        ma = str(ma or "")
+        if vai != QUAN_TRI:
+            ma = ma.strip()                          # VG1-L1 (D1): PIN gõ thừa dấu cách vẫn đúng
+            if not re.fullmatch(r"[0-9]{4}", ma):       # sai dạng: chặn bằng mã riêng, KHÔNG tính một lần sai (chống khoá hộ)
+                return _fail(err("dk_pin_sai_dang"))
 
         def lam(cur, _):
             phut = self._dk_con_khoa(cur, khoa)
@@ -239,13 +249,14 @@ class DangKyMixin:
                 ok = _dung(ma_s, bytes.fromhex(self._dk_cai_dat(cur, "mk_bam")), bytes.fromhex(self._dk_cai_dat(cur, "mk_muoi")))
                 thong = {"ten": "Quản trị"}
             elif vai == GIAO_VIEN:
-                r = cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien WHERE ten = ?",
-                                (str(ten or "").strip(),)).fetchone()
+                k = _chuan_ten(ten)
+                r = next((x for x in cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien") if _chuan_ten(x[1]) == k), None)
                 ok = bool(r) and _dung(ma_s, r[2], r[3])
                 thong = {"ten": r[1], "id": r[0]} if r else {}
             elif vai == HOC_SINH:
-                r = cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh WHERE student_id = ?",
-                                (str(ten or "").strip(),)).fetchone()
+                k = _chuan_ten(ten)
+                r = next((x for x in cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh")
+                          if _chuan_ten(x[0]) == k), None)
                 ok = bool(r) and _dung(ma_s, r[4], r[5])
                 thong = {"ten": r[1], "id": r[0], "lop": r[2], "khoi": r[3]} if r else {}
             else:
@@ -423,6 +434,12 @@ class DangKyMixin:
         return self._dk_chay(lam, QUAN_TRI, GIAO_VIEN, ghi=False, token=token)
 
     # ------------------------------------------------------------ giáo viên
+    @staticmethod
+    def _dk_gv_trung(cur, ten) -> bool:
+        """VG1-L1: trùng tên sau chuẩn hoá (NFC, khoảng trắng, hoa/thường) = trùng."""
+        k = _chuan_ten(ten)
+        return any(_chuan_ten(r[0]) == k for r in cur.execute("SELECT ten FROM dk_giao_vien"))
+
     def dk_gv_tu_dang_ky(self, ma_truong, ten, pin):
         """Giáo viên tự đăng ký (mã trường + tên + PIN riêng 4 chữ số) khi giai đoạn GV đang mở."""
         def lam(cur, _):
@@ -437,7 +454,7 @@ class DangKyMixin:
                 raise _Loi("dk_ten_trong")
             if not re.fullmatch(r"\d{4}", str(pin or "")):
                 raise _Loi("dk_pin_sai_dang")
-            if cur.execute("SELECT 1 FROM dk_giao_vien WHERE ten = ?", (t,)).fetchone():
+            if self._dk_gv_trung(cur, t):
                 raise _Loi("dk_gv_trung")
             b, m = _bam(pin)
             cur.execute("INSERT INTO dk_giao_vien (ten, pin_bam, pin_muoi, cach_tao) VALUES (?, ?, ?, 'tu_dang_ky')", (t, b, m))
@@ -454,7 +471,7 @@ class DangKyMixin:
                 t = unicodedata.normalize("NFC", dong).strip()
                 if not t:
                     continue
-                if len(t) > 60 or cur.execute("SELECT 1 FROM dk_giao_vien WHERE ten = ?", (t,)).fetchone():
+                if len(t) > 60 or self._dk_gv_trung(cur, t):
                     bo_qua.append(t)
                     continue
                 pin = _pin_moi()
@@ -516,7 +533,7 @@ class DangKyMixin:
                 if not khoi or not k_tu <= khoi <= k_den:
                     loi.append({"dong": i, "ly_do": "khoi_ngoai_dai"})
                     continue
-                if any(h[0] == ma for h in hop_le):
+                if any(_chuan_ten(h[0]) == _chuan_ten(ma) for h in hop_le):   # VG1-L1: «H9» và «h9» là cùng một mã
                     loi.append({"dong": i, "ly_do": "trung_ma"})
                     continue
                 hop_le.append((ma, ten, lop, khoi))
@@ -530,9 +547,11 @@ class DangKyMixin:
                     raise _Loi("dk_sai_giai_doan", phan="chuan_bi")
                 cur.execute("DELETE FROM dk_nguyen_vong")
                 cur.execute("DELETE FROM dk_hoc_sinh")
+            co_san = {_chuan_ten(r[0]): r[0] for r in cur.execute("SELECT student_id FROM dk_hoc_sinh")}
             for ma, ten, lop, khoi in hop_le:
-                if cur.execute("SELECT 1 FROM dk_hoc_sinh WHERE student_id = ?", (ma,)).fetchone():
-                    cur.execute("UPDATE dk_hoc_sinh SET ho_ten = ?, lop = ?, khoi = ? WHERE student_id = ?", (ten, lop, khoi, ma))
+                if _chuan_ten(ma) in co_san:                 # giữ nguyên cách viết mã đã lưu (hợp đồng CSV)
+                    cur.execute("UPDATE dk_hoc_sinh SET ho_ten = ?, lop = ?, khoi = ? WHERE student_id = ?",
+                                (ten, lop, khoi, co_san[_chuan_ten(ma)]))
                     da_co += 1
                 else:
                     pin = _pin_moi()
