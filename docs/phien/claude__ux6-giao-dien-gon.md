@@ -49,12 +49,12 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- L1, L2, L3 implemented. MILESTONE 1 READY (bf12e43), MILESTONE 2 READY (f392ae1); checker NOT run yet.
-- Pushed to origin: head 1d7ffe3 (includes a01a8fc: keeps "Kiểm tra lại" visible when step 2 collapses; tests count 450).
-- CI run 1806 on e28fe96 was red: btnValidate hidden (fixed), test count 447 vs 450 (fixed), 3 more Linux failures of unknown
-  names (jobs 1/6, 2/6, 6/6). A new CI run on 1d7ffe3 is in progress; a check was scheduled for 23:24 UTC 2026-11-27.
-- Truong (latest): fix ONLY what is red in CI, then recheck, then done.
-- Local: related UI tests green; ruff clean; kiem_nhanh 7/7; backend diff empty.
+- L1-L3 implemented; M1 (bf12e43) and M2 (f392ae1) written; checker NOT run yet.
+- Truong (latest): "fix only what is red in CI, then recheck, then done; ignore the context limit, follow the CI".
+- CI run 1806 (e28fe96) red causes, all test-copy/visibility fallout: btnValidate hidden when step 2 collapsed (fixed 1d7ffe3),
+  tests count 447 vs 450 (fixed), a14_lop key count 48->46 (xuat_theo_lop_hint deleted), thong_bao used `#view-admin .view-desc`,
+  diem_quyet_tam_gon asserted deleted `#whNkChonEm` (now asserts `#whNkHop`). Last three fixed locally, being pushed.
+- Run 1812 on 7b7a5b0 queued before these fixes; a new run follows the next push.
 
 ## Next steps
 1. Read the CI result for 1d7ffe3; if red, fetch CI failures with failed_only and tail_lines ~130 (summary
@@ -95,6 +95,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
+| 2026-11-27 | Sonnet | CI fixes: a14_lop count, thong_bao, diem_quyet_tam_gon; push then watch CI | Truong: only CI-red, then recheck |
 | 2026-11-27 | Sonnet | Context handoff 2: pushed 1d7ffe3, CI rerun pending, Truong said fix only CI-red then recheck | next session continues |
 | 2026-11-27 | Sonnet | Context handoff: CI red on e28fe96, fix a01a8fc committed locally | superseded |
 | 2026-11-27 | Sonnet | L3 done, MILESTONE 2 READY | CSS mask icons keep UX2 ::after hit areas intact |

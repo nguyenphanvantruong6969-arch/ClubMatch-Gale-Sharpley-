@@ -181,7 +181,7 @@ def test_vung_thong_bao_khong_de_len_tieu_de_hay_thanh_tab(mo):
     page.wait_for_timeout(300)
     stack = page.locator("#toastStack").bounding_box()
     assert stack and stack["height"] > 50
-    for chon in ("#view-admin h1", "#view-admin .view-desc", "#qlTabs"):
+    for chon in ("#view-admin h1", "#qlTabs"):   # UX6-L1: bỏ #view-admin .view-desc (câu mô tả đã xoá)
         o = page.locator(chon).bounding_box()
         giao = not (stack["x"] + stack["width"] <= o["x"] or o["x"] + o["width"] <= stack["x"]
                     or stack["y"] + stack["height"] <= o["y"] or o["y"] + o["height"] <= stack["y"])

@@ -239,8 +239,8 @@ def test_chu_moi_vi_sach_tieng_anh_va_en_khong_dung_you():
                       r'xuat_kq_theo_lop|xuat_muc_theo_lop|aria_loc_lop|aria_sap_xep|toast_lop|'
                       r'ws_dt_cohort|th_stt|members_|theolop_|the_xem_)\w*): "(.*)",$', re.M)
     cap = mach.findall(nguon)
-    assert len(cap) == 48, len(cap)                  # 24 khoá × 2 ngôn ngữ
-    vi, en = cap[:24], cap[24:]
+    assert len(cap) == 46, len(cap)                  # 23 khoá × 2 ngôn ngữ (UX6-L1 bỏ xuat_theo_lop_hint)
+    vi, en = cap[:23], cap[23:]
     assert [k for k, _ in vi] == [k for k, _ in en]
     for k, v in vi:
         assert not TU_ANH_CAM.search(re.sub(r"\{\w+\}", "", v)), (k, v)
