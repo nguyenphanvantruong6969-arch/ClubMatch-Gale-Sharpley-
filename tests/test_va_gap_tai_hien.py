@@ -79,28 +79,26 @@ def _hai_clb_khong_tu_do(api, qt):
     t = {k: ok(api.dk_dang_nhap("giao_vien", k, v))["token"] for k, v in pin.items()}
     a = ok(api.dk_clb_luu(t["Cô An"], _clb(ten="Cờ vua", phong_id=1, chi_tieu=10)))["clb_id"]
     b = ok(api.dk_clb_luu(t["Thầy Bình"], _clb(ten="Robot", phong_id=2, chi_tieu=10)))["clb_id"]
-    ok(api.dk_chuyen_giai_doan(qt, "duyet"))
-    return a, b
+    return a, b                                         # vẫn ở giai đoạn gv_dang_ky
 
 
-def test_duyet_clb_cuoi_cung_cua_buoi_chan_som_khi_thieu_clb_tu_do(cd):
-    """HIỆN TẠI: duyệt xong 2 CLB «Giới hạn» của T2 đều thành công, đến lúc bấm «mở cho học sinh» mới báo
-    `dk_thieu_clb_tu_do` → quản trị phải quay lại sửa. Cần: chặn ngay khi duyệt (hoặc cảnh báo rõ trước khi duyệt)."""
+def test_chan_truoc_khi_vao_giai_doan_duyet_khi_buoi_thieu_clb_tu_do(cd):
+    """HIỆN TẠI: 2 CLB «Giới hạn» ở T2, không CLB Tự do: chuyển sang «duyet», duyệt cả hai đều thành công, tới lúc «mở cho
+    học sinh» mới báo `dk_thieu_clb_tu_do`. Cần (ràng buộc BẬT, mặc định): chặn NGAY khi chuyển sang «duyet»."""
     api, qt = cd
-    a, b = _hai_clb_khong_tu_do(api, qt)
-    ok(api.dk_clb_duyet(qt, a, "duyet"))
-    r = api.dk_clb_duyet(qt, b, "duyet")
-    assert not r["ok"] and r["errors"][0]["code"] == "dk_thieu_clb_tu_do"
+    _hai_clb_khong_tu_do(api, qt)
+    assert ma(api.dk_chuyen_giai_doan(qt, "duyet")) == "dk_thieu_clb_tu_do"
 
 
 def test_rang_buoc_clb_tu_do_co_the_tat(cd):
-    """Yêu cầu «không giới hạn / không ràng buộc phải có CLB Tự do»: cần một cài đặt tắt ràng buộc; khi tắt, mở cho học sinh
-    không bị chặn. Hiện không có cài đặt nào (cứng trong `_dk_kiem_dieu_kien_mo_hs`)."""
+    """Yêu cầu «không ràng buộc phải có CLB Tự do»: cài đặt `bat_buoc_tu_do=False` (mặc định True = hành vi cũ); khi tắt,
+    duyệt và mở cho học sinh không bị chặn. Hiện không có cài đặt nào (cứng trong `_dk_kiem_dieu_kien_mo_hs`)."""
     api, qt = cd
     a, b = _hai_clb_khong_tu_do(api, qt)
+    ok(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False))     # tham số chưa tồn tại -> TypeError (đỏ)
+    ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     ok(api.dk_clb_duyet(qt, a, "duyet"))
     ok(api.dk_clb_duyet(qt, b, "duyet"))
-    ok(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False))     # tham số chưa tồn tại -> TypeError (đỏ)
     ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
     ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
 
