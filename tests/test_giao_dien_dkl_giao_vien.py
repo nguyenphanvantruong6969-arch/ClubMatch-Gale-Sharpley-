@@ -115,12 +115,15 @@ def test_3_clb_da_duyet_khong_con_nut_sua_xoa_va_khong_xoa_duoc_qua_api(cong):
     pg, api, qt = cong, cong.api, cong.qt
     ds = _ok(api.dk_dang_nhap("giao_vien", "Cô An", pg.pin["Cô An"]))["token"]
     cid = _ok(api.dk_clb_danh_sach(ds))[0]["clb_id"]
+    # VG1-L4 (d): buổi T2 phải có một CLB Tự do sống trước khi duyệt CLB Tuyển chọn -> Cô Bê mở CLB Tự do ở P2 và được duyệt trước
+    gb = _ok(api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
+    td = _ok(api.dk_clb_luu(gb, {"ten": "Đọc sách", "buoi": "T2", "loai": "Tự do", "phong_id": 2, "chi_tieu": 30, "khoi_tu": 9, "khoi_den": 12}))["clb_id"]
+    _ok(api.dk_clb_duyet(qt, td, "duyet", 30, None))
     _ok(api.dk_clb_duyet(qt, cid, "duyet", 10, None))
     _vao(pg, "Cô An")
     assert pg.get_by_role("button", name="Xoá Robot").count() == 0
     r = api.dk_clb_xoa(ds, cid)
     assert not r["ok"] and r["errors"][0]["code"] == "dk_clb_khong_sua_duoc"
     # giáo viên khác không xoá được CLB của người khác
-    gb = _ok(api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
     assert not api.dk_clb_xoa(gb, cid)["ok"]
     assert not pg.loi, pg.loi

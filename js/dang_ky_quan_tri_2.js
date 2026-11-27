@@ -256,7 +256,7 @@
       const r1 = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, false);          // lần đầu chỉ để biết SỐ NGƯỜI bị đặt lại PIN
       const e = r1.errors && r1.errors[0];
       if (r1.ok || !e || e.code !== "dk_can_xac_nhan_pin") return r1;
-      if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ ĐẶT LẠI PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
+      if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ đặt lại PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
       const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;
       const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
