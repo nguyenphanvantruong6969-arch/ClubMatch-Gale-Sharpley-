@@ -114,6 +114,7 @@ def test_3_clb_da_duyet_khong_con_nut_sua_xoa_va_khong_xoa_duoc_qua_api(cong):
     pg, api, qt = cong, cong.api, cong.qt
     ds = _ok(api.dk_dang_nhap("giao_vien", "Cô An", pg.pin["Cô An"]))["token"]
     cid = _ok(api.dk_clb_danh_sach(ds))[0]["clb_id"]
+    _ok(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False, xac_nhan_rui_ro=True))        # VG3: test không bàn về CLB Tự do; tắt ràng buộc VG1-L4 để duyệt CLB duy nhất
     _ok(api.dk_clb_duyet(qt, cid, "duyet", 10, None))
     _vao(pg, "Cô An")
     assert pg.get_by_role("button", name="Xoá Robot").count() == 0
