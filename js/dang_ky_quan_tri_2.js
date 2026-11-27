@@ -245,6 +245,28 @@
       buoc(4, "Nạp", nap, pin));
   };
 
+  /* ---------- VG1-L2: xuất phiếu PIN (ĐẶT LẠI PIN rồi ghi .xlsx; PIN cũ không xem lại được vì chỉ lưu băm) ---------- */
+  QT2.phieuPinXuat = function () {
+    const pv = h("select#dkPinPhamVi.dk-nhap", { "aria-label": "Phạm vi phiếu PIN" }, h("option", { value: "hs" }, "Học sinh"), h("option", { value: "gv" }, "Giáo viên"), h("option", { value: "tat_ca" }, "Học sinh và giáo viên"));
+    const lop = DK.truong("Chỉ lớp này (để trống = mọi lớp)", "pin_lop", { id: "dkPinLop" });
+    const nut = DK.nut("Xuất phiếu PIN (.xlsx)", function () { DK.chay(this, async () => {
+      const l = lop.querySelector("input").value.trim() || null;
+      const r1 = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, false);          // lần đầu chỉ để biết SỐ NGƯỜI bị đặt lại PIN
+      const e = r1.errors && r1.errors[0];
+      if (r1.ok || !e || e.code !== "dk_can_xac_nhan_pin") return r1;
+      if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ ĐẶT LẠI PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
+      const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;
+      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
+      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
+      DK.thongBao("Đã tải " + r.data.ten_tep + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên). PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
+    return h("section#dkPhieuPin.dk-khung", {}, h("h3", {}, "Phiếu PIN"),
+      h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi tải tệp Excel có PIN mới để in và phát."),
+      h("label.dk-truong", {}, h("span", {}, "Phạm vi"), pv), lop, nut);
+  };
+
   /* ---------- A9: thẻ Cài đặt ---------- */
   QT2.caiDat = async function () {
     const c = (await DK.goi("dk_cai_dat_doc", T())).data || {};
@@ -277,6 +299,7 @@
       DK.theCon("Giới hạn cho học sinh", nv, thi, luuGh),
       DK.theCon("Đổi mật khẩu quản trị", h("p.dk-phu", {}, "Mật khẩu mới có hiệu lực ngay; các máy quản trị khác bị đăng xuất."), mkCu, mkMoi, mkLai, doiMk)),
       QT2.napExcel(c),
+      QT2.phieuPinXuat(),
       h("p.dk-phu", {}, "Quản trị tự khoá sau 2 phút không thao tác. Số lần đã xuất Sổ nhập: " + (c.so_lan_xuat || 0) + "."));
   };
 

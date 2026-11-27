@@ -1897,5 +1897,25 @@ window.I18N_ERROR_MESSAGES = {
   "dk_excel_trung_ten": {
     "vi": "Tên trùng với một dòng phía trên.",
     "en": "Name repeats an earlier row."
+  },
+  "dk_pham_vi_la": {
+    "vi": "Phạm vi phiếu PIN không hợp lệ (chọn học sinh, giáo viên hoặc tất cả).",
+    "en": "Invalid PIN sheet scope (choose students, teachers or all)."
+  },
+  "dk_can_xac_nhan_pin": {
+    "vi": "Xuất phiếu PIN sẽ ĐẶT LẠI PIN của {n} người (PIN cũ không còn dùng được). Hãy xác nhận trước khi xuất.",
+    "en": "Exporting the PIN sheet RESETS the PIN of {n} people (old PINs stop working). Please confirm first."
+  },
+  "dk_lui_co_nguyen_vong": {
+    "vi": "Đã có {n} học sinh gửi nguyện vọng. Lùi giai đoạn không xoá nguyện vọng, nhưng cần xác nhận.",
+    "en": "{n} students have already submitted choices. Going back does not delete them, but needs confirmation."
+  },
+  "dk_clb_co_nguyen_vong": {
+    "vi": "Đã có {n} nguyện vọng chọn CLB này. Từ chối sẽ gỡ các nguyện vọng đó; cần xác nhận.",
+    "en": "{n} choices already point to this club. Rejecting removes those choices; please confirm."
+  },
+  "dk_can_xac_nhan_rui_ro": {
+    "vi": "Tắt ràng buộc «phải có CLB Tự do» cần xác nhận rủi ro: học sinh không đỗ CLB nào sẽ không có CLB trong buổi đó.",
+    "en": "Turning off the «free club required» rule needs a risk confirmation: a student who gets no club will have none in that session."
   }
 };

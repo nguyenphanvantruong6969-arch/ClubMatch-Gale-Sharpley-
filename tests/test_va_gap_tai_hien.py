@@ -63,14 +63,75 @@ def test_dang_nhap_pin_khong_phai_bon_chu_so_bi_tu_choi_truoc_khi_bam(cd):
     assert ok(api.dk_dang_nhap("giao_vien", "Cô An", ten["pin"]))["ten"] == "Cô An"
 
 
-# ---- 3. Mã PIN học sinh / giáo viên -----------------------------------------------------------------
-def test_nap_lai_danh_sach_hs_van_cho_quan_tri_lay_duoc_pin(cd):
-    """Nạp lại danh sách (chế độ «them») chỉ trả PIN của em MỚI; em đã có thì `pin` rỗng, quản trị mất đường lấy PIN
-    (phải đặt lại từng em). Cần: trả rõ em nào đã có PIN, hoặc có đường xuất phiếu PIN cho toàn bộ."""
+# ---- 3. Mã PIN học sinh / giáo viên (VG1-L2, D2: PIN chỉ lưu băm nên «xuất» = ĐẶT LẠI + xuất .xlsx) -------------------
+def _doc_xlsx(d):
+    import base64
+    import io
+
+    import openpyxl
+    wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(d["file_base64"])))
+    return {ws.title: [[c.value for c in r] for r in ws.iter_rows(min_row=1)] for ws in wb.worksheets}
+
+
+def _hs_gv(api, qt):
+    ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A2"))
+    ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))
+
+
+def test_xuat_pin_co_hai_trang_moi_pin_dang_nhap_duoc_pin_cu_hong_va_mo_khoa(cd):
     api, qt = cd
-    ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1"))
-    r = ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1\nH2\tBình\t10A1\nH3\tChi\t10A1"))
-    assert {x["ma"] for x in r["pin"]} == {"H1", "H2", "H3"}
+    _hs_gv(api, qt)
+    pin_cu = ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]
+    for _ in range(5):                                           # khoá H1 bằng PIN sai ĐÚNG DẠNG
+        api.dk_dang_nhap("hoc_sinh", "H1", "0000" if pin_cu != "0000" else "1111")
+    assert ma(api.dk_dang_nhap("hoc_sinh", "H1", pin_cu)) == "dk_tam_khoa"
+    d = ok(api.dk_pin_xuat_excel(qt, "tat_ca", xac_nhan=True))
+    bang = _doc_xlsx(d)
+    assert bang["Học sinh"][0] == ["Mã HS", "Họ tên", "Lớp", "PIN"] and bang["Giáo viên"][0] == ["Họ tên", "PIN"]
+    assert d["so_hs"] == 2 and d["so_gv"] == 1
+    for m_, ten, lop, pin in bang["Học sinh"][1:]:
+        assert ok(api.dk_dang_nhap("hoc_sinh", m_, pin))["ten"] == ten and lop in ("10A1", "10A2")
+    ten, pin = bang["Giáo viên"][1]
+    assert ok(api.dk_dang_nhap("giao_vien", ten, pin))["ten"] == "Cô An"
+    pin_moi = {r[0]: r[3] for r in bang["Học sinh"][1:]}["H1"]
+    if pin_moi != pin_cu:                                        # (xác suất 1/10000 trùng: bỏ qua nhánh này)
+        assert ma(api.dk_dang_nhap("hoc_sinh", "H1", pin_cu)) == "dk_sai_dang_nhap"
+
+
+def test_xuat_pin_loc_lop_va_pham_vi(cd):
+    api, qt = cd
+    _hs_gv(api, qt)
+    d = ok(api.dk_pin_xuat_excel(qt, "hs", lop="10A2", xac_nhan=True))
+    assert d["so_hs"] == 1 and d["so_gv"] == 0
+    assert [r[0] for r in _doc_xlsx(d)["Học sinh"][1:]] == ["H2"]
+    assert ma(api.dk_pin_xuat_excel(qt, "xyz", xac_nhan=True)) == "dk_pham_vi_la"
+
+
+def test_xuat_pin_can_xac_nhan_va_khong_doi_gi_khi_chua_xac_nhan(cd):
+    api, qt = cd
+    _hs_gv(api, qt)
+    pin = ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]
+    assert ma(api.dk_pin_xuat_excel(qt, "tat_ca")) == "dk_can_xac_nhan_pin"
+    assert ma(api.dk_pin_xuat_excel(qt, "tat_ca", xac_nhan="true")) == "dk_can_xac_nhan_pin"
+    assert ok(api.dk_dang_nhap("hoc_sinh", "H1", pin))["token"]  # PIN cũ còn nguyên
+
+
+def test_xuat_pin_chi_quan_tri_va_nhat_ky_khong_co_pin(cd):
+    api, qt = cd
+    _hs_gv(api, qt)
+    ok(api.dk_hs_dat_lai_pin(qt, "H1"))
+    th = ok(api.dk_dang_nhap("hoc_sinh", "H1", ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]))["token"]
+    pin_gv = ok(api.dk_gv_dat_lai_pin(qt, 1))["pin"]
+    tg = ok(api.dk_dang_nhap("giao_vien", "Cô An", pin_gv))["token"]
+    for t in (th, tg, "khong-co", None):
+        assert not api.dk_pin_xuat_excel(t, "tat_ca", xac_nhan=True)["ok"]
+    d = ok(api.dk_pin_xuat_excel(qt, "tat_ca", xac_nhan=True))
+    import sqlite3
+    c = sqlite3.connect(api.db_path)
+    ct = [r[0] for r in c.execute("SELECT chi_tiet FROM dk_nhat_ky WHERE hanh_dong = 'xuat_pin'")]
+    c.close()
+    assert ct == ["tat_ca hs=2 gv=1"]                             # chỉ số người, không có PIN nào
+    assert d["so_hs"] == 2
 
 
 # ---- 4/5. CLB Tự do: ràng buộc phải CHẶN SỚM (lúc duyệt), không đợi tới lúc mở cho học sinh -------------

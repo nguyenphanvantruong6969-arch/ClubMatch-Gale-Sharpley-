@@ -346,3 +346,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK9-L2 (khối «Nạp từ Excel» ở Cài đặt: tệp mẫu, thả tệp, xem trước, Nạp, phiếu PIN) | xong; checker PASS (vòng 2) | 2026-11-26 | js/dang_ky_quan_tri_2.js, style.css, api_dang_ky_excel.py, CHANGELOG.md | tests/test_giao_dien_dk9_l2.py (10) | |
 | DK9 soát mã (soat-ma, chỉ báo cáo) | xong: 0 chặn, 0 nên sửa; xem tệp nhánh | 2026-11-26 | docs/phien/claude__dk9-nap-excel-cong.md | — | |
 | VG1-L1 (cổng đăng nhập chuẩn hoá tên/mã/PIN) | xong, chờ checker (MILESTONE 1) | 2026-11-27 | api_dang_ky.py, tests/test_dk4_l0b_khoa_dang_nhap.py, CHANGELOG.md | tests/test_vg1_cong_dang_nhap.py (4) |
+| VG1-L2 (xuất phiếu PIN Excel) | xong, chờ checker (MILESTONE 1) | 2026-11-27 | api_dang_ky_excel.py, js/dang_ky_quan_tri_2.js, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_va_gap_tai_hien.py, tests/test_giao_dien_vg1.py |
