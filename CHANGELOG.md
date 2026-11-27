@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
+
+- 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).
+- Lỗi 7 («Đặng Văn Nam 4»): NGUYÊN NHÂN CHƯA XÁC NHẬN (chưa có ảnh). Giả thuyết dựa trên `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` #8: thẻ «Giáo viên (N)» ở tab Danh sách gấp sẵn nên sau khi nạp Excel chỉ thấy tiêu đề kèm số đếm. `js/dang_ky_quan_tri.js`: danh sách giáo viên ≤ 50 người MỞ SẴN. Test hồi quy `tests/test_giao_dien_vg1.py::test_l7_tab_danh_sach_thay_ngay_ten_giao_vien`. Nếu Truong gửi ảnh cho thấy khác thì mở lại.
+
+
 ## 2026-11-27 — VG2 (vá gấp 2: tài khoản, toàn vẹn dữ liệu, giao diện, đơn giản hoá; từ kiểm tra theo vai)
 
 - `api_dang_ky.py`: khoá đăng nhập QUẢN TRỊ leo thang 1→2→4→5 phút (`dn_bac:quan_tri`), đăng nhập đúng xoá bậc; dọn token hết hạn khi đăng nhập; `dk_gv_xoa` (chặn `dk_gv_con_clb`), trần `TOI_DA_GV=300` (`dk_gv_qua_nhieu`); PIN dễ đoán bị từ chối (`dk_pin_de_doan`) và `_pin_moi` không sinh; mã trường ≥ 4 khi khởi tạo; phòng / CLB trùng tên sau chuẩn hoá bị chặn; `dk_phong_xoa` chặn khi còn CLB nào trỏ tới (kể cả đã từ chối); `dk_hs_luu` kiểm dạng (`dk_nv_sai_dang`) + cảnh báo `dk_mat_diem`; `dk_hs_nguyen_vong` không nổ khi em đã bị xoá; lỗi `dk_sai_giai_doan` dùng tên giai đoạn tiếng Việt.
