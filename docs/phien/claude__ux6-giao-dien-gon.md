@@ -49,15 +49,15 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- L1, L2, L3 all implemented. MILESTONE 1 READY (bf12e43) and MILESTONE 2 READY (f392ae1) were written; checker NOT run yet.
-- Local HEAD a01a8fc is 1 commit ahead of origin (e28fe96): keeps "Kiểm tra lại" visible when step 2 collapses + doc count 450.
-  Truong interrupted that push and asked to wait; NOT pushed yet. Ask Truong before pushing.
-- CI run 1806 on e28fe96 was RED: (a) `#btnValidate` hidden by data-gon (fixed in a01a8fc), (b) `test_a13_12_tai_lieu` file
-  count 447 vs 450 (fixed in a01a8fc), (c) 3 more Linux failures (jobs 1/6, 2/6, 6/6; names unknown, get FAILED lines).
-- Local: 71-test rerun of the affected files green; ruff clean; kiem_nhanh 7/7; backend diff empty.
+- L1, L2, L3 implemented. MILESTONE 1 READY (bf12e43), MILESTONE 2 READY (f392ae1); checker NOT run yet.
+- Pushed to origin: head 1d7ffe3 (includes a01a8fc: keeps "Kiểm tra lại" visible when step 2 collapses; tests count 450).
+- CI run 1806 on e28fe96 was red: btnValidate hidden (fixed), test count 447 vs 450 (fixed), 3 more Linux failures of unknown
+  names (jobs 1/6, 2/6, 6/6). A new CI run on 1d7ffe3 is in progress; a check was scheduled for 23:24 UTC 2026-11-27.
+- Truong (latest): fix ONLY what is red in CI, then recheck, then done.
+- Local: related UI tests green; ruff clean; kiem_nhanh 7/7; backend diff empty.
 
 ## Next steps
-1. Ask Truong, then `git pull --rebase` and push a01a8fc; fetch CI failures with failed_only and tail_lines ~130 (summary
+1. Read the CI result for 1d7ffe3; if red, fetch CI failures with failed_only and tail_lines ~130 (summary
    lines "FAILED ..." sit right before "N failed"); fix inside UX6 only; loop until Tests (rbda-kiosk) is green on head.
 2. soat-ma pass on the diff (report, fix only UX6 findings); list anything outside UX6 for Truong.
 3. Checker runs M1 and M2 (protocol section 4); then final CHANGELOG/TIEN_DO touch-ups.
@@ -95,7 +95,8 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
-| 2026-11-27 | Sonnet | Context handoff: CI red on e28fe96, fix a01a8fc committed locally, unpushed (Truong asked to wait) | next session continues |
+| 2026-11-27 | Sonnet | Context handoff 2: pushed 1d7ffe3, CI rerun pending, Truong said fix only CI-red then recheck | next session continues |
+| 2026-11-27 | Sonnet | Context handoff: CI red on e28fe96, fix a01a8fc committed locally | superseded |
 | 2026-11-27 | Sonnet | L3 done, MILESTONE 2 READY | CSS mask icons keep UX2 ::after hit areas intact |
 | 2026-11-27 | Sonnet | L2 done, MILESTONE 1 READY | xuat_theo_lop_hint "?" removed (Hick budget of #xuatPanel) |
 
