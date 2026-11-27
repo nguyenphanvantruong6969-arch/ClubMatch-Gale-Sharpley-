@@ -25,8 +25,21 @@ score pasting with bad lines, exit gate «thiếu điểm», export xlsx works, 
 | 11 | Low | Init accepts a 1-char school code and admin password `1234`, while `dk_cai_dat_doi` rejects a school code < 4 chars (inconsistent). | NEW |
 | 12 | Low | A student who un-ticks then re-ticks an exam club after the admin entered the score loses the score silently (stage `hs_dang_ky` only). | NEW (warn or keep) |
 | 13 | Low | `nguyen_vong` that is not a list → generic `dk_loi_chung` (logged) instead of a validation error. API-only. | NEW |
-| 14 | Low | Idle timeout: UI text says 60 s for students, backend allows 300 s (`GIAY_NGHI_KHAC * 5`). Stray toast «Thao tác hoàn tất.» right after student login. | NEW |
+| 14 | Low | Idle timeout: UI text says 60 s for students, backend allows 300 s (`GIAY_NGHI_KHAC * 5`) — harmless (client logs out first). The «Thao tác hoàn tất.» text is a 1×1 screen-reader live region, NOT a visible bug (retracted in round 2). | Dropped |
 
 ## Suggested L5 (size S, backend + 2 UI tweaks) — if Truong approves
 Fixes 1 (lock keyed by IP-less identity: unlock by admin without session is impossible → proposal: never lock `quan_tri`; instead slow down: exponential delay, or lock only the offending attempt rate), 2, 4, 5, 6 (`dk_gv_xoa` + sign-up cap per stage), 7, 8, 10.
 Needs Truong's decision first on #1 (accept slowdown instead of lock-out for the admin account).
+
+## Round 2 — UI and user flows in Chromium (2026-11-27, on the branch tip incl. VG1-L1..L3)
+Walked every admin stage × 2 widths (1100 / 375 px) × 4 tabs, a teacher creating a club, a student ranking → medals → exam → review → send, score entry, reload.
+No JS/console error anywhere. Held up: HTML in club names is escaped; double-clicking «Gửi duyệt» / «Gửi nguyện vọng» saves once; reload returns to the landing page (no stale
+session); the exam step warns «CLB Tuyển chọn em xếp nhưng chưa tick sẽ không được xét: Robot»; scores `8,5` save correctly; student 390 px layout fine.
+| # | Sev | Finding | Status |
+|---|---|---|---|
+| 15 | Med | **Admin tables overflow at 375 px** (whole page scrolls sideways): «Duyệt CLB» table 684 px wide (overflow 344 px), «Nhập điểm» 43 px, «Xuất» 182 px. `.dk-bang` has no scroll wrapper. | NEW → L3 |
+| 16 | Med | **Stale error stays after success**: score box shows «Điểm phải là số từ 0 đến 10…» while the next valid score `8,5` is already saved (DB 8.5); invalid text also stays in the box. | NEW → L3 |
+| 17 | Med | **Teacher «Xoá» (own pending club) deletes at once, no confirmation.** (Admin «Đóng ngay» is finding 10.) | NEW → L3 |
+| 18 | Low | **Accessibility:** every row has the same «Đặt lại PIN» button with no person in its accessible name (screen-reader users cannot tell them apart); admin screens have no `<h1>`; «← Mở phần mềm xếp CLB» and the switch `on` are < 36 px tap targets. | NEW → L3 |
+| 19 | Low | Club-name input has no `maxlength` (80): the «Tên đang để trống hoặc quá dài.» error appears only at «Gửi duyệt», three steps later; message mixes "blank" and "too long". | NEW → L3 |
+| 20 | Info | Duyệt screen's «Chưa đi tiếp được» list does not mention the missing Tự do club (VG1-L4 scope). | VG1-L4 |
