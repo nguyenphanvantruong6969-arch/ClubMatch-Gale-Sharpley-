@@ -129,10 +129,11 @@
      xếp (chỉ quản trị, DK4-L5) và «Đăng xuất». Nằm ngoài #dkApp để dính ở mép trên; DK.hien đặt nó vào #dkTop. */
   DK.dauTren = function (vaiTro) {
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
-    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
-      k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
-      vaiTro ? [h("span.dk-gian"), h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
-        DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
+    const quanTri = DK.S.vai === "quan_tri";       // VG3: màn quản trị đã có thanh sáu bước và tiêu đề giai đoạn nên thanh trên không nhắc lại
+    return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("img.dk-logo", { src: "logo.png", alt: "", width: "32", height: "32" }), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
+      k >= 0 && !(vaiTro && quanTri) ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
+      vaiTro ? [h("span.dk-gian"), h("div.dk-top-vai", {}, h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
+        quanTri ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null),
         DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc())] : null));
   };
 
@@ -179,7 +180,7 @@
   };
   /* Thẻ vai trò: cả thẻ bấm được (nút ở tiêu đề phủ kín thẻ bằng ::after) nhưng nút vẫn tên đúng là tên vai trò (test và trình đọc màn hình). */
   DK.theVaiTro = (ten, mucDich, chip, dem, lam) => h("div.dk-cua", {}, h("h2.dk-cua-vai", {}, h("button.dk-cua-nut", { type: "button", onclick: lam }, ten)),
-    h("p.dk-cua-md", {}, mucDich), chip, h("p.dk-cua-dem", {}, dem || " "));   // DK8-L6: luôn có dòng đếm (có thể trống) để chip của ba thẻ nằm cùng một hàng
+    h("p.dk-cua-md", {}, mucDich), h("div.dk-cua-pie", {}, chip, h("span.dk-cua-vao", { "aria-hidden": "true" }, "Vào →")), h("p.dk-cua-dem", {}, dem || " "));   // DK8-L6: luôn có dòng đếm (có thể trống) để chip của ba thẻ nằm cùng một hàng
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },

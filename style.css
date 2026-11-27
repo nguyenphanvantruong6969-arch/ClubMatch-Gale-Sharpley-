@@ -3742,3 +3742,67 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-buoc-nd > .btn { align-self: flex-start; }
 .dk-excel-xem .dk-chip { align-self: auto; }
 #dkExcel #dkPin:not(:empty) { margin-top: 14px; }
+
+/* ===== VG3: dọn giao diện cổng đăng ký (chỉ .dk-* / .dk-body; giao diện chính không đổi) ===== */
+/* Thanh trên: logo thật, nhãn vai trò khiêm tốn, hai hàng gọn ở điện thoại */
+.dk-logo { width: 32px; height: 32px; border-radius: 8px; background: none; object-fit: contain; display: block; }
+.dk-top-vai { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; min-width: 0; }
+.dk-top-vai .dk-vai { font-size: 0.9rem; font-weight: 600; color: var(--slate); }
+@media (max-width: 640px) {
+  .dk-top-in { gap: 4px 10px; }
+  .dk-top-in .dk-gian { flex: 1 1 0; }
+  .dk-top-in > .btn-ghost { order: 2; }
+  .dk-top-vai { order: 3; flex: 1 0 100%; gap: 0 12px; padding-bottom: 6px; }
+  .dk-top-in .dk-ve-phan-mem, .dk-top-vai .dk-phu { font-size: 0.85rem; }
+}
+/* Thẻ vai trò ở trang đầu: chip đúng cỡ chữ, có lối "Vào →", không còn khoảng trống giữa thẻ */
+.dk-cua { min-height: 0; padding: 22px; gap: 8px; cursor: pointer; transition: border-color 120ms ease, background-color 120ms ease; }
+.dk-cua:hover { border-color: var(--slate); }
+.dk-cua-vao { font-weight: 600; color: var(--ink-soft); white-space: nowrap; transition: transform 120ms ease; }
+.dk-cua:hover .dk-cua-vao { color: var(--ink); transform: translateX(3px); }
+.dk-cua-pie { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dk-cua-pie .dk-chip { align-self: center; }
+.dk-cua-md { font-size: 1rem; }
+@media (max-width: 480px) { .dk-cua { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { .dk-cua, .dk-cua-vao { transition: none; } .dk-cua:hover .dk-cua-vao { transform: none; } }
+/* Thanh sáu giai đoạn: số trong vòng tròn nhỏ ngay trước tên; đã xong nhạt, hiện tại nổi */
+.dk-gd { display: flex; flex-wrap: nowrap; gap: 4px; overflow-x: auto; padding: 0 0 2px; }
+.dk-gd li { position: relative; flex: 1 1 auto; flex-direction: row; align-items: center; justify-content: center; gap: 8px; padding: 6px 10px; border-radius: 999px;
+  background: transparent; color: var(--slate); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.dk-gd .dk-gd-so { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--paper-hover); color: var(--slate); font-family: var(--font-body); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dk-gd li.xong { background: transparent; color: var(--moss); }
+.dk-gd li.xong .dk-gd-so { background: var(--moss-soft); color: var(--moss); }
+.dk-gd li.cur { background: var(--gold-soft); color: var(--ink); font-weight: 700; }
+.dk-gd li.cur .dk-gd-so { background: var(--gold); color: var(--ink); }
+@media (max-width: 640px) {                    /* một hàng: chấm số cho các bước khác, tên chỉ ở bước hiện tại (tên vẫn có cho trình đọc màn hình) */
+  .dk-gd { grid-template-columns: none; }
+  .dk-gd li { flex: 0 0 auto; padding: 4px 6px; }
+  .dk-gd li.cur { flex: 1 1 auto; padding: 4px 12px 4px 6px; }
+  .dk-gd li:not(.cur) .dk-gd-ten { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Thẻ thanh tab quản trị: một hàng, cuộn ngang trong thanh khi hẹp */
+.dk-the { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+.dk-the-nut { flex: none; white-space: nowrap; }
+@media (max-width: 480px) { .dk-the-nut { padding: 10px 8px; font-size: 14px; } }
+/* Bảng: dòng gọn, cột thao tác sát phải và không giãn; hẹp thì cuộn ngang trong bảng */
+.dk-bang { position: relative; }                /* chữ ẩn «Thao tác» (sr-only, absolute) phải nằm trong bảng cuộn, không đẩy rộng cả trang */
+.dk-bang th, .dk-bang td { padding: 4px 10px; vertical-align: middle; }
+.dk-bang th.dk-th-thao-tac, .dk-bang td.dk-td-thao-tac { width: 1%; white-space: nowrap; text-align: right; }
+.dk-bang td.dk-td-thao-tac .btn { margin: 0 0 0 4px; }
+@media (max-width: 720px) { .dk-bang { display: block; max-width: 100%; overflow-x: auto; } }
+/* Form thêm phòng: một hàng ở màn rộng, nút thẳng hàng với ô nhập */
+.dk-form.dk-ngang { align-items: flex-end; gap: 12px; }
+.dk-form.dk-ngang > .dk-truong { flex: 1 1 180px; max-width: 280px; }
+.dk-form.dk-ngang > .dk-truong:nth-child(2) { flex: 0 1 130px; }
+.dk-form.dk-ngang > .btn { flex: none; }
+@media (max-width: 640px) { .dk-form.dk-ngang { flex-direction: column; align-items: stretch; } .dk-form.dk-ngang > .dk-truong, .dk-form.dk-ngang > .dk-truong:nth-child(2) { max-width: none; flex: none; } }
+/* Màn Xuất: bỏ khoảng trống ở dòng kết quả rỗng, thứ bậc chữ đúng, tiêu đề phụ cách bảng */
+#dkKq:empty { display: none; }
+#dkKq { margin: 0; }
+.dk-noidung h3 { font-size: 1.05rem; }
+.dk-noidung details > h3 { margin: 16px 0 8px; }
+.dk-noidung details > h3:first-of-type { margin-top: 12px; }
+.dk-noidung details > p.dk-phu { margin: 8px 0; }
+#dkKetQua { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+#dkKetQua p { margin: 0; }

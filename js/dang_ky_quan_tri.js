@@ -10,7 +10,7 @@
   /* DK4-UI: thanh sáu giai đoạn (đã xong ✓ · hiện tại nổi · chưa tới) và hạn chót kèm thời gian còn lại. */
   const thanhGd = (gd) => h("ol.dk-gd", { "aria-label": "Các giai đoạn" }, THU_TU.map((k, n) => {
     const c = THU_TU.indexOf(gd);
-    return h("li", n < c ? { class: "xong" } : n === c ? { class: "cur", "aria-current": "step" } : {}, h("span.dk-gd-so", {}, n < c ? "✓" : String(n + 1)), TEN_GD[k]);
+    return h("li", n < c ? { class: "xong" } : n === c ? { class: "cur", "aria-current": "step" } : {}, h("span.dk-gd-so", {}, n < c ? "✓" : String(n + 1)), h("span.dk-gd-ten", {}, TEN_GD[k]));
   }));
   const conLai = DK.conLai;
   const hanDep = (han) => { const m = String(han).match(/^\d{4}-(\d\d)-(\d\d)[T ](\d\d:\d\d)/); return m ? m[2] + "/" + m[1] + " " + m[3] : String(han).replace("T", " "); };   // v8: «28/11 03:53»
@@ -38,8 +38,8 @@
     if (DK.S.vai === "quan_tri" && (the === "viec" || the === "ds") && ["gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
-  const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
-    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c) => h("td", {}, c))))));
+  const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", c === "" ? { scope: "col", class: "dk-th-thao-tac" } : {}, c === "" ? h("span.sr-only", {}, "Thao tác") : c)))),
+    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c, j) => h("td", cot[j] === "" ? { class: "dk-td-thao-tac" } : {}, c))))));
   DK.bang = bang;
   const chuyen = (gd, chu, khoa) => DK.nutVang(chu, function () {
     DK.chay(this, async () => { const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, gd); if (r.ok) DK.quanTri(); return r; });
@@ -65,6 +65,7 @@
       const fp = h("form.dk-form.dk-ngang", { novalidate: true }, o("ten", "Tên phòng"), o("sc", "Sức chứa", { type: "number" }));
       const them = DK.nut("Thêm phòng", function () { DK.chay(this, async () => {
         const r = await goi("dk_phong_luu", T, fp.elements.ten.value, fp.elements.sc.value); if (r.ok) DK.quanTri(); return r; }); });
+      fp.append(them);                                  // VG3: nút nằm cùng hàng với hai ô nhập
       const van = h("textarea.dk-nhap", { rows: "5", placeholder: "Mỗi dòng: mã, họ tên, lớp (ví dụ: 10001\tNguyễn An\t10A1)" });
       const ly = [];
       if (!ph.length) ly.push("chưa có phòng");
@@ -77,7 +78,7 @@
         muc(!!cd.ma_truong, ["Mã trường cho giáo viên: ", h("span.dk-so", {}, cd.ma_truong || "—")], () => { the = "cai"; DK.quanTri(); }));
       return h("div", {},
         theGd(gd, "Chuẩn bị", "Kiểm tra ba mục dưới đây, rồi mở cho giáo viên đăng ký CLB.", "", kiem, DK.QT2.kiemTra(ly, chuyen("gv_dang_ky", "Mở đăng ký giáo viên"))),
-        h("section#dkKhungPhong.dk-khung", {}, h("h3", {}, "1. Phòng"), DK.QT2.bangPhong(ph), fp, them),
+        h("section#dkKhungPhong.dk-khung", {}, h("h3", {}, "1. Phòng"), DK.QT2.bangPhong(ph), fp),
         h("section#dkKhungHs.dk-khung", {}, h("h3", {}, "2. Danh sách học sinh"), h("p.dk-phu", {}, "Chỉ học sinh có tên ở đây mới đăng nhập được. Mỗi em một PIN in trên phiếu."),
           van, DK.QT2.napHocSinh(van, hienPin), h("div#dkPin")));
     }
@@ -112,7 +113,7 @@
         theGd(gd, "Học sinh đang đăng ký", "Theo dõi lớp nào chưa đăng ký để nhắc. Học sinh không thấy các con số này.",
           hs.filter((x) => x.da_nop).length + "/" + hs.length + " em đã gửi", hangHan(tt, gd), khungHan("hs_dang_ky"), chuyen("nhap_diem", "Đóng đăng ký học sinh")),
         h("div.dk-luoi2", {},
-          DK.theCon("Tiến độ theo lớp (lớp chậm nhất ở trên)", bang(["Lớp", "Đã nộp", "Tổng", ""], tdo.theo_lop.map((x) => [x.lop, x.da_nop, x.tong,
+          DK.theCon("Tiến độ theo lớp (lớp chậm nhất ở trên)", bang(["Lớp", "Đã nộp", "Tổng", "Tiến độ"], tdo.theo_lop.map((x) => [x.lop, x.da_nop, x.tong,
             h("progress.dk-tien", { max: String(x.tong || 1), value: String(x.da_nop || 0), "aria-label": "Lớp " + x.lop + ": " + x.da_nop + "/" + x.tong })]))),
           DK.QT2.nhuCau(tdo, hs)),
         h("section.dk-khung", {}, DK.QT2.suaSauMo(ds, phs)));
