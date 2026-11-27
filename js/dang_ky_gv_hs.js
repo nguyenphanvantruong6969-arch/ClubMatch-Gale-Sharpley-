@@ -39,7 +39,7 @@
       c.ly_do_tu_choi ? h("span.dk-phu", {}, "Lý do từ chối: " + c.ly_do_tu_choi) : null),
       chip(TRANG_THAI[c.trang_thai], c.trang_thai === "duyet" ? "on" : c.trang_thai === "tu_choi" ? "off" : "wait"),
       mo && c.trang_thai !== "duyet" ? h("span.dk-thao-tac", {}, DK.nut("Sửa", () => DK.giaoVien(c), { "aria-label": "Sửa " + c.ten }),
-        DK.nut("Xoá", function () { DK.chay(this, async () => { const r = await DK.goi("dk_clb_xoa", T, c.clb_id); if (r.ok) DK.giaoVien(); return r; }); }, { "aria-label": "Xoá " + c.ten })) : null)));
+        DK.nut("Xoá", function () { DK.chay(this, async () => { if (window.confirm && !window.confirm("Xoá CLB «" + c.ten + "»? Không hoàn tác được.")) return { ok: true, data: {}, errors: [] }; const r = await DK.goi("dk_clb_xoa", T, c.clb_id); if (r.ok) DK.giaoVien(); return r; }); }, { "aria-label": "Xoá " + c.ten })) : null)));
     /* DK8-L3 (v8): «CLB của tôi» kèm chip giai đoạn; danh sách là các thẻ; form nằm trong thẻ hẹp bên dưới. */
     const phan = [DK.thanhDau("Giáo viên"), DK.khung(h("div.dk-hang-nut", {}, h("h1.dk-tieude.dk-gian", {}, "CLB của tôi"), DK.chipVai("gv")), ds.length ? danh : h("div.dk-rong", {}, "Chưa đăng ký CLB nào."),
       mo ? h("p.dk-phu", {}, "Giáo viên chỉ chọn được phòng còn trống ở buổi của CLB, và không nhận quá sức chứa. Quên PIN: nhờ quản trị bấm «Đặt lại PIN».")
@@ -95,7 +95,7 @@
           : h("p.dk-ghichu", {}, "CLB " + d.loai + " không có bài kiểm tra. Muốn kiểm tra đầu vào thì chọn loại Tuyển chọn ở bước 1.")];
       const tomTat = [d.ten ? d.ten.trim() : "", d.loai, d.buoi, prRoom ? prRoom.ten : "", d.loai === "Tự do" ? "nhận mọi em" : "nhận " + (d.chi_tieu === undefined ? "" : d.chi_tieu),
         khoiChu(d.khoi_tu, d.khoi_den)].concat(d.loai === "Tuyển chọn" ? ["điểm sàn " + (d.diem_san === undefined ? "" : d.diem_san)] : []).filter(Boolean).join(" · ");
-      const b3 = [nhap("Tên CLB", "ten", { "data-hl": "ten" }), nhap("Mô tả CLB (học sinh đọc khi chọn)", "mo_ta"), nhap("Yêu cầu cơ bản (ghi «Không» nếu không có)", "yeu_cau"), h("p.dk-ghichu.dk-tom-tat", {}, tomTat)];
+      const b3 = [nhap("Tên CLB", "ten", { "data-hl": "ten", maxlength: "80" }), nhap("Mô tả CLB (học sinh đọc khi chọn)", "mo_ta"), nhap("Yêu cầu cơ bản (ghi «Không» nếu không có)", "yeu_cau"), h("p.dk-ghichu.dk-tom-tat", {}, tomTat)];
       const noi = [b1, b2, b3][buoc - 1];
       const nutTrai = buoc > 1 ? DK.nutNhe("← Quay lại", () => { buoc--; ve(); }) : null;
       const kiem = () => { const loi = kiemBuoc(buoc, d); DK.thongBao(loi, !!loi); return !loi; };
@@ -151,6 +151,15 @@
 
     const hcCua = (b, x) => (tay.has(b) ? x.hc : macDinh(theo[b])[x.clb_id]) || "";
     const di = (buoc, buoi) => { bc = buoc; if (buoi !== undefined) i = buoi; ve(); window.scrollTo(0, 0); };
+    /* VG2-L4 (D6): chỉ đi qua màn có việc: buổi trống → sang buổi kế; huy chương chỉ khi có CLB không Tự do; bài thi chỉ khi có CLB Tuyển chọn.
+       Dữ liệu gửi lên (dk_hs_luu) không đổi. */
+    const dongBuoc = () => { const L = []; tt.buoi.forEach((b, k) => { L.push(["rank", k]);
+      if ((theo[b] || []).some((x) => cua(x.clb_id).loai !== "Tự do")) L.push(["medals", k]);
+      if ((theo[b] || []).some((x) => cua(x.clb_id).loai === "Tuyển chọn")) L.push(["tests", k]); }); L.push(["review", 0]); return L; };
+    const viTri = () => dongBuoc().findIndex((s) => s[0] === bc && s[1] === i);
+    const sau = () => dongBuoc()[viTri() + 1], truoc = () => dongBuoc()[Math.max(0, viTri() - 1)];
+    const dich = (s) => di(s[0], s[0] === "review" ? undefined : s[1]);
+    const nhanTiep = () => { const s = sau(); return s[0] === "medals" ? "Tiếp: đặt huy chương" : s[0] === "tests" ? "Tiếp: bài kiểm tra" : s[0] === "review" ? "Tiếp: xem lại và gửi" : "Tiếp: " + tt.buoi[s[1]]; };
 
     function bar() {
       if (bc === "review" || bc === "receipt")
@@ -193,8 +202,8 @@
             h("p.dk-phu", {}, "Giới hạn " + tt.toi_da_nv + " CLB tính riêng cho từng buổi (không phải cả tuần): sang buổi khác em chọn lại từ đầu."),
             ds.length ? h("ol.dk-xep", {}, hang) : h("div.dk-rong", {}, "Chưa chọn. Bấm \"+ Thêm\" ở bên cạnh."),
             day ? h("p.dk-ghichu", {}, "Buổi " + b + " đã đủ " + tt.toi_da_nv + " CLB (giới hạn tính riêng cho từng buổi). Muốn thêm CLB khác, bấm ✕ để bỏ bớt một CLB.") : null)),
-        h("div.dk-hang-nut", {}, i > 0 ? DK.nutNhe("← Buổi trước", () => di("tests", i - 1)) : null, h("span.dk-gian"),
-          DK.nutVang("Tiếp: đặt huy chương", () => di("medals"))),
+        h("div.dk-hang-nut", {}, i > 0 ? DK.nutNhe("← Buổi trước", () => dich(truoc())) : null, h("span.dk-gian"),
+          DK.nutVang(nhanTiep(), () => dich(sau()))),
       ];
     }
 
@@ -224,7 +233,7 @@
           "Mỗi CLB nhận tối đa một huy chương. CLB Tự do luôn có chỗ nên không cần huy chương."),
         h("p.dk-ghichu", {}, "Đã đặt sẵn theo thứ tự nguyện vọng. Em đổi nếu muốn dồn huy chương cho CLB khác; thứ tự nguyện vọng vẫn giữ nguyên."),
         than,
-        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("rank")), h("span.dk-gian"), DK.nutVang("Tiếp: bài kiểm tra", () => di("tests")))];
+        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => dich(truoc())), h("span.dk-gian"), DK.nutVang(nhanTiep(), () => dich(sau())))];
     }
 
     /* ---- bước 3: bài kiểm tra ---- */
@@ -243,8 +252,8 @@
             h("input", { type: "checkbox", checked: x.thi, disabled: !x.thi && dem >= tt.toi_da_thi, title: !x.thi && dem >= tt.toi_da_thi ? "Đã đủ " + tt.toi_da_thi + " bài thi cho buổi này. Bỏ tick một CLB khác trước." : null, onchange: (e) => { x.thi = e.target.checked; ve(); } }),
             h("span.dk-than", {}, h("strong", {}, cua(x.clb_id).ten), " ", cua(x.clb_id).diem_san === null || cua(x.clb_id).diem_san === undefined ? null : h("span.chip.off.dk-san", {}, "Dưới " + cua(x.clb_id).diem_san + " thì không xét"), h("span.dk-phu", {}, ghiChuLoai(cua(x.clb_id)))))))
             : h("div.dk-rong", {}, "Nguyện vọng buổi này không có CLB Tuyển chọn nào. Em bấm tiếp.")),
-        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("medals")), h("span.dk-gian"),
-          DK.nutVang(cuoi ? "Tiếp: xem lại và gửi" : "Tiếp: " + tt.buoi[i + 1], () => (cuoi ? di("review") : di("rank", i + 1))))];
+        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => dich(truoc())), h("span.dk-gian"),
+          DK.nutVang(nhanTiep(), () => dich(sau())))];
     }
 
     /* ---- bước 4: xem lại; biên nhận ---- */

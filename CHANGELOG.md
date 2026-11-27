@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-27 — VG2 (vá gấp 2: tài khoản, toàn vẹn dữ liệu, giao diện, đơn giản hoá; từ kiểm tra theo vai)
+
+- `api_dang_ky.py`: khoá đăng nhập QUẢN TRỊ leo thang 1→2→4→5 phút (`dn_bac:quan_tri`), đăng nhập đúng xoá bậc; dọn token hết hạn khi đăng nhập; `dk_gv_xoa` (chặn `dk_gv_con_clb`), trần `TOI_DA_GV=300` (`dk_gv_qua_nhieu`); PIN dễ đoán bị từ chối (`dk_pin_de_doan`) và `_pin_moi` không sinh; mã trường ≥ 4 khi khởi tạo; phòng / CLB trùng tên sau chuẩn hoá bị chặn; `dk_phong_xoa` chặn khi còn CLB nào trỏ tới (kể cả đã từ chối); `dk_hs_luu` kiểm dạng (`dk_nv_sai_dang`) + cảnh báo `dk_mat_diem`; `dk_hs_nguyen_vong` không nổ khi em đã bị xoá; lỗi `dk_sai_giai_doan` dùng tên giai đoạn tiếng Việt.
+- Giao diện (`js/dang_ky_*.js`, `style.css`): danh sách GV / HS mở sẵn (≤ 60 dòng), nút «Xoá» giáo viên, nhãn «Đặt lại PIN — tên», xác nhận cho «Đóng ngay» và «Xoá» CLB, bảng cuộn ngang trong khung (`.dk-cuon-ngang`), lỗi cũ biến mất ở lần lưu kế, `maxlength=80` tên CLB, tiêu đề `h1`, gợi ý màn thiết lập lần đầu, bỏ chữ «hạt giống»; học sinh chỉ đi qua màn huy chương / bài thi khi có CLB tương ứng (payload `dk_hs_luu` không đổi).
+- Tests mới: `tests/test_vg2_repro.py` (16), `tests/test_giao_dien_vg2.py` (6). Tests cũ đổi cho khớp hành vi mới có chủ đích (mã trường ≥ 4, PIN không dễ đoán, danh sách mở sẵn, hộp xác nhận).
+- Chưa làm trong VG2: bảng khoá cho mã lạ (#21) và khoá form đăng nhập học sinh khi «Chưa mở» (#27).
+
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 
 - `api_dang_ky.py`: cài đặt `bat_buoc_tu_do` (mặc định BẬT = hành vi cũ, bất biến 1). Khi BẬT: (a) `dk_chuyen_giai_doan` chặn vào «duyet» (và mọi cú nhảy đi ngang nó) nếu một buổi có CLB chờ duyệt/đã duyệt mà không có CLB Tự do (`dk_thieu_clb_tu_do`); (b) `dk_clb_duyet` từ chối, `dk_clb_xoa` (quản trị), `dk_clb_sua_sau_mo` (xoá / đổi buổi) không gỡ được CLB Tự do cuối của buổi còn CLB khác; (d) hết hạn tự đóng GV → Duyệt thì `dk_clb_duyet(..., "duyet")` CLB không Tự do bị từ chối khi buổi chưa có CLB Tự do sống. Kiểm cũ ở `_dk_kiem_dieu_kien_mo_hs` giữ làm lưới an toàn. Khi TẮT: các kiểm trên và cảnh báo `dk_khong_co_tu_do` bị bỏ qua.

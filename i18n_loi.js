@@ -1917,5 +1917,25 @@ window.I18N_ERROR_MESSAGES = {
   "dk_can_xac_nhan_rui_ro": {
     "vi": "Tắt ràng buộc «phải có CLB Tự do» cần xác nhận rủi ro: học sinh không đỗ CLB nào sẽ không có CLB trong buổi đó.",
     "en": "Turning off the «free club required» rule needs a risk confirmation: a student who gets no club will have none in that session."
+  },
+  "dk_pin_de_doan": {
+    "vi": "PIN này quá dễ đoán (như 0000, 1234). Hãy chọn 4 số khác.",
+    "en": "This PIN is too easy to guess (like 0000 or 1234). Choose other 4 digits."
+  },
+  "dk_gv_con_clb": {
+    "vi": "Giáo viên này còn CLB chưa bị từ chối. Hãy từ chối hoặc xoá các CLB đó trước.",
+    "en": "This teacher still has clubs that were not rejected. Reject or delete them first."
+  },
+  "dk_gv_qua_nhieu": {
+    "vi": "Đã có quá nhiều tài khoản giáo viên (tối đa {toi_da}). Nhờ quản trị xoá bớt tài khoản không dùng.",
+    "en": "Too many teacher accounts (maximum {toi_da}). Ask the manager to delete unused accounts."
+  },
+  "dk_nv_sai_dang": {
+    "vi": "Danh sách nguyện vọng không đúng dạng. Hãy tải lại trang và chọn lại.",
+    "en": "The wish list has the wrong format. Reload the page and choose again."
+  },
+  "dk_mat_diem": {
+    "vi": "Bỏ chọn thi một CLB đã có điểm: nếu chọn thi lại, điểm cũ phải nhập lại.",
+    "en": "Exam un-ticked for a club that already has a score: if ticked again, the score must be re-entered."
   }
 };

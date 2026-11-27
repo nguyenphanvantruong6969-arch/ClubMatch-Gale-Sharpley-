@@ -56,7 +56,7 @@ def test_1_khoi_tao_qua_giao_dien_va_vao_quan_tri(cong):
     pg.wait_for_selector("input[name=mk]")
     _mot_vang(pg)
     pg.fill("input[name=mk]", "matkhau")
-    pg.fill("input[name=ma]", "TR1")
+    pg.fill("input[name=ma]", "TRU1")
     pg.fill("input[name=buoi]", "T2, T3")
     pg.get_by_role("button", name="Thiết lập cổng").click()
     pg.wait_for_selector("text=Chọn vai trò")

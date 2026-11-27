@@ -20,7 +20,7 @@ def _ma(r):
 @pytest.fixture()
 def cong(tmp_path):
     api = PipelineAPI(str(tmp_path / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     return api, qt
 

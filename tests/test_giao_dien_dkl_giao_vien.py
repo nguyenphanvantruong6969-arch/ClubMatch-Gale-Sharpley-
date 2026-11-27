@@ -24,7 +24,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("dklgv") / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     _ok(api.dk_phong_luu(qt, "P1", 40))
     _ok(api.dk_phong_luu(qt, "P2", 30))
@@ -105,6 +105,7 @@ def test_2_phong_chi_hien_phong_trong_buoi_va_sua_clb(cong):
     ds = _ok(pg.api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
     assert [c["ten"] for c in _ok(pg.api.dk_clb_danh_sach(ds))] == ["Cờ vua nâng cao"]
     # xoá: biến mất khỏi danh sách và khỏi dữ liệu
+    pg.once("dialog", lambda d: d.accept())      # VG2-L3: hỏi xác nhận
     pg.get_by_role("button", name="Xoá Cờ vua nâng cao").click()
     pg.wait_for_function("!document.body.innerText.includes('Cờ vua nâng cao')")
     assert _ok(pg.api.dk_clb_danh_sach(ds)) == []

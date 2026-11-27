@@ -22,11 +22,11 @@ def test_nut_mo_khoa_trong_danh_sach(tmp_path):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2"], [6, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2"], [6, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     pin = _ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))["pin"][0]["pin"]
     for _ in range(5):
-        api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")
+        api.dk_dang_nhap("hoc_sinh", "H1", "0000")
     assert api.dk_dang_nhap("hoc_sinh", "H1", pin)["errors"][0]["code"] == "dk_tam_khoa"
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])

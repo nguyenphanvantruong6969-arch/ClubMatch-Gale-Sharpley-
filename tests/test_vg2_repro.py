@@ -113,9 +113,10 @@ def test_gv_tu_dang_ky_co_tran(cd, monkeypatch):
 # ---- 5. Toàn vẹn dữ liệu ------------------------------------------------------------------------------
 def test_xoa_phong_chi_con_clb_bi_tu_choi_van_bi_chan(cd):
     api, qt = cd
-    pin = ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))["da_tao"][0]
-    t = ok(api.dk_dang_nhap("giao_vien", "Cô An", pin["pin"]))["token"]
-    cid = ok(api.dk_clb_luu(t, _clb(phong_id=3, chi_tieu=5)))["clb_id"]
+    pin = {x["ten"]: x["pin"] for x in ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nCô Bê"))["da_tao"]}
+    t = {k: ok(api.dk_dang_nhap("giao_vien", k, v))["token"] for k, v in pin.items()}
+    cid = ok(api.dk_clb_luu(t["Cô An"], _clb(phong_id=3, chi_tieu=5)))["clb_id"]
+    ok(api.dk_clb_luu(t["Cô Bê"], _clb(ten="Tự do", loai="Tự do", phong_id=1)))      # VG1-L4: buổi cần ≥ 1 CLB Tự do
     ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     ok(api.dk_clb_duyet(qt, cid, "tu_choi", ly_do="x"))
     assert ma(api.dk_phong_xoa(qt, 3)) == "dk_phong_dang_dung"                     # tránh phong_id lơ lửng
