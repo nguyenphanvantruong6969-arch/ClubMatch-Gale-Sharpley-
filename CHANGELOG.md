@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-27 — VG3 vòng CI 1 (sửa test đỏ sau L1–L3)
+
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 451 → 452 (thêm `test_giao_dien_vg3.py`).
+- Hai test cũ đỏ sẵn trên đầu VG1, sửa phía test (ý nghĩa giữ nguyên): `tests/test_giao_dien_dk3_cong.py::test_10` (lùi giai đoạn cần `xac_nhan=True`, VG1-L3) và `tests/test_giao_dien_dkl_giao_vien.py::test_3` (tắt `bat_buoc_tu_do` để duyệt CLB duy nhất, VG1-L4).
+- `style.css`: viền focus của nút tab lùi vào trong (thanh tab cuộn ngang cắt viền ngoài).
+- Soát giao diện (`soat-ma`, tầng 3): bảng cuộn ngang ≤ 720 px có thể cắt viền focus ở mép bảng (nhỏ, để Truong cân nhắc).
+
 ## 2026-11-27 — VG3 (dọn giao diện cổng đăng ký; chỉ trình bày)
 
 - Không đụng `api*.py`, `i18n_errors.py`, payload `dk_*`, giao diện chính: mọi CSS mới nằm cuối `style.css` và chỉ nhắm `.dk-*`.

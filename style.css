@@ -3838,3 +3838,4 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
   .dk-buoc { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
   .dk-buoc li { flex: none; white-space: nowrap; }
 }
+.dk-the-nut:focus-visible { outline-offset: -3px; }          /* thanh tab cuộn ngang cắt viền ngoài nên viền focus lùi vào trong */
