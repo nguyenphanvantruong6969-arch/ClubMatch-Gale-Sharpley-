@@ -165,11 +165,9 @@ def test_rang_buoc_clb_tu_do_co_the_tat(cd):
     ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
 
 
-# ---- 6. Quay lại giai đoạn trước -------------------------------------------------------------------
-def test_lui_giai_doan_khong_de_nguyen_vong_mo_coi(cd):
-    """Lùi từ «hs_dang_ky» về «duyet» rồi TỪ CHỐI một CLB đã có em chọn: `dk_nguyen_vong` còn dòng trỏ CLB đã từ chối
-    (nguyện vọng mồ côi, em không biết). Cần: dọn/báo các em bị ảnh hưởng, hoặc chặn từ chối khi đã có em chọn."""
-    api, qt = cd
+# ---- 6. Quay lại giai đoạn trước (VG1-L3, D3) ---------------------------------------------------------------------
+def _den_hs_dang_ky(api, qt, n_hs=2):
+    """Hai CLB (Tự do + Giới hạn) T2 đã duyệt, n_hs học sinh, mở cho học sinh. Trả (tu_do, gh, {ma: token}, {ma: pin})."""
     pin = {x["ten"]: x["pin"] for x in ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nThầy Bình"))["da_tao"]}
     t = {k: ok(api.dk_dang_nhap("giao_vien", k, v))["token"] for k, v in pin.items()}
     tu_do = ok(api.dk_clb_luu(t["Cô An"], _clb(ten="Tự do", loai="Tự do", phong_id=1)))["clb_id"]
@@ -177,20 +175,76 @@ def test_lui_giai_doan_khong_de_nguyen_vong_mo_coi(cd):
     ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     ok(api.dk_clb_duyet(qt, tu_do, "duyet"))
     ok(api.dk_clb_duyet(qt, gh, "duyet"))
-    h = ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))["pin"][0]["pin"]
+    pins = {x["ma"]: x["pin"] for x in ok(api.dk_hs_nap_danh_sach(
+        qt, "\n".join("H%d\tHS%d\t10A1" % (i, i) for i in range(1, n_hs + 1))))["pin"]}
     ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
-    th = ok(api.dk_dang_nhap("hoc_sinh", "H1", h))["token"]
-    ok(api.dk_hs_luu(th, [{"clb_id": gh}, {"clb_id": tu_do}]))
-    ok(api.dk_chuyen_giai_doan(qt, "duyet"))                       # lùi
-    r = api.dk_clb_duyet(qt, gh, "tu_choi", ly_do="bỏ")
-    if not r["ok"]:
-        return                                                    # chặn: chấp nhận được
+    tok = {m_: ok(api.dk_dang_nhap("hoc_sinh", m_, p_))["token"] for m_, p_ in pins.items()}
+    return tu_do, gh, tok, pins
+
+
+def _sql(api, q, *a):
     import sqlite3
     c = sqlite3.connect(api.db_path)
-    mo_coi = c.execute("SELECT COUNT(*) FROM dk_nguyen_vong n JOIN dk_clb k ON k.clb_id = n.clb_id "
-                       "WHERE k.trang_thai != 'duyet'").fetchone()[0]
-    c.close()
-    assert mo_coi == 0
+    try:
+        return c.execute(q, a).fetchall()
+    finally:
+        c.close()
+
+
+def test_lui_co_nguyen_vong_can_xac_nhan_va_tu_choi_clb_da_chon_don_nguyen_vong(cd):
+    """Lùi từ «hs_dang_ky» về «duyet» đã có nguyện vọng: cần `xac_nhan`. Từ chối CLB đã có em chọn: cần `xac_nhan`, rồi CHỈ nguyện vọng
+    của CLB đó bị gỡ, `hang` đánh lại liền nhau, `nop_luc` giữ, nhật ký ghi số lượng."""
+    api, qt = cd
+    tu_do, gh, tok, _ = _den_hs_dang_ky(api, qt)
+    ok(api.dk_hs_luu(tok["H1"], [{"clb_id": gh}, {"clb_id": tu_do}]))
+    nop = _sql(api, "SELECT nop_luc FROM dk_hoc_sinh WHERE student_id = 'H1'")[0][0]
+    assert nop
+    assert ma(api.dk_chuyen_giai_doan(qt, "duyet")) == "dk_lui_co_nguyen_vong"
+    assert api.dk_hs_nguyen_vong(tok["H1"])["ok"]                                  # chưa đổi gì
+    ok(api.dk_chuyen_giai_doan(qt, "duyet", True))
+    assert ma(api.dk_clb_duyet(qt, gh, "tu_choi", ly_do="bỏ")) == "dk_clb_co_nguyen_vong"
+    ok(api.dk_clb_duyet(qt, gh, "tu_choi", ly_do="bỏ", xac_nhan=True))
+    assert _sql(api, "SELECT clb_id, hang FROM dk_nguyen_vong WHERE student_id = 'H1'") == [(tu_do, 1)]
+    assert _sql(api, "SELECT COUNT(*) FROM dk_nguyen_vong n JOIN dk_clb k ON k.clb_id = n.clb_id WHERE k.trang_thai != 'duyet'")[0][0] == 0
+    assert _sql(api, "SELECT nop_luc FROM dk_hoc_sinh WHERE student_id = 'H1'")[0][0] == nop
+    assert _sql(api, "SELECT chi_tiet FROM dk_nhat_ky WHERE hanh_dong = 'go_nguyen_vong_tu_choi'") == [("%d n=1" % gh,)]
+
+
+def test_lui_nhieu_buoc_xoa_han_chot_va_khong_tu_dong_dong_lai(cd):
+    """Lùi 4 bước một lần (hs_dang_ky -> gv_dang_ky, không có nguyện vọng nên không cần xác nhận). Hạn chót cũ đã qua của giai đoạn đích
+    và các giai đoạn sau bị xoá, nếu không giai đoạn sẽ tự đóng ngay lần gọi kế tiếp."""
+    api, qt = cd
+    _den_hs_dang_ky(api, qt)
+    ok(api.dk_dat_han(qt, "hs_dang_ky", "2020-01-01T08:00"))
+    ok(api.dk_chuyen_giai_doan(qt, "chuan_bi"))                                  # lùi 4 bước (hs_dang_ky -> chuan_bi)
+    ok(api.dk_dat_han(qt, "gv_dang_ky", "2020-01-01T08:00"))
+    ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
+    ok(api.dk_chuyen_giai_doan(qt, "chuan_bi"))
+    ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))                                # đi tới: hạn của gv_dang_ky đã bị xoá khi lùi
+    assert api.dk_trang_thai()["data"]["giai_doan"] == "gv_dang_ky" and api.dk_trang_thai()["data"]["han_chot"] is None
+    assert _sql(api, "SELECT COUNT(*) FROM dk_clb")[0][0] == 2                   # không xoá dữ liệu
+
+
+def test_nhay_tien_phai_qua_cong_cua_moi_ranh_gioi(cd):
+    """Nhảy thẳng gv_dang_ky -> nhap_diem / xuat khi còn CLB chờ duyệt: phải bị cổng «mở cho học sinh» chặn (trước đây lọt)."""
+    api, qt = cd
+    pin = ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))["da_tao"][0]["pin"]
+    t = ok(api.dk_dang_nhap("giao_vien", "Cô An", pin))["token"]
+    ok(api.dk_clb_luu(t, _clb(ten="Tự do", loai="Tự do", phong_id=1)))
+    assert ma(api.dk_chuyen_giai_doan(qt, "nhap_diem")) == "dk_con_clb_cho_duyet"
+    assert ma(api.dk_chuyen_giai_doan(qt, "xuat")) == "dk_con_clb_cho_duyet"
+    assert api.dk_trang_thai()["data"]["giai_doan"] == "gv_dang_ky"
+
+
+def test_hs_bi_go_khoi_danh_sach_phien_cu_khong_luu_duoc_nguyen_vong(cd):
+    """Kiểm tra toàn diện #3: «thay» danh sách rồi mở lại: phiên cũ của em không còn giá trị, không ghi nguyện vọng cho em không còn."""
+    api, qt = cd
+    tu_do, gh, tok, _ = _den_hs_dang_ky(api, qt)
+    ok(api.dk_chuyen_giai_doan(qt, "duyet"))
+    ok(api.dk_hs_nap_danh_sach(qt, "H7\tMới\t10A1", "thay"))
+    ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
+    assert ma(api.dk_hs_luu(tok["H1"], [{"clb_id": gh}])) == "dk_can_dang_nhap"
+    assert _sql(api, "SELECT COUNT(*) FROM dk_nguyen_vong")[0][0] == 0
 
 
 # ---- 7. Số «giáo viên» ở thẻ vai trò -----------------------------------------------------------------

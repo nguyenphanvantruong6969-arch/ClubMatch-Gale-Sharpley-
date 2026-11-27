@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1-L3 (vá gấp: lùi giai đoạn nhiều bước, không để nguyện vọng mồ côi, lỗi 6)
+
+- `api_dang_ky.py` `dk_chuyen_giai_doan(token, giai_doan, xac_nhan=False)`: lùi được BẤT KỲ số bước; lùi khỏi giai đoạn học sinh về trước nó mà đã có nguyện vọng thì cần `xac_nhan=True` (không thì `dk_lui_co_nguyen_vong`, n); lùi xoá hạn chót của giai đoạn đích và các giai đoạn sau (hạn đã qua không tự đóng lại ngay). Nhảy tới phải qua cổng của MỌI ranh giới đi ngang (trước đây nhảy thẳng tới «nhap_diem»/«xuat» bỏ qua cổng mở cho học sinh). Không xoá dữ liệu.
+- `dk_clb_duyet(..., xac_nhan=False)`: từ chối CLB đã có học sinh chọn cần `xac_nhan` (`dk_clb_co_nguyen_vong`, n); khi xác nhận chỉ gỡ nguyện vọng của CLB đó, `hang` đánh lại liền nhau theo (học sinh, buổi), `nop_luc` giữ, nhật ký ghi số lượng.
+- Từ báo cáo kiểm tra toàn diện (#3): `dk_hs_luu` từ chối phiên của học sinh không còn trong danh sách; nạp «thay» danh sách huỷ mọi phiên học sinh cũ.
+- `js/dang_ky_quan_tri.js` + `js/dang_ky_quan_tri_2.js` (`QT2.luiVe`): thẻ «Lùi giai đoạn» có ô chọn giai đoạn đích + nút «Lùi», hộp xác nhận nêu số học sinh. `tests/test_giao_dien_dk8_l2.py` dòng kiểm nút cũ đổi theo.
+- Test: `tests/test_va_gap_tai_hien.py` (test lùi viết lại + 3 test mới), `tests/test_giao_dien_vg1.py` (2).
+
 ## 2026-11-27 — VG1-L2 (vá gấp: xuất phiếu PIN ra Excel, lỗi 3)
 
 - `api_dang_ky_excel.py`: `dk_pin_xuat_excel(token, pham_vi, lop=None, xac_nhan=False)`. PIN chỉ lưu băm nên «xuất» = đặt PIN MỚI cho từng người rồi ghi .xlsx (trang «Học sinh»: Mã HS | Họ tên | Lớp | PIN; «Giáo viên»: Họ tên | PIN). Chỉ quản trị; thiếu `xac_nhan=True` → `dk_can_xac_nhan_pin` (n) và không đổi gì; xoá bộ đếm khoá của người được đặt lại; nhật ký chỉ ghi số người. Mã lỗi mới (cuối `i18n_errors.py`, đã sinh lại `i18n_loi.js`): `dk_pham_vi_la`, `dk_can_xac_nhan_pin`, và sẵn cho L3–L4: `dk_lui_co_nguyen_vong`, `dk_clb_co_nguyen_vong`, `dk_can_xac_nhan_rui_ro`.

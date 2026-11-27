@@ -12,7 +12,7 @@ import browser_host  # noqa: E402
 import test_dk3_api as t3  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from api import PipelineAPI  # noqa: E402
-from test_giao_dien_dk8_l2 import TEN_GD  # noqa: E402
+from test_giao_dien_dk8_l2 import TEN_GD, _dung  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ok = t3.ok
@@ -94,3 +94,31 @@ def test_l2_huy_hop_xac_nhan_thi_khong_doi_pin(vao):
     pg.click("#dkPinXuat")
     pg.wait_for_timeout(500)
     assert ok(pg.api.dk_dang_nhap("hoc_sinh", "H1", pin))["token"]
+
+
+# ---- L3: lùi nhiều bước ---------------------------------------------------------------------------------------------
+def _hs_dang_ky(tmp):
+    api, qt = _dung(tmp, "hs_dang_ky")                     # có sẵn nguyện vọng của H1
+    return api, qt, "hs_dang_ky"
+
+
+def test_l3_lui_ve_giai_doan_chon_duoc_hoi_xac_nhan_khi_co_nguyen_vong(vao):
+    pg = vao(_hs_dang_ky, "Thêm")
+    assert pg.locator("#dkLuiVe option").all_inner_texts() == ["Chuẩn bị", "Giáo viên đăng ký", "Duyệt CLB"]
+    pg.select_option("#dkLuiVe", "gv_dang_ky")                                    # lùi 2 bước một lần
+    pg.click("#dkLui")
+    pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
+    assert pg.hop and "1 học sinh đã gửi nguyện vọng" in pg.hop[0]
+    assert pg.api.dk_trang_thai()["data"]["giai_doan"] == "gv_dang_ky"
+    import sqlite3
+    c = sqlite3.connect(pg.api.db_path)
+    assert c.execute("SELECT COUNT(*) FROM dk_nguyen_vong").fetchone()[0] == 2
+    c.close()
+
+
+def test_l3_huy_xac_nhan_thi_o_nguyen_giai_doan(vao):
+    pg = vao(_hs_dang_ky, "Thêm")
+    pg.evaluate("window.confirm = () => false")
+    pg.click("#dkLui")
+    pg.wait_for_timeout(500)
+    assert pg.api.dk_trang_thai()["data"]["giai_doan"] == "hs_dang_ky"
