@@ -3819,3 +3819,13 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-bang-tt td { vertical-align: top; padding-top: 8px; padding-bottom: 8px; }
 .dk-tt-thi { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
 .dk-tt-thi .dk-nhom { gap: 8px 16px; }
+/* VG3 vòng 2: placeholder đủ chữ, nút ↑ ↓ ngang cỡ ✕, thẻ «Xem trước» bớt khoảng trống, nút/ô trong bảng gọn (≥ 36 px) */
+.dk-app .dk-nhap.dk-so { width: 8rem; max-width: 8rem; }
+.dk-app .dk-nhap.dk-so::placeholder { font-family: var(--font-body); font-size: 13px; }
+.dk-xep .btn { font-size: 1.15rem; font-weight: 600; line-height: 1; }
+.dk-app .dk-bang td .btn { min-height: 36px; padding: 6px 12px; }
+.dk-app .dk-bang td .dk-nhap { min-height: 36px; padding: 4px 8px; }
+.dk-bang th, .dk-bang td { padding: 8px 12px; }
+#dkXemTruoc > summary { min-height: 28px; }
+#dkXemTruoc > p.dk-phu { margin: 4px 0 8px; }
+.dk-noidung .dk-khung > details { margin: 0; }
