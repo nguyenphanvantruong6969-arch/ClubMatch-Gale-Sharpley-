@@ -194,8 +194,7 @@
     const i = THU_TU.indexOf(tt.giai_doan);
     return h("div", {}, await DK.QT2.saoLuu(),
       DK.theCon("Lùi giai đoạn", h("p.dk-phu", {}, "Dùng khi cần sửa: mở lại đăng ký, hoặc mở khoá điểm đã chốt. Không xoá dữ liệu; có ghi nhật ký."),
-        i > 0 ? DK.nut("Lùi về giai đoạn «" + TEN_GD[THU_TU[i - 1]] + "»", function () { DK.chay(this, async () => {
-          const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, THU_TU[i - 1]); if (r.ok) { the = "viec"; DK.quanTri(); } return r; }); }) : h("p.dk-phu", {}, "Đang ở giai đoạn đầu tiên.")),
+        i > 0 ? DK.QT2.luiVe(i) : h("p.dk-phu", {}, "Đang ở giai đoạn đầu tiên.")),
       DK.theCon("Nhật ký", h("details", {}, h("summary", {}, "Nhật ký (" + nk.length + ")"), bang(["Lúc", "Vai", "Việc", "Chi tiết"], nk.map((x) => [x.luc, x.vai, x.hanh_dong, x.chi_tiet || ""])))));
   }
 })(window);

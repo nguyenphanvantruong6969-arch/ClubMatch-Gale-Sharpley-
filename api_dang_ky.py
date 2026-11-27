@@ -375,22 +375,33 @@ class DangKyMixin:
             return err("dk_thieu_clb_tu_do", buoi=", ".join(thieu))
         return None
 
-    def dk_chuyen_giai_doan(self, token, giai_doan):
-        """Sang giai đoạn kế (hoặc lùi — có ghi nhật ký). Mở cho học sinh phải qua `_dk_kiem_dieu_kien_mo_hs`."""
+    def dk_chuyen_giai_doan(self, token, giai_doan, xac_nhan=False):
+        """Sang giai đoạn kế, nhảy tới, hoặc LÙI bất kỳ số bước (VG1-L3, D3; có ghi nhật ký, không xoá dữ liệu). Nhảy tới phải qua
+        cổng của MỌI ranh giới đi ngang (mở cho học sinh: `_dk_kiem_dieu_kien_mo_hs`; xuất: đủ điểm). Lùi khỏi giai đoạn học sinh về
+        trước nó mà đã có nguyện vọng đã gửi thì cần `xac_nhan=True` (không thì `dk_lui_co_nguyen_vong`, n). Lùi xoá hạn chót của giai
+        đoạn đích VÀ các giai đoạn sau (hạn đã qua sẽ tự đóng giai đoạn ngay lần gọi kế tiếp)."""
         def lam(cur, p):
             if giai_doan not in CAC_GIAI_DOAN:
                 raise _Loi("dk_giai_doan_la")
             hien = self._dk_gd
-            if giai_doan == "hs_dang_ky" and CAC_GIAI_DOAN.index(hien) < CAC_GIAI_DOAN.index("hs_dang_ky"):
-                loi = self._dk_kiem_dieu_kien_mo_hs(cur)
-                if loi:
-                    raise _Loi(loi["code"], **loi["params"])
-            if giai_doan == "nhap_diem" and hien == "hs_dang_ky":
-                pass
-            if giai_doan == "xuat":
-                thieu = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE thi = 1 AND diem IS NULL").fetchone()[0]
-                if thieu:
-                    raise _Loi("dk_thieu_diem", n=thieu)
+            i_hien, i_dich = CAC_GIAI_DOAN.index(hien), CAC_GIAI_DOAN.index(giai_doan)
+            i_hs = CAC_GIAI_DOAN.index("hs_dang_ky")
+            for g in CAC_GIAI_DOAN[i_hien + 1:i_dich + 1]:                  # cổng của từng ranh giới đi ngang khi tiến
+                if g == "hs_dang_ky":
+                    loi = self._dk_kiem_dieu_kien_mo_hs(cur)
+                    if loi:
+                        raise _Loi(loi["code"], **loi["params"])
+                if g == "xuat":
+                    thieu = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE thi = 1 AND diem IS NULL").fetchone()[0]
+                    if thieu:
+                        raise _Loi("dk_thieu_diem", n=thieu)
+            if i_dich < i_hien:
+                if i_hien >= i_hs > i_dich:
+                    n = cur.execute("SELECT COUNT(DISTINCT student_id) FROM dk_nguyen_vong").fetchone()[0]
+                    if n and xac_nhan is not True:
+                        raise _Loi("dk_lui_co_nguyen_vong", n=n)
+                cur.execute("UPDATE dk_giai_doan SET han_chot = NULL WHERE ten IN (%s)" % ",".join("?" * len(CAC_GIAI_DOAN[i_dich:])),
+                            CAC_GIAI_DOAN[i_dich:])
             self._dk_dat(cur, "giai_doan", giai_doan)
             self._dk_ghi_nk(cur, QUAN_TRI, "chuyen_giai_doan", "%s -> %s" % (hien, giai_doan))
             return {"giai_doan": giai_doan}
@@ -575,7 +586,10 @@ class DangKyMixin:
                     moi += 1
             self._dk_ghi_nk(cur, QUAN_TRI, "nap_hs", "%s moi=%d" % (che_do, moi))
             return {"moi": moi, "da_co": da_co, "loi": loi, "pin": pins}
-        return self._dk_chay(lam, QUAN_TRI, token=token)
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"] and che_do == "thay":                              # thay cả danh sách: mọi em được tạo lại (PIN mới) nên phiên cũ chết
+            self._dk_huy_phien(HOC_SINH, [v["id"] for v in self._dk_phien_dict().values() if isinstance(v, dict) and v.get("vai") == HOC_SINH])
+        return r
 
     def dk_hs_dat_lai_pin(self, token, student_id):
         def lam(cur, p):
@@ -705,7 +719,18 @@ class DangKyMixin:
             return {}
         return self._dk_chay(lam, GIAO_VIEN, QUAN_TRI, token=token)
 
-    def dk_clb_duyet(self, token, clb_id, quyet_dinh, chi_tieu=None, phong_id=None, ly_do=""):
+    @staticmethod
+    def _dk_go_nguyen_vong_clb(cur, clb_id):
+        """Gỡ nguyện vọng trỏ `clb_id`, đánh lại `hang` 1..n theo (học sinh, buổi) giữ thứ tự; `nop_luc` giữ nguyên."""
+        ai = cur.execute("SELECT DISTINCT student_id, buoi FROM dk_nguyen_vong WHERE clb_id = ?", (clb_id,)).fetchall()
+        cur.execute("DELETE FROM dk_nguyen_vong WHERE clb_id = ?", (clb_id,))
+        for sid, buoi in ai:
+            cur.execute("UPDATE dk_nguyen_vong SET hang = hang + 100000 WHERE student_id = ? AND buoi = ?", (sid, buoi))
+            for k, (cid,) in enumerate(cur.execute("SELECT clb_id FROM dk_nguyen_vong WHERE student_id = ? AND buoi = ? ORDER BY hang",
+                                                   (sid, buoi)).fetchall(), start=1):
+                cur.execute("UPDATE dk_nguyen_vong SET hang = ? WHERE student_id = ? AND clb_id = ?", (k, sid, cid))
+
+    def dk_clb_duyet(self, token, clb_id, quyet_dinh, chi_tieu=None, phong_id=None, ly_do="", xac_nhan=False):
         """D18/D19: duyệt (có thể đổi chỉ tiêu của quản trị / phòng) hoặc từ chối. Chỉ trước khi mở cho học sinh."""
         def lam(cur, p):
             if quyet_dinh not in ("duyet", "tu_choi"):
@@ -716,7 +741,14 @@ class DangKyMixin:
             if r is None:
                 raise _Loi("dk_khong_thay")
             if quyet_dinh == "tu_choi":
+                n_nv = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE clb_id = ?", (clb_id,)).fetchone()[0]
+                if n_nv and xac_nhan is not True:                       # VG1-L3 (D3): không để nguyện vọng mồ côi trỏ CLB đã từ chối
+                    raise _Loi("dk_clb_co_nguyen_vong", n=n_nv)
+                if n_nv:
+                    self._dk_go_nguyen_vong_clb(cur, clb_id)
                 cur.execute("UPDATE dk_clb SET trang_thai = 'tu_choi', ly_do_tu_choi = ? WHERE clb_id = ?", (str(ly_do or "")[:300], clb_id))
+                if n_nv:
+                    self._dk_ghi_nk(cur, QUAN_TRI, "go_nguyen_vong_tu_choi", "%s n=%d" % (clb_id, n_nv))
             else:
                 ph = _so_nguyen(phong_id) if phong_id is not None else r[3]
                 sc = cur.execute("SELECT suc_chua FROM dk_phong WHERE phong_id = ?", (ph,)).fetchone()
@@ -823,6 +855,8 @@ class DangKyMixin:
         def lam(cur, p):
             if self._dk_gd != "hs_dang_ky":
                 raise _Loi("dk_hs_chua_mo")
+            if not cur.execute("SELECT 1 FROM dk_hoc_sinh WHERE student_id = ?", (p["id"],)).fetchone():
+                raise _Loi("dk_can_dang_nhap")                       # em đã bị gỡ khỏi danh sách: phiên cũ không còn giá trị
             tay = set(buoi_tay or [])
             theo_buoi, thay = {}, set()
             for x in nguyen_vong or []:

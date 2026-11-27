@@ -267,6 +267,21 @@
       h("label.dk-truong", {}, h("span", {}, "Phạm vi"), pv), lop, nut);
   };
 
+  /* ---------- VG1-L3: lùi về giai đoạn bất kỳ phía trước (không xoá dữ liệu; đã có nguyện vọng thì hỏi xác nhận) ---------- */
+  QT2.luiVe = function (i) {
+    const sel = h("select#dkLuiVe.dk-nhap", { "aria-label": "Lùi về giai đoạn" }, DK.THU_TU.slice(0, i).map((g, k) => h("option", { value: g, selected: k === i - 1 }, DK.TEN_GD[g])));
+    const nut = DK.nut("Lùi", function () { DK.chay(this, async () => {
+      const g = sel.value;
+      let r = await DK.goi("dk_chuyen_giai_doan", T(), g, false);
+      const e = r.errors && r.errors[0];
+      if (!r.ok && e && e.code === "dk_lui_co_nguyen_vong") {
+        if (global.confirm && !global.confirm(e.params.n + " học sinh đã gửi nguyện vọng. Lùi về «" + DK.TEN_GD[g] + "» KHÔNG xoá nguyện vọng, nhưng học sinh sẽ không sửa được cho tới khi mở lại, và hạn chót các giai đoạn từ đó trở đi bị xoá. Tiếp tục?")) return { ok: true, errors: [] };
+        r = await DK.goi("dk_chuyen_giai_doan", T(), g, true);
+      }
+      if (r.ok && r.data) { DK.thongBao("Đã lùi về «" + DK.TEN_GD[g] + "»."); lamMoi(); } return r; }); }, { id: "dkLui" });
+    return h("div.dk-hang-nut", {}, h("label.dk-truong", {}, h("span", {}, "Lùi về"), sel), nut);
+  };
+
   /* ---------- A9: thẻ Cài đặt ---------- */
   QT2.caiDat = async function () {
     const c = (await DK.goi("dk_cai_dat_doc", T())).data || {};
