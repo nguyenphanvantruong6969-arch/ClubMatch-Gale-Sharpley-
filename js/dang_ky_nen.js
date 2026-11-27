@@ -183,17 +183,19 @@
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },
-      DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password" }),
-      DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma"),
-      DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6" }),
-      DK.truong("Khối thấp nhất", "k1", { type: "number", value: "6" }),
-      DK.truong("Khối cao nhất", "k2", { type: "number", value: "12" }));
-    const b = day(DK.nutVang("Thiết lập cổng", () => DK.chay(b, async () => {
+      DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password", placeholder: "Ít nhất 4 ký tự" }),
+      DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma", { placeholder: "Ví dụ: THPT-AN-LAC" }),
+      DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6", placeholder: "Ví dụ: Thứ 2, Thứ 4" }),
+      h("div.dk-hang-khoi", {},      // UX6-L3: hai khối cùng một hàng
+        DK.truong("Khối thấp nhất", "k1", { type: "number", value: "6" }),
+        DK.truong("Khối cao nhất", "k2", { type: "number", value: "12" })));
+    const b = DK.nutVang("Thiết lập cổng", () => DK.chay(b, async () => {
       const v = (n) => f.elements[n].value;
       const r = await DK.goi("dk_khoi_tao", v("mk"), v("ma"), v("buoi").split(",").map((x) => x.trim()).filter(Boolean), [+v("k1"), +v("k2")]);
       if (r.ok) DK.dauTrang();
       return r;
-    })));
+    }));
+    b.classList.add("dk-nut-lap");     // UX6-L3: nút không rộng hết thẻ
     DK.hien(DK.hep(DK.khung("Thiết lập lần đầu", f, b)));
   };
 

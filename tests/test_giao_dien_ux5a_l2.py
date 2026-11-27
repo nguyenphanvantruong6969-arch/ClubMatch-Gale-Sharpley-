@@ -17,7 +17,7 @@ def test_ngan_sach_hick_tung_khung(mo_ux5a, vai):  # noqa: F811
     gt = dem(page, "#gtPanel")
     assert len(gt) <= (2 if vai == "quan_tri" else 1), gt
     ux = dem(page, "#ux1bPanel")
-    assert ux == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in ▾"
+    assert ux == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in"
     tong = dem(page, "#view-results")
     assert len(tong) <= (10 if vai == "quan_tri" else 9), tong
     assert not loi, loi
@@ -42,7 +42,7 @@ def test_nep_bao_cao_va_phieu_in_con_du_ba_nut_trong_hai_lan_bam(mo_ux5a, vai): 
     page, api, loi = mo_ux5a(vai)
     for i in ("btnUx1bBaoCao", "btnUx1bPhieuLop", "btnUx1bBaoCaoPdf"):
         assert page.locator("#" + i).count() == 1 and page.locator("#" + i).is_hidden()
-    assert page.locator("#ux1bThemTom").inner_text().strip() == "Báo cáo và phiếu in ▾"
+    assert page.locator("#ux1bThemTom").inner_text().strip() == "Báo cáo và phiếu in"
     page.click("#ux1bThemTom")
     assert [page.locator("#" + i).inner_text().strip() for i in
             ("btnUx1bBaoCao", "btnUx1bPhieuLop", "btnUx1bBaoCaoPdf")] == [

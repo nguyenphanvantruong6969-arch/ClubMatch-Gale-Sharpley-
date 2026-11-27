@@ -439,11 +439,12 @@ function loadAdminClubs() {
         suaClbTuDong(c, tr);
       });
       tr.innerHTML =
-        `<td>${esc(c.club_id)}</td><td>${esc(c.name)}${gioDiaDiemHtml(c)}</td><td>${esc(c.capacity)}</td>` +
+        `<td>${esc(c.name)}${gioDiaDiemHtml(c)}<span class="ux6-ma-clb">${esc(c.club_id)}</span></td><td>${esc(c.capacity)}</td>` +
         `<td>${esc(c.reserve_capacity)}</td><td>${esc(c.reserve_group || "—")}</td>` +
         `<td class="cot-buoi">${esc(nhanBuoi(c.buoi))}</td>` + (coFa ? oFaClb(c) : "") + `<td></td>`;
       const delBtn = document.createElement("button");
-      delBtn.className = "btn-icon-danger";
+      delBtn.className = "btn-icon-danger ux6-xoa";   /* UX6-L3: biểu tượng thùng rác (CSS); chữ "Xoá" chỉ hiện ở bước xác nhận */
+      delBtn.setAttribute("aria-label", t("btn_delete") + " " + c.name);
       delBtn.dataset.originalLabel = t("btn_delete");
       delBtn.textContent = delBtn.dataset.originalLabel;
       armTwoStepConfirm(delBtn, () => t("confirm_delete_generic"), () => {

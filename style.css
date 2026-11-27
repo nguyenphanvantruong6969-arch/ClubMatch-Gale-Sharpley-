@@ -3777,3 +3777,51 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .kq-nhom-lop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .kq-thanh-cong-cu .kq-nut-tai { margin-left: auto; }
 .kq-vung-bang { margin-top: 8px; width: 100%; }
+
+/* ============================================================
+   UX6-L3: chi tiết nhất quán
+   ============================================================ */
+/* Logo ảnh thay ô chữ "RB" */
+img.brand-mark { background: none; object-fit: contain; display: block; }
+
+/* Mũi tên xổ: biểu tượng SVG (mặt nạ) thay cho ký tự ▾ trong chữ nút */
+.ux6-mui-ten::after {
+  content: ""; display: inline-block; width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+details[open] > .ux6-mui-ten::after { transform: rotate(180deg); }
+
+/* Nút ba chấm: biểu tượng SVG, không có chữ; nhãn đọc bằng aria-label, gợi ý bằng title */
+.ux6-ba-cham { font-size: 0; min-width: 36px; display: inline-flex; align-items: center; justify-content: center; }
+.ux6-ba-cham::before {
+  content: ""; width: 16px; height: 16px; background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='3' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='13' cy='8' r='1.6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='3' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='13' cy='8' r='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.ux6-ba-cham::-webkit-details-marker { display: none; }
+
+/* Nút phân đoạn của Kết quả: cùng cỡ chữ, font và màu nhấn (vàng) với các nút tab khác */
+.kq-seg-nut { font-size: 14px; padding: 9px 16px; font-weight: 500; color: var(--slate); }
+.kq-seg-nut:hover { color: var(--ink); }
+.kq-seg-nut.is-on { background: var(--paper-raised); color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
+
+/* Chữ đơn (mono) chỉ dành cho mã máy; nhãn giao diện dùng font thân */
+.lang-toggle, .lang-toggle-light, .motion-toggle, .ws-switcher-nhan, .seed-input-wrap, .seed-lock-hint, .brand-sub {
+  font-family: var(--font-body);
+}
+.data-table th, .hs-card-nhan { text-transform: none; letter-spacing: 0; font-size: 12.5px; }
+
+/* Bảng CLB: mã nằm dưới tên, nút xoá là biểu tượng hiện khi rê chuột hoặc có tiêu điểm bàn phím */
+.ux6-ma-clb { display: block; margin-top: 2px; font-family: var(--font-mono); font-size: 11.5px; color: var(--slate); user-select: all; }
+.btn-icon-danger.ux6-xoa:not(.is-confirming) {
+  font-size: 0; text-decoration: none; width: 44px; height: 44px; padding: 0; opacity: 0;
+  background-color: var(--rust-text);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.7 6.5v5M9.3 6.5v5' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.7 6.5v5M9.3 6.5v5' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat;
+  transition: opacity 120ms ease;
+}
+tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible, .btn-icon-danger.ux6-xoa:focus { opacity: 1; }
+@media (hover: none) { .btn-icon-danger.ux6-xoa { opacity: 1; } }
+
+/* Cổng đăng ký: biểu mẫu thiết lập lần đầu */
+.dk-hang-khoi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dk-nut-lap { align-self: flex-start; }

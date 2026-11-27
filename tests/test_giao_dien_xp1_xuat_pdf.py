@@ -59,7 +59,7 @@ def _tep_pdf(thu_muc):
 def test_menu_co_ba_muc_va_o_chon_lop(mo, api):
     _nap(api)
     page, loi = mo()
-    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác ▾"   # UX5A-L3
+    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác"   # UX5A-L3
     assert all(page.locator("#" + i).is_hidden() for i in MUC)          # menu đóng
     _mo_menu(page)
     assert all(page.locator("#" + i).is_visible() for i in MUC)

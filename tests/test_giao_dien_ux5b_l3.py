@@ -30,7 +30,7 @@ def test_quan_tri_chua_chon_em_dong_trang_thai_tao_moi_gap_va_ngan_sach(mo_ux5b)
     assert page.inner_text("#ux5bTtNhap") == "Chọn một học sinh ở trên để bắt đầu."
     assert page.locator("#view-fallback .view-desc").count() == 0      # UX6-L1: bỏ câu mô tả thẻ
     assert page.inner_text("#view-fallback .panel-head h2:visible") == "Tìm học sinh"
-    assert page.inner_text("#ux5bTaoMoi > summary") == "Tạo học sinh mới ▾"
+    assert page.inner_text("#ux5bTaoMoi > summary") == "Tạo học sinh mới"
     for sel in ("#newStudentId", "#newStudentName", "#btnCreateStudent"):
         assert page.locator(sel).is_hidden(), sel
     assert len(dem_nhap(page)) <= 7

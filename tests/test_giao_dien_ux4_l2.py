@@ -60,7 +60,7 @@ def test_dai_tab_bon_muc_va_them_chua_cac_muc_con_lai(trang):
     assert page.evaluate(JS_DAI) == ["qlTabClb", "qlTabHs", "qlTabCachXep", "qlNutThem"]
     assert page.locator("#qlTabClb").inner_text().strip() == "Danh sách CLB"
     assert page.locator("#qlTabCachXep").inner_text().strip() == "Cách xếp"
-    assert page.locator("#qlNutThem").inner_text().strip() == "Thêm ▾"
+    assert page.locator("#qlNutThem").inner_text().strip() == "Thêm"
     assert page.locator("#qlThemMenu").is_hidden()
     assert page.get_attribute("#qlNutThem", "aria-expanded") == "false"
     page.click("#qlNutThem")

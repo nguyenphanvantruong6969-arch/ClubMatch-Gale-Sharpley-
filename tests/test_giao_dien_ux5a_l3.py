@@ -49,7 +49,7 @@ def test_chu_moi_va_tieu_de_nhom(mo_ux5a, vai):  # noqa: F811
     assert page.evaluate("""() => { const h = document.getElementById('chiTietNhomTieuDe'), c = document.getElementById('clbPanel');
       return !!(h.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING); }""")
     if vai == "quan_tri":
-        assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác ▾"
+        assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác"
     assert not loi, loi
 
 

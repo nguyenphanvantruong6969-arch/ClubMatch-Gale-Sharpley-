@@ -16,13 +16,13 @@
   <!-- ===================== SIDEBAR ===================== -->
   <nav class="sidebar">
     <div class="brand">
-      <span class="brand-mark">RB</span>
+      <img class="brand-mark" src="logo.png" alt="" width="36" height="36">
       <div class="brand-text">
         <div class="brand-title" data-i18n="brand_title">Sắp xếp CLB</div>
       </div>
       <button type="button" class="lang-toggle" id="btnLangToggle" data-i18n="lang_toggle_label">EN</button>
       <details class="menu-khac menu-khac-nen-toi" id="menuThanhBen">
-        <summary class="lang-toggle" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn">⋯</summary>
+        <summary class="lang-toggle ux6-ba-cham" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn" data-i18n-title="menu_khac_aria" title="Thêm tuỳ chọn"></summary>
         <div class="menu-khac-hop">
           <button type="button" class="menu-khac-muc motion-toggle" id="btnMotionToggle" aria-pressed="true" data-i18n-aria-label="aria_hieu_ung">Hoạt ảnh: bật</button>
         </div>
@@ -357,7 +357,7 @@
           <button class="btn btn-secondary" id="btnUx1bXuatLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
             <!-- UX5A-L2: ba việc ít dùng gập vào một nếp (Hick); id các nút giữ nguyên -->
             <details class="menu-khac" id="ux1bThemMenu">
-              <summary class="btn btn-secondary" id="ux1bThemTom" data-i18n="ux5a_ux1b_them">Báo cáo và phiếu in ▾</summary>
+              <summary class="btn btn-secondary ux6-mui-ten" id="ux1bThemTom" data-i18n="ux5a_ux1b_them">Báo cáo và phiếu in</summary>
               <div class="menu-khac-hop ux5a-hop-rong">
                 <button class="menu-khac-muc" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
                 <button class="menu-khac-muc" id="btnUx1bPhieuLop" type="button" data-i18n="gt_in_lop">In phiếu cả {cohort_l}</button>
@@ -409,7 +409,7 @@
             <button type="button" class="kq-seg-nut ph-hieu" data-gia-tri="0" aria-pressed="false" data-i18n="ph_khong">Không</button>
           </div>
           <details class="nang-cao ux5a-nep-ph" id="phThemY">
-            <summary class="btn btn-ghost" data-i18n="ux5a_ph_them">Thêm ý kiến ▾</summary>
+            <summary class="btn btn-ghost ux6-mui-ten" data-i18n="ux5a_ph_them">Thêm ý kiến</summary>
           <p data-i18n="ph_cau_kho">Phần nào khó nhất? (không bắt buộc)</p>
           <div class="kq-seg ph-nhom" role="group" data-i18n-aria-label="ph_cau_kho">
             <button type="button" class="kq-seg-nut ph-kho" data-gia-tri="chon_clb" aria-pressed="false" data-i18n="ph_kho_chon_clb">Chọn CLB</button>
@@ -488,7 +488,7 @@
           <button class="btn btn-secondary" id="btnXuatTheoLop" type="button" data-i18n="btn_xuat_theo_lop">Xuất theo {cohort_l}</button>
           <!-- UX1A-L3 + UX1I-I2: MỘT menu "Xuất…" (quản trị): bốn nút chỉ-huy-chương (ẩn khi tắt) và ba mục PDF của XP1-L4 -->
           <details class="menu-khac" id="xuatMenu" data-quyen="quan_tri">
-            <summary class="btn btn-secondary" data-i18n="ux1a_xuat_menu">Xuất tệp khác ▾</summary>
+            <summary class="btn btn-secondary ux6-mui-ten" data-i18n="ux1a_xuat_menu">Xuất tệp khác</summary>
             <div class="menu-khac-hop ux5a-hop-rong">
               <button class="menu-khac-muc" id="btnXuatLyDo" type="button" hidden data-i18n="btn_xuat_ly_do">Xuất lý do kết quả (CSV)</button>
               <button class="menu-khac-muc" id="btnXuatNhuCau" type="button" hidden data-i18n="btn_xuat_nhu_cau">Xuất bảng nhu cầu (CSV)</button>
@@ -864,7 +864,7 @@
         </div>
         <!-- UX5B-L3: việc ít dùng (tạo mới) gập lại; ba ô và nút Tạo giữ nguyên id -->
         <details class="ux5b-gap ux5b-tao-moi" id="ux5bTaoMoi" data-quyen="quan_tri">
-          <summary data-i18n="ux5b_tao_moi">Tạo học sinh mới ▾</summary>
+          <summary class="ux6-mui-ten" data-i18n="ux5b_tao_moi">Tạo học sinh mới</summary>
           <div class="new-student-row">
             <input type="text" id="newStudentId" class="text-input text-input-sm" data-i18n-placeholder="placeholder_new_student_id" placeholder="Mã học sinh mới">
             <input type="text" id="newStudentName" class="text-input" data-i18n-placeholder="placeholder_full_name" placeholder="Họ tên">
@@ -887,7 +887,7 @@
           <div class="panel-actions">
             <!-- T3-34: ba nút phụ gom vào menu ⋯; hai nút xác nhận hai bước giữ menu mở (data-giu-menu). -->
             <details class="menu-khac" id="menuHocSinh">
-              <summary class="btn btn-ghost" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn">⋯</summary>
+              <summary class="btn btn-ghost ux6-ba-cham" data-i18n-aria-label="menu_khac_aria" aria-label="Thêm tuỳ chọn" data-i18n-title="menu_khac_aria" title="Thêm tuỳ chọn"></summary>
               <div class="menu-khac-hop">
                 <button type="button" class="menu-khac-muc" id="btnXuatEmNay" data-i18n="btn_xuat_em_nay">Xuất CSV học sinh này</button>
                 <button type="button" class="menu-khac-muc" id="btnResetStudentEntry" data-quyen="quan_tri" data-giu-menu="1" data-i18n="btn_reset_entry">Xoá toàn bộ phiếu của học sinh này</button>
@@ -979,7 +979,7 @@
         <button type="button" role="tab" class="ql-tab" id="qlTabCachXep" data-ql-tab="cach_xep" aria-controls="qlPanelCachXep" aria-selected="false" tabindex="-1" data-i18n="ux4_ql_tab_cach_xep">Cách xếp</button>
         <!-- UX4-L2: mục ít dùng hoặc nguy hiểm gom vào "Thêm ▾"; id và data-ql-tab của các tab cũ giữ nguyên -->
         <div class="ql-them" id="qlThem">
-          <button type="button" class="ql-tab ql-tab-them" id="qlNutThem" aria-haspopup="true" aria-expanded="false" aria-controls="qlThemMenu" data-i18n="ux4_ql_tab_them">Thêm ▾</button>
+          <button type="button" class="ql-tab ql-tab-them ux6-mui-ten" id="qlNutThem" aria-haspopup="true" aria-expanded="false" aria-controls="qlThemMenu" data-i18n="ux4_ql_tab_them">Thêm</button>
           <div class="ql-them-menu" id="qlThemMenu" role="group" hidden>
             <button type="button" role="tab" class="ql-tab" id="qlTabWh" data-ql-tab="wh" aria-controls="qlPanelWh" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_wh">Điểm quyết tâm</button>
             <button type="button" role="tab" class="ql-tab" id="qlTabDc" data-ql-tab="dc" aria-controls="qlPanelDc" aria-selected="false" tabindex="-1" hidden data-i18n="ql_tab_dc">Điểm chuẩn</button>
@@ -1032,7 +1032,6 @@
         <div class="scroll-x">   <!-- ST-B-013: bảng CLB cuộn ngang trong khung, không kéo cả trang -->
         <table class="data-table" style="margin-top:18px;">
           <thead><tr>
-            <th data-i18n="th_club_id">Mã CLB</th>
             <th data-i18n="th_name_short">Tên</th>
             <th data-i18n="ux4_so_cho">Chỉ tiêu</th>
             <th data-i18n="ux4_cho_rieng_cot">Suất ưu tiên</th>

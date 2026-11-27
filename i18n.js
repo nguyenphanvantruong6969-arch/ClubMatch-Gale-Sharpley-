@@ -72,7 +72,7 @@
       ux5b_tt_buoc_xong: "Đã xếp xong. Xem kết quả ở thẻ \"Kết quả\".",
       ux5b_xem_chi_tiet: "Xem chi tiết",
       ux5b_tuy_chon_chay: "Tuỳ chọn khi chạy",
-      ux5b_tao_moi: "Tạo {person_l} mới ▾",
+      ux5b_tao_moi: "Tạo {person_l} mới",
       ux5b_tt_chua_chon: "Chọn một {person_l} ở trên để bắt đầu.",
       ux5b_buoc_xong: "Đã lưu: {tom_tat}",
       ux5b_sua: "Sửa",
@@ -296,7 +296,7 @@
       ux1a_btn_bat_huy_chuong: "Bật chế độ huy chương",
       ux1a_btn_so_mau_huy_chuong: "Tải sổ mẫu có huy chương",
       ux1a_wh_chua_du: "{n} {person_l} chưa đặt đủ điểm quyết tâm (huy chương).",
-      ux1a_xuat_menu: "Xuất tệp khác ▾",
+      ux1a_xuat_menu: "Xuất tệp khác",
       so_nhap_da_nap: "Đã nạp sổ",
       /* UX1A-L2: nhóm điều hướng */
       ux1a_nhom_nap_xep: "Nạp & xếp",
@@ -569,7 +569,7 @@
 
       ux4_ql_tab_cach_xep: "Cách xếp",
 
-      ux4_ql_tab_them: "Thêm ▾",
+      ux4_ql_tab_them: "Thêm",
 
 
       ux4_tt_clb: "{n} {slot_sl} · {cho} chỗ · {b} {session_l}",
@@ -1037,7 +1037,7 @@
       th_ly_do: "Lý do",
       dd_tieu_de: "Điểm danh 3 buổi đầu",
       ph_tieu_de: "Ý kiến của {person_l} về kết quả",
-      ux5a_ph_them: "Thêm ý kiến ▾",
+      ux5a_ph_them: "Thêm ý kiến",
       gt_tieu_de: "Tra cứu một {person_l}",
       gt_lop_aria: "Lọc theo {cohort_l}",
       gt_tat_ca_lop: "Mọi {cohort_l}",
@@ -1606,7 +1606,7 @@
       nkkey_seed: "Hạt giống",
       nkkey_lop: "Lớp",
       /* === UX1B (L4-B) === */
-      ux5a_ux1b_them: "Báo cáo và phiếu in ▾",
+      ux5a_ux1b_them: "Báo cáo và phiếu in",
       ux1b_chon_lop: "Chọn {cohort_l}",
       ux1b_bao_cao: "Báo cáo tổng hợp",
       ux1b_bao_cao_hint: "Báo cáo tổng hợp chỉ có số liệu gộp: mức lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}. Không có tên, mã hay điểm.",
@@ -1693,7 +1693,7 @@
       ux5b_tt_buoc_xong: "Allocation done. See the results on the \"Results\" tab.",
       ux5b_xem_chi_tiet: "Show details",
       ux5b_tuy_chon_chay: "Run options",
-      ux5b_tao_moi: "Create a new {person_l} ▾",
+      ux5b_tao_moi: "Create a new {person_l}",
       ux5b_tt_chua_chon: "Pick a {person_l} above to start.",
       ux5b_buoc_xong: "Saved: {tom_tat}",
       ux5b_sua: "Edit",
@@ -1917,7 +1917,7 @@
       ux1a_btn_bat_huy_chuong: "Turn on medal mode",
       ux1a_btn_so_mau_huy_chuong: "Download the medal workbook",
       ux1a_wh_chua_du: "{n} {person_pl} have not used all their commitment points (medals).",
-      ux1a_xuat_menu: "More files ▾",
+      ux1a_xuat_menu: "More files",
       so_nhap_da_nap: "Book loaded",
       /* UX1A-L2: navigation groups */
       ux1a_nhom_nap_xep: "Load & run",
@@ -2190,7 +2190,7 @@
 
       ux4_ql_tab_cach_xep: "How to rank",
 
-      ux4_ql_tab_them: "More ▾",
+      ux4_ql_tab_them: "More",
 
 
       ux4_tt_clb: "{n} {slot_pl} · {cho} places · {b} {session_l}",
@@ -2658,7 +2658,7 @@
       th_ly_do: "Reason",
       dd_tieu_de: "Attendance of the first 3 meetings",
       ph_tieu_de: "{person_pl}' views on the result",
-      ux5a_ph_them: "More feedback ▾",
+      ux5a_ph_them: "More feedback",
       gt_tieu_de: "Look up one {person_l}",
       gt_lop_aria: "Filter by {cohort_l}",
       gt_tat_ca_lop: "All {cohort_l}",
@@ -3227,7 +3227,7 @@
       nkkey_seed: "Draw number",
       nkkey_lop: "Class",
       /* === UX1B (L4-B) === */
-      ux5a_ux1b_them: "Reports and printouts ▾",
+      ux5a_ux1b_them: "Reports and printouts",
       ux1b_chon_lop: "Choose {cohort_l}",
       ux1b_bao_cao: "Summary report",
       ux1b_bao_cao_hint: "The summary report has totals only: how full each {slot_l} is, satisfaction, and {person_pl} without a {slot_l} by {cohort_l}. No names, IDs or scores.",
@@ -3481,6 +3481,9 @@
        chuoi khoa tho ma khong test nao do. */
     document.querySelectorAll("[data-i18n-aria-label]").forEach((elm) => {
       elm.setAttribute("aria-label", t(elm.getAttribute("data-i18n-aria-label")));
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach((elm) => {
+      elm.setAttribute("title", t(elm.getAttribute("data-i18n-title")));
     });
     document.title = t("page_title");
     /* Dat ca khi KHOI DONG, khong chi khi bam doi: truoc day ngon ngu luu
