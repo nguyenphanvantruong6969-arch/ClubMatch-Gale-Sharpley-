@@ -257,7 +257,7 @@ def test_10_giao_vien_ba_buoc_mot_nut_vang(cong):
     pg = cong
     api = pg.api
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
-    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi"))
+    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi", True))   # VG1-L3: lùi qua giai đoạn học sinh đã có nguyện vọng cần xác nhận
     _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     _dang_nhap(pg, "giao_vien", "Cô An", pg.api_pin["Cô An"])
     pg.wait_for_selector("text=Bước 1/3")
