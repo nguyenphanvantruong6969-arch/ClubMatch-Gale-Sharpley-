@@ -40,11 +40,14 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- Done (commit `638b556`, pushed): L1–L4 code. `kiem_nhanh.py` 7/7; `tests/test_vg2_repro.py` 16/16 green; `tests/test_giao_dien_vg2.py` 6/6 green; 108 related non-UI tests green; UI files touched by VG2 re-run green (dk6_l1, dk6_l2, dk8_l5, dk3_cong except test_10, dk8_l1, dkl_giao_vien except test_3).
-- NOT done: checker review (no Opus session was spawned by this session), full CI (tests.yml + Windows build) not read, full local suite not run (≈ 22 min).
-- Not implemented on purpose (low): #21 unknown-id lock rows never purged (a shared counter would leak which ids exist), #27 student login form still shown when stage is «Chưa mở».
-- Known red tests that are VG1's, not VG2's (fail on `origin/claude/charming-cray-2izyn6` too): `tests/test_giao_dien_dk3_cong.py::test_10_*` (back-step now needs `xac_nhan`), `tests/test_giao_dien_dk4_mo_khoa.py` (fixed here: wrong PIN `xxxx` is now malformed, use `0000`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_*` (approving a lone Giới hạn/Tuyển chọn club now needs `dk_cai_dat_doi(bat_buoc_tu_do=False, xac_nhan_rui_ro=True)` or a free club). The VG1 branch owner should fix them; if VG1 is merged first, re-merge it here and re-run.
-- VG1 branch `claude/charming-cray-2izyn6` was last merged here at `80dd5cf`; merge again before CI if it moved.
+- Done: L1–L4 code (`638b556`), VG1 tip `80dd5cf` already merged. CI debug session (2026-11-27, Opus) fixed the 5 red CI tests of run 46023005696
+  (dk3_cong test_10 → `xac_nhan=True`; dkl_giao_vien test_3 → approve a Tự do club in T2 first; `dk_can_xac_nhan_pin` no CAPS emphasis (vi/en + JS confirm);
+  CLAUDE_CHI_TIET code map 453 test files) and 3 bugs found in review of the VG2 diff: review-screen «← Quay lại» went to a skipped exam screen
+  (then «Tiếp» jumped to session 1) — new regression lines in `test_giao_dien_vg2.py`; header `<h1>` only for admin (teacher/student had two `<h1>`);
+  session purge iterates `list(ds.items())` (read threads pop concurrently).
+- `kiem_nhanh.py` 7/7; repro 16/16; VG2 UI 6/6; related dk/vg tests green (UI files must run sequentially — module fixtures are order-dependent).
+- Not implemented on purpose (low): #21, #27 (student who logs in before opening already sees «Chưa mở đăng ký»).
+- No checker session was spawned (CLAUDE.md rule 10; Truong asked this session to fix directly).
 
 ## Decisions added in this session (safe defaults)
 - Old tests were edited where the contract changed on purpose: school code ≥ 4 chars (`TR1`→`TRU1`, `T`→`TRUONG`), trivial PINs refused for teacher self-register (`1234`→`7391`, `5678`→`5903`), lists open by default (tests set `parentElement.open = true` instead of toggling), confirm dialogs (tests `pg.once("dialog", accept)`), student wizard skips empty steps (dk8_l5 tests add a Tuyển chọn club so the exam step exists).
@@ -70,3 +73,4 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 |---|---|---|---|
 | 2026-11-27 | Sonnet | role-play test, repro tests, plan | planner role; Truong asked directly |
 | 2026-11-27 | Sonnet | implemented VG2 L1–L4, tests, CHANGELOG/TIEN_DO, pushed `638b556`; handoff at context limit | checker + CI still pending |
+| 2026-11-27 | Opus | CI debug: 5 red CI tests fixed, 3 review bugs fixed (+ regression test), CHANGELOG/TIEN_DO | Build Windows workflow is manual-only (publishes a release): not triggered |
