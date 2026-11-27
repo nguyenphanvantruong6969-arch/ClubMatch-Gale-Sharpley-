@@ -92,9 +92,16 @@ def test_mo_cho_hoc_sinh_can_clb_tu_do_moi_buoi_d2(cd):
     pin = ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))["da_tao"][0]
     t = ok(api.dk_dang_nhap("giao_vien", "Cô An", pin["pin"]))["token"]
     cid = ok(api.dk_clb_luu(t, _clb()))["clb_id"]
-    assert ma(api.dk_chuyen_giai_doan(qt, "hs_dang_ky")) == "dk_con_clb_cho_duyet"
+    assert ma(api.dk_chuyen_giai_doan(qt, "hs_dang_ky")) == "dk_thieu_clb_tu_do"       # VG1-L4: chặn SỚM, ngay khi đi ngang «duyet»
+    pin2 = ok(api.dk_gv_tao_hang_loat(qt, "Thầy Bình"))["da_tao"][0]
+    t2 = ok(api.dk_dang_nhap("giao_vien", "Thầy Bình", pin2["pin"]))["token"]            # mỗi giáo viên một CLB mỗi buổi
+    td = ok(api.dk_clb_luu(t2, _clb(ten="Tự do", loai="Tự do", phong_id=2, chi_tieu=None)))["clb_id"]
+    assert ma(api.dk_chuyen_giai_doan(qt, "hs_dang_ky")) == "dk_con_clb_cho_duyet"     # đủ CLB Tự do nhưng còn CLB chờ duyệt
     ok(api.dk_clb_duyet(qt, cid, "duyet"))
-    assert ma(api.dk_chuyen_giai_doan(qt, "hs_dang_ky")) == "dk_thieu_clb_tu_do"
+    assert ma(api.dk_chuyen_giai_doan(qt, "hs_dang_ky")) == "dk_con_clb_cho_duyet"
+    ok(api.dk_clb_duyet(qt, td, "duyet"))
+    ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
+    ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
 
 
 def test_giao_vien_het_gio_khong_luu_duoc_va_tu_dong_dong(cd, monkeypatch):
@@ -164,11 +171,11 @@ def test_toi_da_5_bai_thi_moi_buoi_d44(cd):
     for i in range(4, 10):
         ok(api.dk_phong_luu(qt, "Q%d" % i, 30))
     ids = []
+    td = ok(api.dk_clb_luu(qt, _clb(ten="TD", loai="Tự do", phong_id=1, chi_tieu=None)))["clb_id"]   # VG1-L4: CLB Tự do có trước khi duyệt CLB khác
+    ok(api.dk_clb_duyet(qt, td, "duyet"))
     for i in range(6):
         ids.append(ok(api.dk_clb_luu(qt, _clb(ten="TC%d" % i, loai="Tuyển chọn", phong_id=4 + i, chi_tieu=10, diem_san=5)))["clb_id"])
         ok(api.dk_clb_duyet(qt, ids[-1], "duyet"))
-    ok(api.dk_clb_luu(qt, _clb(ten="TD", loai="Tự do", phong_id=1, chi_tieu=None)))
-    ok(api.dk_clb_duyet(qt, ok(api.dk_clb_danh_sach(qt))[-1]["clb_id"], "duyet"))
     ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
     ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
     h = ok(api.dk_dang_nhap("hoc_sinh", "H1", ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]))["token"]
