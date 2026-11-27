@@ -95,7 +95,8 @@ def test_rang_buoc_clb_tu_do_co_the_tat(cd):
     duyệt và mở cho học sinh không bị chặn. Hiện không có cài đặt nào (cứng trong `_dk_kiem_dieu_kien_mo_hs`)."""
     api, qt = cd
     a, b = _hai_clb_khong_tu_do(api, qt)
-    ok(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False))     # tham số chưa tồn tại -> TypeError (đỏ)
+    assert ma(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False)) == "dk_can_xac_nhan_rui_ro"   # tắt phải xác nhận rủi ro (chưa có -> TypeError, đỏ)
+    ok(api.dk_cai_dat_doi(qt, bat_buoc_tu_do=False, xac_nhan_rui_ro=True))
     ok(api.dk_chuyen_giai_doan(qt, "duyet"))
     ok(api.dk_clb_duyet(qt, a, "duyet"))
     ok(api.dk_clb_duyet(qt, b, "duyet"))

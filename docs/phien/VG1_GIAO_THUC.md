@@ -26,6 +26,7 @@
 - Every lot's boxes; invariants 1, 4, 5, 6, 7; ORIGINAL spelling of names/IDs preserved after normalisation.
 - Security: lock cannot be bypassed by spelling variants; no PIN in logs/audit/errors; export denied to teacher/student; `xac_nhan` enforced.
 - Back-step: data never deleted except the confirmed rejected-club wishes; `han_chot` cleared; forward jump cannot skip a gate.
+- L4: close buttons truly `disabled` (keyboard too) while the constraint fails; auto-close at deadline then refuses to approve a non-Tự do club; turning OFF without `xac_nhan_rui_ro` fails and the risk text is shown.
 - 3 own edge cases per milestone (e.g. 0 students, name with double space, session with only a rejected Tự do club, setting OFF then ON).
 
 ## 4. Final gate (coder, after L4 + checker OK)
