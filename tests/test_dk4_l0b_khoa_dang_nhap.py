@@ -12,6 +12,11 @@ def _hs(api, qt):
     return ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]
 
 
+def _sai(pin="1234"):
+    """VG1-L1: PIN sai nhưng ĐÚNG DẠNG 4 chữ số (PIN sai dạng bị chặn trước, không tính một lần sai)."""
+    return "0000" if pin != "0000" else "1111"
+
+
 def _gio(api, phut):
     goc = datetime.datetime(2026, 11, 25, 9, 0, 0)
     api._dk_bay_gio = lambda: goc + datetime.timedelta(minutes=phut)
@@ -22,8 +27,8 @@ def test_sai_5_lan_thi_khoa_ca_khi_nhap_dung(cd):
     pin = _hs(api, qt)
     _gio(api, 0)
     for _ in range(4):
-        assert ma(api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")) == "dk_sai_dang_nhap"
-    assert ma(api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")) == "dk_sai_dang_nhap"      # lần 5
+        assert ma(api.dk_dang_nhap("hoc_sinh", "H1", _sai(pin))) == "dk_sai_dang_nhap"
+    assert ma(api.dk_dang_nhap("hoc_sinh", "H1", _sai(pin))) == "dk_sai_dang_nhap"      # lần 5
     assert ma(api.dk_dang_nhap("hoc_sinh", "H1", pin)) == "dk_tam_khoa"                # đúng PIN cũng bị từ chối
     _gio(api, 4)
     assert ma(api.dk_dang_nhap("hoc_sinh", "H1", pin)) == "dk_tam_khoa"
@@ -37,7 +42,7 @@ def test_mot_ma_bi_khoa_khong_anh_huong_ma_khac(cd):
     pin2 = ok(api.dk_hs_dat_lai_pin(qt, "H2"))["pin"]
     _gio(api, 0)
     for _ in range(5):
-        api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")
+        api.dk_dang_nhap("hoc_sinh", "H1", _sai())
     assert ok(api.dk_dang_nhap("hoc_sinh", "H2", pin2))["token"]
 
 
@@ -46,10 +51,10 @@ def test_dang_nhap_dung_xoa_bo_dem_sai(cd):
     pin = _hs(api, qt)
     _gio(api, 0)
     for _ in range(4):
-        api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")
+        api.dk_dang_nhap("hoc_sinh", "H1", _sai(pin))
     ok(api.dk_dang_nhap("hoc_sinh", "H1", pin))
     for _ in range(4):
-        assert ma(api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")) == "dk_sai_dang_nhap"
+        assert ma(api.dk_dang_nhap("hoc_sinh", "H1", _sai(pin))) == "dk_sai_dang_nhap"
     assert ok(api.dk_dang_nhap("hoc_sinh", "H1", pin))["token"]
 
 
@@ -58,8 +63,8 @@ def test_ma_khong_co_that_cung_bi_khoa_cung_ma_loi(cd):
     _hs(api, qt)
     _gio(api, 0)
     for _ in range(5):
-        api.dk_dang_nhap("hoc_sinh", "KHONG_CO", "xxxx")
-    assert ma(api.dk_dang_nhap("hoc_sinh", "KHONG_CO", "xxxx")) == "dk_tam_khoa"      # không lộ mã nào có thật
+        api.dk_dang_nhap("hoc_sinh", "KHONG_CO", _sai())
+    assert ma(api.dk_dang_nhap("hoc_sinh", "KHONG_CO", _sai())) == "dk_tam_khoa"      # không lộ mã nào có thật
 
 
 def test_quan_tri_mo_khoa(cd):
@@ -67,7 +72,7 @@ def test_quan_tri_mo_khoa(cd):
     pin = _hs(api, qt)
     _gio(api, 0)
     for _ in range(5):
-        api.dk_dang_nhap("hoc_sinh", "H1", "xxxx")
+        api.dk_dang_nhap("hoc_sinh", "H1", _sai(pin))
     ds = {x["ma"]: x for x in ok(api.dk_hs_danh_sach(qt))}
     assert ds["H1"]["bi_khoa"] is True and ds["H2"]["bi_khoa"] is False
     assert ma(api.dk_mo_khoa("sai", "hoc_sinh", "H1")) == "dk_can_dang_nhap"
@@ -82,8 +87,8 @@ def test_giao_vien_khoa_va_hs_khong_mo_khoa_duoc(cd):
     pin = _hs(api, qt)               # _dung_san đã tạo giáo viên "Cô An"
     _gio(api, 0)
     for _ in range(5):
-        api.dk_dang_nhap("giao_vien", "Cô An", "xxxx")
-    assert ma(api.dk_dang_nhap("giao_vien", "Cô An", "xxxx")) == "dk_tam_khoa"
+        api.dk_dang_nhap("giao_vien", "Cô An", _sai())
+    assert ma(api.dk_dang_nhap("giao_vien", "Cô An", _sai())) == "dk_tam_khoa"
     assert ok(api.dk_gv_danh_sach(qt))[0]["bi_khoa"] is True
     h = ok(api.dk_dang_nhap("hoc_sinh", "H1", pin))["token"]
     assert ma(api.dk_mo_khoa(h, "giao_vien", "Cô An")) == "dk_khong_du_quyen"
