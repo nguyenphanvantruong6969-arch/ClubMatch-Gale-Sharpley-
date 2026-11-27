@@ -193,6 +193,8 @@ KHOA_UI_DA_BO = {"fill_panel_title", "fill_hint", "fill_nhom_tong", "fill_choi",
                  "chon_buoi_tu", "chon_buoi_den",
                  # T3-L2 (T3-04): gộp hai nút kiểm tra thành một (`btn_validate`, đổi chữ).
                  "btn_health_recheck"}
+# UX6-L1: bớt chữ giải thích — các khoá này bị xoá khỏi UI_STRINGS (vi + en).
+KHOA_UI_DA_BO |= {"pipeline_desc", "kq_desc", "ux5a_gt_mo_ta", "ux5a_kq_mo_bang", "others_desc", "xuat_hint_hoc_sinh", "do_phu_desc", "nv_desc", "tham_tai_lap", "fallback_desc", "ux5b_fallback_desc_qt", "fallback_buoi_hint", "admin_desc", "ux4_mo_clb", "admin_tai_buoi_desc", "ux4_mo_hs", "wh_sua_rong", "wh_dang_mo_khong_can", "wh_nk_chon_em", "wh_nhat_ky_rong", "ux4_mo_lam_lai", "danger_zone_safety", "ux4_mo_cach_xep", "gt2_tc_nhom_goi_y", "scoring_desc", "cb_desc", "cb_duong_hint", "cb_duong_a_ghi", "cb_duong_b_ghi", "cb_buoc_trong", "scoring_desc_person", "import_hint", "gt2_tc_mo_ta", "gt2_thu_mo_ta"}
 
 # T3-L1 (Truong duyệt 04/11/2026): đổi chữ có chủ ý theo bảng 5.1-5.3 của nghiên cứu T3. Chuỗi cũ đổi theo
 # bảng thay chữ dưới đây; chuỗi viết lại hẳn nằm trong `chu_ui_doi_co_y_t3.json` (giá trị MỚI với mặc định
@@ -560,10 +562,10 @@ def test_moi_chuoi_giao_dien_mac_dinh_giong_het_anh_chup(anh_chup):
 # 20 chuỗi tiêu biểu: đủ năm danh từ, vi + en, số ít/số nhiều, mạo từ, viết tắt.
 MAU_20 = [
     "brand_title", "nav_admin", "nav_scoring", "label_students", "label_clubs",
-    "pipeline_desc", "admin_desc", "chua_co_cho_desc", "toast_run_success",
+    "nav_pipeline", "nav_results", "chua_co_cho_desc", "toast_run_success",
     "feedback_scores_saved", "fallback_step1_hint", "buoi_chua_chia", "fill_tag_khong_ai",
     "th_score", "th_student_id", "th_club_id", "xuat_opt_ket_qua",
-    "scoring_desc", "toast_reset_done_removed", "page_title",
+    "btn_validate", "toast_reset_done_removed", "page_title",
 ]
 
 
@@ -584,7 +586,7 @@ def test_mau_20_chuoi_mac_dinh_giong_het_truoc_day(anh_chup):
 @can_node
 def test_giao_dien_cong_ty(anh_chup):
     ra = _chay_js({"khoa": ["label_students", "nav_scoring", "toast_run_success", "th_score",
-                            "admin_desc", "fallback_step0_title", "pipeline_desc", "ux5b_tt_buoc_chay"],
+                            "fallback_step0_title", "ux5b_tt_buoc_chay"],
                    "tham_so": {"n_matched": 8, "n_total": 9, "rounds": 2},
                    "nhan": CONG_TY})
     assert ra["vi"]["label_students"] == "nhân viên"
@@ -594,9 +596,6 @@ def test_giao_dien_cong_ty(anh_chup):
     assert ra["en"]["toast_run_success"] == \
         "Allocation finished: 8/9 employees placed in 2 round(s)."
     assert ra["en"]["fallback_step0_title"] == "Find an employee"   # a -> an (UX5B-L3: bỏ "or create")
-    assert "học sinh" not in ra["vi"]["pipeline_desc"] and "CLB" not in ra["vi"]["pipeline_desc"]
-    # UX5B-L2: pipeline_desc không còn chỗ giữ của ngành; kiểm sự thay nhãn bằng câu trạng thái có {person_l}.
-    assert ra["vi"]["pipeline_desc"] == "Làm ba việc theo thứ tự: nhập sổ, xem cảnh báo, bấm Chạy."
     assert ra["vi"]["ux5b_tt_buoc_chay"] == 'Đã nạp {n} nhân viên. Xem cảnh báo rồi bấm "Chạy sắp xếp".'
     assert ra["en"]["ux5b_tt_buoc_chay"] == '{n} employees loaded. Read the warnings, then press "Run allocation".'
 

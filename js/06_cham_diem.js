@@ -25,8 +25,6 @@ function apDungLuatChamDiem(luat) {
   };
   const nut = document.querySelector('.nav-item[data-tab="scoring"]');
   if (nut) nut.hidden = LUAT_CHAM_DIEM.an;
-  const moTa = el("scoringDesc");
-  if (moTa) moTa.setAttribute("data-i18n", LUAT_CHAM_DIEM.theoNguoi ? "scoring_desc_person" : "scoring_desc");
 }
 
 function loadScoringTab() {

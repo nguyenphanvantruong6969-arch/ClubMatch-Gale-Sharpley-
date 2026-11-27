@@ -28,7 +28,7 @@ def test_moi_id_cu_van_con():
 def test_quan_tri_chua_chon_em_dong_trang_thai_tao_moi_gap_va_ngan_sach(mo_ux5b):
     page, api, loi = mo_ux5b("quan_tri", "fallback")
     assert page.inner_text("#ux5bTtNhap") == "Chọn một học sinh ở trên để bắt đầu."
-    assert page.inner_text("#view-fallback .view-desc:visible") == "Tìm học sinh, rồi chọn CLB dự thi và xếp hạng nguyện vọng."
+    assert page.locator("#view-fallback .view-desc").count() == 0      # UX6-L1: bỏ câu mô tả thẻ
     assert page.inner_text("#view-fallback .panel-head h2:visible") == "Tìm học sinh"
     assert page.inner_text("#ux5bTaoMoi > summary") == "Tạo học sinh mới ▾"
     for sel in ("#newStudentId", "#newStudentName", "#btnCreateStudent"):
@@ -112,7 +112,7 @@ def test_em_moi_mo_buoc_1_va_chua_co_nguyen_vong_thi_an_xoa_het(mo_ux5b):
 def test_giao_vien_khong_thay_tao_moi_va_diem_quyet_tam_nhung_giu_cau_cu(mo_ux5b):
     page, api, loi = mo_ux5b("giao_vien", "fallback")
     assert page.locator("#ux5bTaoMoi").is_hidden()
-    assert page.inner_text("#view-fallback .view-desc:visible") == "Tìm hoặc tạo học sinh, rồi chọn CLB dự thi và xếp hạng nguyện vọng."
+    assert page.locator("#view-fallback .view-desc").count() == 0      # UX6-L1: bỏ câu mô tả thẻ
     chon_hoc_sinh(page, "HS001")
     assert page.locator("#fbWhartonStep").is_hidden()          # D3: ẩn cả mục, không để ô gõ được mà không lưu được
     assert page.locator("#fbWhartonBody input.wh-diem").count() > 0           # có dựng, nhưng giáo viên không thấy

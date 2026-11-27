@@ -2225,8 +2225,7 @@ html.tat-hieu-ung .status-strip:hover {
 
 /* Thẻ 02 Kết quả: hai tầng nút chọn (cách xem, cách sắp). Nút to, rõ cho màn hình họp. */
 /* .main co theo nội dung (margin auto); thẻ Kết quả có bảng hẹp ở Theo CLB nên giữ rộng như nhau ở cả ba cách xem */
-.main:has(#view-results.is-active),
-.main:has(#view-scoring.is-active) { width: 100%; box-sizing: border-box; } /* SG-11a L4: Nhập điểm dùng chung bề rộng nội dung với thẻ Kết quả */
+.main { width: 100%; box-sizing: border-box; }   /* UX6-L1: mọi thẻ cùng bề rộng, để thanh "Việc tiếp theo" không nhảy chỗ khi đổi thẻ (trước đây chỉ Kết quả và Nhập điểm) */
 .main { min-width: 0; }                                /* cột 1fr của lưới không được nở theo bảng rộng: bảng tự cuộn ngang trong .scroll-x, trang thì không */
 .kq-chon-hang { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
 .kq-chon-lop-goi { display: inline-flex; align-items: center; gap: 8px; }   /* UX1F-L4: bọc nhãn + ô chọn lớp, vẫn cùng hàng với các nút */
@@ -3092,7 +3091,6 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .gt2-khong-dung { color: var(--slate); font-size: 14px; margin: 8px 0; }
 .gt2-khong-dung ul { margin: 4px 0 0 0; padding-left: 20px; }
 .gt2-khong-dung li { margin: 2px 0; }
-.gt-ui .gt2-goi-y { margin: 0; }
 .check-khoi { margin: 0 0 14px 0; }
 .check-row { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .check-row input[type="checkbox"] { flex: none; width: 18px; height: 18px; margin: 2px 0 0 0; }
@@ -3137,7 +3135,7 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
   border: 1px solid var(--slate); border-radius: 8px; background: var(--surface, #fff);
 }
 .viec-tiep-theo[hidden] { display: none; }
-.viec-tiep-theo-cau { font-weight: 600; }
+.viec-tiep-theo-cau { font-weight: 600; margin-right: auto; }
 
 /* UX1A-L2: nhóm điều hướng */
 .nav-nhom { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
@@ -3415,7 +3413,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   margin-bottom: 0; text-align: left; border: 1px solid transparent; border-radius: var(--radius-sm);
 }
 .ql-them-menu .ql-tab[aria-selected="true"] { box-shadow: none; border-color: var(--hairline); font-weight: 600; }
-.ql-mo-ta { margin: 0 0 4px; }
 .ql-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }   /* giữ chỗ để bố cục không nhảy khi dữ liệu về */
 .btn-canh-bao {
   background: transparent; color: var(--gold-text); border: 2px solid var(--gold-text); font-weight: 600;
@@ -3458,7 +3455,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #view-pipeline[data-trang-thai="trong"] .drop-zone { border-color: var(--gold); border-width: 3px; }
 #nangCao .stb-lock-line, #nangCao .chon-buoi { margin-top: 8px; }
 /* UX5B-L3: Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm */
-body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
 .ux5b-tao-moi { margin: 10px 0; }
 .ux5b-tao-moi > summary { list-style: none; }
 .ux5b-tao-moi > summary::-webkit-details-marker { display: none; }
@@ -3742,3 +3738,19 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-buoc-nd > .btn { align-self: flex-start; }
 .dk-excel-xem .dk-chip { align-self: auto; }
 #dkExcel #dkPin:not(:empty) { margin-top: 14px; }
+
+/* UX6-L1: giải thích hiếm dùng nằm sau nút "?" (thay cho câu dài mở sẵn). */
+.ux6-hoi { margin: 0 0 8px; }
+.ux6-hoi-nut {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
+  cursor: pointer; list-style: none; color: var(--slate); font-size: 14px; font-weight: 600;
+}
+.ux6-hoi-nut::-webkit-details-marker { display: none; }
+.ux6-hoi-nut::before {
+  content: "?"; display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 50%; font-size: 13px;
+}
+.ux6-hoi-nut { font-size: 0; }
+.ux6-hoi-nut:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; border-radius: 6px; }
+.ux6-hoi-nd { margin: 0 0 8px; max-width: 70ch; font-size: 14px; line-height: 1.5; color: var(--slate); }
+.ux6-hoi-nd[hidden] { display: none; }

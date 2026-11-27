@@ -693,7 +693,6 @@ function veKhoaWh() {
     : t("wh_ql_dang_mo");
   chu.classList.toggle("is-khoa", whQl.khoa);
   el("btnWhMoKhoa").hidden = !whQl.khoa;
-  el("whMoKhoaChuaKhoa").hidden = whQl.khoa;
   if (!whQl.khoa) el("whMoKhoaHop").hidden = true;
   if (!el("whMoKhoaHop").hidden) {
     el("whMoKhoaHoi").textContent = t("wh_mo_khoa_hoi", { can_go: "MO" });
@@ -927,7 +926,6 @@ function veManSuaWharton(state, giu) {
     khiDoi: capNhatChuaLuuWh,
   });
   const coKhung = !!khung.querySelector(".wh-khung");
-  el("whQlSuaRong").hidden = coKhung;
   el("whQlSuaKhoa").hidden = !w.khoa;
   el("btnWhLuu").disabled = !!w.khoa || !coKhung;
   el("btnWhXoaMot").disabled = !!w.khoa;
@@ -936,7 +934,6 @@ function veManSuaWharton(state, giu) {
 
 function loadWhNhatKy(them) {
   const sid = whQl.sid;
-  el("whNkChonEm").hidden = !!sid;
   if (!sid) return Promise.resolve(null);
   if (!them) whQl.nkTrang = 1;
   return chayTai(callApi("get_wharton_nhat_ky", sid, whQl.nkTrang, WH_NK_TRANG), (res) => {
@@ -976,7 +973,6 @@ function veNhatKyWh() {
     li.textContent = dongChu + (cu || moi ? " [" + (cu || "—") + " → " + (moi || "—") + "]" : "");
     ds.appendChild(li);
   });
-  el("whQlNhatKyRong").hidden = ds.children.length > 0;
 }
 
 /* Doi ngon ngu: ve lai moi phan da ve tu du lieu da co, KHONG cho API (xem whBoNho). */
@@ -1077,9 +1073,7 @@ function initWhartonQuanLy() {
     el("whQlSua").hidden = true;
     whBoNho.nhatKy = [];
     clear(el("whQlNhatKy"));
-    el("whQlNhatKyRong").hidden = true;
     el("btnWhNkThem").hidden = true;
-    el("whNkChonEm").hidden = false;
   });
   /* Nút (i) và "Xem nhật ký": câu giải thích dài và nhật ký chỉ hiện khi bấm. */
   el("btnWhThongTin").addEventListener("click", () => {
@@ -1091,7 +1085,6 @@ function initWhartonQuanLy() {
     const mo = el("whNkHop").hidden;
     el("whNkHop").hidden = !mo;
     el("btnWhXemNhatKy").setAttribute("aria-expanded", mo ? "true" : "false");
-    el("whNkChonEm").hidden = !!whQl.sid;
   });
   el("btnWhNkThem").addEventListener("click", () => { whQl.nkTrang += 1; loadWhNhatKy(true); });
 

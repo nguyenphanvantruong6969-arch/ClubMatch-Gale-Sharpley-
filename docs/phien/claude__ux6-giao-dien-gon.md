@@ -22,11 +22,11 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - Sidebar brand: gold square with the text "RB"; "Không gian làm việc" label in monospace; "⋯" button with no label.
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] 0. Create branch `claude/ux6-giao-dien-gon` from `origin/claude/hopeful-cannon-urfiul`; venv:
+- [x] 0. Create branch `claude/ux6-giao-dien-gon` from `origin/claude/hopeful-cannon-urfiul`; venv:
       `python -m venv .venv && .venv/bin/pip install -r requirements-dev.txt -q` (Chromium is preinstalled).
-- [ ] L1-a. Inventory: list every `hint-text` / `view-desc` / `hint` element in `index.html` with its i18n key
+- [x] L1-a. Inventory: list every `hint-text` / `view-desc` / `hint` element in `index.html` with its i18n key
       and a verdict (keep a/b/c · move to "?" · delete) as a table in this file (Decisions section, ≤ 40 lines).
-- [ ] L1-b. Red test `tests/test_giao_dien_ux6_l1.py`; apply the verdicts; remove dead keys from vi + en in
+- [x] L1-b. Red test `tests/test_giao_dien_ux6_l1.py`; apply the verdicts; remove dead keys from vi + en in
       `i18n.js`; shorten the next-step banner (`js/17_viec_tiep_theo.js`). Commit `UX6-L1: …`.
 - [ ] L2-a. Red test `tests/test_giao_dien_ux6_l2.py`; Xếp CLB summary line replacing `#dropZone` after import,
       [Đổi sổ], collapsible finished steps (blocking warning keeps its step open).
@@ -49,10 +49,10 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- Done so far: plan only (Opus, 2026-11-27).
-- In progress: —
-- Tests: —
-- Open problems: none (Truong: no document moves, L4 dropped).
+- Done so far: L1 committed (helpers 78 -> 25 in index.html; banner shortened; `.main` full width on every tab).
+- In progress: L2-a (Xếp CLB summary replacing drop zone).
+- Tests: `test_giao_dien_ux6_l1.py` (51), ux4_l4, ux5a_l2, ux5b_l3, ws_nhan, i18n_sync green. ux2/ux1 files green in the related run.
+- Open problems: none. Notes: `import_hint`, `gt2_tc_mo_ta`, `gt2_thu_mo_ta` deleted (Hick budget of Cách xếp forbids extra "?" controls there).
 
 ## Decisions and gotchas (keep short)
 - UI only; data not returned by the API today is not added (show what exists).
@@ -60,13 +60,31 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
   `.gt-ui`, `.ux5a-hop-rong`): remove dead rules when their element goes.
 - Kết quả table and Quản lý are shared with the teacher role: re-run the role-hiding tests after L2/L3.
 
+## L1-a inventory (78 helper elements; verdict by i18n key or id)
+- KEEP 25 (a/b/c): import_hint(c) · health_panel_hint(b) · chonBuoiNhac(a) · ux5bBuoiTom, ux2PhaGhiChu, paLyDo (b, status)
+  · xuatFaAnGoiY(b) · ux5a_xuat_canh_bao, xuat_canh_bao_diem(a) · phGoiYNut(c) · fallbackStep1Hint(a)
+  · fallback_step3_hint(c) · hcNhacTuyenChon, hcNhacDaChinh(b) · whPhongHoi, whPhongTieuDe, whMoKhoaHoi,
+  whXoaTatCaHoi(a, confirm) · dcQlRong, dcKhongXet, gt2ThuChuaCo, gt2TcGhiChu, cbGhiChuTat (b, empty/blocked)
+  · danger_zone_desc(a) · ghiChuDangKy(b).
+- MOVE to "?" (`<details class="ux6-hoi">`): ux1b_bao_cao_hint, xuat_theo_lop_hint, clb_desc, du_tru_desc,
+  chua_co_cho_desc, tham_desc, dd_goi_y, v2_goi_y, mt2_ghi_chu, buoi_hint_form, ti_le_choi_giai_thich,
+  fallback_step3_hc_hint, gt2_tc_mo_ta, gt2_thu_mo_ta, gt2_ad_ghi_chu; wh_ql_desc and dc_mo_ta already sit
+  behind a toggle button, so only their class changes.
+- DELETE: pipeline_desc, kq_desc, ux5a_gt_mo_ta, ux5a_kq_mo_bang, others_desc, xuat_hint_hoc_sinh, do_phu_desc,
+  nv_desc, tham_tai_lap, fallback_desc, ux5b_fallback_desc_qt, fallback_buoi_hint, fallback_step2_hint,
+  admin_desc, ux4_mo_clb, admin_tai_buoi_desc, ux4_mo_hs, wh_sua_rong, wh_dang_mo_khong_can, wh_nk_chon_em,
+  wh_nhat_ky_rong, ux4_mo_lam_lai, danger_zone_safety, ux4_mo_cach_xep, gt2_tc_nhom_goi_y, scoring_desc,
+  cb_desc, cb_duong_hint, cb_duong_a_ghi, cb_duong_b_ghi, cb_buoc_trong x5, knGoiY (+ their JS lines).
+
 ## Files touched
-- (fill in while working)
+- L1: index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js, tests (ux6_l1 new; copy asserts updated in
+  ws_nhan, gt4, ws_luat_giao_dien, xoa_du_lieu, ux5a_l2, ux4_l2, ux5b_l3).
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
+| 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
 
 ## Coder first-session prompt
 ```
