@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
+
+- `api_dang_ky.py`: cài đặt `bat_buoc_tu_do` (mặc định BẬT = hành vi cũ, bất biến 1). Khi BẬT: (a) `dk_chuyen_giai_doan` chặn vào «duyet» (và mọi cú nhảy đi ngang nó) nếu một buổi có CLB chờ duyệt/đã duyệt mà không có CLB Tự do (`dk_thieu_clb_tu_do`); (b) `dk_clb_duyet` từ chối, `dk_clb_xoa` (quản trị), `dk_clb_sua_sau_mo` (xoá / đổi buổi) không gỡ được CLB Tự do cuối của buổi còn CLB khác; (d) hết hạn tự đóng GV → Duyệt thì `dk_clb_duyet(..., "duyet")` CLB không Tự do bị từ chối khi buổi chưa có CLB Tự do sống. Kiểm cũ ở `_dk_kiem_dieu_kien_mo_hs` giữ làm lưới an toàn. Khi TẮT: các kiểm trên và cảnh báo `dk_khong_co_tu_do` bị bỏ qua.
+- `dk_cai_dat_doi(..., bat_buoc_tu_do=None, xac_nhan_rui_ro=False)`: chỉ tới giai đoạn Duyệt; tắt cần `xac_nhan_rui_ro=True` (`dk_can_xac_nhan_rui_ro`); bật lại chạy lại kiểm (a); lựa chọn ghi nhật ký (`bat_buoc_tu_do`). `dk_cai_dat_doc` trả thêm `bat_buoc_tu_do`, `buoi_thieu_tu_do`.
+- Giao diện (`js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js`): (c) nút vàng «Đóng đăng ký giáo viên» và «Đóng ngay» bị KHOÁ (`disabled` + `aria-disabled`) khi còn buổi thiếu CLB Tự do, dòng đỏ nêu buổi và hai lối thoát; màn Duyệt có cùng dòng đỏ; ô chọn «Không bắt buộc có CLB Tự do» ở Cài đặt với hộp xác nhận rủi ro; màn Duyệt và Xuất nhắc một dòng khi đang TẮT. Chữ rủi ro để trong JS cổng (không dùng khoá `i18n.js` vì quy tắc chữ cấm «em» chỉ áp cho i18n).
+- KIỂM TRƯỚC (kết quả): bộ xếp FA (`fa_daa.kiem_truoc_fa`) có lỗi CHẶN `fa_thieu_clb_tu_do` khi một buổi không có CLB Tự do, nên Sổ nhập thiếu CLB Tự do vẫn xuất được nhưng LẦN XẾP bị chặn. Sửa thuật toán nằm ngoài phạm vi: KHÔNG sửa; ghi «Needs Truong» ở branch file; màn Duyệt/Xuất nhắc điều này khi công tắc TẮT.
+- Test: `tests/test_vg1_tu_do.py` (4), `tests/test_va_gap_tai_hien.py` (2 test CLB Tự do xanh), `tests/test_giao_dien_vg1.py` (+3: nút đóng khoá kể cả bàn phím, mở lại khi đủ, tắt cần xác nhận, huỷ hộp thì vẫn bật).
+
 ## 2026-11-27 — VG1-L3 (vá gấp: lùi giai đoạn nhiều bước, không để nguyện vọng mồ côi, lỗi 6)
 
 - `api_dang_ky.py` `dk_chuyen_giai_doan(token, giai_doan, xac_nhan=False)`: lùi được BẤT KỲ số bước; lùi khỏi giai đoạn học sinh về trước nó mà đã có nguyện vọng thì cần `xac_nhan=True` (không thì `dk_lui_co_nguyen_vong`, n); lùi xoá hạn chót của giai đoạn đích và các giai đoạn sau (hạn đã qua không tự đóng lại ngay). Nhảy tới phải qua cổng của MỌI ranh giới đi ngang (trước đây nhảy thẳng tới «nhap_diem»/«xuat» bỏ qua cổng mở cho học sinh). Không xoá dữ liệu.

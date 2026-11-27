@@ -371,7 +371,7 @@ class DangKyMixin:
         if not duyet:
             return err("dk_chua_co_clb_duyet")
         thieu = [b for b, td in duyet if not td]
-        if thieu:
+        if thieu and self._dk_bat_buoc_tu_do(cur):
             return err("dk_thieu_clb_tu_do", buoi=", ".join(thieu))
         return None
 
@@ -387,6 +387,10 @@ class DangKyMixin:
             i_hien, i_dich = CAC_GIAI_DOAN.index(hien), CAC_GIAI_DOAN.index(giai_doan)
             i_hs = CAC_GIAI_DOAN.index("hs_dang_ky")
             for g in CAC_GIAI_DOAN[i_hien + 1:i_dich + 1]:                  # cổng của từng ranh giới đi ngang khi tiến
+                if g == "duyet" and self._dk_bat_buoc_tu_do(cur):           # VG1-L4 (a): chặn SỚM, không đợi tới lúc mở cho học sinh
+                    thieu = self._dk_buoi_thieu_tu_do(cur)
+                    if thieu:
+                        raise _Loi("dk_thieu_clb_tu_do", buoi=", ".join(thieu))
                 if g == "hs_dang_ky":
                     loi = self._dk_kiem_dieu_kien_mo_hs(cur)
                     if loi:
@@ -448,6 +452,28 @@ class DangKyMixin:
         return self._dk_chay(lam, QUAN_TRI, GIAO_VIEN, ghi=False, token=token)
 
     # ------------------------------------------------------------ giáo viên
+    def _dk_bat_buoc_tu_do(self, cur) -> bool:
+        """VG1-L4 (D4): ràng buộc «mỗi buổi phải có CLB Tự do» (mặc định BẬT = hành vi cũ)."""
+        return self._dk_cai_dat(cur, "bat_buoc_tu_do", "1") != "0"
+
+    @staticmethod
+    def _dk_buoi_thieu_tu_do(cur, bo_qua_clb=None):
+        """Các buổi đang có CLB «sống» (chờ duyệt / đã duyệt) mà không có CLB Tự do sống nào (bỏ `bo_qua_clb` ra khỏi phép đếm)."""
+        co, tu_do = set(), set()
+        for cid, b, loai in cur.execute("SELECT clb_id, buoi, loai FROM dk_clb WHERE trang_thai IN ('cho_duyet', 'duyet')"):
+            if cid == bo_qua_clb:
+                continue
+            co.add(b)
+            if loai == TU_DO:
+                tu_do.add(b)
+        return sorted(co - tu_do)
+
+    def _dk_chan_bo_clb_tu_do_cuoi(self, cur, clb_id):
+        """VG1-L4 (b): không cho gỡ (từ chối / xoá / đổi buổi) CLB Tự do CUỐI CÙNG của một buổi còn CLB sống khác."""
+        r = cur.execute("SELECT buoi, loai, trang_thai FROM dk_clb WHERE clb_id = ?", (clb_id,)).fetchone()
+        if r and r[1] == TU_DO and r[2] in ("cho_duyet", "duyet") and self._dk_bat_buoc_tu_do(cur) and r[0] in self._dk_buoi_thieu_tu_do(cur, clb_id):
+            raise _Loi("dk_thieu_clb_tu_do", buoi=r[0])
+
     def _dk_huy_phien(self, vai, ids):
         """VG1-L2 (kiểm tra toàn diện #2): đặt lại PIN thì phiên đang mở của người đó chết (PIN lộ / dùng chung không còn hiệu lực)."""
         ids = set(ids)
@@ -714,6 +740,8 @@ class DangKyMixin:
                 raise _Loi("dk_sai_giai_doan", phan="duyet")
             if r[1] == "duyet":
                 raise _Loi("dk_clb_khong_sua_duoc")
+            if p["vai"] == QUAN_TRI:
+                self._dk_chan_bo_clb_tu_do_cuoi(cur, clb_id)
             cur.execute("DELETE FROM dk_clb WHERE clb_id = ?", (clb_id,))
             self._dk_ghi_nk(cur, p["vai"], "xoa_clb", clb_id)
             return {}
@@ -741,6 +769,7 @@ class DangKyMixin:
             if r is None:
                 raise _Loi("dk_khong_thay")
             if quyet_dinh == "tu_choi":
+                self._dk_chan_bo_clb_tu_do_cuoi(cur, clb_id)
                 n_nv = cur.execute("SELECT COUNT(*) FROM dk_nguyen_vong WHERE clb_id = ?", (clb_id,)).fetchone()[0]
                 if n_nv and xac_nhan is not True:                       # VG1-L3 (D3): không để nguyện vọng mồ côi trỏ CLB đã từ chối
                     raise _Loi("dk_clb_co_nguyen_vong", n=n_nv)
@@ -750,6 +779,8 @@ class DangKyMixin:
                 if n_nv:
                     self._dk_ghi_nk(cur, QUAN_TRI, "go_nguyen_vong_tu_choi", "%s n=%d" % (clb_id, n_nv))
             else:
+                if r[2] != TU_DO and self._dk_bat_buoc_tu_do(cur) and r[1] in self._dk_buoi_thieu_tu_do(cur):
+                    raise _Loi("dk_thieu_clb_tu_do", buoi=r[1])      # VG1-L4 (d): buổi chưa có CLB Tự do sống thì chưa duyệt CLB khác
                 ph = _so_nguyen(phong_id) if phong_id is not None else r[3]
                 sc = cur.execute("SELECT suc_chua FROM dk_phong WHERE phong_id = ?", (ph,)).fetchone()
                 if sc is None:
@@ -782,6 +813,8 @@ class DangKyMixin:
                 raise _Loi("dk_khong_thay")
             n = cur.execute("SELECT COUNT(DISTINCT student_id) FROM dk_nguyen_vong WHERE clb_id = ?", (clb_id,)).fetchone()[0]
             nguy_hiem = xoa or (phong_id is not None and _so_nguyen(phong_id) != r[2]) or (buoi is not None and buoi != r[1])
+            if xoa or (buoi is not None and buoi != r[1]):
+                self._dk_chan_bo_clb_tu_do_cuoi(cur, clb_id)          # VG1-L4 (b)
             if nguy_hiem and not xac_nhan:
                 return {"can_xac_nhan": True, "anh_huong": n}
             if xoa:
@@ -899,7 +932,7 @@ class DangKyMixin:
                         d["hc"] = None
                     for d, hc in zip(non_tu_do, HUY_CHUONG):
                         d["hc"] = hc
-                if not any(d["loai"] == TU_DO for d in ds):
+                if not any(d["loai"] == TU_DO for d in ds) and self._dk_bat_buoc_tu_do(cur):
                     canh_bao.append(err("dk_khong_co_tu_do", buoi=b))
                 for hang, d in enumerate(ds, start=1):
                     hang_ra.append((p["id"], b, hang, d["clb_id"], int(d["thi"]), cu.get(d["clb_id"]) if d["thi"] else None, d["hc"]))
@@ -1008,10 +1041,11 @@ class DangKyMixin:
             nv, thi = self._dk_gioi_han(cur)
             return {"ma_truong": self._dk_cai_dat(cur, "ma_truong", ""), "buoi": buoi, "khoi": khoi, "toi_da_nv": nv, "toi_da_thi": thi,
                     "so_lan_xuat": _so_nguyen(self._dk_cai_dat(cur, "so_lan_xuat", "0")) or 0, "sao_luu_luc": self._dk_cai_dat(cur, "sao_luu_luc"),
-                    "giai_doan": self._dk_gd}
+                    "giai_doan": self._dk_gd, "bat_buoc_tu_do": self._dk_bat_buoc_tu_do(cur),
+                    "buoi_thieu_tu_do": self._dk_buoi_thieu_tu_do(cur) if self._dk_bat_buoc_tu_do(cur) else []}
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
-    def dk_cai_dat_doi(self, token, ma_truong=None, buoi=None, khoi=None):
+    def dk_cai_dat_doi(self, token, ma_truong=None, buoi=None, khoi=None, bat_buoc_tu_do=None, xac_nhan_rui_ro=False):
         """D4/D36: đổi mã trường (≥ 4 ký tự), danh sách buổi, dải khối. Buổi và khối chỉ đổi được ở giai đoạn Chuẩn bị
         (sau đó CLB và học sinh đã dựa vào chúng). Trả cài đặt hiện tại."""
         def lam(cur, p):
@@ -1033,6 +1067,19 @@ class DangKyMixin:
                     raise _Loi("dk_khoi_sai")
                 self._dk_dat(cur, "buoi", json.dumps(ds, ensure_ascii=False))
                 self._dk_dat(cur, "khoi", json.dumps(k))
+            if bat_buoc_tu_do is not None:                              # VG1-L4 (D4): công tắc «bắt buộc có CLB Tự do»
+                if not isinstance(bat_buoc_tu_do, bool):
+                    raise _Loi("dk_khoi_sai")
+                if CAC_GIAI_DOAN.index(self._dk_gd) > CAC_GIAI_DOAN.index("duyet"):
+                    raise _Loi("dk_sai_giai_doan", phan="duyet")
+                if not bat_buoc_tu_do and xac_nhan_rui_ro is not True:
+                    raise _Loi("dk_can_xac_nhan_rui_ro")
+                if bat_buoc_tu_do:                                       # bật lại: chạy lại kiểm (a)–(b)
+                    thieu = self._dk_buoi_thieu_tu_do(cur)
+                    if thieu:
+                        raise _Loi("dk_thieu_clb_tu_do", buoi=", ".join(thieu))
+                self._dk_dat(cur, "bat_buoc_tu_do", "1" if bat_buoc_tu_do else "0")
+                self._dk_ghi_nk(cur, QUAN_TRI, "bat_buoc_tu_do", "bat" if bat_buoc_tu_do else "tat; xac_nhan_rui_ro")
             self._dk_ghi_nk(cur, QUAN_TRI, "doi_cai_dat", ",".join(x for x, v in (("ma", ma_truong), ("buoi", buoi), ("khoi", khoi)) if v is not None))
             return {}
         return self._dk_chay(lam, QUAN_TRI, token=token)

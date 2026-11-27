@@ -2567,6 +2567,19 @@
     "LG": "Điều phối tức thời (taxi, giao hàng): đã đánh giá là không nên bán bằng chương trình này.",
     "VL": "Nếu việc phải giao ngay."
    }
+  },
+  {
+   "id": "VG1",
+   "nhom": "Phụ lục vá gấp",
+   "pham_vi": "cong_dang_ky",
+   "ten": "Vá gấp cổng đăng ký (đăng nhập, phiếu PIN, lùi giai đoạn, CLB Tự do)",
+   "tep": "api_dang_ky.py, api_dang_ky_excel.py, js/dang_ky_quan_tri*.js",
+   "muc": "Sửa",
+   "quy_mo": "M",
+   "rui_ro": "Thấp–vừa; chỉ lớp dk_*, mặc định giữ hành vi cũ.",
+   "kiem_nhan": "tests/test_va_gap_tai_hien.py xanh (8 test).",
+   "phu_thuoc": [],
+   "ap_dung": {}
   }
  ],
  "so_do": {

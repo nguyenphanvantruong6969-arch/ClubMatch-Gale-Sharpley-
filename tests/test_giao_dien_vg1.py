@@ -122,3 +122,51 @@ def test_l3_huy_xac_nhan_thi_o_nguyen_giai_doan(vao):
     pg.click("#dkLui")
     pg.wait_for_timeout(500)
     assert pg.api.dk_trang_thai()["data"]["giai_doan"] == "hs_dang_ky"
+
+
+# ---- L4: CLB Tự do -------------------------------------------------------------------------------------------------
+def _gv_thieu_tu_do(tmp):
+    api, qt = _khoi(tmp)
+    t = {x["ten"]: ok(api.dk_dang_nhap("giao_vien", x["ten"], x["pin"]))["token"]
+         for x in ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nThầy Bình"))["da_tao"]}
+    ok(api.dk_clb_luu(t["Thầy Bình"], t3._clb(ten="Cờ vua", loai="Giới hạn", phong_id=2, chi_tieu=10)))
+    api._t = t
+    return api, qt, "gv_dang_ky"
+
+
+def test_l4_nut_dong_giai_doan_gv_bi_khoa_khi_thieu_tu_do_va_mo_lai_khi_du(vao):
+    pg = vao(_gv_thieu_tu_do)
+    chinh = pg.get_by_role("button", name="Đóng đăng ký giáo viên")
+    ngay = pg.get_by_role("button", name="Đóng ngay")
+    for b in (chinh, ngay):
+        assert b.is_disabled() and b.get_attribute("aria-disabled") == "true"
+    dong = pg.locator("#dkThieuTuDo")
+    assert "Buổi T2 chưa có CLB Tự do" in dong.inner_text() and pg.locator("#dkKhongDungTuDo").count() == 1
+    chinh.focus()
+    pg.keyboard.press("Enter")                                                   # bàn phím cũng không đi qua được
+    pg.wait_for_timeout(300)
+    assert pg.api.dk_trang_thai()["data"]["giai_doan"] == "gv_dang_ky"
+    ok(pg.api.dk_clb_luu(pg.api._t["Cô An"], t3._clb(ten="Tự do", loai="Tự do", phong_id=1)))
+    pg.get_by_role("tab", name="Việc bây giờ").click()
+    pg.wait_for_timeout(500)
+    assert not pg.get_by_role("button", name="Đóng đăng ký giáo viên").is_disabled()
+    assert pg.locator("#dkThieuTuDo").count() == 0 and not pg.get_by_role("button", name="Đóng ngay").is_disabled()
+
+
+def test_l4_tat_rang_buoc_phai_xac_nhan_rui_ro_roi_mo_nut(vao):
+    pg = vao(_gv_thieu_tu_do)
+    pg.click("#dkKhongDungTuDo")
+    pg.wait_for_timeout(600)
+    assert pg.hop and "KHÔNG có CLB trong buổi đó" in pg.hop[0]
+    assert ok(pg.api.dk_cai_dat_doc(pg.qt))["bat_buoc_tu_do"] is False
+    pg.wait_for_timeout(500)
+    assert not pg.get_by_role("button", name="Đóng đăng ký giáo viên").is_disabled()
+
+
+def test_l4_checkbox_cai_dat_huy_hop_xac_nhan_thi_van_bat(vao):
+    pg = vao(_gv_thieu_tu_do, "Cài đặt")
+    pg.evaluate("window.confirm = () => false")
+    pg.click("#dkTatTuDo")
+    pg.wait_for_timeout(500)
+    assert ok(pg.api.dk_cai_dat_doc(pg.qt))["bat_buoc_tu_do"] is True
+    assert not pg.locator("#dkTatTuDo").is_checked()

@@ -794,6 +794,14 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** thấp–vừa (bảng mới, không đụng bảng của bộ xếp). **Kiểm nhận:** ba tệp test trên; Sổ nhập từ dữ liệu đăng ký nhập 0 lỗi ở chế độ huy chương và chạy xếp được.
 - **Phụ thuộc:** DK2 · **Ngành:** trường học (CLB).
 
+## Phụ lục vá gấp
+
+### VG1 — Vá gấp cổng đăng ký (thêm 27/11/2026)
+- **Trạng thái:** làm trên nhánh `claude/charming-cray-2izyn6`, kế hoạch `docs/phien/claude__charming-cray-2izyn6.md`, giao thức `docs/phien/VG1_GIAO_THUC.md`.
+- **Thay đổi:** L1 đăng nhập chuẩn hoá tên/mã/PIN; L2 xuất phiếu PIN Excel (đặt lại PIN, huỷ phiên cũ); L3 lùi giai đoạn nhiều bước, không nguyện vọng mồ côi; L4 ràng buộc CLB Tự do chặn sớm + công tắc `bat_buoc_tu_do`.
+- **Rủi ro:** thấp–vừa (chỉ lớp `dk_*`, không đụng thuật toán; mặc định giữ hành vi cũ). **Nghiệm thu:** `tests/test_va_gap_tai_hien.py` (8 test tái hiện) xanh.
+- **Chưa làm:** lỗi «Đặng Văn Nam 4» (chưa rõ), và các phát hiện mới trong `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md`.
+
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 
 - **DT** (Phân bổ đề tài, đồ án, người hướng dẫn): Z6, Z3, Z7, Z1, B2, A3, A7  · tuỳ chọn: Z4, Z5, A1, A5, A10, C1, C3, E3

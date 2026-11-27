@@ -12,7 +12,7 @@
   /* ---------- A1: Đóng ngay · Gia hạn ---------- */
   const pad = (n) => String(n).padStart(2, "0");
   const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
-  QT2.giaHan = function (gd, han) {
+  QT2.giaHan = function (gd, han, khoa) {
     const goc = han && !isNaN(new Date(han).getTime()) && new Date(han).getTime() > Date.now() ? new Date(han) : new Date();
     const them = (ms, chu) => DK.nut(chu, function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_dat_han", T(), gd, iso(new Date(goc.getTime() + ms)));
@@ -20,7 +20,8 @@
     /* DK8-L2 (v8): «Gia hạn» + «Đóng ngay» bên phải dòng hạn chót; hai nút gia hạn hiện sẵn (không giấu trong menu) để quản trị bấm một lần. */
     return h("div.dk-han-nut", {}, h("span.dk-phu", {}, "Gia hạn"), them(3600000, "+1 giờ"), them(86400000, "+1 ngày"),
       DK.nut("Đóng ngay", function () { DK.chay(this, async () => {
-        const r = await DK.goi("dk_chuyen_giai_doan", T(), TIEP[gd]); if (r.ok) lamMoi(); return r; }); }));
+        const r = await DK.goi("dk_chuyen_giai_doan", T(), TIEP[gd]); if (r.ok) lamMoi(); return r; }); },
+        khoa ? { disabled: true, "aria-disabled": "true", title: "Chưa đóng được: có buổi chưa có CLB Tự do" } : {}));
   };
 
   /* ---------- A3: phiếu PIN in ra ---------- */
@@ -113,14 +114,14 @@
     });
     return DK.bang(["CLB", "Buổi", "Loại", "Giáo viên", "Phòng", "Chỉ tiêu", "Trạng thái", ""], dong);
   };
-  QT2.lyDoChuaMoHs = function (ds, ph, soHs) {
+  QT2.lyDoChuaMoHs = function (ds, ph, soHs, batBuoc) {
     const ly = [];
     if (!ph.length) ly.push("chưa có phòng");
     if (!soHs) ly.push("chưa có danh sách học sinh");
     const cho = ds.filter((c) => c.trang_thai === "cho_duyet").length, duyet = ds.filter((c) => c.trang_thai === "duyet");
     if (cho) ly.push("còn " + cho + " CLB chờ duyệt");
     if (!duyet.length) ly.push("chưa có CLB nào được duyệt");
-    else { const thieu = [...new Set(duyet.map((c) => c.buoi))].filter((b) => !duyet.some((c) => c.buoi === b && c.loai === "Tự do")); if (thieu.length) ly.push("buổi " + thieu.join(", ") + " chưa có CLB Tự do"); }
+    else if (batBuoc !== false) { const thieu = [...new Set(duyet.map((c) => c.buoi))].filter((b) => !duyet.some((c) => c.buoi === b && c.loai === "Tự do")); if (thieu.length) ly.push("buổi " + thieu.join(", ") + " chưa có CLB Tự do"); }
     return ly;
   };
 
@@ -282,6 +283,24 @@
     return h("div.dk-hang-nut", {}, h("label.dk-truong", {}, h("span", {}, "Lùi về"), sel), nut);
   };
 
+  /* ---------- VG1-L4: ràng buộc «mỗi buổi có CLB Tự do» ---------- */
+  QT2.CHU_RUI_RO = "CLB Tự do là chỗ đảm bảo mọi em đều có nơi xếp khi không trúng nguyện vọng nào. Nếu chỉ có CLB Giới hạn và Tuyển chọn, em không đỗ CLB nào sẽ KHÔNG có CLB trong buổi đó (hiện trong danh sách «chưa xếp»). Chỉ tắt nếu nhà trường chấp nhận điều này.";
+  /* Bật / tắt ràng buộc. Tắt phải qua hộp xác nhận rủi ro (máy chủ cũng đòi `xac_nhan_rui_ro`). Trả phản hồi API, hoặc ok không dữ liệu nếu bấm Huỷ. */
+  QT2.datBatBuoc = async function (bat) {
+    if (!bat && global.confirm && !global.confirm(QT2.CHU_RUI_RO + "\n\nTắt ràng buộc «phải có CLB Tự do»?")) return { ok: true, errors: [] };
+    const r = await DK.goi("dk_cai_dat_doi", T(), null, null, null, bat, !bat);
+    if (r.ok && r.data) { DK.thongBao(bat ? "Đã bật lại: mỗi buổi phải có CLB Tự do." : "Đã tắt ràng buộc CLB Tự do. Việc này được ghi vào nhật ký."); lamMoi(); }
+    return r;
+  };
+  /* Dòng đỏ nêu các buổi chưa có CLB Tự do và hai lối thoát: nhờ giáo viên thêm, hoặc không dùng CLB Tự do. */
+  QT2.tuDoThieu = function (thieu, ngu) {
+    if (!thieu || !thieu.length) return null;
+    return h("p.dk-chua-di#dkThieuTuDo", { role: "alert" }, h("span.dk-chua-di-bieu", { "aria-hidden": "true" }, "!"),
+      "Buổi " + thieu.join(", ") + " chưa có CLB Tự do. " + (ngu === "duyet" ? "Lùi về giai đoạn giáo viên (thẻ «Thêm») để nhờ giáo viên thêm, hoặc " : "Nhờ một giáo viên thêm CLB Tự do, hoặc ") ,
+      DK.nutNhe("Không dùng CLB Tự do", function () { DK.chay(this, () => QT2.datBatBuoc(false)); }, { id: "dkKhongDungTuDo" }));
+  };
+  QT2.nhacTuDoTat = (c) => (c && c.bat_buoc_tu_do === false ? h("p.dk-phu#dkNhacTuDo", {}, "Đang TẮT ràng buộc CLB Tự do: học sinh không đỗ CLB nào ở buổi thiếu CLB Tự do sẽ không có CLB. Bộ xếp hiện vẫn yêu cầu mỗi buổi có CLB Tự do (lỗi fa_thieu_clb_tu_do) — cần xử lý trước khi xếp.") : null);
+
   /* ---------- A9: thẻ Cài đặt ---------- */
   QT2.caiDat = async function () {
     const c = (await DK.goi("dk_cai_dat_doc", T())).data || {};
@@ -308,7 +327,11 @@
       if (moi.value !== lai.value) return { ok: false, errors: ["Hai lần nhập mật khẩu mới không giống nhau."] };       // DK8-L5: là lỗi nhập, không phải «xong»
       const r = await DK.goi("dk_doi_mat_khau", T(), cu.value, moi.value);
       if (r.ok) { cu.value = moi.value = lai.value = ""; chupO(); DK.thongBao("Đã đổi mật khẩu. Các máy quản trị khác phải đăng nhập lại."); } return r; }); }, { id: "dkDoiMk" });
+    const hopTuDo = h("input#dkTatTuDo", { type: "checkbox", checked: c.bat_buoc_tu_do === false, disabled: !["chuan_bi", "gv_dang_ky", "duyet"].includes(c.giai_doan),
+      onchange: function () { const o = this; DK.chay(o, async () => { const r = await QT2.datBatBuoc(!o.checked); if (!r.ok || !r.data) o.checked = c.bat_buoc_tu_do === false; return r; }); } });
     return h("div", {}, h("div.dk-luoi2", {},
+      DK.theCon("CLB Tự do", h("p.dk-phu", {}, "Mặc định mỗi buổi phải có ít nhất một CLB Tự do (chỗ cho học sinh không trúng nguyện vọng nào). Chỉ đổi được tới giai đoạn Duyệt."),
+        h("label.dk-truong", {}, hopTuDo, h("span", {}, " Không bắt buộc có CLB Tự do"))),
       DK.theCon("Mã trường", h("p.dk-phu", {}, "Giáo viên nhập mã này khi tự tạo tài khoản. Đổi mã nếu bị lộ."), ma, luuMa),
       DK.theCon("Buổi và khối", sua ? h("p.dk-phu", {}, "Chỉ đổi được ở giai đoạn Chuẩn bị, khi chưa có CLB.") : h("p.dk-phu", {}, "Đã khoá: giáo viên đã đăng ký xong."), buoi, khoi, sua ? luuBk : null),
       DK.theCon("Giới hạn cho học sinh", nv, thi, luuGh),
