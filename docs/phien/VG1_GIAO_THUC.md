@@ -4,7 +4,13 @@
 > Truong's EXCEPTION (2026-11-27): CLAUDE.md rule 10 is lifted for this item ONLY: the coder spawns the checker session itself and loops until CI is green.
 > Mechanics (message formats, quiet tests): `GT_GIAO_THUC.md` §7–8 with writer = coder. Where they differ, THIS file wins.
 
-## 0. Decisions (do not ask Truong)
+## 0. FULL AUTO (Truong, 2026-11-27): never wait for Truong's input; never end a turn with work or CI pending
+- Every question has a default: pick the SAFER option (old behaviour kept, nothing deleted), write one line in the branch file "Decisions", go on.
+- "Needs Truong" is a NOTE, never a stop: record it, finish everything else, continue the loop.
+- To wait for CI or the checker do NOT end the turn idle: schedule a wake-up (`send_later` 6–10 min, or `ScheduleWakeup`/`Monitor` if present) and
+  resume from the branch file. The only legal stop is §4 step 4 (green) or the usage limit.
+
+## 0b. Decisions (do not ask Truong)
 - Everything in the branch file "Decisions" D1–D5. No new library. No schema change (only a `dk_cai_dat` key).
 - Defect 7 is out of scope. Anything outside L1–L4, an invariant conflict, or the L4 export check failing → "Needs Truong" line, continue.
 
@@ -15,7 +21,7 @@
 | checker | Opus `claude-opus-5-5` | reviews the milestone diff, runs related tests + own edge cases, writes verdict to `docs/phien/claude__charming-cray-2izyn6__checker.md` (the ONLY file it pushes), then `send_message` to the coder | edits product code or tests |
 - The coder creates the checker ONCE at MILESTONE 1 with `create_session` (same repo, `source_revision` = this branch, `model: claude-opus-5-5`,
   prompt = §5), and reuses it with `send_message` at MILESTONE 2 and for every CI-fix re-review. Messages are one line: `REVIEW <k> <base>..<head>`;
-  reply `CHECKER REPORT <k> NO BUGS | BUGS n (see file)`. Never ask Truong; blocked item → "Needs Truong" line in the branch file, continue.
+  reply `CHECKER REPORT <k> NO BUGS | BUGS n (see file)`. Checker is auto-started by the coder (Truong never pastes anything); blocked item → note in branch file, continue.
 
 ## 2. Per-lot loop (coder)
 1. Read branch file + the functions named (grep by name, `sed -n` ≤ 80 lines).
