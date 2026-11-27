@@ -35,7 +35,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] L3. Red test `tests/test_giao_dien_ux6_l3.py`; logo, icons (inline SVG + aria-label), one accent for
       segmented controls, monospace only for codes, sentence-case headers, CLB id under name, icon "Xoá" on
       hover+focus, `dang_ky.html` setup form. Commit `UX6-L3: …`. → `MILESTONE 2 READY`.
-- [ ] L4 (optional; only after Truong answers protocol §2). Repo tidy with `git mv` + link check.
+- L4 dropped by Truong (2026-11-27): no document moves.
 - [ ] End: CHANGELOG (UX6, files, new tests, tests whose copy asserts changed), `docs/ke_hoach/TIEN_DO.md`
       rows, `soat-ma`, push, CI green.
 
@@ -52,7 +52,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - Done so far: plan only (Opus, 2026-11-27).
 - In progress: —
 - Tests: —
-- Open problems: protocol §2 questions for Truong (L4 only).
+- Open problems: none (Truong: no document moves, L4 dropped).
 
 ## Decisions and gotchas (keep short)
 - UI only; data not returned by the API today is not added (show what exists).
@@ -72,8 +72,8 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 ```
 You are the UX6 coder (Sonnet). Read CLAUDE.md, then docs/phien/claude__ux6-giao-dien-gon.md, then
 docs/phien/UX6_GIAO_THUC.md and docs/phien/_GIAO_THUC_GON.md §3. Create branch claude/ux6-giao-dien-gon from
-origin/claude/hopeful-cannon-urfiul and work only there. Do the Plan in order (L1 → L2 → L3; L4 only if Truong
-has answered protocol §2), test first per lot, one commit per lot step, tick the Plan and update "Current state"
+origin/claude/hopeful-cannon-urfiul and work only there. Do the Plan in order (L1 → L2 → L3; L4 is dropped, never
+move any document), test first per lot, one commit per lot step, tick the Plan and update "Current state"
 after each commit, push after each lot. UI files only (protocol §0). At L2 end write "MILESTONE 1 READY", at L3 end
 "MILESTONE 2 READY" in the branch file and in your reply, then wait for the checker. No subagents. Reply to Truong
 in Vietnamese.

@@ -19,7 +19,7 @@
   rounds per review, then "Needs Truong" + `git revert` of that lot.
 - All screenshots/numbers come from SIMULATED data. Do not write report commentary for the student.
 
-## 1. Lots (L1–L3 must-ship; L4 optional and gated)
+## 1. Lots (L1–L3 must-ship; L4 dropped)
 - **L1 Less text.** Apply the copy rule on every tab (Xếp CLB, Đăng ký, Nhập nguyện vọng/điểm, Kết quả, Chi tiết,
   Quản lý + sub-tabs, Cài đặt). Next-step banner (`js/17_viec_tiep_theo.js`, `#viecTiepTheoCau`): one short line
   + one button whose label does not repeat the number ("32 học sinh chưa có CLB" · [Xử lý]); button aligned the
@@ -41,19 +41,13 @@
   keyboard focus, keeping the existing two-step confirm and ≥ 44 px target. `dang_ky.html` first-time setup:
   example placeholders, Khối thấp/cao side by side, button not full width. Test file:
   `tests/test_giao_dien_ux6_l3.py` (no "▾"/"⋯" text in buttons; brand shows an image; delete reachable by keyboard).
-- **L4 Repo tidy (OPTIONAL, start only after Truong answers §2).** Move root `.md/.docx/.pptx/.html` documents that
-  Truong did not list as fixed into `tai_lieu/` with `git mv`; move `LATEST_INSTRUCTION.md`,
-  `INSTRUCTION_FILL_GAPS.md` to `docs/ke_hoach/cu/`; fix relative links (script: no broken link in any .md/.html);
-  check `kiosk.spec`, `browser_host.py` whitelist and the build workflow do not reference moved files.
+- **L4 dropped** (Truong, 2026-11-27): no document moves, no repo tidy in UX6.
 
-## 2. Needs Truong (L4 only; L1–L3 do not wait)
-1. Which root documents must NOT move (linked from the report or already sent to judges)? (`KE_HOACH_SUA_THIET_KE.md`
-   Task 3.4.)
-2. Rename the GitHub repo to `ClubMatch-Gale-Shapley` (Settings → Rename; GitHub redirects the old URL). Only Truong
-   can do this; afterwards the coder updates links in `README.md`/docs.
+## 2. Truong's answers (2026-11-27)
+- No document moves anywhere. L4 skipped. Repo rename is not part of UX6.
 
 ## 3. Milestones (checker, `_GIAO_THUC_GON.md` §1 size M)
-- **M1** after L1+L2: coder writes `MILESTONE 1 READY`. **M2** after L3 (+L4 if done): `MILESTONE 2 READY`.
+- **M1** after L1+L2: coder writes `MILESTONE 1 READY`. **M2** after L3: `MILESTONE 2 READY`.
 - Checker verdict PASS / FIX (≤ 2 rounds) in `docs/phien/claude__ux6-giao-dien-gon__checker.md`; at M2 it takes
   ≤ 3 screenshots (Xếp CLB after run, Kết quả, Quản lý → CLB; `deviceScaleFactor: 1`) and compares with the
   pre-UX6 look described in the branch file.
