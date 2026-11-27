@@ -68,3 +68,18 @@ def test_tat_chi_doi_duoc_toi_giai_doan_duyet_va_chi_quan_tri(cd):
     assert not api.dk_cai_dat_doi(t["Cô An"], bat_buoc_tu_do=False, xac_nhan_rui_ro=True)["ok"]
     assert not api.dk_cai_dat_doc(t["Cô An"])["ok"]
     assert ma(api.dk_cai_dat_doi(qt, bat_buoc_tu_do="no")) != ""
+
+
+def test_b_doi_buoi_clb_khong_tu_do_sang_buoi_chua_co_tu_do_bi_chan(cd):
+    """Checker L4 #1: dời CLB không Tự do sang buổi chưa có CLB Tự do sống không được (khi BẬT); tắt thì được."""
+    api, qt = cd
+    t = _gv(api, qt)
+    td = ok(api.dk_clb_luu(t["Cô An"], _clb(ten="Tự do", loai="Tự do", phong_id=1)))["clb_id"]
+    gh = ok(api.dk_clb_luu(t["Thầy Bình"], _clb(ten="Cờ vua", phong_id=2, chi_tieu=10)))["clb_id"]
+    ok(api.dk_chuyen_giai_doan(qt, "duyet"))
+    ok(api.dk_clb_duyet(qt, td, "duyet"))
+    ok(api.dk_clb_duyet(qt, gh, "duyet"))
+    ok(api.dk_hs_nap_danh_sach(qt, "H1\tAn\t10A1"))
+    ok(api.dk_chuyen_giai_doan(qt, "hs_dang_ky"))
+    assert ma(api.dk_clb_sua_sau_mo(qt, gh, buoi="T3", xac_nhan=True)) == "dk_thieu_clb_tu_do"
+    assert ok(api.dk_cai_dat_doc(qt))["buoi_thieu_tu_do"] == []

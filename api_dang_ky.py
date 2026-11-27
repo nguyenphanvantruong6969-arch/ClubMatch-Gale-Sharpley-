@@ -815,6 +815,9 @@ class DangKyMixin:
             nguy_hiem = xoa or (phong_id is not None and _so_nguyen(phong_id) != r[2]) or (buoi is not None and buoi != r[1])
             if xoa or (buoi is not None and buoi != r[1]):
                 self._dk_chan_bo_clb_tu_do_cuoi(cur, clb_id)          # VG1-L4 (b)
+            if buoi is not None and buoi != r[1] and r[4] != TU_DO and self._dk_bat_buoc_tu_do(cur) and not cur.execute(
+                    "SELECT 1 FROM dk_clb WHERE buoi = ? AND loai = ? AND trang_thai IN ('cho_duyet', 'duyet')", (buoi, TU_DO)).fetchone():
+                raise _Loi("dk_thieu_clb_tu_do", buoi=buoi)           # buổi đích chưa có CLB Tự do sống
             if nguy_hiem and not xac_nhan:
                 return {"can_xac_nhan": True, "anh_huong": n}
             if xoa:
