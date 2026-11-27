@@ -3829,3 +3829,12 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 #dkXemTruoc > summary { min-height: 28px; }
 #dkXemTruoc > p.dk-phu { margin: 4px 0 8px; }
 .dk-noidung .dk-khung > details { margin: 0; }
+/* VG3 vòng 3: ↑ ↓ vẽ bằng CSS (chữ giữ cho trình đọc màn hình nhưng ẩn), nét đậm ngang ✕; thanh bước học sinh một hàng ở màn hẹp */
+.dk-xep .btn[aria-label="Lên"], .dk-xep .btn[aria-label="Xuống"] { font-size: 0; }
+.dk-xep .btn[aria-label="Lên"]::before, .dk-xep .btn[aria-label="Xuống"]::before { content: ""; width: 9px; height: 9px; border-top: 2.5px solid currentColor; border-left: 2.5px solid currentColor; }
+.dk-xep .btn[aria-label="Lên"]::before { transform: rotate(45deg); margin-top: 4px; }
+.dk-xep .btn[aria-label="Xuống"]::before { transform: rotate(225deg); margin-bottom: 4px; }
+@media (max-width: 640px) {
+  .dk-buoc { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+  .dk-buoc li { flex: none; white-space: nowrap; }
+}

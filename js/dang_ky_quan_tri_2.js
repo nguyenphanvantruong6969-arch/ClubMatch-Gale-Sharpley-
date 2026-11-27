@@ -104,7 +104,7 @@
   /* ---------- A6: duyệt có sửa chỉ tiêu / phòng ---------- */
   QT2.bangDuyet = function (ds, ph) {
     const dong = ds.map((c) => {
-      const ct = h("input.dk-nhap.dk-so", { type: "number", min: "1", value: c.chi_tieu !== null ? c.chi_tieu : (c.chi_tieu_gv !== null ? c.chi_tieu_gv : ""), "aria-label": "Chỉ tiêu " + c.ten, placeholder: c.loai === "Tự do" ? "Không giới hạn" : null, disabled: c.loai === "Tự do" || c.trang_thai === "tu_choi" });
+      const ct = h("input.dk-nhap.dk-so", { type: "number", min: "1", value: c.chi_tieu !== null ? c.chi_tieu : (c.chi_tieu_gv !== null ? c.chi_tieu_gv : ""), "aria-label": "Chỉ tiêu " + c.ten, placeholder: c.loai === "Tự do" ? "—" : null, title: c.loai === "Tự do" ? "Không giới hạn" : null, disabled: c.loai === "Tự do" || c.trang_thai === "tu_choi" });
       const sel = h("select.dk-nhap", { "aria-label": "Phòng " + c.ten, disabled: c.trang_thai === "tu_choi" }, ph.map((p) => h("option", { value: p.phong_id, selected: p.phong_id === c.phong_id }, p.ten + " (" + p.suc_chua + ")")));
       const dat = (qd) => function () { DK.chay(this, async () => {
         const r = await DK.goi("dk_clb_duyet", T(), c.clb_id, qd, qd === "duyet" ? (ct.value || null) : null, qd === "duyet" ? +sel.value : null, qd === "tu_choi" ? "Không phù hợp" : "");

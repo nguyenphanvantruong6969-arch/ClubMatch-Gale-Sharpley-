@@ -116,7 +116,7 @@ def test_3_quan_tri_duyet(cong):
     chi_tieu = pg.locator("input[aria-label='Chỉ tiêu Cờ vua']")
     pg.set_viewport_size({"width": 1280, "height": 900})
     assert chi_tieu.bounding_box()["width"] < 140
-    assert pg.locator("tr:has-text('Tự do VG3') input[type=number]").get_attribute("placeholder") == "Không giới hạn"
+    assert pg.locator("tr:has-text('Tự do VG3') input[type=number]").get_attribute("title") == "Không giới hạn"
     assert pg.locator("tr:has-text('Cờ vua') .dk-chip.wait").count() == 1          # trạng thái là chip
     pg.set_viewport_size({"width": 375, "height": 800})
     assert _tran_ngang(pg) <= 0
