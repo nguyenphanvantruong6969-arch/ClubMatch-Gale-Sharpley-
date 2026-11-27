@@ -43,7 +43,8 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - Done: L1–L4 code, accent-free login, CI-debug fixes (see Session log). VG1 tip `892f55d` merged (commit `2d5a6e0`; kept VG2's side for 3 UI tests + code map 454).
 - Truong (2026-11-27): NO checker / review needed; done = CI green + bugs solved. Checker step skipped on purpose.
 - After merge: `kiem_nhanh.py` 7/7; repro + accent-free + vg1 + i18n/doc tests 86 green; UI tests vg2 6, dk3_cong 16, dk4_mo_khoa 1, dkl_giao_vien 3 green.
-- Next: push, read CI (Tests + Build Windows) for head; fix until both green. Open (low, for Truong): #21, #27, 2–3 ms login timing gap.
+- CI: Tests (rbda-kiosk) run 46079820841 on `118182d` = SUCCESS (all jobs incl. coverage >= 85 %). Build Windows is manual-only and overwrites the public release: NOT run, waiting for Truong.
+- Next: when VG1 (`claude/charming-cray-2izyn6`, head `c6766f8`, CI run 46079810673) is green, merge it again (adds defect-7 fix); then PR/merge to main only if Truong asks. Open (low, for Truong): #21, #27, 2–3 ms login timing gap.
 
 ## Decisions added in this session (safe defaults)
 - Old tests were edited where the contract changed on purpose: school code ≥ 4 chars (`TR1`→`TRU1`, `T`→`TRUONG`), trivial PINs refused for teacher self-register (`1234`→`7391`, `5678`→`5903`), lists open by default (tests set `parentElement.open = true` instead of toggling), confirm dialogs (tests `pg.once("dialog", accept)`), student wizard skips empty steps (dk8_l5 tests add a Tuyển chọn club so the exam step exists).
