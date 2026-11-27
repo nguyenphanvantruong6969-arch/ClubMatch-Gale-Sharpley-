@@ -43,3 +43,27 @@ session); the exam step warns «CLB Tuyển chọn em xếp nhưng chưa tick s�
 | 18 | Low | **Accessibility:** every row has the same «Đặt lại PIN» button with no person in its accessible name (screen-reader users cannot tell them apart); admin screens have no `<h1>`; «← Mở phần mềm xếp CLB» and the switch `on` are < 36 px tap targets. | NEW → L3 |
 | 19 | Low | Club-name input has no `maxlength` (80): the «Tên đang để trống hoặc quá dài.» error appears only at «Gửi duyệt», three steps later; message mixes "blank" and "too long". | NEW → L3 |
 | 20 | Info | Duyệt screen's «Chưa đi tiếp được» list does not mention the missing Tự do club (VG1-L4 scope). | VG1-L4 |
+
+## Round 3 — stress test and "is it simple and clear?" (2026-11-27, branch tip incl. VG1-L1..L3)
+### Stress (API level, 800 students × 20 clubs × 5 sessions, 40 parallel threads; the portal server is `127.0.0.1` + secret token, so real load is lower)
+| Test | Result |
+|---|---|
+| Import 800 students | 1.3 s (1.7 ms each) |
+| Reset 800 PINs one by one | 3.5 s (≈ 4 ms each; PBKDF2 10 000 rounds) |
+| 800 logins in parallel | 3.0 s, 0 errors |
+| 800 students save 5 sessions × 3 clubs in parallel | 2.4 s, **0 errors**, 800 submitted, 12 000 wish rows consistent |
+| Admin lists (students/progress/clubs/scores/preview) | ≤ 0.03 s each, also under 30 reading threads (0.14 s) |
+**Held up:** no "database is locked", no lost or duplicated rows, no slowdown. Capacity is NOT a concern for 800 students.
+| # | Sev | Finding | Status |
+|---|---|---|---|
+| 21 | Low | **Lock table grows without bound:** every wrong login for an id that does not exist writes a row in `dk_cai_dat` (2 000 attempts → 2 000 rows, 5 ms each, never purged). A stranger can bloat the DB and the backup. | NEW → VG2-L1 (cap/purge: keep only ids that exist + one shared counter for unknown ids; drop rows older than the lock window) |
+| 22 | Low | **Session tokens are never purged** unless the user comes back (1 021 tokens after the run). Harmless at this size, but also keeps a stale token alive until reuse. | NEW → VG2-L1 (purge expired on each login) |
+### Simplicity and clarity (walked as a first-time admin, a teacher, a student)
+| # | Sev | Finding | Status |
+|---|---|---|---|
+| 23 | **High** | **Student needs 16 screens / 20 clicks** with 5 sessions even when choosing 1 club in 1 session: every session has 3 screens (rank → medals → exam), also for sessions the student leaves EMPTY («Buổi T3 · Đặt huy chương» with nothing to place). Roughly 3× more taps than necessary on a shared kiosk with 800 students. | NEW → VG2-L4 |
+| 24 | Med | **Internal code shown to users:** a teacher registering outside the open stage sees `Việc này chỉ làm được ở giai đoạn "gv_dang_ky".` (`dk_sai_giai_doan`, same for `duyet`, `chuan_bi`, `hs_dang_ky`, `nhap_diem`). Must show the stage's name («Giáo viên đăng ký»). | NEW → VG2-L4 |
+| 25 | Med | **Jargon for school staff:** «Xếp lại (cùng hạt giống)», «lần chạy 1, hạt giống 7», «chế độ giữ chỗ và huy chương». Replace with plain words («Xếp lại và giữ nguyên kết quả bốc thăm»; hide the number behind «Chi tiết kỹ thuật»). Students see «NV1/NV2» without a legend. | NEW → VG2-L4 |
+| 26 | Low | **First-run screen has no help:** no hint that the password needs ≥ 4 characters, what «Mã trường» is for, what a «Khối» is, nor that the password cannot be recovered in the app (only `QUEN_MAT_KHAU.bat`). | NEW → VG2-L4 |
+| 27 | Low | **Wrong/odd status text:** Chuẩn bị with 0 students says «0 học sinh · 0 lớp · đã có PIN»; the student login form is fully shown while the stage is «Chưa mở». | NEW → VG2-L4 |
+Good already: error messages are short plain Vietnamese (75 `dk_*` codes, only 1 over 28 words); the 6-step progress bar; «Chưa đi tiếp được: …» explains what blocks the admin; the medal screen explains Vàng/Bạc/Đồng in 3 sentences; teacher form has 3 clear steps.

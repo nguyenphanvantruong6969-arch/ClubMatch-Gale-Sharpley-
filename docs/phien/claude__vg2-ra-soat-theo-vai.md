@@ -4,7 +4,7 @@
 > Language: English. Cap 150 lines. Rewrite "Current state"; only APPEND to "Session log".
 
 ## Feature / goal
-**VG2 — fixes from the role-play test of the registration portal (dk_*), size M.** Source: `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` (findings 1,3,4,5,6,7,8,10,11,12,13 and round-2 UI findings 15–19).
+**VG2 — fixes from the role-play test of the registration portal (dk_*), size M.** Source: `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` (findings 1,3,4,5,6,7,8,10,11,12,13, round-2 UI findings 15–19, round-3 stress/simplicity findings 21–27).
 New item code (Truong, 2026-11-27); add a stub row to `SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` ("Phụ lục vá gấp", next to VG1).
 Acceptance = `tests/test_vg2_tai_hien.py` (16 red repro tests) + one Chromium file `tests/test_giao_dien_vg2.py` (L3). Findings 2 and 9 were already fixed by VG1-L2.
 **START CONDITION:** VG2 touches the same functions as VG1 (L1 gate, L2 PIN, L3 stage back, L4 free club). Branch from the TIP of
@@ -30,10 +30,13 @@ Acceptance = `tests/test_vg2_tai_hien.py` (16 red repro tests) + one Chromium fi
   (and any stage-closing button) asks a confirm dialog; «Xoá» button + confirm per teacher in the list. Texts via i18n keys prefix `vg2_`.
   Round-2 UI items (findings 15–19 in `VG1_KIEM_TRA_TOAN_DIEN.md`): wrap every `.dk-bang` in `overflow-x:auto` (no page-level horizontal scroll at 375 px on any admin stage); clear the score error on the next successful save; confirm dialog for the teacher's own club «Xoá»; `aria-label` «Đặt lại PIN — <tên>» (same for the other per-row buttons), one `<h1>` per admin screen, ≥ 36 px tap targets for «← Mở phần mềm xếp CLB» and the switch; `maxlength=80` on the club name + separate messages for blank / too long.
 
+- D6 Simplicity (findings 23–27, 21–22): student wizard shows ONLY the steps that apply per session: no wishes → one line «Em không học buổi này» and jump to the next session (no medal/exam screens); medal screen only if ≥ 1 non-Tự do club is chosen; exam screen only if ≥ 1 Tuyển chọn club is chosen; the review screen still lists every session. Server rules unchanged (`dk_hs_luu` payload identical → invariant 1). `dk_sai_giai_doan` message uses the stage's Vietnamese name (map `phan` → «Chuẩn bị / Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký / Nhập điểm / Xuất» in the i18n layer, vi + en). «hạt giống» wording replaced (technical number kept under a collapsed «Chi tiết kỹ thuật»); «NV1» gets a one-line legend «NV = nguyện vọng». First-run screen: helper text under each field. Status text: hide «đã có PIN» when 0 students; disable (not hide) the student login form when the stage is «Chưa mở». Lock table (21): purge rows older than the lock window on each login; unknown ids share one counter. Sessions (22): purge expired tokens on each login.
+
 ## Plan (lots; ✱ = must-ship)
 - [ ] ✱L1 Accounts (D1–D3): `dk_dang_nhap` escalating lock, `dk_gv_xoa`, `TOI_DA_GV`, `_pin_moi` + `dk_pin_de_doan`, `dk_khoi_tao` code length. Tests: repro tests 1,3,4 + `test_dk4_l0b_khoa_dang_nhap.py` stays green.
 - [ ] ✱L2 Integrity (D4): repro tests 2,5 + room/student/list/score warning; related: `test_dk3_api.py`, `test_dk4_chot_va_xep.py`.
 - [ ] ✱L3 UI + i18n (D5): codes appended at END of `i18n_errors.py` then `python tao_i18n_js.py`; Chromium `tests/test_giao_dien_vg2.py` (one shared page fixture: lists visible after Excel import; confirm dialog on «Đóng ngay» both accept/cancel; «Xoá» teacher).
+- [ ] L4 Simplicity (D6): student wizard skips empty/irrelevant steps (Chromium test: 5 sessions, 1 club → ≤ 6 screens, payload to `dk_hs_luu` byte-identical to the long path), plain-language texts, first-run help, i18n `vg2_`; purge of lock rows/tokens in L1 files. Optional if budget is short: first-run help and status-text polish.
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
