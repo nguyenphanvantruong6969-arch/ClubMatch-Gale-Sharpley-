@@ -3432,7 +3432,7 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }
 #ux1aNangCao > summary { display: block; cursor: pointer; }
 /* summary.btn khớp UX2 (::after tuyệt đối, tâm 50%, ≥ 44 px): mũi tên ở ::after phải về lại trong dòng chữ, nên vùng bấm 44 px chuyển sang ::before (cùng hình học UX2) */
-#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; position: static; width: auto; height: auto; transform: none; }
+/* UX6-L3: mũi tên của các summary này là ảnh nền (.ux6-mui-ten), không còn ký tự ▾ */
 #ux1aNangCao > summary.btn::before, .club-them > summary.btn::before {
   content: ""; position: absolute; top: 50%; left: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
 
@@ -3784,13 +3784,12 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 /* Logo ảnh thay ô chữ "RB" */
 img.brand-mark { background: none; object-fit: contain; display: block; }
 
-/* Mũi tên xổ: biểu tượng SVG (mặt nạ) thay cho ký tự ▾ trong chữ nút */
-.ux6-mui-ten::after {
-  content: ""; display: inline-block; width: 12px; height: 12px; margin-left: 6px; vertical-align: -1px;
-  background-color: currentColor;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+/* Mũi tên xổ: biểu tượng SVG (ảnh nền) thay cho ký tự ▾; không dùng ::after vì UX2 dùng nó làm vùng bấm 44 px */
+.ux6-mui-ten {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%235B6570' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center; background-size: 12px;
 }
-details[open] > .ux6-mui-ten::after { transform: rotate(180deg); }
 
 /* Nút ba chấm: biểu tượng SVG, không có chữ; nhãn đọc bằng aria-label, gợi ý bằng title */
 .ux6-ba-cham { font-size: 0; min-width: 36px; display: inline-flex; align-items: center; justify-content: center; }
@@ -3801,7 +3800,7 @@ details[open] > .ux6-mui-ten::after { transform: rotate(180deg); }
 .ux6-ba-cham::-webkit-details-marker { display: none; }
 
 /* Nút phân đoạn của Kết quả: cùng cỡ chữ, font và màu nhấn (vàng) với các nút tab khác */
-.kq-seg-nut { font-size: 14px; padding: 9px 16px; font-weight: 500; color: var(--slate); }
+.kq-seg-nut { min-height: 44px; font-size: 14px; padding: 9px 16px; font-weight: 500; color: var(--slate); }
 .kq-seg-nut:hover { color: var(--ink); }
 .kq-seg-nut.is-on { background: var(--paper-raised); color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
 
@@ -3825,3 +3824,13 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 /* Cổng đăng ký: biểu mẫu thiết lập lần đầu */
 .dk-hang-khoi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .dk-nut-lap { align-self: flex-start; }
+
+.lang-toggle.ux6-ba-cham { min-width: 0; padding: 4px 7px; }
+
+/* UX6-L3: mũi tên của nút gập khung (.panel-toggle) cũng là SVG */
+.panel-toggle::before {
+  content: ""; width: 13px; height: 13px; background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+#ux1aNangCao > summary.ux6-mui-ten, .club-them > summary.ux6-mui-ten { padding-right: 32px; }
+#adminClubTableBody td:first-child { font-family: var(--font-body); }   /* ô đầu của bảng CLB giờ là Tên; mã máy nằm trong .ux6-ma-clb */

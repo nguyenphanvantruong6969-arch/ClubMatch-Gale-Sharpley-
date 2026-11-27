@@ -5,9 +5,8 @@ bảng CLB (mã dưới tên, nút xoá bằng biểu tượng), biểu mẫu th
 import os
 import re
 
-import pytest
 
-from _ux5a_chung import GOC, JS_DEM, mo_ux5a  # noqa: F401
+from _ux5a_chung import GOC, mo_ux5a  # noqa: F401
 
 
 def _doc(ten):
