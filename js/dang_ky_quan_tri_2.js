@@ -104,12 +104,12 @@
   /* ---------- A6: duyệt có sửa chỉ tiêu / phòng ---------- */
   QT2.bangDuyet = function (ds, ph) {
     const dong = ds.map((c) => {
-      const ct = h("input.dk-nhap.dk-so", { type: "number", min: "1", value: c.chi_tieu !== null ? c.chi_tieu : (c.chi_tieu_gv !== null ? c.chi_tieu_gv : ""), "aria-label": "Chỉ tiêu " + c.ten, disabled: c.loai === "Tự do" || c.trang_thai === "tu_choi" });
+      const ct = h("input.dk-nhap.dk-so", { type: "number", min: "1", value: c.chi_tieu !== null ? c.chi_tieu : (c.chi_tieu_gv !== null ? c.chi_tieu_gv : ""), "aria-label": "Chỉ tiêu " + c.ten, placeholder: c.loai === "Tự do" ? "Không giới hạn" : null, disabled: c.loai === "Tự do" || c.trang_thai === "tu_choi" });
       const sel = h("select.dk-nhap", { "aria-label": "Phòng " + c.ten, disabled: c.trang_thai === "tu_choi" }, ph.map((p) => h("option", { value: p.phong_id, selected: p.phong_id === c.phong_id }, p.ten + " (" + p.suc_chua + ")")));
       const dat = (qd) => function () { DK.chay(this, async () => {
         const r = await DK.goi("dk_clb_duyet", T(), c.clb_id, qd, qd === "duyet" ? (ct.value || null) : null, qd === "duyet" ? +sel.value : null, qd === "tu_choi" ? "Không phù hợp" : "");
         if (r.ok) lamMoi(); return r; }); };
-      const tt = { cho_duyet: "Chờ duyệt", duyet: "Đã duyệt", tu_choi: "Từ chối" }[c.trang_thai];
+      const tt = h("span.dk-chip" + { cho_duyet: ".wait", duyet: ".on", tu_choi: ".off" }[c.trang_thai], {}, { cho_duyet: "Chờ duyệt", duyet: "Đã duyệt", tu_choi: "Từ chối" }[c.trang_thai]);
       return [c.ten, c.buoi, c.loai, c.giao_vien || "", sel, ct, tt, c.trang_thai === "tu_choi" ? "" : h("span", {}, DK.nut(c.trang_thai === "duyet" ? "Lưu thay đổi" : "Duyệt", dat("duyet")), c.trang_thai === "duyet" ? null : DK.nutNhe("Từ chối", dat("tu_choi")))];
     });
     return DK.bang(["CLB", "Buổi", "Loại", "Giáo viên", "Phòng", "Chỉ tiêu", "Trạng thái", ""], dong);

@@ -802,6 +802,11 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** thấp–vừa (chỉ lớp `dk_*`, không đụng thuật toán; mặc định giữ hành vi cũ). **Nghiệm thu:** `tests/test_va_gap_tai_hien.py` (8 test tái hiện) xanh.
 - **Chưa làm:** lỗi «Đặng Văn Nam 4» (chưa rõ), và các phát hiện mới trong `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md`.
 
+### VG3 — Dọn giao diện cổng đăng ký (thêm 27/11/2026)
+- **Trạng thái:** làm trên nhánh `claude/vg3-giao-dien-cong`, kế hoạch `docs/phien/claude__vg3-giao-dien-cong.md`.
+- **Thay đổi:** chỉ trình bày (`.dk-*`): tên giai đoạn không lặp trên màn quản trị, thanh sáu bước gọn, thẻ vai trò, logo thật, tab/bảng/form phòng, màn Xuất, màn học sinh (nút ↑↓, hộp huy chương, bảng xem lại).
+- **Rủi ro:** thấp (không đụng `api*.py`, payload hay giao diện chính). **Nghiệm thu:** `tests/test_giao_dien_vg3.py` xanh.
+
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 
 - **DT** (Phân bổ đề tài, đồ án, người hướng dẫn): Z6, Z3, Z7, Z1, B2, A3, A7  · tuỳ chọn: Z4, Z5, A1, A5, A10, C1, C3, E3

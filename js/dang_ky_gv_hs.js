@@ -88,7 +88,7 @@
       const prRoom = phong.find((p) => String(p.phong_id) === String(d.phong_id));
       const b1 = [chon("Buổi", "buoi", tt.buoi.map((b) => [b, b]), () => taiPhong(d.buoi)),
         chon("Loại CLB", "loai", [["Tự do", "Tự do – nhận mọi em, không kiểm tra"], ["Giới hạn", "Giới hạn – có số chỗ, không kiểm tra"], ["Tuyển chọn", "Tuyển chọn – có số chỗ và bài kiểm tra"]]),
-        chon("Phòng (chỉ hiện phòng trống buổi này)", "phong_id", phong.map((p) => [p.phong_id, p.ten + " (" + p.suc_chua + " chỗ)"])),
+        chon("Phòng (chỉ hiện phòng trống buổi này)", "phong_id", phong.length ? phong.map((p) => [p.phong_id, p.ten + " (" + p.suc_chua + " chỗ)"]) : [["", "Chọn phòng…"]]),   // VG3: chưa có phòng trống thì không để ô trắng
         d.loai === "Tự do" ? h("p.dk-ghichu", {}, "CLB Tự do nhận mọi em đăng ký, không cần chỉ tiêu.") : nhap("Số học sinh nhận" + (prRoom ? " (tối đa " + prRoom.suc_chua + ")" : ""), "chi_tieu", { type: "number", min: "1" })];
       const b2 = [h("div.dk-nhom", {}, nhap("Từ khối", "khoi_tu", { type: "number" }), nhap("Đến khối", "khoi_den", { type: "number" })),
         d.loai === "Tuyển chọn" ? [nhap("Điểm sàn (0–10): dưới mốc này không nhận", "diem_san", { type: "number", min: "0", max: "10" }), nhap("Đường dẫn bài thi (link Google Forms)", "link_forms")]
@@ -189,7 +189,7 @@
           h("section.dk-khung", {}, h("h2", {}, "CLB cho khối " + DK.S.khoi + " · " + b),
             chua.length ? h("ul.dk-ds.dk-cac-the", {}, (moHet.has(b) ? chua : chua.slice(0, TOI_DA_THE)).map(the)) : h("div.dk-rong", {}, ds.length ? "Em đã thêm hết CLB của buổi này." : "Buổi này không có CLB nào cho khối của em."),
             chua.length > TOI_DA_THE && !moHet.has(b) ? DK.nutNhe("Xem thêm (" + (chua.length - TOI_DA_THE) + ")", () => { moHet.add(b); ve(); }) : null),
-          h("section.dk-khung", {}, h("h2", {}, "Nguyện vọng " + b + " ", h("span.dk-phu.dk-so", {}, ds.length + "/" + tt.toi_da_nv)),
+          h("section.dk-khung", {}, h("h2", {}, "Nguyện vọng " + b + " ", chip(ds.length + "/" + tt.toi_da_nv, day ? "off" : "")),
             h("p.dk-phu", {}, "Giới hạn " + tt.toi_da_nv + " CLB tính riêng cho từng buổi (không phải cả tuần): sang buổi khác em chọn lại từ đầu."),
             ds.length ? h("ol.dk-xep", {}, hang) : h("div.dk-rong", {}, "Chưa chọn. Bấm \"+ Thêm\" ở bên cạnh."),
             day ? h("p.dk-ghichu", {}, "Buổi " + b + " đã đủ " + tt.toi_da_nv + " CLB (giới hạn tính riêng cho từng buổi). Muốn thêm CLB khác, bấm ✕ để bỏ bớt một CLB.") : null)),
@@ -222,7 +222,7 @@
       return [bar(), h("h1.dk-tieude", {}, "Buổi " + b + " · Đặt huy chương"),
         h("p.dk-phu", {}, "Mỗi buổi em có một huy chương Vàng, một Bạc, một Đồng. Khi CLB có nhiều bạn muốn vào hơn số chỗ, huy chương giúp em được ưu tiên: Vàng mạnh nhất. " +
           "Mỗi CLB nhận tối đa một huy chương. CLB Tự do luôn có chỗ nên không cần huy chương."),
-        h("p.dk-ghichu", {}, "Đã đặt sẵn theo thứ tự nguyện vọng. Em đổi nếu muốn dồn huy chương cho CLB khác; thứ tự nguyện vọng vẫn giữ nguyên."),
+        opts.length ? h("p.dk-ghichu", {}, "Đã đặt sẵn theo thứ tự nguyện vọng. Em đổi nếu muốn dồn huy chương cho CLB khác; thứ tự nguyện vọng vẫn giữ nguyên.") : null,   // VG3: không có CLB nào để đặt huy chương thì không nhắc
         than,
         h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("rank")), h("span.dk-gian"), DK.nutVang("Tiếp: bài kiểm tra", () => di("tests")))];
     }
@@ -258,11 +258,11 @@
         })) : h("span.dk-phu", {}, "Không học buổi này")];
       });
       const thi = [].concat(...tt.buoi.map((b) => theo[b].filter((x) => x.thi).map((x) => cua(x.clb_id))));
-      return [h("table.dk-bang", {}, h("thead", {}, h("tr", {}, h("th", {}, "Buổi"), h("th", {}, "Nguyện vọng"))),
+      return [h("table.dk-bang.dk-bang-tt", {}, h("thead", {}, h("tr", {}, h("th", {}, "Buổi"), h("th", {}, "Nguyện vọng"))),
         h("tbody", {}, hang.map((r) => h("tr", {}, h("td", {}, r[0]), h("td", {}, r[1]))))),
-      h("h3", {}, "Bài kiểm tra (" + thi.length + ")"),
-      thi.length ? h("ul.dk-ds", {}, thi.map((c) => h("li", {}, c.ten, bc === "receipt" && c.link_forms
-        ? h("a", { href: c.link_forms, target: "_blank", rel: "noopener" }, "Làm bài thi") : null))) : h("p.dk-phu", {}, "Không làm bài kiểm tra nào.")];
+      h("div.dk-tt-thi", {}, h("h3", {}, "Bài kiểm tra (" + thi.length + ")"),
+        thi.length ? h("div.dk-nhom", {}, thi.map((c) => h("span.dk-tt-dong", {}, chip(c.ten, "wait"), bc === "receipt" && c.link_forms
+          ? h("a", { href: c.link_forms, target: "_blank", rel: "noopener" }, "Làm bài thi") : null))) : h("p.dk-phu", {}, "Không làm bài kiểm tra nào."))];
     }
     function vReview() {
       const co = tt.buoi.some((b) => theo[b].length);

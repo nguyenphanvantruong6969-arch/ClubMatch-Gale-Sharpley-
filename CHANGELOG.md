@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-27 — VG3 (dọn giao diện cổng đăng ký; chỉ trình bày)
+
+- Không đụng `api*.py`, `i18n_errors.py`, payload `dk_*`, giao diện chính: mọi CSS mới nằm cuối `style.css` và chỉ nhắm `.dk-*`.
+- Quản trị: thanh trên bỏ chip «Giai đoạn n/6 · …» (chỉ ở màn quản trị; trang đầu, giáo viên, học sinh giữ chip); nhãn «Quản trị · …» là nhãn vai trò nhạt; thanh sáu bước gọn (số trong vòng tròn nhỏ ngay trước tên, bước xong nhạt, bước hiện tại nổi; ≤ 640 px một hàng, chỉ bước hiện tại hiện tên); thanh tab một hàng, cuộn ngang trong thanh; header điện thoại hai hàng.
+- Trang đầu: logo thật (`logo.png`) thay chữ «RB»; thẻ vai trò có «Vào →», chip đúng cỡ, hết khoảng trống giữa thẻ.
+- Bảng `.dk-bang`: dòng gọn, cột thao tác sát phải (tiêu đề ẩn «Thao tác» cho trình đọc màn hình), ≤ 720 px bảng cuộn ngang trong thẻ (không cuộn cả trang); form «Thêm phòng» một hàng; Duyệt CLB: ô «Chỉ tiêu» rộng 7rem, CLB Tự do hiện «Không giới hạn», trạng thái là chip.
+- Màn Xuất: bỏ dòng trống, thứ bậc chữ đúng. Học sinh: nút ↑ ↓ ✕ lớn hơn, bộ đếm là chip, nhãn NV cùng phông chữ thân, bỏ hộp «Đã đặt sẵn…» khi không có CLB nào để đặt huy chương, bảng xem lại cột «Buổi» hẹp + bài kiểm tra là chip. Giáo viên: ô «Phòng» hiện «Chọn phòng…» khi chưa có phòng trống.
+- Tệp: `style.css`, `js/dang_ky_nen.js`, `js/dang_ky_quan_tri.js`, `js/dang_ky_quan_tri_2.js`, `js/dang_ky_gv_hs.js`. Test mới: `tests/test_giao_dien_vg3.py` (5). Sửa 1 dòng `tests/test_giao_dien_dk8_l1.py` (màn quản trị không còn chip giai đoạn ở thanh trên).
+
 ## 2026-11-27 — VG1 vòng CI 1 (sửa 3 test đỏ trên CI sau L1–L4)
 
 - `i18n_errors.py` `dk_can_xac_nhan_pin`: bỏ chữ viết HOA nhấn mạnh (quy tắc `test_van_phong_tu_nhien`); `i18n_loi.js` sinh lại.

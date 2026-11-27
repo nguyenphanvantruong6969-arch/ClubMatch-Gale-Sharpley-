@@ -3801,8 +3801,21 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 #dkKq:empty { display: none; }
 #dkKq { margin: 0; }
 .dk-noidung h3 { font-size: 1.05rem; }
+.dk-noidung .dk-khung > h3 { font-size: 1.2rem; font-weight: 600; margin: 0; }          /* tiêu đề thẻ lớn hơn chữ thường (14–15 px) */
+.dk-noidung details > summary { font-size: 1.05rem; }
 .dk-noidung details > h3 { margin: 16px 0 8px; }
 .dk-noidung details > h3:first-of-type { margin-top: 12px; }
 .dk-noidung details > p.dk-phu { margin: 8px 0; }
-#dkKetQua { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
-#dkKetQua p { margin: 0; }
+#dkKetQua { display: flex; flex-direction: column; gap: 10px; }
+#dkKetQua p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+/* VG3-L2: ô chỉ tiêu vừa số, nút ↑ ↓ ✕ rõ hơn, nhãn NV cùng phông chữ thân, bảng xem lại gọn */
+.dk-app .dk-nhap.dk-so { width: 7rem; max-width: 7rem; }
+.dk-xep .btn { font-size: 1.25rem; line-height: 1; }
+.dk-xep .btn:disabled { opacity: 0.4; }
+.dk-nv { font-family: var(--font-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+.dk-hang-nut > h2 .dk-chip { vertical-align: middle; margin-left: 6px; }
+.dk-bang.dk-bang-tt { table-layout: auto; }
+.dk-bang-tt th:first-child, .dk-bang-tt td:first-child { width: 1%; white-space: nowrap; }
+.dk-bang-tt td { vertical-align: top; padding-top: 8px; padding-bottom: 8px; }
+.dk-tt-thi { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.dk-tt-thi .dk-nhom { gap: 8px 16px; }
