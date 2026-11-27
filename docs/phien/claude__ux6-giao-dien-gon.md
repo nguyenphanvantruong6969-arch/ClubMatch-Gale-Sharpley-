@@ -28,10 +28,10 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
       and a verdict (keep a/b/c · move to "?" · delete) as a table in this file (Decisions section, ≤ 40 lines).
 - [x] L1-b. Red test `tests/test_giao_dien_ux6_l1.py`; apply the verdicts; remove dead keys from vi + en in
       `i18n.js`; shorten the next-step banner (`js/17_viec_tiep_theo.js`). Commit `UX6-L1: …`.
-- [ ] L2-a. Red test `tests/test_giao_dien_ux6_l2.py`; Xếp CLB summary line replacing `#dropZone` after import,
+- [x] L2-a. Red test `tests/test_giao_dien_ux6_l2.py`; Xếp CLB summary line replacing `#dropZone` after import,
       [Đổi sổ], collapsible finished steps (blocking warning keeps its step open).
-- [ ] L2-b. `#statusStrip` "x/y đã có CLB" + bar + unplaced-count button (same handler as the banner).
-- [ ] L2-c. Kết quả: table out of its card, one toolbar above it. Commit `UX6-L2: …`. → `MILESTONE 1 READY`.
+- [x] L2-b. `#statusStrip` "x/y đã có CLB" + bar + unplaced-count button (same handler as the banner).
+- [x] L2-c. Kết quả: table out of its card, one toolbar above it. Commit `UX6-L2: …`. → `MILESTONE 1 READY`.
 - [ ] L3. Red test `tests/test_giao_dien_ux6_l3.py`; logo, icons (inline SVG + aria-label), one accent for
       segmented controls, monospace only for codes, sentence-case headers, CLB id under name, icon "Xoá" on
       hover+focus, `dang_ky.html` setup form. Commit `UX6-L3: …`. → `MILESTONE 2 READY`.
@@ -49,10 +49,11 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- Done so far: L1 committed (helpers 78 -> 25 in index.html; banner shortened; `.main` full width on every tab).
-- In progress: L2-a (Xếp CLB summary replacing drop zone).
-- Tests: `test_giao_dien_ux6_l1.py` (51), ux4_l4, ux5a_l2, ux5b_l3, ws_nhan, i18n_sync green. ux2/ux1 files green in the related run.
-- Open problems: none. Notes: `import_hint`, `gt2_tc_mo_ta`, `gt2_thu_mo_ta` deleted (Hick budget of Cách xếp forbids extra "?" controls there).
+- MILESTONE 1 READY (L1 + L2 done, 2026-11-27). Waiting for the checker (protocol §4).
+- Done: L1 (helpers 78 -> 25), L2 (summary line replaces #dropZone, step 2 collapses, strip progress bar + button, Kết quả toolbar).
+- Next: L3 only after the checker's PASS (or start it if Truong says continue; Truong approved the M1 screenshots).
+- Tests: ux6_l1 + ux6_l2 + 147-test related run green; ruff clean; kiem_nhanh 7/7; backend diff empty.
+- Open problems: none. Gotchas: tests waiting for `#dropZone` must use state="attached" (hidden once a Sổ exists).
 
 ## Decisions and gotchas (keep short)
 - UI only; data not returned by the API today is not added (show what exists).
@@ -77,6 +78,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
   cb_desc, cb_duong_hint, cb_duong_a_ghi, cb_duong_b_ghi, cb_buoc_trong x5, knGoiY (+ their JS lines).
 
 ## Files touched
+- L2: index.html, i18n.js, style.css, js/02_van_hanh.js, js/00_nen.js (ux2DiToi focuses btnRun when dropZone hidden), tests (ux6_l2 new; 67 files wait on dropZone "attached").
 - L1: index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js, tests (ux6_l1 new; copy asserts updated in
   ws_nhan, gt4, ws_luat_giao_dien, xoa_du_lieu, ux5a_l2, ux4_l2, ux5b_l3).
 
@@ -85,6 +87,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
+| 2026-11-27 | Sonnet | L2 done, MILESTONE 1 READY | xuat_theo_lop_hint "?" removed (Hick budget of #xuatPanel) |
 
 ## Coder first-session prompt
 ```
