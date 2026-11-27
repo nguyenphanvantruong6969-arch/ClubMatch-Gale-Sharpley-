@@ -49,11 +49,18 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- MILESTONE 1 READY (L1+L2, commit bf12e43). MILESTONE 2 READY (L3 done, 2026-11-27); waiting for the checker (protocol §4).
-- Tests: ux6_l1/l2/l3 + ~450 related UI tests green in batches; ruff clean; kiem_nhanh 7/7; backend diff empty.
-- Screenshots (before/after) sent to Truong in chat; Truong approved the M1 look.
-- Open for Truong: logo uses logo.png (kiosk.spec bundles only logo.png; logo.svg would need a spec change); "…" suffix on dialog buttons kept as convention.
-- Next: soat-ma pass on the diff, CI green on the head commit, checker for M1/M2.
+- L1, L2, L3 all implemented. MILESTONE 1 READY (bf12e43) and MILESTONE 2 READY (f392ae1) were written; checker NOT run yet.
+- Local HEAD a01a8fc is 1 commit ahead of origin (e28fe96): keeps "Kiểm tra lại" visible when step 2 collapses + doc count 450.
+  Truong interrupted that push and asked to wait; NOT pushed yet. Ask Truong before pushing.
+- CI run 1806 on e28fe96 was RED: (a) `#btnValidate` hidden by data-gon (fixed in a01a8fc), (b) `test_a13_12_tai_lieu` file
+  count 447 vs 450 (fixed in a01a8fc), (c) 3 more Linux failures (jobs 1/6, 2/6, 6/6; names unknown, get FAILED lines).
+- Local: 71-test rerun of the affected files green; ruff clean; kiem_nhanh 7/7; backend diff empty.
+
+## Next steps
+1. Ask Truong, then `git pull --rebase` and push a01a8fc; fetch CI failures with failed_only and tail_lines ~130 (summary
+   lines "FAILED ..." sit right before "N failed"); fix inside UX6 only; loop until Tests (rbda-kiosk) is green on head.
+2. soat-ma pass on the diff (report, fix only UX6 findings); list anything outside UX6 for Truong.
+3. Checker runs M1 and M2 (protocol section 4); then final CHANGELOG/TIEN_DO touch-ups.
 
 ## Decisions and gotchas (keep short)
 - UI only; data not returned by the API today is not added (show what exists).
@@ -78,6 +85,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
   cb_desc, cb_duong_hint, cb_duong_a_ghi, cb_duong_b_ghi, cb_buoc_trong x5, knGoiY (+ their JS lines).
 
 ## Files touched
+- CI fix: style.css (data-gon keeps btnValidate; #gtTim min-height), docs/ke_hoach/CLAUDE_CHI_TIET.md (tests count 450).
 - L2: index.html, i18n.js, style.css, js/02_van_hanh.js, js/00_nen.js (ux2DiToi focuses btnRun when dropZone hidden), tests (ux6_l2 new; 67 files wait on dropZone "attached").
 - L1: index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js, tests (ux6_l1 new; copy asserts updated in
   ws_nhan, gt4, ws_luat_giao_dien, xoa_du_lieu, ux5a_l2, ux4_l2, ux5b_l3).
@@ -87,6 +95,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
+| 2026-11-27 | Sonnet | Context handoff: CI red on e28fe96, fix a01a8fc committed locally, unpushed (Truong asked to wait) | next session continues |
 | 2026-11-27 | Sonnet | L3 done, MILESTONE 2 READY | CSS mask icons keep UX2 ::after hit areas intact |
 | 2026-11-27 | Sonnet | L2 done, MILESTONE 1 READY | xuat_theo_lop_hint "?" removed (Hick budget of #xuatPanel) |
 
