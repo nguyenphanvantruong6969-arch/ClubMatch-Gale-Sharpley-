@@ -40,7 +40,7 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- Done so far: 16 red repro tests (`tests/test_vg2_repro.py`), findings report, this plan. No product code changed.
+- Done so far: 16 red repro tests (`tests/test_vg2_repro.py`), findings report, this plan. Truong asked directly (2026-11-27): login accepts names/codes without diacritics, other fonts (NFKC/full-width), zero-width chars, any case; full-width PIN digits (`_chuan_khong_dau`, `_chuan_pin`, `_ung_vien` in `api_dang_ky.py`; exact-diacritic match first, else accent-free match with PIN deciding; lock key now accent-free). Tests `tests/test_vg2_dang_nhap_khong_dau.py` (18). Rest of L1 (escalating lock, `dk_gv_xoa`, trivial PIN D2) still open.
 - Open: defect 7 of VG1 (Truong's "Đặng Văn Nam 4") is probably finding 8 here (collapsed lists) — Truong to confirm; if it is not, it stays open.
 
 ## Next steps
@@ -48,8 +48,10 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 
 ## Files touched
 - tests/test_vg2_repro.py: repro tests (acceptance)
+- api_dang_ky.py, tests/test_vg2_dang_nhap_khong_dau.py: accent-free login (VG2-L1 part)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-27 | Sonnet | role-play test, repro tests, plan | planner role; Truong asked directly |
+| 2026-11-27 | Opus | accent-free / font-insensitive login, 18 tests | Truong asked directly |

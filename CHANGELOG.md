@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-27 — VG2-L1 (một phần: đăng nhập nhận tên/mã không dấu, khác font, khác hoa/thường)
+
+- `api_dang_ky.py`: hàm mới `_chuan_khong_dau` (NFKD, bỏ dấu tiếng Việt kể cả đ→d, bỏ ký tự ẩn Cf, chữ toàn khổ → thường, gộp khoảng trắng, casefold), `_chuan_pin` (NFKC: số toàn khổ «１２３４» thành ASCII; số Ả Rập vẫn `dk_pin_sai_dang` như VG1-L1), `_ung_vien`. `dk_dang_nhap` giáo viên/học sinh: khớp ĐÚNG dấu trước (`_chuan_ten`), không có mới khớp không dấu; nhiều người trùng tên không dấu thì PIN quyết định (đúng một người khớp PIN mới vào; hai người cùng PIN thì từ chối). `_dk_khoa_dn` dùng khoá không dấu: đổi dấu/font không né được bộ đếm khoá (hai người trùng tên không dấu dùng chung một bộ đếm). Mật khẩu quản trị không đổi.
+- Không đụng thuật toán xếp (bất biến 1 không liên quan). Khoá đếm sai đang tồn tại theo định dạng cũ (tên có dấu) bị bỏ qua sau khi cập nhật (tối đa 5 phút).
+- Test: `tests/test_vg2_dang_nhap_khong_dau.py` (18).
+
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 
 - `api_dang_ky.py`: cài đặt `bat_buoc_tu_do` (mặc định BẬT = hành vi cũ, bất biến 1). Khi BẬT: (a) `dk_chuyen_giai_doan` chặn vào «duyet» (và mọi cú nhảy đi ngang nó) nếu một buổi có CLB chờ duyệt/đã duyệt mà không có CLB Tự do (`dk_thieu_clb_tu_do`); (b) `dk_clb_duyet` từ chối, `dk_clb_xoa` (quản trị), `dk_clb_sua_sau_mo` (xoá / đổi buổi) không gỡ được CLB Tự do cuối của buổi còn CLB khác; (d) hết hạn tự đóng GV → Duyệt thì `dk_clb_duyet(..., "duyet")` CLB không Tự do bị từ chối khi buổi chưa có CLB Tự do sống. Kiểm cũ ở `_dk_kiem_dieu_kien_mo_hs` giữ làm lưới an toàn. Khi TẮT: các kiểm trên và cảnh báo `dk_khong_co_tu_do` bị bỏ qua.

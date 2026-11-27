@@ -61,6 +61,29 @@ def _chuan_ten(v) -> str:
     return " ".join(unicodedata.normalize("NFC", str(v or "")).split()).casefold()
 
 
+def _chuan_khong_dau(v) -> str:
+    """VG2-L1 (Truong): khoá so khớp lỏng khi đăng nhập: NFKC (chữ toàn khổ / «font» khác về chữ thường), bỏ ký tự ẩn (Cf),
+    bỏ dấu tiếng Việt (kể cả đ → d), gộp khoảng trắng, bỏ hoa/thường. «Đặng Văn Nam» = «DANG VAN NAM». KHÔNG dùng để lưu."""
+    s = unicodedata.normalize("NFKD", str(v or ""))
+    s = "".join(c for c in s if not unicodedata.combining(c) and unicodedata.category(c) != "Cf")
+    return " ".join(s.replace("đ", "d").replace("Đ", "d").split()).casefold()
+
+
+def _chuan_pin(v) -> str:
+    """VG2-L1: PIN gõ số toàn khổ («１２３４») thành chữ số ASCII (NFKC); bỏ khoảng trắng / ký tự ẩn. Số Ả Rập vẫn sai dạng (VG1-L1)."""
+    return "".join(c for c in unicodedata.normalize("NFKC", str(v or "")) if unicodedata.category(c) != "Cf").strip()
+
+
+def _ung_vien(dong, k_lay, ten):
+    """Khớp đúng (cùng dấu, `_chuan_ten`) trước; không có thì khớp không dấu (`_chuan_khong_dau`), có thể nhiều người."""
+    k = _chuan_ten(ten)
+    dung = [x for x in dong if _chuan_ten(k_lay(x)) == k]
+    if dung:
+        return dung
+    k = _chuan_khong_dau(ten)
+    return [x for x in dong if _chuan_khong_dau(k_lay(x)) == k]
+
+
 def _pin_moi() -> str:
     return "%04d" % secrets.randbelow(10000)
 
@@ -199,7 +222,7 @@ class DangKyMixin:
 
     @staticmethod
     def _dk_khoa_dn(vai, ten):
-        return "dn_sai:%s:%s" % (vai, _chuan_ten(ten)[:64])
+        return "dn_sai:%s:%s" % (vai, _chuan_khong_dau(ten)[:64])   # VG2-L1: không né khoá bằng cách đổi dấu / font
 
     def _dk_con_khoa(self, cur, khoa):
         """Số phút còn bị khoá (làm tròn lên) hoặc 0. Giá trị lưu: `số_lần_sai|hạn_khoá_ISO` (hạn rỗng = chưa khoá)."""
@@ -219,7 +242,7 @@ class DangKyMixin:
         khoa = self._dk_khoa_dn(vai, ten)
         ma = str(ma or "")
         if vai != QUAN_TRI:
-            ma = ma.strip()                          # VG1-L1 (D1): PIN gõ thừa dấu cách vẫn đúng
+            ma = _chuan_pin(ma)                      # VG1-L1 (D1) + VG2-L1: thừa dấu cách, số toàn khổ vẫn đúng
             if not re.fullmatch(r"[0-9]{4}", ma):       # sai dạng: chặn bằng mã riêng, KHÔNG tính một lần sai (chống khoá hộ)
                 return _fail(err("dk_pin_sai_dang"))
 
@@ -249,15 +272,17 @@ class DangKyMixin:
                 ok = _dung(ma_s, bytes.fromhex(self._dk_cai_dat(cur, "mk_bam")), bytes.fromhex(self._dk_cai_dat(cur, "mk_muoi")))
                 thong = {"ten": "Quản trị"}
             elif vai == GIAO_VIEN:
-                k = _chuan_ten(ten)
-                r = next((x for x in cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien") if _chuan_ten(x[1]) == k), None)
-                ok = bool(r) and _dung(ma_s, r[2], r[3])
+                uv = _ung_vien(cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien").fetchall(), lambda x: x[1], ten)
+                hop = [x for x in uv if _dung(ma_s, x[2], x[3])]   # trùng tên không dấu: PIN quyết định; hai người cùng PIN -> từ chối
+                r = hop[0] if len(hop) == 1 else None
+                ok = r is not None
                 thong = {"ten": r[1], "id": r[0]} if r else {}
             elif vai == HOC_SINH:
-                k = _chuan_ten(ten)
-                r = next((x for x in cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh")
-                          if _chuan_ten(x[0]) == k), None)
-                ok = bool(r) and _dung(ma_s, r[4], r[5])
+                uv = _ung_vien(cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh").fetchall(),
+                               lambda x: x[0], ten)
+                hop = [x for x in uv if _dung(ma_s, x[4], x[5])]
+                r = hop[0] if len(hop) == 1 else None
+                ok = r is not None
                 thong = {"ten": r[1], "id": r[0], "lop": r[2], "khoi": r[3]} if r else {}
             else:
                 ok, thong = False, {}
