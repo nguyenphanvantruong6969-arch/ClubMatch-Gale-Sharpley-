@@ -40,17 +40,10 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- Done: L1–L4 code (`638b556`), VG1 tip `80dd5cf` already merged. CI debug session (2026-11-27, Opus) fixed the 5 red CI tests of run 46023005696
-  (dk3_cong test_10 → `xac_nhan=True`; dkl_giao_vien test_3 → approve a Tự do club in T2 first; `dk_can_xac_nhan_pin` no CAPS emphasis (vi/en + JS confirm);
-  CLAUDE_CHI_TIET code map 453 test files) and 3 bugs found in review of the VG2 diff: review-screen «← Quay lại» went to a skipped exam screen
-  (then «Tiếp» jumped to session 1) — new regression lines in `test_giao_dien_vg2.py`; header `<h1>` only for admin (teacher/student had two `<h1>`);
-  session purge iterates `list(ds.items())` (read threads pop concurrently).
-- Accent-free login (Truong asked directly, Opus, 2026-11-27): names/codes without diacritics, other fonts (NFKC/full-width), zero-width chars, any case,
-  full-width PIN digits; exact-diacritic match first, else accent-free match with the PIN deciding; lock key accent-free (`_chuan_khong_dau`, `_chuan_pin`,
-  `_ung_vien` in `api_dang_ky.py`; `tests/test_vg2_dang_nhap_khong_dau.py` 18).
-- `kiem_nhanh.py` 7/7; repro 16/16; VG2 UI 6/6; related dk/vg tests green (UI files must run sequentially — module fixtures are order-dependent).
-- Not implemented on purpose (low): #21, #27 (student who logs in before opening already sees «Chưa mở đăng ký»).
-- No checker session was spawned (CLAUDE.md rule 10; Truong asked this session to fix directly).
+- Done: L1–L4 code, accent-free login, CI-debug fixes (see Session log). VG1 tip `892f55d` merged (commit `2d5a6e0`; kept VG2's side for 3 UI tests + code map 454).
+- Truong (2026-11-27): NO checker / review needed; done = CI green + bugs solved. Checker step skipped on purpose.
+- After merge: `kiem_nhanh.py` 7/7; repro + accent-free + vg1 + i18n/doc tests 86 green; UI tests vg2 6, dk3_cong 16, dk4_mo_khoa 1, dkl_giao_vien 3 green.
+- Next: push, read CI (Tests + Build Windows) for head; fix until both green. Open (low, for Truong): #21, #27, 2–3 ms login timing gap.
 
 ## Decisions added in this session (safe defaults)
 - Old tests were edited where the contract changed on purpose: school code ≥ 4 chars (`TR1`→`TRU1`, `T`→`TRUONG`), trivial PINs refused for teacher self-register (`1234`→`7391`, `5678`→`5903`), lists open by default (tests set `parentElement.open = true` instead of toggling), confirm dialogs (tests `pg.once("dialog", accept)`), student wizard skips empty steps (dk8_l5 tests add a Tuyển chọn club so the exam step exists).
