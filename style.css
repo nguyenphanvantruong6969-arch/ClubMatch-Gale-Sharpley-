@@ -3762,8 +3762,7 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .ux6-tom-dau { color: var(--moss); font-weight: 700; }
 .ux6-tom-chu { font-weight: 600; }
 #panelCanhBao[data-gon="1"] .hint-text,
-#panelCanhBao[data-gon="1"] #healthChiTiet,
-#panelCanhBao[data-gon="1"] #btnValidate { display: none; }
+#panelCanhBao[data-gon="1"] #healthChiTiet { display: none; }   /* "Kiểm tra lại" vẫn hiện: việc kiểm lại không bị gập mất */
 #panelCanhBao[data-gon="1"] .panel-head { margin-bottom: 4px; }
 .status-strip { flex-wrap: wrap; }
 .ux6-tien-do { flex-basis: 100%; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
