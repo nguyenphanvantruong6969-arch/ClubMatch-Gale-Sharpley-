@@ -51,6 +51,8 @@ def test_nap_so_huy_chuong_che_do_tat_canh_bao_diem_gop_mot_dong(mo_trang):  # n
     page, api, goc, loi = mo_trang()
     _tha(page, SO_FA)
     page.locator("#btnImportAll").click()
+    # VG2-L5: chế độ huy chương tắt -> hỏi lại một lần; "Vẫn nhập" giữ hành vi cũ
+    page.locator("#xoaKemBar .btn-primary").click()
     page.wait_for_selector(".queue-row.is-done")
     page.wait_for_selector("#importWarnings:not([hidden])")
     dong = page.locator("#importWarnings .canh-bao-tom-tat")

@@ -500,7 +500,7 @@ class NhapDuLieuMixin:
             # (chỉ thông điệp; không đổi gì được lưu hay cách chạy).
             if not du_lieu["loi"] and not dung_fa_daa(self._luat_nghiem()):
                 co_loai = (not dung_chia_loai(self._luat_nghiem())      # MT2-R1: chia theo loại thì cột Loại được nạp
-                           and any("loai" in c for c in du_lieu["clubs"]))
+                           and any(c.get("loai") for c in du_lieu["clubs"]))   # VG2-L5: cột Loại để TRỐNG (sổ mẫu) không tính
                 if du_lieu.get("co_cot_huy_chuong") or co_loai:
                     kq["canh_bao"].append(err("so_nhap_canh_bao_huy_chuong_che_do_tat"))
             # Workspace chưa bật điểm Wharton mà sổ có cột "Điểm W k": nói trước khi bấm Nhập

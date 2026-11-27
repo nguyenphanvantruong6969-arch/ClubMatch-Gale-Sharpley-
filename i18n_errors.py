@@ -660,8 +660,8 @@ MESSAGES = {
         "en": "This workspace doesn't use FA-DAA yet: the type / pass mark / minimum / room capacity columns of {n} club(s) were skipped and not saved.",
     },
     "so_nhap_canh_bao_huy_chuong_che_do_tat": {
-        "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
-        "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off. Turn it on in Settings, or the medals will not be used.",
+        "vi": "Sổ này có cột Huy chương / Loại (ví dụ sổ xuất từ cổng đăng ký) nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bấm \"Bật chế độ huy chương\" (hoặc bật ở Cài đặt) TRƯỚC khi nhập. Nếu vẫn nhập lúc chế độ tắt, cột Loại bị bỏ qua và lần xếp có thể bị chặn vì thiếu điểm quyết tâm; khi đó phải bật chế độ rồi nhập lại sổ.",
+        "en": "This book has Medal / Type columns (for example a book exported from the registration portal) but the \"Allocate by {slot_l} type and medals\" mode is off. Click \"Turn on medal mode\" (or turn it on in Settings) BEFORE importing. If you import while the mode is off, the Type column is skipped and the allocation may be blocked for missing commitment points; you would then have to turn the mode on and import the book again.",
     },
     "fa_giu_cho_bo_qua": {
         "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} dòng giữ chỗ trong sổ đã được bỏ qua, không lưu.",
