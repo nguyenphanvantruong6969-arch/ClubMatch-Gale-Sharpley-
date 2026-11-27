@@ -6,7 +6,7 @@
 
 ### Đã chạy
 - `tests/test_va_gap_tai_hien.py tests/test_vg1_cong_dang_nhap.py tests/test_vg1_tu_do.py tests/test_dk4_l0b_khoa_dang_nhap.py`: xanh.
-- Mọi `tests/test_dk*.py`, `test_fa_*`, `test_vg1_*`, `test_dang_ky*` (trừ `test_vg2_tai_hien.py`, không thuộc VG1, không có UI):
+- Mọi `tests/test_dk*.py`, `test_fa_*`, `test_vg1_*`, `test_dang_ky*` (trừ `test_vg2_repro.py`, không thuộc VG1, không có UI):
   **2511 đạt, 2 HỎNG** (xem lỗi 2).
 - Chromium: `tests/test_giao_dien_vg1.py` + `tests/test_giao_dien_dk8_l2.py`: 14 đạt.
 - `kiem_nhanh.py`: 7/7 ĐẠT (gồm trùng khít 3 bộ × 5 seed → bất biến 1 giữ). `ruff check`: sạch.

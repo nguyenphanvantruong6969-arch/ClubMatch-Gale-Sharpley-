@@ -6,7 +6,7 @@
 ## Feature / goal
 **VG2 — fixes from the role-play test of the registration portal (dk_*), size M.** Source: `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` (findings 1,3,4,5,6,7,8,10,11,12,13, round-2 UI findings 15–19, round-3 stress/simplicity findings 21–27).
 New item code (Truong, 2026-11-27); add a stub row to `SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` ("Phụ lục vá gấp", next to VG1).
-Acceptance = `tests/test_vg2_tai_hien.py` (16 red repro tests) + one Chromium file `tests/test_giao_dien_vg2.py` (L3). Findings 2 and 9 were already fixed by VG1-L2.
+Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file `tests/test_giao_dien_vg2.py` (L3). Findings 2 and 9 were already fixed by VG1-L2.
 **START CONDITION:** VG2 touches the same functions as VG1 (L1 gate, L2 PIN, L3 stage back, L4 free club). Branch from the TIP of
 `origin/claude/charming-cray-2izyn6` ONLY after its branch file "Current state" says VG1 CI is green. If not green yet: schedule a wake-up
 (`send_later` 20 min) and re-check; do not start earlier (merge conflicts).
@@ -40,14 +40,14 @@ Acceptance = `tests/test_vg2_tai_hien.py` (16 red repro tests) + one Chromium fi
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- Done so far: 16 red repro tests (`tests/test_vg2_tai_hien.py`), findings report, this plan. No product code changed.
+- Done so far: 16 red repro tests (`tests/test_vg2_repro.py`), findings report, this plan. No product code changed.
 - Open: defect 7 of VG1 (Truong's "Đặng Văn Nam 4") is probably finding 8 here (collapsed lists) — Truong to confirm; if it is not, it stays open.
 
 ## Next steps
 1. Follow `docs/phien/VG2_GIAO_THUC.md`.
 
 ## Files touched
-- tests/test_vg2_tai_hien.py: repro tests (acceptance)
+- tests/test_vg2_repro.py: repro tests (acceptance)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
