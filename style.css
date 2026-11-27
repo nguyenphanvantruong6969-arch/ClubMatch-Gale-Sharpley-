@@ -3834,3 +3834,4 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 }
 #ux1aNangCao > summary.ux6-mui-ten, .club-them > summary.ux6-mui-ten { padding-right: 32px; }
 #adminClubTableBody td:first-child { font-family: var(--font-body); }   /* ô đầu của bảng CLB giờ là Tên; mã máy nằm trong .ux6-ma-clb */
+#gtTim { min-height: 46px; }   /* ô tra cứu to ở đầu thẻ Kết quả: không để làm tròn ảnh hưởng mức 44 px của UX2 */
