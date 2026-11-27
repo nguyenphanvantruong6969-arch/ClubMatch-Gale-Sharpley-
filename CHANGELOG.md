@@ -13,6 +13,11 @@
 - Không đụng thuật toán xếp (bất biến 1 không liên quan). Khoá đếm sai đang tồn tại theo định dạng cũ (tên có dấu) bị bỏ qua sau khi cập nhật (tối đa 5 phút).
 - Soát (`soat-ma`, đã tái hiện): `_dk_khoa_dn` ghép cả `ten` vào khoá đếm của quản trị, gọi API với `ten` khác nhau mỗi lần thì đoán mật khẩu quản trị không bao giờ bị khoá (lỗi có từ trước). Nay quản trị dùng một bộ đếm duy nhất.
 - Test: `tests/test_vg2_dang_nhap_khong_dau.py` (19).
+## 2026-11-27 — VG1 vòng CI 1 (sửa 3 test đỏ trên CI sau L1–L4)
+
+- `i18n_errors.py` `dk_can_xac_nhan_pin`: bỏ chữ viết HOA nhấn mạnh (quy tắc `test_van_phong_tu_nhien`); `i18n_loi.js` sinh lại.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 447 → 451 (`test_a13_12_tai_lieu`).
+- `tests/test_giao_dien_dk4_mo_khoa.py`: PIN sai «xxxx» đổi thành PIN sai ĐÚNG DẠNG 4 chữ số (như L1; ý nghĩa test giữ nguyên).
 
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 
