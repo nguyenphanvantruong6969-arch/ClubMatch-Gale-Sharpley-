@@ -28,7 +28,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("dk5ui") / "app.db"))
-    _ok(api.dk_khoi_tao(MK, "TR5", ["T2"], [9, 12]))
+    _ok(api.dk_khoi_tao(MK, "TRUONG5", ["T2"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", MK))["token"]
     for t, sc in (("P1", 40), ("P2", 30), ("P3", 20)):
         _ok(api.dk_phong_luu(qt, t, sc))
@@ -89,6 +89,7 @@ def test_2_quan_tri_duyet_va_mo_cho_hoc_sinh(cong):
     pg = cong
     _vao_quan_tri(pg)
     pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
+    pg.once("dialog", lambda d: d.accept())      # VG2-L3: hỏi xác nhận
     pg.get_by_role("button", name="Đóng ngay").click()
     pg.wait_for_selector("text=Quản trị · Duyệt CLB")
     for ten in ("Tự do UI", "Cờ vua", "Robot"):

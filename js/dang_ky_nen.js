@@ -53,6 +53,7 @@
 
   /* Chạy một thao tác của nút: khoá nút khi bận (chống bấm đúp), hiện lỗi/ok ở #dkThongBao; DK8-L5: nút báo đang lưu / xong / lỗi. */
   DK.chay = async function (nut, ham, okChu) {
+    DK.thongBao("");                                  // VG2-L3: lỗi của lần trước không ở lại sau một lần lưu thành công
     if (nut) nut.disabled = true;
     try {
       const r = await DK.phanHoi(nut, ham);
@@ -131,7 +132,7 @@
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
     return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
-      vaiTro ? [h("span.dk-gian"), h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
+      vaiTro ? [h("span.dk-gian"), DK.S.vai === "quan_tri" ? h("h1.dk-vai", { style: "font-size:inherit;margin:0" }, vaiTro) : h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
         DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc())] : null));
   };
@@ -183,6 +184,7 @@
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },
+      h("p.dk-phu", {}, "Mật khẩu và mã trường: ít nhất 4 ký tự. Mật khẩu không khôi phục được trong ứng dụng (quên thì chạy QUEN_MAT_KHAU.bat). Giáo viên dùng mã trường để tự tạo tài khoản. «Buổi» là các buổi sinh hoạt CLB trong tuần; «Khối» là dải khối lớp (ví dụ 6 đến 12)."),
       DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password" }),
       DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma"),
       DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6" }),

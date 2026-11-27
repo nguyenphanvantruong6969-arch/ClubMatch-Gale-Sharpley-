@@ -77,7 +77,7 @@ def test_l2_xuat_phieu_pin_hoi_xac_nhan_tai_tep_va_pin_moi_dang_nhap_duoc(vao):
     pg.select_option("#dkPinPhamVi", "tat_ca")
     with pg.expect_download() as dl:
         pg.click("#dkPinXuat")
-    assert pg.hop and "ĐẶT LẠI PIN của 3 người" in pg.hop[0]
+    assert pg.hop and "đặt lại PIN của 3 người" in pg.hop[0]
     wb = openpyxl.load_workbook(io.BytesIO(open(dl.value.path(), "rb").read()))
     assert wb.sheetnames == ["Học sinh", "Giáo viên"]
     pin_h1 = {r[0].value: r[3].value for r in wb["Học sinh"].iter_rows(min_row=2)}["H1"]

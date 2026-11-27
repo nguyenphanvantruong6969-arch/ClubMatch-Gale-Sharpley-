@@ -56,7 +56,7 @@ def test_1_khoi_tao_qua_giao_dien_va_vao_quan_tri(cong):
     pg.wait_for_selector("input[name=mk]")
     _mot_vang(pg)
     pg.fill("input[name=mk]", "matkhau")
-    pg.fill("input[name=ma]", "TR1")
+    pg.fill("input[name=ma]", "TRU1")
     pg.fill("input[name=buoi]", "T2, T3")
     pg.get_by_role("button", name="Thiết lập cổng").click()
     pg.wait_for_selector("text=Chọn vai trò")
@@ -257,7 +257,7 @@ def test_10_giao_vien_ba_buoc_mot_nut_vang(cong):
     pg = cong
     api = pg.api
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
-    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi"))
+    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi", xac_nhan=True))     # VG1-L3: lùi qua nguyện vọng đã gửi phải xác nhận
     _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     _dang_nhap(pg, "giao_vien", "Cô An", pg.api_pin["Cô An"])
     pg.wait_for_selector("text=Bước 1/3")

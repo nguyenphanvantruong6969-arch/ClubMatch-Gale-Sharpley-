@@ -55,7 +55,7 @@ needs Truong's screenshot. **Out of scope until then; do not guess.**
 ## Current state
 - L1–L4 coded and pushed (commits `VG1-L1..L4`); 8 repro tests green + `tests/test_vg1_*.py`, `tests/test_giao_dien_vg1.py`. `kiem_nhanh.py` 7/7.
 - Checker session `session_01VfPzNtE9d7La8pmUAfoyyr` (Opus) asked `REVIEW 1 fea0230..HEAD` (covers both milestones). Waiting for `CHECKER REPORT`.
-- Next: on NO BUGS -> §4 CI loop (tests.yml + Build Windows). Note: another session pushed `tests/test_vg2_tai_hien.py` (16 RED repro tests for VG2) onto this branch: they will make CI red; they are NOT VG1 (see `docs/phien/claude__vg2-ra-soat-theo-vai.md`).
+- Next: on NO BUGS -> §4 CI loop (tests.yml + Build Windows). The 16 RED VG2 repro tests (`tests/test_vg2_tai_hien.py`) were REMOVED from this branch (they live on `claude/vg2-ra-soat-theo-vai` as `tests/test_vg2_repro.py`); they are NOT VG1 (see `docs/phien/claude__vg2-ra-soat-theo-vai.md`).
 - Open: defect 7 (Đặng Văn Nam 4) untouched.
 
 ## Decisions added by coder (safe defaults)

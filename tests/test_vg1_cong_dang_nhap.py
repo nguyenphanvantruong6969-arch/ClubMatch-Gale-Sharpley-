@@ -18,7 +18,7 @@ def test_ten_trung_sau_chuan_hoa_la_trung(cd):
     ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))
     r = ok(api.dk_gv_tao_hang_loat(qt, "cô  AN"))
     assert r["da_tao"] == [] and r["bo_qua"] == ["cô  AN"]
-    assert ma(api.dk_gv_tu_dang_ky("TRUONG1", "CÔ AN", "1234")) == "dk_gv_trung"
+    assert ma(api.dk_gv_tu_dang_ky("TRUONG1", "CÔ AN", "7391")) == "dk_gv_trung"
 
 
 def test_ma_hs_trung_sau_chuan_hoa_giu_cach_viet_goc(cd):

@@ -48,10 +48,10 @@ def _dung_san(api, qt):
 
 def test_khoi_tao_mot_lan_va_dang_nhap_khong_lo(api):
     assert ma(api.dk_dang_nhap("quan_tri", "", "x")) == "dk_chua_khoi_tao"
-    ok(api.dk_khoi_tao("matkhau", "T"))
-    assert ma(api.dk_khoi_tao("matkhau", "T")) == "dk_da_khoi_tao"
+    ok(api.dk_khoi_tao("matkhau", "TRUONG"))
+    assert ma(api.dk_khoi_tao("matkhau", "TRUONG")) == "dk_da_khoi_tao"
     assert ma(api.dk_dang_nhap("quan_tri", "", "sai")) == "dk_sai_dang_nhap"
-    assert ma(api.dk_dang_nhap("giao_vien", "ai-do", "1234")) == "dk_sai_dang_nhap"
+    assert ma(api.dk_dang_nhap("giao_vien", "ai-do", "7391")) == "dk_sai_dang_nhap"
     c = sqlite3.connect(api.db_path)
     luu = " ".join(str(v) for r in c.execute("SELECT * FROM dk_cai_dat") for v in r)
     c.close()
@@ -60,10 +60,10 @@ def test_khoi_tao_mot_lan_va_dang_nhap_khong_lo(api):
 
 def test_gv_tu_dang_ky_dung_ma_truong_va_dung_giai_doan(cd):
     api, qt = cd
-    assert ma(api.dk_gv_tu_dang_ky("SAI", "Cô X", "1234")) == "dk_ma_truong_sai"
+    assert ma(api.dk_gv_tu_dang_ky("SAI", "Cô X", "7391")) == "dk_ma_truong_sai"
     assert ma(api.dk_gv_tu_dang_ky("TRUONG1", "Cô X", "12")) == "dk_pin_sai_dang"
-    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô X", "1234"))
-    assert ma(api.dk_gv_tu_dang_ky("TRUONG1", "Cô X", "1234")) == "dk_gv_trung"
+    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô X", "7391"))
+    assert ma(api.dk_gv_tu_dang_ky("TRUONG1", "Cô X", "7391")) == "dk_gv_trung"
     gv = ok(api.dk_gv_danh_sach(qt))
     assert gv[0]["cach_tao"] == "tu_dang_ky"
     assert "pin" not in str(gv)

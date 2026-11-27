@@ -33,25 +33,48 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - D6 Simplicity (findings 23–27, 21–22): student wizard shows ONLY the steps that apply per session: no wishes → one line «Em không học buổi này» and jump to the next session (no medal/exam screens); medal screen only if ≥ 1 non-Tự do club is chosen; exam screen only if ≥ 1 Tuyển chọn club is chosen; the review screen still lists every session. Server rules unchanged (`dk_hs_luu` payload identical → invariant 1). `dk_sai_giai_doan` message uses the stage's Vietnamese name (map `phan` → «Chuẩn bị / Giáo viên đăng ký / Duyệt CLB / Học sinh đăng ký / Nhập điểm / Xuất» in the i18n layer, vi + en). «hạt giống» wording replaced (technical number kept under a collapsed «Chi tiết kỹ thuật»); «NV1» gets a one-line legend «NV = nguyện vọng». First-run screen: helper text under each field. Status text: hide «đã có PIN» when 0 students; disable (not hide) the student login form when the stage is «Chưa mở». Lock table (21): purge rows older than the lock window on each login; unknown ids share one counter. Sessions (22): purge expired tokens on each login.
 
 ## Plan (lots; ✱ = must-ship)
-- [ ] ✱L1 Accounts (D1–D3): `dk_dang_nhap` escalating lock, `dk_gv_xoa`, `TOI_DA_GV`, `_pin_moi` + `dk_pin_de_doan`, `dk_khoi_tao` code length. Tests: repro tests 1,3,4 + `test_dk4_l0b_khoa_dang_nhap.py` stays green.
-- [ ] ✱L2 Integrity (D4): repro tests 2,5 + room/student/list/score warning; related: `test_dk3_api.py`, `test_dk4_chot_va_xep.py`.
-- [ ] ✱L3 UI + i18n (D5): codes appended at END of `i18n_errors.py` then `python tao_i18n_js.py`; Chromium `tests/test_giao_dien_vg2.py` (one shared page fixture: lists visible after Excel import; confirm dialog on «Đóng ngay» both accept/cancel; «Xoá» teacher).
-- [ ] L4 Simplicity (D6): student wizard skips empty/irrelevant steps (Chromium test: 5 sessions, 1 club → ≤ 6 screens, payload to `dk_hs_luu` byte-identical to the long path), plain-language texts, first-run help, i18n `vg2_`; purge of lock rows/tokens in L1 files. Optional if budget is short: first-run help and status-text polish.
+- [x] ✱L1 Accounts (D1–D3): `dk_dang_nhap` escalating lock, `dk_gv_xoa`, `TOI_DA_GV`, `_pin_moi` + `dk_pin_de_doan`, `dk_khoi_tao` code length. Tests: repro tests 1,3,4 + `test_dk4_l0b_khoa_dang_nhap.py` stays green.
+- [x] ✱L2 Integrity (D4): repro tests 2,5 + room/student/list/score warning; related: `test_dk3_api.py`, `test_dk4_chot_va_xep.py`.
+- [x] ✱L3 UI + i18n (D5): codes appended at END of `i18n_errors.py` then `python tao_i18n_js.py`; Chromium `tests/test_giao_dien_vg2.py` (one shared page fixture: lists visible after Excel import; confirm dialog on «Đóng ngay» both accept/cancel; «Xoá» teacher).
+- [x] L4 Simplicity (student wizard + texts done; #21 lock table for unknown ids and #27 disabled student login form NOT done) (D6): student wizard skips empty/irrelevant steps (Chromium test: 5 sessions, 1 club → ≤ 6 screens, payload to `dk_hs_luu` byte-identical to the long path), plain-language texts, first-run help, i18n `vg2_`; purge of lock rows/tokens in L1 files. Optional if budget is short: first-run help and status-text polish.
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- Done so far: 16 red repro tests (`tests/test_vg2_repro.py`), findings report, this plan. Truong asked directly (2026-11-27): login accepts names/codes without diacritics, other fonts (NFKC/full-width), zero-width chars, any case; full-width PIN digits (`_chuan_khong_dau`, `_chuan_pin`, `_ung_vien` in `api_dang_ky.py`; exact-diacritic match first, else accent-free match with PIN deciding; lock key now accent-free). Tests `tests/test_vg2_dang_nhap_khong_dau.py` (18). Rest of L1 (escalating lock, `dk_gv_xoa`, trivial PIN D2) still open.
-- Open: defect 7 of VG1 (Truong's "Đặng Văn Nam 4") is probably finding 8 here (collapsed lists) — Truong to confirm; if it is not, it stays open.
+- Done: L1–L4 code (`638b556`), VG1 tip `80dd5cf` already merged. CI debug session (2026-11-27, Opus) fixed the 5 red CI tests of run 46023005696
+  (dk3_cong test_10 → `xac_nhan=True`; dkl_giao_vien test_3 → approve a Tự do club in T2 first; `dk_can_xac_nhan_pin` no CAPS emphasis (vi/en + JS confirm);
+  CLAUDE_CHI_TIET code map 453 test files) and 3 bugs found in review of the VG2 diff: review-screen «← Quay lại» went to a skipped exam screen
+  (then «Tiếp» jumped to session 1) — new regression lines in `test_giao_dien_vg2.py`; header `<h1>` only for admin (teacher/student had two `<h1>`);
+  session purge iterates `list(ds.items())` (read threads pop concurrently).
+- Accent-free login (Truong asked directly, Opus, 2026-11-27): names/codes without diacritics, other fonts (NFKC/full-width), zero-width chars, any case,
+  full-width PIN digits; exact-diacritic match first, else accent-free match with the PIN deciding; lock key accent-free (`_chuan_khong_dau`, `_chuan_pin`,
+  `_ung_vien` in `api_dang_ky.py`; `tests/test_vg2_dang_nhap_khong_dau.py` 18).
+- `kiem_nhanh.py` 7/7; repro 16/16; VG2 UI 6/6; related dk/vg tests green (UI files must run sequentially — module fixtures are order-dependent).
+- Not implemented on purpose (low): #21, #27 (student who logs in before opening already sees «Chưa mở đăng ký»).
+- No checker session was spawned (CLAUDE.md rule 10; Truong asked this session to fix directly).
 
-## Next steps
-1. Follow `docs/phien/VG2_GIAO_THUC.md`.
+## Decisions added in this session (safe defaults)
+- Old tests were edited where the contract changed on purpose: school code ≥ 4 chars (`TR1`→`TRU1`, `T`→`TRUONG`), trivial PINs refused for teacher self-register (`1234`→`7391`, `5678`→`5903`), lists open by default (tests set `parentElement.open = true` instead of toggling), confirm dialogs (tests `pg.once("dialog", accept)`), student wizard skips empty steps (dk8_l5 tests add a Tuyển chọn club so the exam step exists).
+- `dk_sai_giai_doan` shows Vietnamese stage names via `TEN_GD_VI` in `_Loi.__init__` (English text also gets the Vietnamese name; acceptable).
+- Admin lock uses `dn_bac:quan_tri` (level doubles 1,2,4, capped at 5 = `PHUT_KHOA`); a correct password is still refused during a lock.
+- `i18n_errors.py` rule `chu_cam` forbids «Em»/«You»: `dk_mat_diem` is worded without a pronoun.
+
+## Next steps (ordered)
+1. `git fetch origin && git merge origin/claude/charming-cray-2izyn6` (VG1 tip); fix any conflicts (take VG1's side for `docs/phien/claude__charming-cray-2izyn6*.md`); re-run `tests/test_vg2_repro.py tests/test_giao_dien_vg2.py` and `kiem_nhanh.py`.
+2. Spawn ONE checker (Opus, `claude-opus-5-5`, prompt = `VG1_GIAO_THUC.md` §5 renamed to VG2) with `REVIEW 1 18c63d2..HEAD`; fix findings (max 2 rounds each).
+3. CI loop per `VG1_GIAO_THUC.md` §4: read GitHub Actions `tests.yml` (coverage ≥ 85 %) and `Build Windows executable (rbda-kiosk)` for the head commit, fix, push, repeat until both green. Never skip/loosen a test.
+4. Optional: #21 and #27; Truong's open question: how will students reach the portal (server listens on `127.0.0.1` only)?
 
 ## Files touched
-- tests/test_vg2_repro.py: repro tests (acceptance)
-- api_dang_ky.py, tests/test_vg2_dang_nhap_khong_dau.py: accent-free login (VG2-L1 part)
+- tests/test_vg2_repro.py: repro tests (acceptance); tests/test_giao_dien_vg2.py: Chromium tests (new); tests/test_vg2_dang_nhap_khong_dau.py (accent-free login)
+- api_dang_ky.py, i18n_errors.py, i18n_loi.js: L1–L2 backend, new codes `dk_pin_de_doan`, `dk_gv_con_clb`, `dk_gv_qua_nhieu`, `dk_nv_sai_dang`, `dk_mat_diem`
+- js/dang_ky_nen.js, js/dang_ky_quan_tri.js, js/dang_ky_quan_tri_2.js, js/dang_ky_gv_hs.js, style.css: L3–L4 UI
+- CHANGELOG.md, docs/ke_hoach/TIEN_DO.md: VG2 entries
+- ~20 older tests: adapted to the new contract (see Decisions)
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-27 | Sonnet | role-play test, repro tests, plan | planner role; Truong asked directly |
-| 2026-11-27 | Opus | accent-free / font-insensitive login, 18 tests | Truong asked directly |
+| 2026-11-27 | Sonnet | implemented VG2 L1–L4, tests, CHANGELOG/TIEN_DO, pushed `638b556`; handoff at context limit | checker + CI still pending |
+| 2026-11-27 | Opus | CI debug: 5 red CI tests fixed, 3 review bugs fixed (+ regression test), CHANGELOG/TIEN_DO | Build Windows workflow is manual-only (publishes a release): not triggered |
+| 2026-11-27 | Opus | accent-free / font-insensitive login, 18 tests, merged with remote L1–L4 | Truong asked directly |
