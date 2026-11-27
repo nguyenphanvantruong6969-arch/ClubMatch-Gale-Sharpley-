@@ -11,7 +11,8 @@
 
 - `api_dang_ky.py`: hàm mới `_chuan_khong_dau` (NFKD, bỏ dấu tiếng Việt kể cả đ→d, bỏ ký tự ẩn Cf, chữ toàn khổ → thường, gộp khoảng trắng, casefold), `_chuan_pin` (NFKC: số toàn khổ «１２３４» thành ASCII; số Ả Rập vẫn `dk_pin_sai_dang` như VG1-L1), `_ung_vien`. `dk_dang_nhap` giáo viên/học sinh: khớp ĐÚNG dấu trước (`_chuan_ten`), không có mới khớp không dấu; nhiều người trùng tên không dấu thì PIN quyết định (đúng một người khớp PIN mới vào; hai người cùng PIN thì từ chối). `_dk_khoa_dn` dùng khoá không dấu: đổi dấu/font không né được bộ đếm khoá (hai người trùng tên không dấu dùng chung một bộ đếm). Mật khẩu quản trị không đổi.
 - Không đụng thuật toán xếp (bất biến 1 không liên quan). Khoá đếm sai đang tồn tại theo định dạng cũ (tên có dấu) bị bỏ qua sau khi cập nhật (tối đa 5 phút).
-- Test: `tests/test_vg2_dang_nhap_khong_dau.py` (18).
+- Soát (`soat-ma`, đã tái hiện): `_dk_khoa_dn` ghép cả `ten` vào khoá đếm của quản trị, gọi API với `ten` khác nhau mỗi lần thì đoán mật khẩu quản trị không bao giờ bị khoá (lỗi có từ trước). Nay quản trị dùng một bộ đếm duy nhất.
+- Test: `tests/test_vg2_dang_nhap_khong_dau.py` (19).
 
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 

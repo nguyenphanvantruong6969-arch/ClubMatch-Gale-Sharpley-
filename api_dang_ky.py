@@ -239,6 +239,8 @@ class DangKyMixin:
 
     @staticmethod
     def _dk_khoa_dn(vai, ten):
+        if vai == QUAN_TRI:                              # soát VG2-L1: quản trị không dùng tên -> một bộ đếm duy nhất (đổi `ten` không né khoá)
+            ten = ""
         return "dn_sai:%s:%s" % (vai, _chuan_khong_dau(ten)[:64])   # VG2-L1: không né khoá bằng cách đổi dấu / font
 
     def _dk_con_khoa(self, cur, khoa):

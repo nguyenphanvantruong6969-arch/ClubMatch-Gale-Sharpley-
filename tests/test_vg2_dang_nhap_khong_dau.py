@@ -75,3 +75,12 @@ def test_hs_ma_khac_cach_viet(cd):
         pin = ok(api.dk_hs_dat_lai_pin(qt, "HS001"))["pin"]
     for cach_go in ("hs001", " HS001 ", _toan_kho("HS001"), "HS\u200b001"):
         assert ok(api.dk_dang_nhap("hoc_sinh", cach_go, pin))["id"] == "HS001"
+
+
+def test_khoa_quan_tri_khong_ne_duoc_bang_truong_ten(cd):
+    """Soát VG2-L1: quản trị không dùng tên; gửi `ten` khác nhau mỗi lần qua API không được né bộ đếm khoá."""
+    api, qt = cd
+    for i in range(5):
+        api.dk_dang_nhap("quan_tri", "x%d" % i, "sai_mat_khau")
+    assert ma(api.dk_dang_nhap("quan_tri", "", "matkhau")) == "dk_tam_khoa"
+    assert ma(api.dk_dang_nhap("quan_tri", "khac", "matkhau")) == "dk_tam_khoa"
