@@ -62,3 +62,15 @@ lặp TC), ghi vào CHANGELOG lý do. Repro: `python -m pytest -q tests/test_dk3
   `dk_con_clb_cho_duyet` sau khi có CLB Tự do, rồi mở được cho học sinh; d44 duyệt CLB «TD» trước. `test_dk3_api.py`: 13 đạt. CHANGELOG có ghi.
 - Lỗi 1 (`api_dang_ky.py:dk_clb_sua_sau_mo`, dời CLB không phải Tự do sang buổi chưa có Tự do): **CÒN** (c9760bf không chạm
   `api_dang_ky.py`). Repro như ở REVIEW 1.
+
+## REVIEW 2 — `c9760bf..5087fb9` — 2026-11-27
+
+**Kết luận: NO BUGS.** L1–L4: PASS (cả hai milestone).
+- Lỗi 1 **ĐÃ SỬA** (c963a9f): `dk_clb_sua_sau_mo` trả `dk_thieu_clb_tu_do` khi dời CLB không Tự do sang buổi chưa có CLB Tự do
+  sống; kiểm đặt TRƯỚC nhánh `can_xac_nhan`. Test mới `test_b_doi_buoi_clb_khong_tu_do_sang_buoi_chua_co_tu_do_bi_chan`.
+- Đã chạy: `test_vg1_tu_do.py test_vg1_cong_dang_nhap.py test_va_gap_tai_hien.py test_dk3_api.py test_giao_dien_vg1.py`: 44 đạt;
+  `kiem_nhanh.py` 7/7; `ruff` sạch.
+- 3 ca biên mới của checker (đạt): (a) chưa `xac_nhan` cũng bị chặn và `buoi` không đổi; (b) TẮT từ trước (giai đoạn GV) thì
+  dời sang T3 được; (c) cả 8 ca biên của checker từ REVIEW 1 vẫn đạt.
+- Ghi chú (không chặn): dời sang buổi KHÔNG tồn tại («T9») khi BẬT trả `dk_thieu_clb_tu_do` thay vì `dk_clb_buoi_la`
+  (kiểm Tự do chạy trước kiểm buổi hợp lệ) — thông báo lệch, dữ liệu không đổi. Nên đưa kiểm buổi lên trước nếu tiện.
