@@ -201,3 +201,17 @@ def test_so_gv_o_cong_chi_dem_giao_vien_da_co_tai_khoan_dung_duoc(cd):
     api, qt = cd
     ok(api.dk_gv_tao_hang_loat(qt, "Cô An\nThầy Bình\nCô Chi"))
     assert api.dk_trang_thai()["data"]["so_gv"] == 0
+
+
+def test_dat_lai_pin_va_xuat_pin_huy_phien_cu(cd):
+    """Kiểm tra toàn diện #2: PIN bị lộ / dùng chung thì sau khi đặt lại (từng người hoặc xuất phiếu) phiên cũ phải chết."""
+    api, qt = cd
+    _hs_gv(api, qt)
+    th = ok(api.dk_dang_nhap("hoc_sinh", "H1", ok(api.dk_hs_dat_lai_pin(qt, "H1"))["pin"]))["token"]
+    tg = ok(api.dk_dang_nhap("giao_vien", "Cô An", ok(api.dk_gv_dat_lai_pin(qt, 1))["pin"]))["token"]
+    h2 = ok(api.dk_dang_nhap("hoc_sinh", "H2", ok(api.dk_hs_dat_lai_pin(qt, "H2"))["pin"]))["token"]
+    assert api.dk_hs_nguyen_vong(th)["ok"] and api.dk_clb_danh_sach(tg)["ok"]
+    ok(api.dk_hs_dat_lai_pin(qt, "H1"))                         # đặt lại từng em: chỉ phiên H1 chết
+    assert ma(api.dk_hs_nguyen_vong(th)) == "dk_can_dang_nhap" and api.dk_hs_nguyen_vong(h2)["ok"]
+    ok(api.dk_pin_xuat_excel(qt, "tat_ca", xac_nhan=True))      # xuất phiếu: mọi phiên của người trong phạm vi chết
+    assert ma(api.dk_hs_nguyen_vong(h2)) == "dk_can_dang_nhap" and ma(api.dk_clb_danh_sach(tg)) == "dk_can_dang_nhap"

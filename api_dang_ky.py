@@ -320,7 +320,10 @@ class DangKyMixin:
             gd = self._dk_giai_doan_hien_tai(cur)
             han = cur.execute("SELECT han_chot FROM dk_giai_doan WHERE ten = ?", (gd,)).fetchone()
             # DK8-L1: hai SỐ ĐẾM (không tên, không mã) cho thẻ vai trò ở trang đầu (v8: «N giáo viên đã đăng ký», «N em đã gửi»).
-            so_gv = cur.execute("SELECT COUNT(*) FROM dk_giao_vien").fetchone()[0]
+            # VG1-L2 (D6, mặc định an toàn): «đã đăng ký» = tự đăng ký, hoặc đã gửi ít nhất một CLB (tài khoản do quản trị tạo hộ
+            # mà chưa ai dùng thì chưa tính). Đối xứng với số học sinh «đã gửi».
+            so_gv = cur.execute("SELECT COUNT(*) FROM dk_giao_vien WHERE cach_tao = 'tu_dang_ky' "
+                                "OR gv_id IN (SELECT gv_id FROM dk_clb)").fetchone()[0]
             so_da_gui = cur.execute("SELECT COUNT(*) FROM dk_hoc_sinh WHERE nop_luc IS NOT NULL").fetchone()[0]
             return {"khoi_tao": True, "giai_doan": gd, "han_chot": han[0] if han else None, "buoi": buoi, "khoi": khoi,
                     **dict(zip(("toi_da_nv", "toi_da_thi"), self._dk_gioi_han(cur))), "so_gv": so_gv, "so_da_gui": so_da_gui}
@@ -434,6 +437,13 @@ class DangKyMixin:
         return self._dk_chay(lam, QUAN_TRI, GIAO_VIEN, ghi=False, token=token)
 
     # ------------------------------------------------------------ giáo viên
+    def _dk_huy_phien(self, vai, ids):
+        """VG1-L2 (kiểm tra toàn diện #2): đặt lại PIN thì phiên đang mở của người đó chết (PIN lộ / dùng chung không còn hiệu lực)."""
+        ids = set(ids)
+        ds = self._dk_phien_dict()
+        for t in [t for t, v in ds.items() if t != "_db" and isinstance(v, dict) and v.get("vai") == vai and v.get("id") in ids]:
+            ds.pop(t, None)
+
     @staticmethod
     def _dk_gv_trung(cur, ten) -> bool:
         """VG1-L1: trùng tên sau chuẩn hoá (NFC, khoảng trắng, hoa/thường) = trùng."""
@@ -493,7 +503,10 @@ class DangKyMixin:
             cur.execute("UPDATE dk_giao_vien SET pin_bam = ?, pin_muoi = ? WHERE gv_id = ?", (b, m, gv_id))
             self._dk_ghi_nk(cur, QUAN_TRI, "dat_lai_pin_gv", gv_id)
             return {"pin": pin}
-        return self._dk_chay(lam, QUAN_TRI, token=token)
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:
+            self._dk_huy_phien(GIAO_VIEN, [gv_id])
+        return r
 
     def dk_gv_danh_sach(self, token):
         def lam(cur, p):
@@ -573,7 +586,10 @@ class DangKyMixin:
             cur.execute("UPDATE dk_hoc_sinh SET pin_bam = ?, pin_muoi = ? WHERE student_id = ?", (b, m, student_id))
             self._dk_ghi_nk(cur, QUAN_TRI, "dat_lai_pin_hs", student_id)
             return {"pin": pin}
-        return self._dk_chay(lam, QUAN_TRI, token=token)
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:
+            self._dk_huy_phien(HOC_SINH, [student_id])
+        return r
 
     def dk_hs_danh_sach(self, token):
         def lam(cur, p):

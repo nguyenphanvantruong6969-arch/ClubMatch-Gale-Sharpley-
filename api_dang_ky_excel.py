@@ -323,9 +323,15 @@ class DangKyExcelMixin:
             self._dk_ghi_nk(cur, QUAN_TRI, "xuat_pin", "%s hs=%d gv=%d" % (pham_vi, len(dong_hs), len(dong_gv)))
             bo = io.BytesIO()
             wb.save(bo)
+            doi.update(hs=[x[0] for x in hs], gv=[x[0] for x in gv])
             return {"ten_tep": "PHIEU_PIN.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii"),
                     "so_hs": len(dong_hs), "so_gv": len(dong_gv)}
-        return self._dk_chay(lam, QUAN_TRI, token=token)
+        doi = {}
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:                                                # PIN đã đổi thì phiên cũ của những người đó chết
+            self._dk_huy_phien(HOC_SINH, doi.get("hs", []))
+            self._dk_huy_phien(GIAO_VIEN, doi.get("gv", []))
+        return r
 
     def dk_excel_xem_truoc(self, token, file_base64, ten_tep="", bo_hoc_sinh=False):
         """Chỉ ĐỌC: trả `{hoc_sinh|giao_vien|phong: {co, tong, moi, da_co, loi: [{sheet, dong, ly_do, params}]}, thieu_sheet,

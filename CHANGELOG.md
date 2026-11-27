@@ -4,6 +4,7 @@
 
 - `api_dang_ky_excel.py`: `dk_pin_xuat_excel(token, pham_vi, lop=None, xac_nhan=False)`. PIN chỉ lưu băm nên «xuất» = đặt PIN MỚI cho từng người rồi ghi .xlsx (trang «Học sinh»: Mã HS | Họ tên | Lớp | PIN; «Giáo viên»: Họ tên | PIN). Chỉ quản trị; thiếu `xac_nhan=True` → `dk_can_xac_nhan_pin` (n) và không đổi gì; xoá bộ đếm khoá của người được đặt lại; nhật ký chỉ ghi số người. Mã lỗi mới (cuối `i18n_errors.py`, đã sinh lại `i18n_loi.js`): `dk_pham_vi_la`, `dk_can_xac_nhan_pin`, và sẵn cho L3–L4: `dk_lui_co_nguyen_vong`, `dk_clb_co_nguyen_vong`, `dk_can_xac_nhan_rui_ro`.
 - `js/dang_ky_quan_tri_2.js`: khối «Phiếu PIN» ở Cài đặt (`QT2.phieuPinXuat`: chọn phạm vi, lọc lớp, hộp xác nhận nêu số người bị đặt lại PIN, tải tệp).
+- Từ báo cáo kiểm tra toàn diện (#2): đặt lại PIN (từng người hoặc xuất phiếu) huỷ phiên đang mở của người đó (`_dk_huy_phien`). Lỗi «số giáo viên» ở thẻ vai trò (test thứ 8): `so_gv` chỉ đếm giáo viên tự đăng ký hoặc đã có CLB (mặc định an toàn, ghi ở branch file).
 - Test: `tests/test_va_gap_tai_hien.py` (test cũ «nạp lại danh sách» viết lại thành 4 test xuất PIN), `tests/test_giao_dien_vg1.py` (2, tệp Chromium dùng chung VG1).
 
 ## 2026-11-27 — VG1-L1 (vá gấp cổng đăng ký: đăng nhập chuẩn hoá tên/mã/PIN, lỗi 1–2)
