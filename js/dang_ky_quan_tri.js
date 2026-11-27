@@ -190,7 +190,7 @@
         h("p.dk-dem", {}, ph.length + " phòng · " + gv.length + " giáo viên · " + hs.length + " học sinh · " + hs.filter((x) => x.da_nop).length + " đã gửi nguyện vọng")),
       khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null,
       ct("phong", true, "Phòng (" + ph.length + ")", ph.length ? bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua])) : trong("Chưa có phòng nào.", "Thêm phòng", khoa)),
-      ct("gv", false, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      ct("gv", gv.length <= 50, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
       ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [trong("Chưa có học sinh nào. Dán danh sách (mã, họ tên, lớp) ở bước «Chuẩn bị».", "Thêm học sinh", khoa)]))));
   }
 

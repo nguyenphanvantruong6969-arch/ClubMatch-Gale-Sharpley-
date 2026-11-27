@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
+
+- 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).
+- Lỗi 7 («Đặng Văn Nam 4»): NGUYÊN NHÂN CHƯA XÁC NHẬN (chưa có ảnh). Giả thuyết dựa trên `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` #8: thẻ «Giáo viên (N)» ở tab Danh sách gấp sẵn nên sau khi nạp Excel chỉ thấy tiêu đề kèm số đếm. `js/dang_ky_quan_tri.js`: danh sách giáo viên ≤ 50 người MỞ SẴN. Test hồi quy `tests/test_giao_dien_vg1.py::test_l7_tab_danh_sach_thay_ngay_ten_giao_vien`. Nếu Truong gửi ảnh cho thấy khác thì mở lại.
+
 ## 2026-11-27 — VG1 vòng CI 1 (sửa 3 test đỏ trên CI sau L1–L4)
 
 - `i18n_errors.py` `dk_can_xac_nhan_pin`: bỏ chữ viết HOA nhấn mạnh (quy tắc `test_van_phong_tu_nhien`); `i18n_loi.js` sinh lại.
