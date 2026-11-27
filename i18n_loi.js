@@ -1903,8 +1903,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "Invalid PIN sheet scope (choose students, teachers or all)."
   },
   "dk_can_xac_nhan_pin": {
-    "vi": "Xuất phiếu PIN sẽ ĐẶT LẠI PIN của {n} người (PIN cũ không còn dùng được). Hãy xác nhận trước khi xuất.",
-    "en": "Exporting the PIN sheet RESETS the PIN of {n} people (old PINs stop working). Please confirm first."
+    "vi": "Xuất phiếu PIN sẽ đặt lại PIN của {n} người (PIN cũ không còn dùng được). Hãy xác nhận trước khi xuất.",
+    "en": "Exporting the PIN sheet resets the PIN of {n} people (old PINs stop working). Please confirm first."
   },
   "dk_lui_co_nguyen_vong": {
     "vi": "Đã có {n} học sinh gửi nguyện vọng. Lùi giai đoạn không xoá nguyện vọng, nhưng cần xác nhận.",

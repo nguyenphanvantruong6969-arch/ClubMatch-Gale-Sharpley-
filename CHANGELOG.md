@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-27 — VG1 vòng CI 1 (sửa 3 test đỏ trên CI sau L1–L4)
+
+- `i18n_errors.py` `dk_can_xac_nhan_pin`: bỏ chữ viết HOA nhấn mạnh (quy tắc `test_van_phong_tu_nhien`); `i18n_loi.js` sinh lại.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 447 → 451 (`test_a13_12_tai_lieu`).
+- `tests/test_giao_dien_dk4_mo_khoa.py`: PIN sai «xxxx» đổi thành PIN sai ĐÚNG DẠNG 4 chữ số (như L1; ý nghĩa test giữ nguyên).
+
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 
 - `api_dang_ky.py`: cài đặt `bat_buoc_tu_do` (mặc định BẬT = hành vi cũ, bất biến 1). Khi BẬT: (a) `dk_chuyen_giai_doan` chặn vào «duyet» (và mọi cú nhảy đi ngang nó) nếu một buổi có CLB chờ duyệt/đã duyệt mà không có CLB Tự do (`dk_thieu_clb_tu_do`); (b) `dk_clb_duyet` từ chối, `dk_clb_xoa` (quản trị), `dk_clb_sua_sau_mo` (xoá / đổi buổi) không gỡ được CLB Tự do cuối của buổi còn CLB khác; (d) hết hạn tự đóng GV → Duyệt thì `dk_clb_duyet(..., "duyet")` CLB không Tự do bị từ chối khi buổi chưa có CLB Tự do sống. Kiểm cũ ở `_dk_kiem_dieu_kien_mo_hs` giữ làm lưới an toàn. Khi TẮT: các kiểm trên và cảnh báo `dk_khong_co_tu_do` bị bỏ qua.
