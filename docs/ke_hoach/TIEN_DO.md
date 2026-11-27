@@ -345,3 +345,6 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DK9-L1 (nạp Excel cho cổng: ba hàm backend, tệp mẫu, xem trước chỉ đọc) | xong; checker PASS (vòng 2) | 2026-11-26 | api_dang_ky_excel.py, api.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, CHANGELOG.md | tests/test_dk9_nap_excel.py (16) | |
 | DK9-L2 (khối «Nạp từ Excel» ở Cài đặt: tệp mẫu, thả tệp, xem trước, Nạp, phiếu PIN) | xong; checker PASS (vòng 2) | 2026-11-26 | js/dang_ky_quan_tri_2.js, style.css, api_dang_ky_excel.py, CHANGELOG.md | tests/test_giao_dien_dk9_l2.py (10) | |
 | DK9 soát mã (soat-ma, chỉ báo cáo) | xong: 0 chặn, 0 nên sửa; xem tệp nhánh | 2026-11-26 | docs/phien/claude__dk9-nap-excel-cong.md | — | |
+| UX6-L1 (bớt chữ giải thích: 78 → 25 phần tử, thanh Việc tiếp theo ngắn) | xong | 2026-11-27 | index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js | tests/test_giao_dien_ux6_l1.py | |
+| UX6-L2 (màn hình đổi theo trạng thái: tóm tắt thay ô thả, thanh tiến độ, thanh công cụ Kết quả) | xong; chờ checker M1 | 2026-11-27 | index.html, i18n.js, style.css, js/02_van_hanh.js, js/00_nen.js | tests/test_giao_dien_ux6_l2.py | |
+| UX6-L3 (logo, biểu tượng SVG, nút phân đoạn, bảng CLB, form thiết lập cổng) | xong; chờ checker M2 | 2026-11-27 | index.html, style.css, js/05_quan_ly.js, js/075_workspace.js, js/dang_ky_nen.js | tests/test_giao_dien_ux6_l3.py | |

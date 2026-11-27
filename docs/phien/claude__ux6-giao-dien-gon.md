@@ -32,11 +32,11 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
       [Đổi sổ], collapsible finished steps (blocking warning keeps its step open).
 - [x] L2-b. `#statusStrip` "x/y đã có CLB" + bar + unplaced-count button (same handler as the banner).
 - [x] L2-c. Kết quả: table out of its card, one toolbar above it. Commit `UX6-L2: …`. → `MILESTONE 1 READY`.
-- [ ] L3. Red test `tests/test_giao_dien_ux6_l3.py`; logo, icons (inline SVG + aria-label), one accent for
+- [x] L3. Red test `tests/test_giao_dien_ux6_l3.py`; logo, icons (inline SVG + aria-label), one accent for
       segmented controls, monospace only for codes, sentence-case headers, CLB id under name, icon "Xoá" on
       hover+focus, `dang_ky.html` setup form. Commit `UX6-L3: …`. → `MILESTONE 2 READY`.
 - L4 dropped by Truong (2026-11-27): no document moves.
-- [ ] End: CHANGELOG (UX6, files, new tests, tests whose copy asserts changed), `docs/ke_hoach/TIEN_DO.md`
+- [~] End (CHANGELOG, TIEN_DO done; soat-ma + CI pending): CHANGELOG (UX6, files, new tests, tests whose copy asserts changed), `docs/ke_hoach/TIEN_DO.md`
       rows, `soat-ma`, push, CI green.
 
 ## Done when
@@ -49,11 +49,11 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 - [ ] Checker PASS at M1 and M2; CI green.
 
 ## Current state (overwrite each handoff)
-- MILESTONE 1 READY (L1 + L2 done, 2026-11-27). Waiting for the checker (protocol §4).
-- Done: L1 (helpers 78 -> 25), L2 (summary line replaces #dropZone, step 2 collapses, strip progress bar + button, Kết quả toolbar).
-- Next: L3 only after the checker's PASS (or start it if Truong says continue; Truong approved the M1 screenshots).
-- Tests: ux6_l1 + ux6_l2 + 147-test related run green; ruff clean; kiem_nhanh 7/7; backend diff empty.
-- Open problems: none. Gotchas: tests waiting for `#dropZone` must use state="attached" (hidden once a Sổ exists).
+- MILESTONE 1 READY (L1+L2, commit bf12e43). MILESTONE 2 READY (L3 done, 2026-11-27); waiting for the checker (protocol §4).
+- Tests: ux6_l1/l2/l3 + ~450 related UI tests green in batches; ruff clean; kiem_nhanh 7/7; backend diff empty.
+- Screenshots (before/after) sent to Truong in chat; Truong approved the M1 look.
+- Open for Truong: logo uses logo.png (kiosk.spec bundles only logo.png; logo.svg would need a spec change); "…" suffix on dialog buttons kept as convention.
+- Next: soat-ma pass on the diff, CI green on the head commit, checker for M1/M2.
 
 ## Decisions and gotchas (keep short)
 - UI only; data not returned by the API today is not added (show what exists).
@@ -87,6 +87,7 @@ are untouched by design. New code UX6, outside the 33-item registry (like UX1–
 |---|---|---|---|
 | 2026-11-27 | Opus | Design review + UX6 plan (this file, `UX6_GIAO_THUC.md`) | no product code |
 | 2026-11-27 | Sonnet | L1 done (inventory, helpers 78->25, banner) | one commit |
+| 2026-11-27 | Sonnet | L3 done, MILESTONE 2 READY | CSS mask icons keep UX2 ::after hit areas intact |
 | 2026-11-27 | Sonnet | L2 done, MILESTONE 1 READY | xuat_theo_lop_hint "?" removed (Hick budget of #xuatPanel) |
 
 ## Coder first-session prompt
