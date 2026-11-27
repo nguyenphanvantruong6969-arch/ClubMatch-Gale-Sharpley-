@@ -102,7 +102,7 @@ def test_con_hoc_sinh_chua_co_cho_nut_xu_ly_mo_bang_va_cuon(mo, api, monkeypatch
     page, loi = mo()
     _trang_thai(page, "xu_ly")
     nut = page.locator("#viecTiepTheoNut")
-    assert "3" in nut.inner_text()
+    assert "3" in page.locator("#viecTiepTheoCau").inner_text()      # UX6-L1: số học sinh nằm ở câu, nút chỉ ghi "Xử lý"
     assert "Xử lý" in nut.inner_text()
     nut.click()
     page.wait_for_selector("#view-others.is-active")

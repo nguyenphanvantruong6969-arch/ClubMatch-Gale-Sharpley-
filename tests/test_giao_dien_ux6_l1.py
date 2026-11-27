@@ -17,10 +17,10 @@ KHOA_XOA = [
     "admin_desc", "ux4_mo_clb", "admin_tai_buoi_desc", "ux4_mo_hs", "wh_sua_rong",
     "wh_dang_mo_khong_can", "wh_nk_chon_em", "wh_nhat_ky_rong", "ux4_mo_lam_lai", "danger_zone_safety",
     "ux4_mo_cach_xep", "gt2_tc_nhom_goi_y", "scoring_desc", "cb_desc", "cb_duong_hint", "cb_duong_a_ghi",
-    "cb_duong_b_ghi", "cb_buoc_trong", "import_hint", "gt2_tc_mo_ta", "gt2_thu_mo_ta",
+    "cb_duong_b_ghi", "cb_buoc_trong", "import_hint", "xuat_theo_lop_hint", "gt2_tc_mo_ta", "gt2_thu_mo_ta",
 ]
 KHOA_HOI = [  # chuyển sau nút "?": khoá còn, phần tử mang class ux6-hoi-nd, không còn là hint-text
-    "xuat_theo_lop_hint", "clb_desc", "du_tru_desc", "chua_co_cho_desc", "tham_desc",
+    "clb_desc", "du_tru_desc", "chua_co_cho_desc", "tham_desc",
     "dd_goi_y", "v2_goi_y", "mt2_ghi_chu", "buoi_hint_form", "ti_le_choi_giai_thich", "fallback_step3_hc_hint",
     "ph_goi_y_nut", "gt2_ad_ghi_chu", "wh_ql_desc", "dc_mo_ta",
 ]

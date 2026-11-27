@@ -41,7 +41,7 @@ def test_mot_nut_vang_khong_do_va_nut_fa_khong_vang(mo_ux5a, vai):  # noqa: F811
 @pytest.mark.parametrize("vai", VAI)
 def test_chu_moi_va_tieu_de_nhom(mo_ux5a, vai):  # noqa: F811
     page, api, loi = mo_ux5a(vai, "others")
-    assert page.locator("#view-others .view-desc").inner_text().startswith("Tải kết quả về máy")
+    assert page.locator("#view-others .view-desc").count() == 0       # UX6-L1: bỏ câu mô tả thẻ
     assert page.locator("#xuatPanel h2").inner_text().strip() == "Tải kết quả về máy"
     assert page.locator("#xuatNangCao > summary").inner_text().strip() == "Chọn thêm tệp để xuất"
     assert page.locator("#chiTietNhomTieuDe").first.inner_text().strip() == "Số liệu chi tiết"
@@ -62,7 +62,7 @@ def test_goi_y_huy_chuong_nam_trong_menu_va_chi_con_mot_doan_goi_y(mo_ux5a):  # 
     page.keyboard.press("Escape")
     hint = page.evaluate("""() => [...document.querySelectorAll('#xuatPanel > .hint-text, #xuatPanel > .xuat-canh-bao')]
       .filter(e => e.checkVisibility({checkVisibilityCSS: true})).map(e => e.className)""")
-    assert len(hint) == 2, hint          # một đoạn "Xuất theo lớp…" + một dòng cảnh báo
+    assert len(hint) == 1, hint          # UX6-L1: chỉ còn một dòng cảnh báo (đoạn "Xuất theo lớp…" đã bỏ)
     assert not loi, loi
 
 
