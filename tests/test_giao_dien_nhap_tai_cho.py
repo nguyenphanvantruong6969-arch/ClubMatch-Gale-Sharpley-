@@ -59,7 +59,7 @@ def trang(api_da_cham):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="fallback"]').click()
         page.wait_for_selector("#studentSearchResults .hs-card")
         yield page, api_da_cham, loi

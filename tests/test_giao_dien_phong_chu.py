@@ -67,7 +67,7 @@ def trang(api):
         br = p.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
         page = br.new_page(bypass_csp=True)
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('.nav-item[data-tab="others"]').click()
         page.evaluate("document.fonts.ready")
         yield page

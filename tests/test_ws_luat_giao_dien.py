@@ -45,7 +45,7 @@ def mo_trang(tmp_path):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(browser_host.serve(api, GOC, "index.html", open_browser=False))
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.wait_for_function(
             "document.querySelector('#statStudents + .strip-label').textContent.trim() !== ''",
             timeout=10000)

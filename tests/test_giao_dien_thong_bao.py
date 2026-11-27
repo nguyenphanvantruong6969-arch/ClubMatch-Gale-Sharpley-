@@ -49,7 +49,7 @@ def mo(tmp_path, api):
         if dong_ho:
             page.clock.install(time=GOC_GIO)
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         if dong_ho:
             page.clock.pause_at(GOC_GIO + datetime.timedelta(seconds=30))
         page.evaluate("document.getElementById('toastStack').innerHTML = ''")

@@ -65,7 +65,7 @@ def mo(tmp_path, api):
         if chan_ngoai:
             page.route(re.compile(r"^(?!http://127\.0\.0\.1)"), lambda r: r.abort())
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         if tab:
             page.locator('[data-tab="%s"]' % tab).click()
         return page, api, loi, yeu_cau

@@ -138,7 +138,7 @@ def test_nho_cach_xem_theo_may_va_mo_lai_van_con(mo):
     assert luu["tang1"] == "ma" and "tang2" not in luu
     trang2 = page.context.new_page()           # cùng kho lưu trữ, như mở lại chương trình
     trang2.goto(url)
-    trang2.wait_for_selector("#dropZone")
+    trang2.wait_for_selector("#dropZone", state="attached")
     trang2.locator('.nav-item[data-tab="results"]').click()
     trang2.wait_for_function("() => document.querySelector('#kqTang1 .is-on')")
     assert trang2.locator("#kqTang1 .is-on").get_attribute("data-kq") == "ma"
@@ -155,7 +155,7 @@ def test_kho_luu_tru_hong_hay_bi_chan_khong_lam_hong_the(mo):
     loi2 = []
     trang2.on("pageerror", lambda e: loi2.append(str(e)))
     trang2.goto(url)
-    trang2.wait_for_selector("#dropZone")
+    trang2.wait_for_selector("#dropZone", state="attached")
     trang2.locator('.nav-item[data-tab="results"]').click()
     trang2.wait_for_function("() => !document.getElementById('kqBang').hidden")
     trang2.locator('#kqTang1 [data-kq="clb"]').click()                  # bấm vẫn chạy dù không ghi được
@@ -251,7 +251,7 @@ def test_nho_lop_va_clb_da_chon_sau_khi_mo_lai_va_bo_qua_neu_khong_con(mo):
     page.select_option("#kqChonClb", "B")
     trang2 = page.context.new_page()
     trang2.goto(url)
-    trang2.wait_for_selector("#dropZone")
+    trang2.wait_for_selector("#dropZone", state="attached")
     trang2.locator('.nav-item[data-tab="results"]').click()
     trang2.wait_for_function("() => document.querySelectorAll('#kqChonClb option').length === 2")
     assert trang2.locator("#kqChonClb").input_value() == "B"
@@ -264,7 +264,7 @@ def test_nho_lop_va_clb_da_chon_sau_khi_mo_lai_va_bo_qua_neu_khong_con(mo):
     loi3 = []
     trang3.on("pageerror", lambda e: loi3.append(str(e)))
     trang3.goto(url)
-    trang3.wait_for_selector("#dropZone")
+    trang3.wait_for_selector("#dropZone", state="attached")
     trang3.locator('.nav-item[data-tab="results"]').click()
     trang3.wait_for_function("() => document.querySelectorAll('#kqChonLop option').length === 2")
     assert trang3.locator("#kqChonLop").input_value() == "10A1"

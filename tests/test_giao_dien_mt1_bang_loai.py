@@ -33,7 +33,7 @@ def _mo(mo_trang, doi_ten=False):  # noqa: F811
     c.close()
     assert api.update_workspace_config({"rules": {"wharton": True, "fa_daa": True}})["ok"]
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('.nav-item[data-tab="admin"]').click()
     page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     page.wait_for_selector("#ux1aSanSang table.ux1a-ss-bang")

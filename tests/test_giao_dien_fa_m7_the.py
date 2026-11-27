@@ -36,7 +36,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         return page, api, loi
 
     yield _mo
@@ -68,7 +68,7 @@ def test_fa_bat_the_hien_co_nam_khung_va_chon_duong(mo):
     page.wait_for_function("() => window.ChuanBi.duong() === 'B'")
     assert api.get_fa_duong()["data"] == {"duong": "B"}
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('.nav-item[data-tab="chuan_bi"]').click()
     page.wait_for_function("() => window.ChuanBi.duong() === 'B'")
     assert page.locator('input[name="cbDuong"][value="B"]').is_checked()
