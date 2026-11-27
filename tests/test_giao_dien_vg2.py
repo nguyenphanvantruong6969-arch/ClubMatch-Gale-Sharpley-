@@ -106,4 +106,12 @@ def test_hoc_sinh_chi_di_qua_buoc_co_viec(vao):
     pg.wait_for_selector("text=Buổi T3")
     pg.get_by_role("button", name="Tiếp: xem lại và gửi").click()                  # buổi trống: đi thẳng tới xem lại
     pg.wait_for_selector("#dkGui")
+    # «← Quay lại» từ màn xem lại về bước THẬT cuối cùng (xếp nguyện vọng T3), không rơi vào màn bài kiểm tra bị bỏ qua
+    pg.get_by_role("button", name="← Quay lại").click()
+    pg.wait_for_selector("h1:has-text('Buổi T3 · Xếp nguyện vọng')")
+    pg.get_by_role("button", name="← Buổi trước").click()                         # T3 -> T2 (bỏ qua huy chương / bài thi)
+    pg.wait_for_selector("h1:has-text('Buổi T2 · Xếp nguyện vọng')")
+    pg.get_by_role("button", name="Tiếp: T3").click()
+    pg.get_by_role("button", name="Tiếp: xem lại và gửi").click()
+    pg.wait_for_selector("#dkGui")
     assert not pg.loi, pg.loi

@@ -156,7 +156,7 @@
     const dongBuoc = () => { const L = []; tt.buoi.forEach((b, k) => { L.push(["rank", k]);
       if ((theo[b] || []).some((x) => cua(x.clb_id).loai !== "Tự do")) L.push(["medals", k]);
       if ((theo[b] || []).some((x) => cua(x.clb_id).loai === "Tuyển chọn")) L.push(["tests", k]); }); L.push(["review", 0]); return L; };
-    const viTri = () => dongBuoc().findIndex((s) => s[0] === bc && s[1] === i);
+    const viTri = () => dongBuoc().findIndex((s) => s[0] === bc && (bc === "review" || s[1] === i));
     const sau = () => dongBuoc()[viTri() + 1], truoc = () => dongBuoc()[Math.max(0, viTri() - 1)];
     const dich = (s) => di(s[0], s[0] === "review" ? undefined : s[1]);
     const nhanTiep = () => { const s = sau(); return s[0] === "medals" ? "Tiếp: đặt huy chương" : s[0] === "tests" ? "Tiếp: bài kiểm tra" : s[0] === "review" ? "Tiếp: xem lại và gửi" : "Tiếp: " + tt.buoi[s[1]]; };
@@ -278,7 +278,7 @@
       return [bar(), h("h1.dk-tieude", {}, "Xem lại và gửi"),
         co ? null : h("p.dk-ghichu", {}, "Em chưa chọn CLB nào. Gửi như vậy nghĩa là em không tham gia CLB nào học kỳ này."),
         h("section.dk-khung", {}, tomTat()),
-        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => di("tests", N - 1)), h("span.dk-gian"),
+        h("div.dk-hang-nut", {}, DK.nutNhe("← Quay lại", () => { const L = dongBuoc(); dich(L[L.length - 2] || L[0]); }), h("span.dk-gian"),   // VG2: bước cuối THẬT (có thể không phải bài kiểm tra)
           DK.nutVang(nopXong ? "Gửi lại nguyện vọng" : "Gửi nguyện vọng", function () { nop(this); }, { id: "dkGui" }))];
     }
     function vReceipt() {

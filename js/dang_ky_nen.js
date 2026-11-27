@@ -132,7 +132,7 @@
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
     return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
-      vaiTro ? [h("span.dk-gian"), h("h1.dk-vai", { style: "font-size:inherit;margin:0" }, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
+      vaiTro ? [h("span.dk-gian"), DK.S.vai === "quan_tri" ? h("h1.dk-vai", { style: "font-size:inherit;margin:0" }, vaiTro) : h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
         DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc())] : null));
   };

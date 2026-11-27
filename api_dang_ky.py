@@ -250,7 +250,7 @@ class DangKyMixin:
                 if vai == QUAN_TRI:
                     cur.execute("DELETE FROM dk_cai_dat WHERE khoa = 'dn_bac:quan_tri'")      # VG2-L1 (D1): đăng nhập đúng xoá bậc khoá
                 ds = self._dk_phien_dict()                                                  # VG2-L1: dọn token hết hạn (không tăng mãi)
-                for t in [t for t, v in ds.items() if t != "_db" and isinstance(v, dict) and
+                for t in [t for t, v in list(ds.items()) if t != "_db" and isinstance(v, dict) and      # list(): luồng đọc có thể pop cùng lúc
                           self._dk_dong_ho() - v.get("luc", 0) > (GIAY_NGHI_QUAN_TRI if v.get("vai") == QUAN_TRI else GIAY_NGHI_KHAC * 5)]:
                     ds.pop(t, None)
                 return kq
@@ -506,7 +506,7 @@ class DangKyMixin:
         """VG1-L2 (kiểm tra toàn diện #2): đặt lại PIN thì phiên đang mở của người đó chết (PIN lộ / dùng chung không còn hiệu lực)."""
         ids = set(ids)
         ds = self._dk_phien_dict()
-        for t in [t for t, v in ds.items() if t != "_db" and isinstance(v, dict) and v.get("vai") == vai and v.get("id") in ids]:
+        for t in [t for t, v in list(ds.items()) if t != "_db" and isinstance(v, dict) and v.get("vai") == vai and v.get("id") in ids]:
             ds.pop(t, None)
 
     @staticmethod
