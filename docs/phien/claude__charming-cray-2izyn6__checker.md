@@ -54,3 +54,11 @@ lặp TC), ghi vào CHANGELOG lý do. Repro: `python -m pytest -q tests/test_dk3
 - Xem trước Excel (`_dk_excel_soat_gv` / `_dk_excel_soat_hs`) so trùng theo chữ gốc, không theo `_chuan_ten`: «Nam» và «nam»
   trong cùng tệp đều hiện «mới», lúc nạp một dòng bị bỏ qua. Dữ liệu đúng, chỉ số xem trước lệch.
 - `dk_clb_sua_sau_mo(xoa=True)` xoá nguyện vọng nhưng không đánh lại `hang` (có từ trước VG1; khác cách làm của `tu_choi`).
+
+## REVIEW 1b — `fea0230..c9760bf` — 2026-11-27
+
+**Kết luận: BUGS 1.**
+- Lỗi 2 (2 test cũ `tests/test_dk3_api.py`): **ĐÃ SỬA** ở c9760bf. Hai test viết lại đúng D4: d2 giờ kiểm cả chặn sớm (a) lẫn
+  `dk_con_clb_cho_duyet` sau khi có CLB Tự do, rồi mở được cho học sinh; d44 duyệt CLB «TD» trước. `test_dk3_api.py`: 13 đạt. CHANGELOG có ghi.
+- Lỗi 1 (`api_dang_ky.py:dk_clb_sua_sau_mo`, dời CLB không phải Tự do sang buổi chưa có Tự do): **CÒN** (c9760bf không chạm
+  `api_dang_ky.py`). Repro như ở REVIEW 1.
