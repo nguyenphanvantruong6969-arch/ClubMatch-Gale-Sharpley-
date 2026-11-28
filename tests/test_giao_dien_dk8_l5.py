@@ -49,7 +49,7 @@ def cong(tmp_path):
             gv_pin = None
             if gd == "gv":
                 gv_pin = ok(api.dk_gv_tao_hang_loat(qt, "Cô An"))["da_tao"][0]["pin"]
-            if gd == "hs":
+            if gd in ("hs", "dau_hs"):            # "dau_hs": trang đầu, cổng ĐÃ mở cho học sinh (VG2-L4: chưa mở thì ô học sinh bị khoá)
                 t3._dung_san(api, qt)
             url = browser_host.serve(api, GOC, "dang_ky.html", open_browser=False)
             pg = br.new_page(bypass_csp=True, viewport={"width": 1200, "height": 900})
@@ -212,7 +212,7 @@ def test_i_dau_xong_theo_nut_sau_khi_ve_lai(cong):
 
 # ---------------------------------------------------------------- (b) dấu hợp lệ chỉ theo định dạng
 def test_j_ma_hoc_sinh_va_pin_chi_theo_dinh_dang(cong):
-    pg = cong("dau")
+    pg = cong("dau_hs")
     pg.get_by_role("button", name="Học sinh", exact=True).click()
     ten, ma = pg.locator("input[name=ten]"), pg.locator("input[name=ma]")
     assert not ten.evaluate("e => e.classList.contains('is-hop-le')")
@@ -237,7 +237,7 @@ def test_j_ma_hoc_sinh_va_pin_chi_theo_dinh_dang(cong):
 
 
 def test_k_dau_hop_le_khong_xe_dich_bo_cuc(cong):
-    pg = cong("dau")
+    pg = cong("dau_hs")
     pg.get_by_role("button", name="Học sinh", exact=True).click()
     ten = pg.locator("input[name=ten]")
     truoc = ten.bounding_box()
