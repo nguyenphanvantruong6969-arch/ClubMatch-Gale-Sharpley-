@@ -2580,6 +2580,19 @@
    "kiem_nhan": "tests/test_va_gap_tai_hien.py xanh (8 test).",
    "phu_thuoc": [],
    "ap_dung": {}
+  },
+  {
+   "id": "VG3",
+   "nhom": "Phụ lục vá gấp",
+   "pham_vi": "cong_dang_ky",
+   "ten": "Dọn giao diện cổng đăng ký (thanh sáu bước, thẻ vai trò, bảng, màn học sinh)",
+   "tep": "style.css (.dk-*), js/dang_ky_nen.js, js/dang_ky_quan_tri*.js, js/dang_ky_gv_hs.js",
+   "muc": "Sửa",
+   "quy_mo": "M",
+   "rui_ro": "Thấp; chỉ trình bày, không đụng api*.py hay giao diện chính.",
+   "kiem_nhan": "tests/test_giao_dien_vg3.py xanh; các test giao diện dk* liên quan xanh.",
+   "phu_thuoc": [],
+   "ap_dung": {}
   }
  ],
  "so_do": {

@@ -354,3 +354,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX6-L1 (bớt chữ giải thích: 78 → 25 phần tử, thanh Việc tiếp theo ngắn) | xong | 2026-11-27 | index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js | tests/test_giao_dien_ux6_l1.py | |
 | UX6-L2 (màn hình đổi theo trạng thái: tóm tắt thay ô thả, thanh tiến độ, thanh công cụ Kết quả) | xong; chờ checker M1 | 2026-11-27 | index.html, i18n.js, style.css, js/02_van_hanh.js, js/00_nen.js | tests/test_giao_dien_ux6_l2.py | |
 | UX6-L3 (logo, biểu tượng SVG, nút phân đoạn, bảng CLB, form thiết lập cổng) | xong; chờ checker M2 | 2026-11-27 | index.html, style.css, js/05_quan_ly.js, js/075_workspace.js, js/dang_ky_nen.js | tests/test_giao_dien_ux6_l3.py | |
+| VG3 (dọn giao diện cổng đăng ký) | xong, CI xanh (run 1815) | 2026-11-27 | style.css, js/dang_ky_*.js, tests/test_giao_dien_dk8_l1.py, CHANGELOG.md | tests/test_giao_dien_vg3.py (5) |
