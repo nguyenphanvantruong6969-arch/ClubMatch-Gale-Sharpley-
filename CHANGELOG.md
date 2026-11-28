@@ -7,6 +7,7 @@
 - `tests/test_giao_dien_ux6_l2.py` (quản trị, giáo viên): bảng ẩn của CT1 đứng trước bảng kết quả chính nên `#view-results table` đầu tiên không có kích thước → chuyển khối `#ct1Khung` xuống CUỐI thẻ Kết quả (khi mở, phần còn lại vẫn bị ẩn bởi `.ct1-dang-mo`, nên hiển thị không đổi).
 - `tests/test_mt1_api.py::test_ma_loi_mt_co_vi_va_en`: ca kiểm vị trí khối mã lỗi `mt_` bỏ qua thêm tiền tố `ct1_` (giống sửa đã làm ở `tests/test_mt1_uoc_tinh.py`).
 - Gộp với commit song song `f6abcd4` (cùng sửa nhãn nhật ký, tiền tố `ct1_`, test UX6-L2 nhắm `#kqBang`, chờ 90 s cho bộ 800HS trong `tests/test_giao_dien_ct1.py`); bỏ hai khoá `nkhd_` bị thêm trùng ở cả vi và en (JS ghi đè âm thầm).
+- `tests/test_giao_dien_sua_loi_p1.py::test_bam_dup_luu_diem_chi_gui_mot_lan` đỏ chập chờn trên CI (run 46107115207; không liên quan CT1, CT1 không đổi `js/06_cham_diem.js`): test chờ cố định 800 ms rồi đòi nút đã mở lại. Nay chờ tới khi nút mở lại (≤ 10 s) rồi mới đếm số lần gửi; vẫn bắt lỗi gửi hai lần và lỗi nút không mở lại.
 - Không đổi `.py` sản phẩm, schema, CSV hay thuật toán. Bộ đầy đủ chạy cục bộ trước khi sửa: 6 đỏ / 8074 xanh; sau sửa: các tệp liên quan + CT1 351 xanh, `kiem_nhanh` 7/7.
 
 ## 2026-11-28 — CT1-FIX4 (lối vào: nút riêng "Gợi ý chỉ tiêu")
