@@ -41,7 +41,7 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - [ ] Final: 16 repro tests green, related green, invariant 1 `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `VG2-L<n>`, CI loop to green.
 
 ## Current state
-- L1–L5 + #27 pushed. Head `6373725` (fixes dk8_l5 tests j/k broken by #27 on CI run 46092881970). CI for `6373725` NOT yet checked at handoff (scheduled re-check 02:30 UTC, trigger `trig_01L42Dmtr98ruTxawS4sh11C`).
+- L1–L5 + #27 pushed. Head `6373725` (fixes dk8_l5 tests j/k broken by #27 on CI run 46092881970). CI Tests (rbda-kiosk) run 46096479386 on `dadd37e` (includes all L5/#27 commits) = SUCCESS.
 - Locally: all portal UI tests (dk*, vg*, gt3*) 149 green sequentially; non-UI suite green except nothing (pypdf must be <6; pypdf 7 breaks `test_xp1_danh_sach_pdf` locally only).
 - A duplicate L1–L4 implementation from the Opus session of 2026-11-27 exists only on local branch `bak-vg2-local` (never pushed; remote version kept).
 - Truong: no checker needed; done = CI green + bugs solved. Build Windows is manual (publishes release): not run.
@@ -53,7 +53,7 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 - `i18n_errors.py` rule `chu_cam` forbids «Em»/«You»: `dk_mat_diem` is worded without a pronoun.
 
 ## Next steps (ordered)
-1. Check GitHub Actions "Tests (rbda-kiosk)" on the branch head; if red, fix (never loosen a test), push (fetch+merge first: another session also pushes here), repeat until green.
+1. CI is green; only re-check if new commits land.
 2. Open question for Truong: how do students reach the portal (server listens on `127.0.0.1` only)?
 3. PR / merge to main only if Truong asks.
 
@@ -72,4 +72,4 @@ Acceptance = `tests/test_vg2_repro.py` (16 red repro tests) + one Chromium file 
 | 2026-11-27 | Sonnet | implemented VG2 L1–L4, tests, CHANGELOG/TIEN_DO, pushed `638b556`; handoff at context limit | checker + CI still pending |
 | 2026-11-27 | Opus | CI debug: 5 red CI tests fixed, 3 review bugs fixed (+ regression test), CHANGELOG/TIEN_DO | Build Windows workflow is manual-only (publishes a release): not triggered |
 | 2026-11-27 | Opus | accent-free / font-insensitive login, 18 tests, merged with remote L1–L4 | Truong asked directly |
-| 2026-11-28 | Opus | L5 round-trip fix + #27, CI fix for dk8_l5 j/k, handoff at context limit | CI on 6373725 pending |
+| 2026-11-28 | Opus | L5 round-trip fix + #27, CI fix for dk8_l5 j/k, handoff at context limit | CI green on dadd37e |
