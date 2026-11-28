@@ -12,16 +12,19 @@
 - Coder: Sonnet. Does L1→L4 in order, test first, commits per lot, writes `MILESTONE <k> READY` in the branch file.
 - Checker: Sonnet, started by Truong at each milestone; writes only `docs/phien/claude__dg1-danh-gia-dinh-luong__checker.md`
   ending with `CHECKER REPORT <k> NO BUGS` or a numbered finding list. Max 2 FIX rounds per finding, then note + revert that lot.
-- Milestone 1 = after L2 (metrics + runner). Milestone 2 = after L3/L4 (variants, report, UI).
+- Milestone 1 = after L2 (metrics + generator + runner). Milestone 2 = after L4 (variants, mechanisms, report, UI).
 
 ## 2. Checker focus
 - Each metric matches its definition table row: recompute 3 metrics by hand on the 6×3 test case and 1 on `bo_sach`.
 - Denominators are stated and consistent (all students vs assigned; per session vs per student).
-- Cross-check with `SO_LIEU_DA_KIEM_CHUNG.md` §2 is exact; stability (blocking pairs) is 0 on every run.
+- Cross-check with `SO_LIEU_DA_KIEM_CHUNG.md` §2 is exact; RB-DA blocking pairs are 0 on every run.
+- Upper bound: RB-DA assigned ≤ max matching on every run; hand-check the bound on the 6×3 case.
+- Data seed and lottery seed are separate; CI computed over data seeds; generator is deterministic per seed.
+- Control mechanisms still call the real `club_choice_function` (no copied priority logic).
 - Variants change ONE thing each and reuse the same data + seed; churn counts sum correctly (better + worse + same-rank-moved).
-- No product file changed in L1–L3 (`git diff --stat origin/main -- ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'` empty).
-- Integrity: report says SIMULATED at the top; no interpretation sentences; «Nhận xét» section empty; no real data committed.
-- L4 only: invariants 1, 2, 6 (read-only, no rank fed into priority, `{ok,data,errors}`, i18n via `i18n_errors.py` → `tao_i18n_js.py`).
+- No product file changed in L1–L3 (L4 is the only product lot) (`git diff --stat origin/main -- ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'` empty).
+- Integrity: report says SIMULATED at the top; no interpretation sentences; «Giả thuyết» and «Nhận xét» sections empty; no real data committed.
+- L4: invariants 1, 2, 6, 7 (export sheet is additive; CSV contract unchanged) (read-only, no rank fed into priority, `{ok,data,errors}`, i18n via `i18n_errors.py` → `tao_i18n_js.py`).
 
 ## 3. Budget
 - `_GIAO_THUC_GON.md` §3. Full harness run only once, at the end (report generation); during lots use `--nhanh`.
