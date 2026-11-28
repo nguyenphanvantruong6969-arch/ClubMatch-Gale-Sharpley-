@@ -83,6 +83,10 @@
   /* Hai thời lượng chuyển trạng thái. */
   --dur-1: 150ms;
   --dur-2: 240ms;
+  /* TK1-L2: chiều cao điều khiển của vùng hiện tại (nút, ô nhập, select); thanh công cụ và ô tra cứu đặt 44 px. */
+  --ctl-h: var(--control-h-sm);
+  /* Mũi tên xổ DUY NHẤT: nút thả xuống tự vẽ (summary) và select dùng chung. */
+  --mui-ten: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%235B6570' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* TK1-L1: thẻ dài có thanh cuộn, thẻ ngắn không — giữ chỗ cho thanh cuộn để nội dung không nhảy ngang
@@ -102,7 +106,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-button, input {
+button, input, select {
   font-family: inherit;
   font-size: inherit;
 }
@@ -3096,8 +3100,8 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
    ====================================================================================================== */
 .gt-ui .hint-text { font-size: var(--fs-md); margin: 0 0 var(--sp-2) 0; }
 .gt-ui label { font-size: var(--fs-md); font-weight: 600; color: var(--ink); }
-.gt-ui .btn { font-size: var(--fs-md); min-height: var(--control-h-sm); }
-.gt-ui .text-input { font-size: var(--fs-md); min-height: 40px; box-sizing: border-box; }
+.gt-ui .btn { font-size: var(--fs-md); }
+.gt-ui .text-input { font-size: var(--fs-md); box-sizing: border-box; }
 .gt-ui .club-field { display: flex; flex-direction: column; gap: var(--sp-2); margin: 0 0 var(--sp-3) 0; }
 .gt-ui .club-field .text-input { width: 100%; min-width: 0; max-width: 360px; }
 .gt-ui textarea.text-input { min-height: 84px; resize: vertical; font-family: inherit; line-height: 1.4; }
@@ -3266,7 +3270,7 @@ svg.thanh-diem { display: block; }
 
 /* UX1B-L5c: ô tìm to, gập "Mã tra cứu…", hành động "Sau khi xếp" nói trọn câu, cảnh báo huy chương gộp */
 .gt-tim-hang { margin-bottom: var(--sp-2); }
-.gt-tim-to { flex: 1 1 320px; font-size: var(--fs-md); padding: var(--sp-3) var(--sp-3); min-height: 46px; }
+.gt-tim-to { flex: 1 1 320px; font-size: var(--fs-md); padding: var(--sp-3) var(--sp-3); }
 .gt-ma-gap { margin: var(--sp-2) 0 0; }
 .gt-ma-gap > summary { cursor: pointer; }
 .ux1b-sx-hang { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
@@ -3906,12 +3910,6 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .kq-thanh-cong-cu .kq-nut-tai { margin-left: auto; }
 .kq-nhom-phai { margin-left: auto; display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }   /* CT1: nút Gợi ý chỉ tiêu + nút vàng ở góc phải */
 .kq-thanh-cong-cu .kq-nhom-phai .kq-nut-tai { margin-left: 0; }
-/* CT1: nút "Gợi ý thay đổi chỉ tiêu" nổi bật mà KHÔNG phải nút vàng (Von Restorff: vẫn một .btn-primary): viền đậm màu mực, chữ đậm, biểu tượng bóng đèn trung tính. */
-.btn-goi-y { background: var(--paper-raised, #fff); color: var(--ink); border: 2px solid var(--ink); font-weight: 700; display: inline-flex; align-items: center; gap: var(--sp-2); }
-.btn-goi-y::before { content: ""; width: 18px; height: 18px; flex: 0 0 18px; background: currentColor;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.4 1 2.5h6c0-1.1.3-1.8 1-2.5A6 6 0 0 0 12 3z'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.4 1 2.5h6c0-1.1.3-1.8 1-2.5A6 6 0 0 0 12 3z'/%3E%3C/svg%3E") center / contain no-repeat; }
-.btn-goi-y:hover { background: var(--paper-hover); }
 .kq-vung-bang { margin-top: var(--sp-2); width: 100%; }
 
 /* ============================================================
@@ -3923,7 +3921,7 @@ img.brand-mark { background: none; object-fit: contain; display: block; }
 /* Mũi tên xổ: biểu tượng SVG (ảnh nền) thay cho ký tự ▾; không dùng ::after vì UX2 dùng nó làm vùng bấm 44 px */
 .ux6-mui-ten {
   padding-right: var(--sp-6);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%235B6570' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: var(--mui-ten);
   background-repeat: no-repeat; background-position: right 11px center; background-size: 12px;
 }
 
@@ -3970,7 +3968,6 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 }
 #ux1aNangCao > summary.ux6-mui-ten, .club-them > summary.ux6-mui-ten { padding-right: var(--sp-6); }
 #adminClubTableBody td:first-child { font-family: var(--font-body); }   /* ô đầu của bảng CLB giờ là Tên; mã máy nằm trong .ux6-ma-clb */
-#gtTim { min-height: 46px; }   /* ô tra cứu to ở đầu thẻ Kết quả: không để làm tròn ảnh hưởng mức 44 px của UX2 */
 
 /* ===== CT1 — Xem xét chỉ tiêu (js/20_xem_xet_chi_tieu.js) ===========================================
    Von Restorff: xanh = tăng, vàng = giảm, xám = giữ; luôn kèm chữ (+4, −3, "Mất chỗ"). Không tô màu cho tiêu đề, nhãn nhỏ, biểu tượng.
@@ -4083,3 +4080,18 @@ html.tat-hieu-ung .ct1-vua-xong { animation: none; }
   .ct1-buoc-phai { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .ct1-buoc-cot { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 0; }
+
+/* ============================================================
+   TK1-L2: một hệ điều khiển (nút, ô nhập, select, nút thả xuống) — chỉ giao diện kiosk
+   Chiều cao theo VÙNG qua --ctl-h: mặc định 36 px; thanh công cụ Kết quả, ô tra cứu và hàng chọn phụ 44 px.
+   :where() giữ độ ưu tiên bằng 0 để các luật riêng (.btn-nho, .tk-thanh-ben .btn…) vẫn thắng; cổng .dk-* không bị chạm.
+   ============================================================ */
+.kq-thanh-cong-cu, .gt-ui, .kq-chon-hang-phu { --ctl-h: var(--control-h); }
+:where(body:not(.dk-body) .btn:not(.btn-ghost):not(.btn-nho):not(.btn-row-link):not(.btn-icon-danger)) { min-height: var(--ctl-h); }
+:where(body:not(.dk-body) :is(.text-input, .seed-input)) { min-height: var(--ctl-h); }
+:where(body:not(.dk-body)) :is(summary, a).btn:not(.btn-ghost):not(.btn-nho) { display: inline-flex; align-items: center; justify-content: center; }
+select.text-input {
+  appearance: none; -webkit-appearance: none;
+  padding-right: var(--sp-6);
+  background-image: var(--mui-ten); background-repeat: no-repeat; background-position: right 11px center; background-size: 12px;
+}

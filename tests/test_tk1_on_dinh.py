@@ -109,3 +109,49 @@ def test_gutter_thanh_cuon_on_dinh_va_h1_cung_toa_do_trai(mo_ux5a):  # noqa: F81
             "(t) => document.querySelector('#view-' + t + ' h1').getBoundingClientRect().left", tab)
     assert len({round(x, 1) for x in trai.values()}) == 1, trai
     assert not loi, loi
+
+
+# ---------------------------------------------------------------- L2: một hệ điều khiển
+JS_CAO = """(sel) => {
+  const vis = e => e.checkVisibility({checkVisibilityCSS: true});
+  const q = 'button, select, input:not([type=hidden]):not([type=checkbox]):not([type=radio]), summary';
+  return Array.from(document.querySelector(sel).querySelectorAll(q))
+    .filter(e => vis(e) && !e.closest('tbody') && !e.closest('thead') && !e.closest('.menu-khac-hop'))
+    .map(e => [e.id || e.className || e.tagName, Math.round(e.getBoundingClientRect().height * 10) / 10]);
+}"""
+
+
+def test_thanh_cong_cu_ket_qua_moi_dieu_khien_cung_chieu_cao(mo_ux5a):  # noqa: F811
+    """Kiểm nhận (a): tab phân đoạn, ô chọn, nút xám, nút thả xuống, nút vàng cùng một hàng cùng cao (44 px)."""
+    page, api, loi = mo_ux5a("quan_tri")
+    cao = page.evaluate(JS_CAO, "#kqThanhCongCu")
+    assert len(cao) >= 7, cao
+    assert {c for _, c in cao} == {44}, cao
+    assert not loi, loi
+
+
+def test_nut_goi_y_chi_tieu_la_nut_phu_khong_vien_den_khong_bong_den(mo_ux5a):  # noqa: F811
+    page, api, loi = mo_ux5a("quan_tri")
+    nut = page.locator("#btnCt1Mo")
+    cls = nut.get_attribute("class") or ""
+    assert "btn-secondary" in cls and "btn-goi-y" not in cls and "btn-primary" not in cls, cls
+    st = nut.evaluate("""e => { const b = getComputedStyle(e), t = getComputedStyle(e, '::before');
+        return { vien: b.borderTopWidth, dam: b.fontWeight, truoc: t.content }; }""")
+    assert st["vien"] == "1px" and st["dam"] == "600" and st["truoc"] in ("none", "normal"), st
+    assert page.evaluate("document.querySelectorAll('#kqThanhCongCu .btn-primary').length") == 1
+    assert not loi, loi
+
+
+def test_o_tim_va_o_chon_cung_kieu_va_cao_bang_nut_cung_hang(mo_ux5a):  # noqa: F811
+    """Phát hiện 4 và 8: ô tra cứu to, select và nút thả xuống cùng nền/viền/mũi tên và chiều cao 44 px trong thẻ Kết quả."""
+    page, api, loi = mo_ux5a("quan_tri")
+    gt = page.evaluate("""() => { const c = getComputedStyle(document.getElementById('gtTim'));
+        return [document.getElementById('gtTim').getBoundingClientRect().height, c.backgroundColor, c.borderTopColor]; }""")
+    assert gt[0] == 44, gt
+    sel = page.evaluate("""() => { const s = document.getElementById('kqChonLop'), c = getComputedStyle(s),
+        d = getComputedStyle(document.getElementById('ux1bThemTom'));
+        return { bg: c.backgroundColor, vien: c.borderTopColor, mt: c.backgroundImage.includes('svg'),
+                 mt2: d.backgroundImage.includes('svg'), app: c.appearance, bg2: d.backgroundColor, vien2: d.borderTopColor }; }""")
+    assert sel["mt"] and sel["mt2"] and sel["app"] == "none", sel         # cùng một mũi tên tự vẽ, không mũi tên gốc của trình duyệt
+    assert (sel["bg"], sel["vien"]) == (sel["bg2"], sel["vien2"]) == (gt[1], gt[2]), (sel, gt)
+    assert not loi, loi
