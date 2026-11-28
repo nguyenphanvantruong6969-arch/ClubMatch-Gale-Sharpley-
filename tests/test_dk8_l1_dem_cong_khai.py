@@ -15,7 +15,7 @@ def test_so_dem_bat_dau_bang_khong_va_chi_la_so(cd):
 
 def test_so_dem_tang_dung_va_khong_lo_ten_hay_ma(cd):
     api, qt = cd
-    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô Dung", "1234"))      # một giáo viên tự đăng ký (giai đoạn giáo viên đang mở)
+    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô Dung", "7391"))      # một giáo viên tự đăng ký (giai đoạn giáo viên đang mở)
     ids = t3._dung_san(api, qt)                                   # + 3 giáo viên do quản trị tạo, 3 học sinh, mở cho học sinh
     d = ok(api.dk_trang_thai())
     assert d["so_gv"] == 4 and d["so_da_gui"] == 0

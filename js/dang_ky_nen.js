@@ -53,6 +53,7 @@
 
   /* Chạy một thao tác của nút: khoá nút khi bận (chống bấm đúp), hiện lỗi/ok ở #dkThongBao; DK8-L5: nút báo đang lưu / xong / lỗi. */
   DK.chay = async function (nut, ham, okChu) {
+    DK.thongBao("");                                  // VG2-L3: lỗi của lần trước không ở lại sau một lần lưu thành công
     if (nut) nut.disabled = true;
     try {
       const r = await DK.phanHoi(nut, ham);
@@ -131,7 +132,7 @@
     const tt = DK.S.tt, k = tt && tt.giai_doan ? DK.THU_TU.indexOf(tt.giai_doan) : -1;
     return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("span.dk-logo", { "aria-hidden": "true" }, "RB"), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
-      vaiTro ? [h("span.dk-gian"), h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
+      vaiTro ? [h("span.dk-gian"), DK.S.vai === "quan_tri" ? h("h1.dk-vai", { style: "font-size:inherit;margin:0" }, vaiTro) : h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         DK.S.vai === "quan_tri" ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null,
         DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc())] : null));
   };
@@ -183,6 +184,7 @@
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },
+      h("p.dk-phu", {}, "Mật khẩu và mã trường: ít nhất 4 ký tự. Mật khẩu không khôi phục được trong ứng dụng (quên thì chạy QUEN_MAT_KHAU.bat). Giáo viên dùng mã trường để tự tạo tài khoản. «Buổi» là các buổi sinh hoạt CLB trong tuần; «Khối» là dải khối lớp (ví dụ 6 đến 12)."),
       DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password" }),
       DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma"),
       DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6" }),
@@ -210,9 +212,16 @@
     const tieuDe = { hoc_sinh: "Học sinh đăng nhập", giao_vien: "Giáo viên đăng nhập", quan_tri: "Quản trị đăng nhập" }[vai];
     const goiY = vai === "quan_tri" ? h("p.dk-phu#dkTuKhoa", {}, "Tự khoá sau " + DK.GIAY_NGHI_QUAN_TRI / 60 + " phút không thao tác.")
       : vai === "hoc_sinh" ? h("p.dk-phu", {}, "Không có tên trong danh sách hoặc quên PIN thì báo thầy cô quản lý. Máy tự thoát sau 60 giây không thao tác.") : null;
+    /* VG2-L4 (#27): học sinh vào khi cổng chưa mở cho học sinh -> khoá ô và nút (không ẩn), nói rõ vì sao. */
+    const chuaMoHs = vai === "hoc_sinh" && ["chuan_bi", "gv_dang_ky", "duyet"].includes((DK.S.tt || {}).giai_doan);
+    if (chuaMoHs) {
+      Array.from(f.elements).forEach((o) => { o.disabled = true; o.setAttribute("aria-disabled", "true"); });
+      b.disabled = true; b.setAttribute("aria-disabled", "true");
+    }
+    const chuaMo = chuaMoHs ? h("p.dk-ghichu#dkHsChuaMo", {}, "Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo.") : null;
     DK.hien(DK.hep(DK.veTrangDau(),       // v8: «← Về trang chọn vai trò» nằm TRÊN thẻ; nút vàng rộng hết thẻ; dòng gợi ý dưới nút
       DK.khung(h("div.dk-hang-nut", {}, h("h1.dk-tieude.dk-gian", {}, tieuDe), vai === "quan_tri" ? null : DK.chipVai(vai === "giao_vien" ? "gv" : "hs")),
-        f, b, goiY, vai === "giao_vien" ? DK.nut("Đăng ký tài khoản giáo viên", () => DK.manGvDangKy()) : null)));
+        chuaMo, f, b, goiY, vai === "giao_vien" ? DK.nut("Đăng ký tài khoản giáo viên", () => DK.manGvDangKy()) : null)));
   };
 
   DK.vaoVai = function () {

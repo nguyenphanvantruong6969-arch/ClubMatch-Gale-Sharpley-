@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## 2026-11-28 — VG2-L4 (#27): form đăng nhập học sinh khoá khi cổng chưa mở
+
+- `js/dang_ky_nen.js` `manDangNhap`: vai học sinh ở giai đoạn Chuẩn bị / Giáo viên đăng ký / Duyệt CLB thì ô và nút «Đăng nhập» bị khoá (`disabled` + `aria-disabled`, không ẩn) kèm câu «Chưa mở đăng ký cho học sinh…» (`#dkHsChuaMo`). Test `tests/test_giao_dien_vg2_l4_chua_mo.py`.
+
+## 2026-11-28 — VG2-L5 (vòng tròn Sổ nhập: cổng đăng ký → phần mềm xếp → xuất lại → nạp lại)
+
+- Lỗi: Sổ nhập xuất từ cổng (có cột Loại + Huy chương) kéo vào một workspace MỚI (chế độ huy chương tắt mặc định) nạp được nhưng LẦN XẾP bị chặn (`wharton_ho_so_chua_hop_le`, bảo «điền điểm quyết tâm» — sai hướng).
+- Sửa: câu `so_nhap_canh_bao_huy_chuong_che_do_tat` nói đúng hệ quả và cách sửa; `nhapTatCa` (`js/02_van_hanh.js`) hỏi lại một lần khi cảnh báo này còn (Huỷ mặc định; «Vẫn nhập» = hành vi cũ; `hoiXacNhanXoaKem` nhận nhãn nút tuỳ chọn); `xem_truoc_so_nhap` (`api_nhap.py`) không báo nhầm cho sổ mẫu thường có cột Loại để trống.
+- Test: `tests/test_vg2_vong_tron.py` (cổng → Sổ nhập → xếp → `export_du_lieu_dau_vao` → CSDL mới → xếp: `match_results` trùng khít), `tests/test_giao_dien_vg2_l5_nhap.py`; `tests/test_giao_dien_ux1_nhap_so.py` bấm thêm «Vẫn nhập».
+
+## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
+
+- 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).
+- Lỗi 7 («Đặng Văn Nam 4»): NGUYÊN NHÂN CHƯA XÁC NHẬN (chưa có ảnh). Giả thuyết dựa trên `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md` #8: thẻ «Giáo viên (N)» ở tab Danh sách gấp sẵn nên sau khi nạp Excel chỉ thấy tiêu đề kèm số đếm. `js/dang_ky_quan_tri.js`: danh sách giáo viên ≤ 50 người MỞ SẴN. Test hồi quy `tests/test_giao_dien_vg1.py::test_l7_tab_danh_sach_thay_ngay_ten_giao_vien`. Nếu Truong gửi ảnh cho thấy khác thì mở lại.
+
+
+## 2026-11-27 — VG2 (vá gấp 2: tài khoản, toàn vẹn dữ liệu, giao diện, đơn giản hoá; từ kiểm tra theo vai)
+
+- `api_dang_ky.py`: khoá đăng nhập QUẢN TRỊ leo thang 1→2→4→5 phút (`dn_bac:quan_tri`), đăng nhập đúng xoá bậc; dọn token hết hạn khi đăng nhập; `dk_gv_xoa` (chặn `dk_gv_con_clb`), trần `TOI_DA_GV=300` (`dk_gv_qua_nhieu`); PIN dễ đoán bị từ chối (`dk_pin_de_doan`) và `_pin_moi` không sinh; mã trường ≥ 4 khi khởi tạo; phòng / CLB trùng tên sau chuẩn hoá bị chặn; `dk_phong_xoa` chặn khi còn CLB nào trỏ tới (kể cả đã từ chối); `dk_hs_luu` kiểm dạng (`dk_nv_sai_dang`) + cảnh báo `dk_mat_diem`; `dk_hs_nguyen_vong` không nổ khi em đã bị xoá; lỗi `dk_sai_giai_doan` dùng tên giai đoạn tiếng Việt.
+- Giao diện (`js/dang_ky_*.js`, `style.css`): danh sách GV / HS mở sẵn (≤ 60 dòng), nút «Xoá» giáo viên, nhãn «Đặt lại PIN — tên», xác nhận cho «Đóng ngay» và «Xoá» CLB, bảng cuộn ngang trong khung (`.dk-cuon-ngang`), lỗi cũ biến mất ở lần lưu kế, `maxlength=80` tên CLB, tiêu đề `h1`, gợi ý màn thiết lập lần đầu, bỏ chữ «hạt giống»; học sinh chỉ đi qua màn huy chương / bài thi khi có CLB tương ứng (payload `dk_hs_luu` không đổi).
+- Tests mới: `tests/test_vg2_repro.py` (16), `tests/test_giao_dien_vg2.py` (6). Tests cũ đổi cho khớp hành vi mới có chủ đích (mã trường ≥ 4, PIN không dễ đoán, danh sách mở sẵn, hộp xác nhận).
+- Phiên gỡ lỗi CI (VG2): 5 test đỏ trên CI — `test_giao_dien_dk3_cong.py::test_10` (lùi giai đoạn qua nguyện vọng đã gửi cần `xac_nhan=True`, VG1-L3), `test_giao_dien_dkl_giao_vien.py::test_3` (buổi T2 cần CLB Tự do được duyệt trước, VG1-L4), `test_van_phong_tu_nhien.py` (bỏ chữ HOA nhấn mạnh trong `dk_can_xac_nhan_pin` và hộp xác nhận JS), `test_a13_12_tai_lieu.py` (bản đồ mã: 453 tệp test). Lỗi tìm thêm khi soát: «← Quay lại» ở màn xem lại của học sinh về màn bài thi bị bỏ qua rồi «Tiếp» nhảy về buổi 1 (`js/dang_ky_gv_hs.js`, test thêm trong `test_giao_dien_vg2.py`); `<h1>` đầu trang chỉ cho quản trị (GV/HS bị hai `<h1>`); dọn phiên duyệt `list(ds.items())` (luồng đọc pop cùng lúc → RuntimeError).
+- Chưa làm trong VG2: bảng khoá cho mã lạ (#21) và khoá form đăng nhập học sinh khi «Chưa mở» (#27).
+## 2026-11-27 — VG2-L1 (một phần: đăng nhập nhận tên/mã không dấu, khác font, khác hoa/thường)
+
+- `api_dang_ky.py`: hàm mới `_chuan_khong_dau` (NFKD, bỏ dấu tiếng Việt kể cả đ→d, bỏ ký tự ẩn Cf, chữ toàn khổ → thường, gộp khoảng trắng, casefold), `_chuan_pin` (NFKC: số toàn khổ «１２３４» thành ASCII; số Ả Rập vẫn `dk_pin_sai_dang` như VG1-L1), `_ung_vien`. `dk_dang_nhap` giáo viên/học sinh: khớp ĐÚNG dấu trước (`_chuan_ten`), không có mới khớp không dấu; nhiều người trùng tên không dấu thì PIN quyết định (đúng một người khớp PIN mới vào; hai người cùng PIN thì từ chối). `_dk_khoa_dn` dùng khoá không dấu: đổi dấu/font không né được bộ đếm khoá (hai người trùng tên không dấu dùng chung một bộ đếm). Mật khẩu quản trị không đổi.
+- Không đụng thuật toán xếp (bất biến 1 không liên quan). Khoá đếm sai đang tồn tại theo định dạng cũ (tên có dấu) bị bỏ qua sau khi cập nhật (tối đa 5 phút).
+- Soát (`soat-ma`, đã tái hiện): `_dk_khoa_dn` ghép cả `ten` vào khoá đếm của quản trị, gọi API với `ten` khác nhau mỗi lần thì đoán mật khẩu quản trị không bao giờ bị khoá (lỗi có từ trước). Nay quản trị dùng một bộ đếm duy nhất.
+- Test: `tests/test_vg2_dang_nhap_khong_dau.py` (19).
+## 2026-11-27 — VG1 vòng CI 1 (sửa 3 test đỏ trên CI sau L1–L4)
+
+- `i18n_errors.py` `dk_can_xac_nhan_pin`: bỏ chữ viết HOA nhấn mạnh (quy tắc `test_van_phong_tu_nhien`); `i18n_loi.js` sinh lại.
+- `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 447 → 451 (`test_a13_12_tai_lieu`).
+- `tests/test_giao_dien_dk4_mo_khoa.py`: PIN sai «xxxx» đổi thành PIN sai ĐÚNG DẠNG 4 chữ số (như L1; ý nghĩa test giữ nguyên).
+
 ## 2026-11-27 — VG1-L4 (vá gấp: ràng buộc CLB Tự do chặn sớm + công tắc, lỗi 4–5)
 
 - `api_dang_ky.py`: cài đặt `bat_buoc_tu_do` (mặc định BẬT = hành vi cũ, bất biến 1). Khi BẬT: (a) `dk_chuyen_giai_doan` chặn vào «duyet» (và mọi cú nhảy đi ngang nó) nếu một buổi có CLB chờ duyệt/đã duyệt mà không có CLB Tự do (`dk_thieu_clb_tu_do`); (b) `dk_clb_duyet` từ chối, `dk_clb_xoa` (quản trị), `dk_clb_sua_sau_mo` (xoá / đổi buổi) không gỡ được CLB Tự do cuối của buổi còn CLB khác; (d) hết hạn tự đóng GV → Duyệt thì `dk_clb_duyet(..., "duyet")` CLB không Tự do bị từ chối khi buổi chưa có CLB Tự do sống. Kiểm cũ ở `_dk_kiem_dieu_kien_mo_hs` giữ làm lưới an toàn. Khi TẮT: các kiểm trên và cảnh báo `dk_khong_co_tu_do` bị bỏ qua.

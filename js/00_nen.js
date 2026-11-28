@@ -506,7 +506,7 @@ function boXoaKemBar() {
   if (cu) cu.remove();
 }
 
-function hoiXacNhanXoaKem(neo, cau, khiDongY, viTri) {
+function hoiXacNhanXoaKem(neo, cau, khiDongY, viTri, khoaNut) {
   boXoaKemBar();
   const bar = document.createElement("div");
   bar.id = "xoaKemBar";
@@ -517,7 +517,7 @@ function hoiXacNhanXoaKem(neo, cau, khiDongY, viTri) {
   const dongY = document.createElement("button");
   dongY.type = "button";
   dongY.className = "btn btn-primary";
-  dongY.textContent = t("xoa_kem_nut");
+  dongY.textContent = t(khoaNut || "xoa_kem_nut");      /* VG2-L5: thanh dùng lại cho xác nhận khác (khoaNut) */
   const huy = document.createElement("button");
   huy.type = "button";
   huy.className = "btn btn-ghost";

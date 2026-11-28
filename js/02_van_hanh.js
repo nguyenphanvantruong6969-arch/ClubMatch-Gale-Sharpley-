@@ -918,7 +918,7 @@ function initCsvImportHandlers() {
     themFileVaoHangDoi(ev.dataTransfer && ev.dataTransfer.files);
   });
 
-  el("btnImportAll").addEventListener("click", nhapTatCa);
+  el("btnImportAll").addEventListener("click", () => nhapTatCa());
   el("btnClearQueue").addEventListener("click", boHangDoiNhap);
   el("btnTaiSoMau").addEventListener("click", () => taiSoNhapMau("thuong"));
 }
@@ -1186,10 +1186,17 @@ function batHuyChuongTuXemTruoc(muc, nut) {
   });
 }
 
-function nhapTatCa() {
+function nhapTatCa(daXacNhanCheDo) {
   const muc = importQueue[0];
   if (!muc || !muc.b64 || muc.xong) {
     feedback(el("feedbackImportAll"), t("feedback_no_file_selected"), true);
+    return;
+  }
+  /* VG2-L5: sổ có Huy chương / Loại mà chế độ huy chương TẮT -> nhập lúc này làm mất cột Loại và lần xếp bị chặn.
+     Hỏi lại một lần (Huỷ là mặc định); "Vẫn nhập" giữ đúng hành vi cũ. */
+  const canhBaoCheDo = ((muc.tomTat && muc.tomTat.canh_bao) || []).some((w) => w && w.code === "so_nhap_canh_bao_huy_chuong_che_do_tat");
+  if (canhBaoCheDo && !daXacNhanCheDo) {
+    hoiXacNhanXoaKem(el("btnImportAll"), t("vg2_nhap_khi_huy_chuong_tat"), () => nhapTatCa(true), "afterend", "vg2_van_nhap");
     return;
   }
   datKhoa("dangNhap", true);

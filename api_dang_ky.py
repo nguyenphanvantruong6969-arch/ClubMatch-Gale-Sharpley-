@@ -37,12 +37,17 @@ GIAY_NGHI_KHAC = 60
 SO_VONG_PIN = 10_000
 SO_LAN_SAI_TOI_DA = 5
 PHUT_KHOA = 5
+TOI_DA_GV = 300                                   # VG2-L1: trần tài khoản giáo viên (chống tạo rác)
+TEN_GD_VI = {"chuan_bi": "Chuẩn bị", "gv_dang_ky": "Giáo viên đăng ký", "duyet": "Duyệt CLB", "hs_dang_ky": "Học sinh đăng ký",
+             "nhap_diem": "Nhập điểm", "xuat": "Xuất"}
 BUOI_MAC_DINH = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6"]
 KHOI_MAC_DINH = [6, 12]
 
 
 class _Loi(Exception):
     def __init__(self, ma, **tham_so):
+        if ma == "dk_sai_giai_doan" and "phan" in tham_so:          # VG2-L4: không lộ mã nội bộ («gv_dang_ky») cho người dùng
+            tham_so["phan"] = TEN_GD_VI.get(tham_so["phan"], tham_so["phan"])
         self.loi = err(ma, **tham_so)
         super().__init__(ma)
 
@@ -61,8 +66,43 @@ def _chuan_ten(v) -> str:
     return " ".join(unicodedata.normalize("NFC", str(v or "")).split()).casefold()
 
 
+def _chuan_khong_dau(v) -> str:
+    """VG2-L1 (Truong): khoá so khớp lỏng khi đăng nhập: NFKC (chữ toàn khổ / «font» khác về chữ thường), bỏ ký tự ẩn (Cf),
+    bỏ dấu tiếng Việt (kể cả đ → d), gộp khoảng trắng, bỏ hoa/thường. «Đặng Văn Nam» = «DANG VAN NAM». KHÔNG dùng để lưu."""
+    s = unicodedata.normalize("NFKD", str(v or ""))
+    s = "".join(c for c in s if not unicodedata.combining(c) and unicodedata.category(c) != "Cf")
+    return " ".join(s.replace("đ", "d").replace("Đ", "d").split()).casefold()
+
+
+def _chuan_pin(v) -> str:
+    """VG2-L1: PIN gõ số toàn khổ («１２３４») thành chữ số ASCII (NFKC); bỏ khoảng trắng / ký tự ẩn. Số Ả Rập vẫn sai dạng (VG1-L1)."""
+    return "".join(c for c in unicodedata.normalize("NFKC", str(v or "")) if unicodedata.category(c) != "Cf").strip()
+
+
+def _ung_vien(dong, k_lay, ten):
+    """Khớp đúng (cùng dấu, `_chuan_ten`) trước; không có thì khớp không dấu (`_chuan_khong_dau`), có thể nhiều người."""
+    k = _chuan_ten(ten)
+    dung = [x for x in dong if _chuan_ten(k_lay(x)) == k]
+    if dung:
+        return dung
+    k = _chuan_khong_dau(ten)
+    return [x for x in dong if _chuan_khong_dau(k_lay(x)) == k]
+
+
+def _pin_de_doan(pin) -> bool:
+    """VG2-L1 (D2): 4 số giống nhau, dãy tăng / giảm liên tiếp (0123…6789, 3210…9876), 2580. Chỉ áp cho PIN MỚI."""
+    p = str(pin or "")
+    if not re.fullmatch(r"\d{4}", p):
+        return False
+    d = [int(c) for c in p]
+    return len(set(d)) == 1 or p == "2580" or all(d[i + 1] - d[i] == 1 for i in range(3)) or all(d[i] - d[i + 1] == 1 for i in range(3))
+
+
 def _pin_moi() -> str:
-    return "%04d" % secrets.randbelow(10000)
+    while True:
+        p = "%04d" % secrets.randbelow(10000)
+        if not _pin_de_doan(p):
+            return p
 
 
 def _khoi_cua_lop(lop):
@@ -178,7 +218,7 @@ class DangKyMixin:
             if not isinstance(mat_khau, str) or len(mat_khau) < 4:
                 raise _Loi("dk_mat_khau_ngan")
             ma = str(ma_truong or "").strip()
-            if not ma:
+            if len(ma) < 4:                               # VG2-L2: cùng luật với dk_cai_dat_doi
                 raise _Loi("dk_ma_truong_sai")
             ds = [str(b).strip() for b in (buoi or BUOI_MAC_DINH) if str(b).strip()]
             k = [_so_nguyen(x) for x in (khoi or KHOI_MAC_DINH)]
@@ -199,7 +239,9 @@ class DangKyMixin:
 
     @staticmethod
     def _dk_khoa_dn(vai, ten):
-        return "dn_sai:%s:%s" % (vai, _chuan_ten(ten)[:64])
+        if vai == QUAN_TRI:                              # soát VG2-L1: quản trị không dùng tên -> một bộ đếm duy nhất (đổi `ten` không né khoá)
+            ten = ""
+        return "dn_sai:%s:%s" % (vai, _chuan_khong_dau(ten)[:64])   # VG2-L1: không né khoá bằng cách đổi dấu / font
 
     def _dk_con_khoa(self, cur, khoa):
         """Số phút còn bị khoá (làm tròn lên) hoặc 0. Giá trị lưu: `số_lần_sai|hạn_khoá_ISO` (hạn rỗng = chưa khoá)."""
@@ -219,7 +261,7 @@ class DangKyMixin:
         khoa = self._dk_khoa_dn(vai, ten)
         ma = str(ma or "")
         if vai != QUAN_TRI:
-            ma = ma.strip()                          # VG1-L1 (D1): PIN gõ thừa dấu cách vẫn đúng
+            ma = _chuan_pin(ma)                      # VG1-L1 (D1) + VG2-L1: thừa dấu cách, số toàn khổ vẫn đúng
             if not re.fullmatch(r"[0-9]{4}", ma):       # sai dạng: chặn bằng mã riêng, KHÔNG tính một lần sai (chống khoá hộ)
                 return _fail(err("dk_pin_sai_dang"))
 
@@ -230,12 +272,23 @@ class DangKyMixin:
             kq = xac_thuc(cur)
             if kq is not None:
                 cur.execute("DELETE FROM dk_cai_dat WHERE khoa = ?", (khoa,))
+                if vai == QUAN_TRI:
+                    cur.execute("DELETE FROM dk_cai_dat WHERE khoa = 'dn_bac:quan_tri'")      # VG2-L1 (D1): đăng nhập đúng xoá bậc khoá
+                ds = self._dk_phien_dict()                                                  # VG2-L1: dọn token hết hạn (không tăng mãi)
+                for t in [t for t, v in list(ds.items()) if t != "_db" and isinstance(v, dict) and      # list(): luồng đọc có thể pop cùng lúc
+                          self._dk_dong_ho() - v.get("luc", 0) > (GIAY_NGHI_QUAN_TRI if v.get("vai") == QUAN_TRI else GIAY_NGHI_KHAC * 5)]:
+                    ds.pop(t, None)
                 return kq
             v = self._dk_cai_dat(cur, khoa)
             n = (int(v.split("|", 1)[0]) if v else 0) + 1
             han = ""
             if n >= SO_LAN_SAI_TOI_DA:
-                han = (self._dk_bay_gio() + datetime.timedelta(minutes=PHUT_KHOA)).isoformat(timespec="seconds")
+                phut = PHUT_KHOA
+                if vai == QUAN_TRI:                       # VG2-L1 (D1): quản trị khoá 1 → 2 → 4 → 5 phút (người lạ khó khoá lâu)
+                    bac = int(self._dk_cai_dat(cur, "dn_bac:quan_tri") or 0)
+                    phut = min(PHUT_KHOA, 2 ** bac)
+                    self._dk_dat(cur, "dn_bac:quan_tri", str(bac + 1))
+                han = (self._dk_bay_gio() + datetime.timedelta(minutes=phut)).isoformat(timespec="seconds")
                 self._dk_ghi_nk(cur, "he_thong", "khoa_dang_nhap", "%s %s" % (vai, str(ten or "")[:64]))
                 n = 0
             self._dk_dat(cur, khoa, "%d|%s" % (n, han))
@@ -249,15 +302,17 @@ class DangKyMixin:
                 ok = _dung(ma_s, bytes.fromhex(self._dk_cai_dat(cur, "mk_bam")), bytes.fromhex(self._dk_cai_dat(cur, "mk_muoi")))
                 thong = {"ten": "Quản trị"}
             elif vai == GIAO_VIEN:
-                k = _chuan_ten(ten)
-                r = next((x for x in cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien") if _chuan_ten(x[1]) == k), None)
-                ok = bool(r) and _dung(ma_s, r[2], r[3])
+                uv = _ung_vien(cur.execute("SELECT gv_id, ten, pin_bam, pin_muoi FROM dk_giao_vien").fetchall(), lambda x: x[1], ten)
+                hop = [x for x in uv if _dung(ma_s, x[2], x[3])]   # trùng tên không dấu: PIN quyết định; hai người cùng PIN -> từ chối
+                r = hop[0] if len(hop) == 1 else None
+                ok = r is not None
                 thong = {"ten": r[1], "id": r[0]} if r else {}
             elif vai == HOC_SINH:
-                k = _chuan_ten(ten)
-                r = next((x for x in cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh")
-                          if _chuan_ten(x[0]) == k), None)
-                ok = bool(r) and _dung(ma_s, r[4], r[5])
+                uv = _ung_vien(cur.execute("SELECT student_id, ho_ten, lop, khoi, pin_bam, pin_muoi FROM dk_hoc_sinh").fetchall(),
+                               lambda x: x[0], ten)
+                hop = [x for x in uv if _dung(ma_s, x[4], x[5])]
+                r = hop[0] if len(hop) == 1 else None
+                ok = r is not None
                 thong = {"ten": r[1], "id": r[0], "lop": r[2], "khoi": r[3]} if r else {}
             else:
                 ok, thong = False, {}
@@ -420,7 +475,7 @@ class DangKyMixin:
                 raise _Loi("dk_ten_trong")
             if sc is None or sc <= 0:
                 raise _Loi("dk_phong_suc_chua")
-            if cur.execute("SELECT 1 FROM dk_phong WHERE ten = ?", (t,)).fetchone():
+            if any(_chuan_ten(r[0]) == _chuan_ten(t) for r in cur.execute("SELECT ten FROM dk_phong")):      # VG2-L2: p1 = P1
                 raise _Loi("dk_phong_trung")
             cur.execute("INSERT INTO dk_phong (ten, suc_chua) VALUES (?, ?)", (t, sc))
             phong_id = cur.lastrowid                     # DKL-K: lấy TRƯỚC khi ghi nhật ký (nhật ký cũng là một INSERT)
@@ -430,7 +485,7 @@ class DangKyMixin:
 
     def dk_phong_xoa(self, token, phong_id):
         def lam(cur, p):
-            if cur.execute("SELECT 1 FROM dk_clb WHERE phong_id = ? AND trang_thai != 'tu_choi'", (phong_id,)).fetchone():
+            if cur.execute("SELECT 1 FROM dk_clb WHERE phong_id = ?", (phong_id,)).fetchone():   # VG2-L2: cả CLB đã bị từ chối (tránh phong_id lơ lửng)
                 raise _Loi("dk_phong_dang_dung")
             cur.execute("DELETE FROM dk_phong WHERE phong_id = ?", (phong_id,))
             self._dk_ghi_nk(cur, QUAN_TRI, "xoa_phong", phong_id)
@@ -478,7 +533,7 @@ class DangKyMixin:
         """VG1-L2 (kiểm tra toàn diện #2): đặt lại PIN thì phiên đang mở của người đó chết (PIN lộ / dùng chung không còn hiệu lực)."""
         ids = set(ids)
         ds = self._dk_phien_dict()
-        for t in [t for t, v in ds.items() if t != "_db" and isinstance(v, dict) and v.get("vai") == vai and v.get("id") in ids]:
+        for t in [t for t, v in list(ds.items()) if t != "_db" and isinstance(v, dict) and v.get("vai") == vai and v.get("id") in ids]:
             ds.pop(t, None)
 
     @staticmethod
@@ -501,6 +556,10 @@ class DangKyMixin:
                 raise _Loi("dk_ten_trong")
             if not re.fullmatch(r"\d{4}", str(pin or "")):
                 raise _Loi("dk_pin_sai_dang")
+            if _pin_de_doan(pin):
+                raise _Loi("dk_pin_de_doan")
+            if cur.execute("SELECT COUNT(*) FROM dk_giao_vien").fetchone()[0] >= TOI_DA_GV:
+                raise _Loi("dk_gv_qua_nhieu", toi_da=TOI_DA_GV)
             if self._dk_gv_trung(cur, t):
                 raise _Loi("dk_gv_trung")
             b, m = _bam(pin)
@@ -530,6 +589,22 @@ class DangKyMixin:
             self._dk_ghi_nk(cur, QUAN_TRI, "tao_gv", len(ra))
             return {"da_tao": ra, "bo_qua": bo_qua}
         return self._dk_chay(lam, QUAN_TRI, token=token)
+
+    def dk_gv_xoa(self, token, gv_id):
+        """VG2-L1 (D3): quản trị xoá một giáo viên (dọn tài khoản rác). Còn CLB chưa bị từ chối thì chặn; CLB đã bị từ chối đi theo."""
+        def lam(cur, p):
+            if not cur.execute("SELECT 1 FROM dk_giao_vien WHERE gv_id = ?", (gv_id,)).fetchone():
+                raise _Loi("dk_khong_thay")
+            if cur.execute("SELECT 1 FROM dk_clb WHERE gv_id = ? AND trang_thai != 'tu_choi'", (gv_id,)).fetchone():
+                raise _Loi("dk_gv_con_clb")
+            cur.execute("DELETE FROM dk_clb WHERE gv_id = ?", (gv_id,))
+            cur.execute("DELETE FROM dk_giao_vien WHERE gv_id = ?", (gv_id,))
+            self._dk_ghi_nk(cur, QUAN_TRI, "xoa_gv", gv_id)
+            return {}
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:
+            self._dk_huy_phien(GIAO_VIEN, [gv_id])
+        return r
 
     def dk_gv_dat_lai_pin(self, token, gv_id):
         def lam(cur, p):
@@ -646,7 +721,7 @@ class DangKyMixin:
         ten = unicodedata.normalize("NFC", str(d.get("ten") or "")).strip()
         if not ten or len(ten) > 80:
             raise _Loi("dk_ten_trong")
-        if cur.execute("SELECT 1 FROM dk_clb WHERE ten = ? AND clb_id IS NOT ?", (ten, clb_id)).fetchone():
+        if any(r[1] != clb_id and _chuan_ten(r[0]) == _chuan_ten(ten) for r in cur.execute("SELECT ten, clb_id FROM dk_clb")):   # VG2-L2
             raise _Loi("dk_clb_ten_trung")
         b = str(d.get("buoi") or "")
         if b not in buoi:
@@ -880,8 +955,10 @@ class DangKyMixin:
         def lam(cur, p):
             nv = [dict(buoi=r[0], hang=r[1], clb_id=r[2], thi=bool(r[3]), diem=r[4], huy_chuong=r[5]) for r in cur.execute(
                 "SELECT buoi, hang, clb_id, thi, diem, huy_chuong FROM dk_nguyen_vong WHERE student_id = ? ORDER BY buoi COLLATE THU_TU_BUOI, hang", (p["id"],))]
-            nop = cur.execute("SELECT nop_luc FROM dk_hoc_sinh WHERE student_id = ?", (p["id"],)).fetchone()[0]
-            return {"nguyen_vong": nv, "nop_luc": nop}
+            nop = cur.execute("SELECT nop_luc FROM dk_hoc_sinh WHERE student_id = ?", (p["id"],)).fetchone()
+            if nop is None:
+                raise _Loi("dk_can_dang_nhap")
+            return {"nguyen_vong": nv, "nop_luc": nop[0]}
         return self._dk_chay(lam, HOC_SINH, ghi=False, token=token)
 
     def dk_hs_luu(self, token, nguyen_vong, buoi_tay=None):
@@ -893,6 +970,8 @@ class DangKyMixin:
                 raise _Loi("dk_hs_chua_mo")
             if not cur.execute("SELECT 1 FROM dk_hoc_sinh WHERE student_id = ?", (p["id"],)).fetchone():
                 raise _Loi("dk_can_dang_nhap")                       # em đã bị gỡ khỏi danh sách: phiên cũ không còn giá trị
+            if nguyen_vong is not None and (not isinstance(nguyen_vong, (list, tuple)) or not all(isinstance(x, dict) for x in nguyen_vong)):
+                raise _Loi("dk_nv_sai_dang")                       # VG2-L2: dữ liệu sai dạng có mã lỗi riêng
             tay = set(buoi_tay or [])
             theo_buoi, thay = {}, set()
             for x in nguyen_vong or []:
@@ -939,6 +1018,9 @@ class DangKyMixin:
                     canh_bao.append(err("dk_khong_co_tu_do", buoi=b))
                 for hang, d in enumerate(ds, start=1):
                     hang_ra.append((p["id"], b, hang, d["clb_id"], int(d["thi"]), cu.get(d["clb_id"]) if d["thi"] else None, d["hc"]))
+            moi_thi = {r[3] for r in hang_ra if r[4]}
+            for cid_mat in sorted(c for c, d_ in cu.items() if d_ is not None and c not in moi_thi):      # VG2-L2: bỏ tick thi CLB đã có điểm
+                canh_bao.append(err("dk_mat_diem", clb=cid_mat))
             cur.execute("DELETE FROM dk_nguyen_vong WHERE student_id = ?", (p["id"],))
             cur.executemany("INSERT INTO dk_nguyen_vong (student_id, buoi, hang, clb_id, thi, diem, huy_chuong) VALUES (?,?,?,?,?,?,?)",
                             hang_ra)

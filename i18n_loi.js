@@ -623,8 +623,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "This workspace doesn't use FA-DAA yet: the type / pass mark / minimum / room capacity columns of {n} club(s) were skipped and not saved."
   },
   "so_nhap_canh_bao_huy_chuong_che_do_tat": {
-    "vi": "Sổ này có cột Huy chương / Loại nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bật chế độ này ở Cài đặt, hoặc huy chương sẽ không được dùng.",
-    "en": "This book has Medal / Type columns but the \"Allocate by {slot_l} type and medals\" mode is off. Turn it on in Settings, or the medals will not be used."
+    "vi": "Sổ này có cột Huy chương / Loại (ví dụ sổ xuất từ cổng đăng ký) nhưng chế độ \"Xếp theo loại {slot_l} và huy chương\" đang tắt. Hãy bấm \"Bật chế độ huy chương\" (hoặc bật ở Cài đặt) trước khi nhập. Nếu vẫn nhập lúc chế độ tắt, cột Loại bị bỏ qua và lần xếp có thể bị chặn vì thiếu điểm quyết tâm; khi đó phải bật chế độ rồi nhập lại sổ.",
+    "en": "This book has Medal / Type columns (for example a book exported from the registration portal) but the \"Allocate by {slot_l} type and medals\" mode is off. Click \"Turn on medal mode\" (or turn it on in Settings) before importing. Importing while the mode is off skips the Type column and the allocation may be blocked for missing commitment points; the mode must then be turned on and the book imported again."
   },
   "fa_giu_cho_bo_qua": {
     "vi": "Không gian làm việc này chưa bật chế độ FA-DAA: {n} dòng giữ chỗ trong sổ đã được bỏ qua, không lưu.",
@@ -1903,8 +1903,8 @@ window.I18N_ERROR_MESSAGES = {
     "en": "Invalid PIN sheet scope (choose students, teachers or all)."
   },
   "dk_can_xac_nhan_pin": {
-    "vi": "Xuất phiếu PIN sẽ ĐẶT LẠI PIN của {n} người (PIN cũ không còn dùng được). Hãy xác nhận trước khi xuất.",
-    "en": "Exporting the PIN sheet RESETS the PIN of {n} people (old PINs stop working). Please confirm first."
+    "vi": "Xuất phiếu PIN sẽ đặt lại PIN của {n} người (PIN cũ không còn dùng được). Hãy xác nhận trước khi xuất.",
+    "en": "Exporting the PIN sheet resets the PIN of {n} people (old PINs stop working). Please confirm first."
   },
   "dk_lui_co_nguyen_vong": {
     "vi": "Đã có {n} học sinh gửi nguyện vọng. Lùi giai đoạn không xoá nguyện vọng, nhưng cần xác nhận.",
@@ -1917,5 +1917,25 @@ window.I18N_ERROR_MESSAGES = {
   "dk_can_xac_nhan_rui_ro": {
     "vi": "Tắt ràng buộc «phải có CLB Tự do» cần xác nhận rủi ro: học sinh không đỗ CLB nào sẽ không có CLB trong buổi đó.",
     "en": "Turning off the «free club required» rule needs a risk confirmation: a student who gets no club will have none in that session."
+  },
+  "dk_pin_de_doan": {
+    "vi": "PIN này quá dễ đoán (như 0000, 1234). Hãy chọn 4 số khác.",
+    "en": "This PIN is too easy to guess (like 0000 or 1234). Choose other 4 digits."
+  },
+  "dk_gv_con_clb": {
+    "vi": "Giáo viên này còn CLB chưa bị từ chối. Hãy từ chối hoặc xoá các CLB đó trước.",
+    "en": "This teacher still has clubs that were not rejected. Reject or delete them first."
+  },
+  "dk_gv_qua_nhieu": {
+    "vi": "Đã có quá nhiều tài khoản giáo viên (tối đa {toi_da}). Nhờ quản trị xoá bớt tài khoản không dùng.",
+    "en": "Too many teacher accounts (maximum {toi_da}). Ask the manager to delete unused accounts."
+  },
+  "dk_nv_sai_dang": {
+    "vi": "Danh sách nguyện vọng không đúng dạng. Hãy tải lại trang và chọn lại.",
+    "en": "The wish list has the wrong format. Reload the page and choose again."
+  },
+  "dk_mat_diem": {
+    "vi": "Bỏ chọn thi một CLB đã có điểm: nếu chọn thi lại, điểm cũ phải nhập lại.",
+    "en": "Exam un-ticked for a club that already has a score: if ticked again, the score must be re-entered."
   }
 };

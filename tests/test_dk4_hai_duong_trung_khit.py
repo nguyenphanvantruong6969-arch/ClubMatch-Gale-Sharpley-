@@ -25,7 +25,7 @@ def _xay(thu_muc, ky):
     """Bộ dữ liệu mô phỏng `ky`: 2 buổi, mỗi buổi 1 Tự do + 1 Giới hạn + 1 Tuyển chọn, điểm ngẫu nhiên (cố định theo `ky`)."""
     rng = random.Random(1000 + ky)
     api = PipelineAPI(str(thu_muc / "app.db"))
-    ok(api.dk_khoi_tao("matkhau", "T", ["T2", "T3"], [10, 12]))
+    ok(api.dk_khoi_tao("matkhau", "TRUONG", ["T2", "T3"], [10, 12]))
     qt = ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     for t in ("P1", "P2", "P3", "P4", "P5", "P6"):
         ok(api.dk_phong_luu(qt, t, 30))

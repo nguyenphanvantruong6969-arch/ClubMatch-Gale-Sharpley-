@@ -24,7 +24,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("dklhs") / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     _ok(api.dk_phong_luu(qt, "P1", 40))
     _ok(api.dk_phong_luu(qt, "P2", 30))
