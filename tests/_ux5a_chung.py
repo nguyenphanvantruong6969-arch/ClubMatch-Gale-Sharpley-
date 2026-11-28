@@ -11,6 +11,7 @@ pytest.importorskip("playwright", reason="chưa cài playwright")
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 import browser_host  # noqa: E402
+import cau_hinh_ws  # noqa: E402
 import workspace as ws  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 from api import PipelineAPI  # noqa: E402
@@ -45,15 +46,17 @@ def mo_ux5a():
         pytest.skip("khong tim thay Chromium")
     dong = []
 
-    def mo(vai="quan_tri", tab="results"):
+    def mo(vai="quan_tri", tab="results", so_nhap=None, rules=None, rong=1280):
         tmp = tempfile.mkdtemp()
         goc, xuat = os.path.join(tmp, "g"), os.path.join(tmp, "x")
         os.makedirs(goc)
         os.makedirs(xuat)
         slug = ws.tao(goc, "Truong hoc", None)
         api = PipelineAPI(ws.duong_dan_db(goc, slug), thu_muc_xuat=xuat, thu_muc_goc_ws=goc, ws_da_chon=True)
-        with open(SO_120, "rb") as f:
+        with open(so_nhap or SO_120, "rb") as f:
             assert api.import_so_nhap(base64.b64encode(f.read()).decode())["ok"]
+        if rules:                                    # CT1: bộ không có hồ sơ "Chia 100 điểm" phải tắt luật đó trước khi xếp
+            cau_hinh_ws.ghi_cau_hinh(api.db_path, {"rules": rules})
         for i in range(1, 121):
             assert api.set_student_class("HS%03d" % i, "10A%d" % (1 + i % 4))["ok"]
         assert api.run_pipeline(seed=42)["ok"]
@@ -66,7 +69,7 @@ def mo_ux5a():
         pw = sync_playwright().start()
         br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
         dong.append((br, pw))
-        page = br.new_page(viewport={"width": 1280, "height": 900}, bypass_csp=True)
+        page = br.new_page(viewport={"width": rong, "height": 900}, bypass_csp=True)
         page.set_default_timeout(10000)
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
