@@ -103,13 +103,13 @@ def test_ket_qua_bang_khong_trong_khung_va_mot_thanh_cong_cu(mo_ux5a, vai):  # n
     page, api, loi = mo_ux5a(vai, "results")
     assert page.locator("#kqThanhCongCu").is_visible()
     hop = page.evaluate("""() => {
-      const b = document.querySelector('#view-results table');
+      const b = document.querySelector('#kqBang');
       const the = b && b.closest('.panel');
       return the ? the.id || 'panel' : null;
     }""")
     assert hop is None, hop                                         # bảng không nằm trong .panel
     tb = page.locator("#kqThanhCongCu").bounding_box()
-    ban = page.locator("#view-results table").first.bounding_box()
+    ban = page.locator("#kqBang").bounding_box()
     assert tb["y"] + tb["height"] <= ban["y"] + 2                   # thanh công cụ nằm TRÊN bảng
     assert page.locator("#btnKqTaiBang").is_visible()
     if vai == "giao_vien":
