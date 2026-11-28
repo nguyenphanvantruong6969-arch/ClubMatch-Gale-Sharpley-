@@ -251,12 +251,12 @@
   }
  },
  "lan_chay": {
-  "lenh": "python du_lieu_test/danh_gia/do_danh_gia.py --day-du --phan doi_chieu mac_dinh co_che bien_the quet nhieu_buoi co_san",
-  "commit": "d428f0851c2bb87863555dfdf6d0ca75a74901a2",
+  "lenh": "python du_lieu_test/danh_gia/do_danh_gia.py --day-du --phan co_san nhieu_buoi",
+  "commit": "17af13a1526c293708f6476ea0826767c00502dd",
   "cay_lam_viec_sach": true,
   "python": "3.13.18",
   "may": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39",
-  "bat_dau": "2026-11-28 03:02:25",
-  "thoi_gian_giay": 0.4
+  "bat_dau": "2026-11-28 03:24:00",
+  "thoi_gian_giay": 0.3
  }
 }

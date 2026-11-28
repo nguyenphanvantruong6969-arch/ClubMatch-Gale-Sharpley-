@@ -7,7 +7,9 @@
 | `_chi_so.py` | Chỉ số THUẦN (A nguyện vọng, B chưa xếp + cận trên ghép cực đại, C chỉ tiêu) + bảng `DINH_NGHIA` |
 | `_sinh.py` | Bộ sinh trường mô phỏng (α độ tập trung, ρ liên quan điểm–năng lực, κ chỉ tiêu/HS) + ghi Sổ nhập |
 | `do_danh_gia.py` | Bộ chạy: lưới seed, biến thể tiêu chí, 4 cơ chế đối chứng, thời gian, nhiều buổi, bộ có sẵn |
+| `do_tinh_nang.py` | Nhóm G: suất dự trữ × điểm quyết tâm (2×2), huy chương FA-DAA so với chế độ cũ |
 | `in_bang.py` | In bảng Markdown từ JSON (không có câu diễn giải) |
+| `kiem_ket_qua.py` | Kiểm ràng buộc cứng trên JSON (0 cặp phá vỡ, cận trên, đối chiếu số liệu); `tao_readme_lan_chay.py` sinh `ket_qua/README_LAN_CHAY.md` |
 | `ket_qua/` | JSON của lần chạy ĐẦY ĐỦ đã commit; `README_LAN_CHAY.md` ghi commit, lệnh, thời gian |
 | `ket_qua_nhanh/`, `ket_qua_that/` | Bị `.gitignore` (chạy nhanh / dữ liệu thật — không bao giờ commit) |
 
@@ -15,7 +17,9 @@
 
 ```bash
 ./.venv/bin/python du_lieu_test/danh_gia/do_danh_gia.py --nhanh       # vài giây, 120 & 300 HS, ra ket_qua_nhanh/
-./.venv/bin/python du_lieu_test/danh_gia/do_danh_gia.py --day-du      # đầy đủ (≈ 30 phút), ra ket_qua/
+./.venv/bin/python du_lieu_test/danh_gia/do_danh_gia.py --day-du      # đầy đủ (≈ 20 phút), ra ket_qua/
+./.venv/bin/python du_lieu_test/danh_gia/do_tinh_nang.py --day-du     # nhóm G (≈ 7 phút), ra ket_qua/tinh_nang.json
+./.venv/bin/python du_lieu_test/danh_gia/kiem_ket_qua.py              # kiểm ràng buộc cứng trên JSON
 ./.venv/bin/python du_lieu_test/danh_gia/do_danh_gia.py --giam        # lưới giảm 3 trường × 5 lần bốc thăm
 ./.venv/bin/python du_lieu_test/danh_gia/do_danh_gia.py --so-nhap SO.xlsx   # dữ liệu thật → ket_qua_that/ (KHÔNG commit)
 ./.venv/bin/python du_lieu_test/danh_gia/in_bang.py du_lieu_test/danh_gia/ket_qua

@@ -1,0 +1,1055 @@
+{
+ "tham_so": {
+  "n_hs": 800,
+  "n_clb": 20,
+  "alpha": 0.5,
+  "rho": 0.7,
+  "kappa": 1.1,
+  "so_buoi": 3
+ },
+ "seed_du_lieu": [
+  101,
+  102,
+  103,
+  104,
+  105
+ ],
+ "seed_boc_tham": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "theo_buoi": {
+  "thu_2": {
+   "a.pct_nv1_tat_ca": {
+    "tb": 56.814,
+    "ktc95": [
+     52.0743,
+     61.5537
+    ],
+    "n": 5
+   },
+   "a.pct_top2_tat_ca": {
+    "tb": 85.472,
+    "ktc95": [
+     79.7042,
+     91.2398
+    ],
+    "n": 5
+   },
+   "a.pct_top3_tat_ca": {
+    "tb": 96.126,
+    "ktc95": [
+     93.3023,
+     98.9497
+    ],
+    "n": 5
+   },
+   "a.pct_nv1_da_xep": {
+    "tb": 57.322,
+    "ktc95": [
+     52.68,
+     61.964
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.1": {
+    "tb": 56.814,
+    "ktc95": [
+     52.0743,
+     61.5537
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.2": {
+    "tb": 85.472,
+    "ktc95": [
+     79.7042,
+     91.2398
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.3": {
+    "tb": 96.126,
+    "ktc95": [
+     93.3023,
+     98.9497
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.4": {
+    "tb": 99.004,
+    "ktc95": [
+     98.1682,
+     99.8398
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.5": {
+    "tb": 99.102,
+    "ktc95": [
+     98.401,
+     99.803
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.6": {
+    "tb": 99.102,
+    "ktc95": [
+     98.401,
+     99.803
+    ],
+    "n": 5
+   },
+   "a.hang_tb": {
+    "tb": 1.5957,
+    "ktc95": [
+     1.4934,
+     1.698
+    ],
+    "n": 5
+   },
+   "a.ngoai_danh_sach": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "a.cap_chan": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.n_chua_xep": {
+    "tb": 7.16,
+    "ktc95": [
+     1.6536,
+     12.6664
+    ],
+    "n": 5
+   },
+   "b.pct_chua_xep": {
+    "tb": 0.898,
+    "ktc95": [
+     0.197,
+     1.599
+    ],
+    "n": 5
+   },
+   "b.can_tren_ghep_cuc_dai": {
+    "tb": 800.0,
+    "ktc95": [
+     800.0,
+     800.0
+    ],
+    "n": 5
+   },
+   "b.khong_the_tranh": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.gia_uu_tien_on_dinh": {
+    "tb": 7.16,
+    "ktc95": [
+     1.6536,
+     12.6664
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.danh_sach_rong": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.khong_diem": {
+    "tb": 2.22,
+    "ktc95": [
+     0.2543,
+     4.1857
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.het_cho_uu_tien_cao_hon": {
+    "tb": 4.94,
+    "ktc95": [
+     1.1687,
+     8.7113
+    ],
+    "n": 5
+   },
+   "b.lech_cho": {
+    "tb": 7.16,
+    "ktc95": [
+     1.6536,
+     12.6664
+    ],
+    "n": 5
+   },
+   "c.ty_le_lap_day": {
+    "tb": 83.758,
+    "ktc95": [
+     80.4116,
+     87.1044
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.min": {
+    "tb": 0.1191,
+    "ktc95": [
+     0.0445,
+     0.1936
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.median": {
+    "tb": 0.9503,
+    "ktc95": [
+     0.8472,
+     1.0534
+    ],
+    "n": 5
+   },
+   "c.n_clb_day": {
+    "tb": 3.56,
+    "ktc95": [
+     3.0146,
+     4.1054
+    ],
+    "n": 5
+   },
+   "c.n_clb_duoi_50": {
+    "tb": 2.28,
+    "ktc95": [
+     1.736,
+     2.824
+    ],
+    "n": 5
+   },
+   "c.du_tru_cung_cap": {
+    "tb": 41.6,
+    "ktc95": [
+     37.5201,
+     45.6799
+    ],
+    "n": 5
+   },
+   "c.du_tru_da_dung": {
+    "tb": 39.88,
+    "ktc95": [
+     35.0667,
+     44.6933
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_du_tru": {
+    "tb": 39.88,
+    "ktc95": [
+     35.0667,
+     44.6933
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_thuong": {
+    "tb": 10.92,
+    "ktc95": [
+     8.0332,
+     13.8068
+    ],
+    "n": 5
+   }
+  },
+  "thu_4": {
+   "a.pct_nv1_tat_ca": {
+    "tb": 54.08,
+    "ktc95": [
+     50.5873,
+     57.5727
+    ],
+    "n": 5
+   },
+   "a.pct_top2_tat_ca": {
+    "tb": 77.308,
+    "ktc95": [
+     72.7155,
+     81.9005
+    ],
+    "n": 5
+   },
+   "a.pct_top3_tat_ca": {
+    "tb": 91.16,
+    "ktc95": [
+     88.2904,
+     94.0296
+    ],
+    "n": 5
+   },
+   "a.pct_nv1_da_xep": {
+    "tb": 55.382,
+    "ktc95": [
+     51.5124,
+     59.2516
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.1": {
+    "tb": 54.08,
+    "ktc95": [
+     50.5873,
+     57.5727
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.2": {
+    "tb": 77.308,
+    "ktc95": [
+     72.7155,
+     81.9005
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.3": {
+    "tb": 91.16,
+    "ktc95": [
+     88.2904,
+     94.0296
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.4": {
+    "tb": 96.808,
+    "ktc95": [
+     94.8797,
+     98.7363
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.5": {
+    "tb": 97.652,
+    "ktc95": [
+     96.5297,
+     98.7743
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.6": {
+    "tb": 97.652,
+    "ktc95": [
+     96.5297,
+     98.7743
+    ],
+    "n": 5
+   },
+   "a.hang_tb": {
+    "tb": 1.7297,
+    "ktc95": [
+     1.665,
+     1.7945
+    ],
+    "n": 5
+   },
+   "a.ngoai_danh_sach": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "a.cap_chan": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.n_chua_xep": {
+    "tb": 18.82,
+    "ktc95": [
+     9.7652,
+     27.8748
+    ],
+    "n": 5
+   },
+   "b.pct_chua_xep": {
+    "tb": 2.348,
+    "ktc95": [
+     1.2257,
+     3.4703
+    ],
+    "n": 5
+   },
+   "b.can_tren_ghep_cuc_dai": {
+    "tb": 800.0,
+    "ktc95": [
+     800.0,
+     800.0
+    ],
+    "n": 5
+   },
+   "b.khong_the_tranh": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.gia_uu_tien_on_dinh": {
+    "tb": 18.82,
+    "ktc95": [
+     9.7652,
+     27.8748
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.danh_sach_rong": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.khong_diem": {
+    "tb": 2.78,
+    "ktc95": [
+     -0.922,
+     6.482
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.het_cho_uu_tien_cao_hon": {
+    "tb": 16.04,
+    "ktc95": [
+     5.8719,
+     26.2081
+    ],
+    "n": 5
+   },
+   "b.lech_cho": {
+    "tb": 18.82,
+    "ktc95": [
+     9.7652,
+     27.8748
+    ],
+    "n": 5
+   },
+   "c.ty_le_lap_day": {
+    "tb": 89.492,
+    "ktc95": [
+     87.7124,
+     91.2716
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.min": {
+    "tb": 0.2585,
+    "ktc95": [
+     0.2072,
+     0.3099
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.median": {
+    "tb": 0.9974,
+    "ktc95": [
+     0.9902,
+     1.0046
+    ],
+    "n": 5
+   },
+   "c.n_clb_day": {
+    "tb": 3.94,
+    "ktc95": [
+     3.7734,
+     4.1066
+    ],
+    "n": 5
+   },
+   "c.n_clb_duoi_50": {
+    "tb": 1.6,
+    "ktc95": [
+     1.0733,
+     2.1267
+    ],
+    "n": 5
+   },
+   "c.du_tru_cung_cap": {
+    "tb": 18.8,
+    "ktc95": [
+     17.7613,
+     19.8387
+    ],
+    "n": 5
+   },
+   "c.du_tru_da_dung": {
+    "tb": 18.8,
+    "ktc95": [
+     17.7613,
+     19.8387
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_du_tru": {
+    "tb": 18.8,
+    "ktc95": [
+     17.7613,
+     19.8387
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_thuong": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   }
+  },
+  "thu_6": {
+   "a.pct_nv1_tat_ca": {
+    "tb": 56.294,
+    "ktc95": [
+     51.2548,
+     61.3332
+    ],
+    "n": 5
+   },
+   "a.pct_top2_tat_ca": {
+    "tb": 79.746,
+    "ktc95": [
+     74.0131,
+     85.4789
+    ],
+    "n": 5
+   },
+   "a.pct_top3_tat_ca": {
+    "tb": 91.852,
+    "ktc95": [
+     86.5639,
+     97.1401
+    ],
+    "n": 5
+   },
+   "a.pct_nv1_da_xep": {
+    "tb": 57.946,
+    "ktc95": [
+     52.6642,
+     63.2278
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.1": {
+    "tb": 56.294,
+    "ktc95": [
+     51.2548,
+     61.3332
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.2": {
+    "tb": 79.746,
+    "ktc95": [
+     74.0131,
+     85.4789
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.3": {
+    "tb": 91.852,
+    "ktc95": [
+     86.5639,
+     97.1401
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.4": {
+    "tb": 96.076,
+    "ktc95": [
+     92.2436,
+     99.9084
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.5": {
+    "tb": 97.108,
+    "ktc95": [
+     94.3921,
+     99.8239
+    ],
+    "n": 5
+   },
+   "a.duong_cong_don.6": {
+    "tb": 97.178,
+    "ktc95": [
+     94.6433,
+     99.7127
+    ],
+    "n": 5
+   },
+   "a.hang_tb": {
+    "tb": 1.6678,
+    "ktc95": [
+     1.5593,
+     1.7762
+    ],
+    "n": 5
+   },
+   "a.ngoai_danh_sach": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "a.cap_chan": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.n_chua_xep": {
+    "tb": 22.6,
+    "ktc95": [
+     2.2792,
+     42.9208
+    ],
+    "n": 5
+   },
+   "b.pct_chua_xep": {
+    "tb": 2.822,
+    "ktc95": [
+     0.2873,
+     5.3567
+    ],
+    "n": 5
+   },
+   "b.can_tren_ghep_cuc_dai": {
+    "tb": 790.2,
+    "ktc95": [
+     762.9952,
+     817.4048
+    ],
+    "n": 5
+   },
+   "b.khong_the_tranh": {
+    "tb": 9.8,
+    "ktc95": [
+     -17.4048,
+     37.0048
+    ],
+    "n": 5
+   },
+   "b.gia_uu_tien_on_dinh": {
+    "tb": 12.8,
+    "ktc95": [
+     1.5769,
+     24.0231
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.danh_sach_rong": {
+    "tb": 0.0,
+    "ktc95": [
+     0.0,
+     0.0
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.khong_diem": {
+    "tb": 4.56,
+    "ktc95": [
+     1.8534,
+     7.2666
+    ],
+    "n": 5
+   },
+   "b.nguyen_nhan.het_cho_uu_tien_cao_hon": {
+    "tb": 18.04,
+    "ktc95": [
+     -0.6688,
+     36.7488
+    ],
+    "n": 5
+   },
+   "b.lech_cho": {
+    "tb": 14.76,
+    "ktc95": [
+     6.7017,
+     22.8183
+    ],
+    "n": 5
+   },
+   "c.ty_le_lap_day": {
+    "tb": 94.996,
+    "ktc95": [
+     91.1613,
+     98.8307
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.min": {
+    "tb": 0.6291,
+    "ktc95": [
+     0.3792,
+     0.879
+    ],
+    "n": 5
+   },
+   "c.phan_vi_lap_day.median": {
+    "tb": 0.9904,
+    "ktc95": [
+     0.9636,
+     1.0171
+    ],
+    "n": 5
+   },
+   "c.n_clb_day": {
+    "tb": 4.16,
+    "ktc95": [
+     2.9013,
+     5.4187
+    ],
+    "n": 5
+   },
+   "c.n_clb_duoi_50": {
+    "tb": 0.1,
+    "ktc95": [
+     -0.115,
+     0.315
+    ],
+    "n": 5
+   },
+   "c.du_tru_cung_cap": {
+    "tb": 22.4,
+    "ktc95": [
+     20.1448,
+     24.6552
+    ],
+    "n": 5
+   },
+   "c.du_tru_da_dung": {
+    "tb": 22.4,
+    "ktc95": [
+     20.1448,
+     24.6552
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_du_tru": {
+    "tb": 22.4,
+    "ktc95": [
+     20.1448,
+     24.6552
+    ],
+    "n": 5
+   },
+   "c.du_tru_dien_qua_thuong": {
+    "tb": 11.9,
+    "ktc95": [
+     8.4417,
+     15.3583
+    ],
+    "n": 5
+   }
+  }
+ },
+ "theo_hoc_sinh": {
+  "n_hs": {
+   "tb": 800.0,
+   "ktc95": [
+    800.0,
+    800.0
+   ],
+   "n": 5
+  },
+  "so_buoi_co_cho_tb": {
+   "tb": 2.9392,
+   "ktc95": [
+    2.9219,
+    2.9566
+   ],
+   "n": 5
+  },
+  "pct_du_moi_buoi_da_khai": {
+   "tb": 94.05,
+   "ktc95": [
+    92.3482,
+    95.7518
+   ],
+   "n": 5
+  },
+  "pct_khong_co_cho_nao": {
+   "tb": 0.0,
+   "ktc95": [
+    0.0,
+    0.0
+   ],
+   "n": 5
+  }
+ },
+ "ghi_chu": "Mỗi buổi: chỉ số A–C trên riêng buổi đó (mẫu số = mọi học sinh). theo_hoc_sinh: xem định nghĩa `tong_hop_theo_hoc_sinh`.",
+ "dinh_nghia": {
+  "luu_y": "TOÀN BỘ số đo trên DỮ LIỆU MÔ PHỎNG, không phải khảo sát học sinh thật.",
+  "chi_so": {
+   "pct_nv1_tat_ca": {
+    "ten": "Tỉ lệ được nguyện vọng 1",
+    "cong_thuc": "#(em được xếp ở nguyện vọng 1) / #học sinh",
+    "mau_so": "mọi học sinh (kể cả danh sách rỗng, chưa được xếp)",
+    "nhom": "A"
+   },
+   "pct_nv1_da_xep": {
+    "ten": "Tỉ lệ nguyện vọng 1 trên em được xếp",
+    "cong_thuc": "#(nguyện vọng 1) / #(em được xếp)",
+    "mau_so": "em được xếp",
+    "nhom": "A"
+   },
+   "duong_cong_don": {
+    "ten": "Đường cong tích luỹ",
+    "cong_thuc": "phần tử k = #(em được xếp ở nguyện vọng ≤ k) / #học sinh, k = 1..K",
+    "mau_so": "mọi học sinh; K = độ dài danh sách dài nhất",
+    "nhom": "A"
+   },
+   "hang_tb": {
+    "ten": "Hạng nguyện vọng trung bình",
+    "cong_thuc": "trung bình hạng (1 = nguyện vọng đầu) của em được xếp",
+    "mau_so": "em được xếp",
+    "nhom": "A"
+   },
+   "ngoai_danh_sach": {
+    "ten": "Xếp ngoài danh sách",
+    "cong_thuc": "#(em được xếp vào CLB không có trong danh sách của em); phải = 0",
+    "mau_so": "—",
+    "nhom": "A"
+   },
+   "cap_chan": {
+    "ten": "Cặp phá vỡ (blocking pair)",
+    "cong_thuc": "số cặp (em, CLB) em thích hơn và CLB nhận em theo hàm lựa chọn thật; RB-DA phải = 0",
+    "mau_so": "—",
+    "nhom": "A"
+   },
+   "pct_chua_xep": {
+    "ten": "Tỉ lệ chưa được xếp",
+    "cong_thuc": "#(em chưa được xếp) / #học sinh",
+    "mau_so": "mọi học sinh",
+    "nhom": "B"
+   },
+   "can_tren_ghep_cuc_dai": {
+    "ten": "Cận trên: ghép cực đại",
+    "cong_thuc": "kích thước ghép cực đại đồ thị (học sinh × CLB đã liệt kê, sức chứa CLB), BỎ QUA ưu tiên và ổn định",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "khong_the_tranh": {
+    "ten": "Không thể tránh (do dữ liệu)",
+    "cong_thuc": "#học sinh − cận trên",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "gia_uu_tien_on_dinh": {
+    "ten": "Cái giá của ưu tiên + ổn định",
+    "cong_thuc": "cận trên − #(em được xếp)",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "nguyen_nhan": {
+    "ten": "Nguyên nhân chưa xếp (loại trừ nhau, theo thứ tự)",
+    "cong_thuc": "danh_sach_rong: danh sách rỗng; khong_diem: có ≥1 CLB tuyển chọn trong danh sách và em không có điểm ở CLB tuyển chọn nào đã khai; het_cho_uu_tien_cao_hon: còn lại (mọi CLB đã khai đều đầy người ưu tiên cao hơn)",
+    "mau_so": "em chưa được xếp",
+    "nhom": "B"
+   },
+   "tong_chi_tieu_nho_hon_hs": {
+    "ten": "Tổng chỉ tiêu < số học sinh",
+    "cong_thuc": "Σ chỉ tiêu < #học sinh (cờ cho cả lần chạy)",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "lech_cho": {
+    "ten": "Lệch chỗ",
+    "cong_thuc": "#(em chưa được xếp mà còn CLB em KHÔNG khai còn chỗ trống)",
+    "mau_so": "tính trên số em, không phải số CLB",
+    "nhom": "B"
+   },
+   "ty_le_lap_day": {
+    "ten": "Tỉ lệ lấp đầy",
+    "cong_thuc": "#(em được xếp) / Σ chỉ tiêu",
+    "mau_so": "tổng chỉ tiêu",
+    "nhom": "C"
+   },
+   "phan_vi_lap_day": {
+    "ten": "Phân vị lấp đầy theo CLB",
+    "cong_thuc": "min, p25, trung vị, max của (đã xếp / chỉ tiêu) trên các CLB; nội suy tuyến tính",
+    "mau_so": "mỗi CLB",
+    "nhom": "C"
+   },
+   "du_tru": {
+    "ten": "Suất dự trữ",
+    "cong_thuc": "đã dùng = #(em xếp với tầng 'reserve'); cung cấp = Σ reserve_capacity",
+    "mau_so": "Σ reserve_capacity",
+    "nhom": "C"
+   },
+   "ti_le_cau": {
+    "ten": "Tỉ lệ cầu",
+    "cong_thuc": "#(em xếp CLB này làm nguyện vọng 1) / chỉ tiêu CLB",
+    "mau_so": "chỉ tiêu CLB",
+    "nhom": "C"
+   }
+  },
+  "tham_so_sinh": {
+   "ty_le_clb_tuyen_chon": 0.3,
+   "xac_suat_tick_thi": 0.85,
+   "tran_thi_moi_buoi": 5,
+   "ty_le_chinh_sach": 0.15,
+   "ty_le_khoi_10": 0.06,
+   "ty_le_suat_du_tru": 0.1,
+   "so_clb_du_tru": 4,
+   "san_pop": 0.2,
+   "dai_danh_sach": [
+    3,
+    6
+   ],
+   "nhieu_buoi": [
+    "thu_2",
+    "thu_4",
+    "thu_6"
+   ],
+   "chia_chi_tieu": "(pop + san_pop) × U(0,8; 1,2), largest remainder, tối thiểu 2",
+   "diem": "round(10·(rho·nang_luc + (1−rho)·nhieu), 1)",
+   "hat_giong": "random.Random(crc32(khoá))"
+  },
+  "seed_du_lieu": [
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "seed_boc_tham": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "so_truong": 5,
+  "so_lan_boc_tham_moi_truong": 10,
+  "cach_tinh_ktc": "KTC 95 % kiểu t trên trung bình theo TRƯỜNG (n = số seed dữ liệu, bậc tự do n−1, t_{0,975} = 2.776); sd_boc_tham = trung bình độ lệch chuẩn giữa các lần bốc thăm trong cùng một trường.",
+  "lat_co_cho_pct": "% học sinh có lúc được xếp, có lúc không, giữa các lần bốc thăm của cùng một trường",
+  "lat_clb_pct": "% học sinh có CLB (hoặc 'không xếp') thay đổi giữa các lần bốc thăm của cùng một trường",
+  "cau_hinh_chay": {
+   "che_do": "day_du",
+   "quy_mo": [
+    [
+     120,
+     10
+    ],
+    [
+     300,
+     10
+    ],
+    [
+     800,
+     20
+    ]
+   ],
+   "alpha": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    0.9
+   ],
+   "kappa": [
+    0.9,
+    1.1,
+    1.3
+   ],
+   "rho": [
+    0.0,
+    0.7
+   ],
+   "seed_dl": [
+    101,
+    102,
+    103,
+    104,
+    105
+   ],
+   "seed_bt": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "mac_dinh": {
+    "n_hs": 800,
+    "n_clb": 20,
+    "alpha": 0.5,
+    "rho": 0.7,
+    "kappa": 1.1
+   },
+   "thoi_gian": [
+    [
+     120,
+     10
+    ],
+    [
+     300,
+     10
+    ],
+    [
+     800,
+     20
+    ],
+    [
+     2000,
+     50
+    ]
+   ]
+  }
+ },
+ "lan_chay": {
+  "lenh": "python du_lieu_test/danh_gia/do_danh_gia.py --day-du --phan co_san nhieu_buoi",
+  "commit": "17af13a1526c293708f6476ea0826767c00502dd",
+  "cay_lam_viec_sach": true,
+  "python": "3.13.18",
+  "may": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39",
+  "bat_dau": "2026-11-28 03:24:00",
+  "thoi_gian_giay": 12.9
+ }
+}
