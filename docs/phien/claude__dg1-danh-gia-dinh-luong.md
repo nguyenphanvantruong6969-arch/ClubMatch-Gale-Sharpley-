@@ -138,8 +138,7 @@ screenshots: `python du_lieu_test/danh_gia/chup_quy_trinh.py` (needs Python `pla
 - D11 AI log not regenerated here: `dung_nhat_ky_ai.py` rewrites ~1 000 lines from all branches; run it after merge (it reads the CHANGELOG L5 line).
 - Found while screenshotting (L4 product bug, NOT fixed — planner role): «Chỉ số phân bổ» block sub-label prints `16,099999999999994% mọi suất`
   (unrounded float) under «Chưa được xếp». Small fix in `js/03_ket_qua.js` formatter + one assertion in `tests/test_dg1_chi_so_ung_dung.py`.
-- Needs Truong: write sections 0, 1.1, 2 (mark «viết sau khi có số liệu» if so), 6, 7, 8; decide on the float bug fix; confirm CI green.
-- `kiem_nhanh.py` 7/7. Tests `tests/test_dg1_bao_cao.py` 2/2. No product file changed in L5.
+- Needs Truong: write sections 0, 1.1, 2 (mark «viết sau khi có số liệu» if so), 6, 7, 8; decide on the float bug fix; confirm CI green. `kiem_nhanh.py` 7/7; `test_dg1_bao_cao.py` 2/2; no product file changed in L5.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
