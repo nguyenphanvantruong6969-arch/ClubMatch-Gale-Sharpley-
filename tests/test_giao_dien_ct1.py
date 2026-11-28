@@ -1,7 +1,7 @@
 """CT1-L3: màn "Xem xét chỉ tiêu" (Chromium thật qua `browser_host`; dữ liệu MÔ PHỎNG: `SO_NHAP_TEST.xlsx`, 120 học sinh,
 10 CLB, 130 chỗ, bốc thăm khoá seed 42).
 
-Kiểm: lối vào là MỘT mục trong menu "Báo cáo và phiếu in" (chỉ quản trị); đầu đề khuyến nghị, bốn bước, mở danh sách một bước,
+Kiểm: lối vào là MỘT nút phụ "Gợi ý chỉ tiêu" ở góc phải thanh công cụ (chỉ quản trị); đầu đề khuyến nghị, bốn bước, mở danh sách một bước,
 bảng chỉ tiêu; ngân sách Hick (≤ 7 điều khiển mỗi khung) và Von Restorff (≤ 1 nút vàng mỗi khung, màu luôn kèm chữ, không nút đỏ,
 không nút "Áp dụng"); "Tự thử một thay đổi"; bề rộng 390 px không tràn ngang; khoá i18n vi + en khớp nhau.
 """
@@ -22,27 +22,30 @@ def _mo(mo_ux5a, vai="quan_tri", rong=1280):  # noqa: F811
 
 
 def _vao_ct1(page):
-    page.click("#ux1bThemTom")
     page.click("#btnCt1Mo")
     page.wait_for_selector("#ct1Noi", state="visible")
     page.wait_for_timeout(300)
 
 
-def test_loi_vao_la_mot_muc_trong_menu_chi_quan_tri(mo_ux5a):  # noqa: F811
+def test_loi_vao_la_mot_nut_phu_o_goc_phai_chi_quan_tri(mo_ux5a):  # noqa: F811
     page, api, loi = _mo(mo_ux5a)
-    assert page.locator("#btnCt1Mo").count() == 1 and page.locator("#btnCt1Mo").is_hidden()   # menu đang đóng
-    assert dem(page, "#ux1bPanel") == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"]          # UX5A: ngân sách của thẻ Kết quả không đổi
-    page.click("#ux1bThemTom")
-    assert page.locator("#btnCt1Mo").is_visible()
-    assert "btn-primary" not in (page.get_attribute("#btnCt1Mo", "class") or "")
-    assert page.locator("#btnCt1Mo").inner_text().strip() == "Xem xét chỉ tiêu CLB"
+    nut = page.locator("#btnCt1Mo")
+    assert nut.count() == 1 and nut.is_visible()                                              # thấy ngay, không cần mở menu
+    assert dem(page, "#ux1bPanel") == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"]          # nhóm "lớp và báo cáo" không đổi
+    assert len(dem(page, "#view-results")) <= 10                                              # ngân sách Hick của UX5A (quản trị)
+    assert "btn-primary" not in (nut.get_attribute("class") or "")                            # Von Restorff: chỉ MỘT nút vàng
+    assert page.evaluate(JS_VANG, "#view-results") == ["btnKqTaiBang"]
+    assert nut.inner_text().strip() == "Gợi ý chỉ tiêu"
+    assert "Gợi ý và thay đổi chỉ tiêu" in (nut.get_attribute("title") or "")
+    a, b = nut.bounding_box(), page.locator("#btnKqTaiBang").bounding_box()
+    assert a["x"] < b["x"] and abs(a["y"] - b["y"]) < 20 and b["x"] + b["width"] > 1000       # cạnh nút vàng, bên phải thanh
+    assert page.locator("#ux1bThemMenu #btnCt1Mo").count() == 0                              # không còn nằm trong menu
     assert page.locator("#ct1Khung").is_hidden()
     assert not loi, loi
 
 
 def test_giao_vien_khong_thay_loi_vao_va_bi_tu_choi_o_backend(mo_ux5a):  # noqa: F811
     page, api, loi = _mo(mo_ux5a, "giao_vien")
-    page.click("#ux1bThemTom")
     assert page.locator("#btnCt1Mo").is_hidden() and page.locator("#ct1Khung").is_hidden()
     r = api.get_xem_xet_chi_tieu()
     assert not r["ok"] and r["errors"][0]["code"] == "gt3_khong_du_quyen"
@@ -199,7 +202,6 @@ def test_chua_co_ket_qua_hien_cau_thuong(tmp_path, mo_ux5a):  # noqa: F811
     c.execute("DELETE FROM run_history")
     c.commit()
     c.close()
-    page.click("#ux1bThemTom")
     page.click("#btnCt1Mo")
     page.wait_for_function("document.getElementById('ct1TrangThai').textContent.includes('Chưa có kết quả')")
     assert "Chưa có kết quả xếp chính thức" in page.locator("#ct1TrangThai").inner_text()

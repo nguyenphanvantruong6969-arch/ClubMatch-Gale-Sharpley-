@@ -1638,7 +1638,8 @@
       /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === CT1 === */
-      ct1_menu: "Xem xét chỉ tiêu {slot_s}",
+      ct1_menu: "Gợi ý chỉ tiêu",
+      ct1_menu_goi_y: "Gợi ý và thay đổi chỉ tiêu {slot_s}: nên tăng hay giảm chỗ ở đâu",
       ct1_dong: "Quay lại kết quả",
       ct1_tieu_de: "Chỉ tiêu {slot_s} cho kỳ sau",
       ct1_mo_ta: "Phần mềm đọc nguyện vọng thật của kỳ này và gợi ý nên chuyển chỗ từ {slot_s} nào sang {slot_s} nào. Nhà trường là bên quyết định; màn hình này không đổi chỉ tiêu nào.",
@@ -3378,7 +3379,8 @@
       /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === CT1 === */
-      ct1_menu: "Review {slot_l} quotas",
+      ct1_menu: "Quota suggestions",
+      ct1_menu_goi_y: "Suggest and try {slot_l} quota changes: where to add or remove seats",
       ct1_dong: "Back to results",
       ct1_tieu_de: "{slot} quotas for next term",
       ct1_mo_ta: "The software reads this term's real preferences and suggests which {slot_pl} should give seats to which. The school decides; this screen changes no quota.",

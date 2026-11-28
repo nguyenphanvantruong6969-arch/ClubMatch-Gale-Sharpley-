@@ -1,6 +1,6 @@
 /* js/20_xem_xet_chi_tieu.js — CT1: "Xem xét chỉ tiêu" (chỉ đọc, chỉ quản trị).
 
-   Mở từ MỘT mục trong menu "Báo cáo và phiếu in" của thẻ Kết quả (#btnCt1Mo). Backend: `get_xem_xet_chi_tieu` (đề xuất +
+   Mở từ MỘT nút phụ "Gợi ý chỉ tiêu" ở góc phải thanh công cụ của thẻ Kết quả (#btnCt1Mo, cạnh nút vàng; chỉ quản trị). Backend: `get_xem_xet_chi_tieu` (đề xuất +
    kết quả sau từng bước, tính trong bộ nhớ, cùng bộ số bốc thăm đã khoá), `export_de_xuat_chi_tieu_csv`,
    `export_xem_xet_chi_tieu_csv`. KHÔNG có nút "Áp dụng": màn này không ghi chỉ tiêu nào.
 

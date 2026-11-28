@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-28 — CT1-FIX4 (lối vào: nút riêng "Gợi ý chỉ tiêu")
+
+- Truong yêu cầu một nút riêng ở góc phải thay cho mục trong menu. `#btnCt1Mo` (giữ id) nay là nút PHỤ (`btn-secondary`) "Gợi ý chỉ tiêu" ở góc phải thanh công cụ thẻ Kết quả, ngay cạnh nút vàng "Tải bảng này (Excel)"; chỉ quản trị (`data-quyen`); `title` "Gợi ý và thay đổi chỉ tiêu CLB: nên tăng hay giảm chỗ ở đâu". Đã gỡ khỏi menu "Báo cáo và phiếu in".
+- Luật thiết kế: ngân sách Hick của `#view-results` (quản trị) 9 → 10 điều khiển, vẫn trong mức ≤ 10 của UX5A; `#ux1bPanel` không đổi; vẫn đúng MỘT nút vàng. Test UX5A l2–l4 không phải sửa.
+- Test: `test_loi_vao_la_mot_nut_phu_o_goc_phai_chi_quan_tri` (thay test cũ về menu). Nhãn `ct1_menu` đổi vi + en, thêm `ct1_menu_goi_y`.
+
 ## 2026-11-28 — CT1-FIX (sửa các phát hiện của soát mã CT1; vẫn chỉ đọc)
 
 - Phát hiện 1: dữ liệu NHIỀU buổi (`SO_NHAP_DQT_800HS_HOP_LE`: 2836 lượt, 800 học sinh) không còn gọi lượt là "học sinh". `get_xem_xet_chi_tieu` thêm `so_buoi`; khi > 1, giao diện dùng các khoá `ct1_*_luot` (13 chuỗi vi + en, `ct1T()` trong `js/20_xem_xet_chi_tieu.js`) và thêm một câu giải thích `ct1_luot_ghi_chu`. Một buổi: chữ và số y như trước.

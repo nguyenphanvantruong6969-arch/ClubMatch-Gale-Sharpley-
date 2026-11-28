@@ -3779,6 +3779,8 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .kq-thanh-cong-cu { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 12px; }
 .kq-nhom-lop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .kq-thanh-cong-cu .kq-nut-tai { margin-left: auto; }
+.kq-nhom-phai { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }   /* CT1: nút Gợi ý chỉ tiêu + nút vàng ở góc phải */
+.kq-thanh-cong-cu .kq-nhom-phai .kq-nut-tai { margin-left: 0; }
 .kq-vung-bang { margin-top: 8px; width: 100%; }
 
 /* ============================================================

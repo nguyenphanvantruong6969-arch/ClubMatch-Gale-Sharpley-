@@ -437,12 +437,15 @@
                 <button class="menu-khac-muc" id="btnUx1bBaoCao" type="button" data-i18n="ux1b_bao_cao">Báo cáo tổng hợp</button>
                 <button class="menu-khac-muc" id="btnUx1bPhieuLop" type="button" data-i18n="gt_in_lop">In phiếu cả {cohort_l}</button>
                 <button class="menu-khac-muc" id="btnUx1bBaoCaoPdf" type="button" data-i18n="ux1i_bao_cao_pdf">Báo cáo tổng hợp (PDF)</button>
-                <button class="menu-khac-muc" id="btnCt1Mo" type="button" data-quyen="quan_tri" data-i18n="ct1_menu">Xem xét chỉ tiêu {slot_s}</button><!-- CT1: chỉ quản trị -->
                 <p class="hint-text" data-i18n="ux1b_bao_cao_hint">Báo cáo tổng hợp chỉ có số liệu gộp: mức lấp đầy từng {slot_l}, mức hài lòng, số {person_l} chưa có {slot_l} theo {cohort_l}. Không có tên, mã hay điểm.</p>
               </div>
             </details>
         </div>
-        <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
+        <!-- CT1: nút riêng (Truong, 2026-11-28) ở góc phải thanh, cạnh nút vàng; nút PHỤ (btn-secondary), chỉ quản trị; id btnCt1Mo giữ nguyên -->
+        <div class="kq-nhom-phai">
+          <button type="button" class="btn btn-secondary" id="btnCt1Mo" data-quyen="quan_tri" data-i18n="ct1_menu" data-i18n-title="ct1_menu_goi_y">Gợi ý chỉ tiêu</button>
+          <button type="button" class="btn btn-primary kq-nut-tai" id="btnKqTaiBang" data-i18n="kq_tai_bang">Tải bảng này (Excel)</button>
+        </div>
       </div>
       <div class="save-feedback xuat-ket-qua" id="ux1bPhanHoi" role="status"></div>
       <div id="kqXuatPhanHoi" class="save-feedback xuat-ket-qua" role="status"></div>

@@ -150,7 +150,7 @@ giấy, và máy phải ra đúng như vậy.
 
 ## Đổi chỉ tiêu bằng tay (mục "Xem xét chỉ tiêu")
 
-Sau khi chạy xong kịch bản trên, mở **Kết quả → Báo cáo và phiếu in → Xem xét chỉ tiêu CLB**. Quy tắc đề xuất cho **không bước nào** trên bộ nhỏ này (mỗi CLB chỉ được đổi ±20 % và không dưới 8 chỗ), nên dùng mục **Tự thử một thay đổi** (chọn CLB lấy chỗ, CLB nhận chỗ, số chỗ = 1, bấm *Xếp lại với chỉ tiêu này*). Ba ca tính tay được; kết quả giống hệt ở cả 5 hạt giống:
+Sau khi chạy xong kịch bản trên, mở **Kết quả → nút Gợi ý chỉ tiêu (góc phải)**. Quy tắc đề xuất cho **không bước nào** trên bộ nhỏ này (mỗi CLB chỉ được đổi ±20 % và không dưới 8 chỗ), nên dùng mục **Tự thử một thay đổi** (chọn CLB lấy chỗ, CLB nhận chỗ, số chỗ = 1, bấm *Xếp lại với chỉ tiêu này*). Ba ca tính tay được; kết quả giống hệt ở cả 5 hạt giống:
 
 | Ca | Thử | Chỉ những học sinh sau đổi chỗ |
 |---|---|---|
