@@ -43,7 +43,7 @@ def mo(tmp_path):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
         page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)
@@ -142,7 +142,7 @@ def test_chon_roi_chon_lai_tra_lai_diem_quyet_tam(mo, khoa, tat, bat, fa):
     if fa:
         assert api.update_workspace_config({"rules": {"fa_daa": True, "wharton": True}})["ok"]
         page.reload()
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         page.click("#qlTabCachXep")  # UX4-L2: tiêu chí/thử nằm trong tab Cách xếp
         page.evaluate("document.getElementById('ux1aNangCao').open = document.getElementById('gt2ThuSoSanhKhac').open = true")  # UX4-L4: hai mục gập (Tuỳ chỉnh thêm, So sánh với lần khác)

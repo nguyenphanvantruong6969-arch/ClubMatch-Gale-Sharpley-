@@ -321,11 +321,13 @@ def test_12_dau_xong_loi_dk8_o_goc_phai_tren(cong, chuyen_dong):
 
 
 def test_13_mui_ten_summary_btn_nam_sau_chu(cong):
-    """Mũi tên « ▾» của summary.btn (Thêm tuỳ chọn, Nâng cao) nằm trong dòng chữ, không bị UX2 đẩy lên góc."""
+    """UX6-L3: mũi tên của summary.btn (Thêm tuỳ chọn, Tuỳ chỉnh thêm) là ảnh SVG nền ở mép phải, không còn ký tự ▾ và
+    không đụng vùng bấm 44 px do UX2 vẽ bằng ::after."""
     pg = cong
     pg.goto(pg.dia_chi.replace("dang_ky.html", "index.html"))
     kq = pg.evaluate("""() => [...document.querySelectorAll('.club-them > summary.btn, #ux1aNangCao > summary')].map(s => {
-        const a = getComputedStyle(s, '::after'); return [s.id || s.parentElement.id, a.content, a.position, a.transform]; })""")
+        const c = getComputedStyle(s), a = getComputedStyle(s, '::after');
+        return [s.id || s.parentElement.id, c.backgroundImage, parseFloat(c.paddingRight), a.content]; })""")
     assert len(kq) >= 3, kq
-    for ten, noi_dung, vi_tri, bien_doi in kq:
-        assert noi_dung == '" ▾"' and vi_tri == "static" and bien_doi == "none", (ten, noi_dung, vi_tri, bien_doi)
+    for ten, anh, le_phai, noi_dung in kq:
+        assert "svg" in anh and "▾" not in noi_dung, (ten, anh[:40], le_phai, noi_dung)

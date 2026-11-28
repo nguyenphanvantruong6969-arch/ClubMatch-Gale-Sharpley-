@@ -52,7 +52,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         tab_ql(page, "dc")
         page.wait_for_selector("#adminDiemChuanBlock:not([hidden]) #dcQlTongQuan tbody tr")

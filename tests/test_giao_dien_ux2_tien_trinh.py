@@ -150,7 +150,7 @@ def test_xung_nhip_khong_chay_khi_reduced_motion(api):
         url = browser_host.serve(api, base.GOC, "index.html", open_browser=False)
         page = br.new_page(bypass_csp=True, reduced_motion="reduce")
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.evaluate("() => ux2DatPha('dang')")
         assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-dot', "e => getComputedStyle(e).animationName") == "none"
         assert page.eval_on_selector('#ux2Pha li[data-pha="xep"] .ux2-pha-tt', "e => e.textContent.trim()") == "Đang chạy…"

@@ -48,7 +48,7 @@ def trang(api_co_du_lieu):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         yield page, loi, api_co_du_lieu
         br.close()
 
@@ -249,12 +249,12 @@ def _kiem_csp(page, url, loi):
     page.on("console", lambda m: vi_pham.append(m.text)
             if "Content Security Policy" in m.text else None)
     page.goto(url)
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     for tab in ("results", "others", "fallback", "admin", "scoring", "pipeline"):
         _sang_tab(page, tab)
         page.wait_for_timeout(300)
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.wait_for_timeout(300)
     assert vi_pham == []
     assert loi == []

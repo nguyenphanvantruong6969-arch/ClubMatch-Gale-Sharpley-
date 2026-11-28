@@ -60,7 +60,7 @@ def test_dai_tab_bon_muc_va_them_chua_cac_muc_con_lai(trang):
     assert page.evaluate(JS_DAI) == ["qlTabClb", "qlTabHs", "qlTabCachXep", "qlNutThem"]
     assert page.locator("#qlTabClb").inner_text().strip() == "Danh sách CLB"
     assert page.locator("#qlTabCachXep").inner_text().strip() == "Cách xếp"
-    assert page.locator("#qlNutThem").inner_text().strip() == "Thêm ▾"
+    assert page.locator("#qlNutThem").inner_text().strip() == "Thêm"
     assert page.locator("#qlThemMenu").is_hidden()
     assert page.get_attribute("#qlNutThem", "aria-expanded") == "false"
     page.click("#qlNutThem")
@@ -78,12 +78,11 @@ def test_dai_tab_bon_muc_va_them_chua_cac_muc_con_lai(trang):
 
 def test_phu_de_moi_va_khong_con_chu_nang_cao(trang):
     page, api, loi = trang
-    assert page.locator("#view-admin .view-desc").inner_text().strip() == (
-        "Sửa danh sách CLB và học sinh, chọn cách xếp, hoặc làm lại từ đầu. Chọn một mục bên dưới.")
+    assert page.locator("#view-admin .view-desc").count() == 0            # UX6-L1: bỏ câu mô tả thẻ Quản lý
     for ma in ("clb", "hs", "cach_xep", "du_lieu"):
         _mo_tab(page, ma)
         goc = page.locator('#view-admin [role=tabpanel][data-ql-tab="%s"]' % ma)
-        assert goc.locator(".ql-mo-ta").inner_text().strip()             # dòng mục đích
+        assert goc.locator(".ql-mo-ta").count() == 0                     # UX6-L1: bỏ dòng mục đích
         assert goc.locator(".ql-tt").inner_text().strip()                # dòng trạng thái
         assert "Nâng cao" not in page.locator("#view-admin").inner_text()
     assert page.locator("#ux1aNangCao > summary").inner_text().strip() == "Tuỳ chỉnh thêm"   # L4: mục gập mới, không còn chữ "Nâng cao"

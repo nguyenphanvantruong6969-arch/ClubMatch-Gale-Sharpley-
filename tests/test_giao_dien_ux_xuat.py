@@ -67,7 +67,7 @@ def trang(api_hai_buoi, monkeypatch):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         yield page, api_hai_buoi, loi, mo
         br.close()
 
