@@ -1611,7 +1611,7 @@ window.I18N_ERROR_MESSAGES = {
     "en": "Seats can only move between two {slot_pl} in the same {session_l}. Pick two {slot_pl} in the same {session_l}."
   },
   "ct1_cap_qua_thap": {
-    "vi": "{slot} \"{club_id}\" chỉ còn {con_lai} chỗ sau bước này, ít hơn mức tối thiểu {toi_thieu} (số chỗ đã giữ cho nhóm dự trữ, hoặc 1). Hãy chuyển ít chỗ hơn.",
+    "vi": "{slot} \"{club_id}\" chỉ còn {con_lai} chỗ sau bước này, ít hơn mức tối thiểu {toi_thieu} (số chỗ đã giữ cho nhóm ưu tiên, hoặc 1). Hãy chuyển ít chỗ hơn.",
     "en": "{slot} \"{club_id}\" would have only {con_lai} seats after this step, below the minimum of {toi_thieu} (seats held for the reserved group, or 1). Move fewer seats."
   },
   "ct1_qua_nhieu_buoc": {
