@@ -35,7 +35,9 @@ def test_loi_vao_la_mot_nut_phu_o_goc_phai_chi_quan_tri(mo_ux5a):  # noqa: F811
     assert len(dem(page, "#view-results")) <= 10                                              # ngân sách Hick của UX5A (quản trị)
     assert "btn-primary" not in (nut.get_attribute("class") or "")                            # Von Restorff: chỉ MỘT nút vàng
     assert page.evaluate(JS_VANG, "#view-results") == ["btnKqTaiBang"]
-    assert nut.inner_text().strip() == "Gợi ý chỉ tiêu"
+    assert nut.inner_text().strip() == "Gợi ý thay đổi chỉ tiêu"
+    assert "btn-goi-y" in (nut.get_attribute("class") or "")                                   # nổi bật bằng viền đậm + biểu tượng, không bằng màu vàng
+    assert nut.evaluate("e => getComputedStyle(e).borderTopWidth") == "2px"
     assert "Gợi ý và thay đổi chỉ tiêu" in (nut.get_attribute("title") or "")
     a, b = nut.bounding_box(), page.locator("#btnKqTaiBang").bounding_box()
     assert a["x"] < b["x"] and abs(a["y"] - b["y"]) < 20 and b["x"] + b["width"] > 1000       # cạnh nút vàng, bên phải thanh

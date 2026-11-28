@@ -1638,7 +1638,7 @@
       /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === CT1 === */
-      ct1_menu: "Gợi ý chỉ tiêu",
+      ct1_menu: "Gợi ý thay đổi chỉ tiêu",
       ct1_menu_goi_y: "Gợi ý và thay đổi chỉ tiêu {slot_s}: nên tăng hay giảm chỗ ở đâu",
       ct1_dong: "Quay lại kết quả",
       ct1_tieu_de: "Chỉ tiêu {slot_s} cho kỳ sau",
@@ -3379,7 +3379,7 @@
       /* end UX1B (L5c) */
       /* === end UX1B (L4-B) === */
       /* === CT1 === */
-      ct1_menu: "Quota suggestions",
+      ct1_menu: "Suggest quota changes",
       ct1_menu_goi_y: "Suggest and try {slot_l} quota changes: where to add or remove seats",
       ct1_dong: "Back to results",
       ct1_tieu_de: "{slot} quotas for next term",

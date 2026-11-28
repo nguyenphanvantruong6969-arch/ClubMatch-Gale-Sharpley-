@@ -87,7 +87,7 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 
 ## Next steps (in order)
 0. FIRST `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu` (this file is not on `main`). L1–L4 and CT1-FIX are DONE, never redo.
-1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › nút Gợi ý chỉ tiêu (góc phải)). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix.
+1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › nút Gợi ý thay đổi chỉ tiêu (góc phải)). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix.
 2. Merge, never rebase. Python Chromium tests need `pip install playwright` in a fresh container (browser already in /opt/pw-browsers).
 
 ## Needs Truong
