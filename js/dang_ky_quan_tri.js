@@ -122,7 +122,7 @@
       const [thieu, dsd] = [await dsOf("dk_diem_thieu"), await dsOf("dk_diem_danh_sach")];
       const tong = dsd.reduce((a, c) => a + c.hoc_sinh.length, 0), co = dsd.reduce((a, c) => a + c.hoc_sinh.filter((x) => x.diem !== null && x.diem !== undefined).length, 0);
       return h("div", {}, theGd(gd, "Nhập điểm", "Nhập điểm bài kiểm tra (0–10) từ Google Forms. Dưới điểm sàn hoặc không có điểm thì em không được xét vào CLB Tuyển chọn đó.",
-        co + "/" + tong + " bài đã có điểm", nutXep("Chốt và xếp", true)),
+        co + "/" + tong + " bài đã có điểm", nutXep("Chốt và xếp", true), DK.QT2.khungThieuDiem(thieu)),
       h("section.dk-khung", {}, h("p", {}, thieu.length ? "Còn " + thieu.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm."), await DK.QT2.nhapDiem(dsd)));
     }
     const kq = h("p#dkKq");
@@ -142,7 +142,13 @@
   /* DK4-L4: "Chốt và xếp" — một nút; xong thì vẽ lại màn (giai đoạn Xuất kèm bảng tóm tắt). */
   function nutXep(chu, vang) {
     const lam = function () { DK.chay(this, async () => {
-      const r = await DK.goi("dk_chot_va_xep", DK.S.token); if (r.ok) DK.quanTri(); return r; }); };
+      await DK.QT2.choLuuDiem();                         // sửa 2026-11-28: chờ điểm vừa gõ lưu xong (không thì chốt báo «còn thiếu điểm»)
+      const r = await DK.goi("dk_chot_va_xep", DK.S.token);
+      if (r.ok) DK.quanTri();
+      else if ((r.errors || []).some((e) => e && e.code === "dk_thieu_diem")) {      // còn thiếu thật: vẽ lại để khung cạnh nút liệt kê đúng em
+        await DK.quanTri();
+      }
+      return r; }); };
     return vang ? DK.nutVang(chu, lam, { id: "dkChot" }) : DK.nutNhe(chu, lam);
   }
 

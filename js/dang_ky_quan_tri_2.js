@@ -62,6 +62,24 @@
 
   /* ---------- A2: nhập điểm ---------- */
   const so = (v) => (v === null || v === undefined ? "" : String(v).replace(".", ","));
+  /* Sửa 2026-11-28 (bước 5 không sang Xuất): ô điểm chỉ lưu khi rời ô. Gõ điểm cuối rồi bấm ngay «Chốt và xếp» thì lệnh lưu và lệnh chốt
+     chạy song song, chốt thấy còn thiếu điểm và từ chối. Mọi lệnh lưu điểm đang dở được ghi ở đây; chốt / đếm thiếu chờ chúng xong. */
+  const dangLuuDiem = new Set();
+  QT2.ghiNhanLuuDiem = (p) => { dangLuuDiem.add(p); Promise.resolve(p).finally(() => dangLuuDiem.delete(p)); return p; };
+  QT2.choLuuDiem = async function () {
+    const e = document.activeElement;
+    if (e && e.classList && e.classList.contains("dk-diem")) e.blur();          // ô đang gõ: rời ô để sự kiện change gửi điểm đi
+    while (dangLuuDiem.size) await Promise.allSettled(Array.from(dangLuuDiem));
+  };
+  /* Khung «còn thiếu điểm» ngay cạnh nút «Chốt và xếp»: bao nhiêu bài, theo CLB, kèm mã học sinh (tối đa 5 mã mỗi CLB). */
+  QT2.khungThieuDiem = function (thieu) {
+    if (!thieu || !thieu.length) return null;
+    const theo = {};
+    thieu.forEach((x) => { (theo[x.clb] = theo[x.clb] || []).push(x.ma); });
+    const ds = Object.entries(theo).map(([clb, ma]) => clb + " (" + ma.length + " em: " + ma.slice(0, 5).join(", ") + (ma.length > 5 ? "…" : "") + ")");
+    return h("p#dkThieuDiem.dk-chua-di", { role: "alert" }, h("span.dk-chua-di-bieu", { "aria-hidden": "true" }, "!"),
+      "Còn " + thieu.length + " bài thi chưa có điểm: " + ds.join("; ") + ". Nhập đủ rồi bấm «Chốt và xếp».");
+  };
   QT2.nhapDiem = async function (ds0) {
     const ds = ds0 || (await DK.goi("dk_diem_danh_sach", T())).data || [];
     if (!ds.length) return h("p.dk-phu", {}, "Không CLB nào có thi. Bấm «Chốt và xếp» để sang bước xếp.");
@@ -74,9 +92,9 @@
       const hang = c.hoc_sinh.map((x) => {
         const o = h("input.dk-nhap.dk-diem", { type: "text", inputmode: "decimal", value: so(x.diem), "aria-label": "Điểm " + x.ma });
         const hs = { chip: h("span.chip") }; chip(hs, o);
-        o.addEventListener("change", () => DK.chay(null, async () => {
+        o.addEventListener("change", () => QT2.ghiNhanLuuDiem(DK.chay(null, async () => {
           const r = await DK.goi("dk_diem_dat", T(), x.ma, c.clb_id, o.value.trim() === "" ? null : o.value);
-          if (r.ok) chip(hs, o); else o.classList.add("la-loi"); return r; }));
+          if (r.ok) chip(hs, o); else o.classList.add("la-loi"); return r; })));
         return [x.ma, x.ho_ten, x.lop, o, hs.chip];
       });
       const van = h("textarea.dk-nhap", { rows: "3", placeholder: "Mỗi dòng: Mã HS, dấu Tab, điểm. Chép hai cột từ trang tính là đúng dạng." });
@@ -90,8 +108,12 @@
     });
     const kq = h("p#dkChotDiemKq.dk-phu");
     const chot = DK.nut("Chốt điểm", function () { DK.chay(this, async () => {
+      await QT2.choLuuDiem();                                                     // sửa 2026-11-28: điểm vừa gõ phải vào máy trước khi đếm
       const r = await DK.goi("dk_diem_thieu", T());
-      if (r.ok) kq.textContent = r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp."; return r; }); }, { id: "dkChotDiem" });
+      if (!r.ok) return r;
+      await DK.quanTri();                                                          // vẽ lại: số «x/y bài đã có điểm» và khung còn thiếu cập nhật
+      DK.thongBao(r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp.", r.data.length > 0);
+      return { ok: true, errors: [] }; }); }, { id: "dkChotDiem" });
     return h("div", {}, ...khoi, chot, kq);
   };
 

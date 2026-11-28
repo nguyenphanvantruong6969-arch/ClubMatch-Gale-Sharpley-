@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-28 — Sửa: bước 5 «Nhập điểm» của cổng đăng ký không dẫn tới «Xuất» (Truong báo; ngoài sổ 33 mục)
+
+- Lỗi (tái hiện được, ổn định trong test): ô điểm chỉ lưu khi rời ô (`change`); gõ điểm cuối rồi bấm ngay «Chốt và xếp» thì lệnh lưu điểm và `dk_chot_va_xep` chạy song song (pywebview và `browser_host` mỗi lời gọi một luồng) -> chốt thấy còn thiếu và báo «Còn 1 bài thi chưa có điểm.» dù đã gõ đủ.
+- `js/dang_ky_quan_tri_2.js`: `QT2.ghiNhanLuuDiem` ghi mọi lệnh lưu điểm đang dở; `QT2.choLuuDiem` rời ô đang gõ rồi chờ chúng xong. `QT2.khungThieuDiem` (`#dkThieuDiem`): còn thiếu thì liệt kê ngay cạnh nút (số bài, theo CLB, mã em). «Chốt điểm» chờ lưu xong, rồi vẽ lại màn (số «x/y bài đã có điểm» cập nhật) thay vì một dòng chữ nhỏ cuối trang.
+- `js/dang_ky_quan_tri.js`: `nutXep` chờ `choLuuDiem()` trước khi chốt; chốt bị từ chối vì thiếu điểm thì vẽ lại để khung liệt kê đúng em. Giữ đúng MỘT nút vàng ở bước 5.
+- Tests: `tests/test_giao_dien_dk_buoc5.py` (mới, 3, Chromium; ca chạy song song làm chậm lệnh lưu điểm phía Python, đỏ trên mã cũ). Không đổi backend, thuật toán, schema, CSV.
+- 9 test giao diện cổng đã đỏ sẵn TRƯỚC hai lần sửa hôm nay (kiểm trên mã `105683c~1`): `test_giao_dien_dk5_toan_trinh::test_4`, `test_giao_dien_dk3_cong::test_11[375|600|1000]`, `::test_12[no-preference|reduce]`, `test_giao_dien_dkl_giao_vien::test_3` (và 2 ca khác cùng nhóm khi chạy song song); chưa sửa, cần mục riêng.
+
 ## 2026-11-28 — Sửa: cổng đăng ký không tải được phiếu PIN / tệp mẫu trên bản .exe (Truong yêu cầu; ngoài sổ 33 mục)
 
 - Lỗi: «Xuất phiếu PIN» và «Tải file mẫu» tải tệp bằng `blob:` của trình duyệt; cửa sổ pywebview (WebView2) chặn kiểu tải này mà không báo, nên không có tệp nào về. Nặng hơn: phiếu PIN ĐẶT LẠI PIN của mọi người trước khi tải, nên PIN cũ chết mà PIN mới không ai thấy. Test giao diện chạy trên Chromium (cho tải) nên CI không bắt được.
