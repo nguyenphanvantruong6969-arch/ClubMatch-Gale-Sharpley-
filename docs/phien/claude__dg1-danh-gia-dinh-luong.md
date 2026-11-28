@@ -90,8 +90,8 @@ on/off, FA-DAA on/off. Per variant: Δ of A–C, churn (# students whose club ch
 
 ## Current state
 - Plan v2 (Opus planner, 2026-11-28): added control mechanisms, upper bound, two-seed grid, α/ρ/κ generator, L4 must-ship,
-  student hypotheses section. No code. Plan files live on `claude/vg2-ra-soat-theo-vai` (only branch the planning session
-  could push); coder creates `claude/dg1-danh-gia-dinh-luong` from `origin/main` and checks these two files out (protocol §0).
+  student hypotheses section. No code. Branch `claude/dg1-danh-gia-dinh-luong` created from `origin/main` with both plan files;
+  coder checks it out (protocol §0) and starts at L1.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |

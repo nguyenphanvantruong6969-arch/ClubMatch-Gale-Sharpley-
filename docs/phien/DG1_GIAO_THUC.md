@@ -4,8 +4,7 @@
 > Branch: `claude/dg1-danh-gia-dinh-luong`. Where this file and `_GIAO_THUC_GON.md` differ, THIS file wins.
 
 ## 0. Setup (coder, first session)
-- `git fetch origin main claude/vg2-ra-soat-theo-vai && git checkout -b claude/dg1-danh-gia-dinh-luong origin/main`
-- `git checkout origin/claude/vg2-ra-soat-theo-vai -- docs/phien/claude__dg1-danh-gia-dinh-luong.md docs/phien/DG1_GIAO_THUC.md`, commit.
+- Branch already exists (created from `origin/main` on 2026-11-28 with both plan files): `git fetch origin claude/dg1-danh-gia-dinh-luong && git checkout claude/dg1-danh-gia-dinh-luong`.
 - Every question has a safe default: pick it, one line in "Decisions", continue. "Needs Truong" is a note, never a stop.
 
 ## 1. Roles
