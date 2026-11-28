@@ -86,7 +86,7 @@ top-points / gold-medal club; share of rejections decided by LOTTERY; A–C and 
 - D6 (coder, 2026-11-28) Grid runs `run_rbda` in memory on simulated schools (the function `run_pipeline` calls); real `run_pipeline` only for the TEST seed-42 gate and `thoi_gian`.
 - D7 Excel metrics = a section at the end of the «Thống kê» sheet, not a separate `Chi_so` sheet (a new sheet changes the sheet list that 6 test files + «Hướng dẫn» pin).
 - D8 «Chỉ số phân bổ» denominator = ALL slots (student × session), unlike the existing «Mức đáp ứng nguyện vọng» (placed only); both shown, denominators labelled.
-- D9 Group G: medals reuse the `mo_phong_fa_daa` school model (club types, behaviours); reserves × Wharton use the α/ρ/κ model (points split don/deu/giam by `crc32(seed|sid)`).
+- D9 Group G (planner msg 02:45 read late): in `do_tinh_nang.py`, NOT `_sinh.py`/`_chi_so.py`; Wharton points go straight into `run_rbda` (not via Sổ nhập/rule key); medals reuse `mo_phong_fa_daa` model. Open: per-feature metrics not in `_chi_so.py`.
 
 ## Plan (lots; ✱ = must-ship)
 - [x] ✱L1 `_chi_so.py` (A, B + upper bound, C; pure) + `tests/test_dg1_chi_so.py` + registry stub.
