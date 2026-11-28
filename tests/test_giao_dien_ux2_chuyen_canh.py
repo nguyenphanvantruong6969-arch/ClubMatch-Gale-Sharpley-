@@ -290,7 +290,7 @@ def test_o_nhap_trong_hang_55px_khi_ve_lai_khong_co_hieu_ung_truot_de_len_o(api,
     page, loi = mo()
     page.evaluate(GHI)
     _vao_hs_xong(page, 6)
-    assert page.eval_on_selector("#adminStudentTableBody tr", "r => r.offsetHeight") == 55
+    assert page.eval_on_selector("#adminStudentTableBody tr", "r => r.offsetHeight") == 51      # TK1-L1: đệm ô 14→12 px (lưới 4 pt): hàng 55→51 px
     page.click("#adminStudentTableBody tr .lop-sua")
     page.keyboard.type("10A")
     page.evaluate("() => { loadAdminStudents(); }")
