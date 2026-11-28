@@ -212,9 +212,16 @@
     const tieuDe = { hoc_sinh: "Học sinh đăng nhập", giao_vien: "Giáo viên đăng nhập", quan_tri: "Quản trị đăng nhập" }[vai];
     const goiY = vai === "quan_tri" ? h("p.dk-phu#dkTuKhoa", {}, "Tự khoá sau " + DK.GIAY_NGHI_QUAN_TRI / 60 + " phút không thao tác.")
       : vai === "hoc_sinh" ? h("p.dk-phu", {}, "Không có tên trong danh sách hoặc quên PIN thì báo thầy cô quản lý. Máy tự thoát sau 60 giây không thao tác.") : null;
+    /* VG2-L4 (#27): học sinh vào khi cổng chưa mở cho học sinh -> khoá ô và nút (không ẩn), nói rõ vì sao. */
+    const chuaMoHs = vai === "hoc_sinh" && ["chuan_bi", "gv_dang_ky", "duyet"].includes((DK.S.tt || {}).giai_doan);
+    if (chuaMoHs) {
+      Array.from(f.elements).forEach((o) => { o.disabled = true; o.setAttribute("aria-disabled", "true"); });
+      b.disabled = true; b.setAttribute("aria-disabled", "true");
+    }
+    const chuaMo = chuaMoHs ? h("p.dk-ghichu#dkHsChuaMo", {}, "Chưa mở đăng ký cho học sinh. Em quay lại khi thầy cô thông báo.") : null;
     DK.hien(DK.hep(DK.veTrangDau(),       // v8: «← Về trang chọn vai trò» nằm TRÊN thẻ; nút vàng rộng hết thẻ; dòng gợi ý dưới nút
       DK.khung(h("div.dk-hang-nut", {}, h("h1.dk-tieude.dk-gian", {}, tieuDe), vai === "quan_tri" ? null : DK.chipVai(vai === "giao_vien" ? "gv" : "hs")),
-        f, b, goiY, vai === "giao_vien" ? DK.nut("Đăng ký tài khoản giáo viên", () => DK.manGvDangKy()) : null)));
+        chuaMo, f, b, goiY, vai === "giao_vien" ? DK.nut("Đăng ký tài khoản giáo viên", () => DK.manGvDangKy()) : null)));
   };
 
   DK.vaoVai = function () {

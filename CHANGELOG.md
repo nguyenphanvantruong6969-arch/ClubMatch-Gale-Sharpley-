@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-28 — VG2-L4 (#27): form đăng nhập học sinh khoá khi cổng chưa mở
+
+- `js/dang_ky_nen.js` `manDangNhap`: vai học sinh ở giai đoạn Chuẩn bị / Giáo viên đăng ký / Duyệt CLB thì ô và nút «Đăng nhập» bị khoá (`disabled` + `aria-disabled`, không ẩn) kèm câu «Chưa mở đăng ký cho học sinh…» (`#dkHsChuaMo`). Test `tests/test_giao_dien_vg2_l4_chua_mo.py`.
+
 ## 2026-11-28 — VG2-L5 (vòng tròn Sổ nhập: cổng đăng ký → phần mềm xếp → xuất lại → nạp lại)
 
 - Lỗi: Sổ nhập xuất từ cổng (có cột Loại + Huy chương) kéo vào một workspace MỚI (chế độ huy chương tắt mặc định) nạp được nhưng LẦN XẾP bị chặn (`wharton_ho_so_chua_hop_le`, bảo «điền điểm quyết tâm» — sai hướng).
