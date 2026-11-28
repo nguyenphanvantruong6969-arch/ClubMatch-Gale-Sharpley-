@@ -12,9 +12,9 @@ No backend, no payloads, main app look unchanged. VG2 (branch `claude/vg2-ra-soa
 - [x] L3 test (CI pending) `tests/test_giao_dien_vg3.py` + related tests + ruff + kiem_nhanh + CHANGELOG + TIEN_DO + registry stub + soat-ma + push + CI
 
 ## Current state (overwrite each handoff)
-- Done so far: L1, L2, L3 (committed). Pushed; CI being watched.
+- Done so far: L1, L2, L3 (committed). CI GREEN on 4b6ae09 (run 1815).
 - Tests: `test_giao_dien_dk8_l1/l2` green after L1 (dk8_l1 chip assertion for admin changed to 0 on purpose).
-- Open problems: 2 UI tests are red on the VG1 tip too (not VG3): test_giao_dien_dk3_cong::test_10, test_giao_dien_dkl_giao_vien::test_3 (backend errors dk_lui_co_nguyen_vong / dk_thieu_clb_tu_do; VG2 branch owns them). Everything else in tests/test_giao_dien_dk*/dkl*/vg1/vg3 green (141).
+- Open problems: none. The 2 old reds (dk3_cong::test_10, dkl_giao_vien::test_3) were fixed test-side; tests-count doc 451->452. Minor note for Truong: tables scrolling sideways at <=720 px can clip the focus ring at the table edge.
 
 ## Decisions and gotchas
 - Admin header: topbar stage chip hidden for `quan_tri` only (JS `DK.dauTren`); teacher/student/landing keep it.
@@ -36,3 +36,4 @@ No backend, no payloads, main app look unchanged. VG2 (branch `claude/vg2-ra-soa
 |---|---|---|---|
 | 2026-11-27 | Sonnet | L1 done | |
 | 2026-11-27 | Sonnet | L2, L3, docs, kiem_nhanh 7/7 | 2 pre-existing red tests noted |
+| 2026-11-28 | Sonnet | CI fix round 1, soat-ma pass, CI green (run 1815) | |
