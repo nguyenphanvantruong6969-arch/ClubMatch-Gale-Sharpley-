@@ -42,6 +42,7 @@ template download blocked in the pywebview .exe; (c) bug fix: portal step 5 «Nh
   Mode-switch book must be imported while the workspace is in «Huy chương» mode. Reserves only act in RB-DA modes.
 
 ## Next steps (ordered)
+0. Check the CI run for commit 8197b50 (run #1888 on e99eb90 will still show the old F1 red). Any other red → investigate.
 1. Truong: verify both fixes on the real Windows .exe (PIN sheet lands in Downloads; step 5 type-then-click reaches «Xuất»).
 2. Optional: re-run the DK regression command (`-n 8`) to see the flaky group again.
 3. Run `soat-ma` (CLAUDE.md rule 8) and report.
