@@ -85,8 +85,40 @@ on/off, FA-DAA on/off. Per variant: Δ of A–C, churn (# students whose club ch
       commands, two blank student sections). Exact cross-check vs `SO_LIEU_DA_KIEM_CHUNG.md` §2 (TEST set, seed 42: 108/120,
       wish-1 64). Blocking pairs 0 for RB-DA on every run.
 - [ ] ✱L4 In-app block + export sheet (D5), one Chromium test, related export tests.
+- [ ] ✱L5 Scientific report + screenshots (see "Scientific report" below). Runs the FULL harness once, after L4.
 - [ ] O  F (late arrivals / withdrawals) if budget remains.
 - [ ] Final: tests green, `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `DG1-L<n>`, CI green.
+
+## Scientific report (L5; Truong, 2026-11-28)
+Truong asked: after testing on many datasets and scales, write a scientific report from the collected data, with screenshots
+where useful, including screenshots taken DURING the process. Integrity rule (CLAUDE.md) decides who writes what:
+- File `docs/nghien_cuu/DG1_BAO_CAO_KHOA_HOC.md` (+ `.html` built from it, same pattern as `docs/NGHIEN_CUU_TOI_UU.*`);
+  images in `docs/nghien_cuu/anh_dg1/`. Every number is read from `ket_qua/*.json` by a script
+  (`du_lieu_test/danh_gia/viet_bao_cao.py`); no hand-typed numbers; the commit hash + command that produced the JSON is printed.
+- Banner at the top: «Toàn bộ số liệu đo trên DỮ LIỆU MÔ PHỎNG, không phải khảo sát học sinh thật».
+- Sections and authorship (AI = may draft, HS = student writes, AI leaves the heading + an empty box):
+  0 Tóm tắt — HS. 1 Đặt vấn đề / câu hỏi nghiên cứu — AI states Q1–Q5 as questions only; motivation paragraph HS.
+  2 Giả thuyết — HS, written BEFORE the full run (coder stops and asks Truong only here if empty: note "Needs Truong", run anyway,
+  and mark in the report that hypotheses were written after). 3 Cơ chế RB-DA (short, cite `docs/CO_CHE_THUAT_TOAN.md`) — AI.
+  4 Phương pháp: generator (α, ρ, κ, scales), seed grid, control mechanisms, upper bound, metric definitions table — AI.
+  5 Kết quả: one subsection per Q1–Q5; tables + figures + one FACTUAL caption each («Bảng 3: tỉ lệ NV1 theo α, 5 bộ × 10 lần
+  bốc thăm, trung bình và KTC 95 %»); no "cho thấy / chứng tỏ / tốt hơn" wording — AI. 6 Thảo luận — HS; AI may add ≤ 6
+  neutral guiding questions («Ở α nào khoảng cách giữa RB-DA và Boston lớn nhất?»), never answers. 7 Hạn chế — HS
+  (AI may list FACTUAL limits of the setup only: simulated data, list length 3–6, one school model). 8 Kết luận — HS.
+  9 Tái lập: exact commands, versions, seeds, run time — AI. 10 Tài liệu tham khảo: only works already cited in repo docs
+  (Gale & Shapley 1962; Kominers & Sönmez 2016; Abdulkadiroğlu, Che & Yasuda 2015 …), checked against `docs/CO_CHE_THUAT_TOAN.md`.
+- Figures (matplotlib not allowed unless already in requirements-dev; else SVG/HTML via `do_thi_cot`, then screenshot):
+  F1 cumulative rank curve RB-DA vs 4 controls (default config); F2 %NV1 and unassigned vs α (κ = 0.9/1.1/1.3);
+  F3 per-club fill vs demand ratio; F4 criteria tornado (Δ%NV1, Δunassigned, churn); F5 RB-DA vs upper bound by κ;
+  F6 run time vs scale.
+- Screenshots (Playwright, `deviceScaleFactor: 2` — report figures are for people; exception to `_GIAO_THUC_GON` §3 rule),
+  ≤ 10, reuse `du_lieu_test/chup_dk8.py` pattern, script `du_lieu_test/danh_gia/chup_quy_trinh.py`, temp workspace with the
+  800×20 default set: S1 import of the Sổ nhập (preview), S2 data warnings = 0, S3 rules/criteria screen (tiêu chí GT2),
+  S4 run in progress / done, S5 results with «Chỉ số phân bổ» block (L4), S6 per-club fill view, S7 «So sánh lần chạy»
+  after the reserves-off variant (GT2-L3 UI), S8 Excel export «Chi_so» sheet (render via openpyxl → HTML table → screenshot),
+  S9 the generated HTML report itself (first page). Each with a factual caption. No real student names (generator names only).
+- Log in `docs/nhat_ky_ai/NHAT_KY_AI.md` (one dated line: what AI drafted, what is left to the student), via
+  `dung_nhat_ky_ai.py` if it is the generator.
 
 ## Current state
 - Plan v2 (Opus planner, 2026-11-28): added control mechanisms, upper bound, two-seed grid, α/ρ/κ generator, L4 must-ship,
@@ -98,3 +130,4 @@ on/off, FA-DAA on/off. Per variant: Δ of A–C, churn (# students whose club ch
 |---|---|---|---|
 | 2026-11-28 | Opus | plan + metrics outline | planner role (rule 12) |
 | 2026-11-28 | Opus | plan v2 (6 improvements) | Truong approved all six |
+| 2026-11-28 | Opus | added L5 scientific report + screenshots | authorship split per CLAUDE.md integrity |

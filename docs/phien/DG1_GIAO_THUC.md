@@ -11,7 +11,7 @@
 - Coder: Sonnet. Does L1→L4 in order, test first, commits per lot, writes `MILESTONE <k> READY` in the branch file.
 - Checker: Sonnet, started by Truong at each milestone; writes only `docs/phien/claude__dg1-danh-gia-dinh-luong__checker.md`
   ending with `CHECKER REPORT <k> NO BUGS` or a numbered finding list. Max 2 FIX rounds per finding, then note + revert that lot.
-- Milestone 1 = after L2 (metrics + generator + runner). Milestone 2 = after L4 (variants, mechanisms, report, UI).
+- Milestone 1 = after L2 (metrics + generator + runner). Milestone 2 = after L4 (variants, mechanisms, report, UI). Milestone 3 = after L5 (scientific report + screenshots).
 
 ## 2. Checker focus
 - Each metric matches its definition table row: recompute 3 metrics by hand on the 6×3 test case and 1 on `bo_sach`.
@@ -22,6 +22,9 @@
 - Control mechanisms still call the real `club_choice_function` (no copied priority logic).
 - Variants change ONE thing each and reuse the same data + seed; churn counts sum correctly (better + worse + same-rank-moved).
 - No product file changed in L1–L3 (L4 is the only product lot) (`git diff --stat origin/main -- ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'` empty).
+- L5: every number in `DG1_BAO_CAO_KHOA_HOC.md` traceable to `ket_qua/*.json` (spot-check 5); HS sections (0, 2, 6, 7, 8) contain
+  only headings / guiding questions; captions factual (grep «cho thấy|chứng tỏ|tốt hơn|vượt trội» = 0 outside quotes);
+  references exist in repo docs; screenshots show no real names; AI log line added.
 - Integrity: report says SIMULATED at the top; no interpretation sentences; «Giả thuyết» and «Nhận xét» sections empty; no real data committed.
 - L4: invariants 1, 2, 6, 7 (export sheet is additive; CSV contract unchanged) (read-only, no rank fed into priority, `{ok,data,errors}`, i18n via `i18n_errors.py` → `tao_i18n_js.py`).
 
