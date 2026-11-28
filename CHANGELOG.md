@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## 2026-11-28 — CT1-FIX5 (sửa 6 test đỏ của bộ đầy đủ trên CI, run 46102624745)
+
+- `tests/test_gt4_nhat_ky_doc.py` (vi, en): thiếu nhãn nhật ký cho hai hàm xuất mới → thêm `nkhd_export_de_xuat_chi_tieu_csv`, `nkhd_export_xem_xet_chi_tieu_csv` (vi + en) trong `i18n.js`.
+- `tests/test_giao_dien_ux6_l1.py::test_toi_da_25_phan_tu_goi_y_trong_index_html` (33 > 25): áp luật chữ UX6 cho màn CT1. `ct1_mo_ta`, `ct1_thu_goi_y` chuyển vào nút "?" (`ux6-hoi`); `ct1_bang_mo_ta`, `ct1_t_mo_ta` bỏ (chú giải màu đã nói cùng ý; khung "CLB nào thiếu chỗ" giữ 0 điều khiển); ba dòng chữ do JS điền số liệu/lỗi (`#ct1KnGhiChu`, `#ct1BuocMoTa`, `#ct1ThieuGhiChu`) dùng lớp riêng `ct1-ghi-chu`; dòng liên kết Tiêu chí bỏ lớp `hint-text`. `index.html` về đúng 25.
+- `tests/test_giao_dien_ux6_l2.py` (quản trị, giáo viên): bảng ẩn của CT1 đứng trước bảng kết quả chính nên `#view-results table` đầu tiên không có kích thước → chuyển khối `#ct1Khung` xuống CUỐI thẻ Kết quả (khi mở, phần còn lại vẫn bị ẩn bởi `.ct1-dang-mo`, nên hiển thị không đổi).
+- `tests/test_mt1_api.py::test_ma_loi_mt_co_vi_va_en`: ca kiểm vị trí khối mã lỗi `mt_` bỏ qua thêm tiền tố `ct1_` (giống sửa đã làm ở `tests/test_mt1_uoc_tinh.py`).
+- Gộp với commit song song `f6abcd4` (cùng sửa nhãn nhật ký, tiền tố `ct1_`, test UX6-L2 nhắm `#kqBang`, chờ 90 s cho bộ 800HS trong `tests/test_giao_dien_ct1.py`); bỏ hai khoá `nkhd_` bị thêm trùng ở cả vi và en (JS ghi đè âm thầm).
+- `tests/test_giao_dien_sua_loi_p1.py::test_bam_dup_luu_diem_chi_gui_mot_lan` đỏ chập chờn trên CI (run 46107115207; không liên quan CT1, CT1 không đổi `js/06_cham_diem.js`): test chờ cố định 800 ms rồi đòi nút đã mở lại. Nay chờ tới khi nút mở lại (≤ 10 s) rồi mới đếm số lần gửi; vẫn bắt lỗi gửi hai lần và lỗi nút không mở lại.
+- Không đổi `.py` sản phẩm, schema, CSV hay thuật toán. Bộ đầy đủ chạy cục bộ trước khi sửa: 6 đỏ / 8074 xanh; sau sửa: các tệp liên quan + CT1 351 xanh, `kiem_nhanh` 7/7.
+
+## 2026-11-28 — CT1-FIX4 (lối vào: nút riêng "Gợi ý chỉ tiêu")
+
+- Truong yêu cầu một nút riêng ở góc phải thay cho mục trong menu. `#btnCt1Mo` (giữ id) nay là nút PHỤ (`btn-secondary btn-goi-y`: viền đậm, chữ đậm, biểu tượng bóng đèn; KHÔNG phải nút vàng) "Gợi ý thay đổi chỉ tiêu" ở góc phải thanh công cụ thẻ Kết quả, ngay cạnh nút vàng "Tải bảng này (Excel)"; chỉ quản trị (`data-quyen`); `title` "Gợi ý và thay đổi chỉ tiêu CLB: nên tăng hay giảm chỗ ở đâu". Đã gỡ khỏi menu "Báo cáo và phiếu in".
+- Luật thiết kế: ngân sách Hick của `#view-results` (quản trị) 9 → 10 điều khiển, vẫn trong mức ≤ 10 của UX5A; `#ux1bPanel` không đổi; vẫn đúng MỘT nút vàng. Test UX5A l2–l4 không phải sửa.
+- Test: `test_loi_vao_la_mot_nut_phu_o_goc_phai_chi_quan_tri` (thay test cũ về menu). Nhãn `ct1_menu` đổi vi + en, thêm `ct1_menu_goi_y`.
+
+## 2026-11-28 — CT1-FIX (sửa các phát hiện của soát mã CT1; vẫn chỉ đọc)
+
+- Phát hiện 1: dữ liệu NHIỀU buổi (`SO_NHAP_DQT_800HS_HOP_LE`: 2836 lượt, 800 học sinh) không còn gọi lượt là "học sinh". `get_xem_xet_chi_tieu` thêm `so_buoi`; khi > 1, giao diện dùng các khoá `ct1_*_luot` (13 chuỗi vi + en, `ct1T()` trong `js/20_xem_xet_chi_tieu.js`) và thêm một câu giải thích `ct1_luot_ghi_chu`. Một buổi: chữ và số y như trước.
+- Phát hiện 2: `o_chua_co` chỉ tính lượt CÓ nguyện vọng (`len(o_chua_co) == truoc.chua_co`, trước đây 2280 ≠ 1916); chỉ vẽ tối đa 300 ô, phần còn lại ghi bằng chữ (`ct1_b_o_con_lai`).
+- Phát hiện 3, phương án (b): khi số "kém hơn" LỚN HƠN số "tốt hơn", dưới dòng tổng kết có một dòng chữ cảnh báo (`#ct1KemNhieuHon`, kiểu `.ct1-luu-y`, không phải nút; Hick và Von Restorff không đổi). Luật đề xuất không đổi.
+- Phát hiện 4: chữ "Hiện tại" trên dải xám đổi sang `#111418` (tương phản 5,9:1, trước 3,2:1); `--chart-khong-nhan` không đổi.
+- Phát hiện 5: thêm test `test_nguong_chua_dap_khong_bi_buoc_can_bang_che`; đột biến `chua_dap >= 1` → `>= 99` giờ làm test đỏ.
+- Tests: `tests/test_ct1_nhieu_buoi.py` (mới, 3), thêm 2 ca Chromium trong `tests/test_giao_dien_ct1.py`, 1 ca trong `tests/test_ct1_khuyen_nghi.py`. Không đổi `chi_tieu_ct1.py`, không đổi schema, CSV hay thuật toán (bất biến 1 giữ: CT1 chỉ đọc).
+
+## 2026-11-28 — CT1 (Xem xét chỉ tiêu: màn chỉ đọc, đề xuất chỉ tiêu kỳ sau giữ nguyên tổng chỗ)
+
+- Mục mới CT1 (Truong yêu cầu 28/11/2026). Chỉ ĐỌC: không ghi `match_results` / `run_history` / chỉ tiêu, không sao lưu, không đổi schema hay hợp đồng CSV, không thư viện mới; chỉ dùng bộ số bốc thăm ĐÃ KHOÁ (bất biến 1–5 không bị chạm).
+- `chi_tieu_ct1.py` (mới, thuần hàm): `chi_so_clb_ct1`, `khuyen_nghi_chi_tieu` (mục tiêu = round(T·nv1/N), chỉ tăng khi có người "muốn vào mà chưa được", kẹp ±20 % và tối thiểu 8 chỗ nhưng không vượt chỗ hiện tại, không bớt dưới chỗ giữ dự trữ, cân ±1 để Σ chỗ giữ nguyên, theo từng buổi), `ghep_buoc_chuyen`, `kiem_buoc_tu_chon`, `hang_ket_qua`, `thong_ke_ket_qua`.
+- `api_chi_tieu.py` (mới, `ChiTieuMixin` trong `api.py`): `get_xem_xet_chi_tieu(buoc_tu_chon=None)`, `export_xem_xet_chi_tieu_csv`, `export_de_xuat_chi_tieu_csv`; giải lại từng bước bằng `_giai_trong_bo_nho(..., sao_luu=False, sua_clb=...)`; danh sách em đổi chỗ dựng bằng `tieu_chi.so_sanh_lan_chay` (cùng định nghĩa GT2). Chỉ quản trị (`phan_quyen.py`). Mã lỗi mới `ct1_*` (`i18n_errors.py`, `i18n_loi.js`).
+- Giao diện: một mục "Xem xét chỉ tiêu CLB" trong menu "Báo cáo và phiếu in" của thẻ Kết quả (quản trị); khung `#ct1Khung` (`index.html`, `js/20_xem_xet_chi_tieu.js`, `style.css`, 102 khoá `ct1_*` vi + en). Luật Hick + Von Restorff cho từng khung; không có nút "Áp dụng", không có PDF. Chạy được ở 390 px.
+- Số trên `SO_NHAP_TEST.xlsx` (seed khoá 42, DỮ LIỆU MÔ PHỎNG): bốn bước Bóng rổ→Bóng đá 4, Âm nhạc→Tiếng Anh 3, Tình nguyện→Tin học 2, Văn học→Mỹ thuật 2; NV1 64→67→69→73→74; chưa có CLB 12→11→11→10→8; 15 em tốt hơn / 0 kém hơn.
+- Tests mới: `tests/test_ct1_khuyen_nghi.py` (29), `tests/test_ct1_api.py` (22), `tests/test_ct1_ca_kiem_tay.py` (ba ca kiểm tay × 5 seed), `tests/test_giao_dien_ct1.py` (13, Chromium). Sửa có chủ đích: `tests/test_gt3_phan_quyen.py` (danh sách hàm `get_*` chỉ quản trị), `tests/test_mt1_uoc_tinh.py` (khối khoá cuối), `tests/_ux5a_chung.py` (tham số tuỳ chọn `so_nhap`, `rules`, `rong`).
+- Lỗi đã biết (mục riêng, KHÔNG sửa ở CT1): `fa_daa.goi_y_chi_tieu` không giữ tổng chỗ (đề xuất 566–653 chỗ cho 800 học sinh) nên CT1 không dùng hàm này.
+- Lệch nhỏ so với kế hoạch: nhiều hơn 6 bước thì hiện 5 bước + "Xem thêm bước" (giữ khung ≤ 7 điều khiển); khi hoà, bên nhận chỗ ghép theo "chưa đáp ứng trên chỗ" rồi mới đến mã CLB; liên kết "Tiêu chí" dùng `ux1aMoNangCao()` (GT2 nay ở Quản lý › Cách xếp).
+
 ## 2026-11-27 — VG3 vòng CI 1 (sửa test đỏ sau L1–L3)
 
 - `docs/ke_hoach/CLAUDE_CHI_TIET.md`: số tệp `test_*.py` 451 → 452 (thêm `test_giao_dien_vg3.py`).

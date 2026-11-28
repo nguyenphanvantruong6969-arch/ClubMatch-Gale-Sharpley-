@@ -85,6 +85,7 @@ from api_nhap import NhapDuLieuMixin
 from api_nhat_ky import NhatKyMixin  # GT3-L3
 from api_quan_ly import QuanLyMixin
 from api_sau_xep import SauXepMixin
+from api_chi_tieu import ChiTieuMixin  # CT1
 from api_muc_tieu import MucTieuMixin  # MT1
 from api_phuong_an import PhuongAnMixin  # CB1
 from api_tieu_chi import TieuChiMixin  # GT2
@@ -105,7 +106,7 @@ from phan_quyen import ap_dung_cong  # GT3-L2
 class PipelineAPI(NhapDuLieuMixin, ChamDiemMixin, BaoCaoMixin,
                   XuatKetQuaMixin, QuanLyMixin, SauXepMixin, WorkspaceMixin, TieuChiMixin,
                   FormsMixin, FormsNapMixin, FormsBoMixin, TaiKhoanMixin, NhatKyMixin, MucTieuMixin,
-                  PhuongAnMixin, DangKyMixin, DangKyExcelMixin, DangKySangXepMixin):
+                  ChiTieuMixin, PhuongAnMixin, DangKyMixin, DangKyExcelMixin, DangKySangXepMixin):
     def __init__(self, db_path: str, thu_muc_xuat: str = "",
                  thu_muc_goc_ws: str = None, ws_da_chon: bool = True):
         self.db_path = db_path

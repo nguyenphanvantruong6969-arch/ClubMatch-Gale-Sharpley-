@@ -45,6 +45,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | MT2 | Chia CLB theo loại (Tự do / Giới hạn / Tuyển chọn) bằng một công tắc, ghép với chỉ xếp và chia 100 điểm, không cần huy chương (thêm 22/11/2026) | Sửa mã · L | MT1 | – | – | – | – | – | – | – | – | O | – | – | – |
 | KD1 | Khởi động an toàn khi máy Windows thiếu WebView2 (thêm 25/11/2026) | Sửa mã · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK1 | Bản mẫu cổng đăng ký (Quản lý / Giáo viên / Học sinh), dữ liệu giả (thêm 25/11/2026) | Bản mẫu · S | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| CT1 | Xem xét chỉ tiêu: màn chỉ đọc, đề xuất chỉ tiêu kỳ sau giữ nguyên tổng chỗ, kết quả sau từng bước (thêm 28/11/2026) | Viết mới · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK2 | Cầu nối bản mẫu → Sổ nhập thật (thêm 25/11/2026) | Sửa mã · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK3 | Cổng đăng ký thật (bảng dk_*, api_dang_ky, dang_ky.html) (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK4 | Nối thẳng đăng ký → xếp: `dang_ky_sang_xep.py`, nút "Chốt và xếp" (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
@@ -823,3 +824,12 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **TC** (Tài chính – ngân hàng (chia khách hàng, hồ sơ thẩm định)): Z6, Z3, Z7, Z4*, Z1, B1, B2, A1, A2, A3, A5*, A10, A12, B3, C1, C3, E1, E2, E3, G1, G2, G3, G4  · tuỳ chọn: Z5, Z2, A7
 
 `*` = mục tiền đề (ngành không đánh dấu R nhưng mục khác cần).
+
+## CT1 — Xem xét chỉ tiêu (thêm 28/11/2026)
+- **Mức / quy mô:** Viết mới / M
+- **Tệp:** chi_tieu_ct1.py, api_chi_tieu.py, api.py, phan_quyen.py, i18n_errors.py, i18n_loi.js, index.html, i18n.js, style.css, js/20_xem_xet_chi_tieu.js
+- **Hiện trạng:** nhà trường chỉ nhận tệp CSV; chưa có màn nào nói nên tăng / giảm chỉ tiêu CLB nào, bao nhiêu, và kết quả sau mỗi thay đổi.
+- **Thay đổi:** màn chỉ đọc trong thẻ Kết quả (chỉ quản trị): khuyến nghị chuyển chỗ giữ nguyên tổng; kết quả xếp lại sau từng bước (cùng thuật toán, cùng bốc thăm đã khoá); danh sách em đổi chỗ; thử một thay đổi tự chọn; hai tệp CSV. Không ghi chỉ tiêu, không đổi schema / CSV nhập.
+- **Rủi ro:** thấp; không đụng thuật toán xếp hay bộ số bốc thăm. Số đo là DỮ LIỆU MÔ PHỎNG.
+- **Kiểm nhận:** tests/test_ct1_khuyen_nghi.py, test_ct1_api.py, test_ct1_ca_kiem_tay.py (ba ca tính tay × 5 seed), test_giao_dien_ct1.py; số hồi quy trên SO_NHAP_TEST.xlsx (NV1 64→74, chưa có CLB 12→8, 15 em tốt hơn / 0 kém hơn).
+- **Phụ thuộc:** không · **Ngành:** áp dụng cho mọi ngành có chỉ tiêu (O).

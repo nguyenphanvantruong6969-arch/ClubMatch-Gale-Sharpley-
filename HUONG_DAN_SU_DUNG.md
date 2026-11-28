@@ -667,6 +667,10 @@ khác hẳn — và hai chuyện đó cần hai cách xử lý khác nhau.
 | **Diện trúng tuyển** | `Thường` = cạnh tranh ở chỉ tiêu chung · `Dự trữ` = vào bằng suất dành riêng |
 | Nhóm dự trữ | Nhãn diện ưu tiên của em, nếu có |
 
+#### Xem xét chỉ tiêu cho kỳ sau *(chỉ tài khoản quản trị)*
+
+Ở thẻ **Kết quả**, bấm nút **Gợi ý thay đổi chỉ tiêu** ở góc phải thanh công cụ (cạnh nút *Tải bảng này (Excel)*). Màn này **chỉ đọc**: không đổi chỉ tiêu nào, không ghi gì. Phần mềm xếp lại cả trường bằng chính thuật toán, cùng nguyện vọng và cùng bốc thăm đã khoá, rồi cho biết nên chuyển chỗ từ CLB nào sang CLB nào (tổng số chỗ giữ nguyên), kết quả sau từng bước, và danh sách học sinh đổi chỗ ở mỗi bước (bấm "Xem học sinh nào đổi chỗ"). Mục *Tự thử một thay đổi* cho thử chuyển 1–3 chỗ giữa hai CLB cùng buổi. Có hai tệp CSV: bảng đề xuất và bảng đối chiếu từng học sinh (có tên, đừng gửi cho người không được xem). Muốn đổi thứ tự ưu tiên giữa các học sinh thì dùng màn *Tiêu chí*. Cần đã có kết quả xếp chính thức và bộ số bốc thăm đã khoá. Trường có nhiều buổi thì mọi số đếm tính theo *lượt* (một học sinh ở một buổi là một lượt) và màn có một câu nói rõ điều đó. Nếu các bước làm nhiều lượt kém đi hơn số lượt tốt lên, màn hiện thêm một dòng lưu ý: hãy xem kỹ danh sách từng bước trước khi đổi chỉ tiêu.
+
 ### Kết quả đúng của bộ ví dụ
 
 Chạy với `seed = 42`:

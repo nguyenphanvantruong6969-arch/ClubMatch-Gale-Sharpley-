@@ -148,4 +148,16 @@ không có cặp nào bằng nhau. Test canh cả hai cấu hình (bật có đi
 quả giống hệt nhau cả 5 lần**. Nghĩa là bạn có thể tự kiểm bằng bút chì trên
 giấy, và máy phải ra đúng như vậy.
 
+## Đổi chỉ tiêu bằng tay (mục "Xem xét chỉ tiêu")
+
+Sau khi chạy xong kịch bản trên, mở **Kết quả → nút Gợi ý thay đổi chỉ tiêu (góc phải)**. Quy tắc đề xuất cho **không bước nào** trên bộ nhỏ này (mỗi CLB chỉ được đổi ±20 % và không dưới 8 chỗ), nên dùng mục **Tự thử một thay đổi** (chọn CLB lấy chỗ, CLB nhận chỗ, số chỗ = 1, bấm *Xếp lại với chỉ tiêu này*). Ba ca tính tay được; kết quả giống hệt ở cả 5 hạt giống:
+
+| Ca | Thử | Chỉ những học sinh sau đổi chỗ |
+|---|---|---|
+| A | Nấu ăn −1 → Cờ vua +1 | HS08: chưa có CLB → Cờ vua (nguyện vọng 1) |
+| B | Nấu ăn −1 → Nhiếp ảnh +1 | HS03: Cờ vua → Nhiếp ảnh (nguyện vọng 2 → 1) **và** HS08: chưa có CLB → Cờ vua (1 chỗ, 2 học sinh) |
+| C | Nhiếp ảnh −1 → Nấu ăn +1 | HS02: Nhiếp ảnh → Nấu ăn (nguyện vọng 1 → 2, xuống) |
+
+Test canh ba ca này: `tests/test_ct1_ca_kiem_tay.py`.
+
 *Phần nhận xét về ý nghĩa của kết quả này, học sinh tự viết.*

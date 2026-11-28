@@ -212,9 +212,10 @@ def test_bam_dup_luu_diem_chi_gui_mot_lan(trang):
 
     page.route("**/__api__/submit_club_scores", dem_goi)
     page.locator("#btnSaveScores").dblclick()
-    page.wait_for_timeout(800)
+    # và nút mở lại sau khi xong — CHỜ tới khi mở lại (CI chậm: lưu có thể > 800 ms), rồi mới đếm số lần gửi
+    page.wait_for_function("!document.getElementById('btnSaveScores').disabled", timeout=10000)
+    page.wait_for_timeout(300)                 # cú bấm thứ hai (nếu lọt) đã kịp gửi
     assert len(dem) == 1
-    # và nút mở lại sau khi xong
     assert page.locator("#btnSaveScores").is_enabled()
     assert loi == []
 
