@@ -149,23 +149,25 @@ def do_luoi_2x2(tham_so, seeds_dl, seeds_bt):
                 theo_o[o].append(run[o][0])
             for (b, a) in CAP_SO_SANH:
                 doi[(b, a)].append(dich_chuyen(run[a][1], run[b][1], kb["prefs"], truong["students"]))
-        row = {"o": {o: {k: _tb([p.get(k) for p in ps]) for k in ps[0]} for o, ps in theo_o.items()},
+        row = {"o": {o: {k: _tb([p.get(k) for p in ps]) for k in dg.hop_khoa(ps)} for o, ps in theo_o.items()},
                "doi": {"%s_vs_%s" % pair: {k: _tb([x[k] for x in ds]) for k in ds[0]} for pair, ds in doi.items()}}
         theo_truong.append(row)
     ra = {"tham_so": dict(tham_so), "seed_du_lieu": list(seeds_dl), "seed_boc_tham": list(seeds_bt), "kiem_ho_so": kiem,
           "o": {}, "doi_so_voi": {}}
     for o in CAC_O:
-        ra["o"][o] = {k: dg.tong_hop([t["o"][o][k] for t in theo_truong]) for k in theo_truong[0]["o"][o]}
+        ra["o"][o] = {k: dg.tong_hop([t["o"][o].get(k) for t in theo_truong]) for k in dg.hop_khoa([t["o"][o] for t in theo_truong])}
     for ten in theo_truong[0]["doi"]:
-        ra["doi_so_voi"][ten] = {k: dg.tong_hop([t["doi"][ten][k] for t in theo_truong]) for k in theo_truong[0]["doi"][ten]}
+        ra["doi_so_voi"][ten] = {k: dg.tong_hop([t["doi"][ten].get(k) for t in theo_truong]) for k in dg.hop_khoa([t["doi"][ten] for t in theo_truong])}
     # Hiệu CÓ CẶP theo trường: bật − tắt của từng chỉ số lõi.
     ra["hieu_co_cap"] = {}
+    giu = set(KHOA_CHI_SO_G) | {"nhom.%s.hang_tb" % g for g in NHOM_DU_TRU} | {"a.theo_nhom.du_tru.%s.pct_nv1" % g for g in NHOM_DU_TRU} \
+        | {"a.theo_nhom.du_tru.%s.pct_da_xep" % g for g in NHOM_DU_TRU}
     for (b, a) in CAP_SO_SANH:
+        def hieu(t, k, b=b, a=a):
+            x, y = t["o"][b].get(k), t["o"][a].get(k)
+            return None if x is None or y is None else x - y
         ra["hieu_co_cap"]["%s_tru_%s" % (b, a)] = {
-            k: dg.tong_hop([(t["o"][b][k] - t["o"][a][k]) if (t["o"][b][k] is not None and t["o"][a][k] is not None) else None
-                            for t in theo_truong]) for k in theo_truong[0]["o"][b] if k in set(KHOA_CHI_SO_G) | {"nhom.%s.hang_tb" % g for g in NHOM_DU_TRU}
-                                                                                       | {"a.theo_nhom.du_tru.%s.pct_nv1" % g for g in NHOM_DU_TRU}
-                                                                                       | {"a.theo_nhom.du_tru.%s.pct_da_xep" % g for g in NHOM_DU_TRU}}
+            k: dg.tong_hop([hieu(t, k) for t in theo_truong]) for k in dg.hop_khoa([t["o"][b] for t in theo_truong]) if k in giu}
     return ra
 
 

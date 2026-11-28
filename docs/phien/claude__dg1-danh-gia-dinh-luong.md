@@ -83,6 +83,13 @@ top-points / gold-medal club; share of rejections decided by LOTTERY; A–C and 
   used) via a NEW pure function reusing `tieu_chi._thong_ke`, `{ok,data,errors}`, i18n `dg1_`; plus a «Chi_so» sheet in the
   Excel export. If an equivalent block already shows in default mode, add only the export sheet and note why.
 
+- D6 (coder, 2026-11-28, tự chọn mặc định) Lưới chạy lõi `run_rbda` TRONG BỘ NHỚ trên trường mô phỏng (cùng hàm `run_pipeline` gọi); `run_pipeline`
+  thật + Sổ nhập chỉ ở phép đối chiếu bộ TEST seed 42 (cổng bắt buộc) và ở `thoi_gian.json`. Test `test_nap_qua_phan_mem_khop_bo_nho` canh dữ liệu bộ sinh == dữ liệu nạp qua phần mềm.
+- D7 Mục Excel «CHỈ SỐ PHÂN BỔ» đặt cuối trang «Thống kê» thay vì sheet riêng `Chi_so`: thêm sheet đổi danh sách trang mà 6 tệp test + `Hướng dẫn` canh. Đổi lại dễ: thêm `TRANG_SO_EXCEL` nếu Truong muốn.
+- D8 Khối «Chỉ số phân bổ» dùng mẫu số MỌI suất (em × buổi) — khác bảng «Mức đáp ứng nguyện vọng» sẵn có (mẫu số: em được xếp); cả hai cùng hiện, mẫu số ghi rõ.
+- D9 Nhóm G: huy chương dùng nguyên mô hình `mo_phong_fa_daa` (loại CLB + hành vi); dự trữ × điểm quyết tâm dùng mô hình α/ρ/κ. Điểm quyết tâm: ba kiểu chia dồn/đều/giảm dần, bốc theo `crc32(seed|sid)`.
+- D10 `--giam` (3 × 5) KHÔNG phải dùng: bộ đầy đủ chạy xong dưới 60 phút (xem `ket_qua/README_LAN_CHAY.md`).
+
 ## Plan (lots; ✱ = must-ship)
 - [ ] ✱L1 `_chi_so.py` (A, B incl. upper bound, C; pure) + `tests/test_dg1_chi_so.py` (test first) + registry stub.
 - [ ] ✱L2 `_sinh.py` (α, ρ, κ model) + runner (scales × α × κ × seed grid, E timing, JSON), `--nhanh`, `--so-nhap`;

@@ -90,3 +90,28 @@ def test_dem_cap_chan_cua_co_che_on_dinh_bang_0_con_boston_khac_0():
     kq = loi.run_rbda(st, clubs, sc, app, prefs, stb, elig)
     assert dg.dem_cap_chan(dict(kq.assignment), clubs, prefs, base, chon) == 0
     assert dg.dem_cap_chan(cc.co_che_boston(st, clubs, sc, app, prefs, stb, elig), clubs, prefs, base, chon) > 0
+
+
+def test_gop_khoa_nhom_vang_mat_khong_gay_loi():
+    # Một lần chạy không có em nào ở Tầng 2 → khoá của nhóm đó chỉ có ở lần khác; gộp phải theo HỢP khoá, trung bình trên giá trị CÓ MẶT.
+    a = {"x": 1.0, "nhom.tang_2.n": 10.0}
+    b = {"x": 3.0}
+    assert dg.hop_khoa([a, b]) == ["x", "nhom.tang_2.n"]
+    assert dg.tb_co([a.get("nhom.tang_2.n"), b.get("nhom.tang_2.n")]) == 10.0
+    assert dg.tb_co([None, None]) is None and dg.sd_co([2.0, None]) == 0.0
+    assert dg.tb_co([a["x"], b["x"]]) == 2.0
+
+
+def test_do_cau_hinh_chiu_duoc_nhom_vang_mat(monkeypatch):
+    goc = dg.chay_mot
+    dem = {"n": 0}
+
+    def gia(kb, sbt, truong):
+        ci, kq, dt = goc(kb, sbt, truong)
+        dem["n"] += 1
+        if dem["n"] % 2 == 0:                       # lần chạy chẵn: bỏ nhóm «tang_2»
+            ci["a"]["theo_nhom"]["tang"].pop("tang_2", None)
+        return ci, kq, dt
+    monkeypatch.setattr(dg, "chay_mot", gia)
+    r = dg.do_cau_hinh(TS, [101, 102], [1, 2])
+    assert "a.theo_nhom.tang.tang_2.n" in r["chi_so"] and r["chi_so"]["a.theo_nhom.tang.tang_2.n"]["tb"] is not None

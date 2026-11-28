@@ -82,7 +82,8 @@ def in_mac_dinh(d):
     ra += ["", "**Nhóm** (% NV1, mẫu số: HS của nhóm; tb qua các trường)", ""]
     nh = [(k, v) for k, v in cs.items() if k.startswith("a.theo_nhom.") and k.endswith(".pct_nv1")]
     ra.append(bang(["Nhóm", "% NV1", "% chưa xếp = 100 − % được xếp"],
-                   [(k[len("a.theo_nhom."):-len(".pct_nv1")], ktc(v), so(100 - cs[k.replace(".pct_nv1", ".pct_da_xep")]["tb"])) for k, v in nh]))
+                   [(k[len("a.theo_nhom."):-len(".pct_nv1")], ktc(v), so(None if (cs.get(k.replace(".pct_nv1", ".pct_da_xep")) or {}).get("tb") is None
+                                                                       else 100 - cs[k.replace(".pct_nv1", ".pct_da_xep")]["tb"])) for k, v in nh]))
     ra += ["", "**Độ ổn định giữa các lần bốc thăm**: HS có lúc được xếp, có lúc không = %s %% ; HS đổi CLB = %s %%" % (
         ktc(d.get("lat_co_cho_pct")), ktc(d.get("lat_clb_pct"))), ""]
     if d.get("theo_truong") and d["theo_truong"][0].get("theo_clb"):

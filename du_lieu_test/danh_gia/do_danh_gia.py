@@ -87,6 +87,26 @@ def tong_hop(gia_tri):
     return {"tb": round(tb, 4), "ktc95": [round(tb - h, 4), round(tb + h, 4)], "n": len(xs)}
 
 
+def hop_khoa(cac):
+    """Hợp các khoá của nhiều dict, giữ thứ tự gặp đầu tiên. Nhóm vắng mặt trong MỘT lần chạy (vd không em nào ở Tầng 2) thì
+    khoá của nhóm đó chỉ có ở lần khác — nên mọi phép gộp phải dùng hợp khoá và trung bình CHỈ trên giá trị có mặt."""
+    ra = {}
+    for d in cac:
+        for k in d:
+            ra.setdefault(k, None)
+    return list(ra)
+
+
+def tb_co(gia_tri):
+    xs = [x for x in gia_tri if x is not None]
+    return sum(xs) / len(xs) if xs else None
+
+
+def sd_co(gia_tri):
+    xs = [x for x in gia_tri if x is not None]
+    return statistics.stdev(xs) if len(xs) > 1 else 0.0
+
+
 def lam_phang(d, tien_to=""):
     ra = {}
     for k, v in d.items():
@@ -217,9 +237,9 @@ def do_cau_hinh(tham_so, seeds_dl, seeds_bt, bien_the=None, chi_so_giu=None, luu
                     d["da_xep"].append(x["da_xep"])
             if doi_chieu is not None:
                 chiu.setdefault("lan", []).append(churn(doi_chieu[sdl][sbt], kq.assignment, kb["prefs"]))
-        khoa = [k for k in phang_lan[0] if chi_so_giu is None or k in chi_so_giu]
-        tb = {k: sum(p[k] for p in phang_lan if k in p) / len(phang_lan) for k in khoa}
-        sd = {k: (statistics.stdev([p[k] for p in phang_lan]) if len(phang_lan) > 1 else 0.0) for k in khoa}
+        khoa = [k for k in hop_khoa(phang_lan) if chi_so_giu is None or k in chi_so_giu]
+        tb = {k: tb_co([p.get(k) for p in phang_lan]) for k in khoa}
+        sd = {k: sd_co([p.get(k) for p in phang_lan]) for k in khoa}
         n = len(truong["students"])
         row = {"seed_du_lieu": sdl, "tb": tb, "sd_boc_tham": sd,
                "lat_co_cho": sum(1 for v in co_cho.values() if len(v) > 1),
@@ -233,10 +253,11 @@ def do_cau_hinh(tham_so, seeds_dl, seeds_bt, bien_the=None, chi_so_giu=None, luu
         if chiu:
             row["churn"] = {k: sum(x[k] for x in chiu["lan"]) / len(chiu["lan"]) for k in chiu["lan"][0]}
         theo_truong.append(row)
-    khoa = list(theo_truong[0]["tb"])
-    chi_so = {k: dict(tong_hop([r["tb"][k] for r in theo_truong]),
-                      sd_boc_tham=round(sum(r["sd_boc_tham"][k] for r in theo_truong) / len(theo_truong), 4),
-                      theo_bo=[round(r["tb"][k], 4) for r in theo_truong]) for k in khoa}
+    khoa = hop_khoa([r["tb"] for r in theo_truong])
+    chi_so = {k: dict(tong_hop([r["tb"].get(k) for r in theo_truong]),
+                      sd_boc_tham=(None if tb_co([r["sd_boc_tham"].get(k) for r in theo_truong]) is None
+                                   else round(tb_co([r["sd_boc_tham"].get(k) for r in theo_truong]), 4)),
+                      theo_bo=[None if r["tb"].get(k) is None else round(r["tb"][k], 4) for r in theo_truong]) for k in khoa}
     ra = {
         "tham_so": dict(tham_so), "bien_the": bien_the, "seed_du_lieu": list(seeds_dl), "seed_boc_tham": list(seeds_bt),
         "chi_so": chi_so,
@@ -410,11 +431,11 @@ def phan_co_che(cfg):
                 theo_m[m].append(lam_phang(ci))
         for m in CO_CHE:
             ph = theo_m[m]
-            gom[m].append({k: sum(p[k] for p in ph) / len(ph) for k in ph[0]})
+            gom[m].append({k: tb_co([p.get(k) for p in ph]) for k in hop_khoa(ph)})
         print("  co_che seed_dl=%d xong" % sdl, flush=True)
     ra = {}
     for m in CO_CHE:
-        ra[m] = {k: tong_hop([r[k] for r in gom[m]]) for k in gom[m][0]}
+        ra[m] = {k: tong_hop([r.get(k) for r in gom[m]]) for k in hop_khoa(gom[m])}
     return {"tham_so": ts, "seed_du_lieu": cfg["seed_dl"], "seed_boc_tham": cfg["seed_bt"], "co_che": ra,
             "ghi_chu": "Suất dự trữ dùng (tang) chỉ có ở RB-DA; các cơ chế đối chứng đều gọi `club_choice_function` thật nhưng không ghi tầng. "
                        "Cặp phá vỡ: RB-DA qua `verify_stability`; cơ chế khác qua cùng vòng lặp với `cc.thong_ke`."}
@@ -495,13 +516,13 @@ def phan_nhieu_buoi(cfg):
             lan.append({"theo_buoi": theo_b, "theo_hoc_sinh": tong})
         buoi = sorted(lan[0]["theo_buoi"])
         row = {"seed_du_lieu": sdl,
-               "theo_buoi": {b: {k: sum(x["theo_buoi"][b][k] for x in lan) / len(lan) for k in lan[0]["theo_buoi"][b]} for b in buoi},
+               "theo_buoi": {b: {k: tb_co([x["theo_buoi"][b].get(k) for x in lan]) for k in hop_khoa([x["theo_buoi"][b] for x in lan])} for b in buoi},
                "theo_hoc_sinh": {k: sum(x["theo_hoc_sinh"][k] for x in lan) / len(lan) for k in lan[0]["theo_hoc_sinh"]}}
         theo_truong.append(row)
         print("  nhieu_buoi seed_dl=%d xong" % sdl, flush=True)
     buoi = sorted(theo_truong[0]["theo_buoi"])
     return {"tham_so": dict(ts, so_buoi=3), "seed_du_lieu": cfg["seed_dl"], "seed_boc_tham": cfg["seed_bt"],
-            "theo_buoi": {b: {k: tong_hop([r["theo_buoi"][b][k] for r in theo_truong]) for k in theo_truong[0]["theo_buoi"][b]
+            "theo_buoi": {b: {k: tong_hop([r["theo_buoi"][b].get(k) for r in theo_truong]) for k in hop_khoa([r["theo_buoi"][b] for r in theo_truong])
                               if k in set(CHI_SO_QUET) | {"a.cap_chan"}} for b in buoi},
             "theo_hoc_sinh": {k: tong_hop([r["theo_hoc_sinh"][k] for r in theo_truong]) for k in theo_truong[0]["theo_hoc_sinh"]},
             "ghi_chu": "Mỗi buổi: chỉ số A–C trên riêng buổi đó (mẫu số = mọi học sinh). theo_hoc_sinh: xem định nghĩa `tong_hop_theo_hoc_sinh`."}
@@ -546,9 +567,9 @@ def chay_du_lieu_co_san(ten, du_lieu, seeds_bt):
         lan.append((sbt, ci))
     phang = [lam_phang(ci) for _s, ci in lan]
     return {"ten": ten, "n_hs": len(students), "n_clb": len(clubs), "seed_boc_tham": list(seeds_bt),
-            "chi_so": {k: {"tb": round(sum(p[k] for p in phang) / len(phang), 4),
-                           "sd_boc_tham": round(statistics.stdev([p[k] for p in phang]), 4) if len(phang) > 1 else 0.0}
-                       for k in phang[0]},
+            "chi_so": {k: {"tb": None if tb_co([p.get(k) for p in phang]) is None else round(tb_co([p.get(k) for p in phang]), 4),
+                           "sd_boc_tham": round(sd_co([p.get(k) for p in phang]), 4)}
+                       for k in hop_khoa(phang)},
             "theo_clb_lan_dau": lan[0][1]["c"]["theo_clb"], "ghi_chu": "Một bộ dữ liệu cố định: chỉ có phương sai do bốc thăm (không có KTC giữa các trường)."}
 
 
@@ -631,13 +652,23 @@ def dinh_nghia(cfg):
     }
 
 
-def thong_tin_lan_chay(lenh, t_bat_dau):
+def _doc_git():
+    """(commit, cây làm việc sạch?) — đọc MỘT LẦN lúc nạp mô-đun, tức lúc BẮT ĐẦU lần chạy (commit giữa chừng không làm lệch)."""
     try:
         ma = subprocess.check_output(["git", "-C", GOC, "rev-parse", "HEAD"], text=True).strip()
-        sach = subprocess.check_output(["git", "-C", GOC, "status", "--porcelain", "--", ":!du_lieu_test/danh_gia/ket_qua"], text=True).strip() == ""
+        sach = subprocess.check_output(["git", "-C", GOC, "status", "--porcelain", "--untracked-files=no", "--", ":!du_lieu_test/danh_gia/ket_qua"],
+                                       text=True).strip() == ""
+        return ma, sach
     except Exception:
-        ma, sach = "khong_ro", None
+        return "khong_ro", None
+
+
+GIT_LUC_BAT_DAU = _doc_git()
+
+
+def thong_tin_lan_chay(lenh, t_bat_dau):
     import platform
+    ma, sach = GIT_LUC_BAT_DAU
     return {"lenh": lenh, "commit": ma, "cay_lam_viec_sach": sach, "python": sys.version.split()[0], "may": platform.platform(),
             "bat_dau": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t_bat_dau)), "thoi_gian_giay": round(time.time() - t_bat_dau, 1)}
 

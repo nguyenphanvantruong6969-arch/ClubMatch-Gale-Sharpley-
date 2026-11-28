@@ -1,0 +1,55 @@
+# DG1 — tự soát bằng `soat-ma` (thay checker; không có người trực) — 2026-11-28
+
+> Người soát: chính phiên coder (Sonnet), theo lệnh «không chờ checker» của Truong. Đây là SOÁT TỰ THÂN, không độc lập:
+> nên đọc kỹ các mục «Chưa kiểm được». Cột «Chắc chắn?» theo `SKILL.md` §4.
+
+## Máy
+- `python .claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so FETCH_HEAD` (FETCH_HEAD = `origin/main` vừa `git fetch`): **7/7 ĐẠT**
+  (ruff, chu_cam, ma_loi_js, i18n_loi_khop, i18n_khoa, trung_khit 3 bộ × 5 seed, khong_sua_nhat_ky). Chạy sau L4 (bất biến 1).
+- `git diff origin/main HEAD --stat -- . ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'`: 10 tệp, **+161 dòng, 0 dòng xoá**;
+  `rbda_priority_pipeline.py`, `fa_daa.py`, `cau_hinh_ws.py`, schema: KHÔNG đổi. Lô sản phẩm duy nhất là L4.
+- `tests/test_dg1_*.py`: 45 qua. Test liên quan: `test_so_excel_de_dung`, `test_du_lieu_ket_qua`, `test_giao_dien_bieu_do`,
+  `test_i18n_sync`, `test_i18n_khoa_dc_khong_chet` (73 qua).
+
+## Tầng 1 — lõi
+- Bất biến 1 (mặc định giữ nguyên) và 2 (không đưa hạng vào ưu tiên): L4 không chạm hàm lõi; `chi_so_phan_bo` chỉ ĐỌC cột
+  `rank_in_student_pref` đã ghi để hiển thị. Điểm quyết tâm mô phỏng (nhóm G) dùng thứ tự danh sách ở phía HỌC SINH giả lập
+  chia điểm; phía phần mềm (`diem_wharton_hieu_luc` → `run_rbda`) không nhận hạng.
+- Cơ chế đối chứng vẫn gọi `club_choice_function` thật qua `cc._ham_chon`; `dem_cap_chan` chỉ gọi `chon(...)`, không chép luật ưu tiên.
+  Test `test_dem_cap_chan_cua_co_che_on_dinh_bang_0_con_boston_khac_0`.
+- RB-DA 0 cặp phá vỡ: có trong `doi_chieu_so_lieu.json` (cổng chạy) và kiểm ở MỌI lần chạy lưới (`a.cap_chan` = 0 trong mọi JSON; xem README_LAN_CHAY).
+- Cổng đối chiếu: bộ TEST, seed 42, qua `run_pipeline` thật = 108/120, NV1 = 64, 7 vòng; lõi trong bộ nhớ khớp TỪNG dòng `match_results`.
+
+## Tầng 2 — backend
+- `get_chi_so_phan_bo`: chỉ SELECT; trả `{ok,data,errors}`; mã lỗi `dg1_error_reading_chi_so` ở `i18n_errors.py`, `i18n_loi.js` sinh lại
+  (`kiem_nhanh` ĐẠT). Test canh «chỉ đọc»: `test_api_chi_doc_khong_doi_ket_qua`.
+- Nhiều buổi: chạy thử 300 HS × 3 buổi qua `PipelineAPI` → `n = 900` (em × buổi), đã xếp 330 = khớp `match_results` (chạy tay, không commit).
+- CLB Tự do (`loai = TU_DO`) không tính vào chỉ tiêu/lấp đầy (test ca tay `test_ham_thuan_ca_tay`).
+- Không có rollback/ghi mới nào để chứng minh (đường chỉ đọc).
+
+## Tầng 3 — giao diện (Chromium thật, một test)
+- Khối hiện đúng số sau khi chạy; chữ vi/en đổi giữa chừng (`I18N.setLang`) vẽ lại, không còn `{...}` hay chữ Việt trong bản Anh.
+- Lỗi đọc (route giả `ok:false`) **hiện câu lỗi** thay vì lặng lẽ ẩn khối (theo mục 3.1 của SKILL). Sửa trong phiên này sau khi tự soát.
+- Chữ trong ô đi qua `esc()`; số liệu là số, không có dữ liệu người dùng tự do trong khối (không có tên CLB/em) → rủi ro XSS thấp.
+- Chưa thử: ba vai (học sinh/giáo viên/quản trị) — khối thuộc thẻ Kết quả của quản trị; kiosk học sinh không có thẻ này.
+
+## Tầng 4 — vệ sinh, tài liệu, test
+- ruff sạch. CHANGELOG + TIEN_DO có dòng DG1-L1..L4, G. Sổ đăng ký (md + json) có mục DG1.
+- **Gây hỏng tạm 5 chỗ** (rồi hoàn tác, `git status` sạch): bỏ đường tăng (cận trên) → test đỏ; `<50 %` → `<= 50 %` → đỏ;
+  `cận + 1` → đỏ; đảo tốt/xấu trong churn → đỏ; **đổi `h == 1` → `h <= 2` ở `pct_nv1_tat_ca` → test KHÔNG đỏ** (phát hiện #1).
+- Cạm bẫy khi thử: hoán `h == 1` ↔ `h <= 2` cùng độ dài + cùng giây → `.pyc` cũ còn giữ bản hỏng sau khi hoàn tác nguồn (pytest ra đỏ giả sau khi
+  đã sửa). Đã xoá `__pycache__`; mọi lần chạy đầy đủ dùng mã đã commit (xem README_LAN_CHAY).
+
+## Phát hiện
+| # | Mức | Tệp | Hàm | Vấn đề | Đường xảy ra | Đề xuất | Chắc chắn? | Trạng thái |
+|---|---|---|---|---|---|---|---|---|
+| 1 | nên sửa | tests/test_dg1_chi_so.py | `TestNhomA` | Ca tay đầu mọi em được xếp ở NV1 nên đổi `h == 1` → `h <= 2` không làm test đỏ | mutation M3 | thêm ca có em hạng 2, 3 | đã tái hiện | **ĐÃ SỬA** (`test_phan_biet_nv1_nv2_nv3`; mutation lại → đỏ) |
+| 2 | nên sửa | js/03_ket_qua.js | `loadChiSoPhanBo` | `!res.ok` ẩn khối lặng lẽ (lỗi đọc giống «chưa có kết quả») | API lỗi → khối biến mất, không thông báo | hiện câu lỗi | suy luận + test route giả | **ĐÃ SỬA** |
+| 3 | nhỏ | du_lieu_test/danh_gia/_sinh.py | `sinh_truong` | κ nhiều buổi lấy `κ·N` cho CẢ BA buổi (mỗi em cần 1 chỗ MỖI buổi) → mô hình quá chật | 300 HS × 3 buổi: 330 chỗ cho 900 suất | κ·N·số buổi | đã tái hiện (36,7 % được xếp) | **ĐÃ SỬA**; `nhieu_buoi.json` chạy lại sau sửa |
+| 4 | nhỏ | do_danh_gia.py | `tong_hop` | KTC t có thể vượt [0, 100] (hoặc âm) với phần trăm khi n nhỏ | n = 2 (`--nhanh`) | chỉ là cách đọc; ghi trong README | đã thấy | ghi chú, không sửa |
+
+## Chưa kiểm được
+- Chưa có người độc lập xem lại (soát tự thân). Chưa chạy bộ test đầy đủ (~22 phút; CI chạy). Chưa chụp ảnh giao diện (thuộc L5).
+- Chưa thử Excel mở bằng Excel thật; chỉ đọc lại bằng `openpyxl` (mục «CHỈ SỐ PHÂN BỔ» nằm cuối trang «Thống kê»).
+
+CHECKER REPORT 1+2 NO BUGS (sau khi sửa #1–#3; #4 là ghi chú)
