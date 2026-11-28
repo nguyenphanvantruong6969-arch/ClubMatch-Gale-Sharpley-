@@ -42,6 +42,12 @@ used / offered; reserve-eligible admitted via reserve vs general; demand ratio (
 `score_scope` alternatives from `tieu_chi.cac_lua_chon_hop_le`; `max_choices` 3/5/10; capacity −20 %/+20 %. O: Wharton
 on/off, FA-DAA on/off. Per variant: Δ of A–C, churn (# students whose club changes; better / worse / same rank), by group.
 **Mechanism comparison** — M: A, B, C + blocking pairs for RB-DA vs Boston vs RSD vs TTC vs club-proposing DA.
+**G. Feature evidence (M, Truong 2026-11-28)** — reserves, determination points (`wharton`) and medals (`fa_daa`) each
+on vs off on the same data/seeds, plus a 2×2 reserves × Wharton grid; 120/300/800, α ∈ {0, 0.5, 0.9}, κ = 1.1. Generator
+adds Wharton two-pool points (reuse `sinh_du_lieu_diem_quyet_tam.py` split kinds) and FA-DAA club types + medals (default
+from rank, some students override; behaviours lazy / truthful / strategic as `mo_phong_fa_daa.py`). Metrics: per reserve
+category vs general (%NV1, unassigned, mean rank), reserve seats used/offered, general students displaced; share placed at
+top-points / gold-medal club; share of rejections decided by LOTTERY; A–C and churn per behaviour type.
 **E. Scale & cost** — M: run time (median of 3), rounds. 2 000×50 only here (not in the full sweep).
 **F. Change over time (O)** — +5 % late arrivals, −5 % withdrawals: # existing students who move.
 
