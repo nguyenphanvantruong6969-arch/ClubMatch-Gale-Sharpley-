@@ -104,3 +104,7 @@ bao_cao_hinh/
 # Vai cua phien tu dong (hook ban giao doc), rieng tung container
 .claude/phien_vai.json
 junit_*.xml
+
+# DG1: kết quả chạy nhanh / dữ liệu thật — không commit (ket_qua/ là lần chạy đầy đủ, CÓ commit)
+du_lieu_test/danh_gia/ket_qua_nhanh/
+du_lieu_test/danh_gia/ket_qua_that/
