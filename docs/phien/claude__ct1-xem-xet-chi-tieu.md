@@ -81,17 +81,24 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
   `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
 
 ## Current state (overwrite each handoff)
-- L1–L4, CT1-FIX…FIX4 done. CT1-FIX5 (2026-11-28): fixed the 6 red tests of CI run 46102624745 (nkhd_ labels, hint budget 25,
-  CT1 block moved to end of #view-results, mt1 test prefix). Full suite locally before fix: 6 failed / 8074 passed; after: related + CT1 green.
-- CI on the FIX5 push: NOT yet seen. Do not write `Status: DONE` until "Tests (rbda-kiosk)" is green.
+- L1–L4 and CT1-FIX … FIX5 are DONE and pushed; never redo them. Entry point is now a dedicated button "Gợi ý thay đổi chỉ tiêu"
+  (`#btnCt1Mo`, `.btn-secondary.btn-goi-y`, admin only) at the right of the Kết quả toolbar, next to the gold Excel button (FIX4, Truong's request).
+- FIX5 fixed the 6 red tests of CI run 46102624745. The CI run on head `a724f9e` (run 46105606804) was still running at handoff: NOT yet seen.
+  Do not write `Status: DONE` until "Tests (rbda-kiosk)" is green on the latest head. No PR is open yet.
+- A scheduled self-check (trigger `trig_013Q7CdabaVbAs7eyzf11RkT`, ~04:18 UTC) may fire into the old session; ignore it in a new one.
+- Two sessions (Sonnet + Opus) pushed to this branch in parallel; every push cancels the running CI. Push only after fetch + merge, and not while CI runs.
 
 ## Next steps (in order)
-0. FIRST `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu` (this file is not on `main`). L1–L4 and CT1-FIX are DONE, never redo.
-1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › nút Gợi ý thay đổi chỉ tiêu (góc phải)). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix.
-2. Merge, never rebase. Python Chromium tests need `pip install playwright` in a fresh container (browser already in /opt/pw-browsers).
+0. FIRST `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu` (this file is not on `main`).
+1. Check CI for the latest head (`mcp__github__actions_list`, branch filter, perPage 1). Red → extract FAILED lines (large logs are saved to a file; use python),
+   minimal fix, re-run those tests locally, fetch + merge, push. Green → `Status: DONE <sha>` here, push, then open the PR (Truong said "after ci green open PR");
+   mirror the repo PR template if any, end the description with the attribution lines. Tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run →
+   Kết quả › nút Gợi ý thay đổi chỉ tiêu).
+2. Merge, never rebase. In a fresh container: `pip install playwright` for the Python Chromium tests (browser is in /opt/pw-browsers). `pip install pytest-xdist` was blocked by the classifier: do not retry.
+3. Before each push run the WHOLE related UI set, not only the lot's tests (CI found 3 rounds of repo-wide guards: nhật ký labels, i18n prefix tests, UX6 25-hint budget, UX6-L2 table selector).
 
 ## Needs Truong
-1. ~~Multi-session units~~ FIXED (CT1-FIX). 2. ~~o_chua_co~~ FIXED. 3. Chose (b) warning line; confirm or veto. 4. ~~contrast / ±1 test~~ FIXED.
+1. ~~Multi-session units~~ FIXED (CT1-FIX). 2. ~~o_chua_co~~ FIXED. 3. Chose (b) warning line (`#ct1KemNhieuHon`); confirm or veto. 5. Truong may want the new button to be THE gold button (then Excel becomes secondary) or the CT2 ideas: nav item, text in the Việc tiếp theo bar, verdict sentence at top (not started; needs an item code). 4. ~~contrast / ±1 test~~ FIXED.
 - Deviations: >6 steps shows 5 + "Xem thêm bước" (keeps panel ≤7 controls); Tiêu chí link uses `ux1aMoNangCao()` (GT2 now lives in Quản lý › Cách xếp, not "Chi tiết").
 - Gotchas learnt: repo lint (`kiem_nhanh` chu_cam) forbids the words "em"/"you" in visible strings → use `{person_l}`/`{slot_l}`; wharton default is ON so tests set `{"wharton": False}`; `o_chua_co` = step from which a student stably has a club (app gives [1,2,3,4], mockup's [1,3,4,4] was illustrative).
 
@@ -112,3 +119,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | Handoff at ~400k context: state rewritten, awaiting CI | next session checks CI and finishes per protocol §4 |
 | 2026-11-28 | Sonnet (coder) | Second handoff: added step 0 (check out the branch first) after a new chat restarted at L1 | state was correct on origin; that chat was on the wrong branch |
 | 2026-11-28 | Opus | CT1-FIX5: full suite locally, fixed the 6 CI reds (see CHANGELOG) | no product .py changed |
+| 2026-11-28 | Sonnet | CT1-FIX…FIX5: soat-ma findings 1,2,3b,4,5; advisor UI review; dedicated entry button; CI-red fixes | handoff at ~400k context; CI on a724f9e pending, no PR yet |
