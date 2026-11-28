@@ -48,6 +48,13 @@ Dropped on purpose: quadrant chart, trade-off curve, score histogram (Truong fou
   NV1 64→67→69→73→74; unassigned 12→11→11→10→8; final 15 better / 0 worse. If the app's seed path gives other
   numbers, trust the app and update the test, but the rule outputs (cap_moi) must match.
 
+- Verifiability (added 2026-11-28 after a planning loop): in-product = per-step "who changed" list + CSV (admin only,
+  names inside); outside = 3 hand-checkable quota cases on the 8-student scenario (verified by Opus with
+  `run_rbda`, identical on 5 seeds) + regression test on SO_NHAP_TEST. Recommendation rule yields NO step on the
+  8-student set (±20 % and min size), so hand cases go through `buoc_tu_chon` (custom what-if).
+- Reuse, do not rewrite: `tieu_chi.so_sanh_lan_chay` (pure diff, GT2 definition), `_giai_trong_bo_nho`,
+  `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
+
 ## Current state (overwrite each handoff)
 - Done: design (mockup), simulation, this plan, protocol. No product code yet.
 - Next: coder starts L1.
