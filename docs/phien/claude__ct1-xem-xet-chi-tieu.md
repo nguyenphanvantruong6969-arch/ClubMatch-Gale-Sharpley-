@@ -94,8 +94,11 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
    minimal fix, re-run those tests locally, fetch + merge, push. Green → `Status: DONE <sha>` here, push, then open the PR (Truong said "after ci green open PR");
    mirror the repo PR template if any, end the description with the attribution lines. Tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run →
    Kết quả › nút Gợi ý thay đổi chỉ tiêu).
-2. Merge, never rebase. In a fresh container: `pip install playwright` for the Python Chromium tests (browser is in /opt/pw-browsers). `pip install pytest-xdist` was blocked by the classifier: do not retry.
-3. Before each push run the WHOLE related UI set, not only the lot's tests (CI found 3 rounds of repo-wide guards: nhật ký labels, i18n prefix tests, UX6 25-hint budget, UX6-L2 table selector).
+2. Truong asked (2026-11-28): "if tests are green, merge straight away and build?". Facts: `build-windows-exe.yml` runs ONLY on `workflow_dispatch`
+   (merging does not build). Plan told to Truong, NOT yet confirmed by him: green CI → open PR → merge (merge commit, no rebase) → dispatch the build on `main`
+   (`mcp__github__actions_run_trigger`) → report. Merge and build are outward actions: do them only after Truong says explicitly "xanh thì gộp và build".
+3. Merge, never rebase. In a fresh container: `pip install playwright` for the Python Chromium tests (browser is in /opt/pw-browsers). `pip install pytest-xdist` was blocked by the classifier: do not retry.
+4. Before each push run the WHOLE related UI set, not only the lot's tests (CI found 3 rounds of repo-wide guards: nhật ký labels, i18n prefix tests, UX6 25-hint budget, UX6-L2 table selector).
 
 ## Needs Truong
 1. ~~Multi-session units~~ FIXED (CT1-FIX). 2. ~~o_chua_co~~ FIXED. 3. Chose (b) warning line (`#ct1KemNhieuHon`); confirm or veto. 5. Truong may want the new button to be THE gold button (then Excel becomes secondary) or the CT2 ideas: nav item, text in the Việc tiếp theo bar, verdict sentence at top (not started; needs an item code). 4. ~~contrast / ±1 test~~ FIXED.
@@ -120,3 +123,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | Second handoff: added step 0 (check out the branch first) after a new chat restarted at L1 | state was correct on origin; that chat was on the wrong branch |
 | 2026-11-28 | Opus | CT1-FIX5: full suite locally, fixed the 6 CI reds (see CHANGELOG) | no product .py changed |
 | 2026-11-28 | Sonnet | CT1-FIX…FIX5: soat-ma findings 1,2,3b,4,5; advisor UI review; dedicated entry button; CI-red fixes | handoff at ~400k context; CI on a724f9e pending, no PR yet |
+| 2026-11-28 | Sonnet | Truong asked about merge+build; answered (build is manual dispatch), recorded the plan, no merge done | CI on e13de31 still running at handoff |
