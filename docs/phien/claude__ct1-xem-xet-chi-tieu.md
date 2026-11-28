@@ -48,7 +48,7 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 - [x] L1 `chi_tieu_ct1.py` (pure, new file): `chi_so_clb_ct1`, `khuyen_nghi_chi_tieu`, `ghep_buoc_chuyen`. Tests first.
 - [x] L2 API `get_xem_xet_chi_tieu` (read-only) incl. step-by-step re-solve via `_giai_trong_bo_nho(..., sao_luu=False, sua_clb=...)`.
 - [x] L3 UI: new view inside the results tab, 4 sections, hand-written SVG/divs, vi+en strings. One Chromium test.
-- [ ] L4 docs: CHANGELOG, TIEN_DO, registry line CT1, HUONG_DAN_SU_DUNG short paragraph; `soat-ma`; push.
+- [x] L4 docs: CHANGELOG, TIEN_DO, registry line CT1, HUONG_DAN_SU_DUNG short paragraph; `soat-ma`; push.
 
 ## Decisions and gotchas (keep short)
 - Rule (tested in simulation, `du_lieu_test/ct1_mo_phong/`, SIMULATED data): target_c = round(T·nv1_c/N); raise only

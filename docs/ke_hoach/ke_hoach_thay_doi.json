@@ -2580,6 +2580,19 @@
    "kiem_nhan": "tests/test_va_gap_tai_hien.py xanh (8 test).",
    "phu_thuoc": [],
    "ap_dung": {}
+  },
+  {
+   "id": "CT1",
+   "nhom": "Phụ lục thêm 28/11/2026",
+   "pham_vi": "ket_qua",
+   "ten": "Xem xét chỉ tiêu: màn chỉ đọc, đề xuất chỉ tiêu kỳ sau giữ nguyên tổng chỗ, kết quả sau từng bước",
+   "tep": "chi_tieu_ct1.py, api_chi_tieu.py, js/20_xem_xet_chi_tieu.js, index.html, i18n.js, style.css",
+   "muc": "Viết mới",
+   "quy_mo": "M",
+   "rui_ro": "Thấp; chỉ đọc, không đụng thuật toán xếp hay bộ số bốc thăm.",
+   "kiem_nhan": "tests/test_ct1_khuyen_nghi.py, test_ct1_api.py, test_ct1_ca_kiem_tay.py, test_giao_dien_ct1.py xanh.",
+   "phu_thuoc": [],
+   "ap_dung": {}
   }
  ],
  "so_do": {

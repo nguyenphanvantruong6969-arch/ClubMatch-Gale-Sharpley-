@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-28 — CT1 (Xem xét chỉ tiêu: màn chỉ đọc, đề xuất chỉ tiêu kỳ sau giữ nguyên tổng chỗ)
+
+- Mục mới CT1 (Truong yêu cầu 28/11/2026). Chỉ ĐỌC: không ghi `match_results` / `run_history` / chỉ tiêu, không sao lưu, không đổi schema hay hợp đồng CSV, không thư viện mới; chỉ dùng bộ số bốc thăm ĐÃ KHOÁ (bất biến 1–5 không bị chạm).
+- `chi_tieu_ct1.py` (mới, thuần hàm): `chi_so_clb_ct1`, `khuyen_nghi_chi_tieu` (mục tiêu = round(T·nv1/N), chỉ tăng khi có người "muốn vào mà chưa được", kẹp ±20 % và tối thiểu 8 chỗ nhưng không vượt chỗ hiện tại, không bớt dưới chỗ giữ dự trữ, cân ±1 để Σ chỗ giữ nguyên, theo từng buổi), `ghep_buoc_chuyen`, `kiem_buoc_tu_chon`, `hang_ket_qua`, `thong_ke_ket_qua`.
+- `api_chi_tieu.py` (mới, `ChiTieuMixin` trong `api.py`): `get_xem_xet_chi_tieu(buoc_tu_chon=None)`, `export_xem_xet_chi_tieu_csv`, `export_de_xuat_chi_tieu_csv`; giải lại từng bước bằng `_giai_trong_bo_nho(..., sao_luu=False, sua_clb=...)`; danh sách em đổi chỗ dựng bằng `tieu_chi.so_sanh_lan_chay` (cùng định nghĩa GT2). Chỉ quản trị (`phan_quyen.py`). Mã lỗi mới `ct1_*` (`i18n_errors.py`, `i18n_loi.js`).
+- Giao diện: một mục "Xem xét chỉ tiêu CLB" trong menu "Báo cáo và phiếu in" của thẻ Kết quả (quản trị); khung `#ct1Khung` (`index.html`, `js/20_xem_xet_chi_tieu.js`, `style.css`, 102 khoá `ct1_*` vi + en). Luật Hick + Von Restorff cho từng khung; không có nút "Áp dụng", không có PDF. Chạy được ở 390 px.
+- Số trên `SO_NHAP_TEST.xlsx` (seed khoá 42, DỮ LIỆU MÔ PHỎNG): bốn bước Bóng rổ→Bóng đá 4, Âm nhạc→Tiếng Anh 3, Tình nguyện→Tin học 2, Văn học→Mỹ thuật 2; NV1 64→67→69→73→74; chưa có CLB 12→11→11→10→8; 15 em tốt hơn / 0 kém hơn.
+- Tests mới: `tests/test_ct1_khuyen_nghi.py` (29), `tests/test_ct1_api.py` (22), `tests/test_ct1_ca_kiem_tay.py` (ba ca kiểm tay × 5 seed), `tests/test_giao_dien_ct1.py` (13, Chromium). Sửa có chủ đích: `tests/test_gt3_phan_quyen.py` (danh sách hàm `get_*` chỉ quản trị), `tests/test_mt1_uoc_tinh.py` (khối khoá cuối), `tests/_ux5a_chung.py` (tham số tuỳ chọn `so_nhap`, `rules`, `rong`).
+- Lỗi đã biết (mục riêng, KHÔNG sửa ở CT1): `fa_daa.goi_y_chi_tieu` không giữ tổng chỗ (đề xuất 566–653 chỗ cho 800 học sinh) nên CT1 không dùng hàm này.
+- Lệch nhỏ so với kế hoạch: nhiều hơn 6 bước thì hiện 5 bước + "Xem thêm bước" (giữ khung ≤ 7 điều khiển); khi hoà, bên nhận chỗ ghép theo "chưa đáp ứng trên chỗ" rồi mới đến mã CLB; liên kết "Tiêu chí" dùng `ux1aMoNangCao()` (GT2 nay ở Quản lý › Cách xếp).
+
 ## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
 
 - 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).

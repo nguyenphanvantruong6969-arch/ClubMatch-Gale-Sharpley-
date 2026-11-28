@@ -405,6 +405,20 @@ buổi*, và ở tệp `..._so_boc_tham_theo_buoi.csv`. Trường vẫn chỉ c�
 thứ như trước — bộ số đã khoá và `seed` — vì thứ tự từng buổi là hàm tất định
 của hai thứ đó.
 
+## 3g. Đề xuất chỉ tiêu (CT1) — DỮ LIỆU MÔ PHỎNG
+
+Bộ `SO_NHAP_TEST.xlsx` (120 học sinh, 10 CLB, 130 chỗ), bốc thăm khoá `seed = 42`; số đo bằng `get_xem_xet_chi_tieu` (test: `tests/test_ct1_api.py`). Bốn bước chuyển chỗ: Bóng rổ→Bóng đá 4, Âm nhạc→Tiếng Anh 3, Tình nguyện→Tin học 2, Văn học→Mỹ thuật 2 (tổng vẫn 130).
+
+| Sau bước | Vào CLB thích nhất | Chưa có CLB |
+|---|---|---|
+| hiện tại | 64 | 12 |
+| 1 | 67 | 11 |
+| 2 | 69 | 11 |
+| 3 | 73 | 10 |
+| 4 | 74 | 8 |
+
+Sau cả bốn bước: 15 học sinh được xếp tốt hơn hiện tại, 0 học sinh kém hơn. Ba ca kiểm tay trên bộ 8 học sinh (`NHAP_TAY.md`): giống hệt ở 5 hạt giống (1, 7, 42, 999, 12345).
+
 ## 4. Kịch bản nhỏ kiểm được bằng tay
 
 Xem `NHAP_TAY.md` — 8 học sinh, 3 CLB.
