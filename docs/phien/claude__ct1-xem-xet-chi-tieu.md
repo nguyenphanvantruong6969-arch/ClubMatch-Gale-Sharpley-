@@ -84,7 +84,14 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 - Done: design, simulation, plan, protocol; L1 (`chi_tieu_ct1.py`, pure); L2 (`api_chi_tieu.py`: `get_xem_xet_chi_tieu`,
   two CSV exports, admin-only, read-only; app numbers match plan: NV1 64→67→69→73→74, unassigned 12→11→11→10→8, 15 better / 0 worse).
 - L3 done: entry `#btnCt1Mo` in the "Báo cáo và phiếu in" menu (admin only), panel `#ct1Khung` in view-results (CSS hides the rest while open), `js/20_xem_xet_chi_tieu.js`, 102 i18n keys `ct1_*` (vi+en), 13 Chromium tests (Hick/Von Restorff per panel, 390 px).
-- Next: L4 docs (CHANGELOG, TIEN_DO, registry CT1, HUONG_DAN_SU_DUNG, NHAP_TAY, SO_LIEU_DA_KIEM_CHUNG, hand-case tests, demo script), soat-ma, push, CI.
+- L4 done (docs, hand cases A/B/C × 5 seeds, demo script). soat-ma run: `docs/ke_hoach/BAO_CAO_SOAT_MA_CT1.md` (report only, no fixes).
+- Next: wait for CI, then `Status: DONE <sha>`.
+
+## Needs Truong (soat-ma findings, not fixed because soat-ma is report-only)
+1. Multi-session data: counts are (student × session) but labelled "học sinh" (800HS set: 2836 vs 800). Proposed fix: relabel/count per student.
+2. `o_chua_co` counts student-sessions without preferences (2280 squares vs 1916). Proposed fix: filter by `prefs`, cap squares.
+3. Decision: on the 800HS set the recommended steps give 21 better / 23 worse. Options: (a) keep, (b) add a line when worse > better (recommended), (c) separate research item.
+4. Minor: contrast of "Hiện tại" label (~3.2:1); add a test case the ±1 rebalance cannot mask.
 - Deviations: >6 steps shows 5 + "Xem thêm bước" (keeps panel ≤7 controls); Tiêu chí link uses `ux1aMoNangCao()` (GT2 now lives in Quản lý › Cách xếp, not "Chi tiết").
 - Gotchas learnt: repo lint (`kiem_nhanh` chu_cam) forbids the words "em"/"you" in visible strings → use `{person_l}`/`{slot_l}`; wharton default is ON so tests set `{"wharton": False}`; `o_chua_co` = step from which a student stably has a club (app gives [1,2,3,4], mockup's [1,3,4,4] was illustrative).
 
@@ -101,3 +108,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | L1 `chi_tieu_ct1.py` + 27 tests | tie-break pairing: recipients by chua_dap/cap desc then id (needed to match expected step order, since clb_mythuat < clb_tinhoc) |
 | 2026-11-28 | Sonnet (coder) | L2 API + 22 tests, i18n codes `ct1_*`, phan_quyen admin-only, ChiTieuMixin in api.py | also adjusted 2 brittle tests (gt3 phan_quyen allow-list, mt1 'last 12 keys') to include CT1 |
 | 2026-11-28 | Sonnet (coder) | L3 UI + 13 Chromium tests; `_ux5a_chung.mo_ux5a` got optional `so_nhap`/`rules`/`rong` | UI text avoids "em"/"you" (lint): uses {person_l}/{slot_s} |
+| 2026-11-28 | Sonnet (coder) | L4 docs + 3 hand cases + soat-ma report | findings 1–5 in BAO_CAO_SOAT_MA_CT1.md; none fixed (report-only) |
