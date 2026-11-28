@@ -17,7 +17,7 @@ def test_ngan_sach_hick_tung_khung(mo_ux5a, vai):  # noqa: F811
     gt = dem(page, "#gtPanel")
     assert len(gt) <= (2 if vai == "quan_tri" else 1), gt
     ux = dem(page, "#ux1bPanel")
-    assert ux == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in ▾"
+    assert ux == ["kqChonLop", "btnUx1bXuatLop", "ux1bThemTom"], ux        # Chọn lớp, Xuất theo lớp, nếp "Báo cáo và phiếu in"
     tong = dem(page, "#view-results")
     assert len(tong) <= (10 if vai == "quan_tri" else 9), tong
     assert not loi, loi
@@ -42,7 +42,7 @@ def test_nep_bao_cao_va_phieu_in_con_du_ba_nut_trong_hai_lan_bam(mo_ux5a, vai): 
     page, api, loi = mo_ux5a(vai)
     for i in ("btnUx1bBaoCao", "btnUx1bPhieuLop", "btnUx1bBaoCaoPdf"):
         assert page.locator("#" + i).count() == 1 and page.locator("#" + i).is_hidden()
-    assert page.locator("#ux1bThemTom").inner_text().strip() == "Báo cáo và phiếu in ▾"
+    assert page.locator("#ux1bThemTom").inner_text().strip() == "Báo cáo và phiếu in"
     page.click("#ux1bThemTom")
     assert [page.locator("#" + i).inner_text().strip() for i in
             ("btnUx1bBaoCao", "btnUx1bPhieuLop", "btnUx1bBaoCaoPdf")] == [
@@ -57,12 +57,10 @@ def test_nep_bao_cao_va_phieu_in_con_du_ba_nut_trong_hai_lan_bam(mo_ux5a, vai): 
 @pytest.mark.parametrize("vai", VAI)
 def test_chu_moi_dong_muc_dich(mo_ux5a, vai):  # noqa: F811
     page, api, loi = mo_ux5a(vai)
-    mo_ta = page.locator("#view-results .view-desc").inner_text()
-    assert mo_ta.startswith("Xem học sinh học CLB nào, tra cứu vì sao")
-    assert "Bảng này không có điểm hay số bốc thăm" in mo_ta
-    assert "Gõ tên hoặc mã" in page.locator("#gtPanel").inner_text()
+    # UX6-L1: bỏ câu mô tả thẻ, câu dẫn ô tra cứu và câu dẫn bảng; ô tra cứu tự nói bằng chữ gợi ý.
+    assert page.locator("#view-results .view-desc").count() == 0
+    assert "Gõ tên hoặc mã" not in page.locator("#gtPanel").inner_text()
     assert page.get_attribute("#gtTim", "placeholder") == "Tên hoặc mã học sinh"
-    assert "mỗi học sinh học CLB nào" in page.evaluate(JS_CHU, "#view-results")
     if vai == "quan_tri":
         assert page.locator("#gtMaFold > summary").inner_text().strip() == "Mã tra cứu cho học sinh tự xem…"
         page.click("#gtMaFold > summary")
@@ -72,7 +70,7 @@ def test_chu_moi_dong_muc_dich(mo_ux5a, vai):  # noqa: F811
 
 def test_en_khop_vi():
     nguon = open(os.path.join(GOC, "i18n.js"), encoding="utf-8").read()
-    for khoa in ("ux5a_gt_mo_ta", "ux5a_ux1b_them", "ux5a_kq_mo_bang", "kq_desc", "gt_che_do_hs", "ux1b_ma_tra_cuu"):
+    for khoa in ("ux5a_ux1b_them", "gt_che_do_hs", "ux1b_ma_tra_cuu"):
         vi, en = re.findall(r'\b%s: "((?:[^"\\]|\\.)*)"' % khoa, nguon)[:2]
         assert vi and en and vi != en, khoa
         assert set(re.findall(r"\{\w+\}", vi)) == set(re.findall(r"\{\w+\}", en)), khoa

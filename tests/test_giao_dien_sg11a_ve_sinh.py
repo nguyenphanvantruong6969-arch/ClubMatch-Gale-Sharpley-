@@ -154,7 +154,7 @@ def test_l5_co_fa_giau_dong_giai_thich_va_hien_nut(api):
     try:
         page = br.new_page(viewport={"width": 1400, "height": 1400}, bypass_csp=True)
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.click('.nav-item[data-tab="others"]')
         page.wait_for_selector("#btnXuatLyDo:not([hidden])", state="attached")  # UX1A-L3: nút nằm trong menu "Xuất…" đang đóng
         kq = _trang_xuat(page)

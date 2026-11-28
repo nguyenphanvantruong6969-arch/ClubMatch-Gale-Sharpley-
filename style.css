@@ -2225,8 +2225,7 @@ html.tat-hieu-ung .status-strip:hover {
 
 /* Thẻ 02 Kết quả: hai tầng nút chọn (cách xem, cách sắp). Nút to, rõ cho màn hình họp. */
 /* .main co theo nội dung (margin auto); thẻ Kết quả có bảng hẹp ở Theo CLB nên giữ rộng như nhau ở cả ba cách xem */
-.main:has(#view-results.is-active),
-.main:has(#view-scoring.is-active) { width: 100%; box-sizing: border-box; } /* SG-11a L4: Nhập điểm dùng chung bề rộng nội dung với thẻ Kết quả */
+.main { width: 100%; box-sizing: border-box; }   /* UX6-L1: mọi thẻ cùng bề rộng, để thanh "Việc tiếp theo" không nhảy chỗ khi đổi thẻ (trước đây chỉ Kết quả và Nhập điểm) */
 .main { min-width: 0; }                                /* cột 1fr của lưới không được nở theo bảng rộng: bảng tự cuộn ngang trong .scroll-x, trang thì không */
 .kq-chon-hang { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
 .kq-chon-lop-goi { display: inline-flex; align-items: center; gap: 8px; }   /* UX1F-L4: bọc nhãn + ô chọn lớp, vẫn cùng hàng với các nút */
@@ -3092,7 +3091,6 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
 .gt2-khong-dung { color: var(--slate); font-size: 14px; margin: 8px 0; }
 .gt2-khong-dung ul { margin: 4px 0 0 0; padding-left: 20px; }
 .gt2-khong-dung li { margin: 2px 0; }
-.gt-ui .gt2-goi-y { margin: 0; }
 .check-khoi { margin: 0 0 14px 0; }
 .check-row { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .check-row input[type="checkbox"] { flex: none; width: 18px; height: 18px; margin: 2px 0 0 0; }
@@ -3137,7 +3135,7 @@ body[data-vai="giao_vien"] [data-quyen="quan_tri"] { display: none !important; }
   border: 1px solid var(--slate); border-radius: 8px; background: var(--surface, #fff);
 }
 .viec-tiep-theo[hidden] { display: none; }
-.viec-tiep-theo-cau { font-weight: 600; }
+.viec-tiep-theo-cau { font-weight: 600; margin-right: auto; }
 
 /* UX1A-L2: nhóm điều hướng */
 .nav-nhom { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
@@ -3415,7 +3413,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
   margin-bottom: 0; text-align: left; border: 1px solid transparent; border-radius: var(--radius-sm);
 }
 .ql-them-menu .ql-tab[aria-selected="true"] { box-shadow: none; border-color: var(--hairline); font-weight: 600; }
-.ql-mo-ta { margin: 0 0 4px; }
 .ql-tt { margin: 0 0 14px; min-height: 1.4em; font-weight: 600; color: var(--ink); }   /* giữ chỗ để bố cục không nhảy khi dữ liệu về */
 .btn-canh-bao {
   background: transparent; color: var(--gold-text); border: 2px solid var(--gold-text); font-weight: 600;
@@ -3435,7 +3432,7 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #ux1aNangCao[open] > summary { margin-bottom: 12px; }
 #ux1aNangCao > summary { display: block; cursor: pointer; }
 /* summary.btn khớp UX2 (::after tuyệt đối, tâm 50%, ≥ 44 px): mũi tên ở ::after phải về lại trong dòng chữ, nên vùng bấm 44 px chuyển sang ::before (cùng hình học UX2) */
-#ux1aNangCao > summary::after, .club-them > summary::after { content: " ▾"; position: static; width: auto; height: auto; transform: none; }
+/* UX6-L3: mũi tên của các summary này là ảnh nền (.ux6-mui-ten), không còn ký tự ▾ */
 #ux1aNangCao > summary.btn::before, .club-them > summary.btn::before {
   content: ""; position: absolute; top: 50%; left: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
 
@@ -3458,7 +3455,6 @@ details:not([open]) :where(input, select, textarea, label) { position: static; z
 #view-pipeline[data-trang-thai="trong"] .drop-zone { border-color: var(--gold); border-width: 3px; }
 #nangCao .stb-lock-line, #nangCao .chon-buoi { margin-top: 8px; }
 /* UX5B-L3: Nhập nguyện vọng (ba bước là ba mục gập) và Nhập điểm */
-body:not([data-vai="giao_vien"]) .ux5b-chi-gv { display: none; }
 .ux5b-tao-moi { margin: 10px 0; }
 .ux5b-tao-moi > summary { list-style: none; }
 .ux5b-tao-moi > summary::-webkit-details-marker { display: none; }
@@ -3785,12 +3781,11 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-the { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
 .dk-the-nut { flex: none; white-space: nowrap; }
 @media (max-width: 480px) { .dk-the-nut { padding: 10px 8px; font-size: 14px; } }
-/* Bảng: dòng gọn, cột thao tác sát phải và không giãn; hẹp thì cuộn ngang trong bảng */
+/* Bảng: dòng gọn, cột thao tác sát phải và không giãn (cuộn ngang do khung .dk-cuon-ngang của VG2) */
 .dk-bang { position: relative; }                /* chữ ẩn «Thao tác» (sr-only, absolute) phải nằm trong bảng cuộn, không đẩy rộng cả trang */
 .dk-bang th, .dk-bang td { padding: 4px 10px; vertical-align: middle; }
 .dk-bang th.dk-th-thao-tac, .dk-bang td.dk-td-thao-tac { width: 1%; white-space: nowrap; text-align: right; }
 .dk-bang td.dk-td-thao-tac .btn { margin: 0 0 0 4px; }
-@media (max-width: 720px) { .dk-bang { display: block; max-width: 100%; overflow-x: auto; } }
 /* Form thêm phòng: một hàng ở màn rộng, nút thẳng hàng với ô nhập */
 .dk-form.dk-ngang { align-items: flex-end; gap: 12px; }
 .dk-form.dk-ngang > .dk-truong { flex: 1 1 180px; max-width: 280px; }
@@ -3839,3 +3834,102 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
   .dk-buoc li { flex: none; white-space: nowrap; }
 }
 .dk-the-nut:focus-visible { outline-offset: -3px; }          /* thanh tab cuộn ngang cắt viền ngoài nên viền focus lùi vào trong */
+/* VG2-L3: bảng rộng cuộn trong khung của nó (không làm cả trang tràn ngang ở màn hẹp); đích bấm đủ lớn */
+.dk-cuon-ngang { overflow-x: auto; max-width: 100%; }
+.dk-ve-phan-mem { min-height: 36px; line-height: 36px; }
+
+/* UX6-L1: giải thích hiếm dùng nằm sau nút "?" (thay cho câu dài mở sẵn). */
+.ux6-hoi { margin: 0 0 8px; }
+.ux6-hoi-nut {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
+  cursor: pointer; list-style: none; color: var(--slate); font-size: 14px; font-weight: 600;
+}
+.ux6-hoi-nut::-webkit-details-marker { display: none; }
+.ux6-hoi-nut::before {
+  content: "?"; display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 50%; font-size: 13px;
+}
+.ux6-hoi-nut { font-size: 0; }
+.ux6-hoi-nut:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; border-radius: 6px; }
+.ux6-hoi-nd { margin: 0 0 8px; max-width: 70ch; font-size: 14px; line-height: 1.5; color: var(--slate); }
+.ux6-hoi-nd[hidden] { display: none; }
+
+/* UX6-L2: màn hình đổi theo trạng thái */
+.drop-zone[hidden] { display: none; }
+.ux6-tom-so { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.ux6-tom-so[hidden] { display: none; }
+.ux6-tom-dau { color: var(--moss); font-weight: 700; }
+.ux6-tom-chu { font-weight: 600; }
+#panelCanhBao[data-gon="1"] .hint-text,
+#panelCanhBao[data-gon="1"] #healthChiTiet { display: none; }   /* "Kiểm tra lại" vẫn hiện: việc kiểm lại không bị gập mất */
+#panelCanhBao[data-gon="1"] .panel-head { margin-bottom: 4px; }
+.status-strip { flex-wrap: wrap; }
+.ux6-tien-do { flex-basis: 100%; display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+.ux6-tien-do-chu { font-weight: 600; white-space: nowrap; }
+.ux6-thanh { flex: 1; height: 6px; border-radius: 3px; background: var(--moss-soft); overflow: hidden; min-width: 80px; }
+.ux6-thanh > span { display: block; height: 100%; width: 0; background: var(--moss); transition: width 240ms var(--ease-out); }
+.ux6-tien-do .btn[hidden] { display: none; }
+
+/* UX6-L2 (Kết quả): một thanh công cụ phía trên bảng; bảng không nằm trong khung */
+.kq-thanh-cong-cu { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 12px; }
+.kq-nhom-lop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.kq-thanh-cong-cu .kq-nut-tai { margin-left: auto; }
+.kq-vung-bang { margin-top: 8px; width: 100%; }
+
+/* ============================================================
+   UX6-L3: chi tiết nhất quán
+   ============================================================ */
+/* Logo ảnh thay ô chữ "RB" */
+img.brand-mark { background: none; object-fit: contain; display: block; }
+
+/* Mũi tên xổ: biểu tượng SVG (ảnh nền) thay cho ký tự ▾; không dùng ::after vì UX2 dùng nó làm vùng bấm 44 px */
+.ux6-mui-ten {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%235B6570' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center; background-size: 12px;
+}
+
+/* Nút ba chấm: biểu tượng SVG, không có chữ; nhãn đọc bằng aria-label, gợi ý bằng title */
+.ux6-ba-cham { font-size: 0; min-width: 36px; display: inline-flex; align-items: center; justify-content: center; }
+.ux6-ba-cham::before {
+  content: ""; width: 16px; height: 16px; background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='3' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='13' cy='8' r='1.6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='3' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='13' cy='8' r='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.ux6-ba-cham::-webkit-details-marker { display: none; }
+
+/* Nút phân đoạn của Kết quả: cùng cỡ chữ, font và màu nhấn (vàng) với các nút tab khác */
+.kq-seg-nut { min-height: 44px; font-size: 14px; padding: 9px 16px; font-weight: 500; color: var(--slate); }
+.kq-seg-nut:hover { color: var(--ink); }
+.kq-seg-nut.is-on { background: var(--paper-raised); color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--gold); }
+
+/* Chữ đơn (mono) chỉ dành cho mã máy; nhãn giao diện dùng font thân */
+.lang-toggle, .lang-toggle-light, .motion-toggle, .ws-switcher-nhan, .seed-input-wrap, .seed-lock-hint, .brand-sub {
+  font-family: var(--font-body);
+}
+.data-table th, .hs-card-nhan { text-transform: none; letter-spacing: 0; font-size: 12.5px; }
+
+/* Bảng CLB: mã nằm dưới tên, nút xoá là biểu tượng hiện khi rê chuột hoặc có tiêu điểm bàn phím */
+.ux6-ma-clb { display: block; margin-top: 2px; font-family: var(--font-mono); font-size: 11.5px; color: var(--slate); user-select: all; }
+.btn-icon-danger.ux6-xoa:not(.is-confirming) {
+  font-size: 0; text-decoration: none; width: 44px; height: 44px; padding: 0; opacity: 0;
+  background-color: var(--rust-text);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.7 6.5v5M9.3 6.5v5' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4M6.7 6.5v5M9.3 6.5v5' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat;
+  transition: opacity 120ms ease;
+}
+tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible, .btn-icon-danger.ux6-xoa:focus { opacity: 1; }
+@media (hover: none) { .btn-icon-danger.ux6-xoa { opacity: 1; } }
+
+/* Cổng đăng ký: biểu mẫu thiết lập lần đầu */
+.dk-hang-khoi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dk-nut-lap { align-self: flex-start; }
+
+.lang-toggle.ux6-ba-cham { min-width: 0; padding: 4px 7px; }
+
+/* UX6-L3: mũi tên của nút gập khung (.panel-toggle) cũng là SVG */
+.panel-toggle::before {
+  content: ""; width: 13px; height: 13px; background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+#ux1aNangCao > summary.ux6-mui-ten, .club-them > summary.ux6-mui-ten { padding-right: 32px; }
+#adminClubTableBody td:first-child { font-family: var(--font-body); }   /* ô đầu của bảng CLB giờ là Tên; mã máy nằm trong .ux6-ma-clb */
+#gtTim { min-height: 46px; }   /* ô tra cứu to ở đầu thẻ Kết quả: không để làm tròn ảnh hưởng mức 44 px của UX2 */

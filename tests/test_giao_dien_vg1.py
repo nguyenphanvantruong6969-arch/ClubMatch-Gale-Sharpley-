@@ -77,7 +77,7 @@ def test_l2_xuat_phieu_pin_hoi_xac_nhan_tai_tep_va_pin_moi_dang_nhap_duoc(vao):
     pg.select_option("#dkPinPhamVi", "tat_ca")
     with pg.expect_download() as dl:
         pg.click("#dkPinXuat")
-    assert pg.hop and "ĐẶT LẠI PIN của 3 người" in pg.hop[0]
+    assert pg.hop and "đặt lại PIN của 3 người" in pg.hop[0]
     wb = openpyxl.load_workbook(io.BytesIO(open(dl.value.path(), "rb").read()))
     assert wb.sheetnames == ["Học sinh", "Giáo viên"]
     pin_h1 = {r[0].value: r[3].value for r in wb["Học sinh"].iter_rows(min_row=2)}["H1"]
@@ -170,3 +170,18 @@ def test_l4_checkbox_cai_dat_huy_hop_xac_nhan_thi_van_bat(vao):
     pg.wait_for_timeout(500)
     assert ok(pg.api.dk_cai_dat_doc(pg.qt))["bat_buoc_tu_do"] is True
     assert not pg.locator("#dkTatTuDo").is_checked()
+
+
+# ---- Lỗi 7 (tab giáo viên): danh sách ngắn phải MỞ SẴN, thấy ngay họ tên, không chỉ «Giáo viên (N)» ----------------
+def test_l7_tab_danh_sach_thay_ngay_ten_giao_vien(vao):
+    ten = ["Đặng Văn Nam", "Cô An", "Thầy Bình", "Cô Chi"]
+
+    def chuan_bi(tmp):
+        api, qt = _khoi(tmp)
+        ok(api.dk_gv_tao_hang_loat(qt, "\n".join(ten)))
+        return api, qt, "gv_dang_ky"
+    pg = vao(chuan_bi, "Danh sách")
+    ct = pg.locator("details", has=pg.locator("summary", has_text="Giáo viên (4)"))
+    assert ct.get_attribute("open") is not None
+    hien = [t.strip() for t in ct.locator("tbody tr td:first-child").all_inner_texts()]
+    assert sorted(hien) == sorted(ten)                                       # đúng họ tên, không dính số đếm

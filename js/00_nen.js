@@ -651,7 +651,8 @@ function ux2DiToi(tab, oId) {
   if (the) the.click();
   /* UX5B-L3: ô nằm trong mục gập (<details>, ví dụ "Tạo học sinh mới") thì mở mục đó trước, rồi mới đưa con trỏ vào. */
   setTimeout(() => {
-    const o = oId ? el(oId) : null;
+    let o = oId ? el(oId) : null;
+    if (o && o.hidden && oId === "dropZone") o = el("btnRun");   /* UX6-L2: đã có sổ thì ô thả tệp ẩn, đưa con trỏ tới nút Chạy */
     if (!o) return;
     for (let d = o.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
     o.focus();

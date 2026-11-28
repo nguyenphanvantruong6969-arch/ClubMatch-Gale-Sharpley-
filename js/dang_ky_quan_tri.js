@@ -38,8 +38,8 @@
     if (DK.S.vai === "quan_tri" && (the === "viec" || the === "ds") && ["gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
-  const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", c === "" ? { scope: "col", class: "dk-th-thao-tac" } : {}, c === "" ? h("span.sr-only", {}, "Thao tác") : c)))),
-    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c, j) => h("td", cot[j] === "" ? { class: "dk-td-thao-tac" } : {}, c))))));
+  const bang = (cot, hang) => h("div.dk-cuon-ngang", {}, h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", c === "" ? { scope: "col", class: "dk-th-thao-tac" } : {}, c === "" ? h("span.sr-only", {}, "Thao tác") : c)))),
+    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c, j) => h("td", cot[j] === "" ? { class: "dk-td-thao-tac" } : {}, c)))))));
   DK.bang = bang;
   const chuyen = (gd, chu, khoa) => DK.nutVang(chu, function () {
     DK.chay(this, async () => { const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, gd); if (r.ok) DK.quanTri(); return r; });
@@ -74,7 +74,7 @@
       const muc = (xong, noi, sua) => h("li", {}, h("span.dk-tick" + (xong ? ".on" : ""), { "aria-hidden": "true" }, xong ? "✓" : "!"), h("span.dk-gian", {}, noi), DK.nutNhe("Sửa", sua));
       const kiem = h("ul.dk-kiem", {},
         muc(ph.length, ph.length + " phòng · tổng sức chứa " + ph.reduce((a, x) => a + x.suc_chua, 0), toi("dkKhungPhong")),
-        muc(hs.length, hs.length + " học sinh · " + new Set(hs.map((x) => x.lop)).size + " lớp · đã có PIN", toi("dkKhungHs")),
+        muc(hs.length, hs.length + " học sinh · " + new Set(hs.map((x) => x.lop)).size + " lớp" + (hs.length ? " · mỗi em đã có PIN" : ""), toi("dkKhungHs")),
         muc(!!cd.ma_truong, ["Mã trường cho giáo viên: ", h("span.dk-so", {}, cd.ma_truong || "—")], () => { the = "cai"; DK.quanTri(); }));
       return h("div", {},
         theGd(gd, "Chuẩn bị", "Kiểm tra ba mục dưới đây, rồi mở cho giáo viên đăng ký CLB.", "", kiem, DK.QT2.kiemTra(ly, chuyen("gv_dang_ky", "Mở đăng ký giáo viên"))),
@@ -134,7 +134,7 @@
       h("div.dk-hang-nut", {}, DK.nutVang("Xuất Sổ nhập", function () { DK.chay(this, async () => {
         const r = await goi("dk_xuat_so_nhap", T); if (r.ok) kq.textContent = "Đã ghi " + r.data.duong_dan + " (" + r.data.so_clb + " CLB, " + r.data.so_hs + " học sinh), phiên bản " + r.data.phien_ban + "."; return r; }); }),
       tomTat.da_xep ? DK.nut("Xem kết quả trong phần mềm", () => { location.href = "index.html" + location.search + "#ket-qua"; }, { id: "dkXemKq" }) : null,
-      nutXep("Xếp lại (cùng hạt giống)", false)), kq),
+      nutXep("Xếp lại, giữ nguyên kết quả bốc thăm", false)), kq),
     DK.theCon("Kết quả xếp", tomTat.da_xep ? bangKetQua(tomTat) : h("p", {}, "Chưa xếp lần nào.")),
     h("section.dk-khung", {}, await DK.QT2.xemTruoc(xt)));
   }
@@ -153,7 +153,7 @@
       .map((k, i) => [i ? " · " : "", k === "ngoai" ? h("span", { title: GHI_CHU_NGOAI }, "Xếp ngoài nguyện vọng") : "NV" + k, ": " + m[k]]);
     const nvChu = (m) => (Object.keys(m).length ? nv(m) : "—");
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
-      h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
+      h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + "; mã bốc thăm " + t.seed + ")."),
       bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nvChu(x.theo_nguyen_vong)])));
   }
 
@@ -167,7 +167,10 @@
     const T = DK.S.token;
     const [ph, gv, hs] = (await Promise.all([DK.goi("dk_phong_danh_sach", T), DK.goi("dk_gv_danh_sach", T), DK.goi("dk_hs_danh_sach", T)])).map((r) => r.data || []);
     const datLai = (ham, id, ten) => DK.nutNhe("Đặt lại PIN", function () { DK.chay(this, async () => {
-      const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); });
+      const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); }, { "aria-label": "Đặt lại PIN — " + ten });
+    const xoaGv = (x) => DK.nutNhe("Xoá", function () { DK.chay(this, async () => {
+      if (window.confirm && !window.confirm("Xoá tài khoản giáo viên «" + x.ten + "»? Không hoàn tác được.")) return { ok: true, data: {}, errors: [] };
+      const r = await DK.goi("dk_gv_xoa", T, x.gv_id); if (r.ok) DK.quanTri(); return r; }); }, { "aria-label": "Xoá giáo viên " + x.ten });
     const moKhoa = (vai, ten) => DK.nutNhe("Mở khoá", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_mo_khoa", T, vai, ten); if (r.ok) { DK.thongBao("Đã mở khoá cho " + ten); DK.quanTri(); } return r; }); });
     const thaoTac = (x, nut, vai, ten) => x.bi_khoa ? h("span.dk-thao-tac", {}, nut, h("span.dk-phu", {}, " Đang khoá "), moKhoa(vai, ten)) : nut;
@@ -185,13 +188,13 @@
     const cotHs = ["Mã", "Họ tên", "Lớp", "Đã nộp", ""];
     const khoiHs = [...new Set(hs.map((x) => x.khoi))].sort((a, b) => a - b);
     const nhomHs = khoiHs.map((k) => { const ds = hs.filter((x) => x.khoi === k);
-      return ct("hs-khoi-" + k, khoiHs.length === 1, "Khối " + k + " · " + ds.length + " HS · " + ds.filter((x) => x.da_nop).length + " đã nộp", bang(cotHs, ds.map(dongHs))); });
+      return ct("hs-khoi-" + k, khoiHs.length === 1 || hs.length <= 60, "Khối " + k + " · " + ds.length + " HS · " + ds.filter((x) => x.da_nop).length + " đã nộp", bang(cotHs, ds.map(dongHs))); });
     return h("div", {}, h("section.dk-khung", {}, h("div.dk-gd-dau", {}, h("h2", {}, "Danh sách"),
         h("p.dk-phu", {}, "Phòng, giáo viên và học sinh. Chỉ học sinh có tên ở đây mới đăng nhập được; mỗi em một PIN in trên phiếu."),
         h("p.dk-dem", {}, ph.length + " phòng · " + gv.length + " giáo viên · " + hs.length + " học sinh · " + hs.filter((x) => x.da_nop).length + " đã gửi nguyện vọng")),
       khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null,
       ct("phong", true, "Phòng (" + ph.length + ")", ph.length ? bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua])) : trong("Chưa có phòng nào.", "Thêm phòng", khoa)),
-      ct("gv", false, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      ct("gv", gv.length <= 60, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", h("span.dk-thao-tac", {}, thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten), khoa ? null : xoaGv(x))]))),
       ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [trong("Chưa có học sinh nào. Dán danh sách (mã, họ tên, lớp) ở bước «Chuẩn bị».", "Thêm học sinh", khoa)]))));
   }
 

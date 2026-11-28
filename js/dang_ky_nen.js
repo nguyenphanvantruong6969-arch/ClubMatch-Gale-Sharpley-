@@ -53,6 +53,7 @@
 
   /* Chạy một thao tác của nút: khoá nút khi bận (chống bấm đúp), hiện lỗi/ok ở #dkThongBao; DK8-L5: nút báo đang lưu / xong / lỗi. */
   DK.chay = async function (nut, ham, okChu) {
+    DK.thongBao("");                                  // VG2-L3: lỗi của lần trước không ở lại sau một lần lưu thành công
     if (nut) nut.disabled = true;
     try {
       const r = await DK.phanHoi(nut, ham);
@@ -132,7 +133,7 @@
     const quanTri = DK.S.vai === "quan_tri";       // VG3: màn quản trị đã có thanh sáu bước và tiêu đề giai đoạn nên thanh trên không nhắc lại
     return h("header.dk-dau", {}, h("div.dk-top-in", {}, h("img.dk-logo", { src: "logo.png", alt: "", width: "32", height: "32" }), h("span.dk-thuong-hieu", {}, "Cổng đăng ký CLB"),
       k >= 0 && !(vaiTro && quanTri) ? h("span.dk-chip" + (k === DK.THU_TU.length - 1 ? ".on" : ".wait"), {}, "Giai đoạn " + (k + 1) + "/" + DK.THU_TU.length + " · " + DK.TEN_GD[tt.giai_doan]) : null,
-      vaiTro ? [h("span.dk-gian"), h("div.dk-top-vai", {}, h("strong.dk-vai", {}, vaiTro), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
+      vaiTro ? [h("span.dk-gian"), h("div.dk-top-vai", {}, (quanTri ? h("h1.dk-vai", { style: "font-size:inherit;margin:0" }, vaiTro) : h("strong.dk-vai", {}, vaiTro)), DK.S.ten && !vaiTro.startsWith(DK.S.ten) ? h("span.dk-phu", {}, DK.S.ten) : null,
         quanTri ? h("a.dk-ve-phan-mem#dkVePhanMem", { href: "index.html" + location.search }, "← Mở phần mềm xếp CLB") : null),
         DK.nutNhe("Đăng xuất", () => DK.dangXuatCuc())] : null));
   };
@@ -184,17 +185,20 @@
 
   DK.manKhoiTao = function () {
     const f = h("form.dk-form", { novalidate: true },
-      DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password" }),
-      DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma"),
-      DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6" }),
-      DK.truong("Khối thấp nhất", "k1", { type: "number", value: "6" }),
-      DK.truong("Khối cao nhất", "k2", { type: "number", value: "12" }));
-    const b = day(DK.nutVang("Thiết lập cổng", () => DK.chay(b, async () => {
+      h("p.dk-phu", {}, "Mật khẩu và mã trường: ít nhất 4 ký tự. Mật khẩu không khôi phục được trong ứng dụng (quên thì chạy QUEN_MAT_KHAU.bat). Giáo viên dùng mã trường để tự tạo tài khoản. «Buổi» là các buổi sinh hoạt CLB trong tuần; «Khối» là dải khối lớp (ví dụ 6 đến 12)."),
+      DK.truong("Mật khẩu quản trị", "mk", { type: "password", autocomplete: "new-password", placeholder: "Ít nhất 4 ký tự" }),
+      DK.truong("Mã trường (giáo viên dùng để tự đăng ký)", "ma", { placeholder: "Ví dụ: THPT-AN-LAC" }),
+      DK.truong("Các buổi, cách nhau bằng dấu phẩy", "buoi", { value: "Thứ 2, Thứ 3, Thứ 4, Thứ 5, Thứ 6", placeholder: "Ví dụ: Thứ 2, Thứ 4" }),
+      h("div.dk-hang-khoi", {},      // UX6-L3: hai khối cùng một hàng
+        DK.truong("Khối thấp nhất", "k1", { type: "number", value: "6" }),
+        DK.truong("Khối cao nhất", "k2", { type: "number", value: "12" })));
+    const b = DK.nutVang("Thiết lập cổng", () => DK.chay(b, async () => {
       const v = (n) => f.elements[n].value;
       const r = await DK.goi("dk_khoi_tao", v("mk"), v("ma"), v("buoi").split(",").map((x) => x.trim()).filter(Boolean), [+v("k1"), +v("k2")]);
       if (r.ok) DK.dauTrang();
       return r;
-    })));
+    }));
+    b.classList.add("dk-nut-lap");     // UX6-L3: nút không rộng hết thẻ
     DK.hien(DK.hep(DK.khung("Thiết lập lần đầu", f, b)));
   };
 

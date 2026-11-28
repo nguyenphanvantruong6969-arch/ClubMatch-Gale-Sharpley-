@@ -30,7 +30,7 @@ def mo(api):
             loi = []
             page.on("pageerror", lambda e: loi.append(str(e)))
             page.goto(url)
-            page.wait_for_selector("#dropZone")
+            page.wait_for_selector("#dropZone", state="attached")
             return page, loi
         yield _mo
         br.close()
@@ -77,7 +77,7 @@ def test_che_do_huy_chuong_co_menu_xuat_gom_bon_nut(mo, api):
     page, loi = mo()
     page.locator('.nav-item[data-tab="others"]').click()
     page.wait_for_selector("#xuatMenu", state="visible")
-    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác ▾"   # UX5A-L3
+    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác"   # UX5A-L3
     ids = ("btnXuatLyDo", "btnXuatNhuCau", "btnXuatGoiY", "btnXuatBienBan")
     assert all(page.locator("#" + i).is_hidden() for i in ids)      # menu đóng: chỉ còn hai nút chính
     page.locator("#xuatMenu > summary").click()

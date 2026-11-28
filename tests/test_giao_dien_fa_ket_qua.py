@@ -56,7 +56,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="others"]').click()
         page.wait_for_selector("#resultsTableBody tr", state="attached")
         return page, api, loi

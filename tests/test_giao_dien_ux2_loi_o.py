@@ -32,7 +32,7 @@ def man(api, request):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         yield page, api, loi
         br.close()
 
@@ -157,7 +157,7 @@ def test_rung_khong_khi_giam_chuyen_dong(api):
         url = browser_host.serve(api, GOC, "index.html", open_browser=False)
         page = br.new_page(bypass_csp=True, reduced_motion="reduce")
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.evaluate("() => { const o = document.createElement('input'); o.id = 'ux2Rg'; document.body.appendChild(o); baoLoiTaiO(o, 'x'); }")
         assert page.eval_on_selector("#ux2Rg", "o => o.classList.contains('ux2-rung')") is False
         assert page.eval_on_selector("#ux2Rg", "o => o.getAttribute('aria-invalid')") == "true"      # nghĩa không dựa vào chuyển động

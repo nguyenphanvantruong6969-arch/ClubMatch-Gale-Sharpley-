@@ -589,7 +589,7 @@ def test_dat_loai_clb_tai_cho_lam_tuoi_bang_clb_khong_can_tai_lai(mo_trang):  # 
     c.close()
     assert api.update_workspace_config({"rules": {"wharton": True, "fa_daa": True}})["ok"]
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('.nav-item[data-tab="admin"]').click()
     page.click("#qlTabCachXep")   # UX4-L2: khung Cài đặt nằm trong tab Cách xếp
     dong = page.locator('.ux1a-ss-dong[data-clb]').first

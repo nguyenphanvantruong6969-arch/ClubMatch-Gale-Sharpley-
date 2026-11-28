@@ -160,7 +160,7 @@ def mo_ql(tmp_path, api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         tab_ql(page, "wh")
         page.wait_for_selector("#adminWhartonBlock:not([hidden]) #whQlBody tr")
@@ -200,7 +200,7 @@ def test_thao_tac_khac_mo_ra_xoa_tat_ca_van_xoa_va_xem_nhat_ky_van_ra(mo_ql):
     assert dong_bids(api)
     _mo_thao_tac_khac(page)
     page.locator("#btnWhXemNhatKy").click()
-    assert page.locator("#whNkChonEm").is_visible()                  # chưa chọn em: nhắc mở một em
+    assert page.locator("#whNkHop").is_visible()                     # UX6-L1: câu nhắc "mở một em" (whNkChonEm) đã bỏ; khung nhật ký vẫn mở
     page.locator("#btnWhXoaTatCa").click()
     page.locator("#whXoaTatCaGo").fill("XOA")
     page.locator("#btnWhXoaTatCaXn").click()

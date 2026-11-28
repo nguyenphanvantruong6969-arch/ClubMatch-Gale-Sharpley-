@@ -52,7 +52,7 @@ def trinh(tmp_path, api):
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.on("request", lambda r: goi.append(os.path.basename(r.url)) if "/__api__/" in r.url else None)
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.wait_for_timeout(300)       # cấu hình workspace nạp xong
         return page, api, loi, goi
 

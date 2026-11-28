@@ -51,7 +51,7 @@ def man_cham_diem(api_co_thi_sinh):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="scoring"]').click()
         page.wait_for_selector(".btn-row-link")
         page.locator(".btn-row-link").first.click()

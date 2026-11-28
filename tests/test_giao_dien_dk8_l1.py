@@ -30,8 +30,8 @@ def cong(tmp_path):
     ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     han = (datetime.datetime.now() + datetime.timedelta(days=2, hours=3)).strftime("%Y-%m-%dT%H:%M")
     ok(api.dk_dat_han(qt, "gv_dang_ky", han))
-    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô Lan", "1234"))
-    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Thầy Minh", "5678"))
+    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Cô Lan", "7391"))
+    ok(api.dk_gv_tu_dang_ky("TRUONG1", "Thầy Minh", "5903"))
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
         url = browser_host.serve(api, GOC, "dang_ky.html", open_browser=False)

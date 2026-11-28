@@ -39,7 +39,7 @@ def trang(mo_trang):  # noqa: F811
     _sql(api, "UPDATE clubs SET loai = NULL, diem_san = NULL")
     _sql(api, "UPDATE clubs SET name = ? WHERE club_id = (SELECT MIN(club_id) FROM clubs)", (XSS,))
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('.nav-item[data-tab="admin"]').click()
     page.wait_for_selector("#mt2ChiaLoai:not([hidden])")
     return page, api, loi
@@ -125,7 +125,7 @@ def test_che_do_huy_chuong_khoa_cong_tac_va_khong_ve_bang_trung(trang):
     page, api, loi = trang
     assert api.update_workspace_config({"rules": {"wharton": True, "fa_daa": True}})["ok"]
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('.nav-item[data-tab="admin"]').click()
     page.wait_for_function("document.getElementById('mt2CongTac') && document.getElementById('mt2CongTac').disabled")
     assert page.locator("#mt2CongTac").is_checked() is True

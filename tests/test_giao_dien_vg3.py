@@ -25,7 +25,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("vg3") / "app.db"))
-    _ok(api.dk_khoi_tao(MK, "VG3", ["T2"], [9, 12]))
+    _ok(api.dk_khoi_tao(MK, "VG3X", ["T2"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", MK))["token"]
     for t, sc in (("P1", 40), ("P2", 30), ("P3", 20)):
         _ok(api.dk_phong_luu(qt, t, sc))
@@ -144,16 +144,15 @@ def test_4_hoc_sinh_xep_nguyen_vong_va_huy_chuong(cong):
     assert pg.get_by_text("Đã đặt sẵn theo thứ tự nguyện vọng").count() == 1
     pg.get_by_role("button", name="← Quay lại").click()
     pg.get_by_role("button", name="Bỏ").nth(1).click()                              # chỉ còn CLB Tự do
-    pg.get_by_role("button", name="Tiếp: đặt huy chương").click()
-    assert pg.get_by_text("Không cần huy chương", exact=False).count() + pg.get_by_text("không cần huy chương", exact=False).count() >= 1
-    assert pg.get_by_text("Đã đặt sẵn theo thứ tự nguyện vọng").count() == 0       # không có CLB nào để đặt huy chương: không hiện hộp
+    # VG2 bỏ hẳn bước huy chương khi không có CLB nào để đặt (hộp «Đã đặt sẵn…» cũng không còn chỗ hiện)
+    assert pg.get_by_role("button", name="Tiếp: đặt huy chương").count() == 0
+    assert pg.get_by_text("Đã đặt sẵn theo thứ tự nguyện vọng").count() == 0
     assert _tran_ngang(pg) <= 0
 
 
 def test_5_xem_lai_gon_va_phan_mem_chinh_khong_doi(cong):
     pg = cong
-    pg.get_by_role("button", name="Tiếp: bài kiểm tra").click()
-    pg.get_by_role("button", name="Tiếp: xem lại và gửi").click()
+    pg.get_by_role("button", name="Tiếp: xem lại và gửi").click()                  # CLB Tự do duy nhất: VG2 bỏ qua huy chương và bài kiểm tra
     pg.wait_for_selector("text=Xem lại và gửi")
     assert _tran_ngang(pg) <= 0
     cot = pg.locator("table.dk-bang th").first.bounding_box()["width"]

@@ -56,7 +56,7 @@ def test_1_khoi_tao_qua_giao_dien_va_vao_quan_tri(cong):
     pg.wait_for_selector("input[name=mk]")
     _mot_vang(pg)
     pg.fill("input[name=mk]", "matkhau")
-    pg.fill("input[name=ma]", "TR1")
+    pg.fill("input[name=ma]", "TRU1")
     pg.fill("input[name=buoi]", "T2, T3")
     pg.get_by_role("button", name="Thiết lập cổng").click()
     pg.wait_for_selector("text=Chọn vai trò")
@@ -257,7 +257,7 @@ def test_10_giao_vien_ba_buoc_mot_nut_vang(cong):
     pg = cong
     api = pg.api
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
-    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi", True))                              # VG3: lùi khỏi giai đoạn học sinh khi đã có nguyện vọng cần xác nhận (VG1-L3)
+    _ok(api.dk_chuyen_giai_doan(qt, "chuan_bi", xac_nhan=True))     # VG1-L3: lùi qua nguyện vọng đã gửi phải xác nhận
     _ok(api.dk_chuyen_giai_doan(qt, "gv_dang_ky"))
     _dang_nhap(pg, "giao_vien", "Cô An", pg.api_pin["Cô An"])
     pg.wait_for_selector("text=Bước 1/3")
@@ -321,11 +321,13 @@ def test_12_dau_xong_loi_dk8_o_goc_phai_tren(cong, chuyen_dong):
 
 
 def test_13_mui_ten_summary_btn_nam_sau_chu(cong):
-    """Mũi tên « ▾» của summary.btn (Thêm tuỳ chọn, Nâng cao) nằm trong dòng chữ, không bị UX2 đẩy lên góc."""
+    """UX6-L3: mũi tên của summary.btn (Thêm tuỳ chọn, Tuỳ chỉnh thêm) là ảnh SVG nền ở mép phải, không còn ký tự ▾ và
+    không đụng vùng bấm 44 px do UX2 vẽ bằng ::after."""
     pg = cong
     pg.goto(pg.dia_chi.replace("dang_ky.html", "index.html"))
     kq = pg.evaluate("""() => [...document.querySelectorAll('.club-them > summary.btn, #ux1aNangCao > summary')].map(s => {
-        const a = getComputedStyle(s, '::after'); return [s.id || s.parentElement.id, a.content, a.position, a.transform]; })""")
+        const c = getComputedStyle(s), a = getComputedStyle(s, '::after');
+        return [s.id || s.parentElement.id, c.backgroundImage, parseFloat(c.paddingRight), a.content]; })""")
     assert len(kq) >= 3, kq
-    for ten, noi_dung, vi_tri, bien_doi in kq:
-        assert noi_dung == '" ▾"' and vi_tri == "static" and bien_doi == "none", (ten, noi_dung, vi_tri, bien_doi)
+    for ten, anh, le_phai, noi_dung in kq:
+        assert "svg" in anh and "▾" not in noi_dung, (ten, anh[:40], le_phai, noi_dung)

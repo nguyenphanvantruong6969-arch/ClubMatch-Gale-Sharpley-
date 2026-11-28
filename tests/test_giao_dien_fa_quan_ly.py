@@ -13,7 +13,7 @@ from _fa import bat_fa, dung_fa_clb, dung_hs_fa, giu_cho  # noqa: E402
 from _trinh_duyet import CHROMIUM  # noqa: E402
 
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-COT_CU = ["Mã CLB", "Tên", "Chỉ tiêu", "Suất ưu tiên", "Nhóm ưu tiên"]
+COT_CU = ["Tên", "Chỉ tiêu", "Suất ưu tiên", "Nhóm ưu tiên"]
 COT_FA = ["Loại", "Điểm sàn", "Tối thiểu", "Sức chứa phòng", "Giữ chỗ"]
 
 
@@ -42,7 +42,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         page.wait_for_selector("#adminClubTableBody tr")
         return page, api, loi

@@ -65,7 +65,7 @@ def mo(tmp_path, api):
                 page.reload()
             else:
                 page.goto(url)
-            page.wait_for_selector("#dropZone")
+            page.wait_for_selector("#dropZone", state="attached")
             page.locator('[data-tab="admin"]').click()
             page.wait_for_selector("#btnResetAll", state="attached")
             if bat:
@@ -208,7 +208,7 @@ def test_tab_da_nho_khong_con_ton_tai_thi_mo_tab_dau(mo):
     bat_wharton(api, bat=False)
     page.evaluate("window.__DANG_TAI_LAI = true")
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('[data-tab="admin"]').click()
     page.wait_for_selector("#adminClubTableBody tr")
     page.wait_for_timeout(300)

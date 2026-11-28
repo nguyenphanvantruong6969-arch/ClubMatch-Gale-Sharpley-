@@ -20,6 +20,7 @@
     /* DK8-L2 (v8): «Gia hạn» + «Đóng ngay» bên phải dòng hạn chót; hai nút gia hạn hiện sẵn (không giấu trong menu) để quản trị bấm một lần. */
     return h("div.dk-han-nut", {}, h("span.dk-phu", {}, "Gia hạn"), them(3600000, "+1 giờ"), them(86400000, "+1 ngày"),
       DK.nut("Đóng ngay", function () { DK.chay(this, async () => {
+        if (window.confirm && !window.confirm("Đóng ngay giai đoạn «" + DK.TEN_GD[gd] + "»? Người dùng không đăng ký được nữa (quản trị có thể lùi lại ở «Thêm»).")) return { ok: true, data: {}, errors: [] };
         const r = await DK.goi("dk_chuyen_giai_doan", T(), TIEP[gd]); if (r.ok) lamMoi(); return r; }); },
         khoa ? { disabled: true, "aria-disabled": "true", title: "Chưa đóng được: có buổi chưa có CLB Tự do" } : {}));
   };
@@ -255,7 +256,7 @@
       const r1 = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, false);          // lần đầu chỉ để biết SỐ NGƯỜI bị đặt lại PIN
       const e = r1.errors && r1.errors[0];
       if (r1.ok || !e || e.code !== "dk_can_xac_nhan_pin") return r1;
-      if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ ĐẶT LẠI PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
+      if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ đặt lại PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
       const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;
       const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
       for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);

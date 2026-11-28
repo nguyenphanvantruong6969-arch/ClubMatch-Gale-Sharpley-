@@ -299,7 +299,7 @@ function wsDongWorkspace(w) {
         disabled: w.dang_mo, onclick: () => wsMo(w) }),
       /* T3-15: "Mo" + menu "..." chua phan con lai; "Xoa" dung cuoi, mau do. */
       wsEl("details", { class: "menu-khac" },
-        wsEl("summary", { class: "btn btn-ghost btn-nho", "aria-label": t("menu_khac_aria"), text: "⋯" }),
+        wsEl("summary", { class: "btn btn-ghost btn-nho ux6-ba-cham", "aria-label": t("menu_khac_aria"), title: t("menu_khac_aria") }),
         wsEl("div", { class: "menu-khac-hop" },
           hanhDong("doi_ten", () => wsBatSua(w, "doi_ten")),
           hanhDong("nhan_ban", () => wsBatSua(w, "nhan_ban")),
