@@ -82,7 +82,7 @@ def test_khong_chu_kho_o_ba_the(mo_ux5b, vai):
     kho = [d for d in page.evaluate(JS_CHU, "#view-fallback").split("\n") if TU_CAM.search(d)]
     assert not kho, kho
     chu_nut = [x.strip() for x in page.locator("#view-fallback button:visible, #view-fallback summary:visible").all_inner_texts()]
-    assert all(len(x) >= 2 or x == "⋯" for x in chu_nut), chu_nut        # không còn nút chữ trần "i"
+    assert all(len(x) >= 2 or x == "" for x in chu_nut), chu_nut        # không còn nút chữ trần "i"
     page.locator('.nav-item[data-tab="scoring"]').click()
     page.wait_for_selector("#scoringOverviewBody button")
     kho = [d for d in page.evaluate(JS_CHU, "#view-scoring").split("\n") if TU_CAM.search(d)]

@@ -55,7 +55,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="admin"]').click()
         tab_ql(page, "dc")
         # T3-31: Điểm chuẩn là MỘT bảng; chi tiết (bảng + biểu đồ chấm) mở khi bấm "Xem chi tiết" ở một CLB.

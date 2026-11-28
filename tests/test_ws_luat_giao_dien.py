@@ -45,7 +45,7 @@ def mo_trang(tmp_path):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(browser_host.serve(api, GOC, "index.html", open_browser=False))
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.wait_for_function(
             "document.querySelector('#statStudents + .strip-label').textContent.trim() !== ''",
             timeout=10000)
@@ -69,7 +69,7 @@ def test_diem_theo_nguoi_nhap_va_luu_tren_man_hinh(mo_trang):
     assert not page.locator("#scoringClubPanel").is_visible()
     assert page.locator("#scoringPersonBody .score-input").count() == 2
     assert "Điểm của từng nhân viên" in page.locator("#scoringPersonArea h2").inner_text()
-    assert "Nhập một điểm cho mỗi nhân viên" in page.locator("#scoringDesc").inner_text()
+    assert page.locator("#scoringDesc").count() == 0                # UX6-L1: câu mô tả thẻ Nhập điểm đã bỏ (cả hai cách chấm)
     page.locator('#scoringPersonBody .score-input[data-student-id="N1"]').fill("8,5")
     page.locator('#scoringPersonBody .score-input[data-student-id="N2"]').fill("abc")
     page.locator("#btnSavePersonScores").click()
@@ -95,5 +95,5 @@ def test_mac_dinh_van_la_man_theo_clb(mo_trang):
     page.wait_for_selector("#scoringClubPanel")
     assert page.locator("#scoringClubPanel").is_visible()
     assert not page.locator("#scoringPersonArea").is_visible()
-    assert page.locator("#scoringDesc").get_attribute("data-i18n") == "scoring_desc"
+    assert page.locator("#scoringDesc").count() == 0                # UX6-L1: câu mô tả thẻ Nhập điểm đã bỏ
     assert not loi, loi

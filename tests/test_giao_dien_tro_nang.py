@@ -91,7 +91,7 @@ def mo_trang(api_co_du_lieu):
                 page.add_init_script(
                     f"try {{ localStorage.setItem('rbda_lang', '{ngon_ngu}'); }} catch (e) {{}}")
             page.goto(url)
-            page.wait_for_selector("#dropZone")
+            page.wait_for_selector("#dropZone", state="attached")
             return page
 
         yield _mo

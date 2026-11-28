@@ -149,6 +149,5 @@ def test_man_giao_vien_trung_tinh_con_phieu_va_man_hoc_sinh_giu_giong_em(ws_sach
 def test_phu_de_the_ket_qua_khong_noi_mau_thuan_voi_o_tra_cuu():
     import re as _re
     nguon = open(os.path.join(GOC, "i18n.js"), encoding="utf-8").read()
-    vi, en = _re.findall(r"kq_desc: \"([^\"]*)\"", nguon)
-    assert "bảng này" in vi.lower() and "tra cứu" in vi.lower()
-    assert "this table" in en.lower() and "lookup" in en.lower()
+    # UX6-L1: câu mô tả thẻ Kết quả (`kq_desc`) đã bỏ, nên không còn gì để nói mâu thuẫn với ô tra cứu.
+    assert not _re.search(r"\bkq_desc:", nguon)

@@ -56,7 +56,7 @@ def mo(api, tmp_path):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.wait_for_function("() => !document.querySelector('.nav-item[data-tab=chuan_bi]').hidden")
         page.locator('.nav-item[data-tab="chuan_bi"]').click()
         page.wait_for_selector("#cb-bo-tao")

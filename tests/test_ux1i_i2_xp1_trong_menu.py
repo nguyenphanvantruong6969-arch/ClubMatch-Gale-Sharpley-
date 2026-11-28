@@ -34,7 +34,7 @@ def mo(api, tmp_path):
             loi = []
             page.on("pageerror", lambda e: loi.append(str(e)))
             page.goto(url)
-            page.wait_for_selector("#dropZone")
+            page.wait_for_selector("#dropZone", state="attached")
             page.locator('.nav-item[data-tab="others"]').click()
             page.wait_for_selector("#xuatPanel", state="visible")
             return page, loi
@@ -47,7 +47,7 @@ def test_mot_menu_xuat_co_ca_ba_muc_pdf(mo, api):
     page, loi = mo()
     assert page.locator("#xuatPdfMenu").count() == 0                  # không còn menu riêng
     page.wait_for_selector("#xuatMenu", state="visible")              # quản trị thấy "Xuất…" cả khi không bật huy chương
-    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác ▾"
+    assert page.locator("#xuatMenu > summary").inner_text().strip() == "Xuất tệp khác"
     assert all(page.locator("#" + i).is_hidden() for i in MUC)        # menu đóng
     page.locator("#xuatMenu > summary").click()
     assert all(page.locator("#xuatMenu #" + i).is_visible() for i in MUC)

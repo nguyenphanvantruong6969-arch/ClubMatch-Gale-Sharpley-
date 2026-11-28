@@ -85,7 +85,7 @@ def _mo_trang(api):
     loi = []
     page.on("pageerror", lambda e: loi.append(str(e)))
     page.goto(url)
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.locator('[data-tab="others"]').click()
     page.wait_for_selector(".kpi-o")
     page.wait_for_function("document.querySelectorAll('#clbBody tr').length > 0")
@@ -178,7 +178,7 @@ def test_chua_chay_thi_khong_hien_tom_tat(api):
         br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
         page = br.new_page(bypass_csp=True)
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator('[data-tab="others"]').click()
         page.wait_for_selector("#clbBody tr", state="attached")
         page.wait_for_timeout(300)

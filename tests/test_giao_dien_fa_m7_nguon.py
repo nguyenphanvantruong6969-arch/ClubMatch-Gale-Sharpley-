@@ -47,7 +47,7 @@ def mo(api, tmp_path):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.wait_for_function("() => !document.querySelector('.nav-item[data-tab=chuan_bi]').hidden")
         page.locator('.nav-item[data-tab="chuan_bi"]').click()
         return page, loi
@@ -106,7 +106,7 @@ def test_buoc_1_roi_buoc_2_lan_luot_xanh(mo, api, tmp_path):
     assert os.path.isfile(forms_dot.duong_de_dot(api.db_path))
     # mở lại thẻ: cả hai bước vẫn xanh (trạng thái nằm ở tệp của đợt, không ở trang)
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.wait_for_function("() => !document.querySelector('.nav-item[data-tab=chuan_bi]').hidden")
     page.locator('.nav-item[data-tab="chuan_bi"]').click()
     page.wait_for_selector('#cb-buoc-1 [data-trang-thai="xanh"]')

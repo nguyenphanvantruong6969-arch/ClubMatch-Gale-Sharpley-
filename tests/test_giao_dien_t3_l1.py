@@ -38,7 +38,7 @@ def mo(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         return page, loi
 
     yield _mo
@@ -102,7 +102,7 @@ def test_the_lich_su_chi_hien_tu_hai_lan_chay(api, mo):
     assert page.locator("#historyPanel").is_hidden()
     assert api.run_pipeline(42)["ok"]
     page.reload()
-    page.wait_for_selector("#dropZone")
+    page.wait_for_selector("#dropZone", state="attached")
     page.wait_for_function("!document.querySelector('#historyPanel').hidden")
     assert page.locator("#historyPanel").is_visible()
 

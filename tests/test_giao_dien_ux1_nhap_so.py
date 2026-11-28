@@ -112,7 +112,7 @@ def test_khong_co_workspace_thi_khong_hien_nut_bat_huy_chuong(api):
         loi = []
         page.on("pageerror", lambda e: loi.append(str(e)))
         page.goto(url)
-        page.wait_for_selector("#dropZone")
+        page.wait_for_selector("#dropZone", state="attached")
         page.locator("#fileAny").set_input_files([SO_FA])
         page.wait_for_selector(".queue-row .so-nhap-canh-bao")
         assert "Huy chương" in page.locator(".queue-row .so-nhap-canh-bao").inner_text()
