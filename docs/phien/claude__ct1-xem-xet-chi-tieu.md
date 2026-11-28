@@ -81,11 +81,14 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
   `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
 
 ## Current state (overwrite each handoff)
-- Done: design, simulation, plan, protocol; L1 (`chi_tieu_ct1.py`, pure); L2 (`api_chi_tieu.py`: `get_xem_xet_chi_tieu`,
-  two CSV exports, admin-only, read-only; app numbers match plan: NV1 64→67→69→73→74, unassigned 12→11→11→10→8, 15 better / 0 worse).
-- L3 done: entry `#btnCt1Mo` in the "Báo cáo và phiếu in" menu (admin only), panel `#ct1Khung` in view-results (CSS hides the rest while open), `js/20_xem_xet_chi_tieu.js`, 102 i18n keys `ct1_*` (vi+en), 13 Chromium tests (Hick/Von Restorff per panel, 390 px).
-- L4 done (docs, hand cases A/B/C × 5 seeds, demo script). soat-ma run: `docs/ke_hoach/BAO_CAO_SOAT_MA_CT1.md` (report only, no fixes).
-- Next: wait for CI, then `Status: DONE <sha>`.
+- L1–L4 all done and pushed (HEAD at handoff = latest commit on this branch). Plan ticked. `kiem_nhanh` 7/7, ruff clean, CT1 + related tests green locally.
+- soat-ma run (report only): `docs/ke_hoach/BAO_CAO_SOAT_MA_CT1.md`. Findings NOT fixed (see "Needs Truong").
+- CI: "Tests (rbda-kiosk)" was running for the last push; result NOT yet seen. A one-shot reminder (send_later ~02:40 UTC) was set in the old session.
+
+## Next steps (in order)
+1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → write `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines, 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › Báo cáo và phiếu in › Xem xét chỉ tiêu CLB). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix, push.
+2. Do NOT fix the soat-ma findings unless Truong says so (report-only rule). Findings 1–2 are small fixes; finding 3 needs his decision.
+3. Merge, never rebase (`git fetch origin main && git merge --no-edit FETCH_HEAD`).
 
 ## Needs Truong (soat-ma findings, not fixed because soat-ma is report-only)
 1. Multi-session data: counts are (student × session) but labelled "học sinh" (800HS set: 2836 vs 800). Proposed fix: relabel/count per student.
@@ -96,9 +99,9 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 - Gotchas learnt: repo lint (`kiem_nhanh` chu_cam) forbids the words "em"/"you" in visible strings → use `{person_l}`/`{slot_l}`; wharton default is ON so tests set `{"wharton": False}`; `o_chua_co` = step from which a student stably has a club (app gives [1,2,3,4], mockup's [1,3,4,4] was illustrative).
 
 ## Files touched
-- docs/phien/CT1_BAN_MAU.dc.html: target design.
-- docs/phien/CT1_GIAO_THUC.md: protocol + prompts.
-- du_lieu_test/ct1_mo_phong/*.py: simulation that chose the rule (SIMULATED data).
+- New: `chi_tieu_ct1.py`, `api_chi_tieu.py`, `js/20_xem_xet_chi_tieu.js`, `tests/test_ct1_khuyen_nghi.py`, `test_ct1_api.py`, `test_ct1_ca_kiem_tay.py`, `test_giao_dien_ct1.py`, `docs/ke_hoach/BAO_CAO_SOAT_MA_CT1.md`, `docs/phien/CT1_KICH_BAN_DEMO.md`.
+- Edited: `api.py`, `phan_quyen.py`, `i18n_errors.py`, `i18n_loi.js`, `index.html`, `i18n.js`, `style.css`, `js/_danh_sach.txt`, `tests/_ux5a_chung.py`, `tests/test_gt3_phan_quyen.py`, `tests/test_mt1_uoc_tinh.py`, CHANGELOG, TIEN_DO, registry (md + json), HUONG_DAN_SU_DUNG, NHAP_TAY, SO_LIEU_DA_KIEM_CHUNG.
+- Planning files: `docs/phien/CT1_BAN_MAU.dc.html`, `CT1_GIAO_THUC.md`, `du_lieu_test/ct1_mo_phong/*.py` (SIMULATED data).
 
 ## Session log (append only, newest last)
 | Date | Model | What was done | Notes |
@@ -109,3 +112,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | L2 API + 22 tests, i18n codes `ct1_*`, phan_quyen admin-only, ChiTieuMixin in api.py | also adjusted 2 brittle tests (gt3 phan_quyen allow-list, mt1 'last 12 keys') to include CT1 |
 | 2026-11-28 | Sonnet (coder) | L3 UI + 13 Chromium tests; `_ux5a_chung.mo_ux5a` got optional `so_nhap`/`rules`/`rong` | UI text avoids "em"/"you" (lint): uses {person_l}/{slot_s} |
 | 2026-11-28 | Sonnet (coder) | L4 docs + 3 hand cases + soat-ma report | findings 1–5 in BAO_CAO_SOAT_MA_CT1.md; none fixed (report-only) |
+| 2026-11-28 | Sonnet (coder) | Handoff at ~400k context: state rewritten, awaiting CI | next session checks CI and finishes per protocol §4 |
