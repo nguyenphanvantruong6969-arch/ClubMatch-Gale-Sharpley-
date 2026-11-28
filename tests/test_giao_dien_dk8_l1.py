@@ -92,7 +92,7 @@ def test_d_thanh_tren_dinh_co_thuong_hieu_va_chip_giai_doan(cong):
     pg.wait_for_selector("text=Quản trị · Giáo viên đăng ký")
     dau = pg.locator("header.dk-dau")
     assert dau.count() == 1 and dau.inner_text().count("Quản trị") == 1                     # không lặp nhãn vai trò
-    assert dau.locator(".dk-thuong-hieu").count() == 1 and dau.locator(".dk-chip").count() == 1
+    assert dau.locator(".dk-thuong-hieu").count() == 1 and dau.locator(".dk-chip").count() == 0       # VG3: màn quản trị đã có thanh sáu bước, thanh trên không lặp tên giai đoạn
     assert dau.get_by_role("button", name="Đăng xuất").count() == 1 and dau.locator("#dkVePhanMem").count() == 1
     pg.mouse.wheel(0, 600)
     assert dau.bounding_box()["y"] == 0                                                     # cuộn rồi thanh vẫn dính ở trên cùng
