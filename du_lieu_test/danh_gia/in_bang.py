@@ -184,10 +184,44 @@ def in_doi_chieu(d):
     return "\n".join(ra)
 
 
+
+def in_tinh_nang(d):
+    ra = ["### Tính năng: suất dự trữ × điểm quyết tâm (lưới 2×2, cùng dữ liệu, cùng seed bốc thăm)", ""]
+    cot = [("a.pct_nv1_tat_ca", "% NV1", 1), ("a.pct_top3_tat_ca", "% top 3", 1), ("a.hang_tb", "Hạng TB", 2), ("b.n_chua_xep", "Chưa xếp", 1),
+           ("c.du_tru_da_dung", "Dự trữ dùng", 1), ("pct_dat_clb_diem_cao", "% vào CLB điểm cao nhất", 1), ("a.cap_chan", "Cặp phá vỡ", 1)]
+    tn = {"goc": "tắt / tắt", "du_tru": "dự trữ bật", "wharton": "điểm quyết tâm bật", "du_tru_wharton": "cả hai bật"}
+    for c in d["du_tru_wharton"]:
+        t = c["tham_so"]
+        ra += ["**%d HS × %d CLB, α = %s** (hồ sơ điểm: %d lỗi)" % (t["n_hs"], t["n_clb"], so(t["alpha"], 2), c["kiem_ho_so"]["loi_ho_so"]), ""]
+        ra.append(bang(["Ô"] + [x for _k, x, _n in cot], [[tn[o]] + [ktc(c["o"][o].get(k), n) for k, _x, n in cot] for o in tn]))
+        nh = ["chinh_sach", "khoi_10", "khong"]
+        ra += ["", "Theo nhóm dự trữ, bật − tắt dự trữ (có cặp theo trường): Δ %NV1 / Δ hạng TB / Δ % được xếp (mẫu số: HS của nhóm)", ""]
+        h = c["hieu_co_cap"]["du_tru_tru_goc"]
+        ra.append(bang(["Nhóm", "Δ %NV1", "Δ hạng TB", "Δ % được xếp"],
+                       [(g, ktc(h.get("a.theo_nhom.du_tru.%s.pct_nv1" % g), 2), ktc(h.get("nhom.%s.hang_tb" % g), 3), ktc(h.get("a.theo_nhom.du_tru.%s.pct_da_xep" % g), 2)) for g in nh]))
+        dd = c["doi_so_voi"]["du_tru_vs_goc"]
+        ra += ["", "Số em đổi CLB khi bật dự trữ (tb mỗi lần chạy): " + "; ".join(
+            "%s: đổi %s, tốt hơn %s, xấu hơn %s" % (g, so(dd["%s.doi_clb" % g]["tb"], 2), so(dd["%s.tot_hon" % g]["tb"], 2), so(dd["%s.xau_hon" % g]["tb"], 2)) for g in nh), ""]
+    ra += ["### Tính năng: huy chương (FA-DAA) so với chế độ cũ (mô hình `mo_phong_fa_daa`)", ""]
+    for c in d["huy_chuong"]:
+        ra += ["**%d học sinh** (mẫu số: em × buổi; «thật» = theo độ thích thật, không theo cách em khai)" % c["n_hs"], ""]
+        hang = []
+        for h, v in c["theo_hanh_vi"].items():
+            hang.append((h, ktc(v["cu"]["pt_nv1_that"]), ktc(v["fa"]["pt_nv1_that"]), ktc(v["cu"]["pt_khong_clb"]), ktc(v["fa"]["pt_khong_clb"]),
+                         ktc(v["fa"]["pt_dat_clb_vang_tren_co_clb"]), ktc(v["thua_boc_tham_fa_pt"]),
+                         "%s / %s / %s" % tuple(so(v["doi_clb_cu_sang_fa"][k]["tb"], 1) for k in ("doi_clb", "tot_hon", "xau_hon"))))
+        ra.append(bang(["Hành vi", "% NV1 thật (cũ)", "% NV1 thật (FA)", "% không CLB (cũ)", "% không CLB (FA)", "% vào CLB vàng (FA, trên có CLB)",
+                        "% thua bốc thăm (FA)", "Đổi / tốt hơn / xấu hơn (em×buổi mỗi lần chạy)"], hang))
+        ra += ["", "Lý do quyết định (% dòng): " + "; ".join("%s = %s" % (k, so(v["tb"], 1)) for k, v in c["ly_do_fa_pt_dong"].items()), ""]
+    ra += [goc(d)]
+    return "\n".join(ra)
+
+
 PHAN = [("doi_chieu_so_lieu.json", in_doi_chieu, "doi_chieu"), ("mac_dinh.json", in_mac_dinh, "mac_dinh"),
         ("co_che_doi_chung.json", in_co_che, "co_che"), ("bien_the_tieu_chi.json", in_bien_the, "bien_the"),
         ("quet_quy_mo.json", in_quet, "quet"), ("thoi_gian.json", in_thoi_gian, "thoi_gian"),
-        ("nhieu_buoi.json", in_nhieu_buoi, "nhieu_buoi"), ("bo_co_san.json", in_co_san, "co_san")]
+        ("nhieu_buoi.json", in_nhieu_buoi, "nhieu_buoi"), ("bo_co_san.json", in_co_san, "co_san"),
+        ("tinh_nang.json", in_tinh_nang, "tinh_nang")]
 
 
 def main(argv=None):

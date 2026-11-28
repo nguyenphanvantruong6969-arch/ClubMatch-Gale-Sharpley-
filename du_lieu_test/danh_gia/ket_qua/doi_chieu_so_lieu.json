@@ -1,0 +1,262 @@
+{
+ "bo": "TEST_0*          (120 em / 10 CLB)",
+ "seed": 42,
+ "n_hs": 120,
+ "pipeline": {
+  "duoc_xep": 108,
+  "nv1": 64
+ },
+ "loi_trong_bo_nho": {
+  "duoc_xep": 108,
+  "nv1": 64,
+  "vong": 7
+ },
+ "khop_tung_dong_match_results": true,
+ "cap_chan": 0,
+ "mong_doi": {
+  "duoc_xep": 108,
+  "nv1": 64,
+  "tong": 120,
+  "nguon": "du_lieu_test/SO_LIEU_DA_KIEM_CHUNG.md §2"
+ },
+ "dat": true,
+ "dinh_nghia": {
+  "luu_y": "TOÀN BỘ số đo trên DỮ LIỆU MÔ PHỎNG, không phải khảo sát học sinh thật.",
+  "chi_so": {
+   "pct_nv1_tat_ca": {
+    "ten": "Tỉ lệ được nguyện vọng 1",
+    "cong_thuc": "#(em được xếp ở nguyện vọng 1) / #học sinh",
+    "mau_so": "mọi học sinh (kể cả danh sách rỗng, chưa được xếp)",
+    "nhom": "A"
+   },
+   "pct_nv1_da_xep": {
+    "ten": "Tỉ lệ nguyện vọng 1 trên em được xếp",
+    "cong_thuc": "#(nguyện vọng 1) / #(em được xếp)",
+    "mau_so": "em được xếp",
+    "nhom": "A"
+   },
+   "duong_cong_don": {
+    "ten": "Đường cong tích luỹ",
+    "cong_thuc": "phần tử k = #(em được xếp ở nguyện vọng ≤ k) / #học sinh, k = 1..K",
+    "mau_so": "mọi học sinh; K = độ dài danh sách dài nhất",
+    "nhom": "A"
+   },
+   "hang_tb": {
+    "ten": "Hạng nguyện vọng trung bình",
+    "cong_thuc": "trung bình hạng (1 = nguyện vọng đầu) của em được xếp",
+    "mau_so": "em được xếp",
+    "nhom": "A"
+   },
+   "ngoai_danh_sach": {
+    "ten": "Xếp ngoài danh sách",
+    "cong_thuc": "#(em được xếp vào CLB không có trong danh sách của em); phải = 0",
+    "mau_so": "—",
+    "nhom": "A"
+   },
+   "cap_chan": {
+    "ten": "Cặp phá vỡ (blocking pair)",
+    "cong_thuc": "số cặp (em, CLB) em thích hơn và CLB nhận em theo hàm lựa chọn thật; RB-DA phải = 0",
+    "mau_so": "—",
+    "nhom": "A"
+   },
+   "pct_chua_xep": {
+    "ten": "Tỉ lệ chưa được xếp",
+    "cong_thuc": "#(em chưa được xếp) / #học sinh",
+    "mau_so": "mọi học sinh",
+    "nhom": "B"
+   },
+   "can_tren_ghep_cuc_dai": {
+    "ten": "Cận trên: ghép cực đại",
+    "cong_thuc": "kích thước ghép cực đại đồ thị (học sinh × CLB đã liệt kê, sức chứa CLB), BỎ QUA ưu tiên và ổn định",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "khong_the_tranh": {
+    "ten": "Không thể tránh (do dữ liệu)",
+    "cong_thuc": "#học sinh − cận trên",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "gia_uu_tien_on_dinh": {
+    "ten": "Cái giá của ưu tiên + ổn định",
+    "cong_thuc": "cận trên − #(em được xếp)",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "nguyen_nhan": {
+    "ten": "Nguyên nhân chưa xếp (loại trừ nhau, theo thứ tự)",
+    "cong_thuc": "danh_sach_rong: danh sách rỗng; khong_diem: có ≥1 CLB tuyển chọn trong danh sách và em không có điểm ở CLB tuyển chọn nào đã khai; het_cho_uu_tien_cao_hon: còn lại (mọi CLB đã khai đều đầy người ưu tiên cao hơn)",
+    "mau_so": "em chưa được xếp",
+    "nhom": "B"
+   },
+   "tong_chi_tieu_nho_hon_hs": {
+    "ten": "Tổng chỉ tiêu < số học sinh",
+    "cong_thuc": "Σ chỉ tiêu < #học sinh (cờ cho cả lần chạy)",
+    "mau_so": "—",
+    "nhom": "B"
+   },
+   "lech_cho": {
+    "ten": "Lệch chỗ",
+    "cong_thuc": "#(em chưa được xếp mà còn CLB em KHÔNG khai còn chỗ trống)",
+    "mau_so": "tính trên số em, không phải số CLB",
+    "nhom": "B"
+   },
+   "ty_le_lap_day": {
+    "ten": "Tỉ lệ lấp đầy",
+    "cong_thuc": "#(em được xếp) / Σ chỉ tiêu",
+    "mau_so": "tổng chỉ tiêu",
+    "nhom": "C"
+   },
+   "phan_vi_lap_day": {
+    "ten": "Phân vị lấp đầy theo CLB",
+    "cong_thuc": "min, p25, trung vị, max của (đã xếp / chỉ tiêu) trên các CLB; nội suy tuyến tính",
+    "mau_so": "mỗi CLB",
+    "nhom": "C"
+   },
+   "du_tru": {
+    "ten": "Suất dự trữ",
+    "cong_thuc": "đã dùng = #(em xếp với tầng 'reserve'); cung cấp = Σ reserve_capacity",
+    "mau_so": "Σ reserve_capacity",
+    "nhom": "C"
+   },
+   "ti_le_cau": {
+    "ten": "Tỉ lệ cầu",
+    "cong_thuc": "#(em xếp CLB này làm nguyện vọng 1) / chỉ tiêu CLB",
+    "mau_so": "chỉ tiêu CLB",
+    "nhom": "C"
+   }
+  },
+  "tham_so_sinh": {
+   "ty_le_clb_tuyen_chon": 0.3,
+   "xac_suat_tick_thi": 0.85,
+   "tran_thi_moi_buoi": 5,
+   "ty_le_chinh_sach": 0.15,
+   "ty_le_khoi_10": 0.06,
+   "ty_le_suat_du_tru": 0.1,
+   "so_clb_du_tru": 4,
+   "san_pop": 0.2,
+   "dai_danh_sach": [
+    3,
+    6
+   ],
+   "nhieu_buoi": [
+    "thu_2",
+    "thu_4",
+    "thu_6"
+   ],
+   "chia_chi_tieu": "(pop + san_pop) × U(0,8; 1,2), largest remainder, tối thiểu 2",
+   "diem": "round(10·(rho·nang_luc + (1−rho)·nhieu), 1)",
+   "hat_giong": "random.Random(crc32(khoá))"
+  },
+  "seed_du_lieu": [
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "seed_boc_tham": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "so_truong": 5,
+  "so_lan_boc_tham_moi_truong": 10,
+  "cach_tinh_ktc": "KTC 95 % kiểu t trên trung bình theo TRƯỜNG (n = số seed dữ liệu, bậc tự do n−1, t_{0,975} = 2.776); sd_boc_tham = trung bình độ lệch chuẩn giữa các lần bốc thăm trong cùng một trường.",
+  "lat_co_cho_pct": "% học sinh có lúc được xếp, có lúc không, giữa các lần bốc thăm của cùng một trường",
+  "lat_clb_pct": "% học sinh có CLB (hoặc 'không xếp') thay đổi giữa các lần bốc thăm của cùng một trường",
+  "cau_hinh_chay": {
+   "che_do": "day_du",
+   "quy_mo": [
+    [
+     120,
+     10
+    ],
+    [
+     300,
+     10
+    ],
+    [
+     800,
+     20
+    ]
+   ],
+   "alpha": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    0.9
+   ],
+   "kappa": [
+    0.9,
+    1.1,
+    1.3
+   ],
+   "rho": [
+    0.0,
+    0.7
+   ],
+   "seed_dl": [
+    101,
+    102,
+    103,
+    104,
+    105
+   ],
+   "seed_bt": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "mac_dinh": {
+    "n_hs": 800,
+    "n_clb": 20,
+    "alpha": 0.5,
+    "rho": 0.7,
+    "kappa": 1.1
+   },
+   "thoi_gian": [
+    [
+     120,
+     10
+    ],
+    [
+     300,
+     10
+    ],
+    [
+     800,
+     20
+    ],
+    [
+     2000,
+     50
+    ]
+   ]
+  }
+ },
+ "lan_chay": {
+  "lenh": "python du_lieu_test/danh_gia/do_danh_gia.py --day-du --phan doi_chieu mac_dinh co_che bien_the quet thoi_gian nhieu_buoi co_san",
+  "commit": "d372f11c651ffd033f0333df2f51ed3677926ead",
+  "cay_lam_viec_sach": true,
+  "python": "3.13.18",
+  "may": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39",
+  "bat_dau": "2026-11-28 02:51:56",
+  "thoi_gian_giay": 0.3
+ }
+}
