@@ -5,6 +5,7 @@
 - `du_lieu_test/danh_gia/viet_bao_cao.py`: sinh `docs/nghien_cuu/DG1_BAO_CAO_KHOA_HOC.md` + `.html` và 7 hình SVG (`docs/nghien_cuu/anh_dg1/F*.svg`: đường cong tích luỹ 5 cơ chế, %NV1 / %chưa xếp theo α × κ, lấp đầy theo tỉ lệ cầu, biến thể tiêu chí, chênh với cận trên, thời gian) CHỈ từ `ket_qua/*.json` (bảng dùng lại `in_bang.py`). Mục 0, 1.1, 2, 6, 7, 8 = ô trống cho HỌC SINH viết, được giữ nguyên khi sinh lại; mục 6 có 6 câu hỏi gợi ý trung tính; script từ chối ghi nếu phần AI soạn có «cho thấy / chứng tỏ / tốt hơn / vượt trội».
 - `du_lieu_test/danh_gia/chup_quy_trinh.py`: 6 ảnh chụp giao diện thật (CSDL tạm, trường mô phỏng mặc định seed 101) `docs/nghien_cuu/anh_dg1/S*.png`.
 - `du_lieu_test/danh_gia/xuat_bao_cao_docx.py`: bản Word `docs/nghien_cuu/DG1_BAO_CAO_KHOA_HOC.docx` (pandoc từ .md, SVG → PNG qua Chromium, A4 ngang).
+- Bản hackathon (theo yêu cầu chủ dự án): `du_lieu_test/danh_gia/viet_bao_cao_hackathon.py` → `docs/nghien_cuu/BAO_CAO_HACKATHON.docx` — AI soạn toàn bộ, lời lẽ phổ thông, có mục lục + danh mục bảng/hình kèm số trang, bảng không bị cắt trang; số liệu vẫn đọc từ JSON, ghi rõ MÔ PHỎNG và có hỗ trợ AI.
 - Test mới: `tests/test_dg1_bao_cao.py` (2). Không đổi tệp sản phẩm nào.
 
 ## 2026-11-28 — DG1 (bằng chứng định lượng: L1–L4 + nhóm G + một lần chạy đầy đủ)

@@ -135,7 +135,7 @@ screenshots `anh_dg1/S1..S6.png`. Regenerate: `python du_lieu_test/danh_gia/viet
 screenshots: `python du_lieu_test/danh_gia/chup_quy_trinh.py` (needs Python `playwright`, Chromium from `tests/_trinh_duyet.py`).
 - D10 Screenshots: 6 instead of the planned 9. S2 «warnings = 0» and S7 «So sánh lần chạy» not taken: the generated Sổ nhập raises 5 serious
   «outlier score» warnings (scores < 2 in tested clubs, ρ = 0.7 noise), shown as-is in S1; run comparison UI not driven (budget). Caption says so factually.
-- D11 AI log not regenerated here: `dung_nhat_ky_ai.py` rewrites ~1 000 lines from all branches; run it after merge (it reads the CHANGELOG L5 line).
+- D11 AI log: run `dung_nhat_ky_ai.py` after merge. D12 (Truong, 2026-11-28, hackathon): `viet_bao_cao_hackathon.py` → `BAO_CAO_HACKATHON.docx`, FULLY AI-written plain-language version (research report keeps empty student sections).
 - Found while screenshotting (L4 product bug, NOT fixed — planner role): «Chỉ số phân bổ» block sub-label prints `16,099999999999994% mọi suất`
   (unrounded float) under «Chưa được xếp». Small fix in `js/03_ket_qua.js` formatter + one assertion in `tests/test_dg1_chi_so_ung_dung.py`.
 - Needs Truong: write sections 0, 1.1, 2 (mark «viết sau khi có số liệu» if so), 6, 7, 8; decide on the float bug fix; confirm CI green. `kiem_nhanh.py` 7/7; `test_dg1_bao_cao.py` 2/2; no product file changed in L5.
