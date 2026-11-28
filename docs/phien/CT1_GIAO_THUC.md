@@ -1,11 +1,12 @@
 # CT1 protocol — size M-hackathon (1 coder, checker optional)
 
 > Lean template: `docs/phien/_GIAO_THUC_GON.md` (§3 budget rules apply). Spec, rule, expected numbers:
-> `docs/phien/claude__serene-goldberg-2cjcxe.md`. Design: `docs/phien/CT1_BAN_MAU.dc.html`.
+> `docs/phien/claude__ct1-xem-xet-chi-tieu.md`. Design: `docs/phien/CT1_BAN_MAU.dc.html`.
 
 ## 0. Decisions already made (do not ask Truong)
-- Item CT1 on branch `claude/serene-goldberg-2cjcxe`. Read-only feature: no schema change, no CSV-contract change,
+- Item CT1 on branch `claude/ct1-xem-xet-chi-tieu`. Read-only feature: no schema change, no CSV-contract change,
   no write to `match_results`/`run_history`, no new library. Recommendation rule and step pairing as in the branch file.
+- UI MUST follow the "Design rules" section of the branch file (Hick's law + Von Restorff); it overrides the mockup.
 - Hackathon: speed over polish, but tests-first and invariants hold. Checker runs once at the end only if Truong asks.
 
 ## 1. Lots (must-ship: L1, L2, L3; L4 docs short)
@@ -20,7 +21,7 @@
 Failing test → minimal code → the lot's test file + ≤3 related (`tests/test_du_lieu_ket_qua.py`,
 `tests/test_mt1*`, `tests/test_gt2*`) `-q --tb=line 2>&1 | tail -15` → `ruff check .` →
 `python .claude/skills/soat-ma/scripts/kiem_nhanh.py | tail -10` → commit `CT1-L<n>: …` → push
-`git push -u origin claude/serene-goldberg-2cjcxe`. Never rebase/force-push; before each lot
+`git push -u origin claude/ct1-xem-xet-chi-tieu`. Never rebase/force-push; before each lot
 `git fetch origin main && git merge --no-edit FETCH_HEAD`. After L4: run `soat-ma` four tiers (report only).
 UI tests: `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`, `--trace off`.
 

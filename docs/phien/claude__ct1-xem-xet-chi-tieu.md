@@ -1,4 +1,4 @@
-# Branch handoff: claude/serene-goldberg-2cjcxe
+# Branch handoff: claude/ct1-xem-xet-chi-tieu
 
 > Fresh session: read CLAUDE.md, then THIS file, then `docs/phien/CT1_GIAO_THUC.md`. English, ≤150 lines.
 
@@ -18,6 +18,31 @@ Four sections, top to bottom (see mockup):
 3. **CLB nào thiếu chỗ, CLB nào thừa chỗ?**: per club two bars (capacity grey, NV1 count coloured tăng/giảm/giữ).
 4. **Chỉ tiêu đề xuất** table + `<details>` "Phần mềm tính đề xuất như thế nào?".
 Dropped on purpose: quadrant chart, trade-off curve, score histogram (Truong found the quadrant hard to read).
+
+## Design rules (MUST; Truong 2026-11-28: "follow the 2 design rules we agreed")
+Source: "Design rule" sections of `docs/phien/claude__ux4-quan-ly-de-hieu.md` (Hick's law, Von Restorff), as
+applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… must stay green). Overrides the mockup.
+- **Entry point does not grow the Kết quả budget:** CT1 opens from ONE secondary control placed where UX5A puts rare
+  actions (the existing `details.menu-khac` / "Thêm ▾" of the Kết quả tab), admin only (`data-quyen="quan_tri"`).
+  The CT1 view is its own panel; UX5A Hick/Von Restorff tests unchanged and green.
+- **Hick budgets inside CT1** (count VISIBLE enabled buttons/selects/inputs/links per panel, ≤ 7):
+  1. "Khuyến nghị" panel: 1 control = gold "Xuất bảng đề xuất (CSV)". **No "Áp dụng làm chỉ tiêu kỳ sau" button**
+     (the mockup's gold button writes capacities: out of scope, read-only item) and no "Xuất PDF".
+  2. "Kết quả sau từng bước": per step "Xem em nào đổi chỗ (k em)" secondary + one "Xuất bảng đối chiếu (CSV)"
+     secondary. Lists closed by default. If steps > 6, show 6 and a "Xem thêm bước" link.
+  3. "Tự thử một thay đổi": collapsed `<details>` by default (progressive disclosure); inside: 3 selects + 1 gold
+     "Xếp lại với chỉ tiêu này" + copy/CSV secondary (≤ 5). "Số chỗ" select ≤ 3 options shown (1, 2, 3).
+  4. "CLB nào thiếu chỗ…": no buttons; the method text stays in one `<details>`.
+  5. One plain link to Tiêu chí (GT2) for priority changes.
+- **Von Restorff:** at most ONE `.btn-primary` visible per panel (panel 2 and 4 have none). Green/gold only carry
+  meaning (tăng / giảm), always with text (+4, −3, "Mất chỗ", "Lên NV1"), never colour alone (WCAG 1.4.1). No accent
+  on headings, eyebrows ("KHUYẾN NGHỊ" in muted ink), icons or counts. A step where someone loses a seat or drops shows
+  an ALERT-style text line, not a button. After "Xếp lại", the result block is highlighted briefly (respect
+  `prefers-reduced-motion` and `html.tat-hieu-ung`), meaning also stated in text. No `.btn-danger` anywhere.
+- Test: `tests/test_giao_dien_ct1.py` adds a "Hick budget" + "Von Restorff" check for each CT1 panel (reuse helpers in
+  `tests/_ux5a_chung.py`), as admin; as teacher the entry point is not visible.
+- Working prototype (shows behaviour, not budgets): claude.ai artifact "Thử chỉ tiêu CLB"; its data generator is
+  reproducible from `du_lieu_test/ct1_mo_phong/`.
 
 ## Plan (written by Opus; ticked by Sonnet)
 - [ ] L1 `chi_tieu_ct1.py` (pure, new file): `chi_so_clb_ct1`, `khuyen_nghi_chi_tieu`, `ghep_buoc_chuyen`. Tests first.
@@ -68,3 +93,4 @@ Dropped on purpose: quadrant chart, trade-off curve, score histogram (Truong fou
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-28 | Opus (planner) | Brainstorm, 4-round simulation, mockup v3, plan + protocol | no product code (rule 12) |
+| 2026-11-28 | Opus (planner) | Moved to item branch; added Design rules (Hick, Von Restorff) | planning was on claude/serene-goldberg-2cjcxe |
