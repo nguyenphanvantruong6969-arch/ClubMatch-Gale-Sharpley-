@@ -46,7 +46,7 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 
 ## Plan (written by Opus; ticked by Sonnet)
 - [x] L1 `chi_tieu_ct1.py` (pure, new file): `chi_so_clb_ct1`, `khuyen_nghi_chi_tieu`, `ghep_buoc_chuyen`. Tests first.
-- [ ] L2 API `get_xem_xet_chi_tieu` (read-only) incl. step-by-step re-solve via `_giai_trong_bo_nho(..., sao_luu=False, sua_clb=...)`.
+- [x] L2 API `get_xem_xet_chi_tieu` (read-only) incl. step-by-step re-solve via `_giai_trong_bo_nho(..., sao_luu=False, sua_clb=...)`.
 - [ ] L3 UI: new view inside the results tab, 4 sections, hand-written SVG/divs, vi+en strings. One Chromium test.
 - [ ] L4 docs: CHANGELOG, TIEN_DO, registry line CT1, HUONG_DAN_SU_DUNG short paragraph; `soat-ma`; push.
 
@@ -81,8 +81,10 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
   `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
 
 ## Current state (overwrite each handoff)
-- Done: design, simulation, plan, protocol; L1 (`chi_tieu_ct1.py` + tests, pure).
-- Next: L2 API `get_xem_xet_chi_tieu`.
+- Done: design, simulation, plan, protocol; L1 (`chi_tieu_ct1.py`, pure); L2 (`api_chi_tieu.py`: `get_xem_xet_chi_tieu`,
+  two CSV exports, admin-only, read-only; app numbers match plan: NV1 64→67→69→73→74, unassigned 12→11→11→10→8, 15 better / 0 worse).
+- Next: L3 UI (menu entry in Kết quả tab, 4 sections, JS file, vi+en, Chromium test, Hick/Von Restorff test).
+- Gotchas learnt: repo lint (`kiem_nhanh` chu_cam) forbids the words "em"/"you" in visible strings → use `{person_l}`/`{slot_l}`; wharton default is ON so tests set `{"wharton": False}`; `o_chua_co` = step from which a student stably has a club (app gives [1,2,3,4], mockup's [1,3,4,4] was illustrative).
 
 ## Files touched
 - docs/phien/CT1_BAN_MAU.dc.html: target design.
@@ -95,3 +97,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Opus (planner) | Brainstorm, 4-round simulation, mockup v3, plan + protocol | no product code (rule 12) |
 | 2026-11-28 | Opus (planner) | Moved to item branch; added Design rules (Hick, Von Restorff) | planning was on claude/serene-goldberg-2cjcxe |
 | 2026-11-28 | Sonnet (coder) | L1 `chi_tieu_ct1.py` + 27 tests | tie-break pairing: recipients by chua_dap/cap desc then id (needed to match expected step order, since clb_mythuat < clb_tinhoc) |
+| 2026-11-28 | Sonnet (coder) | L2 API + 22 tests, i18n codes `ct1_*`, phan_quyen admin-only, ChiTieuMixin in api.py | also adjusted 2 brittle tests (gt3 phan_quyen allow-list, mt1 'last 12 keys') to include CT1 |

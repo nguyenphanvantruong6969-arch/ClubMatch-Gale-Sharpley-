@@ -1703,6 +1703,36 @@ MESSAGES = {
         "en": "There is no official allocation to report on yet.",
     },
     # === end MT1 (L3) ===
+    # === CT1 ===
+    "ct1_buoc_khong_hop_le": {
+        "vi": "Bước chuyển chỗ chưa hợp lệ. Hãy chọn hai {slot_l} khác nhau và số chỗ là số nguyên từ 1 trở lên.",
+        "en": "That seat move is not valid. Pick two different {slot_pl} and a whole number of seats, 1 or more.",
+    },
+    "ct1_clb_la": {
+        "vi": "Không dùng được {slot_l} \"{club_id}\" để chuyển chỗ (không có trong danh sách, hoặc không giới hạn chỗ). Hãy chọn lại.",
+        "en": "The {slot_l} \"{club_id}\" can't be used to move seats (it is not in the list, or it has no seat limit). Pick again.",
+    },
+    "ct1_khac_buoi": {
+        "vi": "Chỉ chuyển chỗ được giữa hai {slot_l} cùng {session_l}. Hãy chọn hai {slot_l} cùng một {session_l}.",
+        "en": "Seats can only move between two {slot_pl} in the same {session_l}. Pick two {slot_pl} in the same {session_l}.",
+    },
+    "ct1_cap_qua_thap": {
+        "vi": "{slot} \"{club_id}\" chỉ còn {con_lai} chỗ sau bước này, ít hơn mức tối thiểu {toi_thieu} (số chỗ đã giữ cho nhóm dự trữ, hoặc 1). Hãy chuyển ít chỗ hơn.",
+        "en": "{slot} \"{club_id}\" would have only {con_lai} seats after this step, below the minimum of {toi_thieu} (seats held for the reserved group, or 1). Move fewer seats.",
+    },
+    "ct1_qua_nhieu_buoc": {
+        "vi": "Chỉ thử được tối đa {toi_da} bước một lần. Hãy bớt bước.",
+        "en": "At most {toi_da} steps can be tried at a time. Remove some steps.",
+    },
+    "ct1_moc_khong_khop": {
+        "vi": "Xếp lại với chỉ tiêu hiện tại cho kết quả khác lần xếp chính thức ở {n} {person_l} (dữ liệu hoặc tiêu chí đã đổi sau lần xếp đó). Các con số dưới đây so với kết quả xếp lại này; hãy chạy xếp chính thức lại để hai bên khớp nhau.",
+        "en": "Re-running with the current quotas gives a different result from the official allocation for {n} {person_pl} (the data or criteria changed after it). The numbers below compare against this re-run; run the official allocation again so both match.",
+    },
+    "ct1_buoc_khong_giai_duoc": {
+        "vi": "Không xếp lại được sau các bước này nên chưa có kết quả từng bước. Phần đề xuất chỉ tiêu vẫn xem được.",
+        "en": "The allocation could not be re-run after these steps, so there are no step results. The quota recommendation is still available.",
+    },
+    # === end CT1 ===
     # === MT2 ===
     "mt_thu_chua_ho_tro_loai": {
         "vi": "Chạy thử và ước tính chưa hỗ trợ chế độ chia CLB theo loại. Hãy tắt \"Chia CLB theo loại\" trong Quản lý, hoặc dùng lần xếp chính thức.",

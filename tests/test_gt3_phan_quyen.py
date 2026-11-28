@@ -77,14 +77,16 @@ def test_ham_ghi_la_quan_tri_ham_doc_la_giao_vien():
     for n in cac_ham_cong_khai():
         if n.startswith(("get_", "list_")) and n not in (
                 "get_phien_dang_nhap", "get_nhat_ky_thao_tac",
-                "get_tieu_chi", "list_lan_chay", "get_muc_tieu", "get_phuong_an_xep"):  # CB1: trạng thái phương án chỉ quản trị; MT1: thẻ mục tiêu chỉ quản trị; I1: danh sách so sánh lộ kết quả học sinh khác -> chỉ quản trị
+                "get_tieu_chi", "list_lan_chay", "get_muc_tieu", "get_phuong_an_xep",
+                "get_xem_xet_chi_tieu"):  # CT1: xem xét chỉ tiêu (có tên em) chỉ quản trị; CB1: trạng thái phương án chỉ quản trị; MT1: thẻ mục tiêu chỉ quản trị; I1: danh sách so sánh lộ kết quả học sinh khác -> chỉ quản trị
             assert pq.QUYEN[n] != pq.QUAN_TRI, n
     # I1: GT1/GT2
     assert pq.QUYEN["get_giai_trinh_hoc_sinh"] == pq.GIAO_VIEN
     assert pq.QUYEN["export_phieu_giai_trinh"] == pq.GIAO_VIEN
     for n in ("tao_ma_tra_cuu", "tao_lai_ma_tra_cuu", "export_ma_tra_cuu_csv", "get_tieu_chi", "run_thu",
               "list_lan_chay", "so_sanh_lan_chay", "export_so_sanh_html", "export_so_sanh_csv", "ap_dung_tieu_chi",
-              "get_phuong_an_xep", "chot_phuong_an", "export_van_ban_phuong_an_pdf"):   # CB1
+              "get_phuong_an_xep", "chot_phuong_an", "export_van_ban_phuong_an_pdf",   # CB1
+              "get_xem_xet_chi_tieu", "export_xem_xet_chi_tieu_csv", "export_de_xuat_chi_tieu_csv"):   # CT1
         assert pq.QUYEN[n] == pq.QUAN_TRI, n
 
 

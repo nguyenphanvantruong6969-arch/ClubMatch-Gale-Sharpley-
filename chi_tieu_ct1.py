@@ -82,7 +82,8 @@ def _can_mot_buoi(chi_so: dict, ds: list, tran: float, toi_thieu: int) -> dict:
     N = sum(chi_so[c]["nv1"] for c in ds)
     if N <= 0:
         return dict(cap)
-    thap = {c: min(cap[c], max(toi_thieu, round(cap[c] * (1 - tran)))) for c in ds}
+    thap = {c: min(cap[c], max(toi_thieu, round(cap[c] * (1 - tran)), chi_so[c].get("reserve_capacity") or 0))
+            for c in ds}                                  # không bớt xuống dưới chỗ giữ cho nhóm dự trữ
     cao = {c: max(cap[c], round(cap[c] * (1 + tran))) for c in ds}
     moi = {}
     for c in ds:
@@ -162,6 +163,8 @@ def kiem_buoc_tu_chon(buoc, clubs: dict):
         for c in (tu, den):
             if not isinstance(c, str) or c not in clubs or clubs[c].get("loai_tru"):
                 return loi("ct1_clb_la", club_id=str(c))
+        if clubs[tu].get("buoi") != clubs[den].get("buoi"):
+            return loi("ct1_khac_buoi", tu=tu, den=den)     # chỗ chỉ chuyển giữa hai CLB CÙNG buổi
         cap[tu] -= k
         cap[den] += k
         san = max(1, clubs[tu].get("reserve_capacity") or 0)

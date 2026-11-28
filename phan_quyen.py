@@ -70,8 +70,9 @@ vao_che_do_hoc_sinh
 dat_loai_clb get_tieu_chi run_thu list_lan_chay so_sanh_lan_chay export_so_sanh_html export_so_sanh_csv ap_dung_tieu_chi
 export_danh_sach_pdf
 get_muc_tieu chon_muc_tieu hoan_tac_muc_tieu uoc_tinh_muc_tieu bao_cao_muc_tieu
+get_xem_xet_chi_tieu export_xem_xet_chi_tieu_csv export_de_xuat_chi_tieu_csv
 get_phuong_an_xep chot_phuong_an export_van_ban_phuong_an_pdf
-""".split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát); MT1: ba hàm mục tiêu (cả hàm đọc) chỉ quản trị
+""".split()  # I1: GT1 mã, GT2 tiêu chí; XP1: xuất PDF; vao_che_do_hoc_sinh: GT4 D4-1 (cùng mức với thoát); MT1: ba hàm mục tiêu (cả hàm đọc) chỉ quản trị; CT1: xem xét chỉ tiêu (đọc + hai xuất CSV, có tên em) chỉ quản trị
 
 # DK3: cổng đăng ký tự kiểm quyền bằng phiên riêng (token) nên coi là công khai với cổng chung.
 _CONG_KHAI += [n for n in dir(__import__("api_dang_ky").DangKyMixin) if n.startswith("dk_")]

@@ -115,6 +115,12 @@ def test_tong_cho_giu_nguyen_tren_nhieu_bo_ngau_nhien():
         assert rong == moi                                              # các bước phủ ĐỦ mọi chênh lệch
 
 
+def test_khong_bot_xuong_duoi_cho_giu_du_tru():
+    cl = {"a": _cs(10, 0, 0, reserve=9), "b": _cs(10, 30, 10), "c": _cs(10, 0, 0)}
+    moi = ct.khuyen_nghi_chi_tieu(cl, tran=0.5, toi_thieu=1)
+    assert moi["a"] >= 9 and _tong(moi) == 30
+
+
 def test_clb_tu_do_bi_loai_khoi_de_xuat():
     cl = {"a": _cs(10, 30, 20), "b": _cs(10, 2), "tu_do": _cs(999, 50, 50, loai_tru=True)}
     moi = ct.khuyen_nghi_chi_tieu(cl, tran=0.3, toi_thieu=1)
@@ -160,8 +166,10 @@ def test_khong_co_nv1_thi_giu_nguyen():
 
 # ----- bước tự chọn -----
 
-CLB = {"a": {"cap": 10, "reserve_capacity": 2, "loai_tru": False}, "b": {"cap": 5, "reserve_capacity": 0},
-       "c": {"cap": 3, "reserve_capacity": 0}, "tu": {"cap": 99, "reserve_capacity": 0, "loai_tru": True}}
+CLB = {"a": {"cap": 10, "reserve_capacity": 2, "loai_tru": False, "buoi": "t2"},
+       "b": {"cap": 5, "reserve_capacity": 0, "buoi": "t2"}, "c": {"cap": 3, "reserve_capacity": 0, "buoi": "t2"},
+       "tu": {"cap": 99, "reserve_capacity": 0, "loai_tru": True, "buoi": "t2"},
+       "x": {"cap": 9, "reserve_capacity": 0, "buoi": "t3"}}
 
 
 def test_kiem_buoc_hop_le_tra_ve_bo_chuan():
@@ -184,6 +192,7 @@ def test_kiem_buoc_hop_le_tra_ve_bo_chuan():
     ([{"tu": "c", "den": "b", "k": 3}], "ct1_cap_qua_thap"),              # c còn 0 chỗ
     ([{"tu": "a", "den": "b", "k": 9}], "ct1_cap_qua_thap"),              # a còn 1 < chỗ giữ 2
     ([{"tu": "a", "den": "tu", "k": 1}], "ct1_clb_la"),                   # CLB tự do không dùng được
+    ([{"tu": "a", "den": "x", "k": 1}], "ct1_khac_buoi"),                 # chỗ không chuyển sang buổi khác
 ])
 def test_kiem_buoc_tu_choi(buoc, ma):
     ds, loi = ct.kiem_buoc_tu_chon(buoc, CLB)
