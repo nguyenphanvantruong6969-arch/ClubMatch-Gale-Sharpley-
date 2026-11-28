@@ -82,6 +82,7 @@ def ghi(api, qt, duong, co_loi):
 def main():
     d = tempfile.mkdtemp()
     api = PipelineAPI(os.path.join(d, "a.db"), thu_muc_xuat=d)
+    ok(api.update_workspace_config({"rules": {"wharton": False}}))   # CSDL tạm chỉ dùng cổng đăng ký: tắt tường minh (luật F1)
     ok(api.dk_khoi_tao("kiem-thu", "KIEMTHU", ["Thứ 3", "Thứ 6"], [10, 12]))
     qt = ok(api.dk_dang_nhap("quan_tri", "", "kiem-thu"))["token"]
     for ten, co_loi in (("DANG_KY_DEMO.xlsx", False), ("DANG_KY_DEMO_CO_LOI.xlsx", True)):

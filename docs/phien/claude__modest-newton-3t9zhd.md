@@ -28,6 +28,7 @@ template download blocked in the pywebview .exe; (c) bug fix: portal step 5 «Nh
 - Truong never sent the exact error text for (c); the race was reproduced deterministically and is the most likely cause.
 
 ## Decisions and gotchas
+- CI rule F1 (`test_a13_13_kiem_nhan`): every `du_lieu_test/**.py` creating `PipelineAPI` must contain `"wharton": False` explicitly (or be in `NGOAI_LE_F1`). Demo scripts now comply; regenerating the kit changes PINs/lookup codes.
 - UI downloads via `blob:` + `<a download>` are silently blocked in pywebview (WebView2); Chromium tests allow them, so CI
   cannot catch it. Any file export must be written by Python (`_duong_xuat`, Downloads, no overwrite). No `blob:` left in js/.
 - `dk_pin_xuat_excel`: write failure → `_Loi("dk_xuat_tep_hong")` → rollback (old PINs kept); commit failure → file deleted.
@@ -60,3 +61,4 @@ template download blocked in the pywebview .exe; (c) bug fix: portal step 5 «Nh
 | Date | Model | What was done | Notes |
 |---|---|---|---|
 | 2026-11-28 | Opus | Demo kit; fix (b) PIN/template export; fix (c) step-5 race + inline missing box | Regression 481/483; 1 own regression fixed; Windows check pending |
+| 2026-11-28 | Opus | CI red (F1 rule) from demo scripts fixed; kit regenerated | Watch the CI run of this push |

@@ -295,7 +295,8 @@ def main(argv=None):
     db_k = ws.duong_dan_db(goc_ws, slug_k)
     ma_tra_cuu = tao_db_kiosk(db_k, xuat, so1, chinh)
     kq_k = kiem_kiosk(db_k, xuat, so2, ma_tra_cuu)
-    slug_d = ws.tao(goc_ws, TEN_WS_DANG_KY, None)
+    # Cổng đăng ký: tắt điểm quyết tâm tường minh (luật F1); «Chốt và xếp» tự bật luật cổng cần (`_dk_bao_dam_luat`).
+    slug_d = ws.tao(goc_ws, TEN_WS_DANG_KY, {"rules": {"wharton": False}})
     db_d = ws.duong_dan_db(goc_ws, slug_d)
     dk_hs, pins, diem_sau = tao_db_dang_ky(db_d, xuat)
     kq_d = kiem_dang_ky(db_d, xuat, dk_hs, pins)

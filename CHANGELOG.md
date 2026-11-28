@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-28 — Sửa CI đỏ do bộ demo: luật F1 (script trong `du_lieu_test/` phải ghi tường minh `"wharton": False`)
+
+- CI run 46114453369 đỏ ở `tests/test_a13_13_kiem_nhan.py::test_F1_script_do_tat_wharton_ro_rang` (Windows 7/9 và Linux 3/6, 1 test, 711+839 test còn lại xanh): `bo_demo_hackathon/tao_bo_demo.py`, `tao_excel_dang_ky.py` dựa vào mặc định.
+- `tao_excel_dang_ky.py`: CSDL tạm chỉ dùng cổng đăng ký → `update_workspace_config({"rules": {"wharton": False}})`. `tao_bo_demo.py`: workspace cổng đăng ký tạo với `{"rules": {"wharton": False}}` («Chốt và xếp» tự bật luật cổng cần); workspace kiosk giữ mặc định BẬT (demo điểm quyết tâm). Sinh lại bộ demo: `KIEM_CHUNG.json` không đổi; PIN và mã tra cứu MỚI (CSV khớp zip mới). Đã kiểm: cổng demo đăng nhập HS/GV, chốt và xếp tới «Xuất».
+
 ## 2026-11-28 — Sửa: bước 5 «Nhập điểm» của cổng đăng ký không dẫn tới «Xuất» (Truong báo; ngoài sổ 33 mục)
 
 - Lỗi (tái hiện được, ổn định trong test): ô điểm chỉ lưu khi rời ô (`change`); gõ điểm cuối rồi bấm ngay «Chốt và xếp» thì lệnh lưu điểm và `dk_chot_va_xep` chạy song song (pywebview và `browser_host` mỗi lời gọi một luồng) -> chốt thấy còn thiếu và báo «Còn 1 bài thi chưa có điểm.» dù đã gõ đủ.
