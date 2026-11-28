@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.join(_GOC, "du_lieu_test", "danh_gia"))
 sys.path.insert(0, os.path.join(_GOC, "du_lieu_test"))
 
 import do_danh_gia as dg  # noqa: E402
+import rbda_priority_pipeline as loi  # noqa: E402
 import _sinh as sinh  # noqa: E402
 
 TS = {"n_hs": 120, "n_clb": 10, "alpha": 0.5, "rho": 0.7, "kappa": 1.1}
@@ -115,3 +116,29 @@ def test_do_cau_hinh_chiu_duoc_nhom_vang_mat(monkeypatch):
     monkeypatch.setattr(dg, "chay_mot", gia)
     r = dg.do_cau_hinh(TS, [101, 102], [1, 2])
     assert "a.theo_nhom.tang.tang_2.n" in r["chi_so"] and r["chi_so"]["a.theo_nhom.tang.tang_2.n"]["tb"] is not None
+
+
+def test_bo_co_san_nhieu_buoi_khop_run_pipeline_that(tmp_path):
+    """Bộ nhiều buổi (bo_kich_tran, 3 buổi) chạy qua `chay_tuan` ra ĐÚNG từng dòng match_results của `run_pipeline` thật (seed 42)."""
+    import sqlite3
+    from api import PipelineAPI
+    from do_anh_huong_seed import nap_bo
+    files = next(b for b in dg.CO_SAN if b[0] == "bo_kich_tran")[2]
+    db = nap_bo(str(tmp_path), files)
+    assert PipelineAPI(db).run_pipeline(seed=42)["ok"]
+    c = sqlite3.connect(db)
+    thuc = {(s, b): cid for s, b, cid in c.execute("SELECT student_id, buoi, club_id FROM match_results")}
+    c.close()
+    st, clubs, sc, app, prefs, _ = loi.load_from_sqlite(db)
+    _tb, _hs, kt = dg.chay_tuan(st, clubs, sc, app, prefs, 42, {"du_tru": {s: "khong" for s in st}, "khoi": {s: "?" for s in st}})
+    mem = {(s, b): kt.per_buoi[b].assignment[s] for b in kt.ds_buoi for s in kt.per_buoi[b].assignment}
+    assert mem == thuc and len(thuc) == 150 * 3
+    assert all(_tb[b]["a.cap_chan"] == 0 for b in _tb)
+
+
+def test_chay_du_lieu_co_san_nhieu_buoi_co_theo_buoi_va_theo_hoc_sinh():
+    ten, loai, files = next(b for b in dg.CO_SAN if b[0] == "bo_can_bang")
+    r = dg.chay_du_lieu_co_san(ten, dg.nap_co_san(loai, files), [1, 2])
+    assert r["so_buoi"] == 6 and "chi_so" not in r and len(r["theo_buoi"]) == 6
+    assert all(v["a.cap_chan"]["tb"] == 0 for v in r["theo_buoi"].values())
+    assert 0 < r["theo_hoc_sinh"]["so_buoi_co_cho_tb"]["tb"] <= 6

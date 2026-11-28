@@ -165,11 +165,25 @@ def in_nhieu_buoi(d):
 
 def in_co_san(d):
     ra = ["### Bộ dữ liệu có sẵn (chạy nguyên trạng; tb ± sd qua các lần bốc thăm)", ""]
-    ra.append(bang(["Bộ", "HS", "CLB", "% NV1", "% top 3", "Chưa xếp", "Cận − xếp", "% lấp đầy", "Cặp phá vỡ"],
+    mot = [b for b in d["cac_bo"] if "chi_so" in b]
+    nhieu = [b for b in d["cac_bo"] if "theo_buoi" in b]
+    ra.append(bang(["Bộ (một buổi)", "HS", "CLB", "% NV1", "% top 3", "Chưa xếp", "Cận − xếp", "% lấp đầy", "Cặp phá vỡ"],
                    [(b["ten"], b["n_hs"], b["n_clb"]) + tuple("%s ± %s" % (so(b["chi_so"][k]["tb"], n), so(b["chi_so"][k]["sd_boc_tham"], 2))
                                                          for k, n in (("a.pct_nv1_tat_ca", 1), ("a.pct_top3_tat_ca", 1), ("b.n_chua_xep", 1),
                                                                       ("b.gia_uu_tien_on_dinh", 1), ("c.ty_le_lap_day", 1), ("a.cap_chan", 0)))
-                    for b in d["cac_bo"]]))
+                    for b in mot]))
+    if nhieu:
+        ra += ["", "**Bộ nhiều buổi** (chạy qua `run_rbda_nhieu_buoi`; mỗi dòng một buổi, mẫu số: mọi học sinh)", ""]
+        hang = []
+        for b in nhieu:
+            for buoi, v in sorted(b["theo_buoi"].items()):
+                hang.append((b["ten"], buoi, b["n_hs"]) + tuple("%s ± %s" % (so(v[k]["tb"], n), so(v[k]["sd_boc_tham"], 2))
+                                                                for k, n in (("a.pct_nv1_tat_ca", 1), ("a.pct_top3_tat_ca", 1), ("b.n_chua_xep", 1),
+                                                                             ("b.gia_uu_tien_on_dinh", 1), ("c.ty_le_lap_day", 1), ("a.cap_chan", 0))))
+        ra.append(bang(["Bộ", "Buổi", "HS", "% NV1", "% top 3", "Chưa xếp", "Cận − xếp", "% lấp đầy", "Cặp phá vỡ"], hang))
+        ra += ["", bang(["Bộ", "Số buổi", "Số buổi có chỗ / em (tb)", "% em đủ chỗ ở mọi buổi đã khai", "% em không có chỗ buổi nào"],
+                        [(b["ten"], b["so_buoi"], so(b["theo_hoc_sinh"]["so_buoi_co_cho_tb"]["tb"], 2), so(b["theo_hoc_sinh"]["pct_du_moi_buoi_da_khai"]["tb"], 1),
+                          so(b["theo_hoc_sinh"]["pct_khong_co_cho_nao"]["tb"], 1)) for b in nhieu])]
     ra += ["", goc(d)]
     return "\n".join(ra)
 

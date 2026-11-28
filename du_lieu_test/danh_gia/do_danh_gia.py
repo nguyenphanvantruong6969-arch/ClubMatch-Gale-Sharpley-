@@ -489,36 +489,39 @@ def phan_thoi_gian(cfg):
     return {"cac_quy_mo": ra, "ghi_chu": "Thời gian CPU tường (perf_counter), máy ghi ở lan_chay.may; median của 3 lần."}
 
 
+def chay_tuan(st, clubs, sc, app, prefs, sbt, nhom):
+    """Một lần chạy NHIỀU BUỔI qua `run_rbda_nhieu_buoi` (đúng hàm `run_pipeline` gọi). Trả ({buổi: chỉ số phẳng}, chỉ số theo học sinh)."""
+    elig = loi.default_reserve_eligible_fn(st, clubs)
+    stb = loi.generate_stb_lottery(sorted(st), sbt)
+    kt = loi.run_rbda_nhieu_buoi(st, clubs, sc, app, prefs, stb, elig, seed=sbt)
+    pha_vo = loi.verify_stability_tuan(kt, clubs, prefs, elig)
+    theo_b, xep_b, nv_b = {}, {}, {}
+    for b in kt.ds_buoi:
+        cb, sb, ab, pb = loi.cat_du_lieu_theo_buoi(b, loi.nhom_theo_buoi(clubs)[b], clubs, sc, app, prefs)
+        kq = kt.per_buoi[b]
+        ci = cs.tinh_chi_so(st, cb, pb, ab, sb, kq.assignment, kq.matched_tier, elig, nhom=nhom, cap_chan=len(pha_vo[b]))
+        theo_b[b] = lam_phang(ci)
+        xep_b[b] = dict(kq.assignment)
+        nv_b[b] = pb
+    return theo_b, cs.tong_hop_theo_hoc_sinh(xep_b, nv_b), kt
+
+
+def tb_tuan(lan):
+    """Trung bình trên các lần chạy: {buổi: {khoá: tb}}, {khoá theo học sinh: tb}."""
+    buoi = sorted(lan[0][0])
+    return ({b: {k: tb_co([x[0][b].get(k) for x in lan]) for k in hop_khoa([x[0][b] for x in lan])} for b in buoi},
+            {k: tb_co([x[1].get(k) for x in lan]) for k in lan[0][1]})
+
+
 def phan_nhieu_buoi(cfg):
     ts = {"n_hs": cfg["mac_dinh"]["n_hs"], "n_clb": cfg["mac_dinh"]["n_clb"], "alpha": 0.5, "rho": 0.7, "kappa": 1.1}
     theo_truong = []
     for sdl in cfg["seed_dl"]:
         truong = sinh.sinh_truong(seed=sdl, so_buoi=3, **ts)
-        st, clubs = truong["students"], truong["clubs"]
-        sc, app, prefs = truong["tested_scores"], truong["applicants"], truong["preferences"]
-        elig = loi.default_reserve_eligible_fn(st, clubs)
-        lan = []
-        for sbt in cfg["seed_bt"]:
-            stb = loi.generate_stb_lottery(sorted(st), sbt)
-            kt = loi.run_rbda_nhieu_buoi(st, clubs, sc, app, prefs, stb, elig, seed=sbt)
-            pha_vo = loi.verify_stability_tuan(kt, clubs, prefs, elig)
-            theo_b = {}
-            xep_b, nv_b = {}, {}
-            for b in kt.ds_buoi:
-                cb, sb, ab, pb = loi.cat_du_lieu_theo_buoi(b, loi.nhom_theo_buoi(clubs)[b], clubs, sc, app, prefs)
-                kq = kt.per_buoi[b]
-                ci = cs.tinh_chi_so(st, cb, pb, ab, sb, kq.assignment, kq.matched_tier, elig,
-                                    nhom=_nhom(truong), cap_chan=len(pha_vo[b]))
-                theo_b[b] = lam_phang(ci)
-                xep_b[b] = dict(kq.assignment)
-                nv_b[b] = pb
-            tong = cs.tong_hop_theo_hoc_sinh(xep_b, nv_b)
-            lan.append({"theo_buoi": theo_b, "theo_hoc_sinh": tong})
-        buoi = sorted(lan[0]["theo_buoi"])
-        row = {"seed_du_lieu": sdl,
-               "theo_buoi": {b: {k: tb_co([x["theo_buoi"][b].get(k) for x in lan]) for k in hop_khoa([x["theo_buoi"][b] for x in lan])} for b in buoi},
-               "theo_hoc_sinh": {k: sum(x["theo_hoc_sinh"][k] for x in lan) / len(lan) for k in lan[0]["theo_hoc_sinh"]}}
-        theo_truong.append(row)
+        lan = [chay_tuan(truong["students"], truong["clubs"], truong["tested_scores"], truong["applicants"], truong["preferences"], sbt, _nhom(truong))
+               for sbt in cfg["seed_bt"]]
+        tb_b, tb_hs = tb_tuan(lan)
+        theo_truong.append({"seed_du_lieu": sdl, "theo_buoi": tb_b, "theo_hoc_sinh": tb_hs})
         print("  nhieu_buoi seed_dl=%d xong" % sdl, flush=True)
     buoi = sorted(theo_truong[0]["theo_buoi"])
     return {"tham_so": dict(ts, so_buoi=3), "seed_du_lieu": cfg["seed_dl"], "seed_boc_tham": cfg["seed_bt"],
@@ -557,6 +560,19 @@ def chay_du_lieu_co_san(ten, du_lieu, seeds_bt):
     elig = loi.default_reserve_eligible_fn(students, clubs)
     khoi = {s: "?" for s in students}
     nhom = {"du_tru": {s: (v["reserve_group"] or "khong") for s, v in students.items()}, "khoi": khoi}
+    so_buoi = len(loi.nhom_theo_buoi(clubs))
+    base = {"ten": ten, "n_hs": len(students), "n_clb": len(clubs), "so_buoi": so_buoi, "seed_boc_tham": list(seeds_bt)}
+    if so_buoi > 1:
+        # Dữ liệu nhiều buổi: PHẢI qua `run_rbda_nhieu_buoi` (mỗi em một chỗ MỖI buổi), như `run_pipeline`; chạy một buổi gộp là sai.
+        lan = [chay_tuan(students, clubs, sc, app, prefs, sbt, nhom)[:2] for sbt in seeds_bt]
+        tb_b, tb_hs = tb_tuan(lan)
+        sd_b = {b: {k: sd_co([x[0][b].get(k) for x in lan]) for k in tb_b[b]} for b in tb_b}
+        base.update({
+            "theo_buoi": {b: {k: {"tb": None if v is None else round(v, 4), "sd_boc_tham": round(sd_b[b][k], 4)} for k, v in tb_b[b].items()} for b in tb_b},
+            "theo_hoc_sinh": {k: {"tb": None if v is None else round(v, 4), "sd_boc_tham": round(sd_co([x[1].get(k) for x in lan]), 4)} for k, v in tb_hs.items()},
+            "ghi_chu": "Dữ liệu nhiều buổi: chạy qua run_rbda_nhieu_buoi, chỉ số tính riêng từng buổi (mẫu số: mọi học sinh) và theo học sinh. "
+                       "Một bộ dữ liệu cố định: chỉ có phương sai do bốc thăm."})
+        return base
     lan = []
     for sbt in seeds_bt:
         stb = loi.generate_stb_lottery(sorted(students), sbt)
@@ -566,11 +582,12 @@ def chay_du_lieu_co_san(ten, du_lieu, seeds_bt):
         ci["vong"] = kq.rounds_run
         lan.append((sbt, ci))
     phang = [lam_phang(ci) for _s, ci in lan]
-    return {"ten": ten, "n_hs": len(students), "n_clb": len(clubs), "seed_boc_tham": list(seeds_bt),
-            "chi_so": {k: {"tb": None if tb_co([p.get(k) for p in phang]) is None else round(tb_co([p.get(k) for p in phang]), 4),
-                           "sd_boc_tham": round(sd_co([p.get(k) for p in phang]), 4)}
-                       for k in hop_khoa(phang)},
-            "theo_clb_lan_dau": lan[0][1]["c"]["theo_clb"], "ghi_chu": "Một bộ dữ liệu cố định: chỉ có phương sai do bốc thăm (không có KTC giữa các trường)."}
+    base.update({
+        "chi_so": {k: {"tb": None if tb_co([p.get(k) for p in phang]) is None else round(tb_co([p.get(k) for p in phang]), 4),
+                       "sd_boc_tham": round(sd_co([p.get(k) for p in phang]), 4)}
+                   for k in hop_khoa(phang)},
+        "theo_clb_lan_dau": lan[0][1]["c"]["theo_clb"], "ghi_chu": "Một bộ dữ liệu cố định: chỉ có phương sai do bốc thăm (không có KTC giữa các trường)."})
+    return base
 
 
 def phan_co_san(cfg):
