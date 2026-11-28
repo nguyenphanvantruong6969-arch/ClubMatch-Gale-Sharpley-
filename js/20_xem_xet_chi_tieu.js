@@ -10,7 +10,7 @@
 "use strict";
 
 const CT1_BUOC_HIEN = 6;      /* số bước hiện sẵn khi có ≤ 6 bước; nhiều hơn thì hiện 5 bước + "Xem thêm bước" (đủ 7 điều khiển) */
-const CT1_O_TOI_DA = 300;      /* số ô vuông "chưa có CLB" vẽ tối đa; phần còn lại ghi "+N" bằng chữ */
+const CT1_O_TOI_DA = 64;       /* số ô vuông "chưa có CLB" vẽ tối đa (8 × 8); phần còn lại ghi "+N" bằng chữ, ngoài lưới */
 const CT1_DONG_TOI_DA = 30;   /* số dòng tối đa của danh sách "tự thử" trên màn hình (CSV có đủ) */
 
 let ct1Luot = false;          /* trường có > 1 buổi: mọi số đếm là LƯỢT (học sinh × buổi), nên dùng chuỗi `<khoá>_luot` */
@@ -187,12 +187,11 @@ function ct1VeO(d) {
   sapXep.slice(0, CT1_O_TOI_DA).forEach((b) => {
     luoi.append(ux1aEl("div", { class: "ct1-vuong " + (b === null ? "la-chua" : "la-xep"), text: b === null ? "" : "B" + b }));
   });
-  if (sapXep.length > CT1_O_TOI_DA) {      /* nhiều hơn mức vẽ: chữ "+N" thay cho phần còn lại (không vẽ hàng nghìn ô) */
-    luoi.append(ux1aEl("span", { class: "ct1-thanh-chu", text: t("ct1_b_o_con_lai", { n: sapXep.length - CT1_O_TOI_DA }) }));
-  }
   hop.append(
     ux1aEl("span", { class: "ct1-hinh-tde", text: t("ct1_b_chua_co_tde", { a: d.truoc.chua_co, b: d.sau.chua_co }) }),
     luoi,
+    ...(sapXep.length > CT1_O_TOI_DA    /* nhiều hơn mức vẽ: chữ "+N" NGOÀI lưới (không vẽ hàng nghìn ô) */
+      ? [ux1aEl("span", { class: "ct1-thanh-chu ct1-o-con-lai", text: ct1T("ct1_b_o_con_lai", { n: sapXep.length - CT1_O_TOI_DA }) })] : []),
     ux1aEl("span", { class: "ct1-thanh-chu", text: ct1T("ct1_b_o_chu_thich") }));
   return hop;
 }
@@ -224,10 +223,10 @@ function ct1VeMotBuoc(b, coBuoi) {
       so(t("ct1_b_cot_nv1"), b.nv1_sau, b.nv1_them, true),
       so(t("ct1_b_cot_chua_co"), b.chua_co_sau, b.chua_co_doi, false),
       ux1aEl("div", { class: "ct1-cot" }, ux1aEl("span", { class: "ct1-cot-nhan", text: t("ct1_b_cot_buoc") }),
-        ux1aEl("span", { class: "ct1-cot-chu", text: ct1T("ct1_b_len_xuong", { u: b.so_len, d: b.so_xuong }) })));
+        ux1aEl("span", { class: "ct1-cot-chu", text: t("ct1_b_len_xuong", { u: b.so_len, d: b.so_xuong }) })));
     if (b.so_xuong > 0) {
       trai.append(ux1aEl("p", { class: "ct1-luu-y", id: "ct1LuuY" + b.stt,
-        text: b.so_mat_cho > 0 ? ct1T("ct1_b_luu_y_mat", { d: b.so_xuong, x: b.so_mat_cho }) : ct1T("ct1_b_luu_y", { d: b.so_xuong }) }));
+        text: b.so_mat_cho > 0 ? t("ct1_b_luu_y_mat", { d: b.so_xuong, x: b.so_mat_cho }) : t("ct1_b_luu_y", { d: b.so_xuong }) }));
     }
   }
   const doiMuc = b.co_ket_qua && b.so_doi > 0
@@ -372,14 +371,14 @@ function ct1VeBang(d) {
   const bang = el("ct1BangTab");
   const dau = bang.querySelector("thead");
   dau.textContent = "";
-  dau.append(ux1aEl("tr", {}, ...[["ct1_bang_clb", ""], ["ct1_bang_cho", "so"], ["ct1_bang_nv1", "so"], ["ct1_bang_chua", "so"],
-    ["ct1_bang_trong", "so"], ["ct1_bang_de_xuat", ""]].map(([k, c]) => ux1aEl("th", { scope: "col", class: c, text: t(k) }))));
+  dau.append(ux1aEl("tr", {}, ...[["ct1_bang_clb", ""], ["ct1_bang_cho", "so"], ["ct1_bang_nv1", "so ct1-phu"], ["ct1_bang_chua", "so ct1-phu"],
+    ["ct1_bang_trong", "so ct1-phu"], ["ct1_bang_de_xuat", ""]].map(([k, c]) => ux1aEl("th", { scope: "col", class: c, text: t(k) }))));
   const than = bang.querySelector("tbody");
   than.textContent = "";
   d.clb.filter((c) => !c.loai_tru).forEach((c) => {
     const the = c.doi !== 0 ? c.cap_moi + " (" + ct1Dau(c.doi) + ")" : c.cap_moi + " (" + t("ct1_bang_giu") + ")";
     than.append(ux1aEl("tr", {}, ux1aEl("td", { class: "ct1-ten", text: c.ten }),
-      ...[c.cap, c.nv1, c.chua_dap, c.trong].map((v) => ux1aEl("td", { class: "so", text: String(v) })),
+      ...[c.cap, c.nv1, c.chua_dap, c.trong].map((v, i) => ux1aEl("td", { class: i === 0 ? "so" : "so ct1-phu", text: String(v) })),
       ux1aEl("td", {}, ux1aEl("span", { class: "ct1-tag " + (c.doi > 0 ? "la-tang" : c.doi < 0 ? "la-giam" : "la-giu"), text: the }))));
   });
 }

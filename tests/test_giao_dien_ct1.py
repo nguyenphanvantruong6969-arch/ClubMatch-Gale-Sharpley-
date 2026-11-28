@@ -185,6 +185,10 @@ def test_khong_tran_ngang_o_390px(mo_ux5a):  # noqa: F811
     assert r[0] <= r[1] + 1, r
     for k in KHUNG:
         assert page.locator(k).is_visible(), k
+    # CT1-FIX2: cột "Đề xuất" (cả mục đích của bảng) phải nằm trọn trong màn 390 px, ba cột phụ được ẩn
+    o = page.locator("#ct1BangTab thead th").last.bounding_box()
+    assert o["x"] >= 0 and o["x"] + o["width"] <= 390 + 1, o
+    assert page.locator("#ct1BangTab thead th.ct1-phu").first.is_hidden()
     assert not loi, loi
 
 
@@ -238,6 +242,13 @@ def test_nhieu_buoi_dung_don_vi_luot_o_vuong_bi_chan_va_canh_bao_kem_hon(mo_ux5a
     assert cb.is_visible() and cb.inner_text().startswith("Lưu ý") and "9 lượt" in cb.inner_text()
     assert cb.evaluate("e => e.tagName") == "P"                  # chữ cảnh báo, không phải nút
     assert dem(page, "#ct1Buoc") == dem(page, "#ct1Buoc")        # không thêm điều khiển nào
-    assert page.locator(".ct1-vuong").count() == 300             # chặn số ô vẽ
-    assert "ô xám nữa" in page.locator("#ct1BuocHinh").inner_text()
+    assert page.locator(".ct1-vuong").count() == 64              # chặn số ô vẽ (8 × 8)
+    assert page.locator(".ct1-o-vuong .ct1-o-con-lai").count() == 0   # chữ "+N" nằm NGOÀI lưới ô, không bị ép vào một ô
+    con = page.locator(".ct1-o-con-lai")
+    assert con.count() == 1 and "lượt nữa không vẽ ở đây" in con.inner_text()
+    assert page.locator(".ct1-o-vuong").evaluate("e => e.getBoundingClientRect().height") < 400   # không còn cột cao cả màn
+    # mỗi thẻ bước dùng MỘT đơn vị: số bước 1 = số em của nút "Xem ... (k)" (một bước chỉ đổi trong một buổi)
+    b1 = d["buoc"][0]
+    assert "lượt" not in page.locator("#ct1Buoc1").inner_text().split("Vào")[0]
+    assert "(%d)" % b1["so_doi"] in page.locator("#ct1Buoc1").inner_text()
     assert dem(page, "#ct1Buoc") and not loi, loi
