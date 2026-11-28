@@ -257,7 +257,7 @@
       const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;    // tệp đã được Python ghi (sửa 2026-11-28)
       DK.thongBao("Đã lưu " + QT2.tenTep(r.data.path) + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên) vào thư mục: " + r.data.dir + ". PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
     return h("section#dkPhieuPin.dk-khung", {}, h("h3", {}, "Phiếu PIN"),
-      h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi tải tệp Excel có PIN mới để in và phát."),
+      h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi lưu tệp Excel có PIN mới vào thư mục Tải xuống để in và phát."),
       h("label.dk-truong", {}, h("span", {}, "Phạm vi"), pv), lop, nut);
   };
 
