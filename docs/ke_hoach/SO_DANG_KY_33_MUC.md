@@ -54,6 +54,7 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 | DK8 | Giao diện cổng đăng ký giống bản mẫu v8: thanh trên dính, thẻ vai trò, đăng nhập thẻ hẹp, màn quản trị thanh thẻ + thẻ giai đoạn, giáo viên/học sinh dạng thẻ; L5 phản hồi tích cực (nút đang lưu/xong/lỗi, dấu hợp lệ theo định dạng) (thêm 26/11/2026) | Sửa mã (chỉ giao diện cổng) · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DK9 | Nạp Excel cho cổng đăng ký: MỘT tệp .xlsx (ba trang Học sinh, Giáo viên, Phòng) nạp danh sách qua các hàm có sẵn; tệp mẫu, xem trước chỉ đọc, dòng lỗi kèm số dòng, nạp lại giữ PIN; khối «Nạp từ Excel» ở thẻ Cài đặt (thêm 26/11/2026) | Sửa mã (backend `api_dang_ky_excel.py` + giao diện cổng) · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 | DKL | Đóng khoảng cách cổng đăng ký thật với bản mẫu v8: nhập điểm, phiếu PIN, đóng sớm/gia hạn, sửa/xoá CLB, cài đặt, xem trước/phiên bản xuất, sao lưu (thêm 25/11/2026) | Sửa mã · L | – | – | – | – | – | – | – | – | – | – | – | – | – |
+| TK1 | Gỡ "slop" giao diện kiosk: token chữ/khoảng cách/chiều cao, một hệ nút + ô nhập, một thành phần tab, thanh cảnh báo cố định (thêm 28/11/2026) | Sửa · M | – | – | – | – | – | – | – | – | – | – | – | – | – |
 
 ## Nhóm Z — Lõi chung — mọi ngành đều cần, làm trước
 
@@ -833,3 +834,12 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** thấp; không đụng thuật toán xếp hay bộ số bốc thăm. Số đo là DỮ LIỆU MÔ PHỎNG.
 - **Kiểm nhận:** tests/test_ct1_khuyen_nghi.py, test_ct1_api.py, test_ct1_ca_kiem_tay.py (ba ca tính tay × 5 seed), test_giao_dien_ct1.py; số hồi quy trên SO_NHAP_TEST.xlsx (NV1 64→74, chưa có CLB 12→8, 15 em tốt hơn / 0 kém hơn).
 - **Phụ thuộc:** không · **Ngành:** áp dụng cho mọi ngành có chỉ tiêu (O).
+
+## TK1 — Gỡ "slop" giao diện kiosk (thêm 28/11/2026)
+- **Trạng thái:** làm trên nhánh `claude/tk1-deslop-giao-dien`, kế hoạch `docs/phien/claude__tk1-deslop-giao-dien.md`, giao thức `docs/phien/TK1_GIAO_THUC.md`, bản soát `docs/ke_hoach/TK1_DESLOP_GIAO_DIEN.md`.
+- **Mức / quy mô:** Sửa / M
+- **Tệp:** style.css (không đụng `.dk-*`), index.html, js/*.js, i18n.js (vi + en), tests/test_tk1_on_dinh.py
+- **Thay đổi:** chỉ giao diện kiosk: thang chữ / khoảng cách / chiều cao điều khiển 36·44 / bo góc / bóng / thời lượng; một hệ nút + ô nhập + select; một thành phần tab giữ chỗ chữ đậm; thanh cảnh báo chiều cao cố định; `scrollbar-gutter: stable`.
+- **Rủi ro:** thấp; không đụng backend, thuật toán, CSV, schema; cổng đăng ký giữ nguyên hình.
+- **Kiểm nhận:** tests/test_tk1_on_dinh.py (số cỡ chữ ≤ 8, `h1` cùng tọa độ trái ở mọi thẻ, nút cùng hàng cùng cao, bề rộng tab không đổi khi chọn / đổi vi↔en).
+- **Phụ thuộc:** không · **Ngành:** không áp dụng (giao diện dùng chung).

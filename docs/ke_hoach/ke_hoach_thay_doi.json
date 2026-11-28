@@ -2606,6 +2606,19 @@
    "kiem_nhan": "tests/test_giao_dien_vg3.py xanh; các test giao diện dk* liên quan xanh.",
    "phu_thuoc": [],
    "ap_dung": {}
+  },
+  {
+   "id": "TK1",
+   "nhom": "Phụ lục thêm 28/11/2026",
+   "pham_vi": "kiosk_giao_dien",
+   "ten": "Gỡ \"slop\" giao diện kiosk: token, một hệ nút/ô nhập, một thành phần tab, thanh cảnh báo cố định",
+   "tep": "style.css, index.html, js/*.js, i18n.js, tests/test_tk1_on_dinh.py",
+   "muc": "Sửa",
+   "quy_mo": "M",
+   "rui_ro": "Thấp; chỉ trình bày giao diện kiosk, không đụng backend, thuật toán, CSV, schema hay .dk-*.",
+   "kiem_nhan": "tests/test_tk1_on_dinh.py xanh (cỡ chữ ≤ 8, h1 cùng tọa độ trái, nút cùng hàng cùng cao, tab không đổi bề rộng).",
+   "phu_thuoc": [],
+   "ap_dung": {}
   }
  ],
  "so_do": {

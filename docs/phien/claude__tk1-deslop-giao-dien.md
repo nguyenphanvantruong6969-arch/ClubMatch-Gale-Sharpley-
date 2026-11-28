@@ -7,7 +7,7 @@ CSV or schema change (invariants 1–8 untouched by construction). Audit + numbe
 Out of scope: registration portal `dang_ky.html` (VG3 just redesigned it).
 
 ## Plan (written by Opus; ticked by Sonnet)
-- [ ] L0 Register TK1 in `docs/ke_hoach/SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` (one row, sectors "–").
+- [x] L0 Register TK1 in `docs/ke_hoach/SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json` (one row, sectors "–").
 - [ ] L1 (must) Tokens on `:root`: type scale (12/13/14/16/20/28 px as rem), space scale (4·8·12·16·24·32·48),
       `--control-h-sm: 36px`, `--control-h: 44px`, radius 6/10/pill, 2 shadows, 2 durations. Replace literals.
       `html { scrollbar-gutter: stable; }`. Red test first: distinct font-size count ≤ 8; h1 `left` equal on all tabs.
