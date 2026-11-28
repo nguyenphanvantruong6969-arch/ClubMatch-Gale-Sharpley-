@@ -1,0 +1,24 @@
+# DỮ LIỆU MÔ PHỎNG — CHỈ DÙNG DEMO
+# Điểm thi của các em CHƯA NỘP (DK051–DK060), nếu em nộp đúng như dữ liệu sinh sẵn.
+# Bước Nhập điểm: chọn CLB, dán các dòng «mã<TAB>điểm» bên dưới tên CLB đó.
+
+[CLB Robotics]
+DK051	7.0
+DK052	6.1
+DK053	6.3
+DK054	9.7
+DK055	4.1
+DK057	9.0
+DK058	3.9
+DK059	5.4
+DK060	3.5
+
+[CLB Tin học]
+DK051	3.1
+DK052	6.5
+DK053	5.8
+DK054	3.4
+DK055	7.2
+DK056	7.5
+DK057	8.7
+DK058	5.8

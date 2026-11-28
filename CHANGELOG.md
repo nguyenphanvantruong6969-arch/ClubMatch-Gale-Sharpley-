@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-28 — Bộ demo hackathon (dữ liệu thử, ngoài sổ đăng ký 33 mục; Truong yêu cầu)
+
+- `du_lieu_test/bo_demo_hackathon/` (mới, DỮ LIỆU MÔ PHỎNG): `tao_bo_demo.py` sinh hai workspace `.zip` nạp sẵn (`demo-truong-thpt-mo-phong`: 240 em · 12 CLB · 3 buổi · lớp · suất ưu tiên · thi tuyển · điểm quyết tâm · mã tra cứu · 3 tài khoản GT3; `demo-cong-dang-ky`: cổng DK ở giai đoạn học sinh đăng ký, 4 GV, 8 CLB đã duyệt, 60 em/50 đã nộp), sổ 240 em + sổ 6 em đến muộn, `TAI_KHOAN_DEMO.csv` (mọi mật khẩu/PIN demo), `MA_TRA_CUU_DEMO.csv`, `DIEM_DAN_CONG_DANG_KY.txt`, `KIEM_CHUNG.json`, `README.md` (kịch bản demo theo tính năng).
+- Dựng chỉ qua API công khai; tự kiểm bằng phần mềm thật trên bản sao (nạp 0 cảnh báo, sức khoẻ chỉ `health_oversubscribed_buoi`, đăng nhập sai/đúng, giáo viên bị chặn chạy, đến muộn giữ thứ tự bốc thăm của em cũ, xuất Excel/PDF, tra cứu + khoá, khoá PIN DK). Không đổi mã sản phẩm, schema, CSV hay thuật toán; không thêm test.
+
 ## 2026-11-28 — CT1-FIX5 (sửa 6 test đỏ của bộ đầy đủ trên CI, run 46102624745)
 
 - `tests/test_gt4_nhat_ky_doc.py` (vi, en): thiếu nhãn nhật ký cho hai hàm xuất mới → thêm `nkhd_export_de_xuat_chi_tieu_csv`, `nkhd_export_xem_xet_chi_tieu_csv` (vi + en) trong `i18n.js`.
