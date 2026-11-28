@@ -3873,7 +3873,7 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 .ct1-hinh-tde { font-size: 0.875rem; font-weight: 600; }
 .ct1-thanh { display: flex; height: 34px; border-radius: 6px; overflow: hidden; background: var(--paper-hover); }
 .ct1-doan { box-sizing: border-box; min-width: 3px; border-left: 2px solid var(--paper-raised); }
-.ct1-doan.la-goc { background: var(--chart-khong-nhan); border-left: 0; color: #fff; font-size: 0.8125rem; font-weight: 600; display: flex; align-items: center; padding-left: 10px; white-space: nowrap; overflow: hidden; }
+.ct1-doan.la-goc { background: var(--chart-khong-nhan); border-left: 0; color: #111418; font-size: 0.8125rem; font-weight: 600; display: flex; align-items: center; padding-left: 10px; white-space: nowrap; overflow: hidden; }
 .ct1-doan.la-tang { background: var(--chart-general); }
 .ct1-doan.la-giam { background: var(--gold); }
 .ct1-doan.la-giu { background: var(--chart-khong-nhan); }

@@ -81,21 +81,17 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
   `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
 
 ## Current state (overwrite each handoff)
-- L1–L4 all done and pushed (HEAD at handoff = latest commit on this branch). Plan ticked. `kiem_nhanh` 7/7, ruff clean, CT1 + related tests green locally.
-- soat-ma run (report only): `docs/ke_hoach/BAO_CAO_SOAT_MA_CT1.md`. Findings NOT fixed (see "Needs Truong").
-- CI: "Tests (rbda-kiosk)" was running for the last push; result NOT yet seen. A one-shot reminder (send_later ~02:40 UTC) was set in the old session.
+- L1–L4 done and pushed. CT1-FIX done (soat-ma findings 1, 2, 3b, 4, 5 fixed; see CHANGELOG). Finding 3: option (b) chosen by the
+  report's recommendation; Truong may veto → (a) delete `#ct1KemNhieuHon`, (c) new item. kiem_nhanh, ruff, CT1 tests green locally.
+- CI on the latest push: NOT yet seen. Do not write `Status: DONE` until "Tests (rbda-kiosk)" is green.
 
 ## Next steps (in order)
-0. FIRST: `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu`; `git log --oneline -3` must show the handoff commit. This file is NOT on `main`; a session started from `main` will not see it and may wrongly restart at L1. L1–L4 are DONE, never redo them.
-1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → write `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines, 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › Báo cáo và phiếu in › Xem xét chỉ tiêu CLB). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix, push.
-2. Do NOT fix the soat-ma findings unless Truong says so (report-only rule). Findings 1–2 are small fixes; finding 3 needs his decision.
-3. Merge, never rebase (`git fetch origin main && git merge --no-edit FETCH_HEAD`).
+0. FIRST `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu` (this file is not on `main`). L1–L4 and CT1-FIX are DONE, never redo.
+1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines; 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › Báo cáo và phiếu in › Xem xét chỉ tiêu CLB). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix.
+2. Merge, never rebase. Python Chromium tests need `pip install playwright` in a fresh container (browser already in /opt/pw-browsers).
 
-## Needs Truong (soat-ma findings, not fixed because soat-ma is report-only)
-1. Multi-session data: counts are (student × session) but labelled "học sinh" (800HS set: 2836 vs 800). Proposed fix: relabel/count per student.
-2. `o_chua_co` counts student-sessions without preferences (2280 squares vs 1916). Proposed fix: filter by `prefs`, cap squares.
-3. Decision: on the 800HS set the recommended steps give 21 better / 23 worse. Options: (a) keep, (b) add a line when worse > better (recommended), (c) separate research item.
-4. Minor: contrast of "Hiện tại" label (~3.2:1); add a test case the ±1 rebalance cannot mask.
+## Needs Truong
+1. ~~Multi-session units~~ FIXED (CT1-FIX). 2. ~~o_chua_co~~ FIXED. 3. Chose (b) warning line; confirm or veto. 4. ~~contrast / ±1 test~~ FIXED.
 - Deviations: >6 steps shows 5 + "Xem thêm bước" (keeps panel ≤7 controls); Tiêu chí link uses `ux1aMoNangCao()` (GT2 now lives in Quản lý › Cách xếp, not "Chi tiết").
 - Gotchas learnt: repo lint (`kiem_nhanh` chu_cam) forbids the words "em"/"you" in visible strings → use `{person_l}`/`{slot_l}`; wharton default is ON so tests set `{"wharton": False}`; `o_chua_co` = step from which a student stably has a club (app gives [1,2,3,4], mockup's [1,3,4,4] was illustrative).
 

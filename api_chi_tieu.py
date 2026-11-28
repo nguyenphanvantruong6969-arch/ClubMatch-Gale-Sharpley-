@@ -8,7 +8,7 @@ KHÔNG ghi gì: không `match_results`, `run_history`, `stb_lock`, không đổi
 không tạo tệp ngoài hai hàm xuất. Không dùng `fa_daa.goi_y_chi_tieu`. Bất biến 1–5 không bị chạm: đường giải là
 `_giai_trong_bo_nho` y như chạy thử (GT2) và ước tính mục tiêu (MT1).
 
-Hợp đồng: `{ok, data, errors}`. `data`: tong_cho, so_hoc_sinh, che_do ("de_xuat" | "tu_chon"), clb[], khuyen_nghi, buoc[],
+Hợp đồng: `{ok, data, errors}`. `data`: tong_cho, so_hoc_sinh, so_buoi (số buổi có nguyện vọng; > 1 thì các số đếm là LƯỢT = học sinh × buổi), che_do ("de_xuat" | "tu_chon"), clb[], khuyen_nghi, buoc[],
 truoc, sau, so_tot_hon, so_kem_hon, o_chua_co, canh_bao[], loi_giai (None | danh sách lỗi: lý do không có kết quả từng bước).
 """
 
@@ -151,7 +151,7 @@ class ChiTieuMixin:
 
             tong_cho = sum(v["cap"] for v in clubs.values() if not v["loai_tru"])
             return {
-                "tong_cho": tong_cho, "so_hoc_sinh": len(hs), "che_do": che_do,
+                "tong_cho": tong_cho, "so_hoc_sinh": len(hs), "so_buoi": len({b for _s, b in prefs}) or 1, "che_do": che_do,
                 "clb": [{"club_id": c, "ten": clubs[c]["ten"], "buoi": clubs[c]["buoi"], "cap": cap0[c],
                          "cap_moi": cap_moi[c], "doi": cap_moi[c] - cap0[c], "nv1": chi_so[c]["nv1"],
                          "chua_dap": chi_so[c]["chua_dap"], "da_nhan": chi_so[c]["da_nhan"],
@@ -226,7 +226,7 @@ class ChiTieuMixin:
                 "so_doi": len(doi), "doi": doi})
             ra.append(mo)
             gan_truoc, hang_truoc, tk_truoc = gan, hang, tk
-        o = [xep_o_buoc.get(k) for k in sorted(k for k, c in gan0.items() if c is None)]
+        o = [xep_o_buoc.get(k) for k in sorted(k for k, c in gan0.items() if c is None and k in prefs)]   # chỉ lượt CÓ nguyện vọng
         mat = sum(1 for k, c in gan0.items() if c is not None and gan_truoc.get(k) is None)
         return {"buoc": ra, "truoc": truoc, "sau": tk_truoc, "hang": hang_truoc, "hang0": hang0, "o": o,
                 "moi_mat_cho": mat}, None

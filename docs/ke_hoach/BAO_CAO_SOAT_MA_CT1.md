@@ -1,4 +1,6 @@
-# Báo cáo soát mã CT1 (Xem xét chỉ tiêu) — chỉ báo cáo, chưa sửa
+# Báo cáo soát mã CT1 (Xem xét chỉ tiêu)
+
+> **Cập nhật 2026-11-28 (CT1-FIX):** phát hiện 1, 2, 3 (phương án b), 4, 5 ĐÃ SỬA, xem `CHANGELOG.md`. Phát hiện 3 chọn (b) vì đó là đề xuất của báo cáo; Truong có thể đổi sang (a) hoặc (c). Phát hiện 6 giữ nguyên. Bảng dưới là bản gốc lúc soát.
 
 Nhánh `claude/ct1-xem-xet-chi-tieu`, so với `main`. Dữ liệu thử là DỮ LIỆU MÔ PHỎNG. Soát bằng `soat-ma` (không subagent).
 
@@ -59,7 +61,7 @@ Tầng 4: **Đạt**, kèm phát hiện 5.
 - Ba ca kiểm tay trên 8 học sinh giống hệt ở 5 seed; số hồi quy trên bộ TEST khớp kế hoạch (64→74, 12→8, 15/0).
 - Danh sách em đổi chỗ dùng cùng hàm GT2, nên hai màn không thể nói khác nhau.
 
-## Danh sách sửa (chờ Truong duyệt; trạng thái: Đề xuất)
+## Danh sách sửa (chờ Truong duyệt; trạng thái: **Đã sửa** ở CT1-FIX, riêng mục 3 chọn (b) chờ Truong xác nhận)
 1. Đơn vị "học sinh" khi nhiều buổi (phát hiện 1).
 2. Ô "chưa có CLB" chỉ tính lượt có nguyện vọng và chặn số ô (phát hiện 2).
 3. Câu hỏi cần Truong quyết (phát hiện 3): (a) giữ, (b) thêm dòng cảnh báo khi kém hơn > tốt hơn — **em đề xuất (b)**, (c) mục nghiên cứu riêng.

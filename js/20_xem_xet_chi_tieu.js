@@ -10,7 +10,18 @@
 "use strict";
 
 const CT1_BUOC_HIEN = 6;      /* số bước hiện sẵn khi có ≤ 6 bước; nhiều hơn thì hiện 5 bước + "Xem thêm bước" (đủ 7 điều khiển) */
+const CT1_O_TOI_DA = 300;      /* số ô vuông "chưa có CLB" vẽ tối đa; phần còn lại ghi "+N" bằng chữ */
 const CT1_DONG_TOI_DA = 30;   /* số dòng tối đa của danh sách "tự thử" trên màn hình (CSV có đủ) */
+
+let ct1Luot = false;          /* trường có > 1 buổi: mọi số đếm là LƯỢT (học sinh × buổi), nên dùng chuỗi `<khoá>_luot` */
+
+/* Như t(), nhưng khi đếm theo lượt thì lấy biến thể `_luot` (nếu có) để nhãn không nói "học sinh" cho một con số lượt. */
+function ct1T(khoa, p) {
+  return t(ct1Luot && ct1Co(khoa + "_luot") ? khoa + "_luot" : khoa, p);
+}
+function ct1Co(khoa) {
+  return t(khoa) !== khoa;
+}
 
 let ct1Du = null;             /* data của lần gọi gần nhất ở chế độ đề xuất */
 let ct1Lan = 0;               /* lần gọi mới nhất: bỏ phản hồi về muộn */
@@ -70,6 +81,7 @@ function ct1Tai() {
 
 function ct1Ve() {
   if (!ct1Du) return;
+  ct1Luot = (ct1Du.so_buoi || 1) > 1;
   ct1VeKhuyenNghi(ct1Du);
   ct1VeBuoc(ct1Du);
   ct1VeChonThu(ct1Du);
@@ -92,8 +104,9 @@ function ct1VeKhuyenNghi(d) {
   el("ct1KnCau").textContent = k.so_cho_chuyen > 0
     ? t("ct1_kn_co", { k: k.so_cho_chuyen, a: k.so_clb_cho, b: k.so_clb_nhan })
     : t("ct1_kn_khong");
-  el("ct1KnGhiChu").textContent = d.truoc
-    ? t("ct1_kn_tong", { n: d.tong_cho, m: d.truoc.tong }) : t("ct1_kn_tong", { n: d.tong_cho, m: d.so_hoc_sinh });
+  el("ct1KnGhiChu").textContent = (d.truoc
+    ? ct1T("ct1_kn_tong", { n: d.tong_cho, m: d.truoc.tong }) : ct1T("ct1_kn_tong", { n: d.tong_cho, m: d.so_hoc_sinh }))
+    + (ct1Luot ? " " + t("ct1_luot_ghi_chu", { b: d.so_buoi }) : "");
   const luoi = el("ct1Tile");
   luoi.textContent = "";
   if (!d.truoc) return;                                   /* không có kết quả từng bước: bốn ô số cũng không có */
@@ -103,17 +116,17 @@ function ct1VeKhuyenNghi(d) {
   const dNv = denNv - tuNv, dKo = denKo - tuKo;
   luoi.append(
     ct1Tile(t("ct1_o_nv1"), [x(tuNv, "ct1-so-cu"), mui(), x(denNv, "ct1-so-moi"),
-      x(t("ct1_o_nv1_don_vi", { n: d.truoc.tong }), "ct1-don-vi")],
+      x(ct1T("ct1_o_nv1_don_vi", { n: d.truoc.tong }), "ct1-don-vi")],
     ux1aEl("span", { class: "ct1-o-dong " + (dNv > 0 ? "la-tang" : dNv < 0 ? "la-giam" : ""),
-      text: dNv > 0 ? t("ct1_o_them", { k: dNv }) : dNv < 0 ? t("ct1_o_bot", { k: -dNv }) : ct1Dau(0) })),
+      text: dNv > 0 ? ct1T("ct1_o_them", { k: dNv }) : dNv < 0 ? ct1T("ct1_o_bot", { k: -dNv }) : ct1Dau(0) })),
     ct1Tile(t("ct1_o_chua_co"), [x(tuKo, "ct1-so-cu"), mui(), x(denKo, "ct1-so-moi"),
-      x(t("ct1_don_vi"), "ct1-don-vi")],
+      x(ct1T("ct1_don_vi"), "ct1-don-vi")],
     ux1aEl("span", { class: "ct1-o-dong " + (dKo < 0 ? "la-tang" : dKo > 0 ? "la-giam" : ""),
-      text: dKo < 0 ? t("ct1_o_bot", { k: -dKo }) : dKo > 0 ? t("ct1_o_them", { k: dKo }) : ct1Dau(0) })),
-    ct1Tile(t("ct1_o_tot"), [x(d.so_tot_hon, "ct1-so-moi"), x(t("ct1_don_vi"), "ct1-don-vi")],
+      text: dKo < 0 ? ct1T("ct1_o_bot", { k: -dKo }) : dKo > 0 ? ct1T("ct1_o_them", { k: dKo }) : ct1Dau(0) })),
+    ct1Tile(t("ct1_o_tot"), [x(d.so_tot_hon, "ct1-so-moi"), x(ct1T("ct1_don_vi"), "ct1-don-vi")],
       ux1aEl("span", { class: "ct1-o-dong", text: t("ct1_o_tot_phu") })),
-    ct1Tile(t("ct1_o_kem"), [x(d.so_kem_hon, "ct1-so-moi"), x(t("ct1_don_vi"), "ct1-don-vi")],
-      ux1aEl("span", { class: "ct1-o-dong", text: d.so_kem_hon === 0 ? t("ct1_o_kem_khong") : t("ct1_o_kem_co") })));
+    ct1Tile(t("ct1_o_kem"), [x(d.so_kem_hon, "ct1-so-moi"), x(ct1T("ct1_don_vi"), "ct1-don-vi")],
+      ux1aEl("span", { class: "ct1-o-dong", text: d.so_kem_hon === 0 ? ct1T("ct1_o_kem_khong") : t("ct1_o_kem_co") })));
 }
 
 /* ---- Khung 2: kết quả sau từng bước --------------------------------------------------------- */
@@ -169,14 +182,18 @@ function ct1VeO(d) {
   const o = d.o_chua_co;
   const xep = o.filter((x) => x !== null);
   const luoi = ux1aEl("div", { class: "ct1-o-vuong", role: "img",
-    "aria-label": t("ct1_b_o_aria", { a: o.length, x: xep.length, b: d.sau.chua_co }) });
-  o.slice().sort((p, q) => (p === null) - (q === null) || p - q).forEach((b) => {
+    "aria-label": ct1T("ct1_b_o_aria", { a: o.length, x: xep.length, b: d.sau.chua_co }) });
+  const sapXep = o.slice().sort((p, q) => (p === null) - (q === null) || p - q);
+  sapXep.slice(0, CT1_O_TOI_DA).forEach((b) => {
     luoi.append(ux1aEl("div", { class: "ct1-vuong " + (b === null ? "la-chua" : "la-xep"), text: b === null ? "" : "B" + b }));
   });
+  if (sapXep.length > CT1_O_TOI_DA) {      /* nhiều hơn mức vẽ: chữ "+N" thay cho phần còn lại (không vẽ hàng nghìn ô) */
+    luoi.append(ux1aEl("span", { class: "ct1-thanh-chu", text: t("ct1_b_o_con_lai", { n: sapXep.length - CT1_O_TOI_DA }) }));
+  }
   hop.append(
     ux1aEl("span", { class: "ct1-hinh-tde", text: t("ct1_b_chua_co_tde", { a: d.truoc.chua_co, b: d.sau.chua_co }) }),
     luoi,
-    ux1aEl("span", { class: "ct1-thanh-chu", text: t("ct1_b_o_chu_thich") }));
+    ux1aEl("span", { class: "ct1-thanh-chu", text: ct1T("ct1_b_o_chu_thich") }));
   return hop;
 }
 
@@ -207,10 +224,10 @@ function ct1VeMotBuoc(b, coBuoi) {
       so(t("ct1_b_cot_nv1"), b.nv1_sau, b.nv1_them, true),
       so(t("ct1_b_cot_chua_co"), b.chua_co_sau, b.chua_co_doi, false),
       ux1aEl("div", { class: "ct1-cot" }, ux1aEl("span", { class: "ct1-cot-nhan", text: t("ct1_b_cot_buoc") }),
-        ux1aEl("span", { class: "ct1-cot-chu", text: t("ct1_b_len_xuong", { u: b.so_len, d: b.so_xuong }) })));
+        ux1aEl("span", { class: "ct1-cot-chu", text: ct1T("ct1_b_len_xuong", { u: b.so_len, d: b.so_xuong }) })));
     if (b.so_xuong > 0) {
       trai.append(ux1aEl("p", { class: "ct1-luu-y", id: "ct1LuuY" + b.stt,
-        text: b.so_mat_cho > 0 ? t("ct1_b_luu_y_mat", { d: b.so_xuong, x: b.so_mat_cho }) : t("ct1_b_luu_y", { d: b.so_xuong }) }));
+        text: b.so_mat_cho > 0 ? ct1T("ct1_b_luu_y_mat", { d: b.so_xuong, x: b.so_mat_cho }) : ct1T("ct1_b_luu_y", { d: b.so_xuong }) }));
     }
   }
   const doiMuc = b.co_ket_qua && b.so_doi > 0
@@ -241,8 +258,11 @@ function ct1VeBuoc(d) {
   const ket = el("ct1KetBuoc");
   ket.hidden = !(coKetQua && d.buoc.length);
   ket.textContent = coKetQua
-    ? t("ct1_b_ket", { n: d.buoc.length, t: d.so_tot_hon, k: d.so_kem_hon }) + (d.so_moi_mat_cho > 0 ? " " + t("ct1_b_mat_moi", { x: d.so_moi_mat_cho }) : "")
+    ? ct1T("ct1_b_ket", { n: d.buoc.length, t: d.so_tot_hon, k: d.so_kem_hon }) + (d.so_moi_mat_cho > 0 ? " " + ct1T("ct1_b_mat_moi", { x: d.so_moi_mat_cho }) : "")
     : "";
+  const kemNhieu = el("ct1KemNhieuHon");     /* chữ cảnh báo (không phải nút): chỉ khi số kém hơn LỚN HƠN số tốt hơn */
+  kemNhieu.hidden = !(coKetQua && d.buoc.length && d.so_kem_hon > d.so_tot_hon);
+  kemNhieu.textContent = kemNhieu.hidden ? "" : ct1T("ct1_b_kem_nhieu_hon", { k: d.so_kem_hon, t: d.so_tot_hon });
   el("btnCt1XuatDoiChieu").hidden = !(coKetQua && d.buoc.length);
   if (!coKetQua) {                          /* không xếp lại được: nói rõ lý do bằng chữ thường, phần còn lại vẫn xem được */
     el("ct1BuocMoTa").textContent = t("ct1_b_khong_ket_qua", { errors: trErrs(d.loi_giai || []).join("; ") });

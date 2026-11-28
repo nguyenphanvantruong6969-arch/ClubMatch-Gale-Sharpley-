@@ -207,3 +207,12 @@ def test_kiem_buoc_cong_don_va_gioi_han_so_buoc():
     assert loi["code"] == "ct1_cap_qua_thap"
     nhieu = [{"tu": "a", "den": "b", "k": 1}] * (ct.TOI_DA_BUOC + 1)
     assert ct.kiem_buoc_tu_chon(nhieu, CLB)[1]["code"] == "ct1_qua_nhieu_buoc"
+
+
+def test_nguong_chua_dap_khong_bi_buoc_can_bang_che():
+    """CT1-FIX (phát hiện 5). Mục tiêu theo tỉ lệ nv1 cho A thêm 2 chỗ (chua_dap 1), C giữ 10 (chua_dap 5, tỉ lệ cao hơn),
+    B bớt 2. Nếu bỏ ngưỡng `chua_dap >= 1` thì A dừng ở 10 và bước cân ±1 dồn chỗ cho C (ưu tiên theo tỉ lệ), kết quả khác."""
+    cs = {"A": _cs(10, 12, chua_dap=1), "C": _cs(10, 10, chua_dap=5), "B": _cs(10, 8, chua_dap=0)}
+    assert ct.khuyen_nghi_chi_tieu(cs) == {"A": 12, "B": 8, "C": 10}
+    cs["A"]["chua_dap"] = 0                                    # cùng nv1 nhưng không ai chưa được đáp ứng: A không được tăng
+    assert ct.khuyen_nghi_chi_tieu(cs)["A"] == 10

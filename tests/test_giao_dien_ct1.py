@@ -211,3 +211,33 @@ def test_khoa_i18n_vi_va_en_khop_nhau():
     assert all(v.strip() and e.strip() for (_, v), (_, e) in zip(vi, en))
     khac = sum(1 for (_, v), (_, e) in zip(vi, en) if v != e)
     assert khac >= len(vi) - 6                                                    # trừ vài khoá giống nhau ("{cohort}", "{session}"...)
+
+
+# ---- CT1-FIX: nhiều buổi (đơn vị lượt, ô chưa có CLB bị chặn) và dòng cảnh báo khi kém hơn > tốt hơn -------------
+SO_800 = os.path.join(GOC, "du_lieu_test", "SO_NHAP_DQT_800HS_HOP_LE.xlsx")
+
+
+def test_mot_buoi_khong_co_chu_luot_va_khong_canh_bao(mo_ux5a):  # noqa: F811
+    page, api, loi = _mo(mo_ux5a)
+    _vao_ct1(page)
+    assert "lượt" not in page.locator("#ct1KnGhiChu").inner_text() and "lượt" not in page.locator("#ct1Tile").inner_text()
+    assert page.locator("#ct1KemNhieuHon").is_hidden()          # TEST: 15 tốt hơn / 0 kém hơn
+    assert not loi, loi
+
+
+def test_nhieu_buoi_dung_don_vi_luot_o_vuong_bi_chan_va_canh_bao_kem_hon(mo_ux5a):  # noqa: F811
+    page, api, loi = mo_ux5a("quan_tri", so_nhap=SO_800, rules=RULES, rong=1280)
+    _vao_ct1(page)
+    d = api.get_xem_xet_chi_tieu()["data"]
+    ghi = page.locator("#ct1KnGhiChu").inner_text()
+    assert "lượt" in ghi and "4" in ghi and "toàn bộ %d lượt" % d["truoc"]["tong"] in ghi
+    assert "lượt" in page.locator("#ct1Tile").inner_text() and "học sinh" not in page.locator("#ct1Tile").inner_text()
+    cb = page.locator("#ct1KemNhieuHon")
+    assert d["so_kem_hon"] <= d["so_tot_hon"] and cb.is_hidden()  # cấu hình này: kém hơn không nhiều hơn tốt hơn -> không cảnh báo
+    page.evaluate("() => { ct1Du = Object.assign({}, ct1Du, { so_tot_hon: 5, so_kem_hon: 9 }); ct1Ve(); }")   # kém hơn > tốt hơn
+    assert cb.is_visible() and cb.inner_text().startswith("Lưu ý") and "9 lượt" in cb.inner_text()
+    assert cb.evaluate("e => e.tagName") == "P"                  # chữ cảnh báo, không phải nút
+    assert dem(page, "#ct1Buoc") == dem(page, "#ct1Buoc")        # không thêm điều khiển nào
+    assert page.locator(".ct1-vuong").count() == 300             # chặn số ô vẽ
+    assert "ô xám nữa" in page.locator("#ct1BuocHinh").inner_text()
+    assert dem(page, "#ct1Buoc") and not loi, loi

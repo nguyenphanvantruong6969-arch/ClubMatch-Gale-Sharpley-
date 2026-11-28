@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-28 — CT1-FIX (sửa các phát hiện của soát mã CT1; vẫn chỉ đọc)
+
+- Phát hiện 1: dữ liệu NHIỀU buổi (`SO_NHAP_DQT_800HS_HOP_LE`: 2836 lượt, 800 học sinh) không còn gọi lượt là "học sinh". `get_xem_xet_chi_tieu` thêm `so_buoi`; khi > 1, giao diện dùng các khoá `ct1_*_luot` (13 chuỗi vi + en, `ct1T()` trong `js/20_xem_xet_chi_tieu.js`) và thêm một câu giải thích `ct1_luot_ghi_chu`. Một buổi: chữ và số y như trước.
+- Phát hiện 2: `o_chua_co` chỉ tính lượt CÓ nguyện vọng (`len(o_chua_co) == truoc.chua_co`, trước đây 2280 ≠ 1916); chỉ vẽ tối đa 300 ô, phần còn lại ghi bằng chữ (`ct1_b_o_con_lai`).
+- Phát hiện 3, phương án (b): khi số "kém hơn" LỚN HƠN số "tốt hơn", dưới dòng tổng kết có một dòng chữ cảnh báo (`#ct1KemNhieuHon`, kiểu `.ct1-luu-y`, không phải nút; Hick và Von Restorff không đổi). Luật đề xuất không đổi.
+- Phát hiện 4: chữ "Hiện tại" trên dải xám đổi sang `#111418` (tương phản 5,9:1, trước 3,2:1); `--chart-khong-nhan` không đổi.
+- Phát hiện 5: thêm test `test_nguong_chua_dap_khong_bi_buoc_can_bang_che`; đột biến `chua_dap >= 1` → `>= 99` giờ làm test đỏ.
+- Tests: `tests/test_ct1_nhieu_buoi.py` (mới, 3), thêm 2 ca Chromium trong `tests/test_giao_dien_ct1.py`, 1 ca trong `tests/test_ct1_khuyen_nghi.py`. Không đổi `chi_tieu_ct1.py`, không đổi schema, CSV hay thuật toán (bất biến 1 giữ: CT1 chỉ đọc).
+
 ## 2026-11-28 — CT1 (Xem xét chỉ tiêu: màn chỉ đọc, đề xuất chỉ tiêu kỳ sau giữ nguyên tổng chỗ)
 
 - Mục mới CT1 (Truong yêu cầu 28/11/2026). Chỉ ĐỌC: không ghi `match_results` / `run_history` / chỉ tiêu, không sao lưu, không đổi schema hay hợp đồng CSV, không thư viện mới; chỉ dùng bộ số bốc thăm ĐÃ KHOÁ (bất biến 1–5 không bị chạm).
