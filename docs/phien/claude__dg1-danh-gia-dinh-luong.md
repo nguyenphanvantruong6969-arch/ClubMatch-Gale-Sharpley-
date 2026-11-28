@@ -94,7 +94,7 @@ top-points / gold-medal club; share of rejections decided by LOTTERY; A–C and 
 - [x] ✱L3 Variants + 5 mechanisms + `in_bang.py` + exact cross-check vs `SO_LIEU_DA_KIEM_CHUNG.md` §2 (108/120, NV1 64). (Report generator → L5.)
 - [x] ✱G `do_tinh_nang.py`: reserves × Wharton 2×2, medals (FA-DAA) vs old mode; `tests/test_dg1_tinh_nang.py`.
 - [x] ✱L4 In-app «Chỉ số phân bổ» block + Excel section (D7), one Chromium test. Self-audited with soat-ma (checker file).
-- [ ] ✱L5 Scientific report + screenshots (below), written by the planner Opus session from `ket_qua/*.json`; NOT done by this coder session.
+- [x] ✱L5 Scientific report + screenshots (AI part done 2026-11-28, Opus): `viet_bao_cao.py`, `chup_quy_trinh.py`, `tests/test_dg1_bao_cao.py`. Student sections still empty.
 - [ ] O  F (late arrivals / withdrawals) — dropped this session (budget).
 - [x] Final (coder part): tests green, `kiem_nhanh.py` 7/7, CHANGELOG + TIEN_DO, push. CI (`tests.yml`) not checked by the coder.
 
@@ -130,16 +130,16 @@ where useful, including screenshots taken DURING the process. Integrity rule (CL
   `dung_nhat_ky_ai.py` if it is the generator.
 
 ## Current state
-**DATA READY** (coder Sonnet, 2026-11-28) — `du_lieu_test/danh_gia/ket_qua/`, provenance in `README_LAN_CHAY.md` (commit, command, seconds per file).
-- JSON: `doi_chieu_so_lieu` (gate: TEST seed 42 = 108/120, NV1 64, row-for-row == `run_pipeline`), `mac_dinh` (800×20, α .5, ρ .7, κ 1.1),
-  `co_che_doi_chung` (RB-DA/Boston/RSD/TTC/club-DA), `bien_the_tieu_chi` (9 variants + churn), `quet_quy_mo` (90 configs: 120/300/800 × α × κ × ρ),
-  `tinh_nang` (reserves × Wharton 2×2 + medals), `thoi_gian` (to 2 000×50, incl. `run_pipeline`), `nhieu_buoi` (800×20×3), `bo_co_san` (5 as-is sets).
-- Full grid = 5 data seeds × 10 lottery seeds, took 19.6 min (< 60, so no reduced grid). Hard checks: `kiem_ket_qua.py` → 356 cap_chan/outside-list cells = 0 for RB-DA.
-- Tables: `python du_lieu_test/danh_gia/in_bang.py du_lieu_test/danh_gia/ket_qua` (no commentary). Each JSON has `dinh_nghia` (metrics, denominators, generator params, seeds).
-- Product change = L4 only (+162/−1 lines, the 1 = a CSS selector extended; core algorithm untouched). `kiem_nhanh.py` 7/7 vs `origin/main`. Self-audit: `__checker.md` (9 findings, all fixed or noted).
-- Next (Opus planner): L5 report from the JSON; hypotheses section is the student's. Known facts to state factually: club-DA == RB-DA on most generated data
-  (unique stable matching, still differs on `bo_kich_tran`); CI can leave [0,100] at small n; as-is sets bo_can_bang / bo_kich_tran / DQT_800 are multi-session.
-- Needs Truong: nothing blocking. Optional: Excel sheet `Chi_so` as its own sheet instead of a section (D7); confirm CI green on GitHub.
+**L5 AI PART DONE** (Opus, 2026-11-28). Report `docs/nghien_cuu/DG1_BAO_CAO_KHOA_HOC.md` + `.html`, figures `anh_dg1/F1..F6.svg` (7 files),
+screenshots `anh_dg1/S1..S6.png`. Regenerate: `python du_lieu_test/danh_gia/viet_bao_cao.py` (keeps student text inside `<!-- HS:x -->` boxes);
+screenshots: `python du_lieu_test/danh_gia/chup_quy_trinh.py` (needs Python `playwright`, Chromium from `tests/_trinh_duyet.py`).
+- D10 Screenshots: 6 instead of the planned 9. S2 «warnings = 0» and S7 «So sánh lần chạy» not taken: the generated Sổ nhập raises 5 serious
+  «outlier score» warnings (scores < 2 in tested clubs, ρ = 0.7 noise), shown as-is in S1; run comparison UI not driven (budget). Caption says so factually.
+- D11 AI log not regenerated here: `dung_nhat_ky_ai.py` rewrites ~1 000 lines from all branches; run it after merge (it reads the CHANGELOG L5 line).
+- Found while screenshotting (L4 product bug, NOT fixed — planner role): «Chỉ số phân bổ» block sub-label prints `16,099999999999994% mọi suất`
+  (unrounded float) under «Chưa được xếp». Small fix in `js/03_ket_qua.js` formatter + one assertion in `tests/test_dg1_chi_so_ung_dung.py`.
+- Needs Truong: write sections 0, 1.1, 2 (mark «viết sau khi có số liệu» if so), 6, 7, 8; decide on the float bug fix; confirm CI green.
+- `kiem_nhanh.py` 7/7. Tests `tests/test_dg1_bao_cao.py` 2/2. No product file changed in L5.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -148,3 +148,4 @@ where useful, including screenshots taken DURING the process. Integrity rule (CL
 | 2026-11-28 | Opus | plan v2 (6 improvements) | Truong approved all six |
 | 2026-11-28 | Opus | added L5 scientific report + screenshots | authorship split per CLAUDE.md integrity |
 | 2026-11-28 | Sonnet | coder: L1–L4 + group G + full harness run (DATA READY); self-audit instead of checker | no L5 (planner writes report) |
+| 2026-11-28 | Opus | L5: report generator, 7 SVG figures, 6 app screenshots, tests; found L4 float-format bug | student sections left empty |

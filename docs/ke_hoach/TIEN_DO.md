@@ -359,3 +359,4 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | DG1-L3 (biến thể tiêu chí, 5 cơ chế, thời gian, nhiều buổi, in_bang) | xong | 2026-11-28 | du_lieu_test/danh_gia/do_danh_gia.py, in_bang.py | (cùng tệp L2) | |
 | DG1-G (dự trữ × điểm quyết tâm 2×2, huy chương) | xong | 2026-11-28 | du_lieu_test/danh_gia/do_tinh_nang.py | tests/test_dg1_tinh_nang.py (4) | |
 | DG1-L4 (khối «Chỉ số phân bổ» chỉ-đọc + mục Excel) | xong; tự soát bằng soat-ma (không checker) | 2026-11-28 | tieu_chi.py, api_bao_cao.py, api_xuat.py, index.html, js/03_ket_qua.js, style.css, i18n.js, i18n_errors.py, i18n_loi.js | tests/test_dg1_chi_so_ung_dung.py (7, 1 Chromium) | |
+| DG1-L5 (báo cáo khoa học + ảnh chụp quy trình) | xong phần AI; mục 0, 1.1, 2, 6, 7, 8 chờ học sinh viết | 2026-11-28 | du_lieu_test/danh_gia/viet_bao_cao.py, chup_quy_trinh.py, docs/nghien_cuu/DG1_BAO_CAO_KHOA_HOC.md/.html, anh_dg1/ | tests/test_dg1_bao_cao.py (2) | |
