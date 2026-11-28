@@ -474,9 +474,9 @@ def phan_thoi_gian(cfg):
                 if not kq["ok"]:
                     raise RuntimeError("nạp sổ nhập: %r" % kq["errors"])
                 ts_pl = []
-                for lan in range(3):
+                for _lan in range(3):                 # cùng seed: bốc thăm đã KHOÁ sau lần chạy đầu (bất biến 3) — đổi seed bị từ chối
                     t0 = time.perf_counter()
-                    r = api.run_pipeline(seed=1 + lan)
+                    r = api.run_pipeline(seed=1)
                     ts_pl.append(time.perf_counter() - t0)
                     if not r["ok"]:
                         raise RuntimeError("run_pipeline: %r" % r["errors"])
