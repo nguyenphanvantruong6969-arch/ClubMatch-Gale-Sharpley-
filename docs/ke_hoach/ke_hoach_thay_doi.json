@@ -2580,6 +2580,19 @@
    "kiem_nhan": "tests/test_va_gap_tai_hien.py xanh (8 test).",
    "phu_thuoc": [],
    "ap_dung": {}
+  },
+  {
+   "id": "DG1",
+   "nhom": "Phụ lục vá gấp",
+   "pham_vi": "du_lieu_test",
+   "ten": "Bằng chứng định lượng: nguyện vọng, chỉ tiêu, đổi tiêu chí (bộ đo + khối chỉ số chỉ-đọc)",
+   "tep": "du_lieu_test/danh_gia/*, tests/test_dg1_*.py, api_bao_cao*.py (L4)",
+   "muc": "Thêm",
+   "quy_mo": "M",
+   "rui_ro": "Thấp; L1–L3 chỉ trong du_lieu_test/, L4 chỉ đọc.",
+   "kiem_nhan": "tests/test_dg1_*.py xanh; 0 cặp phá vỡ; bộ TEST seed 42 khớp 108/120, NV1 64.",
+   "phu_thuoc": [],
+   "ap_dung": {}
   }
  ],
  "so_do": {

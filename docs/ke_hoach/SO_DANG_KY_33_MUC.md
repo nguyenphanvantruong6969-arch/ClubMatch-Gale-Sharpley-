@@ -802,6 +802,12 @@ Ký hiệu áp dụng: **R** cần làm · **O** tuỳ chọn · **–** không 
 - **Rủi ro:** thấp–vừa (chỉ lớp `dk_*`, không đụng thuật toán; mặc định giữ hành vi cũ). **Nghiệm thu:** `tests/test_va_gap_tai_hien.py` (8 test tái hiện) xanh.
 - **Chưa làm:** lỗi «Đặng Văn Nam 4» (chưa rõ), và các phát hiện mới trong `docs/phien/VG1_KIEM_TRA_TOAN_DIEN.md`.
 
+### DG1 — Bằng chứng định lượng: nguyện vọng, chỉ tiêu, đổi tiêu chí (thêm 28/11/2026)
+- **Trạng thái:** làm trên nhánh `claude/dg1-danh-gia-dinh-luong`, kế hoạch `docs/phien/claude__dg1-danh-gia-dinh-luong.md`, giao thức `docs/phien/DG1_GIAO_THUC.md`.
+- **Thay đổi:** L1 chỉ số thuần (`du_lieu_test/danh_gia/_chi_so.py`, cận trên ghép cực đại); L2 bộ sinh dữ liệu mô phỏng (α, ρ, κ) + chạy lưới; L3 biến thể tiêu chí + so sánh 4 cơ chế đối chứng + `in_bang.py`; L4 khối «Chỉ số phân bổ» chỉ-đọc trên màn kết quả + sheet `Chi_so` trong Excel (lô duy nhất sửa sản phẩm).
+- **Rủi ro:** thấp (L1–L3 chỉ nằm trong `du_lieu_test/`; L4 chỉ đọc, thêm không đổi). **Nghiệm thu:** `tests/test_dg1_*.py` xanh; RB-DA 0 cặp phá vỡ ở mọi lần chạy; bộ TEST seed 42 khớp `SO_LIEU_DA_KIEM_CHUNG.md` §2 (108/120, NV1 64).
+- Toàn bộ số đo là DỮ LIỆU MÔ PHỎNG; phần nhận xét/kết luận do học sinh viết.
+
 ## Kế hoạch theo ngành (đúng thứ tự làm, đã gồm tiền đề)
 
 - **DT** (Phân bổ đề tài, đồ án, người hướng dẫn): Z6, Z3, Z7, Z1, B2, A3, A7  · tuỳ chọn: Z4, Z5, A1, A5, A10, C1, C3, E3
