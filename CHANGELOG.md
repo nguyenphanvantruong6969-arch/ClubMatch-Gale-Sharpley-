@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2026-11-28 — VG2-L5 (vòng tròn Sổ nhập: cổng đăng ký → phần mềm xếp → xuất lại → nạp lại)
+
+- Lỗi: Sổ nhập xuất từ cổng (có cột Loại + Huy chương) kéo vào một workspace MỚI (chế độ huy chương tắt mặc định) nạp được nhưng LẦN XẾP bị chặn (`wharton_ho_so_chua_hop_le`, bảo «điền điểm quyết tâm» — sai hướng).
+- Sửa: câu `so_nhap_canh_bao_huy_chuong_che_do_tat` nói đúng hệ quả và cách sửa; `nhapTatCa` (`js/02_van_hanh.js`) hỏi lại một lần khi cảnh báo này còn (Huỷ mặc định; «Vẫn nhập» = hành vi cũ; `hoiXacNhanXoaKem` nhận nhãn nút tuỳ chọn); `xem_truoc_so_nhap` (`api_nhap.py`) không báo nhầm cho sổ mẫu thường có cột Loại để trống.
+- Test: `tests/test_vg2_vong_tron.py` (cổng → Sổ nhập → xếp → `export_du_lieu_dau_vao` → CSDL mới → xếp: `match_results` trùng khít), `tests/test_giao_dien_vg2_l5_nhap.py`; `tests/test_giao_dien_ux1_nhap_so.py` bấm thêm «Vẫn nhập».
+
 ## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
 
 - 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).
