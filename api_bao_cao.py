@@ -149,6 +149,26 @@ class BaoCaoMixin:
         except Exception as e:
             return _fail(err("error_reading_club_stats", detail=str(e)))
 
+    @_nho_trong_luc_xuat
+    def get_chi_so_phan_bo(self):
+        """DG1-L4: khối «Chỉ số phân bổ» — CHỈ ĐỌC `match_results` và `clubs`, không ghi gì, không đưa gì vào ưu tiên.
+
+        Tính bằng hàm thuần `tieu_chi.chi_so_phan_bo` (cùng `_thong_ke` mà «So sánh lần chạy» dùng). Chưa có kết quả thì
+        trả số 0 chứ không báo lỗi — giao diện tự ẩn khối.
+        """
+        try:
+            import tieu_chi
+            with self._ket_noi_doc() as cur:
+                rows = [(r[0], r[1], r[2], r[3]) for r in cur.execute(
+                    "SELECT student_id, buoi, club_id, rank_in_student_pref FROM match_results")]
+                tang = {(r[0], r[1]): r[2] for r in cur.execute(
+                    "SELECT student_id, buoi, matched_tier FROM match_results WHERE club_id IS NOT NULL")}
+                clubs = {r[0]: {"capacity": r[1], "reserve_capacity": r[2], "tu_do": r[3] == TU_DO}
+                         for r in cur.execute("SELECT club_id, capacity, reserve_capacity, loai FROM clubs")}
+            return _ok(tieu_chi.chi_so_phan_bo(rows, clubs, tang))
+        except Exception as e:
+            return _fail(err("dg1_error_reading_chi_so", detail=str(e)))
+
     # -----------------------------------------------------------------
     # NHIỀU BUỔI SINH HOẠT
     # -----------------------------------------------------------------

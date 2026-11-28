@@ -973,6 +973,10 @@ html.tat-hieu-ung .status-strip:hover {
 .kpi-o:hover { border-color: var(--slate); }
 .kpi-o:active { transform: scale(0.98); }
 .kpi-o:focus-visible { outline: 2px solid var(--chart-general); outline-offset: 2px; }
+/* DG1-L4: ô chỉ-đọc của khối «Chỉ số phân bổ» — không bấm được nên không có hiệu ứng bấm. */
+.kpi-o.kpi-chi-doc { cursor: default; }
+.kpi-o.kpi-chi-doc:hover { border-color: var(--hairline); }
+.kpi-o.kpi-chi-doc:active { transform: none; }
 
 .kpi-nhan {
   font-size: 12.5px;

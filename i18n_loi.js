@@ -202,6 +202,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Không tải được thống kê {slot_l}. Hãy thử lại.",
     "en": "Couldn't load the {slot_l} summary. Try again."
   },
+  "dg1_error_reading_chi_so": {
+    "vi": "Không tải được chỉ số phân bổ. Hãy thử lại.",
+    "en": "Couldn't load the allocation metrics. Try again."
+  },
   "error_exporting_csv": {
     "vi": "Không xuất được tệp kết quả. Kiểm tra thư mục lưu còn chỗ trống và tệp cũ không đang mở, rồi thử lại.",
     "en": "Couldn't export the results. Check that the folder has free space and the old file isn't open, then try again."

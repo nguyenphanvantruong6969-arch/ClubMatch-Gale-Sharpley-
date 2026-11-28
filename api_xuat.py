@@ -792,6 +792,25 @@ class XuatKetQuaMixin:
                    [[h["so_clb"], h["so_em"], round(100 * h["so_em"] / tong, 1)]
                     for h in d["phan_bo"]])
 
+        cs = self.get_chi_so_phan_bo()
+        if cs.get("ok") and cs["data"]["tong"]["n"]:
+            d = cs["data"]
+            tg, ld, dt = d["tong"], d["lap_day"], d["du_tru"]
+            t.muc("CHỈ SỐ PHÂN BỔ")
+            t.ghi_chu("Chỉ đọc từ kết quả đã xếp. Mẫu số ghi rõ ở từng dòng; phần trăm làm tròn một chữ số.")
+            t.bang(["Chỉ số", "Giá trị", "Mẫu số"], [
+                ["% được nguyện vọng 1", tg["pct_nv1"], "mọi suất (%d)" % tg["n"]],
+                ["% trong 3 nguyện vọng đầu", tg["pct_top3"], "mọi suất (%d)" % tg["n"]],
+                ["% nguyện vọng 1 trên suất đã xếp", d["pct_nv1_da_xep"], "suất đã xếp (%d)" % tg["da_xep"]],
+                ["% trong 3 nguyện vọng đầu trên suất đã xếp", d["pct_top3_da_xep"], "suất đã xếp (%d)" % tg["da_xep"]],
+                ["Số suất chưa được xếp", tg["chua_xep"], "mọi suất (%d)" % tg["n"]],
+                ["% lấp đầy chỉ tiêu", ld["pct"], "tổng chỉ tiêu (%d)" % ld["chi_tieu"]],
+                ["Số CLB đã đầy", ld["n_clb_day"], "%d CLB có chỉ tiêu" % ld["n_clb"]],
+                ["Số CLB lấp đầy dưới 50 %", ld["n_clb_duoi_50"], "%d CLB có chỉ tiêu" % ld["n_clb"]],
+                ["Suất dự trữ đã dùng", dt["da_dung"], "suất dự trữ cung cấp (%d)" % dt["cung_cap"]],
+            ])
+            co_gi = True
+
         if "nv" in bao:
             tong, cot, dong = bao["nv"]
             t.muc("NGUYỆN VỌNG THỨ MẤY THÌ ĐƯỢC: trên %d chỗ đã xếp" % tong)

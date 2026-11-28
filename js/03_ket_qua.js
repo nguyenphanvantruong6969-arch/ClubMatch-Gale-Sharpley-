@@ -28,6 +28,7 @@ const UX2_RONG_CLB = {
 
 function loadResultsTab() {
   loadTomTatKetQua();
+  loadChiSoPhanBo();   /* DG1-L4 */
   if (typeof ux1aVeSauXep === "function") ux1aVeSauXep(); /* UX1A-L2b */
   veXuatPanel();
   loadClubFillStats();
@@ -261,6 +262,38 @@ function moMucVaCuon(id) {
   luuTrangThaiThuGon();
   capNhatNutTatCa();
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* DG1-L4: khối «Chỉ số phân bổ» — CHỈ ĐỌC, một lệnh gọi `get_chi_so_phan_bo`. Mẫu số ghi rõ ở dòng chú thích. */
+function loadChiSoPhanBo() {
+  const dai = el("chiSoPhanBo");
+  if (!dai) return;
+  callApi("get_chi_so_phan_bo").then((res) => {
+    if (!res.ok || !res.data.tong.n) { dai.hidden = true; return; }
+    dai.hidden = false;
+    const d = res.data;
+    const luoi = el("chiSoLuoi");
+    clear(luoi);
+    el("chiSoMauSo").textContent = t("dg1_mau_so", { n: d.tong.n });
+    const o = [
+      { nhan: t("dg1_nv1"), so: `${soThapPhan(d.tong.pct_nv1)}%`, phu: t("dg1_nv1_phu", { p3: soThapPhan(d.tong.pct_top3) }) },
+      { nhan: t("dg1_chua_xep"), so: String(d.tong.chua_xep), phu: t("dg1_chua_xep_phu", { p: soThapPhan(100 - d.tong.pct_da_xep) }) },
+      { nhan: t("dg1_lap_day"), so: `${soThapPhan(d.lap_day.pct)}%`,
+        phu: t("dg1_lap_day_phu", { day: d.lap_day.n_clb_day, thap: d.lap_day.n_clb_duoi_50 }) },
+    ];
+    if (d.du_tru.cung_cap) {
+      o.push({ nhan: t("dg1_du_tru"), so: `${d.du_tru.da_dung} / ${d.du_tru.cung_cap}`, phu: t("dg1_du_tru_phu") });
+    }
+    o.forEach((k) => {
+      const kh = document.createElement("div");
+      kh.className = "kpi-o kpi-chi-doc";
+      kh.innerHTML =
+        `<span class="kpi-nhan">${esc(k.nhan)}</span>` +
+        `<span class="kpi-so">${esc(k.so)}</span>` +
+        `<span class="kpi-phu">${esc(k.phu)}</span>`;
+      luoi.appendChild(kh);
+    });
+  });
 }
 
 function loadTomTatKetQua() {

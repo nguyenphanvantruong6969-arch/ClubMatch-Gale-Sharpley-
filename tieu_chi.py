@@ -232,6 +232,42 @@ def _thong_ke(rows) -> dict:
     }
 
 
+def chi_so_phan_bo(rows, clubs, tang=None) -> dict:
+    """DG1-L4: chỉ số phân bổ của MỘT lần chạy, để hiện ở màn kết quả và ghi vào sổ Excel. Thuần hàm, CHỈ ĐỌC.
+
+    `rows` = (student_id, buoi, club_id | None, rank | None) như `so_sanh_lan_chay`; `clubs` = {cid: {"capacity",
+    "reserve_capacity", "tu_do"}}; `tang` = {(student_id, buoi): "reserve" | "general"} của các em đã có chỗ.
+    Không đọc thứ hạng nguyện vọng nào ngoài `rank` đã ghi trong kết quả (không đi vào ưu tiên CLB).
+
+    Mẫu số (đều ghi trong khoá): `tong.*` chia cho MỌI suất (em × buổi); `pct_*_da_xep` chia cho suất đã được xếp;
+    `lap_day.pct` = suất đã xếp vào CLB có chỉ tiêu / tổng chỉ tiêu. CLB Tự do không giới hạn chỗ nên không tính.
+    """
+    tang = tang or {}
+    tong = _thong_ke(rows)
+    da = [r for r in rows if r[2] is not None]
+    hang = [r[3] for r in da if isinstance(r[3], int) and not isinstance(r[3], bool)]
+    dem = {}
+    for r in da:
+        dem[r[2]] = dem.get(r[2], 0) + 1
+    gioi_han = {c: v for c, v in clubs.items() if not v.get("tu_do")}
+    chi_tieu = sum(v.get("capacity") or 0 for v in gioi_han.values())
+    da_xep = sum(dem.get(c, 0) for c in gioi_han)
+    return {
+        "tong": tong,
+        "pct_nv1_da_xep": _pct(sum(1 for h in hang if h == 1), len(da)),
+        "pct_top3_da_xep": _pct(sum(1 for h in hang if h <= 3), len(da)),
+        "lap_day": {
+            "chi_tieu": chi_tieu, "da_xep": da_xep, "pct": _pct(da_xep, chi_tieu), "n_clb": len(gioi_han),
+            "n_clb_day": sum(1 for c, v in gioi_han.items() if (v.get("capacity") or 0) > 0 and dem.get(c, 0) >= v["capacity"]),
+            "n_clb_duoi_50": sum(1 for c, v in gioi_han.items() if (v.get("capacity") or 0) > 0 and dem.get(c, 0) / v["capacity"] < 0.5),
+        },
+        "du_tru": {
+            "cung_cap": sum(v.get("reserve_capacity") or 0 for v in gioi_han.values()),
+            "da_dung": sum(1 for r in da if tang.get((r[0], r[1])) == "reserve"),
+        },
+    }
+
+
 def _theo_khoa(rows, khoa_fn, thu_tu=None) -> list:
     """[{khoa, a:{...}, b:{...}}] — gom theo khoá (nhóm ưu tiên, lớp). `rows` = (a_rows, b_rows)."""
     ra, rb = rows
