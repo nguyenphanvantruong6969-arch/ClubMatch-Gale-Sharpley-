@@ -301,81 +301,6 @@
       <header class="view-header">
         <h1 data-i18n="kq_title">Kết quả</h1>
       </header>
-      <!-- CT1: "Xem xét chỉ tiêu" (chỉ đọc, chỉ quản trị). Mở từ mục trong menu "Báo cáo và phiếu in"; khi mở, phần còn lại của thẻ Kết quả
-           được CSS ẩn (lớp .ct1-dang-mo). js/20_xem_xet_chi_tieu.js. Mỗi khung ct1* tuân Hick (≤7 điều khiển) và Von Restorff (≤1 nút vàng). -->
-      <div class="ct1-khung" id="ct1Khung" data-quyen="quan_tri" hidden>
-        <div class="ct1-dau">
-          <button type="button" class="btn btn-ghost btn-nho" id="btnCt1Dong" data-i18n="ct1_dong">Quay lại kết quả</button>
-          <h2 class="ct1-tde-lon" id="ct1TieuDe" data-i18n="ct1_tieu_de">Chỉ tiêu {slot_s} cho kỳ sau</h2>
-          <p class="hint-text" data-i18n="ct1_mo_ta">Phần mềm đọc nguyện vọng thật của kỳ này và gợi ý nên chuyển chỗ từ {slot_s} nào sang {slot_s} nào. Nhà trường là bên quyết định; màn hình này không đổi chỉ tiêu nào.</p>
-        </div>
-        <div class="ct1-trang-thai" id="ct1TrangThai" role="status"></div>
-        <div id="ct1Noi" hidden>
-          <section class="ct1-the" id="ct1Khuyen" aria-labelledby="ct1KnCau">
-            <span class="ct1-nhan-nho" data-i18n="ct1_kn_nhan">Khuyến nghị</span>
-            <h2 class="ct1-tde" id="ct1KnCau"></h2>
-            <p class="hint-text" id="ct1KnGhiChu"></p>
-            <div class="ct1-o-luoi" id="ct1Tile"></div>
-            <div class="ct1-hang-nut"><button type="button" class="btn btn-primary" id="btnCt1XuatDeXuat" data-i18n="ct1_xuat_de_xuat">Xuất bảng đề xuất (CSV)</button></div>
-          </section>
-          <section class="ct1-the" id="ct1Buoc" aria-labelledby="ct1BuocTde">
-            <h2 class="ct1-tde ct1-tde-vua" id="ct1BuocTde" data-i18n="ct1_b_tieu_de">Kết quả sau từng bước thay đổi</h2>
-            <p class="hint-text" id="ct1BuocMoTa"></p>
-            <div class="ct1-hai-cot" id="ct1BuocHinh"></div>
-            <ol class="ct1-ds-buoc" id="ct1DsBuoc"></ol>
-            <p class="ct1-ket-buoc" id="ct1KetBuoc"></p>
-            <p class="ct1-luu-y" id="ct1KemNhieuHon" role="note" hidden></p>
-            <div class="ct1-hang-nut">
-              <button type="button" class="btn btn-ghost btn-nho" id="btnCt1ThemBuoc" hidden></button>
-              <button type="button" class="btn btn-secondary" id="btnCt1XuatDoiChieu" data-i18n="ct1_b_xuat">Xuất bảng đối chiếu (CSV)</button>
-            </div>
-          </section>
-          <section class="ct1-the" id="ct1Thu">
-            <details class="ct1-thu" id="ct1ThuMuc">
-              <summary class="btn btn-secondary ux6-mui-ten" id="ct1ThuTom" data-i18n="ct1_thu_tom">Tự thử một thay đổi</summary>
-              <div class="ct1-thu-than">
-                <p class="hint-text" data-i18n="ct1_thu_goi_y">Thử chuyển chỗ giữa hai {slot_s} cùng buổi và xem kết quả ngay. Không lưu gì.</p>
-                <div class="ct1-thu-hang">
-                  <label class="ct1-truong"><span data-i18n="ct1_thu_tu">Lấy chỗ từ</span><select id="ct1ThuTu" class="text-input text-input-sm"></select></label>
-                  <label class="ct1-truong"><span data-i18n="ct1_thu_den">Chuyển cho</span><select id="ct1ThuDen" class="text-input text-input-sm"></select></label>
-                  <label class="ct1-truong"><span data-i18n="ct1_thu_k">Số chỗ</span>
-                    <select id="ct1ThuK" class="text-input text-input-sm"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
-                </div>
-                <div class="ct1-hang-nut"><button type="button" class="btn btn-primary" id="btnCt1ThuXep" data-i18n="ct1_thu_xep">Xếp lại với chỉ tiêu này</button></div>
-                <p class="ct1-luu-y" id="ct1ThuLoi" role="alert" hidden></p>
-                <div class="ct1-thu-kq" id="ct1ThuKq" tabindex="-1" hidden>
-                  <p class="ct1-dong-dam" id="ct1ThuTieuDe"></p>
-                  <div class="scroll-x" id="ct1ThuBangHop"></div>
-                  <div class="ct1-hang-nut"><button type="button" class="btn btn-secondary" id="btnCt1ThuXuat" data-i18n="ct1_b_xuat">Xuất bảng đối chiếu (CSV)</button></div>
-                </div>
-              </div>
-            </details>
-          </section>
-          <section class="ct1-the" id="ct1Thieu" aria-labelledby="ct1ThieuTde">
-            <h2 class="ct1-tde ct1-tde-vua" id="ct1ThieuTde" data-i18n="ct1_t_tieu_de">{slot_s} nào thiếu chỗ, {slot_s} nào thừa chỗ?</h2>
-            <p class="hint-text" data-i18n="ct1_t_mo_ta">Thanh màu dài hơn thanh xám nghĩa là số {person_l} thích {slot_s} đó nhiều hơn số chỗ đang có.</p>
-            <ul class="ct1-chu-giai" id="ct1ThieuChuGiai"></ul>
-            <div class="ct1-ds-thanh" id="ct1ThieuDs"></div>
-            <p class="hint-text" id="ct1ThieuGhiChu" hidden></p>
-          </section>
-          <section class="ct1-the" id="ct1Bang" aria-labelledby="ct1BangTde">
-            <h2 class="ct1-tde ct1-tde-vua" id="ct1BangTde" data-i18n="ct1_bang_tieu_de">Chỉ tiêu đề xuất cho từng {slot_s}</h2>
-            <p class="hint-text" data-i18n="ct1_bang_mo_ta">Bảng để in và trình Ban Giám hiệu.</p>
-            <div class="scroll-x"><table class="data-table ct1-bang" id="ct1BangTab"><thead></thead><tbody></tbody></table></div>
-            <details class="ct1-cach-tinh" id="ct1CachTinh">
-              <summary data-i18n="ct1_cach_tde">Phần mềm tính đề xuất như thế nào?</summary>
-              <ul>
-                <li data-i18n="ct1_cach_1">"Thích nhất": số {person_l} xếp {slot_s} đó ở nguyện vọng 1.</li>
-                <li data-i18n="ct1_cach_2">"Muốn vào mà chưa được": số {person_l} xếp {slot_s} đó cao hơn {slot_s} mà họ đang được nhận.</li>
-                <li data-i18n="ct1_cach_3">Chỉ thêm chỗ cho {slot_s} có {person_l} muốn vào mà chưa được; chỉ bớt ở {slot_s} ít người thích hoặc còn chỗ trống.</li>
-                <li data-i18n="ct1_cach_4">Mỗi {slot_s} đổi tối đa 20 % mỗi kỳ, không dưới 8 chỗ, và tổng số chỗ giữ nguyên.</li>
-              </ul>
-            </details>
-          </section>
-          <p class="hint-text ct1-lien-dong"><a href="#" id="ct1LienTieuChi" data-i18n="ct1_lien_tieu_chi">Muốn đổi thứ tự ưu tiên giữa các {person_l}? Xem màn Tiêu chí.</a></p>
-          <div class="save-feedback xuat-ket-qua" id="ct1PhanHoi" role="status"></div>
-        </div>
-      </div>
       <!-- UX1A-L3: tra cứu một học sinh nằm ĐẦU thẻ Kết quả (trên bảng) -->
       <!-- GT1: tra cứu một học sinh (giải thích vì sao em được/không được từng CLB); js/14_giai_trinh.js -->
       <div class="panel gt-ui" id="gtPanel">
@@ -502,6 +427,79 @@
             <button class="btn btn-secondary" id="btnGuiPhanHoi" type="button" data-i18n="ph_gui">Gửi</button>
           </div>
           <div id="phKetQua" class="save-feedback" role="status"></div>
+        </div>
+      </div>
+      <!-- CT1: "Xem xét chỉ tiêu" (chỉ đọc, chỉ quản trị). Mở từ nút "Gợi ý thay đổi chỉ tiêu" ở góc phải thanh công cụ (khối nằm CUỐI thẻ để bảng kết quả chính vẫn là bảng đầu tiên); khi mở, phần còn lại của thẻ Kết quả
+           được CSS ẩn (lớp .ct1-dang-mo). js/20_xem_xet_chi_tieu.js. Mỗi khung ct1* tuân Hick (≤7 điều khiển) và Von Restorff (≤1 nút vàng). -->
+      <div class="ct1-khung" id="ct1Khung" data-quyen="quan_tri" hidden>
+        <div class="ct1-dau">
+          <button type="button" class="btn btn-ghost btn-nho" id="btnCt1Dong" data-i18n="ct1_dong">Quay lại kết quả</button>
+          <h2 class="ct1-tde-lon" id="ct1TieuDe" data-i18n="ct1_tieu_de">Chỉ tiêu {slot_s} cho kỳ sau</h2>
+          <details class="ux6-hoi"><summary class="ux6-hoi-nut" data-i18n-aria-label="ux6_hoi" aria-label="Giải thích" title="Giải thích">?</summary><p class="ux6-hoi-nd" data-i18n="ct1_mo_ta">Phần mềm đọc nguyện vọng thật của kỳ này và gợi ý nên chuyển chỗ từ {slot_s} nào sang {slot_s} nào. Nhà trường là bên quyết định; màn hình này không đổi chỉ tiêu nào.</p></details>
+        </div>
+        <div class="ct1-trang-thai" id="ct1TrangThai" role="status"></div>
+        <div id="ct1Noi" hidden>
+          <section class="ct1-the" id="ct1Khuyen" aria-labelledby="ct1KnCau">
+            <span class="ct1-nhan-nho" data-i18n="ct1_kn_nhan">Khuyến nghị</span>
+            <h2 class="ct1-tde" id="ct1KnCau"></h2>
+            <p class="ct1-ghi-chu" id="ct1KnGhiChu"></p>
+            <div class="ct1-o-luoi" id="ct1Tile"></div>
+            <div class="ct1-hang-nut"><button type="button" class="btn btn-primary" id="btnCt1XuatDeXuat" data-i18n="ct1_xuat_de_xuat">Xuất bảng đề xuất (CSV)</button></div>
+          </section>
+          <section class="ct1-the" id="ct1Buoc" aria-labelledby="ct1BuocTde">
+            <h2 class="ct1-tde ct1-tde-vua" id="ct1BuocTde" data-i18n="ct1_b_tieu_de">Kết quả sau từng bước thay đổi</h2>
+            <p class="ct1-ghi-chu" id="ct1BuocMoTa"></p>
+            <div class="ct1-hai-cot" id="ct1BuocHinh"></div>
+            <ol class="ct1-ds-buoc" id="ct1DsBuoc"></ol>
+            <p class="ct1-ket-buoc" id="ct1KetBuoc"></p>
+            <p class="ct1-luu-y" id="ct1KemNhieuHon" role="note" hidden></p>
+            <div class="ct1-hang-nut">
+              <button type="button" class="btn btn-ghost btn-nho" id="btnCt1ThemBuoc" hidden></button>
+              <button type="button" class="btn btn-secondary" id="btnCt1XuatDoiChieu" data-i18n="ct1_b_xuat">Xuất bảng đối chiếu (CSV)</button>
+            </div>
+          </section>
+          <section class="ct1-the" id="ct1Thu">
+            <details class="ct1-thu" id="ct1ThuMuc">
+              <summary class="btn btn-secondary ux6-mui-ten" id="ct1ThuTom" data-i18n="ct1_thu_tom">Tự thử một thay đổi</summary>
+              <div class="ct1-thu-than">
+                <details class="ux6-hoi"><summary class="ux6-hoi-nut" data-i18n-aria-label="ux6_hoi" aria-label="Giải thích" title="Giải thích">?</summary><p class="ux6-hoi-nd" data-i18n="ct1_thu_goi_y">Thử chuyển chỗ giữa hai {slot_s} cùng buổi và xem kết quả ngay. Không lưu gì.</p></details>
+                <div class="ct1-thu-hang">
+                  <label class="ct1-truong"><span data-i18n="ct1_thu_tu">Lấy chỗ từ</span><select id="ct1ThuTu" class="text-input text-input-sm"></select></label>
+                  <label class="ct1-truong"><span data-i18n="ct1_thu_den">Chuyển cho</span><select id="ct1ThuDen" class="text-input text-input-sm"></select></label>
+                  <label class="ct1-truong"><span data-i18n="ct1_thu_k">Số chỗ</span>
+                    <select id="ct1ThuK" class="text-input text-input-sm"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+                </div>
+                <div class="ct1-hang-nut"><button type="button" class="btn btn-primary" id="btnCt1ThuXep" data-i18n="ct1_thu_xep">Xếp lại với chỉ tiêu này</button></div>
+                <p class="ct1-luu-y" id="ct1ThuLoi" role="alert" hidden></p>
+                <div class="ct1-thu-kq" id="ct1ThuKq" tabindex="-1" hidden>
+                  <p class="ct1-dong-dam" id="ct1ThuTieuDe"></p>
+                  <div class="scroll-x" id="ct1ThuBangHop"></div>
+                  <div class="ct1-hang-nut"><button type="button" class="btn btn-secondary" id="btnCt1ThuXuat" data-i18n="ct1_b_xuat">Xuất bảng đối chiếu (CSV)</button></div>
+                </div>
+              </div>
+            </details>
+          </section>
+          <section class="ct1-the" id="ct1Thieu" aria-labelledby="ct1ThieuTde">
+            <h2 class="ct1-tde ct1-tde-vua" id="ct1ThieuTde" data-i18n="ct1_t_tieu_de">{slot_s} nào thiếu chỗ, {slot_s} nào thừa chỗ?</h2>
+            <ul class="ct1-chu-giai" id="ct1ThieuChuGiai"></ul>
+            <div class="ct1-ds-thanh" id="ct1ThieuDs"></div>
+            <p class="ct1-ghi-chu" id="ct1ThieuGhiChu" hidden></p>
+          </section>
+          <section class="ct1-the" id="ct1Bang" aria-labelledby="ct1BangTde">
+            <h2 class="ct1-tde ct1-tde-vua" id="ct1BangTde" data-i18n="ct1_bang_tieu_de">Chỉ tiêu đề xuất cho từng {slot_s}</h2>
+            <div class="scroll-x"><table class="data-table ct1-bang" id="ct1BangTab"><thead></thead><tbody></tbody></table></div>
+            <details class="ct1-cach-tinh" id="ct1CachTinh">
+              <summary data-i18n="ct1_cach_tde">Phần mềm tính đề xuất như thế nào?</summary>
+              <ul>
+                <li data-i18n="ct1_cach_1">"Thích nhất": số {person_l} xếp {slot_s} đó ở nguyện vọng 1.</li>
+                <li data-i18n="ct1_cach_2">"Muốn vào mà chưa được": số {person_l} xếp {slot_s} đó cao hơn {slot_s} mà họ đang được nhận.</li>
+                <li data-i18n="ct1_cach_3">Chỉ thêm chỗ cho {slot_s} có {person_l} muốn vào mà chưa được; chỉ bớt ở {slot_s} ít người thích hoặc còn chỗ trống.</li>
+                <li data-i18n="ct1_cach_4">Mỗi {slot_s} đổi tối đa 20 % mỗi kỳ, không dưới 8 chỗ, và tổng số chỗ giữ nguyên.</li>
+              </ul>
+            </details>
+          </section>
+          <p class="ct1-lien-dong"><a href="#" id="ct1LienTieuChi" data-i18n="ct1_lien_tieu_chi">Muốn đổi thứ tự ưu tiên giữa các {person_l}? Xem màn Tiêu chí.</a></p>
+          <div class="save-feedback xuat-ket-qua" id="ct1PhanHoi" role="status"></div>
         </div>
       </div>
     </section>

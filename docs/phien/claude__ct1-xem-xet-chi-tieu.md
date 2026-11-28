@@ -81,9 +81,9 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
   `cac_dong_match_results`, `_khoa_xuat`/`_ghi_csv`. Priority-change demo = existing GT2 screen (link only).
 
 ## Current state (overwrite each handoff)
-- L1–L4 done and pushed. CT1-FIX done (soat-ma findings 1, 2, 3b, 4, 5 fixed; see CHANGELOG). Finding 3: option (b) chosen by the
-  report's recommendation; Truong may veto → (a) delete `#ct1KemNhieuHon`, (c) new item. kiem_nhanh, ruff, CT1 tests green locally.
-- CI on the latest push: NOT yet seen. Do not write `Status: DONE` until "Tests (rbda-kiosk)" is green.
+- L1–L4, CT1-FIX…FIX4 done. CT1-FIX5 (2026-11-28): fixed the 6 red tests of CI run 46102624745 (nkhd_ labels, hint budget 25,
+  CT1 block moved to end of #view-results, mt1 test prefix). Full suite locally before fix: 6 failed / 8074 passed; after: related + CT1 green.
+- CI on the FIX5 push: NOT yet seen. Do not write `Status: DONE` until "Tests (rbda-kiosk)" is green.
 
 ## Next steps (in order)
 0. FIRST `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu` (this file is not on `main`). L1–L4 and CT1-FIX are DONE, never redo.
@@ -111,3 +111,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | L4 docs + 3 hand cases + soat-ma report | findings 1–5 in BAO_CAO_SOAT_MA_CT1.md; none fixed (report-only) |
 | 2026-11-28 | Sonnet (coder) | Handoff at ~400k context: state rewritten, awaiting CI | next session checks CI and finishes per protocol §4 |
 | 2026-11-28 | Sonnet (coder) | Second handoff: added step 0 (check out the branch first) after a new chat restarted at L1 | state was correct on origin; that chat was on the wrong branch |
+| 2026-11-28 | Opus | CT1-FIX5: full suite locally, fixed the 6 CI reds (see CHANGELOG) | no product .py changed |

@@ -3855,7 +3855,7 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 .ct1-khung[hidden], .ct1-khung [hidden] { display: none !important; }
 #ct1Noi { display: flex; flex-direction: column; gap: 20px; }
 .ct1-dau { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-.ct1-dau .hint-text { margin: 0; max-width: 70ch; }
+.ct1-dau .ux6-hoi { margin: 0; }
 .ct1-tde-lon { margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--ink); }
 .ct1-trang-thai { margin: 0; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--hairline); background: var(--paper-raised); color: var(--ink-soft); }
 .ct1-trang-thai.is-loi { border-color: var(--rust); background: var(--rust-soft); color: var(--rust-text); font-weight: 600; }
@@ -3864,6 +3864,8 @@ tr:hover > td > .btn-icon-danger.ux6-xoa, .btn-icon-danger.ux6-xoa:focus-visible
 .ct1-tde { margin: 0; font-size: 1.5rem; line-height: 1.35; font-weight: 700; color: var(--ink); }
 .ct1-tde-vua { font-size: 1.25rem; }
 .ct1-khung .hint-text { margin: 0; line-height: 1.55; }
+.ct1-ghi-chu { margin: 0; color: var(--slate); font-size: 12.5px; line-height: 1.55; }
+.ct1-ghi-chu[hidden] { display: none; }
 .ct1-hang-nut { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .ct1-o-luoi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 @media (min-width: 900px) { .ct1-o-luoi { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
