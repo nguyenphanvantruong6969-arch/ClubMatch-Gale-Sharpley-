@@ -111,8 +111,11 @@
       await QT2.choLuuDiem();                                                     // sửa 2026-11-28: điểm vừa gõ phải vào máy trước khi đếm
       const r = await DK.goi("dk_diem_thieu", T());
       if (!r.ok) return r;
+      const chu = r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp.";
       await DK.quanTri();                                                          // vẽ lại: số «x/y bài đã có điểm» và khung còn thiếu cập nhật
-      DK.thongBao(r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp.", r.data.length > 0);
+      const kqMoi = document.getElementById("dkChotDiemKq");                      // dòng kết quả dưới nút (như trước) trên màn vừa vẽ
+      if (kqMoi) kqMoi.textContent = chu;
+      DK.thongBao(chu, r.data.length > 0);
       return { ok: true, errors: [] }; }); }, { id: "dkChotDiem" });
     return h("div", {}, ...khoi, chot, kq);
   };

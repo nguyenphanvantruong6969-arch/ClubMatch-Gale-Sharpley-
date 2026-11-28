@@ -6,7 +6,8 @@
 - `js/dang_ky_quan_tri_2.js`: `QT2.ghiNhanLuuDiem` ghi mọi lệnh lưu điểm đang dở; `QT2.choLuuDiem` rời ô đang gõ rồi chờ chúng xong. `QT2.khungThieuDiem` (`#dkThieuDiem`): còn thiếu thì liệt kê ngay cạnh nút (số bài, theo CLB, mã em). «Chốt điểm» chờ lưu xong, rồi vẽ lại màn (số «x/y bài đã có điểm» cập nhật) thay vì một dòng chữ nhỏ cuối trang.
 - `js/dang_ky_quan_tri.js`: `nutXep` chờ `choLuuDiem()` trước khi chốt; chốt bị từ chối vì thiếu điểm thì vẽ lại để khung liệt kê đúng em. Giữ đúng MỘT nút vàng ở bước 5.
 - Tests: `tests/test_giao_dien_dk_buoc5.py` (mới, 3, Chromium; ca chạy song song làm chậm lệnh lưu điểm phía Python, đỏ trên mã cũ). Không đổi backend, thuật toán, schema, CSV.
-- 9 test giao diện cổng đã đỏ sẵn TRƯỚC hai lần sửa hôm nay (kiểm trên mã `105683c~1`): `test_giao_dien_dk5_toan_trinh::test_4`, `test_giao_dien_dk3_cong::test_11[375|600|1000]`, `::test_12[no-preference|reduce]`, `test_giao_dien_dkl_giao_vien::test_3` (và 2 ca khác cùng nhóm khi chạy song song); chưa sửa, cần mục riêng.
+- «Chốt điểm» vẫn ghi câu kết quả vào `#dkChotDiemKq` dưới nút sau khi vẽ lại (giữ hợp đồng của `tests/test_giao_dien_dkl_quan_tri.py::test_4`).
+- Hồi quy toàn bộ test cổng (483): 481 xanh. Đỏ: `test_giao_dien_dkl_giao_vien::test_3` (đỏ sẵn trên mã `105683c~1`, trước hai lần sửa hôm nay) và `test_giao_dien_dkl_quan_tri::test_4` (do bản sửa này, đã sửa, nay xanh). Nhóm `test_giao_dien_dk3_cong::test_11/test_12`, `test_giao_dien_dk5_toan_trinh::test_4` đỏ ở lượt chạy trước (cả trên mã cũ) nhưng xanh ở lượt này: chập chờn / phụ thuộc thứ tự chạy, chưa sửa.
 
 ## 2026-11-28 — Sửa: cổng đăng ký không tải được phiếu PIN / tệp mẫu trên bản .exe (Truong yêu cầu; ngoài sổ 33 mục)
 
