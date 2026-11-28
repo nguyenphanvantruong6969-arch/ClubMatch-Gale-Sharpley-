@@ -23,7 +23,7 @@ def _mo(mo_ux5a, vai="quan_tri", rong=1280):  # noqa: F811
 
 def _vao_ct1(page):
     page.click("#btnCt1Mo")
-    page.wait_for_selector("#ct1Noi", state="visible")
+    page.wait_for_selector("#ct1Noi", state="visible", timeout=90000)   # bộ 800HS giải lại nhiều lần: CI chậm hơn máy phát triển
     page.wait_for_timeout(300)
 
 
