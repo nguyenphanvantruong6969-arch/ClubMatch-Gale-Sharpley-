@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-28 — Sửa: cổng đăng ký không tải được phiếu PIN / tệp mẫu trên bản .exe (Truong yêu cầu; ngoài sổ 33 mục)
+
+- Lỗi: «Xuất phiếu PIN» và «Tải file mẫu» tải tệp bằng `blob:` của trình duyệt; cửa sổ pywebview (WebView2) chặn kiểu tải này mà không báo, nên không có tệp nào về. Nặng hơn: phiếu PIN ĐẶT LẠI PIN của mọi người trước khi tải, nên PIN cũ chết mà PIN mới không ai thấy. Test giao diện chạy trên Chromium (cho tải) nên CI không bắt được.
+- `api_dang_ky_excel.py`: `_dk_ghi_tep_xuat` ghi tệp bằng Python qua `_duong_xuat` (thư mục Tải xuống, không ghi đè, như mọi nút xuất khác). `dk_pin_xuat_excel` ghi tệp TRONG giao dịch đặt lại PIN: ghi hỏng → `dk_xuat_tep_hong` + rollback (PIN cũ giữ nguyên); commit hỏng sau khi ghi → xoá tệp. `dk_excel_mau` cũng ghi ra đĩa. Cả hai trả thêm `path`, `dir` (giữ `file_base64` cho bên gọi cũ).
+- `js/dang_ky_quan_tri_2.js`: bỏ tải `blob:`, thông báo tên tệp và thư mục đã lưu. Mã lỗi mới `dk_xuat_tep_hong` (`i18n_errors.py` → `i18n_loi.js`).
+- Tests: `tests/test_dk_xuat_tep_ghi_dia.py` (mới, 7); sửa có chủ đích `tests/test_giao_dien_vg1.py::test_l2_*` và `tests/test_giao_dien_dk9_l2.py::test_b_tai_file_mau_*` (đọc tệp Python đã ghi thay vì chờ trình duyệt tải). Liên quan xanh: 74 backend + 18 giao diện; `kiem_nhanh` 7/7. Chưa kiểm được trên cửa sổ pywebview thật của Windows (môi trường chỉ có Linux). Không đổi thuật toán, schema, CSV.
+
 ## 2026-11-28 — Bộ demo hackathon (dữ liệu thử, ngoài sổ đăng ký 33 mục; Truong yêu cầu)
 
 - `du_lieu_test/bo_demo_hackathon/` (mới, DỮ LIỆU MÔ PHỎNG): `tao_bo_demo.py` sinh hai workspace `.zip` nạp sẵn (`demo-truong-thpt-mo-phong`: 240 em · 12 CLB · 3 buổi · lớp · suất ưu tiên · thi tuyển · điểm quyết tâm · mã tra cứu · 3 tài khoản GT3; `demo-cong-dang-ky`: cổng DK ở giai đoạn học sinh đăng ký, 4 GV, 8 CLB đã duyệt, 60 em/50 đã nộp), sổ 240 em + sổ 6 em đến muộn, `TAI_KHOAN_DEMO.csv` (mọi mật khẩu/PIN demo), `MA_TRA_CUU_DEMO.csv`, `DIEM_DAN_CONG_DANG_KY.txt`, `KIEM_CHUNG.json`, `README.md` (kịch bản demo theo tính năng).

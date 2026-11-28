@@ -1926,6 +1926,10 @@ window.I18N_ERROR_MESSAGES = {
     "vi": "Tên trùng với một dòng phía trên.",
     "en": "Name repeats an earlier row."
   },
+  "dk_xuat_tep_hong": {
+    "vi": "Không ghi được tệp vào thư mục Tải xuống (đĩa đầy hoặc không có quyền ghi). Không có gì bị thay đổi.",
+    "en": "Could not save the file to the Downloads folder (disk full or no write permission). Nothing was changed."
+  },
   "dk_pham_vi_la": {
     "vi": "Phạm vi phiếu PIN không hợp lệ (chọn học sinh, giáo viên hoặc tất cả).",
     "en": "Invalid PIN sheet scope (choose students, teachers or all)."

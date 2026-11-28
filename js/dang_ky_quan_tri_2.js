@@ -223,13 +223,9 @@
       return r;
     };
     const mau = DK.nut("Tải file mẫu", function () { DK.chay(this, async () => {
+      /* Sửa 2026-11-28: Python ghi tệp vào Tải xuống (cửa sổ pywebview chặn tải `blob:`), ở đây chỉ báo chỗ lưu. */
       const r = await DK.goi("dk_excel_mau", T()); if (!r.ok) return r;
-      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
-      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
-      DK.thongBao("Đã tải " + r.data.ten_tep + "."); return r; }); }, { id: "dkExcelMau" });
+      DK.thongBao("Đã lưu " + QT2.tenTep(r.data.path) + " vào thư mục: " + r.data.dir); return r; }); }, { id: "dkExcelMau" });
     const inp = h("input#dkExcelTep", { type: "file", accept: ".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", hidden: true,
       onchange: () => { const f = inp.files[0]; inp.value = ""; chon(f); } });
     const tha = h("div#dkExcelTha.dk-tha", { role: "group", "aria-label": "Thả tệp Excel vào đây" },
@@ -248,6 +244,7 @@
   };
 
   /* ---------- VG1-L2: xuất phiếu PIN (ĐẶT LẠI PIN rồi ghi .xlsx; PIN cũ không xem lại được vì chỉ lưu băm) ---------- */
+  QT2.tenTep = (p) => String(p || "").split(/[\\/]/).pop();      // tên tệp trong đường dẫn Windows hoặc POSIX
   QT2.phieuPinXuat = function () {
     const pv = h("select#dkPinPhamVi.dk-nhap", { "aria-label": "Phạm vi phiếu PIN" }, h("option", { value: "hs" }, "Học sinh"), h("option", { value: "gv" }, "Giáo viên"), h("option", { value: "tat_ca" }, "Học sinh và giáo viên"));
     const lop = DK.truong("Chỉ lớp này (để trống = mọi lớp)", "pin_lop", { id: "dkPinLop" });
@@ -257,13 +254,8 @@
       const e = r1.errors && r1.errors[0];
       if (r1.ok || !e || e.code !== "dk_can_xac_nhan_pin") return r1;
       if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ đặt lại PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
-      const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;
-      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
-      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
-      DK.thongBao("Đã tải " + r.data.ten_tep + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên). PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
+      const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;    // tệp đã được Python ghi (sửa 2026-11-28)
+      DK.thongBao("Đã lưu " + QT2.tenTep(r.data.path) + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên) vào thư mục: " + r.data.dir + ". PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
     return h("section#dkPhieuPin.dk-khung", {}, h("h3", {}, "Phiếu PIN"),
       h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi tải tệp Excel có PIN mới để in và phát."),
       h("label.dk-truong", {}, h("span", {}, "Phạm vi"), pv), lop, nut);

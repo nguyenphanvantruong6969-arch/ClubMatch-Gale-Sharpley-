@@ -80,12 +80,11 @@ def test_a_khoi_co_mot_nut_vang_tat_va_moi_nut_du_44px(cong):
 
 def test_b_tai_file_mau_la_xlsx_chi_co_tieu_de(cong):
     pg = cong()
-    with pg.expect_download() as d:
-        pg.locator("#dkExcelMau").click()
-    f = d.value
-    assert f.suggested_filename == "MAU_DANG_KY.xlsx"
+    pg.locator("#dkExcelMau").click()              # sửa 2026-11-28: Python ghi tệp vào Tải xuống, trình duyệt KHÔNG tải gì
+    pg.wait_for_selector("#dkThongBao:has-text('MAU_DANG_KY.xlsx')")
+    tai_ve = os.environ["RBDA_THU_MUC_TAI_VE"]
     p = pg.thu_muc / "mau.xlsx"
-    f.save_as(str(p))
+    p.write_bytes(open(os.path.join(tai_ve, "MAU_DANG_KY.xlsx"), "rb").read())
     wb = openpyxl.load_workbook(str(p))
     assert wb.sheetnames == ["Học sinh", "Giáo viên", "Phòng", "Hướng dẫn"] and wb["Học sinh"].max_row == 1
     chon(pg, "mau.xlsx", base64.b64encode(p.read_bytes()).decode())                       # tệp mẫu để trống: không có gì để nạp
