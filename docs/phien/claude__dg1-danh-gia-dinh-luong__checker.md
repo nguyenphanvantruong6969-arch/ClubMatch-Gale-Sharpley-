@@ -6,9 +6,9 @@
 ## Máy
 - `python .claude/skills/soat-ma/scripts/kiem_nhanh.py --co-so FETCH_HEAD` (FETCH_HEAD = `origin/main` vừa `git fetch`): **7/7 ĐẠT**
   (ruff, chu_cam, ma_loi_js, i18n_loi_khop, i18n_khoa, trung_khit 3 bộ × 5 seed, khong_sua_nhat_ky). Chạy sau L4 (bất biến 1).
-- `git diff origin/main HEAD --stat -- . ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'`: 10 tệp, **+161 dòng, 0 dòng xoá**;
+- `git diff origin/main HEAD --stat -- . ':!du_lieu_test' ':!tests' ':!docs' ':!CHANGELOG.md'`: 10 tệp, **+162 dòng, 1 dòng sửa (mở rộng một selector CSS)**;
   `rbda_priority_pipeline.py`, `fa_daa.py`, `cau_hinh_ws.py`, schema: KHÔNG đổi. Lô sản phẩm duy nhất là L4.
-- `tests/test_dg1_*.py`: 45 qua. Test liên quan: `test_so_excel_de_dung`, `test_du_lieu_ket_qua`, `test_giao_dien_bieu_do`,
+- `tests/test_dg1_*.py`: 49 qua (cuối phiên). Test liên quan: `test_so_excel_de_dung`, `test_du_lieu_ket_qua`, `test_giao_dien_bieu_do`,
   `test_i18n_sync`, `test_i18n_khoa_dc_khong_chet` (73 qua).
 
 ## Tầng 1 — lõi
@@ -46,10 +46,20 @@
 | 1 | nên sửa | tests/test_dg1_chi_so.py | `TestNhomA` | Ca tay đầu mọi em được xếp ở NV1 nên đổi `h == 1` → `h <= 2` không làm test đỏ | mutation M3 | thêm ca có em hạng 2, 3 | đã tái hiện | **ĐÃ SỬA** (`test_phan_biet_nv1_nv2_nv3`; mutation lại → đỏ) |
 | 2 | nên sửa | js/03_ket_qua.js | `loadChiSoPhanBo` | `!res.ok` ẩn khối lặng lẽ (lỗi đọc giống «chưa có kết quả») | API lỗi → khối biến mất, không thông báo | hiện câu lỗi | suy luận + test route giả | **ĐÃ SỬA** |
 | 3 | nhỏ | du_lieu_test/danh_gia/_sinh.py | `sinh_truong` | κ nhiều buổi lấy `κ·N` cho CẢ BA buổi (mỗi em cần 1 chỗ MỖI buổi) → mô hình quá chật | 300 HS × 3 buổi: 330 chỗ cho 900 suất | κ·N·số buổi | đã tái hiện (36,7 % được xếp) | **ĐÃ SỬA**; `nhieu_buoi.json` chạy lại sau sửa |
+| 5 | chặn (đo sai) | do_danh_gia.py | `chay_du_lieu_co_san` | 3/5 bộ có sẵn là NHIỀU BUỔI (bo_can_bang 6, bo_kich_tran 3, DQT_800 4) nhưng bị chạy gộp thành MỘT buổi qua `run_rbda` → số «chưa xếp», «lấp đầy» sai | bo_can_bang: 15 chưa xếp / 32 % lấp đầy (gộp) so với từng buổi 94–114 chưa xếp / 100 % | chạy qua `run_rbda_nhieu_buoi`, số liệu theo buổi + theo học sinh | đã tái hiện (in_bang bản đầu) | **ĐÃ SỬA** + test `test_bo_co_san_nhieu_buoi_khop_run_pipeline_that` so TỪNG dòng với `run_pipeline` thật (seed 42); `bo_co_san.json` chạy lại |
+| 6 | nên sửa | do_danh_gia.py | `phan_thoi_gian` | gọi `run_pipeline(seed=1+lan)` ba lần: bốc thăm đã khoá sau lần đầu → `hat_giong_da_khoa` (bất biến 3 hoạt động đúng; lỗi ở bộ đo) | lần chạy đầy đủ đầu tiên sập ở phần thời gian | dùng cùng seed | đã tái hiện | **ĐÃ SỬA**; `thoi_gian.json` chạy lại riêng một mình |
+| 7 | nên sửa | do_danh_gia.py, do_tinh_nang.py | `do_cau_hinh`, `do_luoi_2x2` | gộp theo khoá của lần chạy ĐẦU → nhóm vắng mặt ở một lần chạy (không em nào ở Tầng 2 khi α = 0,9) gây `KeyError` (tính chung: trung bình chia cho cả số lần có và không có) | `do_tinh_nang.py` sập ở 800 × 20, α = 0,9 | hợp khoá, trung bình CHỈ trên giá trị có mặt (`hop_khoa`, `tb_co`) | đã tái hiện (log chạy đầu) | **ĐÃ SỬA** + 2 test |
+| 8 | nên sửa | style.css, js/03_ket_qua.js | `loadChiSoPhanBo` | ô chỉ số dùng lớp `.kpi-o` — test `test_o_tom_tat_khop_ham_doc` đếm MỌI `.kpi-o` trên trang → đỏ (3 ô thành 7 ô) | chạy `test_giao_dien_tom_tat_ket_qua.py` | lớp riêng `.dg1-o` | đã tái hiện | **ĐÃ SỬA** |
+| 9 | nhỏ | i18n.js | `dg1_du_tru` | chữ «dự trữ» ở giao diện trái quy ước T3-L3 (`test_nguon_chu_khong_con_du_tru_o_i18n_va_index`) | chạy 32 tệp test giao diện thẻ Kết quả | «Suất ưu tiên đã dùng» / «Priority seats used» | đã tái hiện | **ĐÃ SỬA** (mục Excel giữ «dự trữ» như trang Thống kê sẵn có) |
 | 4 | nhỏ | do_danh_gia.py | `tong_hop` | KTC t có thể vượt [0, 100] (hoặc âm) với phần trăm khi n nhỏ | n = 2 (`--nhanh`) | chỉ là cách đọc; ghi trong README | đã thấy | ghi chú, không sửa |
 
 ## Chưa kiểm được
 - Chưa có người độc lập xem lại (soát tự thân). Chưa chạy bộ test đầy đủ (~22 phút; CI chạy). Chưa chụp ảnh giao diện (thuộc L5).
 - Chưa thử Excel mở bằng Excel thật; chỉ đọc lại bằng `openpyxl` (mục «CHỈ SỐ PHÂN BỔ» nằm cuối trang «Thống kê»).
 
-CHECKER REPORT 1+2 NO BUGS (sau khi sửa #1–#3; #4 là ghi chú)
+## Chạy rộng
+- 32 tệp test giao diện có mở thẻ Kết quả (`-n 2`): 331 qua, 2 đỏ — #9 (đã sửa) và `test_giai_phong_thi_hien_loi_moi_va_bam_nhan` (FA «gap1»,
+  timeout 8 giây khi máy đang chạy hai lần đo nặng; chạy lại riêng: ĐẠT, và ĐẠT trên `origin/main` — nhiễu tải, không liên quan thay đổi).
+- `kiem_ket_qua.py` trên JSON cuối: 356 ô cap_chan/ngoai_danh_sach = 0 cho RB-DA, đối chiếu số liệu ĐẠT.
+
+CHECKER REPORT 1+2 NO BUGS (sau khi sửa #1–#3 và #5–#9; #4 là ghi chú; soát tự thân, chưa có người độc lập)

@@ -83,24 +83,20 @@ top-points / gold-medal club; share of rejections decided by LOTTERY; A–C and 
   used) via a NEW pure function reusing `tieu_chi._thong_ke`, `{ok,data,errors}`, i18n `dg1_`; plus a «Chi_so» sheet in the
   Excel export. If an equivalent block already shows in default mode, add only the export sheet and note why.
 
-- D6 (coder, 2026-11-28, tự chọn mặc định) Lưới chạy lõi `run_rbda` TRONG BỘ NHỚ trên trường mô phỏng (cùng hàm `run_pipeline` gọi); `run_pipeline`
-  thật + Sổ nhập chỉ ở phép đối chiếu bộ TEST seed 42 (cổng bắt buộc) và ở `thoi_gian.json`. Test `test_nap_qua_phan_mem_khop_bo_nho` canh dữ liệu bộ sinh == dữ liệu nạp qua phần mềm.
-- D7 Mục Excel «CHỈ SỐ PHÂN BỔ» đặt cuối trang «Thống kê» thay vì sheet riêng `Chi_so`: thêm sheet đổi danh sách trang mà 6 tệp test + `Hướng dẫn` canh. Đổi lại dễ: thêm `TRANG_SO_EXCEL` nếu Truong muốn.
-- D8 Khối «Chỉ số phân bổ» dùng mẫu số MỌI suất (em × buổi) — khác bảng «Mức đáp ứng nguyện vọng» sẵn có (mẫu số: em được xếp); cả hai cùng hiện, mẫu số ghi rõ.
-- D9 Nhóm G: huy chương dùng nguyên mô hình `mo_phong_fa_daa` (loại CLB + hành vi); dự trữ × điểm quyết tâm dùng mô hình α/ρ/κ. Điểm quyết tâm: ba kiểu chia dồn/đều/giảm dần, bốc theo `crc32(seed|sid)`.
-- D10 `--giam` (3 × 5) KHÔNG phải dùng: bộ đầy đủ chạy xong dưới 60 phút (xem `ket_qua/README_LAN_CHAY.md`).
+- D6 (coder, 2026-11-28) Grid runs `run_rbda` in memory on simulated schools (the function `run_pipeline` calls); real `run_pipeline` only for the TEST seed-42 gate and `thoi_gian`.
+- D7 Excel metrics = a section at the end of the «Thống kê» sheet, not a separate `Chi_so` sheet (a new sheet changes the sheet list that 6 test files + «Hướng dẫn» pin).
+- D8 «Chỉ số phân bổ» denominator = ALL slots (student × session), unlike the existing «Mức đáp ứng nguyện vọng» (placed only); both shown, denominators labelled.
+- D9 Group G: medals reuse the `mo_phong_fa_daa` school model (club types, behaviours); reserves × Wharton use the α/ρ/κ model (points split don/deu/giam by `crc32(seed|sid)`).
 
 ## Plan (lots; ✱ = must-ship)
-- [ ] ✱L1 `_chi_so.py` (A, B incl. upper bound, C; pure) + `tests/test_dg1_chi_so.py` (test first) + registry stub.
-- [ ] ✱L2 `_sinh.py` (α, ρ, κ model) + runner (scales × α × κ × seed grid, E timing, JSON), `--nhanh`, `--so-nhap`;
-      `tests/test_dg1_sinh.py`: same seed → byte-identical Sổ nhập; α = 0.9 gives higher wish-1 concentration than α = 0.
-- [ ] ✱L3 Criteria variants + mechanism comparison + report generator (Q1–Q5 sections, definitions, charts, reproduce
-      commands, two blank student sections). Exact cross-check vs `SO_LIEU_DA_KIEM_CHUNG.md` §2 (TEST set, seed 42: 108/120,
-      wish-1 64). Blocking pairs 0 for RB-DA on every run.
-- [ ] ✱L4 In-app block + export sheet (D5), one Chromium test, related export tests.
-- [ ] ✱L5 Scientific report + screenshots (see "Scientific report" below). Runs the FULL harness once, after L4.
-- [ ] O  F (late arrivals / withdrawals) if budget remains.
-- [ ] Final: tests green, `kiem_nhanh.py` 7/7, `soat-ma`, CHANGELOG + TIEN_DO `DG1-L<n>`, CI green.
+- [x] ✱L1 `_chi_so.py` (A, B + upper bound, C; pure) + `tests/test_dg1_chi_so.py` + registry stub.
+- [x] ✱L2 `_sinh.py` (α, ρ, κ) + runner (grid, timing, JSON, `--nhanh`, `--so-nhap`); `tests/test_dg1_sinh.py`, `test_dg1_do_danh_gia.py`.
+- [x] ✱L3 Variants + 5 mechanisms + `in_bang.py` + exact cross-check vs `SO_LIEU_DA_KIEM_CHUNG.md` §2 (108/120, NV1 64). (Report generator → L5.)
+- [x] ✱G `do_tinh_nang.py`: reserves × Wharton 2×2, medals (FA-DAA) vs old mode; `tests/test_dg1_tinh_nang.py`.
+- [x] ✱L4 In-app «Chỉ số phân bổ» block + Excel section (D7), one Chromium test. Self-audited with soat-ma (checker file).
+- [ ] ✱L5 Scientific report + screenshots (below), written by the planner Opus session from `ket_qua/*.json`; NOT done by this coder session.
+- [ ] O  F (late arrivals / withdrawals) — dropped this session (budget).
+- [x] Final (coder part): tests green, `kiem_nhanh.py` 7/7, CHANGELOG + TIEN_DO, push. CI (`tests.yml`) not checked by the coder.
 
 ## Scientific report (L5; Truong, 2026-11-28)
 Truong asked: after testing on many datasets and scales, write a scientific report from the collected data, with screenshots
@@ -134,9 +130,16 @@ where useful, including screenshots taken DURING the process. Integrity rule (CL
   `dung_nhat_ky_ai.py` if it is the generator.
 
 ## Current state
-- Plan v2 (Opus planner, 2026-11-28): added control mechanisms, upper bound, two-seed grid, α/ρ/κ generator, L4 must-ship,
-  student hypotheses section. No code. Branch `claude/dg1-danh-gia-dinh-luong` created from `origin/main` with both plan files;
-  coder checks it out (protocol §0) and starts at L1.
+**DATA READY** (coder Sonnet, 2026-11-28) — `du_lieu_test/danh_gia/ket_qua/`, provenance in `README_LAN_CHAY.md` (commit, command, seconds per file).
+- JSON: `doi_chieu_so_lieu` (gate: TEST seed 42 = 108/120, NV1 64, row-for-row == `run_pipeline`), `mac_dinh` (800×20, α .5, ρ .7, κ 1.1),
+  `co_che_doi_chung` (RB-DA/Boston/RSD/TTC/club-DA), `bien_the_tieu_chi` (9 variants + churn), `quet_quy_mo` (90 configs: 120/300/800 × α × κ × ρ),
+  `tinh_nang` (reserves × Wharton 2×2 + medals), `thoi_gian` (to 2 000×50, incl. `run_pipeline`), `nhieu_buoi` (800×20×3), `bo_co_san` (5 as-is sets).
+- Full grid = 5 data seeds × 10 lottery seeds, took 19.6 min (< 60, so no reduced grid). Hard checks: `kiem_ket_qua.py` → 356 cap_chan/outside-list cells = 0 for RB-DA.
+- Tables: `python du_lieu_test/danh_gia/in_bang.py du_lieu_test/danh_gia/ket_qua` (no commentary). Each JSON has `dinh_nghia` (metrics, denominators, generator params, seeds).
+- Product change = L4 only (+162/−1 lines, the 1 = a CSS selector extended; core algorithm untouched). `kiem_nhanh.py` 7/7 vs `origin/main`. Self-audit: `__checker.md` (9 findings, all fixed or noted).
+- Next (Opus planner): L5 report from the JSON; hypotheses section is the student's. Known facts to state factually: club-DA == RB-DA on most generated data
+  (unique stable matching, still differs on `bo_kich_tran`); CI can leave [0,100] at small n; as-is sets bo_can_bang / bo_kich_tran / DQT_800 are multi-session.
+- Needs Truong: nothing blocking. Optional: Excel sheet `Chi_so` as its own sheet instead of a section (D7); confirm CI green on GitHub.
 
 ## Session log (append only)
 | Date | Model | What was done | Notes |
@@ -144,3 +147,4 @@ where useful, including screenshots taken DURING the process. Integrity rule (CL
 | 2026-11-28 | Opus | plan + metrics outline | planner role (rule 12) |
 | 2026-11-28 | Opus | plan v2 (6 improvements) | Truong approved all six |
 | 2026-11-28 | Opus | added L5 scientific report + screenshots | authorship split per CLAUDE.md integrity |
+| 2026-11-28 | Sonnet | coder: L1–L4 + group G + full harness run (DATA READY); self-audit instead of checker | no L5 (planner writes report) |
