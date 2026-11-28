@@ -12,6 +12,7 @@ trang nào = lỗi. Mọi dữ liệu mẫu là DỮ LIỆU GIẢ LẬP.
 import base64
 import binascii
 import io
+import os
 import unicodedata
 import zipfile
 
@@ -54,6 +55,25 @@ def _loi_dong(sheet, dong, ly_do, **tham_so):
 
 
 class DangKyExcelMixin:
+    # ------------------------------------------------------------ ghi tệp xuất ra đĩa (sửa 2026-11-28)
+    # Trước đây hai nút dưới đây trả base64 để trình duyệt tự tải bằng `blob:`; cửa sổ pywebview của bản .exe CHẶN kiểu tải
+    # đó (không báo gì), nên quản trị không nhận được tệp. Nay Python ghi tệp như mọi nút xuất khác (`_duong_xuat`: thư mục
+    # Tải xuống, không ghi đè tệp cũ). `file_base64` vẫn trả kèm cho bên gọi cũ.
+    def _dk_ghi_tep_xuat_dia(self, ten_tep, du_lieu):
+        duong = self._duong_xuat("", ten_tep)
+        with open(duong, "xb") as f:                           # "x": không bao giờ ghi đè (đã chọn tên chưa có)
+            f.write(du_lieu)
+        return duong
+
+    def _dk_ghi_tep_xuat(self, ten_tep, du_lieu):
+        """Ghi `du_lieu` (bytes) ra đĩa; hỏng thì ném `_Loi("dk_xuat_tep_hong")` để giao dịch đang mở rollback."""
+        try:
+            return self._dk_ghi_tep_xuat_dia(ten_tep, du_lieu)
+        except Exception:
+            import logging
+            logging.getLogger(__name__).exception("dk: khong ghi duoc tep xuat %s", ten_tep)
+            raise _Loi("dk_xuat_tep_hong") from None
+
     # ------------------------------------------------------------ đọc tệp (không đụng CSDL)
     @staticmethod
     def _dk_excel_giai_ma(file_base64, ten_tep):
@@ -268,7 +288,9 @@ class DangKyExcelMixin:
                 r[0].alignment = Alignment(wrap_text=False)
             bo = io.BytesIO()
             wb.save(bo)
-            return {"ten_tep": "MAU_DANG_KY.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii")}
+            duong = self._dk_ghi_tep_xuat("MAU_DANG_KY.xlsx", bo.getvalue())
+            return {"ten_tep": "MAU_DANG_KY.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii"),
+                    "path": duong, "dir": os.path.dirname(duong)}
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
 
     def dk_pin_xuat_excel(self, token, pham_vi, lop=None, xac_nhan=False):
@@ -323,11 +345,19 @@ class DangKyExcelMixin:
             self._dk_ghi_nk(cur, QUAN_TRI, "xuat_pin", "%s hs=%d gv=%d" % (pham_vi, len(dong_hs), len(dong_gv)))
             bo = io.BytesIO()
             wb.save(bo)
+            # Ghi tệp TRONG giao dịch đặt lại PIN: ghi hỏng thì `_Loi` -> rollback -> PIN cũ còn nguyên (trước đây PIN đã đổi
+            # mà tệp không tới tay ai). Commit hỏng sau khi đã ghi thì xoá tệp (PIN trong tệp không còn hiệu lực).
+            doi["path"] = self._dk_ghi_tep_xuat("PHIEU_PIN.xlsx", bo.getvalue())
             doi.update(hs=[x[0] for x in hs], gv=[x[0] for x in gv])
             return {"ten_tep": "PHIEU_PIN.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii"),
-                    "so_hs": len(dong_hs), "so_gv": len(dong_gv)}
+                    "so_hs": len(dong_hs), "so_gv": len(dong_gv), "path": doi["path"], "dir": os.path.dirname(doi["path"])}
         doi = {}
         r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if not r["ok"] and doi.get("path"):
+            try:
+                os.remove(doi["path"])
+            except OSError:
+                pass
         if r["ok"]:                                                # PIN đã đổi thì phiên cũ của những người đó chết
             self._dk_huy_phien(HOC_SINH, doi.get("hs", []))
             self._dk_huy_phien(GIAO_VIEN, doi.get("gv", []))

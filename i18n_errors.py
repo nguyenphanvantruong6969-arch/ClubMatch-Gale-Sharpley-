@@ -2042,6 +2042,10 @@ MESSAGES = {
         "vi": "Tên trùng với một dòng phía trên.",
         "en": "Name repeats an earlier row.",
     },
+    "dk_xuat_tep_hong": {
+        "vi": "Không ghi được tệp vào thư mục Tải xuống (đĩa đầy hoặc không có quyền ghi). Không có gì bị thay đổi.",
+        "en": "Could not save the file to the Downloads folder (disk full or no write permission). Nothing was changed.",
+    },
     # === end DK9 ===
     # === VG1 (vá gấp cổng đăng ký) ===
     "dk_pham_vi_la": {

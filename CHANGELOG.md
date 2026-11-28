@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## 2026-11-28 — Sửa CI đỏ do bộ demo: luật F1 (script trong `du_lieu_test/` phải ghi tường minh `"wharton": False`)
+
+- CI run 46114453369 đỏ ở `tests/test_a13_13_kiem_nhan.py::test_F1_script_do_tat_wharton_ro_rang` (Windows 7/9 và Linux 3/6, 1 test, 711+839 test còn lại xanh): `bo_demo_hackathon/tao_bo_demo.py`, `tao_excel_dang_ky.py` dựa vào mặc định.
+- `tao_excel_dang_ky.py`: CSDL tạm chỉ dùng cổng đăng ký → `update_workspace_config({"rules": {"wharton": False}})`. `tao_bo_demo.py`: workspace cổng đăng ký tạo với `{"rules": {"wharton": False}}` («Chốt và xếp» tự bật luật cổng cần); workspace kiosk giữ mặc định BẬT (demo điểm quyết tâm). Sinh lại bộ demo: `KIEM_CHUNG.json` không đổi; PIN và mã tra cứu MỚI (CSV khớp zip mới). Đã kiểm: cổng demo đăng nhập HS/GV, chốt và xếp tới «Xuất».
+
+## 2026-11-28 — Sửa: bước 5 «Nhập điểm» của cổng đăng ký không dẫn tới «Xuất» (Truong báo; ngoài sổ 33 mục)
+
+- Lỗi (tái hiện được, ổn định trong test): ô điểm chỉ lưu khi rời ô (`change`); gõ điểm cuối rồi bấm ngay «Chốt và xếp» thì lệnh lưu điểm và `dk_chot_va_xep` chạy song song (pywebview và `browser_host` mỗi lời gọi một luồng) -> chốt thấy còn thiếu và báo «Còn 1 bài thi chưa có điểm.» dù đã gõ đủ.
+- `js/dang_ky_quan_tri_2.js`: `QT2.ghiNhanLuuDiem` ghi mọi lệnh lưu điểm đang dở; `QT2.choLuuDiem` rời ô đang gõ rồi chờ chúng xong. `QT2.khungThieuDiem` (`#dkThieuDiem`): còn thiếu thì liệt kê ngay cạnh nút (số bài, theo CLB, mã em). «Chốt điểm» chờ lưu xong, rồi vẽ lại màn (số «x/y bài đã có điểm» cập nhật) thay vì một dòng chữ nhỏ cuối trang.
+- `js/dang_ky_quan_tri.js`: `nutXep` chờ `choLuuDiem()` trước khi chốt; chốt bị từ chối vì thiếu điểm thì vẽ lại để khung liệt kê đúng em. Giữ đúng MỘT nút vàng ở bước 5.
+- Tests: `tests/test_giao_dien_dk_buoc5.py` (mới, 3, Chromium; ca chạy song song làm chậm lệnh lưu điểm phía Python, đỏ trên mã cũ). Không đổi backend, thuật toán, schema, CSV.
+- «Chốt điểm» vẫn ghi câu kết quả vào `#dkChotDiemKq` dưới nút sau khi vẽ lại (giữ hợp đồng của `tests/test_giao_dien_dkl_quan_tri.py::test_4`).
+- Hồi quy toàn bộ test cổng (483): 481 xanh. Đỏ: `test_giao_dien_dkl_giao_vien::test_3` (đỏ sẵn trên mã `105683c~1`, trước hai lần sửa hôm nay) và `test_giao_dien_dkl_quan_tri::test_4` (do bản sửa này, đã sửa, nay xanh). Nhóm `test_giao_dien_dk3_cong::test_11/test_12`, `test_giao_dien_dk5_toan_trinh::test_4` đỏ ở lượt chạy trước (cả trên mã cũ) nhưng xanh ở lượt này: chập chờn / phụ thuộc thứ tự chạy, chưa sửa.
+
+## 2026-11-28 — Sửa: cổng đăng ký không tải được phiếu PIN / tệp mẫu trên bản .exe (Truong yêu cầu; ngoài sổ 33 mục)
+
+- Lỗi: «Xuất phiếu PIN» và «Tải file mẫu» tải tệp bằng `blob:` của trình duyệt; cửa sổ pywebview (WebView2) chặn kiểu tải này mà không báo, nên không có tệp nào về. Nặng hơn: phiếu PIN ĐẶT LẠI PIN của mọi người trước khi tải, nên PIN cũ chết mà PIN mới không ai thấy. Test giao diện chạy trên Chromium (cho tải) nên CI không bắt được.
+- `api_dang_ky_excel.py`: `_dk_ghi_tep_xuat` ghi tệp bằng Python qua `_duong_xuat` (thư mục Tải xuống, không ghi đè, như mọi nút xuất khác). `dk_pin_xuat_excel` ghi tệp TRONG giao dịch đặt lại PIN: ghi hỏng → `dk_xuat_tep_hong` + rollback (PIN cũ giữ nguyên); commit hỏng sau khi ghi → xoá tệp. `dk_excel_mau` cũng ghi ra đĩa. Cả hai trả thêm `path`, `dir` (giữ `file_base64` cho bên gọi cũ).
+- `js/dang_ky_quan_tri_2.js`: bỏ tải `blob:`, thông báo tên tệp và thư mục đã lưu. Mã lỗi mới `dk_xuat_tep_hong` (`i18n_errors.py` → `i18n_loi.js`).
+- Tests: `tests/test_dk_xuat_tep_ghi_dia.py` (mới, 7); sửa có chủ đích `tests/test_giao_dien_vg1.py::test_l2_*` và `tests/test_giao_dien_dk9_l2.py::test_b_tai_file_mau_*` (đọc tệp Python đã ghi thay vì chờ trình duyệt tải). Liên quan xanh: 74 backend + 18 giao diện; `kiem_nhanh` 7/7. Chưa kiểm được trên cửa sổ pywebview thật của Windows (môi trường chỉ có Linux). Không đổi thuật toán, schema, CSV.
+
+## 2026-11-28 — Bộ demo hackathon (dữ liệu thử, ngoài sổ đăng ký 33 mục; Truong yêu cầu)
+
+- `du_lieu_test/bo_demo_hackathon/` (mới, DỮ LIỆU MÔ PHỎNG): `tao_bo_demo.py` sinh hai workspace `.zip` nạp sẵn (`demo-truong-thpt-mo-phong`: 240 em · 12 CLB · 3 buổi · lớp · suất ưu tiên · thi tuyển · điểm quyết tâm · mã tra cứu · 3 tài khoản GT3; `demo-cong-dang-ky`: cổng DK ở giai đoạn học sinh đăng ký, 4 GV, 8 CLB đã duyệt, 60 em/50 đã nộp), sổ 240 em + sổ 6 em đến muộn, `TAI_KHOAN_DEMO.csv` (mọi mật khẩu/PIN demo), `MA_TRA_CUU_DEMO.csv`, `DIEM_DAN_CONG_DANG_KY.txt`, `KIEM_CHUNG.json`, `README.md` (kịch bản demo theo tính năng).
+- Dựng chỉ qua API công khai; tự kiểm bằng phần mềm thật trên bản sao (nạp 0 cảnh báo, sức khoẻ chỉ `health_oversubscribed_buoi`, đăng nhập sai/đúng, giáo viên bị chặn chạy, đến muộn giữ thứ tự bốc thăm của em cũ, xuất Excel/PDF, tra cứu + khoá, khoá PIN DK). Không đổi mã sản phẩm, schema, CSV hay thuật toán; không thêm test.
+
 ## 2026-11-28 — CT1-FIX5 (sửa 6 test đỏ của bộ đầy đủ trên CI, run 46102624745)
 
 - `tests/test_gt4_nhat_ky_doc.py` (vi, en): thiếu nhãn nhật ký cho hai hàm xuất mới → thêm `nkhd_export_de_xuat_chi_tieu_csv`, `nkhd_export_xem_xet_chi_tieu_csv` (vi + en) trong `i18n.js`.

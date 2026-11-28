@@ -62,6 +62,24 @@
 
   /* ---------- A2: nhập điểm ---------- */
   const so = (v) => (v === null || v === undefined ? "" : String(v).replace(".", ","));
+  /* Sửa 2026-11-28 (bước 5 không sang Xuất): ô điểm chỉ lưu khi rời ô. Gõ điểm cuối rồi bấm ngay «Chốt và xếp» thì lệnh lưu và lệnh chốt
+     chạy song song, chốt thấy còn thiếu điểm và từ chối. Mọi lệnh lưu điểm đang dở được ghi ở đây; chốt / đếm thiếu chờ chúng xong. */
+  const dangLuuDiem = new Set();
+  QT2.ghiNhanLuuDiem = (p) => { dangLuuDiem.add(p); Promise.resolve(p).finally(() => dangLuuDiem.delete(p)); return p; };
+  QT2.choLuuDiem = async function () {
+    const e = document.activeElement;
+    if (e && e.classList && e.classList.contains("dk-diem")) e.blur();          // ô đang gõ: rời ô để sự kiện change gửi điểm đi
+    while (dangLuuDiem.size) await Promise.allSettled(Array.from(dangLuuDiem));
+  };
+  /* Khung «còn thiếu điểm» ngay cạnh nút «Chốt và xếp»: bao nhiêu bài, theo CLB, kèm mã học sinh (tối đa 5 mã mỗi CLB). */
+  QT2.khungThieuDiem = function (thieu) {
+    if (!thieu || !thieu.length) return null;
+    const theo = {};
+    thieu.forEach((x) => { (theo[x.clb] = theo[x.clb] || []).push(x.ma); });
+    const ds = Object.entries(theo).map(([clb, ma]) => clb + " (" + ma.length + " em: " + ma.slice(0, 5).join(", ") + (ma.length > 5 ? "…" : "") + ")");
+    return h("p#dkThieuDiem.dk-chua-di", { role: "alert" }, h("span.dk-chua-di-bieu", { "aria-hidden": "true" }, "!"),
+      "Còn " + thieu.length + " bài thi chưa có điểm: " + ds.join("; ") + ". Nhập đủ rồi bấm «Chốt và xếp».");
+  };
   QT2.nhapDiem = async function (ds0) {
     const ds = ds0 || (await DK.goi("dk_diem_danh_sach", T())).data || [];
     if (!ds.length) return h("p.dk-phu", {}, "Không CLB nào có thi. Bấm «Chốt và xếp» để sang bước xếp.");
@@ -74,9 +92,9 @@
       const hang = c.hoc_sinh.map((x) => {
         const o = h("input.dk-nhap.dk-diem", { type: "text", inputmode: "decimal", value: so(x.diem), "aria-label": "Điểm " + x.ma });
         const hs = { chip: h("span.chip") }; chip(hs, o);
-        o.addEventListener("change", () => DK.chay(null, async () => {
+        o.addEventListener("change", () => QT2.ghiNhanLuuDiem(DK.chay(null, async () => {
           const r = await DK.goi("dk_diem_dat", T(), x.ma, c.clb_id, o.value.trim() === "" ? null : o.value);
-          if (r.ok) chip(hs, o); else o.classList.add("la-loi"); return r; }));
+          if (r.ok) chip(hs, o); else o.classList.add("la-loi"); return r; })));
         return [x.ma, x.ho_ten, x.lop, o, hs.chip];
       });
       const van = h("textarea.dk-nhap", { rows: "3", placeholder: "Mỗi dòng: Mã HS, dấu Tab, điểm. Chép hai cột từ trang tính là đúng dạng." });
@@ -90,8 +108,15 @@
     });
     const kq = h("p#dkChotDiemKq.dk-phu");
     const chot = DK.nut("Chốt điểm", function () { DK.chay(this, async () => {
+      await QT2.choLuuDiem();                                                     // sửa 2026-11-28: điểm vừa gõ phải vào máy trước khi đếm
       const r = await DK.goi("dk_diem_thieu", T());
-      if (r.ok) kq.textContent = r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp."; return r; }); }, { id: "dkChotDiem" });
+      if (!r.ok) return r;
+      const chu = r.data.length ? "Còn " + r.data.length + " bài thi chưa có điểm." : "Mọi bài thi đã có điểm. Bấm «Chốt và xếp» để xếp.";
+      await DK.quanTri();                                                          // vẽ lại: số «x/y bài đã có điểm» và khung còn thiếu cập nhật
+      const kqMoi = document.getElementById("dkChotDiemKq");                      // dòng kết quả dưới nút (như trước) trên màn vừa vẽ
+      if (kqMoi) kqMoi.textContent = chu;
+      DK.thongBao(chu, r.data.length > 0);
+      return { ok: true, errors: [] }; }); }, { id: "dkChotDiem" });
     return h("div", {}, ...khoi, chot, kq);
   };
 
@@ -223,13 +248,9 @@
       return r;
     };
     const mau = DK.nut("Tải file mẫu", function () { DK.chay(this, async () => {
+      /* Sửa 2026-11-28: Python ghi tệp vào Tải xuống (cửa sổ pywebview chặn tải `blob:`), ở đây chỉ báo chỗ lưu. */
       const r = await DK.goi("dk_excel_mau", T()); if (!r.ok) return r;
-      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
-      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
-      DK.thongBao("Đã tải " + r.data.ten_tep + "."); return r; }); }, { id: "dkExcelMau" });
+      DK.thongBao("Đã lưu " + QT2.tenTep(r.data.path) + " vào thư mục: " + r.data.dir); return r; }); }, { id: "dkExcelMau" });
     const inp = h("input#dkExcelTep", { type: "file", accept: ".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", hidden: true,
       onchange: () => { const f = inp.files[0]; inp.value = ""; chon(f); } });
     const tha = h("div#dkExcelTha.dk-tha", { role: "group", "aria-label": "Thả tệp Excel vào đây" },
@@ -248,6 +269,7 @@
   };
 
   /* ---------- VG1-L2: xuất phiếu PIN (ĐẶT LẠI PIN rồi ghi .xlsx; PIN cũ không xem lại được vì chỉ lưu băm) ---------- */
+  QT2.tenTep = (p) => String(p || "").split(/[\\/]/).pop();      // tên tệp trong đường dẫn Windows hoặc POSIX
   QT2.phieuPinXuat = function () {
     const pv = h("select#dkPinPhamVi.dk-nhap", { "aria-label": "Phạm vi phiếu PIN" }, h("option", { value: "hs" }, "Học sinh"), h("option", { value: "gv" }, "Giáo viên"), h("option", { value: "tat_ca" }, "Học sinh và giáo viên"));
     const lop = DK.truong("Chỉ lớp này (để trống = mọi lớp)", "pin_lop", { id: "dkPinLop" });
@@ -257,15 +279,10 @@
       const e = r1.errors && r1.errors[0];
       if (r1.ok || !e || e.code !== "dk_can_xac_nhan_pin") return r1;
       if (global.confirm && !global.confirm("Xuất phiếu PIN sẽ đặt lại PIN của " + e.params.n + " người: PIN cũ không còn dùng được. Tiếp tục?")) return { ok: true, errors: [] };
-      const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;
-      const bin = global.atob(r.data.file_base64), u8 = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-      const url = global.URL.createObjectURL(new global.Blob([u8], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-      const a = h("a", { href: url, download: r.data.ten_tep }); document.body.append(a); a.click(); a.remove();
-      global.setTimeout(() => global.URL.revokeObjectURL(url), 2000);
-      DK.thongBao("Đã tải " + r.data.ten_tep + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên). PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
+      const r = await DK.goi("dk_pin_xuat_excel", T(), pv.value, l, true); if (!r.ok) return r;    // tệp đã được Python ghi (sửa 2026-11-28)
+      DK.thongBao("Đã lưu " + QT2.tenTep(r.data.path) + " (" + r.data.so_hs + " học sinh, " + r.data.so_gv + " giáo viên) vào thư mục: " + r.data.dir + ". PIN cũ đã bị thay."); return r; }); }, { id: "dkPinXuat" });
     return h("section#dkPhieuPin.dk-khung", {}, h("h3", {}, "Phiếu PIN"),
-      h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi tải tệp Excel có PIN mới để in và phát."),
+      h("p.dk-phu", {}, "PIN chỉ được lưu dạng băm nên không xem lại được. Xuất phiếu = đặt PIN MỚI cho mọi người trong phạm vi chọn (PIN cũ hết dùng, tài khoản đang bị khoá được mở), rồi lưu tệp Excel có PIN mới vào thư mục Tải xuống để in và phát."),
       h("label.dk-truong", {}, h("span", {}, "Phạm vi"), pv), lop, nut);
   };
 

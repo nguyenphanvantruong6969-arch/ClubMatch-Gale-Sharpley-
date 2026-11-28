@@ -75,10 +75,12 @@ def test_l2_xuat_phieu_pin_hoi_xac_nhan_tai_tep_va_pin_moi_dang_nhap_duoc(vao):
     pg = vao(_gv_hs, "Cài đặt")
     pin_cu = ok(pg.api.dk_hs_dat_lai_pin(pg.qt, "H1"))["pin"]
     pg.select_option("#dkPinPhamVi", "tat_ca")
-    with pg.expect_download() as dl:
-        pg.click("#dkPinXuat")
+    pg.click("#dkPinXuat")                       # sửa 2026-11-28: Python ghi tệp vào Tải xuống, trình duyệt KHÔNG tải gì
+    pg.wait_for_selector("#dkThongBao:has-text('PIN cũ đã bị thay')")
     assert pg.hop and "đặt lại PIN của 3 người" in pg.hop[0]
-    wb = openpyxl.load_workbook(io.BytesIO(open(dl.value.path(), "rb").read()))
+    tai_ve = os.environ["RBDA_THU_MUC_TAI_VE"]
+    assert os.listdir(tai_ve) == ["PHIEU_PIN.xlsx"] and tai_ve in pg.locator("#dkThongBao").inner_text()
+    wb = openpyxl.load_workbook(io.BytesIO(open(os.path.join(tai_ve, "PHIEU_PIN.xlsx"), "rb").read()))
     assert wb.sheetnames == ["Học sinh", "Giáo viên"]
     pin_h1 = {r[0].value: r[3].value for r in wb["Học sinh"].iter_rows(min_row=2)}["H1"]
     assert ok(pg.api.dk_dang_nhap("hoc_sinh", "H1", pin_h1))["token"]

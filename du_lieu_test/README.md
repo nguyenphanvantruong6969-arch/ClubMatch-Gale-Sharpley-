@@ -7,6 +7,9 @@
 > lộ ra — nó không mô phỏng một phân bố nguyện vọng tự nhiên. Trình bày các con
 > số này như số liệu khảo sát thật là **bịa đặt dữ liệu**.
 
+> **Demo cho giám khảo / hackathon:** dùng [`bo_demo_hackathon/`](bo_demo_hackathon/README.md) — hai workspace nạp sẵn,
+> mọi tài khoản đăng nhập (phần mềm chính + cổng đăng ký) và kịch bản demo từng tính năng.
+
 ## Thả vào phần mềm: Sổ nhập CLB
 
 Giao diện chỉ nhận **Sổ nhập CLB** (một tệp Excel). Mỗi bộ dưới đây có sẵn bản sổ:

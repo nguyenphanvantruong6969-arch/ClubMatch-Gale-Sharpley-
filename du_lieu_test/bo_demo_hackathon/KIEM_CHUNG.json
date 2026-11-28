@@ -1,0 +1,127 @@
+{
+  "cong_dang_ky": {
+    "giai_doan": "hs_dang_ky",
+    "khoa_sau_5_lan_sai": "dk_tam_khoa",
+    "tien_do": {
+      "theo_clb": [
+        {
+          "clb_id": 4,
+          "so_em": 40,
+          "ten": "CLB Robotics"
+        },
+        {
+          "clb_id": 5,
+          "so_em": 39,
+          "ten": "CLB Bóng đá"
+        },
+        {
+          "clb_id": 6,
+          "so_em": 39,
+          "ten": "CLB Âm nhạc"
+        },
+        {
+          "clb_id": 1,
+          "so_em": 38,
+          "ten": "CLB Bóng rổ"
+        },
+        {
+          "clb_id": 3,
+          "so_em": 38,
+          "ten": "CLB Cờ vua"
+        },
+        {
+          "clb_id": 8,
+          "so_em": 38,
+          "ten": "CLB Tin học"
+        },
+        {
+          "clb_id": 2,
+          "so_em": 37,
+          "ten": "CLB Văn học"
+        },
+        {
+          "clb_id": 7,
+          "so_em": 33,
+          "ten": "CLB Hội hoạ"
+        }
+      ],
+      "theo_lop": [
+        {
+          "da_nop": 10,
+          "lop": "10A1",
+          "tong": 12
+        },
+        {
+          "da_nop": 10,
+          "lop": "10A2",
+          "tong": 12
+        },
+        {
+          "da_nop": 10,
+          "lop": "11A1",
+          "tong": 12
+        },
+        {
+          "da_nop": 10,
+          "lop": "11A2",
+          "tong": 12
+        },
+        {
+          "da_nop": 11,
+          "lop": "12A1",
+          "tong": 12
+        }
+      ]
+    }
+  },
+  "kiosk": {
+    "canh_bao_nap_den_muon": [],
+    "canh_bao_suc_khoe": [
+      "health_oversubscribed_buoi"
+    ],
+    "dang_nhap_sai": "gt3_sai_thong_tin",
+    "giao_vien_bam_chay": "gt3_khong_du_quyen",
+    "lan_1": {
+      "cho_da_xep_theo_hang_nguyen_vong": {
+        "1": 257,
+        "2": 45,
+        "3": 19,
+        "4+": 0
+      },
+      "em_co_it_nhat_1_clb": "192/240",
+      "suat_uu_tien_da_dung": 20,
+      "tong_cho_da_xep": 321
+    },
+    "lan_2_sau_den_muon": {
+      "cho_da_xep_theo_hang_nguyen_vong": {
+        "1": 255,
+        "2": 45,
+        "3": 21,
+        "4+": 0
+      },
+      "em_co_it_nhat_1_clb": "195/246",
+      "suat_uu_tien_da_dung": 20,
+      "tong_cho_da_xep": 321
+    },
+    "luot_cho_em_cu_doi_sau_den_muon": 8,
+    "run_history": 2,
+    "thu_tu_boc_tham_em_cu_giu_nguyen": true,
+    "tra_cuu_dung_ma": true,
+    "tra_cuu_sai_5_lan": "gt1_tam_khoa",
+    "xuat_duoc": [
+      "excel",
+      "pdf_danh_sach",
+      "pdf_bao_cao"
+    ]
+  },
+  "nhan": "DỮ LIỆU MÔ PHỎNG — CHỈ DÙNG DEMO",
+  "seed_du_lieu": 20261128,
+  "seed_xep": 42,
+  "so_clb": 12,
+  "so_den_muon": 6,
+  "so_hs": 240,
+  "workspace": [
+    "demo-truong-thpt-mo-phong.zip",
+    "demo-cong-dang-ky.zip"
+  ]
+}
