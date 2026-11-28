@@ -86,6 +86,7 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 - CI: "Tests (rbda-kiosk)" was running for the last push; result NOT yet seen. A one-shot reminder (send_later ~02:40 UTC) was set in the old session.
 
 ## Next steps (in order)
+0. FIRST: `git fetch origin && git checkout claude/ct1-xem-xet-chi-tieu && git pull origin claude/ct1-xem-xet-chi-tieu`; `git log --oneline -3` must show the handoff commit. This file is NOT on `main`; a session started from `main` will not see it and may wrongly restart at L1. L1–L4 are DONE, never redo them.
 1. Check CI for this branch (`mcp__github__actions_list`, branch filter). Green → write `Status: DONE <sha>` here, push, tell Truong in Vietnamese (≤10 lines, 3 steps: load SO_NHAP_TEST.xlsx → run → Kết quả › Báo cáo và phiếu in › Xem xét chỉ tiêu CLB). Red → `get_job_logs failed_only`, ≤60 lines, minimal fix, push.
 2. Do NOT fix the soat-ma findings unless Truong says so (report-only rule). Findings 1–2 are small fixes; finding 3 needs his decision.
 3. Merge, never rebase (`git fetch origin main && git merge --no-edit FETCH_HEAD`).
@@ -113,3 +114,4 @@ applied to the Kết quả tab by UX5A (`tests/test_giao_dien_ux5a_l2.py`… mus
 | 2026-11-28 | Sonnet (coder) | L3 UI + 13 Chromium tests; `_ux5a_chung.mo_ux5a` got optional `so_nhap`/`rules`/`rong` | UI text avoids "em"/"you" (lint): uses {person_l}/{slot_s} |
 | 2026-11-28 | Sonnet (coder) | L4 docs + 3 hand cases + soat-ma report | findings 1–5 in BAO_CAO_SOAT_MA_CT1.md; none fixed (report-only) |
 | 2026-11-28 | Sonnet (coder) | Handoff at ~400k context: state rewritten, awaiting CI | next session checks CI and finishes per protocol §4 |
+| 2026-11-28 | Sonnet (coder) | Second handoff: added step 0 (check out the branch first) after a new chat restarted at L1 | state was correct on origin; that chat was on the wrong branch |
