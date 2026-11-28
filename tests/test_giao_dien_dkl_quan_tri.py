@@ -35,7 +35,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("dkl") / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     with sync_playwright() as pw:
         br = pw.chromium.launch(executable_path=CHROMIUM, args=["--no-sandbox"])
@@ -109,6 +109,7 @@ def test_2_gia_han_dong_ngay_va_duyet_sua_chi_tieu_phong(cong):
     han1 = _ok(api.dk_trang_thai())["han_chot"]
     assert han1
     # Đóng ngay -> sang Duyệt CLB
+    pg.once("dialog", lambda d: d.accept())      # VG2-L3: hỏi xác nhận
     pg.get_by_role("button", name="Đóng ngay").click()
     pg.wait_for_selector("text=Quản trị · Duyệt CLB")
     # A8: còn CLB chờ duyệt -> có lý do, chưa có nút "Mở cho học sinh"

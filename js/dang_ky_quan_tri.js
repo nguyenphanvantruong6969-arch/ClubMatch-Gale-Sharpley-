@@ -38,12 +38,12 @@
     if (DK.S.vai === "quan_tri" && (the === "viec" || the === "ds") && ["gv_dang_ky", "duyet", "hs_dang_ky", "nhap_diem"].includes(tt.giai_doan)) DK.QT2.tuLamMoi(true);
   };
 
-  const bang = (cot, hang) => h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
-    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c) => h("td", {}, c))))));
+  const bang = (cot, hang) => h("div.dk-cuon-ngang", {}, h("table.dk-bang", {}, h("thead", {}, h("tr", {}, cot.map((c) => h("th", {}, c)))),
+    h("tbody", {}, hang.map((r) => h("tr", {}, r.map((c) => h("td", {}, c)))))));
   DK.bang = bang;
-  const chuyen = (gd, chu) => DK.nutVang(chu, function () {
+  const chuyen = (gd, chu, khoa) => DK.nutVang(chu, function () {
     DK.chay(this, async () => { const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, gd); if (r.ok) DK.quanTri(); return r; });
-  });
+  }, khoa ? { disabled: true, "aria-disabled": "true" } : {});
   function khungHan(gd) {
     const han = DK.truong("Hạn chót (tuỳ chọn)", "han", { type: "datetime-local", value: (DK.S.tt || {}).han_chot || "" });
     const nut = DK.nut("Đặt hạn", function () { DK.chay(this, async () => {
@@ -51,7 +51,7 @@
     return h("details.dk-chon-han", {}, h("summary", {}, "Chọn hạn chót khác"), h("div.dk-hang-nut", {}, han, nut));
   }
   /* DK8-L2: dòng hạn chót của thẻ giai đoạn: chữ bên trái, «Gia hạn +1 giờ / +1 ngày» và «Đóng ngay» bên phải (v8 `waitFrame`). */
-  const hangHan = (tt, gd) => h("div.dk-hang-han", {}, hanChu(tt), h("span.dk-gian"), DK.QT2.giaHan(gd, tt.han_chot));
+  const hangHan = (tt, gd, khoa) => h("div.dk-hang-han", {}, hanChu(tt), h("span.dk-gian"), DK.QT2.giaHan(gd, tt.han_chot, khoa));
   /* Thẻ giai đoạn (v8: tab «Việc bây giờ» = MỘT thẻ nổi) và thẻ nội dung (`DK.theCon`). */
   const theGd = (gd, tieuDe, mucDich, demChu, ...con) => h("section.dk-khung.dk-gd-the", {}, thanhGd(gd),
     h("div.dk-gd-dau", {}, h("h2", {}, tieuDe), h("p.dk-phu", {}, mucDich), demChu ? h("p.dk-dem", {}, demChu) : null), ...con);
@@ -73,7 +73,7 @@
       const muc = (xong, noi, sua) => h("li", {}, h("span.dk-tick" + (xong ? ".on" : ""), { "aria-hidden": "true" }, xong ? "✓" : "!"), h("span.dk-gian", {}, noi), DK.nutNhe("Sửa", sua));
       const kiem = h("ul.dk-kiem", {},
         muc(ph.length, ph.length + " phòng · tổng sức chứa " + ph.reduce((a, x) => a + x.suc_chua, 0), toi("dkKhungPhong")),
-        muc(hs.length, hs.length + " học sinh · " + new Set(hs.map((x) => x.lop)).size + " lớp · đã có PIN", toi("dkKhungHs")),
+        muc(hs.length, hs.length + " học sinh · " + new Set(hs.map((x) => x.lop)).size + " lớp" + (hs.length ? " · mỗi em đã có PIN" : ""), toi("dkKhungHs")),
         muc(!!cd.ma_truong, ["Mã trường cho giáo viên: ", h("span.dk-so", {}, cd.ma_truong || "—")], () => { the = "cai"; DK.quanTri(); }));
       return h("div", {},
         theGd(gd, "Chuẩn bị", "Kiểm tra ba mục dưới đây, rồi mở cho giáo viên đăng ký CLB.", "", kiem, DK.QT2.kiemTra(ly, chuyen("gv_dang_ky", "Mở đăng ký giáo viên"))),
@@ -83,12 +83,14 @@
     }
     if (gd === "gv_dang_ky") {
       const [gv, ds] = [await dsOf("dk_gv_danh_sach"), await dsOf("dk_clb_danh_sach")];
+      const thieuTd = ((await goi("dk_cai_dat_doc", T)).data || {}).buoi_thieu_tu_do || [];      // VG1-L4 (c): khoá mọi nút đóng giai đoạn giáo viên
       const van = h("textarea.dk-nhap", { rows: "4", placeholder: "Mỗi dòng một tên giáo viên" });
       const tao = DK.nut("Tạo tài khoản giáo viên", function () { DK.chay(this, async () => {
         const r = await goi("dk_gv_tao_hang_loat", T, van.value); if (r.ok) hienPin(r.data.da_tao.map((x) => ({ ma: x.ten, ten: x.ten, pin: x.pin })), "Mã PIN giáo viên (chỉ hiện lúc này)", "gv"); return r; }); });
       return h("div", {},
         theGd(gd, "Giáo viên đang đăng ký", "Thầy cô tự tạo tài khoản bằng mã trường và gửi CLB. Không cần làm gì cho tới hạn chót.",
-          gv.length + " giáo viên · " + ds.length + " CLB đã gửi", hangHan(tt, gd), khungHan(gd), chuyen("duyet", "Đóng đăng ký giáo viên")),
+          gv.length + " giáo viên · " + ds.length + " CLB đã gửi", hangHan(tt, gd, thieuTd.length > 0), khungHan(gd), chuyen("duyet", "Đóng đăng ký giáo viên", thieuTd.length > 0),
+          DK.QT2.tuDoThieu(thieuTd, "gv")),
         DK.theCon("CLB đã gửi", ds.length ? bang(["CLB", "Giáo viên", "Buổi", "Phòng", "Nhận"], ds.map((c) => [c.ten, c.giao_vien || "", c.buoi, c.phong || "",
           c.loai === "Tự do" ? "Mọi em" : String(c.chi_tieu !== null && c.chi_tieu !== undefined ? c.chi_tieu : (c.chi_tieu_gv === null || c.chi_tieu_gv === undefined ? "" : c.chi_tieu_gv))]))
           : h("div.dk-rong", {}, "Chưa có CLB nào. Danh sách hiện ở đây khi giáo viên gửi.")),
@@ -98,9 +100,11 @@
     if (gd === "duyet") {
       const [ds, ph, hs] = [await dsOf("dk_clb_danh_sach"), await dsOf("dk_phong_danh_sach"), await dsOf("dk_hs_danh_sach")];
       const dem = (k) => ds.filter((c) => c.trang_thai === k).length;
-      return h("div", {}, theGd(gd, "Duyệt CLB", "Duyệt hoặc từ chối từng CLB; sửa số nhận và phòng nếu cần. Học sinh chỉ thấy CLB đã duyệt.",
+      const cdd = (await goi("dk_cai_dat_doc", T)).data || {};
+      return h("div", {}, DK.QT2.nhacTuDoTat(cdd), theGd(gd, "Duyệt CLB", "Duyệt hoặc từ chối từng CLB; sửa số nhận và phòng nếu cần. Học sinh chỉ thấy CLB đã duyệt.",
         dem("cho_duyet") + " chờ duyệt · " + dem("duyet") + " đã duyệt · " + dem("tu_choi") + " từ chối", DK.QT2.bangDuyet(ds, ph),
-        DK.QT2.kiemTra(DK.QT2.lyDoChuaMoHs(ds, ph, hs.length), chuyen("hs_dang_ky", "Mở cho học sinh"))));
+        DK.QT2.tuDoThieu(cdd.buoi_thieu_tu_do, "duyet"),
+        DK.QT2.kiemTra(DK.QT2.lyDoChuaMoHs(ds, ph, hs.length, cdd.bat_buoc_tu_do), chuyen("hs_dang_ky", "Mở cho học sinh"))));
     }
     if (gd === "hs_dang_ky") {
       const [tdo, hs, ds, phs] = [(await goi("dk_tien_do", T)).data, await dsOf("dk_hs_danh_sach"), await dsOf("dk_clb_danh_sach"), await dsOf("dk_phong_danh_sach")];
@@ -123,12 +127,13 @@
     const kq = h("p#dkKq");
     const tomTat = (await goi("dk_ket_qua_xep", T)).data || {};
     const xt = (await goi("dk_xuat_xem_truoc", T)).data || { clb: [], hoc_sinh: [], tong_hoc_sinh: 0, so_lan_xuat: 0 };
-    return h("div", {}, theGd(gd, "Xuất Sổ nhập" + (xt.so_lan_xuat ? " · v" + xt.so_lan_xuat : ""), "Ghi Sổ nhập rồi nạp vào phần mềm xếp CLB. Xếp lại cùng hạt giống cho cùng kết quả.",
+    const cdx = (await goi("dk_cai_dat_doc", T)).data || {};
+    return h("div", {}, DK.QT2.nhacTuDoTat(cdx), theGd(gd, "Xuất Sổ nhập" + (xt.so_lan_xuat ? " · v" + xt.so_lan_xuat : ""), "Ghi Sổ nhập rồi nạp vào phần mềm xếp CLB. Xếp lại cùng hạt giống cho cùng kết quả.",
       xt.clb.length + " CLB · " + xt.tong_hoc_sinh + " học sinh",
       h("div.dk-hang-nut", {}, DK.nutVang("Xuất Sổ nhập", function () { DK.chay(this, async () => {
         const r = await goi("dk_xuat_so_nhap", T); if (r.ok) kq.textContent = "Đã ghi " + r.data.duong_dan + " (" + r.data.so_clb + " CLB, " + r.data.so_hs + " học sinh), phiên bản " + r.data.phien_ban + "."; return r; }); }),
       tomTat.da_xep ? DK.nut("Xem kết quả trong phần mềm", () => { location.href = "index.html" + location.search + "#ket-qua"; }, { id: "dkXemKq" }) : null,
-      nutXep("Xếp lại (cùng hạt giống)", false)), kq),
+      nutXep("Xếp lại, giữ nguyên kết quả bốc thăm", false)), kq),
     DK.theCon("Kết quả xếp", tomTat.da_xep ? bangKetQua(tomTat) : h("p", {}, "Chưa xếp lần nào.")),
     h("section.dk-khung", {}, await DK.QT2.xemTruoc(xt)));
   }
@@ -147,7 +152,7 @@
       .map((k, i) => [i ? " · " : "", k === "ngoai" ? h("span", { title: GHI_CHU_NGOAI }, "Xếp ngoài nguyện vọng") : "NV" + k, ": " + m[k]]);
     const nvChu = (m) => (Object.keys(m).length ? nv(m) : "—");
     return h("div#dkKetQua", {}, t.da_bat_luat ? h("p#dkLuuY", {}, "Lưu ý: chế độ giữ chỗ và huy chương đã được bật cho kho dữ liệu này.") : "",
-      h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + ", hạt giống " + t.seed + ")."),
+      h("p", {}, "Đã xếp " + t.so_hoc_sinh + " học sinh (lần chạy " + t.run_id + "; mã bốc thăm " + t.seed + ")."),
       bang(["Buổi", "Đã xếp", "Chưa xếp", "Theo nguyện vọng"], t.theo_buoi.map((x) => [x.ten_buoi || x.buoi, x.da_xep, x.chua_xep, nvChu(x.theo_nguyen_vong)])));
   }
 
@@ -161,7 +166,10 @@
     const T = DK.S.token;
     const [ph, gv, hs] = (await Promise.all([DK.goi("dk_phong_danh_sach", T), DK.goi("dk_gv_danh_sach", T), DK.goi("dk_hs_danh_sach", T)])).map((r) => r.data || []);
     const datLai = (ham, id, ten) => DK.nutNhe("Đặt lại PIN", function () { DK.chay(this, async () => {
-      const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); });
+      const r = await DK.goi(ham, T, id); if (r.ok) DK.thongBao("PIN mới của " + ten + ": " + r.data.pin); return r; }); }, { "aria-label": "Đặt lại PIN — " + ten });
+    const xoaGv = (x) => DK.nutNhe("Xoá", function () { DK.chay(this, async () => {
+      if (window.confirm && !window.confirm("Xoá tài khoản giáo viên «" + x.ten + "»? Không hoàn tác được.")) return { ok: true, data: {}, errors: [] };
+      const r = await DK.goi("dk_gv_xoa", T, x.gv_id); if (r.ok) DK.quanTri(); return r; }); }, { "aria-label": "Xoá giáo viên " + x.ten });
     const moKhoa = (vai, ten) => DK.nutNhe("Mở khoá", function () { DK.chay(this, async () => {
       const r = await DK.goi("dk_mo_khoa", T, vai, ten); if (r.ok) { DK.thongBao("Đã mở khoá cho " + ten); DK.quanTri(); } return r; }); });
     const thaoTac = (x, nut, vai, ten) => x.bi_khoa ? h("span.dk-thao-tac", {}, nut, h("span.dk-phu", {}, " Đang khoá "), moKhoa(vai, ten)) : nut;
@@ -179,13 +187,13 @@
     const cotHs = ["Mã", "Họ tên", "Lớp", "Đã nộp", ""];
     const khoiHs = [...new Set(hs.map((x) => x.khoi))].sort((a, b) => a - b);
     const nhomHs = khoiHs.map((k) => { const ds = hs.filter((x) => x.khoi === k);
-      return ct("hs-khoi-" + k, khoiHs.length === 1, "Khối " + k + " · " + ds.length + " HS · " + ds.filter((x) => x.da_nop).length + " đã nộp", bang(cotHs, ds.map(dongHs))); });
+      return ct("hs-khoi-" + k, khoiHs.length === 1 || hs.length <= 60, "Khối " + k + " · " + ds.length + " HS · " + ds.filter((x) => x.da_nop).length + " đã nộp", bang(cotHs, ds.map(dongHs))); });
     return h("div", {}, h("section.dk-khung", {}, h("div.dk-gd-dau", {}, h("h2", {}, "Danh sách"),
         h("p.dk-phu", {}, "Phòng, giáo viên và học sinh. Chỉ học sinh có tên ở đây mới đăng nhập được; mỗi em một PIN in trên phiếu."),
         h("p.dk-dem", {}, ph.length + " phòng · " + gv.length + " giáo viên · " + hs.length + " học sinh · " + hs.filter((x) => x.da_nop).length + " đã gửi nguyện vọng")),
       khoa ? h("p.dk-phu#dkKhoaDs", {}, "Học sinh đã bắt đầu đăng ký nên không thêm hay thay danh sách được nữa.") : null,
       ct("phong", true, "Phòng (" + ph.length + ")", ph.length ? bang(["Phòng", "Sức chứa"], ph.map((x) => [x.ten, x.suc_chua])) : trong("Chưa có phòng nào.", "Thêm phòng", khoa)),
-      ct("gv", false, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten)]))),
+      ct("gv", gv.length <= 60, "Giáo viên (" + gv.length + ")", !gv.length ? trong("Chưa có giáo viên nào. Giáo viên tự đăng ký bằng mã trường; quản trị cũng có thể tạo hộ ở giai đoạn «Giáo viên đăng ký».", "Mở «Việc bây giờ»", false) : bang(["Tên", "Cách tạo", ""], gv.map((x) => [x.ten, x.cach_tao === "quan_tri" ? "Quản trị tạo" : "Tự đăng ký", h("span.dk-thao-tac", {}, thaoTac(x, datLai("dk_gv_dat_lai_pin", x.gv_id, x.ten), "giao_vien", x.ten), khoa ? null : xoaGv(x))]))),
       ct("hs", false, "Học sinh (" + hs.length + ")", ...(nhomHs.length ? nhomHs : [trong("Chưa có học sinh nào. Dán danh sách (mã, họ tên, lớp) ở bước «Chuẩn bị».", "Thêm học sinh", khoa)]))));
   }
 
@@ -194,8 +202,7 @@
     const i = THU_TU.indexOf(tt.giai_doan);
     return h("div", {}, await DK.QT2.saoLuu(),
       DK.theCon("Lùi giai đoạn", h("p.dk-phu", {}, "Dùng khi cần sửa: mở lại đăng ký, hoặc mở khoá điểm đã chốt. Không xoá dữ liệu; có ghi nhật ký."),
-        i > 0 ? DK.nut("Lùi về giai đoạn «" + TEN_GD[THU_TU[i - 1]] + "»", function () { DK.chay(this, async () => {
-          const r = await DK.goi("dk_chuyen_giai_doan", DK.S.token, THU_TU[i - 1]); if (r.ok) { the = "viec"; DK.quanTri(); } return r; }); }) : h("p.dk-phu", {}, "Đang ở giai đoạn đầu tiên.")),
+        i > 0 ? DK.QT2.luiVe(i) : h("p.dk-phu", {}, "Đang ở giai đoạn đầu tiên.")),
       DK.theCon("Nhật ký", h("details", {}, h("summary", {}, "Nhật ký (" + nk.length + ")"), bang(["Lúc", "Vai", "Việc", "Chi tiết"], nk.map((x) => [x.luc, x.vai, x.hanh_dong, x.chi_tiet || ""])))));
   }
 })(window);

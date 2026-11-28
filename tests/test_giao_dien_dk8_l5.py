@@ -222,7 +222,7 @@ def test_j_ma_hoc_sinh_va_pin_chi_theo_dinh_dang(cong):
     assert not ten.evaluate("e => e.classList.contains('is-hop-le')")
     ma.fill("123")
     assert not ma.evaluate("e => e.classList.contains('is-hop-le')")
-    ma.fill("1234")
+    ma.fill("7391")
     assert ma.evaluate("e => e.classList.contains('is-hop-le')")
     ma.fill("12a4")
     assert not ma.evaluate("e => e.classList.contains('is-hop-le')")
@@ -263,7 +263,7 @@ def test_m_giao_vien_tu_dang_ky_va_ten_clb(cong):
     pg.fill("input[name=ten]", "Thầy B")
     pg.fill("input[name=pin]", "12")
     assert pg.locator("input[name=ten].is-hop-le").count() == 1 and pg.locator("input[name=pin].is-hop-le").count() == 0
-    pg.fill("input[name=pin]", "1234")
+    pg.fill("input[name=pin]", "7391")
     assert pg.locator("input[name=pin].is-hop-le").count() == 1
 
 
@@ -287,7 +287,7 @@ def test_o_khong_bao_gio_o_nguyen_vong_huy_chuong_dap_an(cong):
     pg.wait_for_selector("text=Buổi T2")
     dem = "document.querySelectorAll('[data-hl], .is-hop-le, select.is-xong, input[type=checkbox].is-xong').length"
     assert pg.evaluate(dem) == 0                                                 # bước xếp nguyện vọng
-    for ten in ("Cờ vua", "Tự do 1"):
+    for ten in ("Cờ vua", "Tự do 1", "Robot"):
         pg.locator("li.dk-the-clb", has_text=ten).get_by_role("button", name="+ Thêm").click()
     assert pg.evaluate(dem) == 0
     pg.get_by_role("button", name="Tiếp: đặt huy chương").click()
@@ -304,13 +304,13 @@ def test_p_man_da_gui_mot_dau_tick_tieu_de_giu_chu(cong):
     pg = cong("hs")
     pg.get_by_role("button", name="Đúng là em", exact=True).click()
     pg.wait_for_selector("text=Buổi T2")
-    pg.locator("li.dk-the-clb", has_text="Tự do 1").get_by_role("button", name="+ Thêm").click()
+    for ten in ("Tự do 1", "Robot"):                                                  # VG2-L4: màn huy chương / bài thi chỉ hiện khi có CLB tương ứng
+        pg.locator("li.dk-the-clb", has_text=ten).get_by_role("button", name="+ Thêm").click()
     for ten in ("Tiếp: đặt huy chương", "Tiếp: bài kiểm tra"):
         pg.get_by_role("button", name=ten).click()
     pg.get_by_role("button", name="Tiếp: T3").click()
     pg.wait_for_selector("text=Buổi T3")
-    for ten in ("Tiếp: đặt huy chương", "Tiếp: bài kiểm tra", "Tiếp: xem lại và gửi"):
-        pg.get_by_role("button", name=ten).click()
+    pg.get_by_role("button", name="Tiếp: xem lại và gửi").click()                       # buổi trống: đi thẳng, không qua huy chương / bài thi
     pg.locator("#dkGui").click()
     pg.wait_for_selector("#dkBienNhan")
     assert pg.locator(".dk-xong-dau").count() == 1

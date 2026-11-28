@@ -131,7 +131,7 @@ def test_c_the_khac_khong_co_thanh_sau_buoc_va_them_co_mui_ten(cong):
     assert the.count() >= 3 and abs(_y(the.nth(0)) - _y(the.nth(1))) < 2 and _x(the.nth(1)) > _x(the.nth(0)) + 200   # lưới hai cột
     pg.get_by_role("tab", name="Thêm").click()
     pg.wait_for_timeout(400)
-    assert pg.locator("#dkSaoLuu").count() == 1 and pg.get_by_role("button", name="Lùi về giai đoạn «Chuẩn bị»").count() == 1
+    assert pg.locator("#dkSaoLuu").count() == 1 and pg.locator("#dkLuiVe option").all_inner_texts() == ["Chuẩn bị"] and pg.locator("#dkLui").count() == 1   # VG1-L3: chọn giai đoạn để lùi
 
 
 def test_d_chuan_bi_danh_sach_kiem(cong):

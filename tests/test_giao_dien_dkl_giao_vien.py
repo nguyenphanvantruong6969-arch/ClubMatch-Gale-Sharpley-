@@ -24,7 +24,7 @@ def cong(tmp_path_factory):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path_factory.mktemp("dklgv") / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [9, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [9, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     _ok(api.dk_phong_luu(qt, "P1", 40))
     _ok(api.dk_phong_luu(qt, "P2", 30))
@@ -105,6 +105,7 @@ def test_2_phong_chi_hien_phong_trong_buoi_va_sua_clb(cong):
     ds = _ok(pg.api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
     assert [c["ten"] for c in _ok(pg.api.dk_clb_danh_sach(ds))] == ["Cờ vua nâng cao"]
     # xoá: biến mất khỏi danh sách và khỏi dữ liệu
+    pg.once("dialog", lambda d: d.accept())      # VG2-L3: hỏi xác nhận
     pg.get_by_role("button", name="Xoá Cờ vua nâng cao").click()
     pg.wait_for_function("!document.body.innerText.includes('Cờ vua nâng cao')")
     assert _ok(pg.api.dk_clb_danh_sach(ds)) == []
@@ -114,12 +115,15 @@ def test_3_clb_da_duyet_khong_con_nut_sua_xoa_va_khong_xoa_duoc_qua_api(cong):
     pg, api, qt = cong, cong.api, cong.qt
     ds = _ok(api.dk_dang_nhap("giao_vien", "Cô An", pg.pin["Cô An"]))["token"]
     cid = _ok(api.dk_clb_danh_sach(ds))[0]["clb_id"]
+    # VG1-L4 (d): buổi T2 phải có một CLB Tự do sống trước khi duyệt CLB Tuyển chọn -> Cô Bê mở CLB Tự do ở P2 và được duyệt trước
+    gb = _ok(api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
+    td = _ok(api.dk_clb_luu(gb, {"ten": "Đọc sách", "buoi": "T2", "loai": "Tự do", "phong_id": 2, "chi_tieu": 30, "khoi_tu": 9, "khoi_den": 12}))["clb_id"]
+    _ok(api.dk_clb_duyet(qt, td, "duyet", 30, None))
     _ok(api.dk_clb_duyet(qt, cid, "duyet", 10, None))
     _vao(pg, "Cô An")
     assert pg.get_by_role("button", name="Xoá Robot").count() == 0
     r = api.dk_clb_xoa(ds, cid)
     assert not r["ok"] and r["errors"][0]["code"] == "dk_clb_khong_sua_duoc"
     # giáo viên khác không xoá được CLB của người khác
-    gb = _ok(api.dk_dang_nhap("giao_vien", "Cô Bê", pg.pin["Cô Bê"]))["token"]
     assert not api.dk_clb_xoa(gb, cid)["ok"]
     assert not pg.loi, pg.loi

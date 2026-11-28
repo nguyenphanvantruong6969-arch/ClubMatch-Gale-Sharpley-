@@ -3742,3 +3742,7 @@ body.dk-body { height: auto; min-height: 100%; }       /* html, body {height:100
 .dk-buoc-nd > .btn { align-self: flex-start; }
 .dk-excel-xem .dk-chip { align-self: auto; }
 #dkExcel #dkPin:not(:empty) { margin-top: 14px; }
+
+/* VG2-L3: bảng rộng cuộn trong khung của nó (không làm cả trang tràn ngang ở màn hẹp); đích bấm đủ lớn */
+.dk-cuon-ngang { overflow-x: auto; max-width: 100%; }
+.dk-ve-phan-mem { min-height: 36px; line-height: 36px; }

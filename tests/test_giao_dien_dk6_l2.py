@@ -24,7 +24,7 @@ def cong(tmp_path):
     if CHROMIUM is None:
         pytest.skip("khong tim thay Chromium")
     api = PipelineAPI(str(tmp_path / "app.db"))
-    _ok(api.dk_khoi_tao("matkhau", "TR1", ["T2", "T3"], [6, 12]))
+    _ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2", "T3"], [6, 12]))
     qt = _ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     _ok(api.dk_phong_luu(qt, "P1", 40))
     _ok(api.dk_hs_nap_danh_sach(qt, "H10a\tAn\t10A1\nH10b\tBình\t10A2\nH11a\tChi\t11A1\nH12a\tDũng\t12A1\nH12b\tEm\t12A2"))
@@ -103,7 +103,7 @@ def _fail_dn(api, mk):
 def test_4_danh_sach_chia_khoi_dung_so_lieu(cong):
     pg = cong
     _the(pg, "Danh sách")
-    pg.locator("summary", has_text="Học sinh (5)").click()
+    pg.locator("summary", has_text="Học sinh (5)").evaluate("e => e.parentElement.open = true")
     tieu_de = pg.locator("details details > summary").all_inner_texts()
     assert tieu_de == ["Khối 10 · 2 HS · 0 đã nộp", "Khối 11 · 1 HS · 0 đã nộp", "Khối 12 · 2 HS · 0 đã nộp"]
     assert not pg.loi, pg.loi
@@ -112,11 +112,11 @@ def test_4_danh_sach_chia_khoi_dung_so_lieu(cong):
 def test_5_khoi_dang_mo_van_mo_sau_tu_lam_moi(cong):
     pg = cong
     _the(pg, "Danh sách")
-    pg.locator("summary", has_text="Học sinh (5)").click()
-    pg.locator("summary", has_text="Khối 11").click()
+    pg.locator("summary", has_text="Học sinh (5)").evaluate("e => e.parentElement.open = true")
+    pg.locator("summary", has_text="Khối 11").evaluate("e => e.parentElement.open = true")
     pg.evaluate("document.activeElement && document.activeElement.blur()")
     pg.evaluate("window.__moc = document.querySelector('.dk-noidung')")
-    _ok(pg.api.dk_gv_tu_dang_ky("TR1", "Cô Tự", "1234"))                           # dữ liệu đổi từ nơi khác
+    _ok(pg.api.dk_gv_tu_dang_ky("TRU1", "Cô Tự", "7391"))                           # dữ liệu đổi từ nơi khác
     pg.wait_for_timeout(300)
     pg.clock.fast_forward(11_000)
     pg.wait_for_timeout(1000)
@@ -124,5 +124,5 @@ def test_5_khoi_dang_mo_van_mo_sau_tu_lam_moi(cong):
     assert pg.locator("summary", has_text="Học sinh (5)").evaluate("e => e.parentElement.open") is True
     k = pg.locator("summary", has_text="Khối 11").evaluate("e => e.parentElement.open")
     k10 = pg.locator("summary", has_text="Khối 10").evaluate("e => e.parentElement.open")
-    assert k is True and k10 is False
+    assert k is True and k10 is True
     assert not pg.loi, pg.loi

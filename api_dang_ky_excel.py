@@ -15,7 +15,7 @@ import io
 import unicodedata
 import zipfile
 
-from api_dang_ky import QUAN_TRI, _khoi_cua_lop, _Loi, _so_nguyen
+from api_dang_ky import GIAO_VIEN, HOC_SINH, QUAN_TRI, _bam, _khoi_cua_lop, _Loi, _pin_moi, _so_nguyen
 from i18n_errors import err
 from i18n_errors import phan_hoi_loi as _fail
 from i18n_errors import phan_hoi_ok as _ok
@@ -270,6 +270,68 @@ class DangKyExcelMixin:
             wb.save(bo)
             return {"ten_tep": "MAU_DANG_KY.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii")}
         return self._dk_chay(lam, QUAN_TRI, ghi=False, token=token)
+
+    def dk_pin_xuat_excel(self, token, pham_vi, lop=None, xac_nhan=False):
+        """VG1-L2 (D2). PIN chỉ lưu băm nên không «xem lại» được: xuất = ĐẶT LẠI PIN rồi ghi tệp .xlsx (trang «Học sinh»: Mã | Họ tên |
+        Lớp | PIN; trang «Giáo viên»: Họ tên | PIN). `pham_vi` = hs | gv | tat_ca; `lop` chỉ lọc học sinh. Chỉ quản trị; không có
+        `xac_nhan=True` thì lỗi `dk_can_xac_nhan_pin` (n người) và KHÔNG đổi gì. Mỗi người một PIN mới, xoá bộ đếm khoá của họ,
+        nhật ký chỉ ghi số người (không ghi PIN). Trả `{ten_tep, file_base64, so_hs, so_gv}`."""
+        def lam(cur, p):
+            if pham_vi not in ("hs", "gv", "tat_ca"):
+                raise _Loi("dk_pham_vi_la")
+            hs, gv = [], []
+            if pham_vi in ("hs", "tat_ca"):
+                q = "SELECT student_id, ho_ten, lop FROM dk_hoc_sinh"
+                tham = ()
+                if lop not in (None, ""):
+                    q, tham = q + " WHERE lop = ?", (str(lop),)
+                hs = cur.execute(q + " ORDER BY lop, student_id", tham).fetchall()
+            if pham_vi in ("gv", "tat_ca"):
+                gv = cur.execute("SELECT gv_id, ten FROM dk_giao_vien ORDER BY ten").fetchall()
+            if xac_nhan is not True:
+                raise _Loi("dk_can_xac_nhan_pin", n=len(hs) + len(gv))
+            import openpyxl
+            from openpyxl.styles import Font
+            wb = openpyxl.Workbook()
+            wb.remove(wb.active)
+            dong_hs, dong_gv = [], []
+            for ma, ten, lp in hs:
+                pin = _pin_moi()
+                b, m = _bam(pin)
+                cur.execute("UPDATE dk_hoc_sinh SET pin_bam = ?, pin_muoi = ? WHERE student_id = ?", (b, m, ma))
+                cur.execute("DELETE FROM dk_cai_dat WHERE khoa = ?", (self._dk_khoa_dn(HOC_SINH, ma),))
+                dong_hs.append((ma, ten, lp, pin))
+            for gid, ten in gv:
+                pin = _pin_moi()
+                b, m = _bam(pin)
+                cur.execute("UPDATE dk_giao_vien SET pin_bam = ?, pin_muoi = ? WHERE gv_id = ?", (b, m, gid))
+                cur.execute("DELETE FROM dk_cai_dat WHERE khoa = ?", (self._dk_khoa_dn(GIAO_VIEN, ten),))
+                dong_gv.append((ten, pin))
+            for ten_ws, tieu, dong, rong in (("Học sinh", ["Mã HS", "Họ tên", "Lớp", "PIN"], dong_hs, (14, 32, 12, 8)),
+                                             ("Giáo viên", ["Họ tên", "PIN"], dong_gv, (36, 8))):
+                ws = wb.create_sheet(ten_ws)
+                ws.append(tieu)
+                for c in ws[1]:
+                    c.font = Font(bold=True)
+                for d in dong:
+                    ws.append([str(x) for x in d])                 # mọi ô là chữ: PIN «0042» và mã «0123» không bị Excel đổi thành số
+                    for c in ws[ws.max_row]:
+                        c.number_format = "@"
+                for i, w in enumerate(rong):
+                    ws.column_dimensions[chr(ord("A") + i)].width = w
+                ws.freeze_panes = "A2"
+            self._dk_ghi_nk(cur, QUAN_TRI, "xuat_pin", "%s hs=%d gv=%d" % (pham_vi, len(dong_hs), len(dong_gv)))
+            bo = io.BytesIO()
+            wb.save(bo)
+            doi.update(hs=[x[0] for x in hs], gv=[x[0] for x in gv])
+            return {"ten_tep": "PHIEU_PIN.xlsx", "file_base64": base64.b64encode(bo.getvalue()).decode("ascii"),
+                    "so_hs": len(dong_hs), "so_gv": len(dong_gv)}
+        doi = {}
+        r = self._dk_chay(lam, QUAN_TRI, token=token)
+        if r["ok"]:                                                # PIN đã đổi thì phiên cũ của những người đó chết
+            self._dk_huy_phien(HOC_SINH, doi.get("hs", []))
+            self._dk_huy_phien(GIAO_VIEN, doi.get("gv", []))
+        return r
 
     def dk_excel_xem_truoc(self, token, file_base64, ten_tep="", bo_hoc_sinh=False):
         """Chỉ ĐỌC: trả `{hoc_sinh|giao_vien|phong: {co, tong, moi, da_co, loi: [{sheet, dong, ly_do, params}]}, thieu_sheet,

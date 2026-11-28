@@ -36,7 +36,7 @@ def test_giao_dien_theo_gioi_han_do_phan_mem_dat(tmp_path, monkeypatch):
     monkeypatch.setattr(api_dang_ky, "TOI_DA_NV_BUOI", 2)
     monkeypatch.setattr(api_dang_ky, "TOI_DA_THI_BUOI", 1)
     api = PipelineAPI(str(tmp_path / "app.db"))
-    ok(api.dk_khoi_tao("matkhau", "TR1", ["T2"], [6, 12]))
+    ok(api.dk_khoi_tao("matkhau", "TRU1", ["T2"], [6, 12]))
     qt = ok(api.dk_dang_nhap("quan_tri", "", "matkhau"))["token"]
     for t in ("P1", "P2", "P3", "P4"):
         ok(api.dk_phong_luu(qt, t, 40))
