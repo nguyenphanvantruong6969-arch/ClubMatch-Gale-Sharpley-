@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-28 — DG1 (bằng chứng định lượng: L1–L4 + nhóm G + một lần chạy đầy đủ)
+
+- **L1** `du_lieu_test/danh_gia/_chi_so.py` (thuần): chỉ số A nguyện vọng, B chưa xếp + cận trên ghép cực đại (đường tăng, không thư viện), C chỉ tiêu/dự trữ, `DINH_NGHIA`. Test `tests/test_dg1_chi_so.py` (ca tay 6×3, vét cạn 30 ca nhỏ cho cận trên). Mục DG1 trong `SO_DANG_KY_33_MUC.md` + `ke_hoach_thay_doi.json`.
+- **L2** `_sinh.py` (trường mô phỏng α/ρ/κ, nhiều buổi, ghi Sổ nhập) + `do_danh_gia.py` (lưới 5 seed dữ liệu × 10 seed bốc thăm tách bạch, KTC t theo trường, cổng đối chiếu `SO_LIEU_DA_KIEM_CHUNG.md` §2). Tests `tests/test_dg1_sinh.py`, `tests/test_dg1_do_danh_gia.py`.
+- **L3** biến thể tiêu chí (dự trữ tắt, nhóm cứng, chỉ nhóm, điểm theo người, max_choices 3/5/10, chỉ tiêu ±20 %) với churn khớp `tieu_chi.so_sanh_lan_chay`; so 5 cơ chế (RB-DA, Boston, RSD, TTC, DA do CLB đề xuất); thời gian (kể cả `run_pipeline` 5 bước và 2 000×50); nhiều buổi; 5 bộ có sẵn; `in_bang.py` in bảng Markdown từ JSON.
+- **G** `do_tinh_nang.py`: lưới 2×2 «suất dự trữ × điểm quyết tâm» (hồ sơ điểm qua `kiem_ho_so_wharton` = 0 lỗi) và «huy chương» (mô hình `mo_phong_fa_daa`, chế độ cũ vs FA-DAA). Test `tests/test_dg1_tinh_nang.py`.
+- **L4** (lô DUY NHẤT sửa sản phẩm, chỉ thêm, chỉ đọc): `tieu_chi.chi_so_phan_bo` (thuần, dùng `_thong_ke`), `api_bao_cao.get_chi_so_phan_bo` (`{ok,data,errors}`, mã lỗi `dg1_error_reading_chi_so` → `i18n_loi.js` sinh lại), khối «Chỉ số phân bổ» ở màn kết quả (`index.html`, `js/03_ket_qua.js`, `style.css`, khoá `dg1_*` vi/en), mục «CHỈ SỐ PHÂN BỔ» ở cuối trang «Thống kê» của sổ Excel kết quả. Test `tests/test_dg1_chi_so_ung_dung.py` (có một test Chromium).
+- **Quyết định lệch kế hoạch (an toàn mặc định):** (1) mục Excel đặt TRONG trang «Thống kê» thay vì sheet riêng `Chi_so`, để không đổi danh sách sheet (6 tệp test và `Hướng dẫn` đang canh); (2) lưới chính chạy lõi `run_rbda` trong bộ nhớ (cùng hàm `run_pipeline` gọi), còn `run_pipeline` thật dùng ở phép đối chiếu bộ TEST seed 42 (108/120, NV1 64, khớp từng dòng `match_results`) và ở `thoi_gian.json`; (3) mô hình huy chương dùng nguyên `mo_phong_fa_daa` vì mô hình α/ρ/κ không có loại CLB.
+- Sửa lỗi bộ sinh: chỉ tiêu nhiều buổi tính theo MỖI buổi (κ × N × số buổi) — bản đầu để tổng chỉ tiêu = κ × N cho cả ba buổi.
+- JSON đầy đủ trong `du_lieu_test/danh_gia/ket_qua/`, kèm `README_LAN_CHAY.md` (commit, lệnh, thời gian). `ket_qua_nhanh/`, `ket_qua_that/` bị `.gitignore`.
+
 ## 2026-11-27 — VG1 vòng CI 2 + lỗi 7 (tab giáo viên)
 
 - 2 test giao diện cũ cập nhật theo thiết kế mới: `tests/test_giao_dien_dk3_cong.py::test_10_...` (lùi qua giai đoạn học sinh có nguyện vọng cần `xac_nhan=True`), `tests/test_giao_dien_dkl_giao_vien.py::test_3_...` (dữ liệu thử không có CLB Tự do nên tắt ràng buộc trước khi duyệt).

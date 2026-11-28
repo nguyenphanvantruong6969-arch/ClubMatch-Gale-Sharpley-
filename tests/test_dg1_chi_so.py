@@ -74,6 +74,16 @@ class TestNhomA:
         assert a["hang_tb"] == 1.0 and a["hang_trung_vi"] == 1.0
         assert a["ngoai_danh_sach"] == 0
 
+    def test_phan_biet_nv1_nv2_nv3(self):
+        # Ca có em ở hạng 2 và 3: s1 [B,A] → A (hạng 2); s2 [B,C,A] → A (hạng 3); s3 [B] → B (hạng 1).
+        nv = {"s1": ["B", "A"], "s2": ["B", "C", "A"], "s3": ["B"], "s4": [], "s5": [], "s6": []}
+        xep = {"s1": "A", "s2": "A", "s3": "B", "s4": None, "s5": None, "s6": None}
+        a = cs.tinh_chi_so(HS, CLB, nv, UNG_VIEN, DIEM, xep, {}, du_tru_fn)["a"]
+        assert a["pct_nv1_tat_ca"] == 16.7 and a["pct_top2_tat_ca"] == 33.3 and a["pct_top3_tat_ca"] == 50.0
+        assert a["pct_nv1_da_xep"] == 33.3 and a["pct_top3_da_xep"] == 100.0
+        assert a["hang_tb"] == 2.0 and a["hang_trung_vi"] == 2.0
+        assert a["duong_cong_don"] == [16.7, 33.3, 50.0]
+
     def test_duong_cong_don(self):
         a = chay()["a"]
         # k = 1..max độ dài danh sách (2): % trên MỌI học sinh.

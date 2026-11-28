@@ -354,3 +354,8 @@ Claude Code cập nhật tệp này sau mỗi mục. Một dòng mỗi mục.
 | UX6-L1 (bớt chữ giải thích: 78 → 25 phần tử, thanh Việc tiếp theo ngắn) | xong | 2026-11-27 | index.html, i18n.js, style.css, js/05_quan_ly.js, js/06_cham_diem.js | tests/test_giao_dien_ux6_l1.py | |
 | UX6-L2 (màn hình đổi theo trạng thái: tóm tắt thay ô thả, thanh tiến độ, thanh công cụ Kết quả) | xong; chờ checker M1 | 2026-11-27 | index.html, i18n.js, style.css, js/02_van_hanh.js, js/00_nen.js | tests/test_giao_dien_ux6_l2.py | |
 | UX6-L3 (logo, biểu tượng SVG, nút phân đoạn, bảng CLB, form thiết lập cổng) | xong; chờ checker M2 | 2026-11-27 | index.html, style.css, js/05_quan_ly.js, js/075_workspace.js, js/dang_ky_nen.js | tests/test_giao_dien_ux6_l3.py | |
+| DG1-L1 (chỉ số thuần + cận trên ghép cực đại) | xong | 2026-11-28 | du_lieu_test/danh_gia/_chi_so.py, SO_DANG_KY_33_MUC.md, ke_hoach_thay_doi.json | tests/test_dg1_chi_so.py (19) | |
+| DG1-L2 (bộ sinh α/ρ/κ + bộ chạy lưới seed) | xong | 2026-11-28 | du_lieu_test/danh_gia/_sinh.py, do_danh_gia.py, README.md | tests/test_dg1_sinh.py (8), tests/test_dg1_do_danh_gia.py (7) | |
+| DG1-L3 (biến thể tiêu chí, 5 cơ chế, thời gian, nhiều buổi, in_bang) | xong | 2026-11-28 | du_lieu_test/danh_gia/do_danh_gia.py, in_bang.py | (cùng tệp L2) | |
+| DG1-G (dự trữ × điểm quyết tâm 2×2, huy chương) | xong | 2026-11-28 | du_lieu_test/danh_gia/do_tinh_nang.py | tests/test_dg1_tinh_nang.py (4) | |
+| DG1-L4 (khối «Chỉ số phân bổ» chỉ-đọc + mục Excel) | xong; tự soát bằng soat-ma (không checker) | 2026-11-28 | tieu_chi.py, api_bao_cao.py, api_xuat.py, index.html, js/03_ket_qua.js, style.css, i18n.js, i18n_errors.py, i18n_loi.js | tests/test_dg1_chi_so_ung_dung.py (7, 1 Chromium) | |

@@ -123,6 +123,12 @@ def test_giao_dien_khoi_chi_so_hien_tren_man_ket_qua(api):
         page.wait_for_selector("#chiSoPhanBo:not([hidden])")
         chu = page.inner_text("#chiSoPhanBo")
         # Lỗi đọc: khối hiện câu lỗi (không lặng lẽ ẩn); có chữ độc trong lỗi thì không chạy thành mã.
+        # Đổi ngôn ngữ giữa chừng: khối vẽ lại bằng tiếng Anh (không còn chữ có dấu tiếng Việt, không còn {tham_số}).
+        page.evaluate("window.I18N.setLang('en')")
+        page.wait_for_function("document.getElementById('chiSoTieuDe').textContent === 'Allocation metrics'")
+        chu_en = page.inner_text("#chiSoPhanBo")
+        page.evaluate("window.I18N.setLang('vi')")
+        page.wait_for_function("document.getElementById('chiSoTieuDe').textContent === 'Chỉ số phân bổ'")
         page.route("**/__api__/get_chi_so_phan_bo", lambda route: route.fulfill(
             status=200, content_type="application/json",
             body='{"ok": false, "data": null, "errors": [{"code": "dg1_error_reading_chi_so", "params": {}}]}'))
@@ -131,6 +137,7 @@ def test_giao_dien_khoi_chi_so_hien_tren_man_ket_qua(api):
         sau_loi = page.inner_text("#chiSoPhanBo")
         br.close()
     assert not loi
+    assert "Got first choice" in chu_en and "{" not in chu_en and "mọi suất" not in chu_en
     assert "Không tải được" in sau_loi
     assert "100" in chu and "75" in chu          # % NV1 (mọi em) và % lấp đầy
     assert "1 / 1" in chu or "1/1" in chu        # suất dự trữ đã dùng / cung cấp
