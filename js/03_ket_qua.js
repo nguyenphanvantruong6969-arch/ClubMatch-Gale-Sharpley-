@@ -294,7 +294,7 @@ function loadChiSoPhanBo() {
     }
     o.forEach((k) => {
       const kh = document.createElement("div");
-      kh.className = "kpi-o kpi-chi-doc";
+      kh.className = "dg1-o";
       kh.innerHTML =
         `<span class="kpi-nhan">${esc(k.nhan)}</span>` +
         `<span class="kpi-so">${esc(k.so)}</span>` +
