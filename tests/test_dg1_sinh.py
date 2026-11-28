@@ -110,3 +110,11 @@ def test_nap_qua_phan_mem_khop_bo_nho(tmp_path):
     assert prefs == t["preferences"]
     assert {c: d for c, d in scores.items() if d} == {c: d for c, d in t["tested_scores"].items() if d}
     assert {c: sorted(v) for c, v in app.items()} == {c: sorted(v) for c, v in t["applicants"].items()}
+
+
+def test_nhieu_buoi_kappa_tinh_moi_buoi():
+    # Mỗi em cần một chỗ MỖI buổi: tổng chỉ tiêu ≈ κ × N × số buổi, nên κ thực (theo buổi) vẫn ≈ κ.
+    t = sinh.sinh_truong(300, 12, kappa=1.1, so_buoi=3, seed=5)
+    assert abs(t["tham_so"]["kappa_thuc"] - 1.1) < 0.05
+    tong = sum(v["capacity"] for v in t["clubs"].values())
+    assert abs(tong - 1.1 * 300 * 3) <= 12 * 2

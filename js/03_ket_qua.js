@@ -268,11 +268,19 @@ function moMucVaCuon(id) {
 function loadChiSoPhanBo() {
   const dai = el("chiSoPhanBo");
   if (!dai) return;
-  callApi("get_chi_so_phan_bo").then((res) => {
-    if (!res.ok || !res.data.tong.n) { dai.hidden = true; return; }
+  return callApi("get_chi_so_phan_bo").then((res) => {
+    const luoi = el("chiSoLuoi");
+    if (!res.ok) {
+      /* Lỗi đọc KHÔNG đồng nghĩa "chưa có kết quả": hiện câu lỗi thay vì lặng lẽ ẩn khối. */
+      dai.hidden = false;
+      clear(luoi);
+      const e = Array.isArray(res.errors) ? res.errors[0] : res.errors;
+      el("chiSoMauSo").textContent = e && typeof e === "object" ? trErr(e) : String(e || "");
+      return;
+    }
+    if (!res.data.tong.n) { dai.hidden = true; return; }
     dai.hidden = false;
     const d = res.data;
-    const luoi = el("chiSoLuoi");
     clear(luoi);
     el("chiSoMauSo").textContent = t("dg1_mau_so", { n: d.tong.n });
     const o = [

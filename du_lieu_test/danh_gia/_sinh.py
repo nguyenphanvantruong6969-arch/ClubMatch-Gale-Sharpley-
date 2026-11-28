@@ -7,7 +7,7 @@ Mô hình (tham số và seed đều in vào JSON, không có hằng số ẩn):
   * Hữu dụng u(em, CLB) = α·pop(CLB) + (1−α)·ε, ε ~ U(0,1) riêng từng cặp em–CLB.
     Danh sách = top L CLB theo hữu dụng, L ~ đều {3..6} (nối nguyên vọng Forms Top 1–10, bị cắt), trong MỖI buổi.
     α = 0: ai cũng muốn khác nhau; α → 1: ai cũng muốn cùng vài CLB.
-  * Chỉ tiêu: tổng = round(κ·N), chia tỉ lệ (pop + 0,2)·U(0,8; 1,2) (sàn 0,2 để CLB ít người vẫn có chỗ), tối thiểu 2 chỗ/CLB.
+  * Chỉ tiêu: tổng = round(κ·N·số buổi) (mỗi em cần một chỗ mỗi buổi), chia tỉ lệ (pop + 0,2)·U(0,8; 1,2) (sàn 0,2 để CLB ít người vẫn có chỗ), tối thiểu 2 chỗ/CLB.
   * ~30 % CLB là «tuyển chọn» (thi). Em tick thi mỗi CLB tuyển chọn trong danh sách với xác suất 0,85, tối đa 5 CLB mỗi buổi.
     Điểm = round(10·(ρ·năng_lực + (1−ρ)·nhiễu), 1); năng_lực U(0,1) riêng từng em, nhiễu U(0,1) riêng từng cặp em–CLB.
     ρ = 0: điểm không liên quan năng lực; ρ = 0,7: liên quan mạnh.
@@ -79,7 +79,7 @@ def sinh_truong(n_hs, n_clb, alpha=0.5, rho=0.7, kappa=1.1, seed=1, so_buoi=1):
     pop = {c: (1.0 - i / (n_clb - 1)) if n_clb > 1 else 1.0 for i, c in enumerate(thu_hang)}
 
     buoi_cua = {c: (TEN_BUOI[i % so_buoi] if so_buoi > 1 else loi.BUOI_MAC_DINH) for i, c in enumerate(thu_hang)}
-    cap = _chia_chi_tieu(rng, pop, round(kappa * n_hs))
+    cap = _chia_chi_tieu(rng, pop, round(kappa * n_hs * so_buoi))      # mỗi em cần MỘT chỗ MỖI buổi
 
     n_tc = max(1, round(TY_LE_TUYEN_CHON * n_clb))
     tuyen_chon = set(rng.sample(cids, n_tc))
@@ -135,7 +135,7 @@ def sinh_truong(n_hs, n_clb, alpha=0.5, rho=0.7, kappa=1.1, seed=1, so_buoi=1):
         "preferences": preferences, "dang_ky_thi": dang_ky_thi, "khoi": khoi, "do_nho_tieng": pop,
         "tuyen_chon": sorted(tuyen_chon), "ds_buoi": ds_buoi,
         "tham_so": {"n_hs": n_hs, "n_clb": n_clb, "alpha": alpha, "rho": rho, "kappa": kappa, "seed": seed,
-                    "so_buoi": so_buoi, "kappa_thuc": round(sum(cap.values()) / n_hs, 3)},
+                    "so_buoi": so_buoi, "kappa_thuc": round(sum(cap.values()) / (n_hs * so_buoi), 3)},
     }
 
 
